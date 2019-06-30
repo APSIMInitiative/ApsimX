@@ -2546,49 +2546,6 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Report.Report, Models",
-                              "VariableNames": [
-                                "[Clock].Today",
-                                "[FodderBeet].Leaf.Fw",
-                                "[FodderBeet].Leaf.Fn",
-                                "[FodderBeet].Phenology.CurrentPhaseName",
-                                "[FodderBeet].Phenology.Stage",
-                                "[FodderBeet].Phenology.ThermalTime.Value()",
-                                "[FodderBeet].Phenology.AccumulatedThermalTime.Value()",
-                                "[FodderBeet].Leaf.Live.Wt as LeafWt",
-                                "[FodderBeet].Petiole.Live.Wt as PetioleWt",
-                                "[FodderBeet].StorageRoot.Live.Wt as StorageRootWt",
-                                "[FodderBeet].Leaf.LAI as LAI",
-                                "[FodderBeet].Structure.LeafTipsAppeared as AppearedLeaves",
-                                "[FodderBeet].Leaf.PlantAppearedGreenLeafNo as GreenLeaves",
-                                "[FodderBeet].Leaf.PlantsenescedLeafNo as SenescecedLeaves",
-                                "[FodderBeet].Leaf.CoverGreen as RadiationInterception",
-                                "[FodderBeet].AboveGround.Wt as AboveGroundWt",
-                                "[FodderBeet].Leaf.Photosynthesis.RadnInt.Value()",
-                                "[FodderBeet].Leaf.Photosynthesis.RUEact.Value()",
-                                "[ExtraVariables].Script.AccumPlantN",
-                                "[FodderBeet].Leaf.Live.N as LeafN",
-                                "[FodderBeet].Root.Live.N as RootN",
-                                "[FodderBeet].StorageRoot.Live.N as StorageRootN",
-                                "[FodderBeet].Petiole.Live.N as PetioleN",
-                                "[FodderBeet].Leaf.Live.NConc as LeafNconc",
-                                "[FodderBeet].Root.Live.NConc as RootNconc",
-                                "[ExtraVariables].Script.AccumFert",
-                                "[ExtraVariables].Script.AccumIrrigation as irrigation",
-                                "[ExtraVariables].Script.SoilNitrogenContent",
-                                "[FodderBeet].AboveGround.N as AboveGroundN",
-                                "[FodderBeet].Leaf.CohortParameters.MaxArea.Value()"
-                              ],
-                              "EventNames": [
-                                "[Clock].DoReport"
-                              ],
-                              "Name": "Report",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -2671,13 +2628,13 @@
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
-                              "ColourArgb": -3376729,
+                              "ColourArgb": -16777216,
                               "FactorToVaryColours": "Nit",
                               "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
+                              "FactorToVaryLines": "Nit",
+                              "Marker": 11,
                               "MarkerSize": 0,
-                              "Line": 4,
+                              "Line": 0,
                               "LineThickness": 0,
                               "Checkpoint": "Current",
                               "TableName": "ObservedData",
@@ -8976,7 +8933,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "AppearedLeaves",
                               "Children": [
                                 {
@@ -9012,12 +8969,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9054,7 +9011,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "GreenLeaves",
                               "Children": [
                                 {
@@ -9090,12 +9047,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9132,7 +9089,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -9168,12 +9125,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9210,7 +9167,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "LightInterception",
                               "Children": [
                                 {
@@ -9246,12 +9203,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9261,7 +9218,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -9298,7 +9255,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Total",
                               "Children": [
                                 {
@@ -9334,12 +9291,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9376,7 +9333,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRoot",
                               "Children": [
                                 {
@@ -9412,12 +9369,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9454,7 +9411,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Leaf",
                               "Children": [
                                 {
@@ -9490,12 +9447,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9532,7 +9489,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Petiole",
                               "Children": [
                                 {
@@ -9568,12 +9525,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9583,7 +9540,7 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -9620,7 +9577,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Total_N",
                               "Children": [
                                 {
@@ -9656,12 +9613,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9698,7 +9655,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "StorageRoot_N",
                               "Children": [
                                 {
@@ -9734,12 +9691,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9776,7 +9733,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Leaf_N",
                               "Children": [
                                 {
@@ -9812,12 +9769,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9854,7 +9811,7 @@
                                 }
                               ],
                               "LegendPosition": 3,
-                              "DisabledSeries": null,
+                              "DisabledSeries": [],
                               "Name": "Petiole_N",
                               "Children": [
                                 {
@@ -9890,12 +9847,12 @@
                                       "showEquation": true,
                                       "Name": "Regression",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
+                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -9905,12 +9862,12 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -21040,12 +20997,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -21055,7 +21012,7 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -21128,12 +21085,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -21206,12 +21163,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -21284,12 +21241,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -21362,12 +21319,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -21377,7 +21334,7 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -21450,12 +21407,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -21528,12 +21485,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -21606,12 +21563,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -21684,12 +21641,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -21699,12 +21656,12 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -30164,12 +30121,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -30179,7 +30136,7 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -30252,12 +30209,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -30330,12 +30287,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -30408,12 +30365,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -30486,12 +30443,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -30501,7 +30458,7 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -30574,12 +30531,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -30652,12 +30609,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -30730,12 +30687,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -30808,12 +30765,12 @@
                                   "showEquation": true,
                                   "Name": "Regression",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -30823,12 +30780,12 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -44467,7 +44424,7 @@
                     }
                   ],
                   "LegendPosition": 3,
-                  "DisabledSeries": null,
+                  "DisabledSeries": [],
                   "Name": "TotalWt",
                   "Children": [
                     {
@@ -45843,7 +45800,7 @@
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
                               "Filter": null,
@@ -45909,7 +45866,7 @@
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
                               "Filter": null,
@@ -45921,826 +45878,6 @@
                             }
                           ],
                           "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
-                  "Name": "TestStats",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "CanopyStats",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "DisabledSeries": null,
-                          "Name": "LAI",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16747854,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.Leaf.LAI",
-                              "YFieldName": "Predicted.FodderBeet.Leaf.LAI",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "DisabledSeries": null,
-                          "Name": "GreenLeaves",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": null,
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.Leaf.PlantAppearedGreenLeafNo",
-                              "YFieldName": "Predicted.FodderBeet.Leaf.PlantAppearedGreenLeafNo",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "BiomassStats",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "DisabledSeries": null,
-                          "Name": "TotalWt",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16747854,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Temperature",
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.AboveGround.Wt",
-                              "YFieldName": "Predicted.FodderBeet.AboveGround.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "DisabledSeries": null,
-                          "Name": "StorageRootWt",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16747854,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Nit",
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.StorageRoot.Live.Wt",
-                              "YFieldName": "Predicted.FodderBeet.StorageRoot.Live.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "DisabledSeries": null,
-                          "Name": "LeafWt",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16747854,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Nit",
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.Leaf.Live.Wt",
-                              "YFieldName": "Predicted.FodderBeet.Leaf.Live.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "DisabledSeries": null,
-                          "Name": "PetioleWt",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16747854,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Nit",
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.Petiole.Live.Wt",
-                              "YFieldName": "Predicted.FodderBeet.Petiole.Live.Wt",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "N_uptakeStats",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "DisabledSeries": null,
-                          "Name": "Total_N",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16747854,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Nit",
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.AboveGround.N",
-                              "YFieldName": "Predicted.FodderBeet.AboveGround.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "DisabledSeries": null,
-                          "Name": "StorageRoot_N",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16747854,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Nit",
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.StorageRoot.Live.N",
-                              "YFieldName": "Predicted.FodderBeet.StorageRoot.Live.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "DisabledSeries": null,
-                          "Name": "Leaf_N",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16747854,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Nit",
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.Leaf.Live.N",
-                              "YFieldName": "Predicted.FodderBeet.Leaf.Live.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "DisabledSeries": null,
-                          "Name": "Petiole_N",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16747854,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Nit",
-                              "FactorToVaryLines": null,
-                              "Marker": 4,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "PredictedObserved",
-                              "XFieldName": "Observed.FodderBeet.Petiole.Live.N",
-                              "YFieldName": "Predicted.FodderBeet.Petiole.Live.N",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series1",
-                              "Children": [
-                                {
-                                  "$type": "Models.Graph.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -48016,7 +47153,7 @@
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
                               "Filter": null,
@@ -48103,7 +47240,7 @@
                               "X2FieldName": null,
                               "Y2FieldName": null,
                               "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": true,
+                              "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
                               "Filter": null,
@@ -49019,7 +48156,7 @@
                           "Title": "Crop Biomass (g/m2)",
                           "Inverted": false,
                           "Minimum": 0.0,
-                          "Maximum": 4000.0,
+                          "Maximum": "NaN",
                           "Interval": 500.0,
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
@@ -49115,7 +48252,7 @@
                           "Title": "Crop Biomass (g/m2)",
                           "Inverted": false,
                           "Minimum": "NaN",
-                          "Maximum": 2500.0,
+                          "Maximum": "NaN",
                           "Interval": 500.0,
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
@@ -49470,7 +48607,7 @@
                           "Inverted": false,
                           "Minimum": 0.0,
                           "Maximum": "NaN",
-                          "Interval": 1.0,
+                          "Interval": "NaN",
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
                         },
@@ -50435,8 +49572,8 @@
                           "Title": "Crop Biomass (g/m2)",
                           "Inverted": false,
                           "Minimum": 0.0,
-                          "Maximum": 4000.0,
-                          "Interval": 500.0,
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
                         },
@@ -50531,7 +49668,7 @@
                           "Title": "Crop Biomass (g/m2)",
                           "Inverted": false,
                           "Minimum": "NaN",
-                          "Maximum": 2500.0,
+                          "Maximum": "NaN",
                           "Interval": 500.0,
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
@@ -50627,7 +49764,7 @@
                           "Title": "Crop Biomass (g/m2)",
                           "Inverted": false,
                           "Minimum": "NaN",
-                          "Maximum": 300.0,
+                          "Maximum": "NaN",
                           "Interval": "NaN",
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
@@ -50723,7 +49860,7 @@
                           "Title": "Crop Biomass (g/m2)",
                           "Inverted": false,
                           "Minimum": "NaN",
-                          "Maximum": 300.0,
+                          "Maximum": "NaN",
                           "Interval": "NaN",
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
@@ -50886,7 +50023,7 @@
                           "Inverted": false,
                           "Minimum": 0.0,
                           "Maximum": "NaN",
-                          "Interval": 1.0,
+                          "Interval": "NaN",
                           "DateTimeAxis": false,
                           "CrossesAtZero": false
                         },
