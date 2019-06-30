@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using Models.Core.Run;
     using System.Threading;
+    using System.Globalization;
 
     /// <summary>
     /// # [Name]
@@ -195,7 +196,7 @@
                 {
                     foreach (DataRow row in table.Rows)
                         if (!DBNull.Value.Equals(row[icol]))
-                            row[icol] = Convert.ToDateTime(row[icol]).Date;
+                            row[icol] = Convert.ToDateTime(row[icol], CultureInfo.InvariantCulture).Date;
                 }
         }
 

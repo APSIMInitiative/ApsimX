@@ -3,6 +3,7 @@ using System.Text;
 using System.Xml;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Globalization;
 
 namespace CMPServices
 {
@@ -963,7 +964,7 @@ namespace CMPServices
                     case TBaseType.ITYPE_SINGLE:
                         { //4 byte
                             if (value <= Single.MaxValue)
-                                FData = BitConverter.GetBytes(Convert.ToSingle(value));
+                                FData = BitConverter.GetBytes(Convert.ToSingle(value, CultureInfo.InvariantCulture));
                         } break;
                     case TBaseType.ITYPE_DOUBLE:
                         {
@@ -1123,13 +1124,12 @@ namespace CMPServices
                     case TBaseType.ITYPE_INT4:
                     case TBaseType.ITYPE_INT8: 
                         if (value.Length > 0)
-                            setValue(Convert.ToInt64(value)); break;
+                            setValue(Convert.ToInt64(value, CultureInfo.InvariantCulture)); break;
                     case TBaseType.ITYPE_SINGLE:
                     case TBaseType.ITYPE_DOUBLE:
                         {
                             if (value.Length > 0)
-                                setValue(Convert.ToDouble(value, 
-                                                          System.Globalization.CultureInfo.InvariantCulture));
+                                setValue(Convert.ToDouble(value, CultureInfo.InvariantCulture));
                             else
                                 setValue(0);
                         } break;
@@ -1187,10 +1187,9 @@ namespace CMPServices
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
                     case TBaseType.ITYPE_INT4:
-                    case TBaseType.ITYPE_INT8: setValue(Convert.ToInt64(value)); break;
+                    case TBaseType.ITYPE_INT8: setValue(Convert.ToInt64(value, CultureInfo.InvariantCulture)); break;
                     case TBaseType.ITYPE_SINGLE:
-                    case TBaseType.ITYPE_DOUBLE: setValue(Convert.ToDouble(value, 
-                                                                           System.Globalization.CultureInfo.InvariantCulture)); break;
+                    case TBaseType.ITYPE_DOUBLE: setValue(Convert.ToDouble(value, CultureInfo.InvariantCulture)); break;
                     case TBaseType.ITYPE_CHAR:
                         { //single byte char
                             FData = ascii.GetBytes(value.ToString());
@@ -1247,7 +1246,7 @@ namespace CMPServices
                                     break;
                                 }
                             case TBaseType.ITYPE_INT8:
-                                result = setValue(Convert.ToInt64(srcValue.asDouble()));
+                                result = setValue(Convert.ToInt64(srcValue.asDouble(), CultureInfo.InvariantCulture));
                                 break;
                             case TBaseType.ITYPE_DOUBLE:
                                 {
@@ -1575,7 +1574,7 @@ namespace CMPServices
                     case TBaseType.ITYPE_SINGLE:
                     case TBaseType.ITYPE_STR:
                     case TBaseType.ITYPE_WSTR:
-                        value = Convert.ToInt32(Math.Floor(asDouble() + 0.5)); break;
+                        value = Convert.ToInt32(Math.Floor(asDouble() + 0.5), CultureInfo.InvariantCulture); break;
 
                     default:
                         {
@@ -1632,7 +1631,7 @@ namespace CMPServices
             {
                 switch (FBaseType)
                 {
-                    case TBaseType.ITYPE_DOUBLE: value = Convert.ToSingle(asDouble());    break;
+                    case TBaseType.ITYPE_DOUBLE: value = Convert.ToSingle(asDouble(), CultureInfo.InvariantCulture);    break;
                     case TBaseType.ITYPE_SINGLE: value = BitConverter.ToSingle(FData, 0); break;
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
@@ -1645,7 +1644,7 @@ namespace CMPServices
                             buf = asStr();
                             if (buf.Length < 1)
                                 buf = "0";
-                            value = Convert.ToSingle(buf);
+                            value = Convert.ToSingle(buf, CultureInfo.InvariantCulture);
                         }
                         break;
                     default:
