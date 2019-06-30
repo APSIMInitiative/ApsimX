@@ -127,7 +127,7 @@
                          jobRunner.NumberOfSimulationsCompleted + " of " +
                          (jobRunner.TotalNumberOfSimulations) + " completed)", Simulation.MessageType.Information);
 
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.PercentComplete()));
+                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.PercentComplete(), CultureInfo.InvariantCulture));
             }
         }
     }

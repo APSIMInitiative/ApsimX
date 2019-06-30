@@ -11,6 +11,7 @@ using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
+using System.Globalization;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileGRASP.cs" company="APSIM Initiative">
@@ -394,7 +395,7 @@ namespace Models.CLEM
             int i = 0;
             foreach (DataRow row in distinctStkRates.Rows)
             {
-                results[i] = Convert.ToDouble(row["StkRate"]);
+                results[i] = Convert.ToDouble(row["StkRate"], CultureInfo.InvariantCulture);
                 i++;
             }
 

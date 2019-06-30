@@ -173,7 +173,7 @@
                 {
                     foreach (DataRow row in table.Rows)
                         if (!DBNull.Value.Equals(row[icol]))
-                            row[icol] = Convert.ToDateTime(row[icol]).Date;
+                            row[icol] = Convert.ToDateTime(row[icol], CultureInfo.InvariantCulture).Date;
                 }
         }
 

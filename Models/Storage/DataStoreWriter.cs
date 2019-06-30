@@ -368,7 +368,7 @@
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
                 {
-                    int id = Convert.ToInt32(row["ID"]);
+                    int id = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture);
                     string folderName = null;
                     if (data.Columns.Contains("FolderName"))
                         folderName = row["FolderName"].ToString();

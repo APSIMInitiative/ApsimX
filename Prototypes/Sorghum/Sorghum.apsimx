@@ -66,6 +66,83 @@
       "Name": "Replacements",
       "Children": [
         {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Sorghum].Phenology.DaysAfterSowing as Das",
+            "[Sorghum].Phenology.CurrentStageName as Stage",
+            "[Sorghum].TotalLive.Wt as BiomassWt",
+            "[Sorghum].Grain.Size * 1000 as GrainSize // FIXME!",
+            "[Sorghum].Grain.NumberFunction as GrainNoFunc",
+            "[Sorghum].Grain.Number as GrainNo",
+            "[Sorghum].Leaf.LAI as LAI",
+            "[Sorghum].Root.Live.Wt as RootGreenWt",
+            "[Sorghum].Leaf.Live.Wt as LeafGreenWt",
+            "[Sorghum].Stem.Live.Wt as StemGreenWt",
+            "[Sorghum].Rachis.Live.Wt as RachisGreenWt",
+            "[Sorghum].Grain.Live.Wt as GrainGreenWt",
+            "[Sorghum].Total.N as BiomassN",
+            "[Sorghum].TotalLive.N as biomass_n",
+            "[Sorghum].Root.Live.N as RootGreenN",
+            "[Sorghum].Leaf.Live.N as LeafGreenN",
+            "[Sorghum].Stem.Live.N as StemGreenN",
+            "[Sorghum].Rachis.Live.N as RachisGreenN",
+            "[Sorghum].Grain.Live.N as GrainGreenN",
+            "[Sorghum].Grain.Live.NConc as GrainGreenNConc",
+            "//[Sorghum].Leaf.Number as LeafNo",
+            "sum([Soil].SoilWater.ESW) as ESW",
+            "sum([Soil].SoilNitrogen.NO3.kgha) as NO3",
+            "[Sorghum].Leaf.SLN as SLN",
+            "sum([Soil].SoilWater.SW) as sw",
+            "// HI",
+            "",
+            "[Sorghum].Leaf.LAI / [Sorghum].Population * 10000 as GPLA",
+            "[Sorghum].Leaf.LAIDead / [Sorghum].Population * 10000 as SPLA",
+            "([Sorghum].Leaf.LAIDead / [Sorghum].Population + [Sorghum].Leaf.LAI / [Sorghum].Population) * 10000 as TPLA // gpla + spla as per old apsim. this assumes paddock area = 1ha",
+            "//[Sorghum].Leaf.LAITotal as TPLA // ??",
+            "[Sorghum].Leaf.LAIDead as SPLA",
+            "// Yield",
+            "[Sorghum].AboveGround.Wt // g/m2 - Biomass (kg/ha) in old Apsim",
+            "",
+            "// Variables in old apsim:",
+            "//",
+            "//DaysAfterSowing as Das",
+            "//Stage",
+            "//GrainSize",
+            "//GrainNo",
+            "//MaxLAI as LaiAnth",
+            "//RootGreenWt",
+            "//LeafGreenWt",
+            "//StemGreenWt",
+            "//RachisGreenWt",
+            "//GrainGreenWt",
+            "//biomass_n",
+            "//RootGreenN",
+            "//LeafGreenN",
+            "//StemGreenN",
+            "//RachisGreenN",
+            "//GrainGreenN",
+            "//GrainGreenNConc",
+            "//LeafNo",
+            "//ESW",
+            "//no3() as NO3",
+            "//SLN",
+            "//sw()",
+            "//HI",
+            "//TPLA",
+            "//SPLA",
+            "//Yield",
+            "//Biomass"
+          ],
+          "EventNames": [
+            "[Sorghum].Harvesting"
+          ],
+          "Name": "outputfile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.PMF.Plant, Models",
           "CropType": "Sorghum",
           "IsEnding": false,
@@ -1890,88 +1967,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "NumberFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MinimumFunction, Models",
-                      "Name": "MinimumFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grain].FinalGrainNum.Value()",
-                          "Name": "FinalGrainNum",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].FinalGrainNum.Value()",
-                              "Name": "FinalGrainNum",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "DivideFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].TTStartGrainToNow.Value()",
-                                  "Name": "TTStartGrainToNow",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 100.0,
-                                  "Units": null,
-                                  "Name": "RampTT",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Grain].TemperatureFactor.Value()",
-                      "Name": "TemperatureFactor",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "StartGrainFill",
                   "ReSetEvent": "Germination",
@@ -2156,6 +2151,97 @@
                       "VariableName": "[Phenology].ThermalTimeFM.Value()",
                       "Name": "ThermalTime",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.EndOfDayFunction, Models",
+                  "Name": "NumberFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "NumberFunctionValue",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "MinimumFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Grain].FinalGrainNum.Value()",
+                              "Name": "FinalGrainNum",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "MultiplyFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grain].FinalGrainNum.Value()",
+                                  "Name": "FinalGrainNum",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "DivideFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grain].TTStartGrainToNow.Value()",
+                                      "Name": "TTStartGrainToNow",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 100.0,
+                                      "Units": null,
+                                      "Name": "RampTT",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Grain].TemperatureFactor.Value()",
+                          "Name": "TemperatureFactor",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3972,6 +4058,8 @@
               "LeafInitialisationStage": "Emergence",
               "KDead": 0.03,
               "LAIDead": 0.0,
+              "NitrogenPhotoStress": 0.0,
+              "NitrogenPhenoStress": 0.0,
               "PhosphorusStress": 1.0,
               "senRadnCrit": 0.0,
               "senLightTimeConst": 10.0,
@@ -8093,15 +8181,6 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].NDemands.Structural",
-                              "Name": "structural",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -8509,83 +8588,6 @@
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report.Report, Models",
-          "VariableNames": [
-            "[Sorghum].Phenology.DaysAfterSowing as Das",
-            "[Sorghum].Phenology.CurrentStageName as Stage",
-            "[Sorghum].TotalLive.Wt as BiomassWt",
-            "[Sorghum].Grain.Size * 1000 as GrainSize // FIXME!",
-            "[Sorghum].Grain.NumberFunction as GrainNoFunc",
-            "[Sorghum].Grain.Number as GrainNo",
-            "[Sorghum].Leaf.LAI as LAI",
-            "[Sorghum].Root.Live.Wt as RootGreenWt",
-            "[Sorghum].Leaf.Live.Wt as LeafGreenWt",
-            "[Sorghum].Stem.Live.Wt as StemGreenWt",
-            "[Sorghum].Rachis.Live.Wt as RachisGreenWt",
-            "[Sorghum].Grain.Live.Wt as GrainGreenWt",
-            "[Sorghum].Total.N as BiomassN",
-            "[Sorghum].TotalLive.N as biomass_n",
-            "[Sorghum].Root.Live.N as RootGreenN",
-            "[Sorghum].Leaf.Live.N as LeafGreenN",
-            "[Sorghum].Stem.Live.N as StemGreenN",
-            "[Sorghum].Rachis.Live.N as RachisGreenN",
-            "[Sorghum].Grain.Live.N as GrainGreenN",
-            "[Sorghum].Grain.Live.NConc as GrainGreenNConc",
-            "//[Sorghum].Leaf.Number as LeafNo",
-            "sum([Soil].SoilWater.ESW) as ESW",
-            "sum([Soil].SoilNitrogen.NO3.kgha) as NO3",
-            "[Sorghum].Leaf.SLN as SLN",
-            "sum([Soil].SoilWater.SW) as sw",
-            "// HI",
-            "",
-            "[Sorghum].Leaf.LAI / [Sorghum].Population * 10000 as GPLA",
-            "[Sorghum].Leaf.LAIDead / [Sorghum].Population * 10000 as SPLA",
-            "([Sorghum].Leaf.LAIDead / [Sorghum].Population + [Sorghum].Leaf.LAI / [Sorghum].Population) * 10000 as TPLA // gpla + spla as per old apsim. this assumes paddock area = 1ha",
-            "//[Sorghum].Leaf.LAITotal as TPLA // ??",
-            "[Sorghum].Leaf.LAIDead as SPLA",
-            "// Yield",
-            "[Sorghum].AboveGround.Wt // g/m2 - Biomass (kg/ha) in old Apsim",
-            "",
-            "// Variables in old apsim:",
-            "//",
-            "//DaysAfterSowing as Das",
-            "//Stage",
-            "//GrainSize",
-            "//GrainNo",
-            "//MaxLAI as LaiAnth",
-            "//RootGreenWt",
-            "//LeafGreenWt",
-            "//StemGreenWt",
-            "//RachisGreenWt",
-            "//GrainGreenWt",
-            "//biomass_n",
-            "//RootGreenN",
-            "//LeafGreenN",
-            "//StemGreenN",
-            "//RachisGreenN",
-            "//GrainGreenN",
-            "//GrainGreenNConc",
-            "//LeafNo",
-            "//ESW",
-            "//no3() as NO3",
-            "//SLN",
-            "//sw()",
-            "//HI",
-            "//TPLA",
-            "//SPLA",
-            "//Yield",
-            "//Biomass"
-          ],
-          "EventNames": [
-            "[Sorghum].Harvesting"
-          ],
-          "Name": "outputfile",
-          "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false

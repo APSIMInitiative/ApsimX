@@ -117,6 +117,7 @@ namespace Models.PMF
             double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
             {
+                // Z.Water calculated as Supply * fraction used
                 waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
             }
 
@@ -128,7 +129,7 @@ namespace Models.PMF
 
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
-            if (WDemand > 0)
+            if (MathUtilities.IsPositive(WDemand))
                 fraction = Math.Min(1.0, waterSupply / WDemand);
 
             // Proportionally allocate supply across organs.
@@ -170,6 +171,7 @@ namespace Models.PMF
                     myZone.Depth += 0;
                 }
                 var currentLayer = Soils.Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
+                var currentLayerProportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
@@ -177,13 +179,15 @@ namespace Models.PMF
                     myZone.AvailableSW[layer] = myZone.soil.Water[layer] - myZone.soil.LL15mm[layer];
                     myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
 
+                    if (layer == currentLayer)
+                    {
+                        myZone.AvailableSW[layer] *= currentLayerProportion;
+                        myZone.PotentialAvailableSW[layer] *= currentLayerProportion;
+                    }
+
                     var proportion = root.rootProportionInLayer(layer, myZone);
                     myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
                 }
-                var currentLayerProportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
-                myZone.AvailableSW[currentLayer] *= currentLayerProportion;
-                myZone.PotentialAvailableSW[currentLayer] *= currentLayerProportion;
-
                 var totalAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();
@@ -239,11 +243,11 @@ namespace Models.PMF
                 
                 //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 //old sorghum uses g/m^2 - need to convert after it is used to calculate actual diffusion
-                var nDemand = N.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
+                // leaf adjustment is not needed here because it is an adjustment for structural demand - we only look at metabolic here.
+                var nDemand = Math.Max(0, N.TotalMetabolicDemand - grainDemand); // to replicate calcNDemand in old sorghum 
                                 
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
-
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
@@ -294,7 +298,7 @@ namespace Models.PMF
                             var maxRate = root.MaxNUptakeRate.Value();
 
                             var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * root.MaxNUptakeRate.Value();
-                            var maxUptake = maxUptakeRateFrac * dltt - actualMassFlow;
+                            var maxUptake = Math.Max(0, maxUptakeRateFrac * dltt - actualMassFlow);
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
 
@@ -311,9 +315,13 @@ namespace Models.PMF
                     }
                     //originalcode
                     UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
+                    if (UptakeDemands.NO3N.Any(n => MathUtilities.IsNegative(n)))
+                        throw new Exception("-ve no3 uptake demand");
                     UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
 
                     N.UptakeSupply[rootIndex] += MathUtilities.Sum(organNO3Supply) * kgha2gsm * zone.Zone.Area / Plant.Zone.Area;  //g/^m
+                    if (MathUtilities.IsNegative(N.UptakeSupply[rootIndex]))
+                        throw new Exception($"-ve uptake supply for organ {(Organs[rootIndex] as IModel).Name}");
                     nSupply += MathUtilities.Sum(organNO3Supply) * zone.Zone.Area;
                     zones.Add(UptakeDemands);
                 }
@@ -361,7 +369,7 @@ namespace Models.PMF
                     no3Diffusion *= proportion;
                 }
 
-                myZone.Diffusion[layer] = no3Diffusion;
+                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
 
                 //NH4Supply[layer] = no3massFlow;
                 //onyl 2 fields passed in for returning data. 
@@ -397,7 +405,11 @@ namespace Models.PMF
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 for (int i = 0; i < Organs.Count; i++)
+                {
                     N.UptakeSupply[i] = nSupply / Plant.Zone.Area * N.UptakeSupply[i] / N.TotalUptakeSupply * kgha2gsm;
+                    if (MathUtilities.IsNegative(N.UptakeSupply[i]))
+                        throw new Exception($"-ve uptake supply for organ {(Organs[i] as IModel).Name}");
+                }
 
                 //Allocate N that the SoilArbitrator has allocated the plant to each organ
                 AllocateUptake(Organs.ToArray(), N, NArbitrator);
@@ -415,7 +427,7 @@ namespace Models.PMF
         /// <param name="arbitrator">The option.</param>
         override public void Retranslocation(IArbitration[] Organs, BiomassArbitrationType BAT, IArbitrationMethod arbitrator)
         {
-            if (BAT.TotalRetranslocationSupply > 0.00000000001)
+            if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
             {
                 var nArbitrator = arbitrator as SorghumArbitratorN;
                 if (nArbitrator != null)
@@ -425,12 +437,12 @@ namespace Models.PMF
                 else
                 {
                     double BiomassRetranslocated = 0;
-                    if (BAT.TotalRetranslocationSupply > 0.00000000001)
+                    if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
                     {
                         arbitrator.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
                         // Then calculate how much DM (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
                         for (int i = 0; i < Organs.Length; i++)
-                            if (BAT.RetranslocationSupply[i] > 0.00000000001)
+                            if (MathUtilities.IsPositive(BAT.RetranslocationSupply[i]))
                             {
                                 double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
                                 BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
