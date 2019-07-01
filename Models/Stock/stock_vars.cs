@@ -9,6 +9,7 @@ namespace Models.GrazPlan
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
 
     /// <summary>
     /// Livestock metabolizable energy partition
@@ -450,7 +451,7 @@ namespace Models.GrazPlan
                 {
                     damBreed = parameters.sParentageBreed(0);
                     sireBreed = parameters.sParentageBreed(1);
-                    generation = Convert.ToInt32(Math.Max(0, Math.Round(Math.Log(parameters.fParentagePropn(0)) / Math.Log(0.5))));    // TODO: may need checking
+                    generation = Convert.ToInt32(Math.Max(0, Math.Round(Math.Log(parameters.fParentagePropn(0)) / Math.Log(0.5))), CultureInfo.InvariantCulture);    // TODO: may need checking
                 }
                 else if (parameters.iParentageCount() == 2)
                 {

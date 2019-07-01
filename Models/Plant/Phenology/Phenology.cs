@@ -7,6 +7,7 @@ using System.IO;
 using System.Data;
 using System.Linq;
 using Models.PMF.Struct;
+using System.Globalization;
 
 namespace Models.PMF.Phen
 {
@@ -187,7 +188,7 @@ namespace Models.PMF.Phen
             if (newStage > phases.Count()+1)
                 throw new Exception(this + " Trying to set to non-existant stage");
 
-            currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage)) - 1;
+            currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage), CultureInfo.InvariantCulture) - 1;
 
             if (newStage < Stage) 
             {
@@ -401,7 +402,15 @@ namespace Models.PMF.Phen
 
                     if(SorghumFlag != null && CurrentPhase is EmergingPhase)
                     {
-                        propOfDayToUse = 0.0;
+                        // void accumulate(...)
+                        double dltPhase = 1.0 + Stage % 1.0;
+                        double newStage = Math.Floor(Stage) + dltPhase;
+                        double dltStage = newStage - Stage;
+                        double pIndex = Stage;
+                        double dltIndex = dltStage;
+                        double indexDevel = pIndex - Math.Floor(pIndex) + dltIndex;
+                        double portionInOld = 1 - APSIM.Shared.Utilities.MathUtilities.Divide(indexDevel - 1, dltIndex, 0);
+                        propOfDayToUse = 1 - portionInOld;
                     }
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
@@ -412,11 +421,8 @@ namespace Models.PMF.Phen
 
                 Stage = (currentPhaseIndex + 1) + resetSorghumStage * CurrentPhase.FractionComplete;
 
-               if (plant != null)
-                    if (plant.IsAlive && PostPhenology != null)
+                if (plant != null && plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());
-
-                
             }
         }
 

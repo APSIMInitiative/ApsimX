@@ -12,6 +12,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -112,7 +113,7 @@
             }
             set
             {
-                NumPaths = Convert.ToInt32(value[0].Rows[0][1]);
+                NumPaths = Convert.ToInt32(value[0].Rows[0][1], CultureInfo.InvariantCulture);
 
                 Parameters.Clear();
                 foreach (DataRow row in value[1].Rows)
@@ -123,9 +124,9 @@
                     if (!Convert.IsDBNull(row["Path"]))
                         param.Path = row["Path"].ToString();
                     if (!Convert.IsDBNull(row["LowerBound"]))
-                        param.LowerBound = Convert.ToDouble(row["LowerBound"]);
+                        param.LowerBound = Convert.ToDouble(row["LowerBound"], CultureInfo.InvariantCulture);
                     if (!Convert.IsDBNull(row["UpperBound"]))
-                        param.UpperBound = Convert.ToDouble(row["UpperBound"]);
+                        param.UpperBound = Convert.ToDouble(row["UpperBound"], CultureInfo.InvariantCulture);
                     if (param.Name != null || param.Path != null)
                         Parameters.Add(param);
                 }
@@ -237,7 +238,7 @@
                     var factors = new List<CompositeFactor>();
                     for (int p = 0; p < Parameters.Count; p++)
                     {
-                        object value = Convert.ToDouble(parameterRow[p]);
+                        object value = Convert.ToDouble(parameterRow[p], CultureInfo.InvariantCulture);
                         var f = new CompositeFactor(Parameters[p].Name, Parameters[p].Path, value);
                         factors.Add(f);
                     }

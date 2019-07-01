@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
+using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -102,15 +103,25 @@ namespace Models.CLEM.Activities
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
-                        Status = ActivityStatus.Success;
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
-                    if (weanedCount > Convert.ToInt32(count * labourlimit))
+                    if (weanedCount > Convert.ToInt32(count * labourlimit, CultureInfo.InvariantCulture))
                     {
+                        this.Status = ActivityStatus.Partial;
                         break;
                     }
                 }
+
+                if(weanedCount > 0)
+                {
+                    SetStatusSuccess();
+                }
+                else
+                {
+                    this.Status = ActivityStatus.NotNeeded;
+                }
+
             }
         }
 
@@ -162,7 +173,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            Status = ActivityStatus.NotNeeded;
             return;
         }
 

@@ -703,7 +703,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (MicroClimatePresent)
+                if ((MicroClimatePresent) && (LightProfile != null))
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)

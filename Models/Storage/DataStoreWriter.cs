@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.Linq;
     using System.Threading;
 
@@ -362,7 +363,7 @@
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
                 {
-                    int id = Convert.ToInt32(row["ID"]);
+                    int id = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture);
                     string folderName = row["FolderName"].ToString();
                     simulationIDs.Add(row["Name"].ToString(),
                                       new SimulationDetails() { ID = id, FolderName = folderName });
@@ -374,7 +375,7 @@
             {
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
-                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture));
             }
         }
 

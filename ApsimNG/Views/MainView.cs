@@ -166,6 +166,12 @@
             stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
 
+            if (ProcessUtilities.CurrentOS.IsWindows && Utility.Configuration.Settings.Font == null)
+            {
+                // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
+                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11");
+            }
+
             // Can't set font until widgets are initialised.
             if (Utility.Configuration.Settings.Font != null)
                 ChangeFont(Utility.Configuration.Settings.Font);
