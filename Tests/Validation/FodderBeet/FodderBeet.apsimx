@@ -2224,17 +2224,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.PMF.Plant, Models",
-                              "CropType": "FodderBeet",
-                              "IsEnding": false,
-                              "DaysAfterEnding": 0,
-                              "ResourceName": "FodderBeet",
-                              "Name": "FodderBeet",
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.MicroClimate, Models",
                               "a_interception": 0.0,
                               "b_interception": 1.0,
@@ -2588,6 +2577,17 @@
                               ],
                               "Name": "Report",
                               "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.Plant, Models",
+                              "CropType": "FodderBeet",
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
+                              "ResourceName": "FodderBeet",
+                              "Name": "FodderBeet",
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
