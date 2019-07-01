@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using Views;
@@ -93,7 +94,7 @@
             }
 
             // Add all simulations to table up to the maximum number of sims to display.
-            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value);
+            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value, CultureInfo.InvariantCulture);
             var cellRenderDetails = new List<CellRendererDescription>();
             for (int i = 0; i < Math.Min(simulationDescriptions.Count, maximumNumberOfSimulations); i++)
             {

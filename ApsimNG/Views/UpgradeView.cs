@@ -122,6 +122,7 @@ namespace UserInterface.Views
             htmlAlign.Add(htmlView.MainWidget);
             tabbedExplorerView = owner as IMainView;
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
+            window1.Modal = true;
             oldVersions.Toggled += OnShowOldVersionsToggled;
             button1.Clicked += OnUpgrade;
             button2.Clicked += OnViewMoreDetail;
@@ -290,9 +291,7 @@ namespace UserInterface.Views
                     if (!checkbutton1.Active)
                         throw new Exception("You must agree to the license terms before upgrading.");
 
-                    if (String.IsNullOrWhiteSpace(firstNameBox.Text) || String.IsNullOrWhiteSpace(lastNameBox.Text) ||
-                        String.IsNullOrWhiteSpace(emailBox.Text) || String.IsNullOrWhiteSpace(countryBox.ActiveText))
-                        throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
+                    AssertInputsAreValid();
 
                     Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
                     Upgrade upgrade = upgradeList[selIndex];
@@ -301,6 +300,17 @@ namespace UserInterface.Views
                     if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo, window1) == Gtk.ResponseType.Yes)
                     {
+                        // Write to the registration database.
+                        AssertInputsAreValid();
+                        try
+                        {
+                            WriteUpgradeRegistration(versionNumber);
+                        }
+                        catch (Exception err)
+                        {
+                            throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
+                        }
+
                         window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
@@ -361,6 +371,18 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Throws if user has not provided info in a mandatory field.
+        /// </summary>
+        private void AssertInputsAreValid()
+        {
+            if (string.IsNullOrWhiteSpace(firstNameBox.Text) || 
+                string.IsNullOrWhiteSpace(lastNameBox.Text) ||
+                string.IsNullOrWhiteSpace(emailBox.Text) || 
+                string.IsNullOrWhiteSpace(countryBox.ActiveText))
+                throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
+        }
+
+        /// <summary>
         /// Invoked when the download progress changes.
         /// Updates the progress bar.
         /// </summary>
@@ -403,9 +425,6 @@ namespace UserInterface.Views
                 {
                     if (e.Error != null) // On Linux, we get to this point even when errors have occurred
                         throw e.Error;
-
-                    // Write to the registration database.
-                    WriteUpgradeRegistration(versionNumber);
 
                     if (File.Exists(tempSetupFileName))
                     {
@@ -467,25 +486,27 @@ namespace UserInterface.Views
         /// </summary>
         private void WriteUpgradeRegistration(string version)
         {
-            string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/AddNew";
+            string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/AddRegistration";
             url += "?firstName=" + firstNameBox.Text;
 
             url = AddToURL(url, "lastName", lastNameBox.Text);
             url = AddToURL(url, "organisation", organisationBox.Text);
             url = AddToURL(url, "country", countryBox.ActiveText);
             url = AddToURL(url, "email", emailBox.Text);
+            url = AddToURL(url, "product", "APSIM Next Generation");
+            url = AddToURL(url, "version", version);
+            url = AddToURL(url, "platform", GetPlatform());
+            url = AddToURL(url, "type", "Upgrade");
 
-            string product = "APSIM Next Generation";
-            if (ProcessUtilities.CurrentOS.IsWindows)
-                product += " (Windows)";
-            else if (ProcessUtilities.CurrentOS.IsMac)
-                product += " (Mac)";
-            else if (ProcessUtilities.CurrentOS.IsLinux)
-                product += " (Debian)"; // fixme - linux != debian
-            product += " Upgrade";
-            url = AddToURL(url, "product",  product);
-
-            WebUtilities.CallRESTService<object>(url);
+            try
+            {
+                WebUtilities.CallRESTService<object>(url);
+            }
+            catch
+            {
+                // Retry once.
+                WebUtilities.CallRESTService<object>(url);
+            }
         }
 
         /// <summary>Add a key / value pair to url if not empty</summary>
@@ -494,6 +515,20 @@ namespace UserInterface.Views
             if (value == null || value == string.Empty)
                 value = "-";
             return url + "&" + key + "=" + value;
+        }
+
+        /// <summary>
+        /// Gets the platform name used when writing to registration database.
+        /// </summary>
+        private string GetPlatform()
+        {
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                return "Windows";
+            else if (ProcessUtilities.CurrentOS.IsMac)
+                return "Mac";
+            else if (ProcessUtilities.CurrentOS.IsLinux)
+                return "Linux";
+            return "?";
         }
 
         /// <summary>

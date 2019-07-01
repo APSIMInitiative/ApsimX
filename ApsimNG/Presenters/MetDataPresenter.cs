@@ -9,6 +9,7 @@ namespace UserInterface.Presenters
     using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
+    using System.Globalization;
     using System.IO;
     using System.Text;
     using APSIM.Shared.Utilities;
@@ -128,11 +129,11 @@ namespace UserInterface.Presenters
             {
                 using (DataTable data = this.graphMetData)
                 {
-                    DateTime startDate = new DateTime(Convert.ToInt16(startYear), 1, 1);
-                    DateTime endDate = new DateTime(Convert.ToInt16(startYear), 12, 31);
+                    DateTime startDate = new DateTime(Convert.ToInt16(startYear, CultureInfo.InvariantCulture), 1, 1);
+                    DateTime endDate = new DateTime(Convert.ToInt16(startYear, CultureInfo.InvariantCulture), 12, 31);
                     if (showYears > 1)
                     {
-                        endDate = endDate.AddYears(Convert.ToInt16(showYears) - 1);
+                        endDate = endDate.AddYears(Convert.ToInt16(showYears, CultureInfo.InvariantCulture) - 1);
                     }
 
                     this.DisplayDetailedGraphs(data, tabIndex, startDate, endDate, false);
@@ -283,8 +284,8 @@ namespace UserInterface.Presenters
                         DateTime rowDate;
                         try
                         {
-                            yr = Convert.ToInt32(data.Rows[r][yearCol]);
-                            day = Convert.ToInt32(data.Rows[r][dayCol]);
+                            yr = Convert.ToInt32(data.Rows[r][yearCol], CultureInfo.InvariantCulture);
+                            day = Convert.ToInt32(data.Rows[r][dayCol], CultureInfo.InvariantCulture);
                             rowDate = new DateTime(yr, 1, 1);
                         }
                         catch (Exception err)

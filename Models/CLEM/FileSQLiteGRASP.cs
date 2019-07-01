@@ -11,6 +11,7 @@ using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
+using System.Globalization;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileSQLiteGRASP.cs" company="CSIRO">
@@ -147,7 +148,7 @@ namespace Models.CLEM
                 int i = 0;
                 foreach (DataRow row in res.Rows)
                 {
-                    results[i] = Convert.ToDouble(row[0]);
+                    results[i] = Convert.ToDouble(row[0], CultureInfo.InvariantCulture);
                     i++;
                 }
                 return results;
@@ -374,6 +375,10 @@ namespace Models.CLEM
             }
 
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
+            if(results.Rows.Count == 0)
+            {
+                return null;
+            }
             results.DefaultView.Sort = "Year, Month";
 
             List<PastureDataType> pastureDetails = new List<PastureDataType>();

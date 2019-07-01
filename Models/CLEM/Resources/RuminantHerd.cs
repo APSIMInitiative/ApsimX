@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using Models.Core;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
+using System.Globalization;
 
 namespace Models.CLEM.Resources
 {
@@ -193,7 +194,7 @@ namespace Models.CLEM.Resources
                         // calculate number of births assuming conception at min age first mating
                         // therefore first birth min age + gestation length
 
-                        female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2)) - 1;
+                        female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
                         female.AgeAtLastBirth = ageFirstBirth + (currentIPI* female.NumberOfBirths);
                         female.AgeAtLastConception = female.AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
                         female.SuccessfulPregnancy = true;

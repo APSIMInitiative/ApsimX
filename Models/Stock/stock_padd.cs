@@ -6,6 +6,7 @@ namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Models.Core;
     using Models.PMF.Interfaces;
@@ -314,8 +315,8 @@ namespace Models.GrazPlan
 
             double[] result = new double[GrazType.DigClassNo + 1];
 
-            highClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - maxDMD + EPSILON) / CLASSWIDTH));
-            lowClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - minDMD - EPSILON) / CLASSWIDTH));
+            highClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - maxDMD + EPSILON) / CLASSWIDTH), CultureInfo.InvariantCulture);
+            lowClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - minDMD - EPSILON) / CLASSWIDTH), CultureInfo.InvariantCulture);
             if (highClass != lowClass)
                 relDMD = Math.Max(0.0, Math.Min((meanDMD - GrazType.ClassDig[lowClass]) / (GrazType.ClassDig[highClass] - GrazType.ClassDig[lowClass]), 1.0));
             else
