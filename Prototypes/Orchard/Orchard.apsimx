@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 452,
+  "ExplorerWidth": 283,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
@@ -27,7 +27,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\n# SimpleFruitTree\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of perennial tree and vine crops.  Its scope is intended for use in water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model has simple functions for estimating the growht and nitrogen uptake of different organs and anohter simple function for predicting canopy size so water uptake can be predicted.\n\nThe model has currently been parameterised and tested for 4 genotpes; Apple, Kiwifruit, Grape and Peach.\n\nSimpleFruitTree has a simple phenology model that breaks the annual growth cycle into 4 phases:\n\n   1. The <b>Dormancy</b> phase when the tree is a bare trunk, using no water, growing no biomass and taking up no Nitrogen\n   2. The <b>CanopyExpansion</b> phase which occurs in the spring when the bulk of biomass assimilation is partitioned to the new leaves with smaller proportions going to trunk and root growth\n   3. The <b>FruitGrowth</b> phase where the bulk of biomass assimilation is partitioned to the growing fruit with smaller proportions going to leaf, trunk and root growth\n   4. The <b>LeafFall</b> phase where any further biomass assimilated is partitioned to the trunk and roots. \n\nAs infered above the SimpleFruitTree consists of 4 organs:  \n\n   1. <b>Leaf</b> which ls represented with the Simpleleaf class and provides estimates of:\n    - Leaf area index that the MicroClimate model uses to estimate the radiation of the tree canopy and the grass in the underlying alley\n    - Water uptake demand that the soil arbitrator uses to estimate soil water extraction\n    - Photosynthesis estimates (Using radiation use efficiency) to drive tree biomass production\n    - Biomass demand that is used to grow leaf biomass and determine N demand for leaf growth\n   2. <b>Fruit</b> which represents the biomass and nitrogen that may be removed from the orchard each year as harvested product\n   3. <b>Trunk</b> which represents the perennial biomass of the trees and will grow a small amount each year but is mostly pruned out at the end of the year and may be returned to the soil surface.\n   4. <b>Root</b> which extracts water and nitrogen from the soil for plant growth, grows a small amount of biomass each year and senesesses a proportion of this to the soil.  \n\n   \n \n#Inclusion in APSIM simulations\nA SimpleFruitTree crop is included in a simulation the same as any other APSIM crop  \n\n * The SimpleFruitTree object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \n * It is then planted with a sowing rule  \n~~~\nSimpleFruitTree.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  \n~~~\n\n  * Note that the SimpleTreeModel has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \n  * `depth` in the Sow arguement is the depth that the crop is sown at.  In most cases the Sow argument is used to initialise an established tree crop so sow depth arguement is used to set the root depth of the trees.  This depth should be set to the rooting depth that is expected as roots will not grow during the simulation.  \n\n#Representing and Orchard System\n * While the SimpleFruitTree model will run as a stand alone model, in most cases fruit trees and vines are grown in rows with a grass or herb ley growing in the alleys.  As such it is important to set up a simulation with two rectangular zones, one with the fruit tree established within and another with the pasture or herb ley established.  In most cases a SLURP is adequate to represent the energy, water and nitrogen balance of the alleys.  \n * As part of the development of this crop model the Microclimate radiation arbitration was improved to be suitable for fruit crop set ups.  This involved modifying the strip crop radiation interception code to allow:\n   1. The entire depth of the tallest (tree) canopy to be taller than the grass growing in the alleys\n   2. The width of the canopy of the trees to exceed the width of the zone that the trees are planted in so they may intercept more radiation that would be possible if they were kept within the spatial confines of the row zone\n\n#Further development requirements\nThe greatest effort has been spent on getting the models water balance predictions working to an adequate standard.  This included running an optimisation procedure against the validation data set to obtain the most suitalbe parameters for water extraction parameters (kl pattern through the soil) and water demand parameters (max canopy conductance and conductance response to light) as well as weather the roots of the alley should be allowed to grow sideways into the row.  \nThe model has been set up to predict biomass accumulation and N uptake but the parameters for this functionality have not be determined from observed or published data so further work is required here.  The rates of senescence of the FruitTree root system and the contribution of the mown grass in the alley to the N and C balance have not yet been established correctly.\n ",
+              "Text": "\n# SimpleFruitTree\n\nThis model has been built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to provide a simple representation of perennial tree and vine crops.  Its scope is intended for use in water and nitrogen balance studies where the focus is on soil processes and a very simple crop is adequate.  The model has simple functions for estimating the growht and nitrogen uptake of different organs and anohter simple function for predicting canopy size so water uptake can be predicted.\n\nThe model has currently been parameterised and tested for 4 genotpes; Apple, Kiwifruit, Grape and Peach.\n\nSimpleFruitTree has a simple phenology model that breaks the annual growth cycle into 4 phases:\n\n   1. The <b>Dormancy</b> phase when the tree is a bare trunk, using no water, growing no biomass and taking up no Nitrogen\n   2. The <b>CanopyExpansion</b> phase which occurs in the spring when the bulk of biomass assimilation is partitioned to the new leaves with smaller proportions going to trunk and root growth\n   3. The <b>FruitGrowth</b> phase where the bulk of biomass assimilation is partitioned to the growing fruit with smaller proportions going to leaf, trunk and root growth\n   4. The <b>LeafFall</b> phase where any further biomass assimilated is partitioned to the trunk and roots. \n\nAs infered above the SimpleFruitTree consists of 4 organs:  \n\n   1. <b>Leaf</b> which ls represented with the Simpleleaf class and provides estimates of:\n    - Leaf area index that the MicroClimate model uses to estimate the radiation of the tree canopy and the grass in the underlying alley\n    - Water uptake demand that the soil arbitrator uses to estimate soil water extraction\n    - Photosynthesis estimates (Using radiation use efficiency) to drive tree biomass production\n    - Biomass demand that is used to grow leaf biomass and determine N demand for leaf growth\n   2. <b>Fruit</b> which represents the biomass and nitrogen that may be removed from the orchard each year as harvested product\n   3. <b>Trunk</b> which represents the perennial biomass of the trees and will grow a small amount each year but is mostly pruned out at the end of the year and may be returned to the soil surface.\n   4. <b>Root</b> which extracts water and nitrogen from the soil for plant growth, grows a small amount of biomass each year and senesesses a proportion of this to the soil.  \n\n   \n \n#Inclusion in APSIM simulations\nA SimpleFruitTree crop is included in a simulation the same as any other APSIM crop  \n\n * The SimpleFruitTree object needs to be dragged or copied from the Crop folder in the tool box into the field of your simulation.  \n * It is then planted with a sowing rule  \n~~~\nSimpleFruitTree.Sow(cultivar: StaticCrop, population: 1, depth: 10, rowSpacing: 150);  \n~~~\n\n  * Note that the SimpleTreeModel has no notion of population or rowSpacing but these parameters are required by the Sow method so filler values are provided  \n  * `depth` in the Sow arguement is the depth that the crop is sown at.  In most cases the Sow argument is used to initialise an established tree crop so sow depth arguement is used to set the root depth of the trees.  This depth should be set to the rooting depth that is expected as roots will not grow during the simulation.  \n\n#Representing and Orchard System\n * While the SimpleFruitTree model will run as a stand alone model, in most cases fruit trees and vines are grown in rows with a grass or herb ley growing in the alleys.  As such it is important to set up a simulation with two rectangular zones, one with the fruit tree established within and another with the pasture or herb ley established.  In most cases a SLURP is adequate to represent the energy, water and nitrogen balance of the alleys.  \n * As part of the development of this crop model the Microclimate radiation arbitration was improved to be suitable for fruit crop set ups.  This involved modifying the strip crop radiation interception code to allow:\n   1. The entire depth of the tallest (tree) canopy to be taller than the grass growing in the alleys\n   2. The width of the canopy of the trees to exceed the width of the zone that the trees are planted in so they may intercept more radiation that would be possible if they were kept within the spatial confines of the row zone\n![Alt Text](RadInt.jpg)\n\n**Figure [FigureNumber]:**  Schematic of radiation interception scheme as modeled for tree row crops\n\n#Further development requirements\nThe greatest effort has been spent on getting the models water balance predictions working to an adequate standard.  This included running an optimisation procedure against the validation data set to obtain the most suitalbe parameters for water extraction parameters (kl pattern through the soil) and water demand parameters (max canopy conductance and conductance response to light) as well as weather the roots of the alley should be allowed to grow sideways into the row.  \nThe model has been set up to predict biomass accumulation and N uptake but the parameters for this functionality have not be determined from observed or published data so further work is required here.  The rates of senescence of the FruitTree root system and the contribution of the mown grass in the alley to the N and C balance have not yet been established correctly.\nKl patterns are currently parameterised in a manager script (so they could be optimised) this needs to be moved into model set up.\nOptimisation was not able to give good fits for both row and alley zones for grape suggesting the kl patterns differ between alley and row.  Further investigation is required to better determine spatial water extraction parameters.\n ",
               "Name": "TitlePage",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -394,11 +394,79 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "SenescenceRate",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.ExponentialFunction, Models",
+                      "A": 0.0,
+                      "B": 1.0,
+                      "C": 1.0,
+                      "Name": "ExponentialFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "DivideFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SubtractFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.SoilTemperatureDepthFunction, Models",
+                                  "Depth": 100.0,
+                                  "Name": "SoilTemperatureDepthFunction",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 20.0,
+                                  "Units": null,
+                                  "Name": "Constant",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 10.0,
+                              "Units": null,
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.015,
+                      "Units": null,
+                      "Name": "Coefficient",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2792,7 +2860,8 @@
                 "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 1300,1600,1600,1300",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.1,1",
-                "[Leaf].Gsmax350 = 0.008"
+                "[Leaf].Gsmax350 = 0.008",
+                "[Leaf].R50 = 100"
               ],
               "Name": "Apple",
               "Children": [
@@ -2827,7 +2896,8 @@
                 "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 5000,5000,5000,5000",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].Gsmax350 = 0.003"
+                "[Leaf].Gsmax350 = 0.006",
+                "[Leaf].R50 = 200"
               ],
               "Name": "Kiwifruit",
               "Children": [
@@ -2862,7 +2932,8 @@
                 "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 300,700,700,300",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].Gsmax350 = 0.006"
+                "[Leaf].Gsmax350 = 0.0045",
+                "[Leaf].R50 = 200"
               ],
               "Name": "Grape_4Cane",
               "Children": [
@@ -2897,7 +2968,8 @@
                 "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 300,700,700,300",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,3",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.7,1",
-                "[Leaf].Gsmax350 = 0.006"
+                "[Leaf].Gsmax350 = 0.0045",
+                "[Leaf].R50 = 200"
               ],
               "Name": "Grape_2Cane",
               "Children": [
@@ -2932,7 +3004,8 @@
                 "[Leaf].WidthFunction.SeasonalWidthPattern.XYPairs.Y= 2400,2400,3000,3000,2400",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.X = 1,6",
                 "[Leaf].WidthFunction.AgeFactor.XYPairs.Y = 0.1,1",
-                "[Leaf].Gsmax350 = 0.002"
+                "[Leaf].Gsmax350 = 0.003",
+                "[Leaf].R50 = 200"
               ],
               "Name": "Peach",
               "Children": [
@@ -3828,11 +3901,11 @@
                 },
                 {
                   "Key": "SurfaceKL",
-                  "Value": "0.2"
+                  "Value": "0.22"
                 },
                 {
                   "Key": "KLReductionFactor",
-                  "Value": "0.003"
+                  "Value": "0.005"
                 },
                 {
                   "Key": "KLReductionDepth",
@@ -6769,6 +6842,48 @@
             },
             {
               "$type": "Models.Manager, Models",
+              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n               }\r\n        }\r\n    }\r\n}            \r\n",
+              "Parameters": [
+                {
+                  "Key": "CultivarName",
+                  "Value": "Kiwifruit"
+                },
+                {
+                  "Key": "SowingDate",
+                  "Value": "2008-07-01"
+                },
+                {
+                  "Key": "StartAge",
+                  "Value": "6"
+                },
+                {
+                  "Key": "SurfaceKL",
+                  "Value": "0.08"
+                },
+                {
+                  "Key": "KLReductionFactor",
+                  "Value": "0.005"
+                },
+                {
+                  "Key": "KLReductionDepth",
+                  "Value": "150"
+                },
+                {
+                  "Key": "YKLModifiers",
+                  "Value": ""
+                },
+                {
+                  "Key": "XDepth",
+                  "Value": ""
+                }
+              ],
+              "Name": "TreeInitialisation",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
               "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            SimpleFruitTree.Root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            SimpleFruitTree.Root.ZoneRootDepths.Add(2600);\r\n            SimpleFruitTree.Root.ZoneInitialDM.Add(10);\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
               "Parameters": [
                 {
@@ -7726,48 +7841,6 @@
               "Code": "using System;\r\nusing Models.Core;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n",
               "Parameters": [],
               "Name": "PlantVariables",
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n               }\r\n        }\r\n    }\r\n}            \r\n",
-              "Parameters": [
-                {
-                  "Key": "CultivarName",
-                  "Value": "Kiwifruit"
-                },
-                {
-                  "Key": "SowingDate",
-                  "Value": "2008-07-01"
-                },
-                {
-                  "Key": "StartAge",
-                  "Value": "6"
-                },
-                {
-                  "Key": "SurfaceKL",
-                  "Value": "0.2"
-                },
-                {
-                  "Key": "KLReductionFactor",
-                  "Value": "0.003"
-                },
-                {
-                  "Key": "KLReductionDepth",
-                  "Value": "150"
-                },
-                {
-                  "Key": "YKLModifiers",
-                  "Value": ""
-                },
-                {
-                  "Key": "XDepth",
-                  "Value": ""
-                }
-              ],
-              "Name": "TreeInitialisation",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -11768,7 +11841,7 @@
                 },
                 {
                   "Key": "SurfaceKL",
-                  "Value": "0.16"
+                  "Value": "0.13"
                 },
                 {
                   "Key": "KLReductionFactor",
@@ -15495,7 +15568,7 @@
                 },
                 {
                   "Key": "SurfaceKL",
-                  "Value": "0.16"
+                  "Value": "0.13"
                 },
                 {
                   "Key": "KLReductionFactor",
@@ -20230,7 +20303,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"SimpleFruitTree.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"SimpleFruitTree.Leaf.R50\", R50Value); \r\n            }\r\n        }\r\n    }\r\n}            \r\n",
+                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                   "Parameters": [
                     {
                       "Key": "CultivarName",
@@ -20245,8 +20318,12 @@
                       "Value": "9"
                     },
                     {
+                      "Key": "SurfaceKL",
+                      "Value": "0.26"
+                    },
+                    {
                       "Key": "KLReductionFactor",
-                      "Value": "-0.0005"
+                      "Value": "0.001"
                     },
                     {
                       "Key": "KLReductionDepth",
@@ -20259,14 +20336,6 @@
                     {
                       "Key": "XDepth",
                       "Value": ""
-                    },
-                    {
-                      "Key": "MaxG",
-                      "Value": "0.006"
-                    },
-                    {
-                      "Key": "R50",
-                      "Value": "100"
                     }
                   ],
                   "Name": "TreeInitialisation",
@@ -27562,7 +27631,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"SimpleFruitTree.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"SimpleFruitTree.Leaf.R50\", R50Value); \r\n            }\r\n        }\r\n    }\r\n}            \r\n",
+                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                   "Parameters": [
                     {
                       "Key": "CultivarName",
@@ -27577,8 +27646,12 @@
                       "Value": "9"
                     },
                     {
+                      "Key": "SurfaceKL",
+                      "Value": "0.26"
+                    },
+                    {
                       "Key": "KLReductionFactor",
-                      "Value": "-0.0005"
+                      "Value": "0.001"
                     },
                     {
                       "Key": "KLReductionDepth",
@@ -27591,14 +27664,6 @@
                     {
                       "Key": "XDepth",
                       "Value": ""
-                    },
-                    {
-                      "Key": "MaxG",
-                      "Value": "0.006"
-                    },
-                    {
-                      "Key": "R50",
-                      "Value": "100"
                     }
                   ],
                   "Name": "TreeInitialisation",
@@ -33018,7 +33083,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"SimpleFruitTree.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"SimpleFruitTree.Leaf.R50\", R50Value); \r\n            }\r\n        }\r\n    }\r\n}            \r\n",
+                  "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                   "Parameters": [
                     {
                       "Key": "CultivarName",
@@ -33033,8 +33098,12 @@
                       "Value": "9"
                     },
                     {
+                      "Key": "SurfaceKL",
+                      "Value": "0.26"
+                    },
+                    {
                       "Key": "KLReductionFactor",
-                      "Value": "-0.0005"
+                      "Value": "0.001"
                     },
                     {
                       "Key": "KLReductionDepth",
@@ -33047,14 +33116,6 @@
                     {
                       "Key": "XDepth",
                       "Value": ""
-                    },
-                    {
-                      "Key": "MaxG",
-                      "Value": "0.006"
-                    },
-                    {
-                      "Key": "R50",
-                      "Value": "100"
                     }
                   ],
                   "Name": "TreeInitialisation",
@@ -35774,7 +35835,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [Description(\"Maximum Stomatal Conductance\")]\r\n        public double MaxG { get; set; }\r\n        [Description(\"Stomatal Radn response\")]\r\n        public double R50 { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = 1;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = 1 * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n                object GMaxValue = MaxG;\r\n                zone.Set(\"SimpleFruitTree.Leaf.Gsmax350\", GMaxValue); \r\n                object R50Value = R50; \r\n                zone.Set(\"SimpleFruitTree.Leaf.R50\", R50Value); \r\n            }\r\n        }\r\n    }\r\n}            \r\n                ",
+              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SimpleFruitTree;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link] Zone zone;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        [Description(\"Kl in the shallowest layer\")]\r\n        public double SurfaceKL { get; set; }\r\n        [Description(\"Factor to change Kl modifier with Depth\")]\r\n        public double KLReductionFactor { get; set; }\r\n        [Description(\"Depth that KL starts to decline\")]\r\n        public double KLReductionDepth { get; set; }\r\n        \r\n        public double[] YKLModifiers { get; set; }\r\n        public double[] XDepth { get; set; }\r\n        private double Depth { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n            \tdouble maxRootDepth = (double)zone.Get(\"SimpleFruitTree.Root.MaximumRootDepth.FixedValue\");\r\n            \tdouble initialRootDepth = Math.Min(1,StartAge/6) * maxRootDepth;\r\n                SimpleFruitTree.Sow(cultivar: CultivarName, population: 1, depth: initialRootDepth, rowSpacing: 3000);\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"SimpleFruitTree.Phenology.Age.Years\",StartAgeValue);\r\n                YKLModifiers = new double[Soil.Thickness.Length];\r\n                XDepth = new double[Soil.Thickness.Length];\r\n                Depth = 0;\r\n                for (int layer = 0; layer < Soil.Thickness.Length; layer++)\r\n                {\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add half of the thickness of the current layer so depth is the mid depth of that layer\r\n                    if (Depth <= KLReductionDepth)\r\n                    {\r\n                        YKLModifiers[layer] = SurfaceKL;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    else\r\n                    {\r\n                        double KLMod = SurfaceKL * Math.Exp(-KLReductionFactor * (Depth - KLReductionDepth));\r\n                        YKLModifiers[layer] = KLMod;\r\n                        XDepth[layer] = Depth;\r\n                    }\r\n                    Depth += Soil.Thickness[layer] / 2;  //Add the other half of the current layer so depth is the top of the next layer\r\n                }\r\n                object KLMods = YKLModifiers;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.Y\", KLMods);\r\n                object Depths = XDepth;\r\n                zone.Set(\"SimpleFruitTree.Root.KLModifier.XYPairs.X\", Depths);\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
               "Parameters": [
                 {
                   "Key": "CultivarName",
@@ -35789,8 +35850,12 @@
                   "Value": "9"
                 },
                 {
+                  "Key": "SurfaceKL",
+                  "Value": "0.26"
+                },
+                {
                   "Key": "KLReductionFactor",
-                  "Value": "-0.0005"
+                  "Value": "0.001"
                 },
                 {
                   "Key": "KLReductionDepth",
@@ -35803,14 +35868,6 @@
                 {
                   "Key": "XDepth",
                   "Value": ""
-                },
-                {
-                  "Key": "MaxG",
-                  "Value": "0.005"
-                },
-                {
-                  "Key": "R50",
-                  "Value": "100"
                 }
               ],
               "Name": "TreeInitialisation",
@@ -38227,6 +38284,15 @@
         }
       ],
       "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Manager, Models",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    public class Script : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            DataStore store = Apsim.Find(this, typeof(DataStore)) as DataStore;\r\n\r\n            var data = store.Reader.GetData(\"PredictedObserved\");\r\n            var predictedTransp = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.transpiration\");\r\n            var observedTransp = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.transpiration\");\r\n\r\n            var stats = MathUtilities.CalcRegressionStats(\"transpiration\", predictedTransp, observedTransp);\r\n\r\n            if (stats.NSE < 0.04)\r\n                throw new Exception(\"Test failed. NSE is below threshold. NSE=\" + stats.NSE);\r\n        }\r\n    }\r\n}",
+      "Parameters": [],
+      "Name": "Test",
+      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
