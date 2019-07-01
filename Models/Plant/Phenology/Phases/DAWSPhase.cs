@@ -68,7 +68,7 @@ namespace Models.PMF.Phen
                 First = false;
             }
 
-            if (met.DaysSinceWinterSolstice >= DAWStoProgress)
+            if ((met.DaysSinceWinterSolstice >= DAWStoProgress)||((DAWStoProgress >= 365) & (met.DaysSinceWinterSolstice == 0)))
             {
                 proceedToNextPhase = true;
                 propOfDayToUse = 0.00001;
@@ -79,6 +79,8 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase()
         {
+            First = true;
+            StartDAWS = 0;
         }
 
         /// <summary>Writes the summary.</summary>
