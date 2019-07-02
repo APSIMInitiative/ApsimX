@@ -5110,7 +5110,6 @@
                                     389.0,
                                     16.0,
                                     16.0,
-                                    98.0,
                                     98.0
                                   ],
                                   "BDMetadata": null,
@@ -5126,10 +5125,10 @@
                                       "LL": [
                                         0.13,
                                         0.13,
-                                        0.16,
-                                        0.17,
-                                        0.17,
-                                        0.12
+                                        0.1,
+                                        0.08,
+                                        0.11,
+                                        0.11
                                       ],
                                       "KL": [
                                         0.06,
@@ -6289,6 +6288,208 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "ShowPageOfGraphs": true,
+                          "Name": "LeafGraphs",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Leaf Area Index (LAI)",
+                                  "Inverted": false,
+                                  "Minimum": 0.0,
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": "Date",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "LAI",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "SimulationName",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "FodderBeet.Leaf.LAI",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Simulated",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -3376729,
+                                  "FactorToVaryColours": "SimulationName",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "ObservedData",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "FodderBeet.Leaf.LAI",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Observed",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Fractional Intercepted solar radiation (0-1)",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": 1.0,
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": "Date",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "LightInterception",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16777216,
+                                  "FactorToVaryColours": "SimulationName",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "Report",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "FodderBeet.Leaf.CoverGreen",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Simulated",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -3376729,
+                                  "FactorToVaryColours": "SimulationName",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "ObservedData",
+                                  "XFieldName": "Clock.Today",
+                                  "YFieldName": "FodderBeet.Leaf.CoverGreen",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Observed",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -6686,6 +6887,826 @@
                         }
                       ],
                       "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Core.Folder, Models",
+                      "ShowPageOfGraphs": true,
+                      "Name": "TestStats",
+                      "Children": [
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "ShowPageOfGraphs": true,
+                          "Name": "CanopyStats",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "LAI",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16747854,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.Leaf.LAI",
+                                  "YFieldName": "Predicted.FodderBeet.Leaf.LAI",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": 0.6,
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": 0.6,
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "LightInterception",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -16747854,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.Leaf.CoverGreen",
+                                  "YFieldName": "Predicted.FodderBeet.Leaf.CoverGreen",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "ShowPageOfGraphs": true,
+                          "Name": "BiomassStats",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "TotalWt",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -3376729,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.AboveGround.Wt",
+                                  "YFieldName": "Predicted.FodderBeet.AboveGround.Wt",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "StorageRootWt",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -3376729,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.StorageRoot.Live.Wt",
+                                  "YFieldName": "Predicted.FodderBeet.StorageRoot.Live.Wt",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "LeafWt",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -3376729,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.Leaf.Live.Wt",
+                                  "YFieldName": "Predicted.FodderBeet.Leaf.Live.Wt",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "PetioleWt",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -3376729,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.Petiole.Live.Wt",
+                                  "YFieldName": "Predicted.FodderBeet.Petiole.Live.Wt",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "ShowPageOfGraphs": true,
+                          "Name": "N_uptakeStats",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "Total_N",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -11094807,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.AboveGround.N",
+                                  "YFieldName": "Predicted.FodderBeet.AboveGround.N",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": true,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "StorageRoot_N",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -11094807,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.StorageRoot.Live.N",
+                                  "YFieldName": "Predicted.FodderBeet.StorageRoot.Live.N",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "Leaf_N",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -11094807,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.Leaf.Live.N",
+                                  "YFieldName": "Predicted.FodderBeet.Leaf.Live.N",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": null,
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 0,
+                              "DisabledSeries": [],
+                              "Name": "Petiole_N",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -11094807,
+                                  "FactorToVaryColours": "Irr",
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 0,
+                                  "MarkerSize": 0,
+                                  "Line": 4,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": "PredictedObserved",
+                                  "XFieldName": "Observed.FodderBeet.Petiole.Live.N",
+                                  "YFieldName": "Predicted.FodderBeet.Petiole.Live.N",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": true,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series1",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Graph.Regression, Models",
+                                      "ForEachSeries": false,
+                                      "showOneToOne": true,
+                                      "showEquation": true,
+                                      "Name": "Regression",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
