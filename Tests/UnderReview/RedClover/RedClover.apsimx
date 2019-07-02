@@ -1,12 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 587,
+  "ExplorerWidth": 300,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# The APSIM-PMF Red Clover Model\r\n\r\n\r\n_Rogerio Cichota, Plant and Food Research, New Zealand_\r\n\r\n\r\n##Preamble\r\n\r\nRed clover (*Trifolium pratense*) is a herbaceous perennial herb in the Fabaceae family (former Leguminosae) native of Europe, west Asia, and north Africa ([HayThesis1985RedClover]; [FrameEtAll1998Book]; [BlackEtAl2009Clovers]).  It can now be be found in swards around the world in places with temperate and subtropical climates.  Although considered a perennial, red clover plants are typically short-lived in grazed conditions (2-4years).  The plant has deep taproots and long segmented semi-erect stems. From each stem segment tri-foliate leaves grow alternately and from their axils a flower stalk (peduncle) may grow, petioles are 1-4 cm long.  Roots are quite thick and can reach depths greater than 2.0 m.  The inflorescence is typically pink/red and grows from peduncles that are less than 1cm long.  As a legume, red clover can host N-fixing bacteria (*Rhizobium*) in a symbiotic relationship; from this, large quantities of N from the atmosphere can be incorporated to the soil ([HeichelEtAl1985] ;[ChmelikovaEtAl2015]).  This is a major reason why red clover is sown alongside grasses in pastures, although red clover is also a valuable forage grown in monoculture, producing very high quality feed and is highly palatable to ruminants.  \r\n\r\n\r\n**Objective:**  The model presented here was built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of red clover as forage crop.  The model current focus is on describing biomass accumulation and regrowth after harvest on monocultural swards. As derivate of APSIM's PMF, it is readily possible to use the red clover model for mixed swards, but this has not been properly tested yet and should be done with caution.  \r\nThe simulation of variations in N concentration over the growing season can also be considered as incipient and only reasonably good. The model should be updated and its performance revised in the future when more data becomes available.  \r\n\r\n  \r\n\r\n## Generic background  \r\n\r\n",
+      "Text": "# The APSIM-PMF Red Clover Model\r\n\r\n\r\n_Rogerio Cichota, Plant and Food Research, New Zealand_\r\n\r\n\r\n##Preamble\r\n\r\nRed clover (*Trifolium pratense*) is a herbaceous perennial herb in the Fabaceae family (former Leguminosae) native of Europe, west Asia, and north Africa ([HayThesis1985RedClover]; [FrameEtAll1998Book]; [BlackEtAl2009Clovers]).  It can now be be found in swards around the world in places with temperate and subtropical climates.  Although considered a perennial, red clover plants are typically short-lived in grazed conditions (2-4years).  The plant has deep taproots and long segmented semi-erect stems. From each stem segment tri-foliate leaves grow alternately and from their axils a flower stalk (peduncle) may grow, petioles are 1-4 cm long.  Roots are quite thick and can reach depths greater than 2.0 m.  The inflorescence is typically pink/red and grows from peduncles that are less than 1cm long.  As a legume, red clover can host N-fixing bacteria (*Rhizobium*) in a symbiotic relationship; from this, large quantities of N from the atmosphere can be incorporated to the soil ([HeichelEtAl1985] ;[ChmelikovaEtAl2015]).  This is a major reason why red clover is sown alongside grasses in pastures, although red clover is also a valuable forage grown in monoculture, producing very high quality feed and is highly palatable to ruminants.  \r\n\r\n\r\n**Objective:**  The model presented here was built using the Plant Modelling Framework (PMF) of [brown_plant_2014] to simulate the growth of red clover as forage crop.  The model current focus is on describing biomass accumulation and regrowth after harvest on monocultural swards. As a derivate of APSIM's PMF, it is readily possible to use the red clover model for mixed swards, but this has not been properly tested yet and should be done with caution.  \r\nThe simulation of variations in N concentration over the growing season can also be considered as incipient and only reasonably good. The model should be updated and its performance revised in the future when more data becomes available.  \r\n\r\n  \r\n\r\n## Generic background  \r\n\r\n",
       "Name": "TitlePage",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -9585,21 +9585,6 @@
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
-                  "Name": "NRate",
-                  "n": 750,
-                  "Slope": 1.0,
-                  "Intercept": 0.0,
-                  "SEslope": 0.0,
-                  "SEintercept": 0.0,
-                  "R2": 1.0,
-                  "RMSE": 0.0,
-                  "NSE": 1.0,
-                  "ME": 0.0,
-                  "MAE": 0.0,
-                  "RSR": 0.0
-                },
-                {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "NTakenOff",
                   "n": 498,
                   "Slope": -0.052051334234658027,
@@ -9741,21 +9726,6 @@
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
-                  "Name": "NRate",
-                  "n": 216,
-                  "Slope": 1.0,
-                  "Intercept": 0.0,
-                  "SEslope": 0.0,
-                  "SEintercept": 0.0,
-                  "R2": 1.0,
-                  "RMSE": 0.0,
-                  "NSE": 1.0,
-                  "ME": 0.0,
-                  "MAE": 0.0,
-                  "RSR": 0.0
-                },
-                {
-                  "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "NTakenOff",
                   "n": 132,
                   "Slope": -0.01678727962839939,
@@ -9882,13 +9852,13 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[NRate]",
+                      "Specification": "[FertiliserSchedule]",
                       "Name": "NRate",
                       "Children": [
                         {
                           "$type": "Models.Operations, Models",
                           "Operation": null,
-                          "Name": "0",
+                          "Name": "0N",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10000,7 +9970,7 @@
                               "Enabled": true
                             }
                           ],
-                          "Name": "50",
+                          "Name": "50N",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10112,7 +10082,7 @@
                               "Enabled": true
                             }
                           ],
-                          "Name": "100",
+                          "Name": "100N",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10224,7 +10194,7 @@
                               "Enabled": true
                             }
                           ],
-                          "Name": "200",
+                          "Name": "200N",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10336,7 +10306,7 @@
                               "Enabled": true
                             }
                           ],
-                          "Name": "350",
+                          "Name": "350N",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10448,7 +10418,7 @@
                               "Enabled": true
                             }
                           ],
-                          "Name": "500",
+                          "Name": "500N",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -11580,7 +11550,7 @@
                             {
                               "$type": "Models.Operations, Models",
                               "Operation": null,
-                              "Name": "NRate",
+                              "Name": "FertiliserSchedule",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -14193,7 +14163,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "NRate = 0",
+                          "Filter": "NRate = '0N'",
                           "Name": "TotalRadn",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14285,7 +14255,7 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": null,
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
+                          "FactorToVaryLines": "NRate",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -14300,7 +14270,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "NRate = 0",
+                          "Filter": "NRate = '0N'",
                           "Name": "ThermalTime",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14315,7 +14285,7 @@
                           "ColourArgb": -1663232,
                           "FactorToVaryColours": null,
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
+                          "FactorToVaryLines": "NRate",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -14330,7 +14300,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "NRate = 0",
+                          "Filter": "NRate = '0N'",
                           "Name": "Photoperiod",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -14345,7 +14315,7 @@
                           "ColourArgb": -990142,
                           "FactorToVaryColours": null,
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
+                          "FactorToVaryLines": "NRate",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -14360,7 +14330,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "NRate = 0",
+                          "Filter": "NRate = '0N'",
                           "Name": "PhotoperiodVar",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -16049,72 +16019,6 @@
                             }
                           ],
                           "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Graph.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "DisabledSeries": [],
-                          "Name": "Graph",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "NRate",
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "Checkpoint": "Current",
-                              "TableName": "Report",
-                              "XFieldName": "CumulativeHarvestedWt",
-                              "YFieldName": "CumulativeFixedN",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -26445,7 +26349,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 0",
+                              "Filter": "NRate = '0N'",
                               "Name": "Predicted",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26475,7 +26379,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 0",
+                              "Filter": "NRate = '0N'",
                               "Name": "Observed",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26541,7 +26445,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 50",
+                              "Filter": "NRate = '50N'",
                               "Name": "Predicted",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26571,7 +26475,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 50",
+                              "Filter": "NRate = '50N'",
                               "Name": "Observed",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26637,7 +26541,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 100",
+                              "Filter": "NRate = '100N'",
                               "Name": "Predicted",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26667,7 +26571,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 100",
+                              "Filter": "NRate = '100N'",
                               "Name": "Observed",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26733,7 +26637,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 200",
+                              "Filter": "NRate = '200N'",
                               "Name": "Predicted",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26763,7 +26667,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 200",
+                              "Filter": "NRate = '200N'",
                               "Name": "Observed",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26829,7 +26733,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 350",
+                              "Filter": "NRate = '350N'",
                               "Name": "Predicted",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26859,7 +26763,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 350",
+                              "Filter": "NRate = '350N'",
                               "Name": "Observed",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26925,7 +26829,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 500",
+                              "Filter": "NRate = '500N'",
                               "Name": "Predicted",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -26955,7 +26859,7 @@
                               "IncludeSeriesNameInLegend": true,
                               "Cumulative": false,
                               "CumulativeX": false,
-                              "Filter": "NRate = 500",
+                              "Filter": "NRate = '500N'",
                               "Name": "Observed",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -27869,7 +27773,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This simulation setup was based on a dataset supplied by Hamish Brown, which was collected for his PhD thesis.  The trial was conducted at the Iversen field of Lincoln University, in Lincoln, New Zealand between 1996 and 2002 ([BrownThesis_2004]; [BrownEtAl_2005]).  The work was focused on understanding water use and its interaction with yield of dryland and irrigated forage crops (lucerne, chicory and red clover were used).  \nThe trial was implemented in spring of 1996, after conventional cultivation, including subsoiling and liming.  Red clover (cultivar '*Pawera*') was sown at a rate of 10.0 kg/ha and was grazed regularly by sheep.  There were annual applications of superphosphate but no N fertilisation (except excreta from grazing sheep).  The treatments consisted of irrigation versus dryland conditions.  The major parameters analysed were herbage growth and yield, population, nutritive characteristics, and water utilisation.  N concentration was infered from the few measurements of crude protein and interploated over time using a sinusoidal function; these values are for reference only and cannot be used to actually validate the model.  \r\nSoil data was obtained from measurements presented by H. Brown Thesis ([BrownThesis_2004]) and complemented by S-MAP database from Landcare Research Limited. Weather data was obtained from the nearby Broadfields met station in Lincoln.  \r\n",
+                  "Text": "This simulation setup was based on a dataset supplied by Hamish Brown, which was collected for his PhD thesis.  The trial was conducted at the Iversen field of Lincoln University, in Lincoln, New Zealand between 1996 and 2002 ([BrownThesis_2004]; [BrownEtAl_2005]).  The work was focused on understanding water use and its interaction with yield of dryland and irrigated forage crops (lucerne, chicory and red clover were used).  \nThe trial was implemented in spring of 1996, after conventional cultivation, including sub soiling and liming.  Red clover (cultivar '*Pawera*') was sown at a rate of 10.0 kg/ha and was grazed regularly by sheep.  There were annual applications of superphosphate but no N fertilisation (except excreta from grazing sheep).  The treatments consisted of irrigation versus dryland conditions.  The major parameters analysed were herbage growth and yield, population, nutritive characteristics, and water utilisation.  N concentration was inferred from the few measurements of crude protein and interpolated over time using a sinusoidal function; these values are for reference only and cannot be used to actually validate the model.  \r\nSoil data was obtained from measurements presented by H. Brown Thesis ([BrownThesis_2004]) and complemented by S-MAP database from Landcare Research Limited. Weather data was obtained from the nearby Broadfield met station in Lincoln.  \r\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -32512,7 +32416,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
@@ -32824,7 +32728,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             }
                           ],
@@ -38823,7 +38727,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -38839,7 +38743,7 @@
                             }
                           ],
                           "LegendPosition": 0,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "AboveGround",
                           "Children": [
                             {
@@ -38979,7 +38883,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": false,
+                              "DateTimeAxis": true,
                               "CrossesAtZero": false
                             },
                             {
@@ -38995,7 +38899,7 @@
                             }
                           ],
                           "LegendPosition": 3,
-                          "DisabledSeries": null,
+                          "DisabledSeries": [],
                           "Name": "BelowGround",
                           "Children": [
                             {
@@ -46726,7 +46630,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "NRate = 0",
+                          "Filter": "NInputs = 'Nil'",
                           "Name": "TotalRadn",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -46833,7 +46737,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "NRate = 0",
+                          "Filter": "NInputs = 'Nil'",
                           "Name": "ThermalTime",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -46863,7 +46767,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "NRate = 0",
+                          "Filter": "NInputs = 'Nil'",
                           "Name": "Photoperiod",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -46893,7 +46797,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "NRate = 0",
+                          "Filter": "NInputs = 'Nil'",
                           "Name": "PhotoperiodVar",
                           "Children": [],
                           "IncludeInDocumentation": true,
