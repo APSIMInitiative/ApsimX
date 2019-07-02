@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using Models.CLEM.Activities;
 using Models.Core.Attributes;
 using Models.CLEM.Groupings;
+using System.Globalization;
 
 namespace Models.CLEM
 {
@@ -150,7 +151,7 @@ namespace Models.CLEM
                                 TimeStep = timestep,
                                 Breed = breedGroup.Key,
                                 Herd = herdGroup.Key,
-                                Age = Convert.ToInt32(ageGroup.Key),
+                                Age = Convert.ToInt32(ageGroup.Key, CultureInfo.InvariantCulture),
                                 Sex = sexGroup.Key.ToString().Substring(0, 1),
                                 Number = ageGroup.Sum(a => a.Number),
                                 AverageWeight = ageGroup.Average(a => a.Weight),

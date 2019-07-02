@@ -22,6 +22,7 @@ namespace UserInterface.Views
     using EventArguments;
     using APSIM.Shared.Utilities;
     using System.Linq;
+    using System.Globalization;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -1069,7 +1070,7 @@ namespace UserInterface.Views
                 this.EnsureAxisExists(axisType, typeof(DateTime));
                 do
                 {
-                    DateTime d = Convert.ToDateTime(enumerator.Current);
+                    DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
                     dataPointValues.Add(DateTimeAxis.ToDouble(d));
                     if (d < smallestDate)
                         smallestDate = d;
@@ -1214,8 +1215,8 @@ namespace UserInterface.Views
                 Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
                 if (legendArea.Contains(location))
                 {
-                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top);
-                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height) / this.plot1.Model.Series.Count;
+                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
+                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
                     int seriesIndex = y / itemHeight;
                     if (this.OnLegendClick != null)
                     {

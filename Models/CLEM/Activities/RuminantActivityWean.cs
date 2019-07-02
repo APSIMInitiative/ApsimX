@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
+using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -105,7 +106,7 @@ namespace Models.CLEM.Activities
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
-                    if (weanedCount > Convert.ToInt32(count * labourlimit))
+                    if (weanedCount > Convert.ToInt32(count * labourlimit, CultureInfo.InvariantCulture))
                     {
                         this.Status = ActivityStatus.Partial;
                         break;
