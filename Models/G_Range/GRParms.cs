@@ -1238,7 +1238,12 @@ namespace Models
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.relativeSeedProduction = new double[nFacets];
                 for (int i = 0; i < nFacets; i++)
-                    parm.relativeSeedProduction[i] = tempArray[i] / 10000.0;
+                    parm.relativeSeedProduction[i] = tempArray[i] /
+#if EZ_HACK
+                        2000.0;
+#else
+                        10000.0;
+#endif
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
                 parm.waterEffectOnEstablish = new double[nFacets, 4];

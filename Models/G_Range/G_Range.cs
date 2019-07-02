@@ -64,7 +64,21 @@ namespace Models
         public string[] CultivarNames { get { return null; } }
 
         /// <summary>Get above ground biomass</summary>
-        public PMF.Biomass AboveGround { get { return new PMF.Biomass(); } }
+        public PMF.Biomass AboveGround
+        {
+            get
+            {
+                PMF.Biomass mass = new PMF.Biomass();
+                // 2.5 is the factor G-Range uses to convert carbon to biomass
+                mass.MetabolicWt = (leafCarbon[Facet.herb] + leafCarbon[Facet.shrub] + leafCarbon[Facet.tree]) * 2.5;
+                mass.StructuralWt = (fineBranchCarbon[Facet.shrub] + fineBranchCarbon[Facet.tree] + 
+                                    deadStandingCarbon[Facet.herb] + deadStandingCarbon[Facet.shrub] + deadStandingCarbon[Facet.tree]) * 2.5;
+                mass.MetabolicN = leafNitrogen[Facet.herb] + leafNitrogen[Facet.shrub] + leafNitrogen[Facet.tree];
+                mass.StructuralN = fineBranchNitrogen[Facet.shrub] + fineBranchNitrogen[Facet.tree] +
+                                     deadStandingNitrogen[Facet.herb] + deadStandingNitrogen[Facet.shrub] + deadStandingNitrogen[Facet.tree];
+                return mass;
+            }
+        }
 
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
@@ -1391,7 +1405,7 @@ namespace Models
 
             // If the whole array was being set deliberately, then we also need
             carbonNitrogenRatio[surfaceIndex] = carbonNitrogenRatio[soilIndex];
-            // CHECK
+            // CHECK - EJZ
 
             // Moving the following from WATER_LOSS, since it was only being done with no snow present.
             double avgALiveBiomass = 0.0;
