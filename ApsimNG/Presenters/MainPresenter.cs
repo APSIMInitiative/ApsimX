@@ -45,6 +45,11 @@
         private IFileConverterView fileConverter = null;
 
         /// <summary>
+        /// View used to show help information.
+        /// </summary>
+        private HelpView helpView = null;
+
+        /// <summary>
         /// The most recent exception that has been thrown.
         /// </summary>
         public List<string> LastError { get; private set; }
@@ -1048,9 +1053,17 @@
         /// <param name="args">Event arguments.</param>
         private void OnHelp(object sender, EventArgs args)
         {
-            Process getHelp = new Process();
-            getHelp.StartInfo.FileName = @"https://apsimnextgeneration.netlify.com/";
-            getHelp.Start();
+            try
+            {
+                if (helpView == null)
+                    helpView = new HelpView(view as MainView);
+
+                helpView.Visible = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
