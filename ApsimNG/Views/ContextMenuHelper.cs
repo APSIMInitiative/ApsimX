@@ -12,13 +12,16 @@ namespace UserInterface.Views
         private Widget widget;
         public Widget Widget { get { return widget; } }
 
-        private bool rightClick;
-        public bool RightClick { get { return rightClick; } }
+        private double x;
+        public double X { get { return x; } }
+        private double y;
+        public double Y { get { return y; } }
 
-        public ContextMenuEventArgs(Widget widget, bool rightClick)
+        public ContextMenuEventArgs(Widget widget, double X, double Y)
         {
             this.widget = widget;
-            this.rightClick = rightClick;
+            this.x = X;
+            this.y = Y;
         }
     }
 
@@ -56,7 +59,7 @@ namespace UserInterface.Views
         private void Widget_PopupMenu(object o, PopupMenuArgs args)
         {
             args.RetVal = true;
-            RaiseContextMenuEvent(args, (Widget)o, false);
+            RaiseContextMenuEvent(args, (Widget)o, -1, -1);
         }
 
         [GLib.ConnectBefore]
@@ -65,13 +68,15 @@ namespace UserInterface.Views
             if (args.Event.Button == 3 && args.Event.Type == EventType.ButtonPress)
             {
                 args.RetVal = true;
-                RaiseContextMenuEvent(args, (Widget)o, true);
+                //Console.WriteLine("e = " + args.Event.X + ",", args.Event.Y);
+
+                RaiseContextMenuEvent(args, (Widget)o, args.Event.X , args.Event.Y);
             }
         }
 
         private bool propagating = false;   //Prevent reentry
 
-        private void RaiseContextMenuEvent(GLib.SignalArgs signalArgs, Widget widget, bool rightClick)
+        private void RaiseContextMenuEvent(GLib.SignalArgs signalArgs, Widget widget, double x, double y)
         {
             if (!propagating)
             {
@@ -81,9 +86,8 @@ namespace UserInterface.Views
                 Gtk.Global.PropagateEvent(widget, evnt);
                 propagating = false;
                 signalArgs.RetVal = true;     //The widget already processed the event in the propagation
-
                 //Raise the context menu event
-                ContextMenuEventArgs args = new ContextMenuEventArgs(widget, rightClick);
+                ContextMenuEventArgs args = new ContextMenuEventArgs(widget, x, y);
                 if (ContextMenu != null)
                 {
                     ContextMenu.Invoke(this, args);
