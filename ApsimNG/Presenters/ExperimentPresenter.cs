@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using Views;
@@ -31,7 +32,7 @@
         private const int DefaultMaxSims = 50;
 
         /// <summary>The list of columns that we will hide from user.</summary>
-        private string[] hiddenColumns = new string[] { "Experiment", "Zone" };
+        private string[] hiddenColumns = new string[] { "Experiment", "Zone", "FolderName" };
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
@@ -93,7 +94,7 @@
             }
 
             // Add all simulations to table up to the maximum number of sims to display.
-            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value);
+            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value, CultureInfo.InvariantCulture);
             var cellRenderDetails = new List<CellRendererDescription>();
             for (int i = 0; i < Math.Min(simulationDescriptions.Count, maximumNumberOfSimulations); i++)
             {
@@ -129,7 +130,7 @@
         /// <summary>Get a list of all simulation descriptions (even disabled ones).</summary>
         private void GetAllSimulationDescriptionsFromExperiment()
         {
-            var savedDisabledSimulationNames = experiment.DisabledSimNames;
+            List<string> savedDisabledSimulationNames = experiment.DisabledSimNames;
             experiment.DisabledSimNames = null;
             simulationDescriptions = experiment.GenerateSimulationDescriptions();
             experiment.DisabledSimNames = savedDisabledSimulationNames;

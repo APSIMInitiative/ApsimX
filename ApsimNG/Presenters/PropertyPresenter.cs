@@ -23,6 +23,7 @@ namespace UserInterface.Presenters
     using System.Drawing;
     using Models.CLEM.Resources;
     using Models.Storage;
+    using System.Globalization;
 
     /// <summary>
     /// <para>
@@ -466,6 +467,7 @@ namespace UserInterface.Presenters
                     Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
                     // get crop file names
                     fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileCrop)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteCrop)).Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
@@ -774,7 +776,7 @@ namespace UserInterface.Presenters
             }
             else if (property.DataType == typeof(DateTime))
             {
-                value = Convert.ToDateTime(value);
+                value = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
             }
             else if (property.DataType.IsEnum)
             {

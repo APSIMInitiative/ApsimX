@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using Models.CLEM.Activities;
 using Models.Core.Attributes;
 using Models.CLEM.Groupings;
+using System.Globalization;
 
 namespace Models.CLEM
 {
@@ -22,7 +23,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This component will generate a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/reporting/ruminantherdsummary.htm")]
+    [HelpUri(@"Content/Features/Reporting/RuminantHerdSummary.htm")]
     public class SummariseRuminantHerd: CLEMModel
     {
         [Link]
@@ -52,8 +53,6 @@ namespace Models.CLEM
         {
             OnReportItemGenerated?.Invoke(this, e);
         }
-
-        private Report.Report hSReport;
 
         /// <summary>
         /// List of filters that define the herd
@@ -93,27 +92,31 @@ namespace Models.CLEM
                 current = current.Parent as IModel;
             }
 
-            hSReport = new Report.Report();
-            hSReport.Name = this.Name + "Report";
-            hSReport.VariableNames = new string[]
-            {
-                "[Clock].Today as Date",
-                name + ".ReportDetails" + ".Breed as Breed",
-                name + ".ReportDetails" + ".Herd as Herd",
-                name + ".ReportDetails" + ".Age as AgeGroup",
-                name + ".ReportDetails" + ".Sex as Sex",
-                name + ".ReportDetails" + ".Number as Num",
-                name + ".ReportDetails" + ".AverageWeight as AvgWt",
-                name + ".ReportDetails" + ".AverageWeightGain as AvgWtGn",
-                name + ".ReportDetails" + ".AverageIntake as AvgIntake",
-                name + ".ReportDetails" + ".AdultEquivalents as AE",
-                name + ".ReportDetails" + ".NumberPregnant as NoPregnant",
-                name + ".ReportDetails" + ".NumberOfBirths as Births"
-            };
-            hSReport.EventNames = new string[]
-            {
-                name+".OnReportItemGenerated"
-            };
+            // store details needed to create this report in future.
+
+            //hSReport = new Report.Report
+            //{
+            //    Name = this.Name + "Report",
+            //    VariableNames = new string[]
+            //{
+            //    "[Clock].Today as Date",
+            //    name + ".ReportDetails" + ".Breed as Breed",
+            //    name + ".ReportDetails" + ".Herd as Herd",
+            //    name + ".ReportDetails" + ".Age as AgeGroup",
+            //    name + ".ReportDetails" + ".Sex as Sex",
+            //    name + ".ReportDetails" + ".Number as Num",
+            //    name + ".ReportDetails" + ".AverageWeight as AvgWt",
+            //    name + ".ReportDetails" + ".AverageWeightGain as AvgWtGn",
+            //    name + ".ReportDetails" + ".AverageIntake as AvgIntake",
+            //    name + ".ReportDetails" + ".AdultEquivalents as AE",
+            //    name + ".ReportDetails" + ".NumberPregnant as NoPregnant",
+            //    name + ".ReportDetails" + ".NumberOfBirths as Births"
+            //},
+            //    EventNames = new string[]
+            //{
+            //    name+".OnReportItemGenerated"
+            //}
+            //};
         }
 
         /// <summary>
@@ -143,18 +146,20 @@ namespace Models.CLEM
                         // weaned
                         foreach (var ageGroup in sexGroup.OrderBy(a => a.Age).GroupBy(a => Math.Truncate(a.Age / 12.0)))
                         {
-                            ReportDetails = new HerdReportItemGeneratedEventArgs();
-                            ReportDetails.TimeStep = timestep;
-                            ReportDetails.Breed = breedGroup.Key;
-                            ReportDetails.Herd = herdGroup.Key;
-                            ReportDetails.Age = Convert.ToInt32(ageGroup.Key);
-                            ReportDetails.Sex = sexGroup.Key.ToString().Substring(0,1);
-                            ReportDetails.Number = ageGroup.Sum(a => a.Number);
-                            ReportDetails.AverageWeight = ageGroup.Average(a => a.Weight);
-                            ReportDetails.AverageWeightGain = ageGroup.Average(a => a.WeightGain);
-                            ReportDetails.AverageIntake = ageGroup.Average(a => (a.Intake+a.MilkIntake)); //now daily/30.4;
-                            ReportDetails.AdultEquivalents = ageGroup.Sum(a => a.AdultEquivalent);
-                            if(sexGroup.Key== Sex.Female)
+                            ReportDetails = new HerdReportItemGeneratedEventArgs
+                            {
+                                TimeStep = timestep,
+                                Breed = breedGroup.Key,
+                                Herd = herdGroup.Key,
+                                Age = Convert.ToInt32(ageGroup.Key, CultureInfo.InvariantCulture),
+                                Sex = sexGroup.Key.ToString().Substring(0, 1),
+                                Number = ageGroup.Sum(a => a.Number),
+                                AverageWeight = ageGroup.Average(a => a.Weight),
+                                AverageWeightGain = ageGroup.Average(a => a.WeightGain),
+                                AverageIntake = ageGroup.Average(a => (a.Intake + a.MilkIntake)), //now daily/30.4;
+                                AdultEquivalents = ageGroup.Sum(a => a.AdultEquivalent)
+                            };
+                            if (sexGroup.Key== Sex.Female)
                             {
                                 ReportDetails.NumberPregnant = ageGroup.Cast<RuminantFemale>().Where(a => a.IsPregnant).Count();
                                 ReportDetails.NumberLactating = ageGroup.Cast<RuminantFemale>().Where(a => a.IsLactating).Count();

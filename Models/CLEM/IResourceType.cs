@@ -41,5 +41,9 @@ namespace Models.CLEM
         /// </summary>
         ResourcePricing Price { get; }
 
+        /// <summary>
+        /// Get the units of measure this resource.
+        /// </summary>
+        string Units { get; }
     }
 }

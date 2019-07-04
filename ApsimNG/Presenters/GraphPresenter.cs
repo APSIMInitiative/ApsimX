@@ -219,9 +219,9 @@ namespace UserInterface.Presenters
                                                     definition.MarkerSize,
                                                     definition.ShowInLegend);
                     }
-                    else if (definition.Type == SeriesType.Area)
+                    else if (definition.Type == SeriesType.Region)
                     {
-                        graphView.DrawArea(
+                        graphView.DrawRegion(
                                             definition.Title,
                                             definition.X,
                                             definition.Y,
@@ -231,6 +231,17 @@ namespace UserInterface.Presenters
                                             definition.YAxis,
                                             colour,
                                             definition.ShowInLegend);
+                    }
+                    else if (definition.Type == SeriesType.Area)
+                    {
+                        graphView.DrawArea(
+                            definition.Title,
+                            definition.X,
+                            definition.Y,
+                            definition.XAxis,
+                            definition.YAxis,
+                            colour,
+                            definition.ShowInLegend);
                     }
                 }
                 catch (Exception err)

@@ -91,6 +91,25 @@ namespace UserInterface.Presenters
                 {
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
+                //Versions
+                try
+                {
+                    var versions = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
+                    if (versions.Count() > 0)
+                    {
+                        object newView = new HTMLView(this.view as ViewBase);
+                        versionPresenter = new VersionsPresenter();
+                        if (newView != null && versionPresenter != null)
+                        {
+                            this.view.AddTabView("Version", newView);
+                            versionPresenter.Attach(model, newView, this.explorerPresenter);
+                        }
+                    }
+                }
+                catch (Exception err)
+                {
+                    this.explorerPresenter.MainPresenter.ShowError(err);
+                }
                 //Properties
                 try
                 {
@@ -113,25 +132,6 @@ namespace UserInterface.Presenters
                         {
                             this.view.AddTabView("Properties", newView);
                             propertyPresenter.Attach(model, newView, this.explorerPresenter);
-                        }
-                    }
-                }
-                catch (Exception err)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(err);
-                }
-                //Versions
-                try
-                {
-                    var versions = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
-                    if (versions.Count() > 0)
-                    {
-                        object newView = new HTMLView(this.view as ViewBase);
-                        versionPresenter = new VersionsPresenter();
-                        if (newView != null && versionPresenter != null)
-                        {
-                            this.view.AddTabView("Version", newView);
-                            versionPresenter.Attach(model, newView, this.explorerPresenter);
                         }
                     }
                 }

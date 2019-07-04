@@ -216,15 +216,10 @@ namespace Models.PMF.Organs
             {
                 //calc StressFactorLookup   
                 var extractable = soil.SoilWater.ESW[RootLayer];
-
                 var llDep = soil.LL15[RootLayer] * soil.Thickness[RootLayer];
                 var capacity = soil.DULmm[RootLayer] - llDep;
 
-                var ratio = 0.0;
-                if(capacity > 0.0)
-                    ratio = extractable / capacity;
-
-                root.SWAvailabilityRatio = ratio;
+                root.SWAvailabilityRatio = APSIM.Shared.Utilities.MathUtilities.Divide(extractable, capacity, 10);
                 rootDepthWaterStress = root.RootDepthStressFactor.Value();
             }
 

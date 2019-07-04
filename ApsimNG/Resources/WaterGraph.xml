@@ -13,7 +13,7 @@
         </Axis>
         <Series>
           <Name>LL15</Name>
-          <Type>Area</Type>
+          <Type>Region</Type>
           <Title>LL15</Title>
           <ShowInLegend>false</ShowInLegend>
           <XAxis>Top</XAxis>

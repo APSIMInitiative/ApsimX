@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer defines a date range to perfrom activities.")]
-    [HelpUri(@"content/features/timers/daterange.htm")]
+    [HelpUri(@"Content/Features/Timers/DateRange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnActivityPerformed(EventArgs e)
+        public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }

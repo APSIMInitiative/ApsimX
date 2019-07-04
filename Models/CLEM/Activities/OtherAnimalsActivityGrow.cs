@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of a specified type of other animal.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/otheranimals/otheranimalsactivitygrow.htm")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityGrow.htm")]
     public class OtherAnimalsActivityGrow : CLEMActivityBase
     {
         /// <summary>
@@ -61,7 +61,7 @@ namespace Models.CLEM.Activities
             // death from old age
             while(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).Count() > 0)
             {
-                animalType.Remove(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).FirstOrDefault(), this.Name, "Died");
+                animalType.Remove(animalType.Cohorts.Where(a => a.Age > animalType.MaxAge).FirstOrDefault(), this, "Died");
             }
         }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace Models.CLEM.Groupings
 {
@@ -18,7 +19,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/filters/ruminantfeedgroupmonthly.htm")]
+    [HelpUri(@"Content/Features/Filters/RuminantFeedGroupMonthly.htm")]
     public class RuminantFeedGroupMonthly: CLEMModel, IValidatableObject
     {
         /// <summary>
@@ -92,7 +93,7 @@ namespace Models.CLEM.Groupings
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     if (grps.LastOrDefault().Key != 1)
                     {
-                        html += (Convert.ToDecimal(grps.FirstOrDefault().Key)).ToString("0.##%");
+                        html += (Convert.ToDecimal(grps.FirstOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%");
                     }
                     break;
                 default:
@@ -112,7 +113,7 @@ namespace Models.CLEM.Groupings
                     case RuminantFeedActivityTypes.ProportionOfWeight:
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                            html += (Convert.ToDecimal(grps.LastOrDefault().Key)).ToString("0.##%");
+                            html += (Convert.ToDecimal(grps.LastOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%");
                         break;
                     default:
                         break;

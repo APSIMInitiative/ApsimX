@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer defines a range between months upon which to perform activities.")]
-    [HelpUri(@"content/features/timers/monthrange.htm")]
+    [HelpUri(@"Content/Features/Timers/MonthRange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
@@ -66,22 +66,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                bool due = IsMonthInRange(Clock.Today);
-                if (due)
-                {
-                    // report activity performed.
-                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
-                    {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = this.Name
-                        }
-                    };
-                    activitye.Activity.SetGuID(this.UniqueID);
-                    this.OnActivityPerformed(activitye);
-                }
-                return due;
+                return IsMonthInRange(Clock.Today);
             }
         }
 
@@ -118,7 +103,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnActivityPerformed(EventArgs e)
+        public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }

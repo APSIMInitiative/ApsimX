@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of a specified herd and pasture (paddock) in the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantgraze.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase
     {
         /// <summary>
@@ -142,22 +142,32 @@ namespace Models.CLEM.Activities
             // if there is no ResourceRequestList (i.e. not created from parent pasture)
             if (ResourceRequestList == null)
             {
-                // determine pasture quality from all pools (DMD) at start of grazing
-                double pastureDMD = GrazeFoodStoreModel.DMD;
-
-                // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
-                // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
-                // NABSA uses Diet_DMD, but we cant adjust Potential using diet before anything consumed.
-                PotentialIntakePastureQualityLimiter = 1.0;
-                if ((0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100) >= 0)
-                {
-                    PotentialIntakePastureQualityLimiter = 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
-                }
-
+                PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
                 GetResourcesNeededForActivity();
             }
-            // this has all the code to feed animals.
+            // The DoActivity has all the code to feed animals.
             DoActivity();
+        }
+
+        /// <summary>
+        /// Calculate the potential intake limiter based on pasture quality.
+        /// </summary>
+        /// <returns>Limiter as proportion</returns>
+        public double CalculatePotentialIntakePastureQualityLimiter()
+        {
+            // determine pasture quality from all pools (DMD) at start of grazing
+            double pastureDMD = GrazeFoodStoreModel.DMD;
+            // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
+            // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
+            // NABSA uses Diet_DMD, but we cant adjust Potential using diet before anything consumed.
+            if ((0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100) >= 0)
+            {
+                return 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
+            }
+            else
+            {
+                return 1;
+            }
         }
 
         public override List<ResourceRequest> GetResourcesNeededForActivity()
@@ -177,9 +187,9 @@ namespace Models.CLEM.Activities
                         // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
                         // calculate intake from potential modified by pasture availability and hours grazed
                         indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
-                        // assumes animals will stop eating at potential intake * 1.2 if they have been feed before grazing.
-                        // hours grazed is not adjusted for this reduced feeding.
-                        indAmount = Math.Min(ind.PotentialIntake * 1.2 - ind.Intake, indAmount);
+                        // assumes animals will stop eating at potential intake if they have been feed before grazing.
+                        // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential intake
+                        indAmount = Math.Min(ind.PotentialIntake - ind.Intake, indAmount);
                         amount += indAmount;
                     }
                     if (amount > 0)
@@ -232,7 +242,7 @@ namespace Models.CLEM.Activities
             }
 
             // if Jan-March then use first three months otherwise use 2
-            int greenage = (Clock.Today.Month <= 3) ? 3 : 2;
+            int greenage = (Clock.Today.Month <= 3) ? 2 : 1;
 
             double green = GrazeFoodStoreModel.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
             double propgreen = green / GrazeFoodStoreModel.Amount;
@@ -242,15 +252,20 @@ namespace Models.CLEM.Activities
             
             double greenlimit = (this.RuminantTypeModel.GreenDietMax*100) * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen*100) - (this.RuminantTypeModel.GreenDietZero*100))));
             greenlimit = Math.Max(0.0, greenlimit);
-            if (propgreen > 90)
+            if (propgreen > 0.9)
             {
                 greenlimit = 100;
             }
+
+            //Console.WriteLine(Clock.Today.ToShortDateString() + "\t" + green.ToString() + "\t" + GrazeFoodStoreModel.Amount.ToString() + "\t" + propgreen.ToString() + "\t" + greenlimit.ToString());
 
             foreach (var pool in this.PoolFeedLimits.Where(a => a.Pool.Age <= greenage))
             {
                 pool.Limit = greenlimit / 100.0;
             }
+
+            // order feedpools by age so that diet is taken from youngest greenest first
+            this.PoolFeedLimits = this.PoolFeedLimits.OrderBy(a => a.Pool.Age).ToList();
         }
 
         public override void DoActivity()
@@ -262,10 +277,10 @@ namespace Models.CLEM.Activities
                 if (herd.Count() > 0)
                 {
                     //Get total amount
-                    // assumes animals will stop eating at potential intake * 1.2 if they have been feed before grazing.
-                    // hours grazed is not adjusted for this reduced feeding.
-                    double totalDesired = herd.Sum(a => Math.Min(a.PotentialIntake * 1.2 - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8)));
-                    double totalEaten = herd.Sum(a => Math.Min(a.PotentialIntake * 1.2 - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8)));
+                    // assumes animals will stop eating at potential intake if they have been feed before grazing.
+                    // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential
+                    double totalDesired = herd.Sum(a => Math.Min(a.PotentialIntake - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8)));
+                    double totalEaten = herd.Sum(a => Math.Min(a.PotentialIntake - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8)));
 
                     totalEaten *= GrazingCompetitionLimiter;
 
@@ -287,6 +302,8 @@ namespace Models.CLEM.Activities
                             DMD = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).DMD,
                             PercentN = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).N
                         };
+
+                        //Console.WriteLine(Clock.Today.ToShortDateString() + "\t" + food.DMD.ToString() + "\t" + food.PercentN.ToString());
 
                         double shortfall = request.Provided / request.Required;
 

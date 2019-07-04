@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantpredictivestocking.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStocking.htm")]
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
@@ -103,7 +103,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalStock")]
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
-            this.Status = ActivityStatus.Ignored;
             // this event happens after management has marked individuals for purchase or sale.
             if (Clock.Today.Month == AssessmentMonth)
             {
@@ -155,6 +154,10 @@ namespace Models.CLEM.Activities
                     // get prediction
                     HandleDestocking(shortfallAE, paddockGroup.Key);
                 }
+            }
+            else
+            {
+                this.Status = ActivityStatus.Ignored;
             }
         }
 
@@ -299,7 +302,7 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"errorlink\">No month set";
             }
             html += "</span> for a dry season of ";
-            if (DrySeasonLength <= 0)
+            if (DrySeasonLength > 0)
             {
                 html += "<span class=\"setvalue\">";
                 html += DrySeasonLength.ToString("#0");

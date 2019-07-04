@@ -25,6 +25,8 @@
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
+    [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
+    [ValidParent(ParentType = typeof(Factorial.Factor))]
     public class Manager : Model, IOptionallySerialiseChildren
     {
         private static bool haveTrappedAssemblyResolveEvent = false;

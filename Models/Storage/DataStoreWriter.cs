@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.Linq;
     using System.Threading;
 
@@ -32,7 +33,7 @@
         private bool somethingHasBeenWriten = false;
 
         /// <summary>The IDS for all simulations</summary>
-        private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, SimulationDetails> simulationIDs = new Dictionary<string, SimulationDetails>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>The IDs for all checkpoints</summary>
         private Dictionary<string, int> checkpointIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
@@ -100,7 +101,7 @@
 
             Start();
             var table = data.ToTable();
-            AddIndexColumns(table, "Current", data.SimulationName);
+            AddIndexColumns(table, "Current", data.SimulationName, data.FolderName);
 
             // Add units
             AddUnits(data.TableName, data.ColumnNames, data.ColumnUnits);
@@ -136,7 +137,7 @@
             else
                 DeleteOldRowsInTable(table.TableName, "Current");
 
-            AddIndexColumns(table, "Current", null);
+            AddIndexColumns(table, "Current", null, null);
 
             lock (lockObject)
             {
@@ -295,24 +296,29 @@
         /// create an ID if the simulationName is unknown.
         /// </summary>
         /// <param name="simulationName">The name of the simulation to look for.</param>
+        /// <param name="folderName">The name of the folder the simulation belongs in.</param>
         /// <returns>Always returns a number.</returns>
-        public int GetSimulationID(string simulationName)
+        public int GetSimulationID(string simulationName, string folderName)
         {
             if (simulationName == null)
                 return 0;
 
             lock (lockObject)
             {
-                if (!simulationIDs.TryGetValue(simulationName, out int id))
+                if (!simulationIDs.TryGetValue(simulationName, out SimulationDetails details))
                 {
                     // Not found so create a new ID, add it to our collection of ids
+                    int id;
                     if (simulationIDs.Count > 0)
-                        id = simulationIDs.Values.Max() + 1;
+                        id = simulationIDs.Values.Select(v => v.ID).Max() + 1;
                     else
                         id = 1;
-                    simulationIDs.Add(simulationName, id);
+                    simulationIDs.Add(simulationName, new SimulationDetails() { ID = id, FolderName = folderName });
+                    return id;
                 }
-                return id;
+                else if (folderName != null)
+                    details.FolderName = folderName;
+                return details.ID;
             }
         }
 
@@ -356,7 +362,12 @@
             {
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
-                    simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                {
+                    int id = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture);
+                    string folderName = row["FolderName"].ToString();
+                    simulationIDs.Add(row["Name"].ToString(),
+                                      new SimulationDetails() { ID = id, FolderName = folderName });
+                }
             }
 
             checkpointIDs.Clear();
@@ -364,7 +375,7 @@
             {
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
-                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture));
             }
         }
 
@@ -418,7 +429,7 @@
                             foreach (var simulationName in simsNeedingCleaning)
                             {
                                 simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
-                                simulationIds.Add(GetSimulationID(simulationName));
+                                simulationIds.Add(GetSimulationID(simulationName, null));
                             }
                         }
                     }
@@ -465,7 +476,8 @@
         /// <param name="table">The table to add the columns to.</param>
         /// <param name="checkpointName">The name of the checkpoint.</param>
         /// <param name="simulationName">The simulation name.</param>
-        private void AddIndexColumns(DataTable table, string checkpointName, string simulationName)
+        /// <param name="folderName">The name of the folder the simulation sits in.</param>
+        private void AddIndexColumns(DataTable table, string checkpointName, string simulationName, string folderName)
         {
             if (!tablesNotNeedingIndexColumns.Contains(table.TableName))
             {
@@ -502,14 +514,14 @@
                         foreach (DataRow row in table.Rows)
                         {
                             simulationName = row[simulationNameColumnIndex].ToString();
-                            row[simulationColumn] = GetSimulationID(simulationName); ;
+                            row[simulationColumn] = GetSimulationID(simulationName, folderName); ;
                         }
                         table.Columns.RemoveAt(simulationNameColumnIndex);
                     }
                     else if (simulationName != null)
                     {
                         simulationColumn = table.Columns.Add("SimulationID", typeof(int));
-                        var id = GetSimulationID(simulationName);
+                        var id = GetSimulationID(simulationName, folderName);
                         foreach (DataRow row in table.Rows)
                             row[simulationColumn] = id;
                     }
@@ -561,8 +573,9 @@
                 foreach (var simulation in simulationIDs)
                 {
                     var row = simulationsTable.NewRow();
-                    row[0] = simulation.Value;
+                    row[0] = simulation.Value.ID;
                     row[1] = simulation.Key;
+                    row[2] = simulation.Value.FolderName;
                     simulationsTable.Rows.Add(row);
                 }
                 WriteTable(simulationsTable);
@@ -603,7 +616,12 @@
 
             /// <summary>Units of column.</summary>
             public string Units { get; set; }
+        }
 
+        private class SimulationDetails
+        {
+            public int ID { get; set; }
+            public string FolderName { get; set; }
         }
     }
 }

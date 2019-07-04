@@ -47,7 +47,7 @@
                     // Add a simulation descriptor.
                     simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
 
-                    // Add in simulation descriptors.
+                    // Don't need to add a folderName descriptor, as this will be added by the base simulation.
                     foreach (var simulationDescriptor in baseSimulation.GenerateSimulationDescriptions())
                     {
                         foreach (var descriptor in simulationDescriptor.Descriptors)
