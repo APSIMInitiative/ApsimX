@@ -1,5 +1,6 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
