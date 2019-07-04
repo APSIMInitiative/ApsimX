@@ -179,6 +179,8 @@ namespace Models.PostSimulationTools
                     List<string> unitNames = new List<string>();
 
                     // write units to table.
+                    reader.Refresh();
+
                     foreach (string fieldName in commonCols)
                     {
                         string units = reader.Units(PredictedTableName, fieldName);
@@ -191,8 +193,29 @@ namespace Models.PostSimulationTools
                             unitNames.Add(unitsMinusBrackets);
                         }
                     }
+
                     if (unitNames.Count > 0)
+                    {
+                        // The Writer replaces tables, rather than appends to them,
+                        // so we actually need to re-write the existing units table values
+                        // Is there a better way to do this?
+                        DataView allUnits = new DataView(reader.GetData("_Units"));
+                        allUnits.Sort = "TableName";
+                        DataTable tableNames = allUnits.ToTable(true, "TableName");
+                        foreach (DataRow row in tableNames.Rows)
+                        {
+                            string tableName = row["TableName"] as string;
+                            List<string> colNames = new List<string>();
+                            List<string> unitz = new List<string>();
+                            foreach (DataRowView rowView in allUnits.FindRows(tableName))
+                            {
+                                colNames.Add(rowView["ColumnHeading"].ToString());
+                                unitz.Add(rowView["Units"].ToString());
+                            }
+                            dataStore.Writer.AddUnits(tableName, colNames, unitz);
+                        }
                         dataStore.Writer.AddUnits(Name, unitFieldNames, unitNames);
+                    }
                 }
                 else
                 {
