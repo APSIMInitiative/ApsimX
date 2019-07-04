@@ -17,6 +17,7 @@ namespace UserInterface.Presenters
     using Utility;
     using Views;
     using Models.Storage;
+    using System.Globalization;
 
     /// <summary>
     /// <para>
@@ -701,7 +702,7 @@ namespace UserInterface.Presenters
             }
             else if (property.DataType == typeof(DateTime))
             {
-                value = Convert.ToDateTime(value);
+                value = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
             }
             else if (property.DataType.IsEnum)
             {

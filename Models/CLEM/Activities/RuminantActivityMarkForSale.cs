@@ -3,6 +3,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -107,7 +108,7 @@ namespace Models.CLEM.Activities
                             this.Status = ActivityStatus.Ignored;
                             break;
                         case LabourUnitType.perHead:
-                            numberToTag = Convert.ToInt32(herd.Count() * LabourLimitProportion);
+                            numberToTag = Convert.ToInt32(herd.Count() * LabourLimitProportion, CultureInfo.InvariantCulture);
                             this.Status = ActivityStatus.Partial;
                             break;
                         default:

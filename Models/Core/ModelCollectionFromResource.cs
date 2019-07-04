@@ -3,6 +3,7 @@
     using Models.Core.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Reflection;
 
     /// <summary>This class loads a model from a resource</summary>
@@ -65,7 +66,7 @@
                     object fromValue = property.GetValue(from);
                     bool doSetPropertyValue;
                     if (fromValue is double)
-                        doSetPropertyValue = Convert.ToDouble(fromValue) != 0;
+                        doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
                     else
                         doSetPropertyValue = fromValue != null;
 
