@@ -62,10 +62,7 @@ namespace Models.PMF
 
         [Link]
         private SorghumLeaf leaf = null;
-
-        [ScopedLinkByName]
-        private GenericOrgan stem = null;
-
+        
         #endregion
 
         #region Main outputs
@@ -229,12 +226,8 @@ namespace Models.PMF
                 var leafIndex = 2;
                 var stemIndex = 4;
 
-                var nGreen = stem.Live.N;
-                var dmGreen = stem.Live.Wt;
-                var dltDM = stem.potentialDMAllocation.Structural;
-
                 var rootDemand = N.StructuralDemand[rootIndex] + N.MetabolicDemand[rootIndex];
-                var stemDemand = N.StructuralDemand[stemIndex] + N.MetabolicDemand[stemIndex];
+                var stemDemand = /*N.StructuralDemand[stemIndex] + */N.MetabolicDemand[stemIndex];
                 var leafDemand = N.MetabolicDemand[leafIndex];
                 var grainDemand = N.StructuralDemand[grainIndex] + N.MetabolicDemand[grainIndex];
                 //have to correct the leaf demand calculation
@@ -266,7 +259,7 @@ namespace Models.PMF
                     
                     //at present these 2arrays arenot being used within the CalculateNitrogenSupply function
                     //sorghum uses Diffusion & Massflow variables currently
-                    double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha
+                    double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha - dltNo3 in old apsim
                     double[] organNH4Supply = new double[zone.NH4N.Length];
 
                     ZoneState myZone = root.Zones.Find(z => z.Name == zone.Zone.Name);
@@ -289,7 +282,11 @@ namespace Models.PMF
                         var actualMassFlow = dltt > 0 ? totalMassFlow : 0.0;
                         var maxDiffusionConst = root.MaxDiffusion.Value();
 
-                        if (totalMassFlow < nDemand && dltt > 0.0)
+                        double ttElapsed = (Apsim.Find(this, "TTFMFromFlowering") as Functions.IFunction).Value();
+                        if (ttElapsed > 570)
+                            totalMassFlow = 0;
+
+                        if (totalMassFlow < nDemand && ttElapsed < 570) // fixme && ttElapsed < nUptakeCease
                         {
                             actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
                             actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
