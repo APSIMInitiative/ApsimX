@@ -69,10 +69,13 @@ namespace Models
             get
             {
                 PMF.Biomass mass = new PMF.Biomass();
-                // 2.5 is the factor G-Range uses to convert carbon to biomass
+                // 2.5 is the factor G-Range uses to convert carbon to biomass for leaves and roots
+                // but when converting from carbon to biomass for wood parts it uses 2.0, rather than 2.5
+                // So what should be used for deadStanding? Looks like it uses 2.5, even though I suspect
+                // for shrub and tree facets, the deadStandingCarbon will be mostly woody.
                 mass.MetabolicWt = (leafCarbon[Facet.herb] + leafCarbon[Facet.shrub] + leafCarbon[Facet.tree]) * 2.5;
-                mass.StructuralWt = (fineBranchCarbon[Facet.shrub] + fineBranchCarbon[Facet.tree] + 
-                                    deadStandingCarbon[Facet.herb] + deadStandingCarbon[Facet.shrub] + deadStandingCarbon[Facet.tree]) * 2.5;
+                mass.StructuralWt = (fineBranchCarbon[Facet.shrub] + fineBranchCarbon[Facet.tree]) * 2.0 + 
+                                    (deadStandingCarbon[Facet.herb] + deadStandingCarbon[Facet.shrub] + deadStandingCarbon[Facet.tree]) * 2.5;
                 mass.MetabolicN = leafNitrogen[Facet.herb] + leafNitrogen[Facet.shrub] + leafNitrogen[Facet.tree];
                 mass.StructuralN = fineBranchNitrogen[Facet.shrub] + fineBranchNitrogen[Facet.tree] +
                                      deadStandingNitrogen[Facet.herb] + deadStandingNitrogen[Facet.shrub] + deadStandingNitrogen[Facet.tree];
@@ -104,13 +107,13 @@ namespace Models
         #region ICanopy interface
 
         /// <summary>Albedo.</summary>
-        public double Albedo { get { return 0.15; } }
+        public double Albedo { get { return 0.15; } } // This is canopy albedo, not soil albedo
 
         /// <summary>Gets or sets the gsmax.</summary>
         [Description("Daily maximum stomatal conductance(m/s)")]
         public double Gsmax { get { return 0.01; } }
 
-        /// <summary>Gets or sets the R50.</summary>
+        /// <summary>Gets or sets the R50.</summary> // What is an R50?
         public double R50 { get { return 200; } }
 
         /// <summary>Gets the LAI</summary>
@@ -341,24 +344,35 @@ namespace Models
 
         /// <summary>
         /// X dimension of rangeland cell
+        /// In the "standard" G-Range configuration, values run from 1 to 720, corresponding with longitudes
+        /// from 180 W (normally expressed as -180) to 180 E, using half-degree steps.
         /// </summary>
         public int X;
 
         /// <summary>
         /// Y dimension of rangeland cell
+        /// In the "standard" G-Range configuration, values run from 1 to 360, correpsonding with latitudes
+        /// from 90 S (normally expressed as -90) to 90 N, using half-degree steps.
         /// </summary>
         public int Y;
 
+        /// <summary>
+        /// Month of the year, expressed as a value in the range 1-12
+        /// </summary>
         private int month;
 
         /// <summary>
         /// Identifier storing the type of rangeland cell, used as a key to the Parms strcuture
+        /// A value in the range 1-15, indicating the "biome" within a cell. Values are 1: tropical evergreen forest; 2: tropical deciduous forest;
+        /// 3: temperate broadleaf evergreen forest; 4: temperate needleleaf evergreen forest; 5: temperate deciduous forest; 6: boreal evergreen forest;
+        /// 7: boreal deciduous forest; 8: evergreen/deciduous mixed forest; 9: savanna; 10: grassland; 11: dense shrubland; 12: open shrubland;
+        /// 13: tundra; 14: desert; 15: polar desert
         /// </summary>
         public int rangeType { get; private set; }
 
         private double lastMonthDayLength;     // The day length of the previous month, to know when spring and fall come.
         private bool dayLengthIncreasing;      // Increasing or decreasing day length, comparing the current to previous day lengths.
-        private bool inWinter = false;         // NOT ORIGINALLY PART OF THE CELL STRUCTURE - It used a Fortran "SAVE" in Plant_Death.95
+        private bool inWinter = false;         // NOT ORIGINALLY PART OF THE CELL STRUCTURE - G-Range itself uses (inappropriately) a Fortran "SAVE" in Plant_Death.95
 
         /// <summary>
         /// Day length, calculated based on latitude and month
@@ -369,6 +383,7 @@ namespace Models
         /// <summary>
         /// Heat accumulation above a base temperature (e.g., 4.4 C in Boone (1999))
         /// </summary>
+        [Units("<sup>o</sup>Cd")]
         public double heatAccumulation { get; private set; }
 
         /// <summary>
@@ -379,6 +394,7 @@ namespace Models
 
         /// <summary>
         /// The total population of each vegetation layer
+        /// This is the number of individuals in a 1 km^2 area
         /// </summary>
         public double[] totalPopulation { get; private set; } = new double[nLayers]; 
 
@@ -493,6 +509,7 @@ namespace Models
         /// <summary>
         /// Transpiration water loss
         /// </summary>
+        [Units("cm/month")]
         public double transpiration { get; private set; }
 
         private double[] relativeWaterContent = new double[nDefSoilLayers]; // Used to initialize and during simulation in CENTURY.Here, only during simulation
@@ -1300,7 +1317,7 @@ namespace Models
                     ZeroAccumulators();       // Zero-out the accumulators storing dead materials
                 }
             }
-            // Actually we should check Clock.StartDate and be sure we spin up to the day before.
+            // Actually we should check Clock.StartDate and be sure we spin up to the day (month) before the start of the simulation.
             doingSpinUp = false;
         }
 #endif

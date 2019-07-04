@@ -295,6 +295,8 @@ namespace Models
 #if !G_RANGE_BUG
             if (doingSpinUp)
             {
+                // TODO: While we're doing the spinup, we should also calculate values for average precipitation and temperature,
+                // rather than relying on the GRange database.
 /*
                 if (weatherFaker == null)
                     weatherFaker = new WeatherFaker(Latitude, Longitude);
