@@ -4044,6 +4044,14 @@
               "$type": "Models.PMF.Organs.SorghumLeaf, Models",
               "Culms": [],
               "StartLive": null,
+              "Albedo": 0.0,
+              "Gsmax350": 0.0,
+              "R50": 0.0,
+              "BaseHeight": 0.0,
+              "Width": 0.0,
+              "FRGR": 0.0,
+              "PotentialEP": 0.0,
+              "LightProfile": null,
               "DltLAI": 0.0,
               "dltPotentialLAI": 0.0,
               "dltStressedLAI": 0.0,
@@ -5640,6 +5648,16 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "StomatalConductanceCO2Modifier1",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false

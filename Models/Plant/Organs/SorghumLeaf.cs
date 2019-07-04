@@ -36,9 +36,73 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
+    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass, ICanopy
     {
         //IHasWaterDemand, removing to see if it's necessary
+
+        #region Canopy interface
+
+        /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
+        public string CanopyType { get { return Plant.CropType; } }
+
+        /// <summary>Albedo.</summary>
+        [Description("Albedo")]
+        public double Albedo { get; set; }
+
+        /// <summary>The effect of CO2 on stomatal conductance</summary>
+        [Link]
+        IFunction StomatalConductanceCO2Modifier = null;
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        [Description("Daily maximum stomatal conductance(m/s)")]
+        public double Gsmax
+        {
+            get
+            {
+                return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value();
+            }
+        }
+
+        /// <summary>Gets or sets the gsmax.</summary>
+        [Description("Maximum stomatal conductance at CO2 concentration of 350 ppm (m/s)")]
+        public double Gsmax350 { get; set; }
+
+        /// <summary>Gets or sets the R50.</summary>
+        [Description("R50")]
+        public double R50 { get; set; }
+
+        /// <summary>Gets or sets the height.</summary>
+        [Units("mm")]
+        public double BaseHeight { get; set; }
+
+        /// <summary>Gets the depth.</summary>
+        [Units("mm")]
+        public double Depth { get { return Math.Max(0, Height - BaseHeight); } }
+
+        /// <summary>The width of an individual plant</summary>
+        [Units("mm")]
+        public double Width { get; set; }
+
+        /// <summary>Gets or sets the FRGR.</summary>
+        [Units("mm")]
+        public double FRGR { get; set; }
+
+        private double _PotentialEP = 0;
+        /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
+        [Units("mm")]
+        public double PotentialEP
+        {
+            get { return _PotentialEP; }
+            set
+            {
+                _PotentialEP = value;
+                MicroClimatePresent = true;
+            }
+        }
+
+        /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
+        public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
+        #endregion
 
         /// <summary>
         /// The SMM2SM
