@@ -14,9 +14,9 @@ namespace ApsimNG.Classes.DirectedGraph
 
     public class DGArc : DGObject
     {
-        private int clickTolerence = 3;
-        private DGNode sourceNode = null;
-        private DGNode targetNode = null;
+        public DGNode sourceNode { get; private set; }
+        public DGNode targetNode { get; private set; }
+        private int clickTolerence = 8;
         private BezierCurve bezCurve = new BezierCurve();
         private List<PointD> bezPoints = new List<PointD>();
         private double[] bezParameters = new double[8];
@@ -30,7 +30,7 @@ namespace ApsimNG.Classes.DirectedGraph
             sourceNode = allNodes.Find(node => node.Name == directedGraphArc.SourceName);
             targetNode = allNodes.Find(node => node.Name == directedGraphArc.DestinationName);
             Colour = OxyColor.FromRgb(directedGraphArc.Colour.R, directedGraphArc.Colour.G, directedGraphArc.Colour.B);
-            Name = directedGraphArc.Text;
+            Name = directedGraphArc.Name;
         }
 
         /// <summary>Get a DirectedGraph arc from this instance.</summary>
@@ -42,7 +42,7 @@ namespace ApsimNG.Classes.DirectedGraph
                 a.SourceName = sourceNode.Name;
             if (targetNode != null)
                 a.DestinationName = targetNode.Name;
-            a.Text = Name;
+            a.Name = Name;
             a.Colour = System.Drawing.Color.FromArgb(Colour.A, Colour.R, Colour.B);
             return a;
         }

@@ -8,15 +8,17 @@ namespace UserInterface.Interfaces
     using System;
 
     /// <summary>
-    /// This interface defines the API for talking to an initial water view.
+    /// This interface defines the API for talking to an bubble chart view.
     /// </summary>
     public interface IRotBubbleChartView
     {
         /// <summary>
         /// Invoked when the user changes the initial state list box.
         /// </summary>
-        event EventHandler OnInitialStateChanged;
+        event EventHandler<EventArguments.InitialStateEventArgs> OnInitialStateChanged;
 
+        /// <summary> </summary>
+        event EventHandler<EventArguments.GraphChangedEventArgs> OnGraphChanged;
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
@@ -25,16 +27,21 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
-        event EventHandler<EventArguments.DupNodeEventArgs> DupNode;
+        event EventHandler<EventArguments.DelNodeEventArgs> DelNode;
 
         /// <summary>
         /// Invoked when the user adds a node to the chart
         /// </summary>
-        event EventHandler<EventArguments.DelNodeEventArgs> DelNode;
-        
+        event EventHandler<EventArguments.AddArcEventArgs> AddArc;
+
         /// <summary>
-        /// Gets the directed graph.
+        /// Invoked when the user adds a node to the chart
         /// </summary>
-        Views.DirectedGraphView Graph { get; }
+        event EventHandler<EventArguments.DelArcEventArgs> DelArc;
+
+        /// <summary>
+        /// Gets / sets the directed graph.
+        /// </summary>
+        Models.RotBubbleChart.RBGraph Graph { get; set; }
     }
 }
