@@ -168,13 +168,16 @@
         }
 
         /// <summary>
-        /// Invoked when a run is done.
+        /// Invoked when a run is beginning.
         /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments.</param>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun()
+        private void OnBeginRun(object sender, EventArgs e)
         {
-            allCombinations.Clear();
-            ParameterValues.Clear();
+            R r = new R();
+            Console.WriteLine(r.InstallPackage("boot"));
+            Console.WriteLine(r.InstallPackage("sensitivity"));
         }
 
         /// <summary>
@@ -396,8 +399,6 @@
             string rFileName = GetTempFileName("sobolscript", ".r");
             File.WriteAllText(rFileName, script);
             R r = new R();
-            Console.WriteLine(r.GetPackage("boot"));
-            Console.WriteLine(r.GetPackage("sensitivity"));
 
             string result = r.Run(rFileName, "");
             string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");

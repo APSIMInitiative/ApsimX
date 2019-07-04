@@ -163,6 +163,12 @@
                     else if (rootModel is Simulation)
                         FileName = (rootModel as Simulation).FileName;
 
+
+                    // Publish BeginRun event.
+                    var e = new Events(rootModel);
+                    e.Publish("BeginRun", new object[] { this, new EventArgs() });
+
+                    // Find simulations to run.
                     if (runSimulations)
                         FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
 
