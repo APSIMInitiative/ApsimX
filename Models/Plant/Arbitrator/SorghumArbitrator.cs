@@ -356,7 +356,7 @@ namespace Models.PMF
                 myZone.MassFlow[layer] = no3massFlow;
 
                 //diffusion
-                var swAvailFrac = myZone.AvailableSW[layer] / myZone.PotentialAvailableSW[layer];
+                var swAvailFrac = MathUtilities.Divide(myZone.AvailableSW[layer], myZone.PotentialAvailableSW[layer], 0);
                 //old sorghum stores N03 in g/ms not kg/ha
                 var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
 
