@@ -3,6 +3,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,12 @@ namespace Models.PMF
     [Serializable]
     public class SorghumArbitratorN : Model, IArbitrationMethod, ICustomDocumentation
     {
+        /// <summary>
+        /// Daily NSupply.
+        /// </summary>
+        [JsonIgnore]
+        public double NSupply { get; set; }
+
         /// <summary>Relatives the allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -26,6 +33,7 @@ namespace Models.PMF
         public void DoAllocation(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply; // / 0.1; //g/m^2
+            NSupply = TotalSupply; // reporting variable
             //allocate structural first - will be a different order to biomass so need to hard code the order until an interface is created
             //roots
             //stem
