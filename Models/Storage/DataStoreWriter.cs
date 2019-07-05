@@ -1,5 +1,6 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
@@ -24,7 +25,7 @@
         private IRunnable sleepJob = new JobRunnerSleepJob();
 
         /// <summary>The runner used to run commands on a worker thread.</summary>
-        private IJobRunner commandRunner;
+        private JobRunner commandRunner;
 
         /// <summary>Are we idle i.e. not writing to database?</summary>
         private bool idle = true;
@@ -46,7 +47,10 @@
 
         /// <summary>A list of names of tables that don't have checkpointid or simulatoinid columns.</summary>
         private static string[] tablesNotNeedingIndexColumns = new string[] { "_Simulations", "_Checkpoints", "_Units" };
-        
+
+        /// <summary>Are we stopping writing to the db?</summary>
+        private bool stopping;
+
         /// <summary>Default constructor.</summary>
         public DataStoreWriter()
         {
@@ -169,6 +173,7 @@
 
                 WaitForIdle();
 
+                stopping = true;
                 commandRunner.Stop();
                 commandRunner = null;
                 commands.Clear();
@@ -180,38 +185,39 @@
         }
 
         /// <summary>Called by the job runner when all jobs completed</summary>
-        public void Completed() { }
+        public void AllCompleted() { }
 
-        /// <summary>Return the next command to run.</summary>
-        public IRunnable GetNextJobToRun()
+        /// <summary>Return an enumeration of jobs that need running.</summary>
+        public IEnumerable<IRunnable> GetJobs()
         {
             // NOTE: This is called from the job runner worker thread.
 
-            // Try and get a command to execute.
-            IRunnable command = null;
-            lock (lockObject)
+            while (!stopping)
             {
-                if (commands.Count > 0)
+                IRunnable command = null;
+                lock (lockObject)
                 {
-                    command = commands[0];
-                    commands.RemoveAt(0);
+                    if (commands.Count > 0)
+                    {
+                        command = commands[0];
+                        commands.RemoveAt(0);
+                    }
+                }
+
+                // If nothing was found to run then return a sleep job 
+                // so that the job runner doesn't exit.
+                if (command == null)
+                {
+                    idle = true;
+                    yield return sleepJob;
+                }
+                else
+                {
+                    idle = false;
+                    somethingHasBeenWriten = true;
+                    yield return command;
                 }
             }
-
-            // If nothing was found to run then return a sleep job 
-            // so that the job runner doesn't exit.
-            if (command == null)
-            {
-                command = sleepJob;
-                idle = true;
-            }
-            else
-            {
-                idle = false;
-                somethingHasBeenWriten = true;
-            }
-
-            return command;
         }
 
         /// <summary>Delete all data in datastore, except for checkpointed data.</summary>
@@ -364,7 +370,9 @@
                 foreach (DataRow row in data.Rows)
                 {
                     int id = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture);
-                    string folderName = row["FolderName"].ToString();
+                    string folderName = null;
+                    if (data.Columns.Contains("FolderName"))
+                        folderName = row["FolderName"].ToString();
                     simulationIDs.Add(row["Name"].ToString(),
                                       new SimulationDetails() { ID = id, FolderName = folderName });
                 }
@@ -375,7 +383,7 @@
             {
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
-                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture));
+                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }
         }
 
@@ -462,8 +470,10 @@
                 {
                     if (commandRunner == null)
                     {
-                        commandRunner = new JobRunnerSync();
-                        commandRunner.Run(this);
+                        stopping = false;
+                        commandRunner = new JobRunner(numProcessors:1);
+                        commandRunner.Add(this);
+                        commandRunner.Run();
                         ReadExistingDatabase(Connection);
                     }
                 }
@@ -604,6 +614,10 @@
                 }
                 WriteTable(checkpointsTable);
             }
+        }
+
+        void IJobManager.JobHasCompleted(JobCompleteArguments args)
+        {
         }
 
         /// <summary>

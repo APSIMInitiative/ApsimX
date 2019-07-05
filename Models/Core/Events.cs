@@ -35,12 +35,14 @@
             // Connect publishers to subscribers.
             foreach (Publisher publisher in publishers)
             {
-                var modelsInScope = scope.FindAll(publisher.Model as IModel).ToList();
-                var subscribersForEvent = subscribers.Where(s => modelsInScope.Contains(s.Model) &&
-                                                                 s.Name.Equals(publisher.Name, StringComparison.InvariantCultureIgnoreCase));
-                //var subscribers = Subscriber.FindAll(publisher.Name, publisher.Model as IModel, scope);
-                foreach (var subscriber in subscribersForEvent)
-                    publisher.ConnectSubscriber(subscriber);
+                if (publisher.Model is IModel && (publisher.Model as IModel).Enabled)
+                {
+                    var modelsInScope = scope.FindAll(publisher.Model as IModel).ToList();
+                    var subscribersForEvent = subscribers.Where(s => modelsInScope.Contains(s.Model) &&
+                                                                     s.Name.Equals(publisher.Name, StringComparison.InvariantCultureIgnoreCase));
+                    foreach (var subscriber in subscribersForEvent)
+                        publisher.ConnectSubscriber(subscriber);
+                }
             }
         }
 
