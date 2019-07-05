@@ -202,17 +202,6 @@ namespace Models
 
         #region Elements from Fortran code
 
-        // I've pulled in all the members of the original G-Range RangeCell structure, but not all are used (yet)
-        // These pragmas disable warnings related to the declaration of unused variables.
-
-        // Once the entire model has been transcoded, these pragmas should be remove (and the associated warnings dealt with appropriately)
-
-        //#pragma warning disable 0414
-
-        //#pragma warning disable 0169
-
-        //#pragma warning disable 0649
-
         /// <summary>
         ///  Stores parameters unique to each landscape unit
         /// </summary>
@@ -1219,10 +1208,12 @@ namespace Models
         {
             LoadParms();    // Initialize_Landscape_Parms
             LoadGlobals();  // Initialize_Globe
+            if (!globe.rangeland)
+                throw new ApsimXException(this, "G-Range cannot treat the specified location as rangeland!");
             InitParms();    // Initialize_Rangelands
+#if !G_RANGE_BUG
             // I need to find a way to spin up the simulation. It takes a couple of decades for things to come to a near-equilibrium
             // The orignal G-Range uses a file to store state from a previous run to avoid this problem.
-#if !G_RANGE_BUG
             SpinUp();
 #endif
         }

@@ -569,13 +569,13 @@ namespace Models
             public double[] indivPlantArea = new double[nFacets];
         }
 
-#pragma warning disable 0649
+// #pragma warning disable 0649
 
         [Serializable]
         private struct Globals
         {
             public int zone;                    // A unique ID, from 1 to N, for each cell.ZONE is a name that comes from ARC GRID.
-            public int elev;                    // Elevation, in meters ... commented out, not used.
+            // public int elev;                    // Elevation, in meters ... commented out, not used.
 
             public bool land;                   // Defining land versus ocean
 
@@ -607,7 +607,7 @@ namespace Models
             public double herbCover;            // Herbaceous cover, from MODIS 44B product
             public double propBurned;           // The proportion of the cell burned, as shown in maps(NOTE SCALE DEPENDENCE)
             public double propFertilized;       // The proportion of the cell fertilized, as shown in maps(NOTE SCALE DEPENDENCE)
-            public double temporary;            // A temporary map location, used to read-in values
+            // public double temporary;            // A temporary map location, used to read-in values
             public int fireMapsUsed;            // [From SimParm] Whether fire maps will be used (1) or fire will be based on frequencies in the land unit
             public int fertilizeMapsUsed;       // [From SimParm] Whether fertilize maps will be used (1) or fertilizing will be based on frequencies in the
         };
@@ -1091,6 +1091,7 @@ namespace Models
                 throw new ApsimXException(this, "The specified location is not considered to be rangeland.");
 
             globe.land = (int)dataRow["Land"] == 1;
+            globe.rangeland = globe.land; // we're going to treat everywhere as rangeland
             globe.coverClass = (int)dataRow["Goge"];
 
             globe.latitude = (double)dataRow["Lats"];
@@ -1113,6 +1114,11 @@ namespace Models
             globe.egreenTreeCover = (double)dataRow["Egreen"];
             globe.shrubCover = (double)dataRow["Shrub"];
             globe.herbCover = (double)dataRow["Herb"];
+            // We could add fire and fertilize maps later, if wanted.
+            globe.fireMapsUsed = 0;
+            globe.propBurned = 0.0;
+            globe.fertilizeMapsUsed = 0;
+            globe.propFertilized = 0.0;
         }
 
         /// <summary>
