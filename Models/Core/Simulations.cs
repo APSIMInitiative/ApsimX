@@ -9,7 +9,6 @@ using Models.Factorial;
 using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Core.Interfaces;
-using Models.Core.Runners;
 using Models.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -125,20 +124,6 @@ namespace Models.Core
             List<Exception> creationExceptions = new List<Exception>();
             return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
         }
-
-
-        /// <summary>Run a simulation</summary>
-        /// <param name="simulation">The simulation to run</param>
-        /// <param name="doClone">Clone the simulation before running?</param>
-        public void Run(Simulation simulation, bool doClone)
-        {
-            Apsim.ParentAllChildren(simulation);
-            RunSimulation simulationRunner = new RunSimulation(this, simulation);
-            Links.Resolve(simulationRunner);
-            simulationRunner.Run(new System.Threading.CancellationTokenSource());
-        }
-
-
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
         /// <param name="FileName">Name of the file.</param>
@@ -266,7 +251,7 @@ namespace Models.Core
                     // Clone the simulation
                     SimulationDescription simDescription = new SimulationDescription(simulation);
 
-                    Simulation clonedSimulation = simDescription.ToSimulation(this);
+                    Simulation clonedSimulation = simDescription.ToSimulation();
 
                     // Now use the path to get the model we want to document.
                     modelToDocument = Apsim.Get(clonedSimulation, pathOfModelToDocument) as IModel;
@@ -275,7 +260,7 @@ namespace Models.Core
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
                     // resolve all links in cloned simulation.
-                    Links.Resolve(clonedSimulation, true);
+                    //Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
                     foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
@@ -285,7 +270,7 @@ namespace Models.Core
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
                     // Unresolve links.
-                    Links.Unresolve(clonedSimulation, allLinks: true);
+                    Links.Unresolve(clonedSimulation, true);
                 }
             }
         }

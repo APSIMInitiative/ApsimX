@@ -126,7 +126,7 @@
                     this.view.AddLowerView(newView);
 
                     // Resolve links in presenter.
-                    this.explorerPresenter.ApsimXFile.Links.Resolve(currentLowerPresenter);
+                    explorerPresenter.ApsimXFile.Links.Resolve(currentLowerPresenter);
                     this.currentLowerPresenter.Attach(model, newView, explorerPresenter);
                 }
             }

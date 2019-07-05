@@ -1,6 +1,7 @@
 ﻿
 namespace UnitTests
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
@@ -19,10 +20,10 @@ namespace UnitTests
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        public static void EnsureJobRanGreen(object sender, JobCompleteArgs args)
+        public static void EnsureJobRanGreen(object sender, JobCompleteArguments args)
         {
-            if (args.exceptionThrowByJob != null)
-                throw new Exception(string.Format("Exception was thrown when running via {0}, when we expected no error to be thrown.", sender.GetType().Name), args.exceptionThrowByJob);
+            if (args.ExceptionThrowByJob != null)
+                throw new Exception(string.Format("Exception was thrown when running via {0}, when we expected no error to be thrown.", sender.GetType().Name), args.ExceptionThrowByJob);
         }
 
         /// <summary>Call an event in a model</summary>
