@@ -1459,6 +1459,31 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "Emergence",
+                  "EndStageName": "FloralInitiation",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 0.0,
+                  "FractionRemovedOnHarvest": 0.0,
+                  "FractionRemovedOnGraze": 0.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "TTEmergToFI",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "Name": "ThermalTime",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -4069,6 +4094,7 @@
               "NitrogenPhotoStress": 0.0,
               "NitrogenPhenoStress": 0.0,
               "PhosphorusStress": 1.0,
+              "FinalLeafNo": 0.0,
               "senRadnCrit": 0.0,
               "senLightTimeConst": 10.0,
               "frostKill": 1.0,
@@ -5658,6 +5684,75 @@
                   "Units": null,
                   "Name": "StomatalConductanceCO2Modifier1",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 10.0,
+                  "Units": null,
+                  "Name": "minLeafNo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 40.0,
+                  "Units": null,
+                  "Name": "maxLeafNo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].TTEmergToFI.Value()",
+                  "Name": "TTEmergToFI",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 21.6,
+                  "Units": "oCd",
+                  "Name": "leafInitRate",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Degree days to initiate each leaf primordium until floral init (deg day)",
+                      "Name": "Description",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 4.0,
+                  "Units": null,
+                  "Name": "noSeed",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Number of leaf primordia present in seed",
+                      "Name": "Description",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false

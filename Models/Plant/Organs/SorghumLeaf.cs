@@ -123,7 +123,66 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
+        [Link]
+        private IFunction minLeafNo = null;
+
+        [Link]
+        private IFunction maxLeafNo = null;
+
+        [Link]
+        private IFunction TTEmergToFI = null;
+
+        [Link]
+        private IFunction leafInitRate = null;
+
+        [Link]
+        private IFunction seedNo = null;
+
         #region Canopy interface
+
+        /// <summary>
+        /// Number of leaf primordia present in seed.
+        /// </summary>
+        public double SeedNo
+        {
+            get
+            {
+                return seedNo?.Value() ?? 0;
+            }
+        }
+
+        /// <summary>
+        /// Degree days to initiate each leaf primordium until floral init (deg day).
+        /// </summary>
+        public double LeafInitRate
+        {
+            get
+            {
+                return leafInitRate?.Value() ?? 0;
+            }
+        }
+
+        /// <summary>
+        /// Min Leaf Number.
+        /// </summary>
+        public double MinLeafNo
+        {
+            get
+            {
+                return minLeafNo.Value();
+            }
+        }
+
+        /// <summary>
+        /// Max Leaf Number.
+        /// </summary>
+        public double MaxLeafNo
+        {
+            get
+            {
+                return maxLeafNo.Value();
+            }
+        }
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -359,6 +418,10 @@ namespace Models.PMF.Organs
         [Description("Phosphorus Stress")]
         public double PhosphorusStress { get; set; }
 
+        /// <summary>
+        /// Final Leaf Number.
+        /// </summary>
+        public double FinalLeafNo { get; set; }
 
         private double SowingDensity { get; set; }
 
@@ -390,6 +453,33 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Events
+
+        /// <summary>
+        /// Recalculates and updates final leaf number. Called after
+        /// SW arbitration but before phenology.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("DoSorghumCalcs")]
+        private void OnUpdateFinalLeafNo(object sender, EventArgs e)
+        {
+            double fi = 5;
+            if (phenology.Stage <= fi)
+            {
+                FinalLeafNo = CalcFinalLeafNo();
+            }
+        }
+
+        /// <summary>
+        /// Calculates final leaf number. Doesn't update any globals.
+        /// </summary>
+        /// <returns></returns>
+        private double CalcFinalLeafNo()
+        {
+            double ttFi = TTEmergToFI.Value();
+            return MathUtilities.Bound(MathUtilities.Divide(ttFi, LeafInitRate, 0) + SeedNo, MinLeafNo, MaxLeafNo);
+        }
+
         /// <summary>Called when [phase changed].</summary>
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
