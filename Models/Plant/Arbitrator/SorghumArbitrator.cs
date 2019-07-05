@@ -242,6 +242,7 @@ namespace Models.PMF
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
@@ -360,13 +361,13 @@ namespace Models.PMF
                 //old sorghum stores N03 in g/ms not kg/ha
                 var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
 
+                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
+
                 if (layer == currentLayer)
                 {
                     var proportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
-                    no3Diffusion *= proportion;
+                    myZone.Diffusion[layer] *= proportion;
                 }
-
-                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
 
                 //NH4Supply[layer] = no3massFlow;
                 //onyl 2 fields passed in for returning data. 
