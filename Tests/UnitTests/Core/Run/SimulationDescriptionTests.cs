@@ -121,13 +121,13 @@
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
 
-            var newSim = simulationDescription.ToSimulation(simulations);
+            var newSim = simulationDescription.ToSimulation();
             var weather = newSim.Children[0] as MockWeather;
             Assert.AreEqual(weather.MaxT, 2);
 
             // Make sure any property overrides happens after a model replacement.
             simulationDescription.AddOverride(new PropertyReplacement("Weather.MaxT", 3));
-            newSim = simulationDescription.ToSimulation(simulations);
+            newSim = simulationDescription.ToSimulation();
             weather = newSim.Children[0] as MockWeather;
             Assert.AreEqual(weather.MaxT, 3);
 
@@ -175,7 +175,7 @@
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
 
-            var newSim = simulationDescription.ToSimulation(simulations);
+            var newSim = simulationDescription.ToSimulation();
             var weather = newSim.Children[0] as MockWeather;
 
             // Name ('Dummy name') didn't match so property should still be 1.

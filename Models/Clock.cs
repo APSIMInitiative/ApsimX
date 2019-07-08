@@ -1,10 +1,10 @@
-﻿using System;
-using System.Xml.Serialization;
-using Models.Core;
-using System.Threading;
-
-namespace Models
+﻿namespace Models
 {
+    using Models.Core;
+    using Models.Core.Run;
+    using System;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// The clock model
     /// </summary>
@@ -198,7 +198,7 @@ namespace Models
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, Core.Runners.RunSimulation.CommenceArgs e)
+        private void OnDoCommence(object sender, CommenceArgs e)
         {
                 if (DoInitialSummary != null)
                     DoInitialSummary.Invoke(this, args);
