@@ -151,6 +151,7 @@
             this.view.Tree.AllowDrop -= this.OnAllowDrop;
             this.view.Tree.Droped -= this.OnDrop;
             this.view.Tree.Renamed -= this.OnRename;
+            this.view.Tree.ContextMenu.Destroy();
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
