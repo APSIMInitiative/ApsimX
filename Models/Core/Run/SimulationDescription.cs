@@ -1,15 +1,22 @@
 ﻿namespace Models.Core.Run
 {
+    using APSIM.Shared.JobRunning;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
 
     /// <summary>
     /// Encapsulates all the bits that are need to construct a simulation
     /// and the associated metadata describing a simulation.
     /// </summary>
     [Serializable]
-    public class SimulationDescription
+    public class SimulationDescription : IRunnable
     {
+        /// <summary>The top level simulations instance.</summary>
+        private IModel topLevelModel;
+
         /// <summary>The base simulation.</summary>
         private Simulation baseSimulation;
 
@@ -18,7 +25,6 @@
 
         /// <summary>Do we clone the simulation before running?</summary>
         private bool doClone;
-
 
         /// <summary>
         /// Constructor
@@ -29,6 +35,13 @@
         public SimulationDescription(Simulation sim, string name = null, bool clone = true)
         {
             baseSimulation = sim;
+            if (sim != null)
+            {
+                topLevelModel = sim;
+                while (topLevelModel.Parent != null)
+                    topLevelModel = topLevelModel.Parent;
+            }
+
             if (name == null && baseSimulation != null)
                 Name = baseSimulation.Name;
             else
@@ -42,6 +55,15 @@
         /// <summary>Gets / sets the list of descriptors for this simulaton.</summary>
         public List<Descriptor> Descriptors { get; set; } = new List<Descriptor>();
 
+        /// <summary>Gets or sets the DataStore for this simulaton.</summary>
+        public DataStore Storage
+        {
+            get
+            {
+                var scope = new ScopingRules();
+                return scope.FindAll(baseSimulation).First(model => model is DataStore) as DataStore;
+            }
+        }
         /// <summary>
         /// Add an override to replace an existing model, as specified by the
         /// path, with a replacement model.
@@ -63,33 +85,65 @@
             replacementsToApply.Add(new PropertyReplacement(path, replacement));
         }
 
+        /// <summary>Run the simulation.</summary>
+        /// <param name="cancelToken"></param>
+        public void Run(CancellationTokenSource cancelToken)
+        {
+            var simulationToRun = ToSimulation();
+            simulationToRun.Run(cancelToken);
+        }
+
         /// <summary>
         /// Convert the simulation decription to a simulation.
         /// path.
         /// </summary>
-        /// <param name="simulations">The top level simulations model.</param>
-        public Simulation ToSimulation(Simulations simulations = null)
+        public Simulation ToSimulation()
         {
-            AddReplacements(simulations);
+            try
+            {
+                AddReplacements();
 
-            Simulation newSimulation;
-            if (doClone)
-                newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-            else
-                newSimulation = baseSimulation;
+                Simulation newSimulation;
+                if (doClone)
+                {
+                    newSimulation = Apsim.Clone(baseSimulation) as Simulation;
 
-            if (Name == null)
-                newSimulation.Name = baseSimulation.Name;
-            else
-                newSimulation.Name = Name;
-            newSimulation.Parent = null;
-            Apsim.ParentAllChildren(newSimulation);
-            replacementsToApply.ForEach(r => r.Replace(newSimulation));
+                    // If there is a child DataStore 
+                    // remove it and use the same one as in baseSimulation. This is
+                    // because we want to use the same DataStore for all simulations
+                    // and not have a separate DataStore instance for each simulation.
+                    Model goodStorage;
+                    if (topLevelModel == null)
+                        goodStorage = Apsim.Child(newSimulation, typeof(IDataStore)) as Model;
+                    else
+                        goodStorage = Apsim.Child(topLevelModel, typeof(IDataStore)) as Model;
+                    var unwantedStorage = Apsim.Child(newSimulation, typeof(IDataStore)) as Model;
+                    if (unwantedStorage != null)
+                        Apsim.Delete(unwantedStorage);
+                    if (goodStorage != null)
+                        newSimulation.Children.Add(goodStorage);
+                }
+                else
+                    newSimulation = baseSimulation;
 
-            // Give the simulation the descriptors.
-            newSimulation.Descriptors = Descriptors;
+                if (Name == null)
+                    newSimulation.Name = baseSimulation.Name;
+                else
+                    newSimulation.Name = Name;
+                newSimulation.Parent = null;
+                Apsim.ParentAllChildren(newSimulation);
+                replacementsToApply.ForEach(r => r.Replace(newSimulation));
 
-            return newSimulation;
+                // Give the simulation the descriptors.
+                newSimulation.Descriptors = Descriptors;
+
+                return newSimulation;
+            }
+            catch (Exception err)
+            {
+                var message = "Error in file: " + baseSimulation.FileName + " Simulation: " + Name;
+                throw new Exception(message, err);
+            }
         }
 
         /// <summary>
@@ -102,12 +156,11 @@
         }
 
         /// <summary>Add any replacements to all simulation descriptions.</summary>
-        /// <param name="simulations">The top level simulations model.</param>
-        private void AddReplacements(Simulations simulations)
+        private void AddReplacements()
         {
-            if (simulations != null)
+            if (topLevelModel != null)
             {
-                IModel replacements = Apsim.Child(simulations, "Replacements");
+                IModel replacements = Apsim.Child(topLevelModel, "Replacements");
                 if (replacements != null)
                 {
                     foreach (IModel replacement in replacements.Children)

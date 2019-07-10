@@ -40,6 +40,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "Descriptors": null,
+          "Services": [],
           "Name": "Base",
           "Children": [
             {
@@ -817,7 +818,7 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Inert",
-                            "Location": "65, 426",
+                            "Location": "656, 254",
                             "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
@@ -825,7 +826,7 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "SurfaceResidue",
-                            "Location": "345, 45",
+                            "Location": "566, 69",
                             "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
@@ -833,7 +834,7 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMLignin",
-                            "Location": "265, 151",
+                            "Location": "261, 69",
                             "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
@@ -841,7 +842,7 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCellulose",
-                            "Location": "444, 154",
+                            "Location": "397, 70",
                             "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
@@ -849,7 +850,7 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCarbohydrate",
-                            "Location": "50, 200",
+                            "Location": "123, 70",
                             "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
@@ -897,7 +898,7 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Atmosphere",
-                            "Location": "63, 290",
+                            "Location": "48, 338",
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
@@ -905,7 +906,7 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "PlantAvailableNO3",
-                            "Location": "702, 339",
+                            "Location": "688, 415",
                             "Colour": "86, 180, 233",
                             "OutlineColour": "Black",
                             "Transparent": false
@@ -913,7 +914,7 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "PlantAvailableNH4",
-                            "Location": "675, 205",
+                            "Location": "691, 421",
                             "Colour": "86, 180, 233",
                             "OutlineColour": "Black",
                             "Transparent": false
@@ -924,7 +925,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "415, 173",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -932,7 +933,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Humic",
-                            "Location": "349, 151",
+                            "Location": "499, 172",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -948,7 +949,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMLignin",
                             "DestinationName": "Humic",
-                            "Location": "0, 0",
+                            "Location": "255, 105",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -972,7 +973,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMCarbohydrate",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "141, 131",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -988,7 +989,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "335, 301",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -996,7 +997,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Humic",
-                            "Location": "321, 241",
+                            "Location": "319, 278",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1004,7 +1005,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Humic",
                             "DestinationName": "Microbial",
-                            "Location": "319, 267",
+                            "Location": "334, 340",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1020,7 +1021,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NO3",
                             "DestinationName": "Atmosphere",
-                            "Location": "0, 0",
+                            "Location": "1, 319",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1028,7 +1029,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NH4",
                             "DestinationName": "NO3",
-                            "Location": "0, 0",
+                            "Location": "243, 409",
                             "Colour": "Black",
                             "Text": null
                           }
@@ -1570,7 +1571,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Factorial;\r\nusing Models.Storage;\r\nusing Models.Utilities;\r\nusing System;\r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Data;\r\nusing System.Diagnostics;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ITest\r\n    {\r\n        [Link]\r\n        DataStore store = null;\r\n\r\n        public void Run()\r\n        {\r\n            Experiment experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;\r\n            Clock clock = Apsim.Find(this, typeof(Clock)) as Clock;\r\n            List<double> harvestedWtSums = new List<double>();\r\n            List<double> irrigationSums = new List<double>();\r\n            foreach (string simulationName in store.Reader.SimulationNames)\r\n            {\r\n                DataTable data = GetDataForSimulation(simulationName, \"HarvestedWt\", \"Irrigation\", \"Date\");\r\n                IEnumerable<double> harvestedWt = new List<double>();\r\n                IEnumerable<double> irrigation = new List<double>();\r\n                IEnumerable<double> date = new List<double>();\r\n                double sumHarvestedWt = 0.0;\r\n                double sumIrrigation = 0.0;\r\n                for (int i = 0; i < data.Rows.Count; i++)\r\n                {\r\n                    if (data.Rows[i][\"HarvestedWt\"] != DBNull.Value && data.Rows[i][0] != DBNull.Value)\r\n                    {\r\n                        harvestedWt = harvestedWt.Append((double)data.Rows[i][\"HarvestedWt\"]);\r\n                        irrigation = irrigation.Append((double)data.Rows[i][\"Irrigation\"]);\r\n                        date = date.Append(DateToNumber((DateTime)data.Rows[i][\"Date\"]));\r\n                        sumHarvestedWt += (double)data.Rows[i][\"HarvestedWt\"];\r\n                        sumIrrigation += (double)data.Rows[i][\"Irrigation\"];\r\n                    }\r\n                }\r\n                harvestedWtSums = harvestedWtSums.Append(sumHarvestedWt).ToList();\r\n                irrigationSums = irrigationSums.Append(sumIrrigation).ToList();\r\n                //var expFitStats = RegressionUtilities.ExponentialFitStats(date.ToArray(), harvestedWt.ToArray());\r\n                //var polyFitStats = RegressionUtilities.PolyFitStats(date.ToArray(), swUptake.ToArray(), 2);\r\n\r\n                // Can inspect the stats here in the debugger, e.g. stats.R2\r\n            }\r\n            var stats = MathUtilities.CalcRegressionStats(\"test\", harvestedWtSums, irrigationSums);\r\n            if (stats.Slope < 0)\r\n                throw new Exception(\"Fail. Slope=\" + stats.Slope);\r\n            //Debugger.Break();\r\n        }\r\n\r\n        private DataTable GetDataForSimulation(string simulationName, params string[] fieldNames)\r\n        {\r\n            IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;\r\n            if (storage == null)\r\n                throw new Exception(string.Format(\"Error when fetching data in script {0}. Storage is null - does this simulation have a datastore?\", Parent.Name));\r\n            return storage.Reader.GetData(\"Results\", \"Current\", simulationName, fieldNames, null);\r\n        }\r\n\r\n        private double DateToNumber(DateTime date)\r\n        {\r\n            Clock clock = Apsim.Find(this, typeof(Clock)) as Clock;\r\n            return (double)(date - clock.StartDate).Ticks / (clock.EndDate - clock.StartDate).Ticks;\r\n        }\r\n\r\n        private MathUtilities.RegrStats ExponentialFitStats(double[] x, double[] y)\r\n        {\r\n            double[] yHat = y.Select(i => Math.Log(i)).ToArray();\r\n            return MathUtilities.CalcRegressionStats(\"test\", y, yHat);\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Factorial;\r\nusing Models.Storage;\r\nusing Models.Utilities;\r\nusing System;\r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Data;\r\nusing System.Diagnostics;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ITest\r\n    {\r\n        [Link]\r\n        IDataStore store = null;\r\n\r\n        public void Run()\r\n        {\r\n            Experiment experiment = Apsim.Parent(this, typeof(Experiment)) as Experiment;\r\n            Clock clock = Apsim.Find(this, typeof(Clock)) as Clock;\r\n            List<double> harvestedWtSums = new List<double>();\r\n            List<double> irrigationSums = new List<double>();\r\n            foreach (string simulationName in store.Reader.SimulationNames)\r\n            {\r\n                DataTable data = GetDataForSimulation(simulationName, \"HarvestedWt\", \"Irrigation\", \"Date\");\r\n                IEnumerable<double> harvestedWt = new List<double>();\r\n                IEnumerable<double> irrigation = new List<double>();\r\n                IEnumerable<double> date = new List<double>();\r\n                double sumHarvestedWt = 0.0;\r\n                double sumIrrigation = 0.0;\r\n                for (int i = 0; i < data.Rows.Count; i++)\r\n                {\r\n                    if (data.Rows[i][\"HarvestedWt\"] != DBNull.Value && data.Rows[i][0] != DBNull.Value)\r\n                    {\r\n                        harvestedWt = harvestedWt.Append((double)data.Rows[i][\"HarvestedWt\"]);\r\n                        irrigation = irrigation.Append((double)data.Rows[i][\"Irrigation\"]);\r\n                        date = date.Append(DateToNumber((DateTime)data.Rows[i][\"Date\"]));\r\n                        sumHarvestedWt += (double)data.Rows[i][\"HarvestedWt\"];\r\n                        sumIrrigation += (double)data.Rows[i][\"Irrigation\"];\r\n                    }\r\n                }\r\n                harvestedWtSums = harvestedWtSums.Append(sumHarvestedWt).ToList();\r\n                irrigationSums = irrigationSums.Append(sumIrrigation).ToList();\r\n                //var expFitStats = RegressionUtilities.ExponentialFitStats(date.ToArray(), harvestedWt.ToArray());\r\n                //var polyFitStats = RegressionUtilities.PolyFitStats(date.ToArray(), swUptake.ToArray(), 2);\r\n\r\n                // Can inspect the stats here in the debugger, e.g. stats.R2\r\n            }\r\n            var stats = MathUtilities.CalcRegressionStats(\"test\", harvestedWtSums, irrigationSums);\r\n            if (stats.Slope < 0)\r\n                throw new Exception(\"Fail. Slope=\" + stats.Slope);\r\n            //Debugger.Break();\r\n        }\r\n\r\n        private DataTable GetDataForSimulation(string simulationName, params string[] fieldNames)\r\n        {\r\n            IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;\r\n            if (storage == null)\r\n                throw new Exception(string.Format(\"Error when fetching data in script {0}. Storage is null - does this simulation have a datastore?\", Parent.Name));\r\n            return storage.Reader.GetData(\"Results\", \"Current\", simulationName, fieldNames, null);\r\n        }\r\n\r\n        private double DateToNumber(DateTime date)\r\n        {\r\n            Clock clock = Apsim.Find(this, typeof(Clock)) as Clock;\r\n            return (double)(date - clock.StartDate).Ticks / (clock.EndDate - clock.StartDate).Ticks;\r\n        }\r\n\r\n        private MathUtilities.RegrStats ExponentialFitStats(double[] x, double[] y)\r\n        {\r\n            double[] yHat = y.Select(i => Math.Log(i)).ToArray();\r\n            return MathUtilities.CalcRegressionStats(\"test\", y, yHat);\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [],
               "Name": "SensibilityTest",
               "IncludeInDocumentation": true,

@@ -76,7 +76,7 @@
         /// <returns>The units (with surrounding parentheses), or null if not available</returns>
         public string Units(string tableName, string columnHeading)
         {
-            if (units.Table != null)
+            if (units.Table != null && units.Table.Rows.Count > 0)
             {
                 units.RowFilter = string.Format("TableName='{0}' AND ColumnHeading='{1}'",
                                                 tableName, columnHeading);
