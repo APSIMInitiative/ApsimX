@@ -200,6 +200,8 @@ namespace Models.CLEM.Activities
                     else
                     {
                         femaleind.MilkProduction = 0;
+                        femaleind.MilkProductionPotential = 0;
+                        femaleind.MilkCurrentlyAvailable = 0;
                     }
                 }
                 
@@ -472,8 +474,6 @@ namespace Models.CLEM.Activities
                         //TODO: Check foetus gage correct
                         energyFoetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * foetusAge - 349.16 * Math.Exp(-0.000058 * foetusAge)) / 0.13;
                     }
-
-                    Console.WriteLine(Clock.Today.ToShortDateString() + "\t" + femaleind.SucklingOffspringList.Count().ToString() + "\t" + femaleind.MilkCurrentlyAvailable.ToString());
                 }
 
                 //TODO: add draft individual energy requirement
