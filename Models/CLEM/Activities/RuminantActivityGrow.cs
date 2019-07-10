@@ -67,7 +67,6 @@ namespace Models.CLEM.Activities
             manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as ProductStoreTypeManure;
         }
 
-
         /// <summary>Function to determine naturally wean individuals at start of timestep</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -254,6 +253,7 @@ namespace Models.CLEM.Activities
             ind.MilkCurrentlyAvailable = ind.MilkProduction * 30.4;
 
             // returns the energy required for milk production
+
             return ind.MilkProduction * 3.2 / kl;
         }
 
@@ -268,7 +268,7 @@ namespace Models.CLEM.Activities
 
             int cmonth = Clock.Today.Month;
 
-            // grow all weaned individuals
+            // grow individuals
 
             List<string> breeds = herd.Select(a => a.BreedParams.Name).Distinct().ToList();
             foreach (string breed in breeds)
@@ -276,7 +276,7 @@ namespace Models.CLEM.Activities
                 double totalMethane = 0;
                 foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.Age))
                 {
-                    ind.MetabilicIntake = ind.Intake;
+                    ind.MetabolicIntake = ind.Intake;
                     this.Status = ActivityStatus.Success;
                     if (ind.Weaned)
                     {
@@ -311,7 +311,7 @@ namespace Models.CLEM.Activities
                             double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired);
                             //TODO: add min protein to parameters
                             ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
-                            ind.MetabilicIntake *= ratioSupplyRequired;
+                            ind.MetabolicIntake *= ratioSupplyRequired;
                         }
 
                         // old. I think IAT
@@ -320,13 +320,13 @@ namespace Models.CLEM.Activities
                         // TODO: check if we still need to apply modification to only the non-supplemented component of intake
                         // Used to be 1.2 * Potential
                         ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-                        ind.MetabilicIntake = Math.Min(ind.MetabilicIntake, ind.Intake);
+                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
                     }
                     else
                     {
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
                         ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-                        ind.MetabilicIntake = Math.Min(ind.MetabilicIntake, ind.Intake);
+                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
                     }
 
                     // TODO: nabsa adjusts potential intake for digestability of fodder here.
@@ -378,7 +378,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
-            double intakeDaily = ind.MetabilicIntake / 30.4;
+            double intakeDaily = ind.MetabolicIntake / 30.4;
 
             // Sme 1 for females and castrates
             // TODO: castrates not implemented
@@ -406,6 +406,7 @@ namespace Models.CLEM.Activities
                 // recalculate milk intake based on mothers updated milk production for the time step
                 double potentialMilkIntake = ind.BreedParams.MilkIntakeIntercept + ind.BreedParams.MilkIntakeCoefficient * ind.Weight;
                 ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);
+
                 if (ind.Mother != null)
                 {
                     ind.Mother.TakeMilk(ind.MilkIntake * 30.4, MilkUseReason.Suckling);
@@ -414,7 +415,7 @@ namespace Models.CLEM.Activities
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
                 double kgl = 1;
-                if ((ind.MetabilicIntake + ind.MilkIntake) > 0)
+                if ((ind.MetabolicIntake + ind.MilkIntake) > 0)
                 {
                     // average energy efficiency for maintenance
                     kml = ((ind.MilkIntake * 0.7) + (intakeDaily * km)) / (ind.MilkIntake + intakeDaily);
@@ -427,6 +428,7 @@ namespace Models.CLEM.Activities
 
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * ind.AgeZeroCorrected);
                 ind.EnergyBalance = energyMilkConsumed - energyMaintenance + energyMetablicFromIntake;
+
                 double feedingValue;
                 if (ind.EnergyBalance > 0)
                 {
@@ -451,14 +453,12 @@ namespace Models.CLEM.Activities
                     RuminantFemale femaleind = ind as RuminantFemale;
 
                     // calculate energy for lactation
-                    if (femaleind.IsLactating)
+                    // look for milk production calculated before offspring may have been weaned
+
+                    if (femaleind.IsLactating | femaleind.MilkProductionPotential > 0)
                     {
                         // recalculate milk production based on DMD of food provided
                         energyMilk = CalculateMilkProduction(femaleind);
-                    }
-                    else
-                    {
-                        femaleind.MilkProductionPotential = 0;
                     }
 
                     // Determine energy required for foetal development
@@ -472,6 +472,8 @@ namespace Models.CLEM.Activities
                         //TODO: Check foetus gage correct
                         energyFoetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * foetusAge - 349.16 * Math.Exp(-0.000058 * foetusAge)) / 0.13;
                     }
+
+                    Console.WriteLine(Clock.Today.ToShortDateString() + "\t" + femaleind.SucklingOffspringList.Count().ToString() + "\t" + femaleind.MilkCurrentlyAvailable.ToString());
                 }
 
                 //TODO: add draft individual energy requirement
@@ -509,7 +511,6 @@ namespace Models.CLEM.Activities
                     // Reference: from Hirata model
                     energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * km * ind.EnergyBalance / (0.8 * energyEmptyBodyGain);
                 }
-
             }
             energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
 
