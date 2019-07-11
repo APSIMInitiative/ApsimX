@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using Views;
@@ -93,7 +94,7 @@
             }
 
             // Add all simulations to table up to the maximum number of sims to display.
-            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value);
+            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value, CultureInfo.InvariantCulture);
             var cellRenderDetails = new List<CellRendererDescription>();
             for (int i = 0; i < Math.Min(simulationDescriptions.Count, maximumNumberOfSimulations); i++)
             {
@@ -244,9 +245,9 @@
                 var selectedSimulations = GetSelectedSimulationNamesFromView();
 
                 // Before running the simulations, disable all simulations except for those which are selected.
-                RunCommand runner = new RunCommand(experiment, explorerPresenter, false);
-                runner.SimulationNamesToRun = selectedSimulations;
-                runner.Do(explorerPresenter.CommandHistory);
+                var runner = new Runner(experiment, simulationNamesToRun: selectedSimulations, wait: false);
+                RunCommand runCmd = new RunCommand(experiment.Name, runner, explorerPresenter);
+                runCmd.Do(explorerPresenter.CommandHistory);
             }
             catch (Exception e)
             {

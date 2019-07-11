@@ -7,6 +7,7 @@ using System.IO;
 using System.Data;
 using System.Linq;
 using Models.PMF.Struct;
+using System.Globalization;
 
 namespace Models.PMF.Phen
 {
@@ -187,7 +188,7 @@ namespace Models.PMF.Phen
             if (newStage > phases.Count()+1)
                 throw new Exception(this + " Trying to set to non-existant stage");
 
-            currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage)) - 1;
+            currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage), CultureInfo.InvariantCulture) - 1;
 
             if (newStage < Stage) 
             {

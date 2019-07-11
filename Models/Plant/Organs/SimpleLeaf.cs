@@ -305,7 +305,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (MicroClimatePresent)
+                if (MicroClimatePresent && LightProfile != null)
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
@@ -396,9 +396,9 @@ namespace Models.PMF.Organs
                 if (CoverFunction == null && ExtinctionCoefficientFunction == null)
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
                 if (CoverFunction != null)
-                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value() * -1));
+                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value() * -1)) * parentPlant.populationFactor;
                 if (LAIFunction != null)
-                    LAI = LAIFunction.Value();
+                    LAI = LAIFunction.Value() * parentPlant.populationFactor;
 
                 Height = HeightFunction.Value();
                 if (BaseHeightFunction == null)
@@ -668,8 +668,8 @@ namespace Models.PMF.Organs
         {
             if (dmConversionEfficiency.Value() > 0.0)
             {
-                DMDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
-                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
+                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value()) * parentPlant.populationFactor;
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value()) * parentPlant.populationFactor;
                 DMDemand.Metabolic = 0;
             }
             else

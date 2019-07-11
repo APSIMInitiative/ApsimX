@@ -12,6 +12,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -29,6 +30,9 @@
     [ValidParent(ParentType = typeof(Folder))]
     public class Sobol : Model, ISimulationDescriptionGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
@@ -112,7 +116,7 @@
             }
             set
             {
-                NumPaths = Convert.ToInt32(value[0].Rows[0][1]);
+                NumPaths = Convert.ToInt32(value[0].Rows[0][1], CultureInfo.InvariantCulture);
 
                 Parameters.Clear();
                 foreach (DataRow row in value[1].Rows)
@@ -123,9 +127,9 @@
                     if (!Convert.IsDBNull(row["Path"]))
                         param.Path = row["Path"].ToString();
                     if (!Convert.IsDBNull(row["LowerBound"]))
-                        param.LowerBound = Convert.ToDouble(row["LowerBound"]);
+                        param.LowerBound = Convert.ToDouble(row["LowerBound"], CultureInfo.InvariantCulture);
                     if (!Convert.IsDBNull(row["UpperBound"]))
-                        param.UpperBound = Convert.ToDouble(row["UpperBound"]);
+                        param.UpperBound = Convert.ToDouble(row["UpperBound"], CultureInfo.InvariantCulture);
                     if (param.Name != null || param.Path != null)
                         Parameters.Add(param);
                 }
@@ -164,13 +168,16 @@
         }
 
         /// <summary>
-        /// Invoked when a run is done.
+        /// Invoked when a run is beginning.
         /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments.</param>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun()
+        private void OnBeginRun(object sender, EventArgs e)
         {
-            allCombinations.Clear();
-            ParameterValues.Clear();
+            R r = new R();
+            Console.WriteLine(r.InstallPackage("boot"));
+            Console.WriteLine(r.InstallPackage("sensitivity"));
         }
 
         /// <summary>
@@ -237,7 +244,7 @@
                     var factors = new List<CompositeFactor>();
                     for (int p = 0; p < Parameters.Count; p++)
                     {
-                        object value = Convert.ToDouble(parameterRow[p]);
+                        object value = Convert.ToDouble(parameterRow[p], CultureInfo.InvariantCulture);
                         var f = new CompositeFactor(Parameters[p].Name, Parameters[p].Path, value);
                         factors.Add(f);
                     }
@@ -260,9 +267,8 @@
             }
         }
 
-        /// <summary>Main run method for performing our post simulation calculations</summary>
-        /// <param name="dataStore">The data store.</param>
-        public void Run(IDataStore dataStore)
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void Run()
         {
             DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
@@ -393,8 +399,6 @@
             string rFileName = GetTempFileName("sobolscript", ".r");
             File.WriteAllText(rFileName, script);
             R r = new R();
-            Console.WriteLine(r.GetPackage("boot"));
-            Console.WriteLine(r.GetPackage("sensitivity"));
 
             string result = r.Run(rFileName, "");
             string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");

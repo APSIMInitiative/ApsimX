@@ -1,9 +1,10 @@
-﻿namespace Models.Core
+﻿namespace Models.Core.Run
 {
-    using Models.Core.Run;
     using System.Collections.Generic;
 
-    /// <summary>An interface for something that can generate simulations to run</summary>
+    /// <summary>
+    /// An interface for a model that generates simulation descriptions.
+    /// </summary>
     public interface ISimulationDescriptionGenerator
     {
         /// <summary>Gets a list of simulation descriptions.</summary>

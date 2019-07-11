@@ -22,6 +22,9 @@ namespace Models.Core
     [Serializable]
     public class Model : IModel
     {
+        [NonSerialized]
+        private IModel modelParent;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Model" /> class.
         /// </summary>
@@ -48,7 +51,7 @@ namespace Models.Core
         /// Gets or sets the parent of the model.
         /// </summary>
         [XmlIgnore]
-        public IModel Parent { get; set; }
+        public IModel Parent { get { return modelParent; } set { modelParent = value; } }
 
         /// <summary>
         /// Gets or sets a value indicating whether a model is hidden from the user.

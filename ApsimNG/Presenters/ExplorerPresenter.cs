@@ -5,7 +5,7 @@
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
-    using Models.Core.Runners;
+    using Models.Core.Run;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -572,8 +572,8 @@
                 {
                     MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
-                    RunOrganiser organiser = new RunOrganiser(ApsimXFile, model, false);
-                    var errors = organiser.GenerateApsimXFiles(path, (int percent) => 
+                    var runner = new Runner(model);
+                    var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) => 
                     {
                         MainPresenter.ShowProgress(percent, false);
                     });

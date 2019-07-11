@@ -11,6 +11,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Xml.Serialization;
@@ -27,6 +28,9 @@
     [ValidParent(ParentType = typeof(Folder))]
     public class Morris : Model, ISimulationDescriptionGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
@@ -135,9 +139,9 @@
                     if (!Convert.IsDBNull(row["Path"]))
                         param.Path = row["Path"].ToString();
                     if (!Convert.IsDBNull(row["LowerBound"]))
-                        param.LowerBound = Convert.ToDouble(row["LowerBound"]);
+                        param.LowerBound = Convert.ToDouble(row["LowerBound"], CultureInfo.InvariantCulture);
                     if (!Convert.IsDBNull(row["UpperBound"]))
-                        param.UpperBound = Convert.ToDouble(row["UpperBound"]);
+                        param.UpperBound = Convert.ToDouble(row["UpperBound"], CultureInfo.InvariantCulture);
                     if (param.Name != null || param.Path != null)
                         Parameters.Add(param);
                 }
@@ -180,13 +184,15 @@
         }
 
         /// <summary>
-        /// Invoked when a run is done.
+        /// Invoked when a run is beginning.
         /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments.</param>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun()
+        private void OnBeginRun(object sender, EventArgs e)
         {
-            allCombinations.Clear();
-            ParameterValues = null;
+            R r = new R();
+            r.InstallPackage("sensitivity");
         }
 
         /// <summary>
@@ -207,7 +213,7 @@
                     var factors = new List<CompositeFactor>();
                     foreach (Parameter param in Parameters)
                     {
-                        object value = Convert.ToDouble(parameterRow[param.Name]);
+                        object value = Convert.ToDouble(parameterRow[param.Name], CultureInfo.InvariantCulture);
                         CompositeFactor f = new CompositeFactor(param.Name, param.Path, value);
                         factors.Add(f);
                     }
@@ -231,8 +237,7 @@
         }
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
-        /// <param name="dataStore">The data store.</param>
-        public void Run(IDataStore dataStore)
+        public void Run()
         {
             DataTable predictedData = dataStore.Reader.GetData(TableName, filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
@@ -365,7 +370,6 @@
             script += "write.table(apsimMorris$X, row.names = F, col.names = T, sep = \",\")" + Environment.NewLine;
             File.WriteAllText(rFileName, script);
             R r = new R();
-            Console.WriteLine(r.GetPackage("sensitivity"));
             return r.RunToTable(rFileName);
         }
 
@@ -427,7 +431,6 @@
 
             // Run R
             R r = new R();
-            Console.WriteLine(r.GetPackage("sensitivity"));
             r.RunToTable(rFileName);
 
             eeDataRaw = ApsimTextFile.ToTable(eeFileName);

@@ -12,6 +12,7 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Models.Core.Run;
     using Models.Storage;
+    using System.Globalization;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
@@ -271,7 +272,7 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value);
+                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value, CultureInfo.InvariantCulture);
                 }
                 catch (FormatException)
                 {
