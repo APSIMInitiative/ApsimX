@@ -135,12 +135,11 @@ namespace Models.Report
             try
             {
                 IVariable var = locator.GetObject(variableName);
-                if (var != null)
-                {
-                    Units = var.UnitsLabel;
-                    if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
-                        Units = Units.Substring(1, Units.Length - 2);
-                }
+                if (var == null && !string.IsNullOrWhiteSpace(variableName))
+                    throw new Exception($"Unable to locate variable '{variableName}'.");
+                Units = var.UnitsLabel;
+                if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                    Units = Units.Substring(1, Units.Length - 2);
             }
             catch (Exception) { }
 
@@ -181,17 +180,12 @@ namespace Models.Report
             this.locator = locator;
             this.events = events;
             this.clock = clock;
-            try
-            {
-                IVariable var = locator.GetObject(variableName);
-                if (var != null)
-                {
-                    Units = var.UnitsLabel;
-                    if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
-                        Units = Units.Substring(1, Units.Length - 2);
-                }
-            }
-            catch (Exception) { }
+            IVariable var = locator.GetObject(variableName);
+            if (var == null && !string.IsNullOrWhiteSpace(variableName))
+                throw new Exception($"Unable to locate variable '{variableName}'.");
+            Units = var.UnitsLabel;
+            if (Units != null && Units.StartsWith("(") && Units.EndsWith(")"))
+                Units = Units.Substring(1, Units.Length - 2);
         }
 
         /// <summary>

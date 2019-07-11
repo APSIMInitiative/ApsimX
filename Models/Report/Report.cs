@@ -85,39 +85,53 @@ namespace Models.Report
         [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            dataToWriteToDb = null;
-
-            // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
-            for (int i = 0; i < this.VariableNames.Length; i++)
+            try
             {
-                bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
-                if (!isDuplicate && this.VariableNames[i] != string.Empty)
+                dataToWriteToDb = null;
+
+                // sanitise the variable names and remove duplicates
+                List<string> variableNames = new List<string>();
+                variableNames.Add("Parent.Name as Zone");
+                for (int i = 0; i < this.VariableNames.Length; i++)
                 {
-                    string variable = this.VariableNames[i];
+                    bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
+                    if (!isDuplicate && this.VariableNames[i] != string.Empty)
+                    {
+                        string variable = this.VariableNames[i];
 
-                    // If there is a comment in this line, ignore everything after (and including) the comment.
-                    int commentIndex = variable.IndexOf("//");
-                    if (commentIndex >= 0)
-                        variable = variable.Substring(0, commentIndex);
+                        // If there is a comment in this line, ignore everything after (and including) the comment.
+                        int commentIndex = variable.IndexOf("//");
+                        if (commentIndex >= 0)
+                            variable = variable.Substring(0, commentIndex);
 
-                    // No need to add an empty variable
-                    if (!string.IsNullOrEmpty(variable))
-                        variableNames.Add(variable.Trim());
+                        // No need to add an empty variable
+                        if (!string.IsNullOrEmpty(variable))
+                            variableNames.Add(variable.Trim());
+                    }
+                }
+                this.VariableNames = variableNames.ToArray();
+                this.FindVariableMembers();
+
+                // Subscribe to events.
+                if (EventNames != null)
+                {
+                    foreach (string eventName in EventNames)
+                    {
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(eventName))
+                                events.Subscribe(eventName.Trim(), DoOutputEvent);
+                        }
+                        catch (Exception err)
+                        {
+                            throw new Exception($"Invalid reporting frequency: '{eventName}'", err);
+                        }
+                    }
                 }
             }
-            this.VariableNames = variableNames.ToArray();
-            this.FindVariableMembers();
-
-            // Subscribe to events.
-            if (EventNames != null)
+            catch (Exception err)
             {
-                foreach (string eventName in EventNames)
-                {
-                    if (eventName != string.Empty)
-                        events.Subscribe(eventName.Trim(), DoOutputEvent);
-                }
+                throw new Exception($"Error in report '{Name}': {err.Message}", err);
             }
         }
 
