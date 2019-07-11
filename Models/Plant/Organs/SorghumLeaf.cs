@@ -460,7 +460,7 @@ namespace Models.PMF.Organs
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        [EventSubscribe("DoSorghumCalcs")]
+        [EventSubscribe("PrePhenology")]
         private void OnUpdateFinalLeafNo(object sender, EventArgs e)
         {
             double fi = 5;
