@@ -15,7 +15,7 @@
     public class SimulationDescription : IRunnable
     {
         /// <summary>The top level simulations instance.</summary>
-        private IModel topLevelModel;
+        private Simulations topLevelModel;
 
         /// <summary>The base simulation.</summary>
         private Simulation baseSimulation;
@@ -37,9 +37,10 @@
             baseSimulation = sim;
             if (sim != null)
             {
-                topLevelModel = sim;
-                while (topLevelModel.Parent != null)
-                    topLevelModel = topLevelModel.Parent;
+                IModel topLevel = sim;
+                while (topLevel.Parent != null)
+                    topLevel = topLevel.Parent;
+                topLevelModel = topLevel as Simulations;
             }
 
             if (name == null && baseSimulation != null)
@@ -105,38 +106,22 @@
 
                 Simulation newSimulation;
                 if (doClone)
-                {
                     newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-
-                    // If there is a child DataStore 
-                    // remove it and use the same one as in baseSimulation. This is
-                    // because we want to use the same DataStore for all simulations
-                    // and not have a separate DataStore instance for each simulation.
-                    Model goodStorage;
-                    if (topLevelModel == null)
-                        goodStorage = Apsim.Child(newSimulation, typeof(IDataStore)) as Model;
-                    else
-                        goodStorage = Apsim.Child(topLevelModel, typeof(IDataStore)) as Model;
-                    var unwantedStorage = Apsim.Child(newSimulation, typeof(IDataStore)) as Model;
-                    if (unwantedStorage != null)
-                        Apsim.Delete(unwantedStorage);
-                    if (goodStorage != null)
-                        newSimulation.Children.Add(goodStorage);
-                }
                 else
                     newSimulation = baseSimulation;
 
-                if (Name == null)
+                if (string.IsNullOrWhiteSpace(Name))
                     newSimulation.Name = baseSimulation.Name;
                 else
                     newSimulation.Name = Name;
+
                 newSimulation.Parent = null;
                 Apsim.ParentAllChildren(newSimulation);
                 replacementsToApply.ForEach(r => r.Replace(newSimulation));
 
                 // Give the simulation the descriptors.
                 newSimulation.Descriptors = Descriptors;
-
+                newSimulation.Services = topLevelModel.GetServices();
                 return newSimulation;
             }
             catch (Exception err)
