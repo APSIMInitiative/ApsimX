@@ -267,7 +267,7 @@
                 }
             }
 
-            var links = new Links();
+            var links = new Links(services);
             foreach (ITest test in Apsim.ChildrenRecursively(rootModel, typeof(ITest)))
             {
                 DateTime startTime = DateTime.Now;
