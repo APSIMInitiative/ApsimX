@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,6 +106,7 @@ namespace Models.Core
         }
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
+        [JsonIgnore]
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
 
         /// <summary>Gets the value of a variable or model.</summary>
@@ -137,6 +139,7 @@ namespace Models.Core
         public string FileName { get; set; }
 
         /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>
+        [JsonIgnore]
         public List<object> Services { get; set; } = new List<object>();
 
         /// <summary>
