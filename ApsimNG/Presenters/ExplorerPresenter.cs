@@ -718,11 +718,11 @@
 
         public void DownloadSoil()
         {
-            Models.Soils.Soil currentSoil = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Models.Soils.Soil;
-            if (currentSoil != null)
-            {
+            Model model = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Model;
+            if (model != null)
+            { 
                 Utility.SoilDownloadDialog dlg = new Utility.SoilDownloadDialog();
-                dlg.ShowFor(currentSoil, (view as ExplorerView), this.view.Tree.SelectedNode, this);
+                dlg.ShowFor(model, (view as ExplorerView), this.view.Tree.SelectedNode, this);
             }
         }
 
