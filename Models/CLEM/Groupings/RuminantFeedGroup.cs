@@ -72,6 +72,12 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
 
+            if(this.Parent.GetType() != typeof(RuminantActivityFeed))
+            {
+                html += "<div class=\"warningbanner\">This Ruminant Feed Group must be placed beneath a Ruminant Activity Feed parent</div>";
+                return html;
+            }
+
             RuminantFeedActivityTypes ft = (this.Parent as RuminantActivityFeed).FeedStyle;
             html += "\n<div class=\"activityentry\">";
             switch (ft)

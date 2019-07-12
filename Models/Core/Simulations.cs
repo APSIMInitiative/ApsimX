@@ -265,7 +265,7 @@ namespace Models.Core
                     modelToDocument.IncludeInDocumentation = true;
                     foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))
                         child.IncludeInDocumentation = true;
-
+                    Links.Resolve(modelToDocument, true, true);
                     // Document the model.
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);
 
