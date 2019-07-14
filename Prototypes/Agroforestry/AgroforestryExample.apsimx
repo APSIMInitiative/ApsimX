@@ -1,9 +1,33 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 287,
+  "ExplorerWidth": 300,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [
+        {
+          "$type": "Models.PostSimulationTools.ExcelInput, Models",
+          "FileName": "Observed.xlsx",
+          "FileNameMetadata": null,
+          "SheetNames": [
+            "ObservedWarraBlock1"
+          ],
+          "Name": "Observed",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
     {
       "$type": "Models.Core.Simulation, Models",
       "Name": "Small Windbreak Example",
@@ -332,8 +356,8 @@
                   "VariableNames": [
                     "[Clock].Today",
                     "[Zone].Area",
-                    "Distance",
-                    "Radn",
+                    "[TreeRow].Distance",
+                    "[Weather].Radn as Radn",
                     "[LocalMicroClimate].Radn",
                     "[TreeProxy].Shade"
                   ],
@@ -355,11 +379,11 @@
                     "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3N",
                     "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                     "[TreeProxy].WaterUptake",
-                    "[TreeProxy].Urel",
+                    "//[TreeProxy].Urel",
                     "[TreeProxy].H",
                     "[TreeProxy].heightToday",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr"
+                    "[MicroClimate].PetAerodynamicTerm",
+                    "[MicroClimate].PetRadiationTerm"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -954,7 +978,7 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Wheat].Zadok.Stage",
+                    "[Wheat].Phenology.Zadok.Stage",
                     "[Wheat].Phenology.CurrentStageName",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].AboveGround.N",
@@ -994,11 +1018,11 @@
                     "[Wheat].Leaf.CoverGreen",
                     "[Wheat].height",
                     "[Wheat].PotentialEP",
-                    "[TreeProxy].Urel",
+                    "//[TreeProxy].Urel",
                     "[TreeProxy].H",
                     "[TreeProxy].heightToday",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr"
+                    "[MicroClimate].PetAerodynamicTerm",
+                    "[MicroClimate].PetRadiationTerm"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -1605,7 +1629,7 @@
                   "VariableNames": [
                     "[Clock].Today",
                     "[Zone].LocalMicroClimate.Wind",
-                    "[Wheat].Zadok.Stage",
+                    "[Wheat].Phenology.Zadok.Stage",
                     "[Wheat].Phenology.CurrentStageName",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].AboveGround.N",
@@ -1616,7 +1640,7 @@
                     "[Wheat].Grain.Wt",
                     "[Wheat].Grain.N",
                     "[Wheat].Total.Wt",
-                    "Distance",
+                    "[5 to 10m].Distance",
                     "[Zone].Area"
                   ],
                   "EventNames": [
@@ -1644,11 +1668,11 @@
                     "[Wheat].Leaf.CoverGreen",
                     "[Wheat].height",
                     "[Wheat].PotentialEP",
-                    "[TreeProxy].Urel",
+                    "//[TreeProxy].Urel",
                     "[TreeProxy].H",
                     "[TreeProxy].heightToday",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr"
+                    "[MicroClimate].PetAerodynamicTerm",
+                    "[MicroClimate].PetRadiationTerm"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -2254,7 +2278,7 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Wheat].Zadok.Stage",
+                    "[Wheat].Phenology.Zadok.Stage",
                     "[Wheat].Phenology.CurrentStageName",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].AboveGround.N",
@@ -2265,7 +2289,7 @@
                     "[Wheat].Grain.Wt",
                     "[Wheat].Grain.N",
                     "[Wheat].Total.Wt",
-                    "Distance",
+                    "[10 to 15m].Distance",
                     "[Zone].Area"
                   ],
                   "EventNames": [
@@ -2293,8 +2317,8 @@
                     "[Wheat].Leaf.CoverGreen",
                     "[Wheat].height",
                     "[Wheat].PotentialEP",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr"
+                    "[MicroClimate].PetAerodynamicTerm",
+                    "[MicroClimate].PetRadiationTerm"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -2900,7 +2924,7 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Wheat].Zadok.Stage",
+                    "[Wheat].Phenology.Zadok.Stage",
                     "[Wheat].Phenology.CurrentStageName",
                     "[Wheat].AboveGround.Wt",
                     "[Wheat].AboveGround.N",
@@ -2913,7 +2937,7 @@
                     "[Wheat].Total.Wt",
                     "[Zone].Area",
                     "Field1.Area",
-                    "Distance"
+                    "[15 to 20m].Distance"
                   ],
                   "EventNames": [
                     "[Wheat].Harvesting"
@@ -2940,8 +2964,8 @@
                     "[Wheat].Leaf.CoverGreen",
                     "[Wheat].height",
                     "[Wheat].PotentialEP",
-                    "[MicroClimate].peta",
-                    "[MicroClimate].petr"
+                    "[MicroClimate].PetAerodynamicTerm",
+                    "[MicroClimate].PetRadiationTerm"
                   ],
                   "EventNames": [
                     "[Clock].DoReport"
@@ -3606,7 +3630,7 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "Yield",
               "Children": [
                 {
@@ -4370,7 +4394,7 @@
                   "Minimum": "NaN",
                   "Maximum": "NaN",
                   "Interval": "NaN",
-                  "DateTimeAxis": false,
+                  "DateTimeAxis": true,
                   "CrossesAtZero": false
                 },
                 {
@@ -4386,7 +4410,7 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "Name": "TreeWaterUptakeCum",
               "Children": [
                 {
@@ -14497,30 +14521,6 @@
       "ReadOnly": false
     },
     {
-      "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
-      "CustomFileName": null,
-      "Name": "DataStore",
-      "Children": [
-        {
-          "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
-          "SheetNames": [
-            "ObservedWarraBlock1"
-          ],
-          "Name": "Observed",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Graph.Graph, Models",
       "Caption": null,
       "Axis": [
@@ -14548,7 +14548,7 @@
         }
       ],
       "LegendPosition": 0,
-      "DisabledSeries": null,
+      "DisabledSeries": [],
       "Name": "Yield",
       "Children": [
         {
