@@ -62,10 +62,7 @@ namespace Models.PMF
 
         [Link]
         private SorghumLeaf leaf = null;
-
-        [ScopedLinkByName]
-        private GenericOrgan stem = null;
-
+        
         #endregion
 
         #region Main outputs
@@ -213,7 +210,7 @@ namespace Models.PMF
         public double PhotoStress { get; set; }
 
         /// <summary>
-        /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
+        /// Calculate the potential N uptake for today. Should return null if crop is not in the ground (this is not true for old sorghum).
         /// </summary>
         public override List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
@@ -229,12 +226,8 @@ namespace Models.PMF
                 var leafIndex = 2;
                 var stemIndex = 4;
 
-                var nGreen = stem.Live.N;
-                var dmGreen = stem.Live.Wt;
-                var dltDM = stem.potentialDMAllocation.Structural;
-
                 var rootDemand = N.StructuralDemand[rootIndex] + N.MetabolicDemand[rootIndex];
-                var stemDemand = N.StructuralDemand[stemIndex] + N.MetabolicDemand[stemIndex];
+                var stemDemand = /*N.StructuralDemand[stemIndex] + */N.MetabolicDemand[stemIndex];
                 var leafDemand = N.MetabolicDemand[leafIndex];
                 var grainDemand = N.StructuralDemand[grainIndex] + N.MetabolicDemand[grainIndex];
                 //have to correct the leaf demand calculation
@@ -249,6 +242,7 @@ namespace Models.PMF
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
@@ -266,7 +260,7 @@ namespace Models.PMF
                     
                     //at present these 2arrays arenot being used within the CalculateNitrogenSupply function
                     //sorghum uses Diffusion & Massflow variables currently
-                    double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha
+                    double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha - dltNo3 in old apsim
                     double[] organNH4Supply = new double[zone.NH4N.Length];
 
                     ZoneState myZone = root.Zones.Find(z => z.Name == zone.Zone.Name);
@@ -289,7 +283,11 @@ namespace Models.PMF
                         var actualMassFlow = dltt > 0 ? totalMassFlow : 0.0;
                         var maxDiffusionConst = root.MaxDiffusion.Value();
 
-                        if (totalMassFlow < nDemand && dltt > 0.0)
+                        double ttElapsed = (Apsim.Find(this, "TTFMFromFlowering") as Functions.IFunction).Value();
+                        if (ttElapsed > 570)
+                            totalMassFlow = 0;
+
+                        if (totalMassFlow < nDemand && ttElapsed < 570) // fixme && ttElapsed < nUptakeCease
                         {
                             actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
                             actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
@@ -359,17 +357,17 @@ namespace Models.PMF
                 myZone.MassFlow[layer] = no3massFlow;
 
                 //diffusion
-                var swAvailFrac = myZone.AvailableSW[layer] / myZone.PotentialAvailableSW[layer];
+                var swAvailFrac = MathUtilities.Divide(myZone.AvailableSW[layer], myZone.PotentialAvailableSW[layer], 0);
                 //old sorghum stores N03 in g/ms not kg/ha
                 var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
+
+                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
 
                 if (layer == currentLayer)
                 {
                     var proportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
-                    no3Diffusion *= proportion;
+                    myZone.Diffusion[layer] *= proportion;
                 }
-
-                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
 
                 //NH4Supply[layer] = no3massFlow;
                 //onyl 2 fields passed in for returning data. 
