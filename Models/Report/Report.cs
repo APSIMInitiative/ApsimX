@@ -131,7 +131,7 @@ namespace Models.Report
             }
             catch (Exception err)
             {
-                throw new Exception($"Error in report '{Name}': {err.Message}", err);
+                throw new Exception($"Error in report '{Apsim.FullPath(this)}': {err.Message}", err);
             }
         }
 
