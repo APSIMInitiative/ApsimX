@@ -8843,7 +8843,6 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Sorghum_SomeStress",
           "Children": [
             {
@@ -16210,7 +16209,6 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Sorghum_NoStress",
           "Children": [
             {
@@ -24391,7 +24389,6 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Sorghum_NStress",
           "Children": [
             {
@@ -33517,7 +33514,6 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Sorghum_WaterStress",
           "Children": [
             {
