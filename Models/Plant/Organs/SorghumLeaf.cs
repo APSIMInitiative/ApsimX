@@ -250,10 +250,6 @@ namespace Models.PMF.Organs
         [ChildLinkByName]
         IFunction dltLAIFunction = null;
 
-        /// <summary>The lai dead function</summary>
-        [Link]
-        IFunction LaiDeadFunction = null;
-
         ///// <summary>The lai dead function</summary>
         //[Link]
         //IFunction sdRatio = null;
@@ -577,7 +573,7 @@ namespace Models.PMF.Organs
 
                 Height = HeightFunction.Value();
 
-                LAIDead = LaiDeadFunction.Value();
+                LAIDead = SenescedLai;
             }
         }
 
@@ -614,6 +610,7 @@ namespace Models.PMF.Organs
             //UpdateVars
             SenescedLai += DltSenescedLai;
             LAI += DltLAI - DltSenescedLai;
+            //LAIDead = SenescedLai; // drew todo
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
 
@@ -720,10 +717,6 @@ namespace Models.PMF.Organs
 
             DltSenescedLaiFrost = calcLaiSenescenceFrost();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiFrost);
-            if(DltSenescedLai > 0.0)
-            {
-                Console.WriteLine("DltSenescedLAI: {0}", DltSenescedLai);
-            }
         }
 
         private double calcLaiSenescenceFrost()
@@ -783,8 +776,6 @@ namespace Models.PMF.Organs
                 dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst, 0.0));
             }
             dltSlaiWater = Math.Min(LAI, dltSlaiWater);
-            if (dltSlaiWater > 0)
-                Console.WriteLine("dltSlaiWater");
             return dltSlaiWater;
             //return 0.0;
         }
@@ -1134,7 +1125,6 @@ namespace Models.PMF.Organs
         public double provideNRetranslocation(BiomassArbitrationType BAT, double requiredN, bool forLeaf)
         {
             int leafIndex = 2;
-
             double laiToday = calcLAI();
             //whether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
@@ -1142,16 +1132,15 @@ namespace Models.PMF.Organs
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
-            var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total, LAI, 0.0);
             var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
             dilutionN = Math.Max(dilutionN, 0);
             if(phenology.Between("Germination", "Flowering"))
             {
                 // pre anthesis, get N from dilution, decreasing dltLai and senescence
                 double nProvided = Math.Min(dilutionN, requiredN / 2.0);
-                requiredN -= nProvided;
-                nGreenToday -= nProvided; //jkb
                 DltRetranslocatedN -= nProvided;
+                nGreenToday -= nProvided; //jkb
+                requiredN -= nProvided;
                 if (requiredN <= 0.0001)
                     return nProvided;
 

@@ -304,6 +304,11 @@ namespace Models.PMF
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
 
+                        // Update reporting variables. Yes this will be called four times each day
+                        // and so we only record the last value each time. It doesn't make a huge difference.
+                        NDiffusionSupply = actualDiffusion;
+                        NMassFlowSupply = actualMassFlow;
+
                         //adjust diffusion values proportionally
                         //make sure organNO3Supply is in kg/ha
                         for (int layer = 0; layer < organNO3Supply.Length; layer++)
@@ -390,8 +395,8 @@ namespace Models.PMF
                 // Calculate the total no3 and nh4 across all zones.
                 var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
-                NMassFlowSupply = 0.0; //rewporting variables
-                NDiffusionSupply = 0.0;
+                //NMassFlowSupply = 0.0; //rewporting variables
+                //NDiffusionSupply = 0.0;
                 var supply = 0.0;
                 foreach (ZoneWaterAndN Z in zones)
                 {
@@ -434,7 +439,7 @@ namespace Models.PMF
                 var nArbitrator = arbitrator as SorghumArbitratorN;
                 if (nArbitrator != null)
                 {
-                    nArbitrator.DoRetranslocation(Organs, BAT);
+                    nArbitrator.DoRetranslocation(Organs, BAT, DM);
                 }
                 else
                 {
