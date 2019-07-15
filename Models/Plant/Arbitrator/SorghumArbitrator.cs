@@ -237,7 +237,11 @@ namespace Models.PMF
                 //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 //old sorghum uses g/m^2 - need to convert after it is used to calculate actual diffusion
                 // leaf adjustment is not needed here because it is an adjustment for structural demand - we only look at metabolic here.
-                var nDemand = Math.Max(0, N.TotalMetabolicDemand - grainDemand); // to replicate calcNDemand in old sorghum 
+
+                // dh - In old sorghum, root only has one type of NDemand - it doesn't have a structural/metabolic division.
+                // In new apsim, root only uses structural, metabolic is always 0. Therefore, we have to include root's structural
+                // NDemand in this calculation.
+                var nDemand = Math.Max(0, N.TotalMetabolicDemand + N.StructuralDemand[rootIndex] - grainDemand); // to replicate calcNDemand in old sorghum 
                                 
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
