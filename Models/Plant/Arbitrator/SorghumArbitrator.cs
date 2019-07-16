@@ -237,7 +237,11 @@ namespace Models.PMF
                 //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 //old sorghum uses g/m^2 - need to convert after it is used to calculate actual diffusion
                 // leaf adjustment is not needed here because it is an adjustment for structural demand - we only look at metabolic here.
-                var nDemand = Math.Max(0, N.TotalMetabolicDemand - grainDemand); // to replicate calcNDemand in old sorghum 
+
+                // dh - In old sorghum, root only has one type of NDemand - it doesn't have a structural/metabolic division.
+                // In new apsim, root only uses structural, metabolic is always 0. Therefore, we have to include root's structural
+                // NDemand in this calculation.
+                var nDemand = Math.Max(0, N.TotalMetabolicDemand + N.StructuralDemand[rootIndex] - grainDemand); // to replicate calcNDemand in old sorghum 
                                 
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
@@ -299,6 +303,11 @@ namespace Models.PMF
                             var maxUptake = Math.Max(0, maxUptakeRateFrac * dltt - actualMassFlow);
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
+
+                        // Update reporting variables. Yes this will be called four times each day
+                        // and so we only record the last value each time. It doesn't make a huge difference.
+                        NDiffusionSupply = actualDiffusion;
+                        NMassFlowSupply = actualMassFlow;
 
                         //adjust diffusion values proportionally
                         //make sure organNO3Supply is in kg/ha
@@ -386,8 +395,8 @@ namespace Models.PMF
                 // Calculate the total no3 and nh4 across all zones.
                 var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
-                NMassFlowSupply = 0.0; //rewporting variables
-                NDiffusionSupply = 0.0;
+                //NMassFlowSupply = 0.0; //rewporting variables
+                //NDiffusionSupply = 0.0;
                 var supply = 0.0;
                 foreach (ZoneWaterAndN Z in zones)
                 {
@@ -430,7 +439,7 @@ namespace Models.PMF
                 var nArbitrator = arbitrator as SorghumArbitratorN;
                 if (nArbitrator != null)
                 {
-                    nArbitrator.DoRetranslocation(Organs, BAT);
+                    nArbitrator.DoRetranslocation(Organs, BAT, DM);
                 }
                 else
                 {

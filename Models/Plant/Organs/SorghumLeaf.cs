@@ -210,6 +210,9 @@ namespace Models.PMF.Organs
         [Units("0-1")]
         public double CoverGreen { get; set; }
 
+        /// <summary>Gets the cover dead.</summary>
+        public double CoverDead { get; set; }
+
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
         public double CoverTotal
@@ -249,10 +252,6 @@ namespace Models.PMF.Organs
         /// <summary>The lai dead function</summary>
         [ChildLinkByName]
         IFunction dltLAIFunction = null;
-
-        /// <summary>The lai dead function</summary>
-        [Link]
-        IFunction LaiDeadFunction = null;
 
         ///// <summary>The lai dead function</summary>
         //[Link]
@@ -341,9 +340,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
 
-
-        /// <summary>Gets the cover dead.</summary>
-        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
 
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
@@ -577,7 +573,7 @@ namespace Models.PMF.Organs
 
                 Height = HeightFunction.Value();
 
-                LAIDead = LaiDeadFunction.Value();
+                LAIDead = SenescedLai;
             }
         }
 
@@ -613,10 +609,12 @@ namespace Models.PMF.Organs
 
             //UpdateVars
             SenescedLai += DltSenescedLai;
+
             LAI += DltLAI - DltSenescedLai;
+            LAIDead = SenescedLai; // drew todo
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
-
+            CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAIDead), 0.0, 0.999999999);
             var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
             NitrogenPhotoStress = Math.Max(photoStress, 0.0);
 
@@ -720,10 +718,6 @@ namespace Models.PMF.Organs
 
             DltSenescedLaiFrost = calcLaiSenescenceFrost();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiFrost);
-            if(DltSenescedLai > 0.0)
-            {
-                Console.WriteLine("DltSenescedLAI: {0}", DltSenescedLai);
-            }
         }
 
         private double calcLaiSenescenceFrost()
@@ -783,8 +777,6 @@ namespace Models.PMF.Organs
                 dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst, 0.0));
             }
             dltSlaiWater = Math.Min(LAI, dltSlaiWater);
-            if (dltSlaiWater > 0)
-                Console.WriteLine("dltSlaiWater");
             return dltSlaiWater;
             //return 0.0;
         }
@@ -818,9 +810,10 @@ namespace Models.PMF.Organs
         {
             // Derives seneseced plant dry matter (g/m^2) for the day
             //Should not include any retranloocated biomass
-            double laiToday = LAI + DltLAI - DltSenescedLai; // how much LAI we will end up with at end of day
+            // dh - old apsim does not take into account DltSenescedLai for this laiToday calc
+            double laiToday = LAI + DltLAI/* - DltSenescedLai*/; // how much LAI we will end up with at end of day
             double slaToday = MathUtilities.Divide(laiToday, Live.Wt, 0.0); // m2/g?
-            double sla = MathUtilities.Divide(LAI, Live.Wt, 0);
+
             if (MathUtilities.IsPositive(Live.Wt))
             {
                 // In Old Apsim, this was calculated as: DltSenescedLai / slaToday
@@ -849,8 +842,8 @@ namespace Models.PMF.Organs
                     Dead.StorageWt += storageWtSenescing;
                     Senesced.StructuralWt += structuralWtSenescing;
 
-                    double sln = MathUtilities.Divide(Live.N, LAI, 0.0);
-                    DltSenescedN += DltSenescedLai * Math.Max((sln - SenescedLeafSLN.Value()), 0.0);
+                    double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
+                    DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
 
                     SenescingProportion = DltSenescedN / Live.N;
 
@@ -1134,7 +1127,6 @@ namespace Models.PMF.Organs
         public double provideNRetranslocation(BiomassArbitrationType BAT, double requiredN, bool forLeaf)
         {
             int leafIndex = 2;
-
             double laiToday = calcLAI();
             //whether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
@@ -1142,16 +1134,15 @@ namespace Models.PMF.Organs
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
-            var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total, LAI, 0.0);
             var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
             dilutionN = Math.Max(dilutionN, 0);
             if(phenology.Between("Germination", "Flowering"))
             {
                 // pre anthesis, get N from dilution, decreasing dltLai and senescence
                 double nProvided = Math.Min(dilutionN, requiredN / 2.0);
-                requiredN -= nProvided;
-                nGreenToday -= nProvided; //jkb
                 DltRetranslocatedN -= nProvided;
+                nGreenToday -= nProvided; //jkb
+                requiredN -= nProvided;
                 if (requiredN <= 0.0001)
                     return nProvided;
 
@@ -1181,7 +1172,7 @@ namespace Models.PMF.Organs
                 double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
                 double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
                 DltRetranslocatedN -= newN;
-                nGreenToday += newN;
+                nGreenToday += newN; // local variable
                 nProvided += newN;
                 DltSenescedLaiN += senescenceLAI;
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
@@ -1411,7 +1402,8 @@ namespace Models.PMF.Organs
                 Removed.Clear();
 
                 //clear local variables
-                DltLAI = 0.0;
+                // dh - DltLAI cannot be cleared here. It needs to retain its value from yesterday,
+                // for when leaf retranslocates to itself in provideN().
                 dltPotentialLAI = 0.0;
                 DltRetranslocatedN = 0.0;
                 DltSenescedLai = 0.0;
