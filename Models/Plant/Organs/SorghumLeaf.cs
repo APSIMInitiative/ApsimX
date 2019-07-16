@@ -816,12 +816,9 @@ namespace Models.PMF.Organs
 
             if (MathUtilities.IsPositive(Live.Wt))
             {
-                // In Old Apsim, this was calculated as: DltSenescedLai / slaToday
-                // However, DltSenescedLai can be greater than slaToday if we senesce most of the leaf.
-                // In this scenario, DltSenescedBiomass could end up greater than Live.Wt (!)
-                // To fix this, we divide start-of-day (pre-senescence) sla.
-                var DltSenescedBiomass = Live.Wt * MathUtilities.Divide(DltSenescedLai, LAI, 0);
-                var SenescingProportion = DltSenescedBiomass / Live.Wt;
+                // This is equivalent to dividing by slaToday
+                double DltSenescedBiomass = Live.Wt * MathUtilities.Divide(DltSenescedLai, laiToday, 0);
+                double SenescingProportion = DltSenescedBiomass / Live.Wt;
 
                 if (MathUtilities.IsGreaterThan(DltSenescedBiomass, Live.Wt))
                     throw new Exception($"Attempted to senesce more biomass than exists on leaf '{Name}'");
@@ -1270,8 +1267,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         protected virtual void SetDMDemand(object sender, EventArgs e)
         {
-            var leaves = Culms[0].CurrentLeafNumber - Culms[0].DltNewLeafAppeared;
-
             DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
             DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
             DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value()); // / dmConversionEfficiency.Value());
