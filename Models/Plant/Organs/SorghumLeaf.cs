@@ -609,6 +609,7 @@ namespace Models.PMF.Organs
 
             //UpdateVars
             SenescedLai += DltSenescedLai;
+
             LAI += DltLAI - DltSenescedLai;
             LAIDead = SenescedLai; // drew todo
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
@@ -1401,7 +1402,8 @@ namespace Models.PMF.Organs
                 Removed.Clear();
 
                 //clear local variables
-                DltLAI = 0.0;
+                // dh - DltLAI cannot be cleared here. It needs to retain its value from yesterday,
+                // for when leaf retranslocates to itself in provideN().
                 dltPotentialLAI = 0.0;
                 DltRetranslocatedN = 0.0;
                 DltSenescedLai = 0.0;
