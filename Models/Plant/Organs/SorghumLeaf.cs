@@ -1148,7 +1148,8 @@ namespace Models.PMF.Organs
                 {
                     double n = DltLAI * NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
-                    laiN = Math.Min(laiN, BAT.StructuralAllocation[leafIndex]);
+                    // dh - we don't make this check in old apsim
+                    //laiN = Math.Min(laiN, BAT.StructuralAllocation[leafIndex]);
                     if (MathUtilities.IsPositive(laiN))
                     {
                         DltLAI = (n - laiN) / NewLeafSLN.Value();
