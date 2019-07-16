@@ -809,9 +809,10 @@ namespace Models.PMF.Organs
         {
             // Derives seneseced plant dry matter (g/m^2) for the day
             //Should not include any retranloocated biomass
-            double laiToday = LAI + DltLAI - DltSenescedLai; // how much LAI we will end up with at end of day
+            // dh - old apsim does not take into account DltSenescedLai for this laiToday calc
+            double laiToday = LAI + DltLAI/* - DltSenescedLai*/; // how much LAI we will end up with at end of day
             double slaToday = MathUtilities.Divide(laiToday, Live.Wt, 0.0); // m2/g?
-            double sla = MathUtilities.Divide(LAI, Live.Wt, 0);
+
             if (MathUtilities.IsPositive(Live.Wt))
             {
                 // In Old Apsim, this was calculated as: DltSenescedLai / slaToday
@@ -1170,7 +1171,7 @@ namespace Models.PMF.Organs
                 double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
                 double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
                 DltRetranslocatedN -= newN;
-                nGreenToday += newN;
+                nGreenToday += newN; // local variable
                 nProvided += newN;
                 DltSenescedLaiN += senescenceLAI;
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
