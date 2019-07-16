@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 281,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
@@ -3996,6 +3996,7 @@
               "LAI": 0.0,
               "SLN": 0.0,
               "CoverGreen": 0.0,
+              "CoverDead": 0.0,
               "Height": 0.0,
               "WaterDemand": 0.0,
               "MicroClimatePresent": false,
@@ -29175,7 +29176,7 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "LAIPMF",
+                  "Name": "CoverGreenPMF",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -29205,7 +29206,7 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "LAI710",
+                  "Name": "CoverGreen710",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
