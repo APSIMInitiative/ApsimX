@@ -210,6 +210,9 @@ namespace Models.PMF.Organs
         [Units("0-1")]
         public double CoverGreen { get; set; }
 
+        /// <summary>Gets the cover dead.</summary>
+        public double CoverDead { get; set; }
+
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
         public double CoverTotal
@@ -337,9 +340,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
 
-
-        /// <summary>Gets the cover dead.</summary>
-        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
 
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
@@ -610,10 +610,10 @@ namespace Models.PMF.Organs
             //UpdateVars
             SenescedLai += DltSenescedLai;
             LAI += DltLAI - DltSenescedLai;
-            //LAIDead = SenescedLai; // drew todo
+            LAIDead = SenescedLai; // drew todo
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
-
+            CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAIDead), 0.0, 0.999999999);
             var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
             NitrogenPhotoStress = Math.Max(photoStress, 0.0);
 
