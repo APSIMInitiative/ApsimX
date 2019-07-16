@@ -841,8 +841,8 @@ namespace Models.PMF.Organs
                     Dead.StorageWt += storageWtSenescing;
                     Senesced.StructuralWt += structuralWtSenescing;
 
-                    double sln = MathUtilities.Divide(Live.N, LAI, 0.0);
-                    DltSenescedN += DltSenescedLai * Math.Max((sln - SenescedLeafSLN.Value()), 0.0);
+                    double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
+                    DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
 
                     SenescingProportion = DltSenescedN / Live.N;
 
