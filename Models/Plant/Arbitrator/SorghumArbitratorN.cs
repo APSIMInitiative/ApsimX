@@ -58,7 +58,12 @@ namespace Models.PMF
             var leaf = Organs[leafIndex] as SorghumLeaf;
             var leafAdjustment = leaf.calculateClassicDemandDelta();
 
-            var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
+            //var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
+
+            // dh - Old apsim calls organ->calcNDemand() to get demands. This is equivalent to metabolic NDemand in new apsim.
+            //      Root had no separation of structural/metabolic N in old apsim. New apsim is similar, except it's all in
+            //      structural demand, so we need to remember to take that into account as well.
+            var totalPlantNDemand = BAT.TotalMetabolicDemand + BAT.StructuralDemand[rootIndex] - grainDemand; // to replicate calcNDemand in old sorghum 
             if (MathUtilities.IsPositive(totalPlantNDemand))
             {
                 BAT.SupplyDemandRatioN = MathUtilities.Divide(BAT.TotalUptakeSupply, totalPlantNDemand, 0);
