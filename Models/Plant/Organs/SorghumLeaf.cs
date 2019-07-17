@@ -563,8 +563,14 @@ namespace Models.PMF.Organs
             dltStressedLAI = 0;
             if (LeafInitialised)
             {
-                dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
-                dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
+                // fixme
+                int emergence = 3; //= phenology.StartStagePhaseIndex("Emergence");
+                int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
+                if (phenology.Stage >= emergence && phenology.Stage <= flag)
+                {
+                    dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
+                    dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
+                }
                 //old model calculated BiomRUE at the end of the day
                 //this is done at strat of the day
                 BiomassRUE = Photosynthesis.Value();
