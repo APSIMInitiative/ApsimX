@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Soils;
     using APSIM.Shared.Utilities;
     using Core;
     using Functions;
@@ -20,7 +19,7 @@ namespace Models.WaterModel
     {
         /// <summary>The water movement model.</summary>
         [Link]
-        private SoilModel soil = null;
+        private WaterBalance soil = null;
 
         /// <summary>Depth of water table (mm)</summary>
         [XmlIgnore]

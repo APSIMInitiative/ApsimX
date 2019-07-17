@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Soils;
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
@@ -45,13 +44,13 @@ namespace Models.WaterModel
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
-    public class SoilModel : Model, ISoil
+    public class WaterBalance : Model, ISoil
     {
         // --- Links -------------------------------------------------------------------------
 
         /// <summary>Link to the soil properties.</summary>
         [Link]
-        private APSIM.Shared.Soils.Soil properties = null;
+        private APSIM.Shared.APSoil.Soil properties = null;
 
         /// <summary>Link to the lateral flow model.</summary>
         [Link]
@@ -180,7 +179,7 @@ namespace Models.WaterModel
         }
 
         /// <summary>Provides access to the soil properties.</summary>
-        public APSIM.Shared.Soils.Soil Properties {  get { return properties; } }
+        public APSIM.Shared.APSoil.Soil Properties {  get { return properties; } }
 
         // --- Event handlers ------------------------------------------------------------
 
@@ -191,7 +190,7 @@ namespace Models.WaterModel
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // Set our water to the initial value.
-            Water = MathUtilities.Multiply(properties.Water.SW, properties.Water.Thickness);
+            //Water = MathUtilities.Multiply(properties.Water.SW, properties.Water.Thickness);
         }
 
         /// <summary>Called by CLOCK to let this model do its water movement.</summary>
@@ -214,7 +213,7 @@ namespace Models.WaterModel
             // Allow irrigation to infiltrate.
             if (!irrigation.WillRunoff)
             {
-                int irrigationLayer = SoilUtilities.FindLayerIndex(properties, Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
+                int irrigationLayer = APSIM.Shared.APSoil.SoilUtilities.FindLayerIndex(properties, Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
                 Water[irrigationLayer] = irrigation.IrrigationApplied;
                 Infiltration += irrigation.IrrigationApplied;
 

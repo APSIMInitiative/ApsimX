@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Soils;
     using APSIM.Shared.Utilities;
     using Core;
     using Interfaces;
@@ -56,7 +55,7 @@ namespace Models.WaterModel
 
         /// <summary>The water movement model.</summary>
         [Link]
-        private SoilModel soil = null;
+        private WaterBalance soil = null;
 
         /// <summary>A function for reducing CN due to cover.</summary>
         [Link]
@@ -141,7 +140,7 @@ namespace Models.WaterModel
             double cumRunoffWeightingFactor = 0.0;
 
             // Get sumulative depth (mm)
-            double[] cumThickness = SoilUtilities.ToCumThickness(soil.Properties.Water.Thickness);
+            double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(soil.Properties.Water.Thickness);
 
             // Ensure hydro effective depth doesn't go below bottom of soil.
             hydrolEffectiveDepth = Math.Min(hydrolEffectiveDepth, MathUtilities.Sum(soil.Properties.Water.Thickness));
@@ -150,7 +149,7 @@ namespace Models.WaterModel
             double scaleFactor = 1.0 / (1.0 - Math.Exp(-4.16));
 
             // layer number that the effective depth occurs
-            int hydrolEffectiveLayer = SoilUtilities.FindLayerIndex(soil.Properties, hydrolEffectiveDepth);
+            int hydrolEffectiveLayer = APSIM.Shared.APSoil.SoilUtilities.FindLayerIndex(soil.Properties, hydrolEffectiveDepth);
 
             double[] runoffWeightingFactor = new double[soil.Properties.Water.Thickness.Length];
             for (int i = 0; i <= hydrolEffectiveLayer; i++)
