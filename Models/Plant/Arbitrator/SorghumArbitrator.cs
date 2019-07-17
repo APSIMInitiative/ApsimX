@@ -75,6 +75,10 @@ namespace Models.PMF
         [XmlIgnore]
         public double[] Diffusion { get; private set; }
 
+        /// <summary>
+        /// Today's dltTT.
+        /// </summary>
+        public double DltTT { get; set; }
 
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
@@ -425,6 +429,12 @@ namespace Models.PMF
         }
 
         #endregion
+
+        [EventSubscribe("DoPhenology")]
+        private void OnDoPhenology(object sender, EventArgs e)
+        {
+            DltTT = (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()");
+        }
 
         #region Plant interface methods
 
