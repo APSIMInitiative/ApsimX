@@ -16420,7 +16420,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "",
                   "Name": "dltTTPMF",
                   "Children": [
                     {
@@ -16461,7 +16461,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "",
                   "Name": "dltTT710",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -16527,7 +16527,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[Stage] >= 7",
                   "Name": "dltTTFM_PMF",
                   "Children": [
                     {
@@ -16568,7 +16568,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[Stage] >= 7",
                   "Name": "dltTTFM_710",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -24898,6 +24898,15 @@
               "Name": "dltTT",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "dltTT is only used before flowering (stage = 7)",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Graph.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
@@ -24920,7 +24929,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "",
                   "Name": "dltTTPMF",
                   "Children": [
                     {
@@ -24961,7 +24970,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "",
                   "Name": "dltTT710",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -25005,6 +25014,15 @@
               "Name": "dltTTFM",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "dltTTFM is only used after flowering (stage = 7)",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Graph.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
@@ -25027,7 +25045,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[Stage] >= 7",
                   "Name": "dltTTFM_PMF",
                   "Children": [
                     {
@@ -25068,7 +25086,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[Stage] >= 7",
                   "Name": "dltTTFM_710",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -34301,7 +34319,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "StagePMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": "Sorghum_NStress",
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -34373,6 +34402,15 @@
               "Name": "dltTT",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "dltTT is only used before flowering (stage = 7)",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Graph.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
@@ -34395,7 +34433,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[Stage] <= 7",
                   "Name": "dltTTPMF",
                   "Children": [
                     {
@@ -34436,7 +34474,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[Stage] <= 7",
                   "Name": "dltTT710",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -34480,6 +34518,15 @@
               "Name": "dltTTFM",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "dltTTFM is only used after flowering (stage = 7)",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Graph.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
@@ -34502,7 +34549,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[Stage] >= 7",
                   "Name": "dltTTFM_PMF",
                   "Children": [
                     {
@@ -34543,7 +34590,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "[Stage] >= 7",
                   "Name": "dltTTFM_710",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -43456,7 +43503,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "",
                   "Name": "dltTTFM_PMF",
                   "Children": [
                     {
@@ -43497,7 +43544,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": null,
+                  "Filter": "",
                   "Name": "dltTTFM_710",
                   "Children": [],
                   "IncludeInDocumentation": true,
