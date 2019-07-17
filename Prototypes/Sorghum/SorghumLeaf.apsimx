@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 281,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
@@ -16422,7 +16422,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "dltTTPMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": "Sorghum_SomeStress",
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -16518,7 +16529,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "dltTTFM_PMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": "Sorghum_SomeStress",
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -24900,7 +24922,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "dltTTPMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": "Sorghum_NoStress",
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -24996,7 +25029,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "dltTTFM_PMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": "Sorghum_NoStress",
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -34353,7 +34397,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "dltTTPMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": "Sorghum_NStress",
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -34449,7 +34504,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "dltTTFM_PMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": "Sorghum_NStress",
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -43276,7 +43342,7 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "day_of_year",
-                  "YFieldName": "Phenology.ThermalTime",
+                  "YFieldName": "Arbitrator.DltTT",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -43285,7 +43351,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "dltTTPMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": "Sorghum_WaterStress",
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -43381,7 +43458,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "dltTTFM_PMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": "Sorghum_WaterStress",
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
