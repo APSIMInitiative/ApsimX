@@ -2118,26 +2118,10 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "StartGrainFill",
-                  "EndStageName": "Maturity",
-                  "ResetStageName": null,
-                  "FractionRemovedOnCut": 0.0,
-                  "FractionRemovedOnHarvest": 0.0,
-                  "FractionRemovedOnGraze": 0.0,
-                  "FractionRemovedOnPrune": 0.0,
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].TTFMSgfToMaturity",
                   "Name": "TTStartGrainToNow",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5782,7 +5766,7 @@
                 },
                 {
                   "$type": "Models.PMF.RetranslocateAvailableN, Models",
-                  "Name": "RetranslocateAvailableN",
+                  "Name": "RetranslocateNitrogen",
                   "Children": [
                     {
                       "$type": "Models.Functions.MaximumFunction, Models",
@@ -6817,14 +6801,6 @@
                   "Start": "Emergence",
                   "End": "StartGrainFill",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
-                  "Name": "RetranslocateNitrogen",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
