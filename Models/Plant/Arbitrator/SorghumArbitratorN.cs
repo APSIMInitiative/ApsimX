@@ -190,10 +190,6 @@ namespace Models.PMF
         /// <param name="source">The organ which N will be taken from.</param>
         public double AllocateStructuralFromRachis(int iSupply, int iSink, BiomassArbitrationType n, BiomassArbitrationType dm, GenericOrgan source)
         {
-            var tmp1 = n.StructuralDemand[iSink];
-            var tmp2 = n.StructuralAllocation[iSink];
-            var tmpcheck = n.StructuralDemand[iSink] - n.StructuralAllocation[iSink];
-
             double StructuralRequirement = Math.Max(0.0, n.StructuralDemand[iSink] - n.StructuralAllocation[iSink]);
             if (MathUtilities.IsPositive(StructuralRequirement))
             {
@@ -223,33 +219,44 @@ namespace Models.PMF
         /// <param name="source">The organ which N will be taken from.</param>
         public double AllocateStructuralFromStem(int iSupply, int iSink, BiomassArbitrationType n, BiomassArbitrationType dm, GenericOrgan source)
         {
-            var tmp1 = n.StructuralDemand[iSink];
-            var tmp2 = n.StructuralAllocation[iSink];
-            var tmpcheck = n.StructuralDemand[iSink] - n.StructuralAllocation[iSink];
-
             double StructuralRequirement = Math.Max(0.0, n.StructuralDemand[iSink] - n.StructuralAllocation[iSink]);
             if (MathUtilities.IsPositive(StructuralRequirement))
             {
                 //only allocate as much structural as demanded - cyclical process so allow for any amounts already allocated to Retranslocation
-                double StructuralAllocation = Math.Min(StructuralRequirement, n.RetranslocationSupply[iSupply] - n.Retranslocation[iSupply]);
-
+                double nAvailable = Math.Min(StructuralRequirement, n.RetranslocationSupply[iSupply] - n.Retranslocation[iSupply]);
+                double nProvided = 0;
                 double dmGreen = source.Live.Wt;
                 double dltDmGreen = dm.StructuralAllocation[iSupply] + dm.MetabolicAllocation[iSupply];
                 double dltNGreen = n.StructuralAllocation[iSupply] + n.MetabolicAllocation[iSupply];
-                double nConc = MathUtilities.Divide(source.Live.N, dmGreen + dltDmGreen, 0);
+
+                if (dltNGreen > StructuralRequirement)
+                {
+                    n.StructuralAllocation[iSink] += StructuralRequirement;
+                    n.Retranslocation[iSupply] += StructuralRequirement;
+                    return StructuralRequirement;
+                }
+                else
+                {
+                    StructuralRequirement -= dltNGreen;
+                    nProvided = dltNGreen;
+                }
 
                 // dh - no point multiplying both numbers by 100 as we do in old apsim.
-                if (nConc < source.CritNconc && dltNGreen < StructuralRequirement)
+                double nConc = MathUtilities.Divide(source.Live.N, dmGreen + dltDmGreen, 0);
+                if (nConc < source.CritNconc)
                     return 0;
+
+                double availableN = n.RetranslocationSupply[iSupply] - n.Retranslocation[iSupply];
 
                 // cannot take below structural N
                 double structN = (dmGreen + dltDmGreen) * source.CritNconc;
-                StructuralAllocation = Math.Min(StructuralAllocation, source.Live.N - structN);
-                StructuralAllocation = Math.Max(StructuralAllocation, 0);
+                nAvailable = Math.Min(nAvailable, source.Live.N - structN);
+                nAvailable = Math.Max(nAvailable, 0);
+                nProvided += Math.Min(StructuralRequirement, nAvailable);
 
-                n.StructuralAllocation[iSink] += StructuralAllocation;
-                n.Retranslocation[iSupply] += StructuralAllocation;
-                return StructuralAllocation;
+                n.StructuralAllocation[iSink] += nProvided;
+                n.Retranslocation[iSupply] += nProvided;
+                return nProvided;
             }
             return 0.0;
         }
