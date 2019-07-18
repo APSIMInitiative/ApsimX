@@ -913,7 +913,7 @@
                     analysis.ParticleSizeSilt = ConvertLayers(silt, layerCount);
                     analysis.ParticleSizeClay = ConvertLayers(clay, layerCount);
                     analysis.Rocks = ConvertLayers(coarse, layerCount);
-                    analysis.PHUnits = Analysis.PHUnitsEnum.Water;
+                    analysis.PHUnits = Sample.PHSampleUnitsEnum.Water;
                     analysis.PH = ConvertLayers(phWater, layerCount);
                     analysis.CEC = ConvertLayers(cationEC, layerCount);
                     // Obviously using the averaging in "ConvertLayers" for texture classes is not really correct, but should be OK as a first pass if we don't have sharply contrasting layers
@@ -958,7 +958,7 @@
                     wheat.KL = kl;
                     wheat.LL = ll;
 
-                    organicMatter.OCUnits = SoilOrganicMatter.OCUnitsEnum.Total;
+                    organicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
                     organicMatter.OC = ConvertLayers(ocdrc, layerCount);
 
                     double rootWt = Math.Max(0.0, Math.Min(3000.0, 2.5 * (ppt - 100.0)));

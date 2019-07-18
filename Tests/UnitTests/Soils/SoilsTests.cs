@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="TestSoils.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UnitTests.Soils
+﻿namespace UnitTests.Soils
 {
     using APSIM.Shared.Utilities;
     using Models;
@@ -22,70 +17,61 @@ namespace UnitTests.Soils
     [TestFixture]
     public class SoilsTests
     {
-        /// <summary>Set a link field.</summary>
-        /// <param name="obj"></param>
-        /// <param name="fieldName"></param>
-        /// <param name="value"></param>
-        private static void SetLink(object obj, string fieldName, object value)
-        {
-            ReflectionUtilities.SetValueOfFieldOrProperty(fieldName, obj, value);
-        }
-
         /// <summary>Test setup routine. Returns a soil properties that can be used for testing.</summary>
-        //public static Soil Setup()
-        //{
-        //    var soilParameters = new Soil
-        //    {
-        //        Water = new Water
-        //        {
-        //            Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
-        //            BD = new double[] { 1.36, 1.216, 1.24, 1.32, 1.372, 1.368 },
-        //            AirDry = new double[] { 0.135, 0.214, 0.261, 0.261, 0.261, 0.261 },
-        //            LL15 = new double[] { 0.27, 0.267, 0.261, 0.261, 0.261, 0.261 },
-        //            DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 },
-        //            SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 },
+        public static Soil Setup()
+        {
+            var soil = new Soil
+            {
+                Children = new List<Model>()
+                {
+                    new Water()
+                    {
+                        Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
+                        BD = new double[] { 1.36, 1.216, 1.24, 1.32, 1.372, 1.368 },
+                        AirDry = new double[] { 0.135, 0.214, 0.261, 0.261, 0.261, 0.261 },
+                        LL15 = new double[] { 0.27, 0.267, 0.261, 0.261, 0.261, 0.261 },
+                        DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 },
+                        SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 },
 
-        //            Crops = new List<SoilCrop>()
-        //            {
-        //                new SoilCrop
-        //                {
-        //                    Name = "Wheat",
-        //                    KL = new double[] { 0.06, 0.060, 0.060, 0.060, 0.060, 0.060 },
-        //                    LL = new double[] { 0.27, 0.267, 0.261, 0.315, 0.402, 0.402 }
-        //                }
-        //            }
-        //        },
-        //        SoilOrganicMatter = new SoilOrganicMatter
-        //        {
-        //            Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
-        //            OC = new double[] { 2, 1, 0.5, 0.4, 0.3, 0.2 }
-        //        },
-        //        Analysis = new AnalysisParameters
-        //        {
-        //            Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
-        //            CL = new double[] { 38, double.NaN, 500, 490, 500, 500 }
-        //        },
-        //        Samples = new List<SampleParameters>()
-        //        {
-        //            new SampleParameters
-        //            {
-        //                Thickness = new double[] { 100, 300, 300, 300 },
-        //                SW = new double[] { 0.103, 0.238, 0.253, 0.247 },
-        //                OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN },
-        //                SWUnits = SampleParameters.SWUnitsEnum.Gravimetric
-        //            },
-        //            new SampleParameters
-        //            {
-        //                Thickness = new double[] { 100, 300 },
-        //                NO3 = new double[] { 23, 7 },
-        //                OC = new double[] { 1.35, 1.4 },
-        //                SWUnits = SampleParameters.SWUnitsEnum.Volumetric
-        //            }
-        //        }
-        //    };
+                        Children = new List<Model>()
+                        {
+                            new SoilCrop
+                            {
+                                Name = "Wheat",
+                                KL = new double[] { 0.06, 0.060, 0.060, 0.060, 0.060, 0.060 },
+                                LL = new double[] { 0.27, 0.267, 0.261, 0.315, 0.402, 0.402 }
+                            }
+                        }
+                    },
+                    new SoilOrganicMatter
+                    {
+                        Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
+                        OC = new double[] { 2, 1, 0.5, 0.4, 0.3, 0.2 }
+                    },
+                    new Analysis
+                    {
+                        Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
+                        CL = new double[] { 38, double.NaN, 500, 490, 500, 500 }
+                    },
+                    new Sample
+                    {
+                        Thickness = new double[] { 100, 300, 300, 300 },
+                        SW = new double[] { 0.103, 0.238, 0.253, 0.247 },
+                        OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN },
+                        SWUnits = Sample.SWUnitsEnum.Gravimetric
+                    },
+                    new Sample
+                    {
+                        Thickness = new double[] { 100, 300 },
+                        NO3 = new double[] { 23, 7 },
+                        OC = new double[] { 1.35, 1.4 },
+                        SWUnits = Sample.SWUnitsEnum.Volumetric
+                    }
+                }
+            };
 
-        //    return soilParameters;
-        //}
+            return soil;
+        }
 
         ///// <summary>Test soil water layer structure conversion and mapping.</summary>
         //[Test]

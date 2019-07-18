@@ -16,12 +16,15 @@ pipeline {
 							)
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+								git remote add hol353 https://github.com/hol353/APSIM.Shared
 							)
 							pushd APSIM.Shared
 							git reset .
 							git checkout .
 							git clean -xfdq
 							git checkout master
+							get fetch hol353
+							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins
@@ -45,12 +48,15 @@ pipeline {
 							)
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+								git remote add hol353 https://github.com/hol353/APSIM.Shared
 							)
 							pushd APSIM.Shared
 							git reset .
 							git checkout .
 							git clean -xfdq
 							git checkout master
+							get fetch hol353
+							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins
@@ -76,12 +82,15 @@ pipeline {
 							)
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+								git remote add hol353 https://github.com/hol353/APSIM.Shared
 							)
 							pushd APSIM.Shared
 							git reset .
 							git checkout .
 							git clean -xfdq
 							git checkout master
+							get fetch hol353
+							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins
@@ -105,12 +114,15 @@ pipeline {
 							)
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+								git remote add hol353 https://github.com/hol353/APSIM.Shared
 							)
 							pushd APSIM.Shared
 							git reset .
 							git checkout .
 							git clean -xfdq
 							git checkout master
+							get fetch hol353
+							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins
@@ -134,12 +146,15 @@ pipeline {
 							)
 							if not exist APSIM.Shared (
 								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
+								git remote add hol353 https://github.com/hol353/APSIM.Shared
 							)
 							pushd APSIM.Shared
 							git reset .
 							git checkout .
 							git clean -xfdq
 							git checkout master
+							get fetch hol353
+							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins

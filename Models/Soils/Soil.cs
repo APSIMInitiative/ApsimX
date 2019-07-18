@@ -152,6 +152,11 @@
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
             }
 
+        /// <summary>
+        /// Water node of soil.
+        /// </summary>
+        public Water WaterNode { get { return waterNode; } }
+
         #region Water
         /// <summary>The layering used to parameterise the water node</summary>
         public double[] WaterNodeThickness
