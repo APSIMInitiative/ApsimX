@@ -47,17 +47,22 @@
             if (water.Crops != null)
             {
                 var waterNode = Apsim.Child(soil, typeof(Water)) as Water;
-                foreach (SoilCrop crop in water.Crops)
+                foreach (ISoilCrop crop in water.Crops)
                 {
-                    if (!MathUtilities.AreEqual(toThickness, crop.Thickness))
+                    if (!MathUtilities.AreEqual(toThickness, soil.Thickness))
                     {
-                        crop.LL = MapConcentration(crop.LL, crop.Thickness, toThickness, MathUtilities.LastValue(crop.LL));
-                        crop.KL = MapConcentration(crop.KL, crop.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
-                        crop.XF = MapConcentration(crop.XF, crop.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
+                        crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
+                        crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
 
-                        // Ensure crop LL are between Airdry and DUL.
-                        for (int i = 0; i < crop.LL.Length; i++)
-                            crop.LL = MathUtilities.Constrain(crop.LL, waterNode.AirDry, waterNode.DUL);
+                        if (crop is SoilCrop)
+                        {
+                            var soilCrop = crop as SoilCrop;
+                            soilCrop.LL = MapConcentration(soilCrop.LL, soil.Thickness, toThickness, MathUtilities.LastValue(soilCrop.LL));
+
+                            // Ensure crop LL are between Airdry and DUL.
+                            for (int i = 0; i < soilCrop.LL.Length; i++)
+                                soilCrop.LL = MathUtilities.Constrain(soilCrop.LL, waterNode.AirDry, waterNode.DUL);
+                        }
                     }
                 }
             }
@@ -94,6 +99,8 @@
                     soilOrganicMatter.FBiom = MapConcentration(soilOrganicMatter.FBiom, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.FBiom));
                     soilOrganicMatter.FInert = MapConcentration(soilOrganicMatter.FInert, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.FInert));
                     soilOrganicMatter.OC = MapConcentration(soilOrganicMatter.OC, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.OC));
+                    soilOrganicMatter.SoilCN = MapConcentration(soilOrganicMatter.SoilCN, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.SoilCN));
+                    soilOrganicMatter.RootWt = MapConcentration(soilOrganicMatter.RootWt, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.RootWt));
                     soilOrganicMatter.Thickness = thickness;
 
                     soilOrganicMatter.OCMetadata = StringUtilities.CreateStringArray("Mapped", thickness.Length); ;

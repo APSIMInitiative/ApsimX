@@ -1292,10 +1292,11 @@
             Values[LastIndex + 3] = 0.0; // This will be constrained below to crop LL below.
 
             // Get the first crop ll or ll15.
-            double[] LowerBound;
+            double[] LowerBound = null;
             if (waterNode.Crops.Count > 0)
                 LowerBound = LLMapped(waterNode.Crops[0].Name, Thicknesses);
-            else
+
+            if (LowerBound == null)
                 LowerBound = LL15Mapped(Thicknesses);
             if (LowerBound == null)
                 throw new Exception("Cannot find crop lower limit or LL15 in soil");
@@ -1323,6 +1324,9 @@
         internal double[] LLMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
+            if (SoilCrop == null)
+                return null;
+
             if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.LL;
             double[] Values = Map(SoilCrop.LL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
