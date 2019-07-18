@@ -23,7 +23,7 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							get fetch hol353
+							git fetch hol353
 							git checkout soil-refactor
 							git pull origin master
 							popd
@@ -55,7 +55,7 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							get fetch hol353
+							git fetch hol353
 							git checkout soil-refactor
 							git pull origin master
 							popd
@@ -89,7 +89,7 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							get fetch hol353
+							git fetch hol353
 							git checkout soil-refactor
 							git pull origin master
 							popd
@@ -121,7 +121,7 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							get fetch hol353
+							git fetch hol353
 							git checkout soil-refactor
 							git pull origin master
 							popd
@@ -153,7 +153,7 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							get fetch hol353
+							git fetch hol353
 							git checkout soil-refactor
 							git pull origin master
 							popd
