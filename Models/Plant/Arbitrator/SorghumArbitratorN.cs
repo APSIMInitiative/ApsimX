@@ -204,7 +204,7 @@ namespace Models.PMF
                 double dltDmGreen = dm.StructuralAllocation[iSupply] + dm.MetabolicAllocation[iSupply];
                 double nConc = MathUtilities.Divide(source.Live.N, dmGreen + dltDmGreen, 0);
                 // dh - no point multiplying both numbers by 100 as we do in old apsim.
-                if (nConc < source.CritNconc)
+                if (nConc < source.MinNconc)
                     return 0;
 
                 n.StructuralAllocation[iSink] += StructuralAllocation;
