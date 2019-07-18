@@ -174,12 +174,12 @@ namespace Models.PMF
 
             var forStem = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, stemIndex, N);
             var forRachis = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, rachisIndex, N);
-            var forLeaffromStem = AllocateStructuralFromOrgan(stemIndex, leafIndex, N, dm, Organs[stemIndex] as GenericOrgan);
+            var forLeaffromStem = AllocateStructuralFromStem(stemIndex, leafIndex, N, dm, Organs[stemIndex] as GenericOrgan);
             var forLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, leafIndex, N);
 
-            AllocateStructuralFromOrgan(rachisIndex, grainIndex, N, dm, Organs[rachisIndex] as GenericOrgan);
-            AllocateStructuralFromOrgan(stemIndex, grainIndex, N, dm, Organs[stemIndex] as GenericOrgan);
-            AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, grainIndex, N);
+            double fromRachis = AllocateStructuralFromRachis(rachisIndex, grainIndex, N, dm, Organs[rachisIndex] as GenericOrgan);
+            double fromStem = AllocateStructuralFromStem(stemIndex, grainIndex, N, dm, Organs[stemIndex] as GenericOrgan);
+            double fromLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, grainIndex, N);
         }
 
         /// <summary>Relatives the allocation.</summary>
@@ -188,7 +188,7 @@ namespace Models.PMF
         /// <param name="n">The organs.</param>
         /// <param name="dm">The dm BAT.</param>
         /// <param name="source">The organ which N will be taken from.</param>
-        public double AllocateStructuralFromOrgan(int iSupply, int iSink, BiomassArbitrationType n, BiomassArbitrationType dm, GenericOrgan source)
+        public double AllocateStructuralFromRachis(int iSupply, int iSink, BiomassArbitrationType n, BiomassArbitrationType dm, GenericOrgan source)
         {
             var tmp1 = n.StructuralDemand[iSink];
             var tmp2 = n.StructuralAllocation[iSink];
@@ -202,10 +202,50 @@ namespace Models.PMF
 
                 double dmGreen = source.Live.Wt;
                 double dltDmGreen = dm.StructuralAllocation[iSupply] + dm.MetabolicAllocation[iSupply];
+                double dltNGreen = n.StructuralAllocation[iSupply] + n.MetabolicAllocation[iSupply];
                 double nConc = MathUtilities.Divide(source.Live.N, dmGreen + dltDmGreen, 0);
                 // dh - no point multiplying both numbers by 100 as we do in old apsim.
                 if (nConc < source.MinNconc)
                     return 0;
+
+                n.StructuralAllocation[iSink] += StructuralAllocation;
+                n.Retranslocation[iSupply] += StructuralAllocation;
+                return StructuralAllocation;
+            }
+            return 0.0;
+        }
+
+        /// <summary>Relatives the allocation.</summary>
+        /// <param name="iSupply">The organs.</param>
+        /// <param name="iSink">The organs.</param>
+        /// <param name="n">The organs.</param>
+        /// <param name="dm">The dm BAT.</param>
+        /// <param name="source">The organ which N will be taken from.</param>
+        public double AllocateStructuralFromStem(int iSupply, int iSink, BiomassArbitrationType n, BiomassArbitrationType dm, GenericOrgan source)
+        {
+            var tmp1 = n.StructuralDemand[iSink];
+            var tmp2 = n.StructuralAllocation[iSink];
+            var tmpcheck = n.StructuralDemand[iSink] - n.StructuralAllocation[iSink];
+
+            double StructuralRequirement = Math.Max(0.0, n.StructuralDemand[iSink] - n.StructuralAllocation[iSink]);
+            if (MathUtilities.IsPositive(StructuralRequirement))
+            {
+                //only allocate as much structural as demanded - cyclical process so allow for any amounts already allocated to Retranslocation
+                double StructuralAllocation = Math.Min(StructuralRequirement, n.RetranslocationSupply[iSupply] - n.Retranslocation[iSupply]);
+
+                double dmGreen = source.Live.Wt;
+                double dltDmGreen = dm.StructuralAllocation[iSupply] + dm.MetabolicAllocation[iSupply];
+                double dltNGreen = n.StructuralAllocation[iSupply] + n.MetabolicAllocation[iSupply];
+                double nConc = MathUtilities.Divide(source.Live.N, dmGreen + dltDmGreen, 0);
+
+                // dh - no point multiplying both numbers by 100 as we do in old apsim.
+                if (nConc < source.CritNconc && dltNGreen < StructuralRequirement)
+                    return 0;
+
+                // cannot take below structural N
+                double structN = (dmGreen + dltDmGreen) * source.CritNconc;
+                StructuralAllocation = Math.Min(StructuralAllocation, source.Live.N - structN);
+                StructuralAllocation = Math.Max(StructuralAllocation, 0);
 
                 n.StructuralAllocation[iSink] += StructuralAllocation;
                 n.Retranslocation[iSupply] += StructuralAllocation;
