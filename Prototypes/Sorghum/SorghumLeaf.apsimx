@@ -1412,7 +1412,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                      "VariableName": "[Phenology].CurrentPhase.ProgressionForTimeStep",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
