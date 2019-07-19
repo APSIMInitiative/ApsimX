@@ -12,9 +12,9 @@
         public static void Standardise(Soil soil)
         {
             SoilUnits.Convert(soil);
-            RemoveInitialWater(soil);
-            Layers.Standardise(soil);
             SoilDefaults.FillInMissingValues(soil);
+            Layers.Standardise(soil);
+            RemoveInitialWater(soil);
             MergeSamplesIntoOne(soil);
         }
 
@@ -85,10 +85,11 @@
                 if (sample == null)
                 {
                     sample = new Sample();
+                    sample.Thickness = soil.Thickness;
                     soil.Children.Add(sample);
                 }
 
-                sample.SW = initialWater.SW(soil.Thickness, soil.LL15, soil.DUL, null);
+                sample.SW = initialWater.SW(sample.Thickness, soil.LL15, soil.DUL, null);
 
                 soil.Children.Remove(initialWater);
             }

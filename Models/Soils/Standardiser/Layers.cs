@@ -17,14 +17,20 @@
         {
             var waterNode = Apsim.Child(soil, typeof(Water)) as Water;
             var analysisNode = Apsim.Child(soil, typeof(Analysis)) as Analysis;
+            var layerStructure = Apsim.Child(soil, typeof(LayerStructure)) as LayerStructure;
 
-            SetWaterThickness(waterNode, soil.Thickness, soil);
-            SetSoilWaterThickness(soil.SoilWater as SoilWater, soil.Thickness);
-            SetAnalysisThickness(analysisNode, soil.Thickness);
-            SetSoilOrganicMatterThickness(soil.SoilOrganicMatter, soil.Thickness);
+            // Determine the target layer structure.
+            var targetThickness = soil.Thickness;
+            if (layerStructure != null)
+                targetThickness = layerStructure.Thickness;
 
             foreach (Sample sample in Apsim.Children(soil, typeof(Sample)))
-                SetSampleThickness(sample, soil.Thickness, soil);
+                SetSampleThickness(sample, targetThickness, soil);
+
+            SetWaterThickness(waterNode, targetThickness, soil);
+            SetSoilWaterThickness(soil.SoilWater as SoilWater, targetThickness);
+            SetAnalysisThickness(analysisNode, targetThickness);
+            SetSoilOrganicMatterThickness(soil.SoilOrganicMatter, targetThickness);
         }
 
         /// <summary>Sets the water thickness.</summary>
@@ -33,6 +39,27 @@
         /// <param name="soil">Soil</param>
         private static void SetWaterThickness(Water water, double[] toThickness, Soil soil)
         {
+            bool needToConstrainCropLL = false;
+            if (water.Crops != null)
+            {
+                foreach (ISoilCrop crop in water.Crops)
+                {
+                    if (!MathUtilities.AreEqual(toThickness, soil.Thickness))
+                    {
+                        crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
+                        crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
+
+                        if (crop is SoilCrop)
+                        {
+                            needToConstrainCropLL = true;
+
+                            var soilCrop = crop as SoilCrop;
+                            soilCrop.LL = MapConcentration(soilCrop.LL, soil.Thickness, toThickness, MathUtilities.LastValue(soilCrop.LL));
+                        }
+                    }
+                }
+            }
+
             if (!MathUtilities.AreEqual(toThickness, water.Thickness))
             {
                 water.BD = MapConcentration(water.BD, water.Thickness, toThickness, MathUtilities.LastValue(water.BD));
@@ -44,25 +71,16 @@
                 water.Thickness = toThickness;
             }
 
-            if (water.Crops != null)
+            if (needToConstrainCropLL)
             {
-                var waterNode = Apsim.Child(soil, typeof(Water)) as Water;
                 foreach (ISoilCrop crop in water.Crops)
                 {
-                    if (!MathUtilities.AreEqual(toThickness, soil.Thickness))
+                    if (crop is SoilCrop)
                     {
-                        crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
-                        crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
-
-                        if (crop is SoilCrop)
-                        {
-                            var soilCrop = crop as SoilCrop;
-                            soilCrop.LL = MapConcentration(soilCrop.LL, soil.Thickness, toThickness, MathUtilities.LastValue(soilCrop.LL));
-
-                            // Ensure crop LL are between Airdry and DUL.
-                            for (int i = 0; i < soilCrop.LL.Length; i++)
-                                soilCrop.LL = MathUtilities.Constrain(soilCrop.LL, waterNode.AirDry, waterNode.DUL);
-                        }
+                        var soilCrop = crop as SoilCrop;
+                        // Ensure crop LL are between Airdry and DUL.
+                        for (int i = 0; i < soilCrop.LL.Length; i++)
+                            soilCrop.LL = MathUtilities.Constrain(soilCrop.LL, water.AirDry, water.DUL);
                     }
                 }
             }
@@ -125,27 +143,12 @@
 
                 string[] metadata = StringUtilities.CreateStringArray("Mapped", thickness.Length);
 
-                analysis.Al = MapConcentration(analysis.Al, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.Al));
-                analysis.AlMetadata = metadata;
-                analysis.Ca = MapConcentration(analysis.Ca, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.Ca));
-                analysis.CaMetadata = metadata;
-                analysis.CEC = MapConcentration(analysis.CEC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.CEC));
-                analysis.CECMetadata = metadata;
                 analysis.CL = MapConcentration(analysis.CL, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.CL));
                 analysis.CLMetadata = metadata;
                 analysis.EC = MapConcentration(analysis.EC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.EC));
                 analysis.ECMetadata = metadata;
                 analysis.ESP = MapConcentration(analysis.ESP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ESP));
                 analysis.ESPMetadata = metadata;
-                analysis.K = MapConcentration(analysis.K, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.K));
-                analysis.KMetadata = metadata;
-                analysis.Mg = MapConcentration(analysis.Mg, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.Mg));
-                analysis.MgMetadata = metadata;
-                analysis.Mn = MapConcentration(analysis.Mn, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.Mn));
-                analysis.MnMetadata = metadata;
-                analysis.MunsellColour = null;
-                analysis.Na = MapConcentration(analysis.Na, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.Na));
-                analysis.NaMetadata = metadata;
                 analysis.ParticleSizeClay = MapConcentration(analysis.ParticleSizeClay, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeClay));
                 analysis.ParticleSizeClayMetadata = metadata;
                 analysis.ParticleSizeSand = MapConcentration(analysis.ParticleSizeSand, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeSand));
@@ -154,11 +157,7 @@
                 analysis.ParticleSizeSiltMetadata = metadata;
                 analysis.PH = MapConcentration(analysis.PH, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.PH));
                 analysis.PHMetadata = metadata;
-                analysis.Rocks = MapConcentration(analysis.Rocks, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.Rocks));
-                analysis.RocksMetadata = metadata;
-                analysis.Texture = null;
                 analysis.Thickness = thickness;
-
             }
         }
 

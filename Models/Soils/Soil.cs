@@ -174,10 +174,7 @@
         {
             get
             {
-                if (structure != null)
-                    return structure.Thickness;
-                else
-                    return waterNode.Thickness;
+                return waterNode.Thickness;
             }
         }
 

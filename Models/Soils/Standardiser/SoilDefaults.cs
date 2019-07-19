@@ -108,20 +108,54 @@
         private static void CheckAnalysisForMissingValues(Soil soil)
         {
             var analysis = Apsim.Child(soil, typeof(Analysis)) as Analysis;
-            for (int i = 0; i < analysis.Thickness.Length; i++)
+
+            analysis.CL = FillMissingValues(analysis.CL, analysis.Thickness.Length, 0);
+            analysis.EC = FillMissingValues(analysis.EC, analysis.Thickness.Length, 0);
+            analysis.ESP = FillMissingValues(analysis.ESP, analysis.Thickness.Length, 0);
+            analysis.PH = FillMissingValues(analysis.PH, analysis.Thickness.Length, 7.0);
+            analysis.ParticleSizeClay = FillMissingValues(analysis.ParticleSizeClay, analysis.Thickness.Length, 0);
+            analysis.ParticleSizeSand = FillMissingValues(analysis.ParticleSizeSand, analysis.Thickness.Length, 0);
+            analysis.ParticleSizeSilt = FillMissingValues(analysis.ParticleSizeSilt, analysis.Thickness.Length, 0);
+        }
+
+        /// <summary>Changes all missing values in an array to a valid value.</summary>
+        /// <param name="values">The values to in fill.</param>
+        /// <param name="numValues">The number of values that should exist.</param>
+        /// <param name="defaultValue">The value to use if can't find any other value.</param>
+        private static double[] FillMissingValues(double[] values, int numValues, double defaultValue)
+        {
+            Array.Resize(ref values, numValues);
+            for (int i = 0; i < numValues; i++)
             {
-                if (analysis.CL != null && double.IsNaN(analysis.CL[i]))
-                    analysis.CL[i] = 0;
+                if (double.IsNaN(values[i]))
+                {
+                    double validValue = 0;
+                    if (i == 0)
+                        validValue = FindFirstValueInArray(values);
+                    else
+                        validValue = values[i - 1];
 
-                if (analysis.EC != null && double.IsNaN(analysis.EC[i]))
-                    analysis.EC[i] = 0;
-
-                if (analysis.ESP != null && double.IsNaN(analysis.ESP[i]))
-                    analysis.ESP[i] = 0;
-
-                if (analysis.PH != null && double.IsNaN(analysis.PH[i]))
-                    analysis.PH[i] = 7;
+                    if (double.IsNaN(validValue))
+                        values[i] = defaultValue;
+                    else
+                        values[i] = validValue;
+                }
             }
+            return values;
+        }
+
+        /// <summary>
+        /// Find the first non NaN value in the array.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        private static double FindFirstValueInArray(double[] values)
+        {
+            for (int j = 0; j < values.Length; j++)
+                if (!double.IsNaN(values[j]))
+                    return values[j];
+
+            return double.NaN;
         }
 
         /// <summary>Checks the crop for missing values.</summary>
