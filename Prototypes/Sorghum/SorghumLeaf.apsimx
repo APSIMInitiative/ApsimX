@@ -8704,7 +8704,7 @@
             "[Sorghum].Grain.Live.N as GrainGreenN",
             "[Sorghum].Grain.Live.NConc as GrainGreenNConc",
             "[Sorghum].Grain.NumberFunction.Value() as GrainNo",
-            "[Sorghum].Grain.Size as GrainSize ",
+            "[Sorghum].Grain.Size * 1000 as GrainSize ",
             "[Sorghum].Structure.MainStemNodeNo as LeafNo",
             "[Sorghum].Phenology.LeafAppearance1.RemainingLeaves.Value()",
             "[Sorghum].Phenology.LeafAppearance2.RemainingLeaves.Value()",
