@@ -470,13 +470,22 @@ namespace Models.PMF
                     if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
                     {
                         arbitrator.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
-                        // Then calculate how much DM (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
-                        for (int i = 0; i < Organs.Length; i++)
-                            if (MathUtilities.IsPositive(BAT.RetranslocationSupply[i]))
-                            {
-                                double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
-                                BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
-                            }
+
+                        int leafIndex = 2;
+                        int stemIndex = 4;
+
+                        double grainDifferential = BiomassRetranslocated;
+
+                        // Retranslocate from stem.
+                        double stemWtAvail = BAT.RetranslocationSupply[stemIndex];
+                        double stemRetrans = Math.Min(grainDifferential, stemWtAvail);
+                        BAT.Retranslocation[stemIndex] += stemRetrans;
+                        grainDifferential -= stemRetrans;
+
+                        double leafWtAvail = BAT.RetranslocationSupply[leafIndex];
+                        double leafRetrans = Math.Min(grainDifferential, leafWtAvail);
+                        BAT.Retranslocation[leafIndex] += Math.Min(grainDifferential, leafWtAvail);
+                        grainDifferential -= leafRetrans;
                     }
                 }
             }
