@@ -23,19 +23,22 @@
             CheckAnalysisForMissingValues(soil);
 
             var water = Apsim.Child(soil, typeof(Water)) as Water;
-            var crops = Apsim.Children(water, typeof(SoilCrop)).Cast<SoilCrop>().ToArray();
-
-            foreach (var crop in crops)
+            if (water != null)
             {
-                if (crop.XF == null)
-                {
-                    crop.XF = MathUtilities.CreateArrayOfValues(1.0, crop.Thickness.Length);
-                    crop.XFMetadata = StringUtilities.CreateStringArray("Estimated", crop.Thickness.Length);
-                }
-                if (crop.KL == null)
-                    FillInKLForCrop(crop);
+                var crops = Apsim.Children(water, typeof(SoilCrop)).Cast<SoilCrop>().ToArray();
 
-                CheckCropForMissingValues(crop, soil);
+                foreach (var crop in crops)
+                {
+                    if (crop.XF == null)
+                    {
+                        crop.XF = MathUtilities.CreateArrayOfValues(1.0, crop.Thickness.Length);
+                        crop.XFMetadata = StringUtilities.CreateStringArray("Estimated", crop.Thickness.Length);
+                    }
+                    if (crop.KL == null)
+                        FillInKLForCrop(crop);
+
+                    CheckCropForMissingValues(crop, soil);
+                }
             }
 
             var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
@@ -213,25 +216,29 @@
             if (sample.OC != null)
                 sample.OC = MathUtilities.FixArrayLength(sample.OC, sample.Thickness.Length);
 
-            double[] ll15 = Layers.LL15Mapped(soil, sample.Thickness);
-            for (int i = 0; i < sample.Thickness.Length; i++)
+            var water = Apsim.Child(soil, typeof(Water)) as Water;
+            if (water != null)
             {
-                if (sample.SW != null && double.IsNaN(sample.SW[i]))
-                    sample.SW[i] = ll15[i];
-                if (sample.NO3 != null && double.IsNaN(sample.NO3[i]))
-                    sample.NO3[i] = 1.0;
-                if (sample.NH4 != null && double.IsNaN(sample.NH4[i]))
-                    sample.NH4[i] = 0.1;
-                if (sample.CL != null && double.IsNaN(sample.CL[i]))
-                    sample.CL[i] = 0;
-                if (sample.EC != null && double.IsNaN(sample.EC[i]))
-                    sample.EC[i] = 0;
-                if (sample.ESP != null && double.IsNaN(sample.ESP[i]))
-                    sample.ESP[i] = 0;
-                if (sample.PH != null && (double.IsNaN(sample.PH[i]) || sample.PH[i] == 0.0))
-                    sample.PH[i] = 7.0;
-                if (sample.OC != null && (double.IsNaN(sample.OC[i]) || sample.OC[i] == 0.0))
-                    sample.OC[i] = 0.5;
+                double[] ll15 = Layers.LL15Mapped(soil, sample.Thickness);
+                for (int i = 0; i < sample.Thickness.Length; i++)
+                {
+                    if (sample.SW != null && double.IsNaN(sample.SW[i]))
+                        sample.SW[i] = ll15[i];
+                    if (sample.NO3 != null && double.IsNaN(sample.NO3[i]))
+                        sample.NO3[i] = 1.0;
+                    if (sample.NH4 != null && double.IsNaN(sample.NH4[i]))
+                        sample.NH4[i] = 0.1;
+                    if (sample.CL != null && double.IsNaN(sample.CL[i]))
+                        sample.CL[i] = 0;
+                    if (sample.EC != null && double.IsNaN(sample.EC[i]))
+                        sample.EC[i] = 0;
+                    if (sample.ESP != null && double.IsNaN(sample.ESP[i]))
+                        sample.ESP[i] = 0;
+                    if (sample.PH != null && (double.IsNaN(sample.PH[i]) || sample.PH[i] == 0.0))
+                        sample.PH[i] = 7.0;
+                    if (sample.OC != null && (double.IsNaN(sample.OC[i]) || sample.OC[i] == 0.0))
+                        sample.OC[i] = 0.5;
+                }
             }
         }
 

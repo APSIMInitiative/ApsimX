@@ -174,7 +174,21 @@
         {
             get
             {
-                return waterNode.Thickness;
+                if (waterNode != null)
+                    return waterNode.Thickness;
+                else if (Weirdo != null)
+                    return Weirdo.Thickness;
+                else
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.Thickness = value;
+                else if (Weirdo != null)
+                    Weirdo.Thickness = value;
+                else
+                    throw new Exception("Cannot set thickness. No water model found");
             }
         }
 
@@ -199,14 +213,21 @@
         {
             get
             {
-                if (waterNode != null && structure == null)
+                if (waterNode != null)
                     return waterNode.BD;
-                else if (waterNode != null)
-                    return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last());
                 else if (Weirdo != null)
-                    return Map(Weirdo.BD, Weirdo.ParamThickness, Thickness, MapType.Concentration, Weirdo.BD.Last());
+                    return Weirdo.BD;
                 else
-                    throw new Exception("Whoops, No soil models to provide a BD value");
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.BD = value;
+                else if (Weirdo != null)
+                    Weirdo.BD = value;
+                else
+                    throw new Exception("Cannot set BD. No water model found");
             }
         }
 
@@ -262,7 +283,22 @@
 
         /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        public double[] AirDry { get { return Map(waterNode.AirDry, waterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] AirDry
+        {
+            get
+            {
+                if (waterNode != null)
+                    return waterNode.AirDry;
+                else
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.AirDry = value;
+            }
+        }
+
 
         /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
@@ -270,12 +306,21 @@
         {
             get
             {
-                if (waterNode != null && structure == null)
+                if (waterNode != null)
                     return waterNode.LL15;
-                else if (waterNode != null)
-                    return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration);
+                else if (Weirdo != null)
+                    return Weirdo.LL15;
                 else
-                    return Map(Weirdo.LL15, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.LL15 = value;
+                else if (Weirdo != null)
+                    Weirdo.LL15 = value;
+                else
+                    throw new Exception("Cannot set LL15. No water model found");
             }
         }
 
@@ -295,12 +340,21 @@
         {
             get
             {
-                if (waterNode != null && structure == null)
+                if (waterNode != null)
                     return waterNode.DUL;
-                else if (waterNode !=null)
-                    return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration);
+                else if (Weirdo != null)
+                    return Weirdo.DUL;
                 else
-                    return Map(Weirdo.DUL, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.DUL = value;
+                else if (Weirdo != null)
+                    Weirdo.DUL = value;
+                else
+                    throw new Exception("Cannot set DUL. No water model found");
             }
         }
 
@@ -320,12 +374,21 @@
         {
             get
             {
-                if (waterNode != null && structure == null)
+                if (waterNode != null)
                     return waterNode.SAT;
-                else if (waterNode != null)
-                    return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration);
+                else if (Weirdo != null)
+                    return Weirdo.SAT;
                 else
-                    return Map(Weirdo.SAT, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.SAT = value;
+                else if (Weirdo != null)
+                    Weirdo.SAT = value;
+                else
+                    throw new Exception("Cannot set SAT. No water model found");
             }
         }
 
@@ -341,7 +404,27 @@
 
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        public double[] KS { get { return Map(waterNode.KS, waterNode.Thickness, Thickness, MapType.Concentration); } }
+        public double[] KS
+        {
+            get
+            {
+                if (waterNode != null)
+                    return waterNode.KS;
+                else if (Weirdo != null)
+                    return Weirdo.Ksat;
+                else
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.KS = value;
+                else if (Weirdo != null)
+                    Weirdo.Ksat = value;
+                else
+                    throw new Exception("Cannot set KS. No water model found");
+            }
+        }
 
         /// <summary>SWCON at standard thickness. Units: 0-1</summary>
         [Units("0-1")]
