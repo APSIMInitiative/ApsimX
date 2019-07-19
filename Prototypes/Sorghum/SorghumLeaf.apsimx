@@ -5575,7 +5575,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "Leaf.Live.Wt",
+                                  "VariableName": "[Leaf].Live.Wt",
                                   "Name": "LiveWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -5584,9 +5584,19 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Plant].SowingData.Density",
+                                  "VariableName": "[Sorghum].SowingData.Population",
                                   "Name": "Density",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Memo, Models",
+                                      "Text": "This assumes paddock area is 1ha...",
+                                      "Name": "Memo",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
