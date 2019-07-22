@@ -11,9 +11,9 @@
         /// <param name="soil">The soil.</param>
         public static void Standardise(Soil soil)
         {
+            Layers.Standardise(soil);
             SoilUnits.Convert(soil);
             SoilDefaults.FillInMissingValues(soil);
-            Layers.Standardise(soil);
             RemoveInitialWater(soil);
             MergeSamplesIntoOne(soil);
         }

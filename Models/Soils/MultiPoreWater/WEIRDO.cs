@@ -427,29 +427,6 @@ namespace Models.Soils
         public double[] MappedLowerRepellentWC { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
         public double[] MappedMinRepellancyFactor { get; set; }
-        /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
-        public double[] InitialSoilWater
-        {
-            get
-            {
-                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
-
-                if (initialWater != null)
-                    throw new Exception("WEIRDO doesn't integrate with InitialWater Node yet");
-                //return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
-                else
-                {
-                    foreach (Sample Sample in Apsim.Children(this.Parent, typeof(Sample)))
-                    {
-                        if (MathUtilities.ValuesInArray(Sample.SW))
-                        {
-                            return Soil.Map(Sample.SWVolumetric, Sample.Thickness, Thickness);
-                        }
-                    }
-                }
-                return null;
-            }
-        }
         /// <summary>The factor for root penetration into soil layer</summary>
         public double[] MappedXF { get; set; }
         #endregion
@@ -640,9 +617,9 @@ namespace Models.Soils
             RootLengthDensity = new double[ProfileLayers];
             double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
 
-            MappedSAT = Soil.Map(SAT, ParamThickness, Thickness, Soil.MapType.Concentration,SAT[SAT.Length-1]);
-            MappedDUL = Soil.Map(DUL, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedLL15 = Soil.Map(LL15, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
+            MappedSAT = SAT;
+            MappedDUL = DUL;
+            MappedLL15 = LL15;
             MappedCFlow = Soil.Map(CflowScaled, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
             MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
@@ -690,10 +667,10 @@ namespace Models.Soils
             //Check the soil water content initialisation is legit
             for (int l = 0; l < ProfileLayers; l++)
             {
-                if (InitialSoilWater[l] - MappedSAT[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is greater than the layers saturated water content of " + MappedSAT[l]);
-                if (MappedLL15[l] - InitialSoilWater[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is less than the layers lower limit water content of " + MappedLL15[l]);
+                if (Soil.InitialWaterVolumetric[l] - MappedSAT[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + Soil.InitialWaterVolumetric[l] + " is greater than the layers saturated water content of " + MappedSAT[l]);
+                if (MappedLL15[l] - Soil.InitialWaterVolumetric[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + Soil.InitialWaterVolumetric[l] + " is less than the layers lower limit water content of " + MappedLL15[l]);
             }
         }
 
@@ -1204,12 +1181,12 @@ namespace Models.Soils
                     Pores[l][c].ThetaLower = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiLower);
                     Pores[l][c].CFlow = MappedCFlow[l];
                     Pores[l][c].XFlow = MappedXFlow[l];
-                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, InitialSoilWater[l] - AccumWaterVolume);
+                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Thickness[l];
                     Pores[l][c].IncludeSorption = IncludeSorption;
                 }
-                if (Math.Abs(AccumWaterVolume - InitialSoilWater[l]) > FloatingPointTolerance)
+                if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];

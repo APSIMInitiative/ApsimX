@@ -170,6 +170,7 @@
 
         /// <summary>Return the soil layer thicknesses (mm)</summary>
         [Units("mm")]
+        [XmlIgnore]
         public double[] Thickness 
         {
             get
@@ -209,6 +210,7 @@
 
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] BD
         {
             get
@@ -237,10 +239,8 @@
         {
             get
             {
-                if(waterNode !=null)
-                return SWMapped(SWAtWaterThickness, waterNode.Thickness, Thickness);
-                else 
-                    return SWMapped(Weirdo.InitialSoilWater, Weirdo.Thickness, Thickness); //Fix me.  This call seems redundant, move if test up a function
+                var sample = Apsim.Child(this, typeof(Sample)) as Sample;
+                return sample?.SW;
             }
         }
 
@@ -252,32 +252,6 @@
             get
             {
                 return SoilWater.SWmm;
-            }
-        }
-
-        /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
-        public double[] SWAtWaterThickness
-        {
-            get
-            {
-                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
-
-                if (initialWater != null)
-                    return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
-                else
-                {
-                    foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    {
-                        if (MathUtilities.ValuesInArray(Sample.SW))
-                        {
-                            if (waterNode != null)
-                            return SWMapped(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness);
-                            else
-                                return Map(Sample.SWVolumetric, Sample.Thickness, Weirdo.Thickness);
-                        }
-                    }
-                }
-                return null;
             }
         }
 
@@ -302,6 +276,7 @@
 
         /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] LL15
         {
             get
@@ -336,6 +311,7 @@
 
         /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] DUL
         {
             get
@@ -370,6 +346,7 @@
 
         /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] SAT
         {
             get
@@ -404,6 +381,7 @@
 
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] KS
         {
             get
@@ -578,26 +556,22 @@
             }
         }
 
-        /// <summary>Plant available water at standard thickness at water node thickness. Units:mm/mm</summary>
-        [Units("mm/mm")]
-        public double[] PAWAtWaterThickness
-        {
-            get
-            {
-                return CalcPAWC(waterNode.Thickness,
-                                waterNode.LL15,
-                                SWAtWaterThickness,
-                                null);
-            }
-        }
         #endregion
 
         #region Crops
 
-        /// <summary>A list of crop names.</summary>
-        /// <value>The crop names.</value>
+        /// <summary>A list of crop names. Never returns null.</summary>
         [XmlIgnore]
-        public string[] CropNames { get { return waterNode.CropNames; } }
+        public string[] CropNames
+        {
+            get
+            {
+                if (waterNode != null)
+                    return waterNode.CropNames;
+                else
+                    return new string[0];
+            }
+        }
 
         /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
         /// <param name="CropName">Name of the crop.</param>
@@ -685,28 +659,6 @@
                             XFMapped(CropName, waterNode.Thickness));
         }
 
-        /// <summary>
-        /// Plant available water for the specified crop at water node thickness. Will throw if crop not found. Units: mm/mm
-        /// </summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <returns></returns>
-        public double[] PAWCropAtWaterThickness(string CropName)
-        {
-            return CalcPAWC(waterNode.Thickness,
-                            LLMapped(CropName, waterNode.Thickness),
-                            SWAtWaterThickness,
-                            XFMapped(CropName, waterNode.Thickness));
-        }
-
-        /// <summary>
-        /// Plant available water for the specified crop at water node thickness. Will throw if crop not found. Units: mm
-        /// </summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <returns></returns>
-        public double[] PAWmmAtWaterThickness(string CropName)
-        {
-            return MathUtilities.Multiply(PAWCropAtWaterThickness(CropName), waterNode.Thickness);
-        }
         #endregion
 
         #region Predicted Crops
@@ -1317,7 +1269,7 @@
             if(waterNode != null)
             return Map(waterNode.BD, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.BD.Last());
             else
-                return Map(Weirdo.BD, Weirdo.ParamThickness, ToThickness, MapType.Concentration, Weirdo.BD.Last());
+                return Map(Weirdo.BD, Weirdo.Thickness, ToThickness, MapType.Concentration, Weirdo.BD.Last());
         }
 
         /// <summary>AirDry - mapped to the specified layer structure. Units: mm/mm</summary>

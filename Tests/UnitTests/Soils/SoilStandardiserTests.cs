@@ -104,7 +104,7 @@
                         {
                             new SoilCrop
                             {
-                                Name = "Wheat",
+                                Name = "WheatSoil",
                                 KL = new double[] { 0.06, 0.060, 0.060 },
                                 LL = new double[] { 0.27, 0.267, 0.261 }
                             }

@@ -57,12 +57,12 @@
                     }
                 }
 
-                soil.BD = MapConcentration(soil.BD, water.Thickness, toThickness, MathUtilities.LastValue(soil.BD));
-                soil.AirDry = MapConcentration(soil.AirDry, water.Thickness, toThickness, MathUtilities.LastValue(soil.AirDry));
-                soil.LL15 = MapConcentration(soil.LL15, water.Thickness, toThickness, MathUtilities.LastValue(soil.LL15));
-                soil.DUL = MapConcentration(soil.DUL, water.Thickness, toThickness, MathUtilities.LastValue(soil.DUL));
-                soil.SAT = MapConcentration(soil.SAT, water.Thickness, toThickness, MathUtilities.LastValue(soil.SAT));
-                soil.KS = MapConcentration(soil.KS, water.Thickness, toThickness, MathUtilities.LastValue(soil.KS));
+                soil.BD = MapConcentration(soil.BD, soil.Thickness, toThickness, MathUtilities.LastValue(soil.BD));
+                soil.AirDry = MapConcentration(soil.AirDry, soil.Thickness, toThickness, MathUtilities.LastValue(soil.AirDry));
+                soil.LL15 = MapConcentration(soil.LL15, soil.Thickness, toThickness, MathUtilities.LastValue(soil.LL15));
+                soil.DUL = MapConcentration(soil.DUL, soil.Thickness, toThickness, MathUtilities.LastValue(soil.DUL));
+                soil.SAT = MapConcentration(soil.SAT, soil.Thickness, toThickness, MathUtilities.LastValue(soil.SAT));
+                soil.KS = MapConcentration(soil.KS, soil.Thickness, toThickness, MathUtilities.LastValue(soil.KS));
                 soil.Thickness = toThickness;
 
                 if (needToConstrainCropLL)
