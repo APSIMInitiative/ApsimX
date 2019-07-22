@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 473,
   "Version": 57,
   "Name": "Simulations",
   "Children": [
@@ -1027,9 +1027,9 @@
               "CohortsAtInitialisation": 0,
               "AppearedCohortNo": 0,
               "PlantAppearedLeafNo": 0.0,
-              "Albedo": 0.18,
-              "Gsmax350": 0.006,
-              "R50": 100.0,
+              "Albedo": 0.25,
+              "Gsmax350": 0.012,
+              "R50": 150.0,
               "Height": 0.0,
               "BaseHeight": 0.0,
               "Width": 0.0,
@@ -1207,234 +1207,23 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "NodeNumber",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "LAIFunction",
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "InitialTip",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Sowing",
-                          "End": "Emergence",
-                          "Name": "Preemergence",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Tips",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
-                          "End": "HarvestRipe",
-                          "Name": "PostEmergence",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Tips",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SpecificLeafArea",
+                      "Name": "SLA",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "Emergence",
-                      "EndStageName": "EndCanopyDevelopment",
-                      "ResetStageName": null,
-                      "FractionRemovedOnCut": 1.0,
-                      "FractionRemovedOnHarvest": 1.0,
-                      "FractionRemovedOnGraze": 1.0,
-                      "FractionRemovedOnPrune": 0.0,
-                      "Name": "NodesGrown",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "DeltaNode",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].VegetativeThermalTime.Value()",
-                              "Name": "ThermalTime",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].Phyllochron.Value()",
-                              "Name": "Phyllochron",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "Emergence",
-                  "EndStageName": "Maturity",
-                  "ResetStageName": null,
-                  "FractionRemovedOnCut": 1.0,
-                  "FractionRemovedOnHarvest": 1.0,
-                  "FractionRemovedOnGraze": 1.0,
-                  "FractionRemovedOnPrune": 1.0,
-                  "Name": "LAIFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "DeltaLAI",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookup, Models",
-                          "Name": "LAER",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "Emergence",
-                              "End": "EndCanopyDevelopment",
-                              "Name": "Vegetative",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "Delta",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.00013,
-                                      "Units": null,
-                                      "Name": "Constant",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Soybean].Structure.TotalStemPopn",
-                                      "Name": "StemNumber",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "XProperty": "[Leaf].NodeNumber",
-                                      "Name": "Branches",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            0.0,
-                                            6.0,
-                                            7.0,
-                                            8.0,
-                                            9.0
-                                          ],
-                                          "Y": [
-                                            1.0,
-                                            1.0,
-                                            2.0,
-                                            3.0,
-                                            3.0
-                                          ],
-                                          "Name": "XYPairs",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "EndCanopyDevelopment",
-                              "End": "Maturity",
-                              "Name": "Reproductive",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].VegetativeThermalTime.Value()",
-                          "Name": "ThermalTime",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Live.Wt",
+                      "Name": "LeafLiveWt",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -1551,6 +1340,49 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "Emergence",
+                  "EndStageName": "EndCanopyDevelopment",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 1.0,
+                  "FractionRemovedOnHarvest": 1.0,
+                  "FractionRemovedOnGraze": 1.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "NodeNumber",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "DeltaNode",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].VegetativeThermalTime.Value()",
+                          "Name": "ThermalTime",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].Phyllochron.Value()",
+                          "Name": "Phyllochron",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": null,
@@ -1567,7 +1399,7 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Emergence",
-                      "End": "StartGrainFilling",
+                      "End": "EndCanopyDevelopment",
                       "Name": "Vegetative",
                       "Children": [
                         {
@@ -1587,16 +1419,51 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "StartGrainFilling",
-                      "End": "HarvestRipe",
+                      "Start": "EndCanopyDevelopment",
+                      "End": "Maturity",
                       "Name": "Reproductive",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.05,
-                          "Units": null,
+                          "$type": "Models.Functions.DivideFunction, Models",
                           "Name": "Rate",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].ThermalTime",
+                              "Name": "TT",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "TTRemaining",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Expression": "[Phenology].MidGrainFilling.Target + [Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target",
+                                  "Name": "TTRequired",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Expression": "[Phenology].MidGrainFilling.ProgressThroughPhase + [Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
+                                  "Name": "TTComplete",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -1613,7 +1480,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.5,
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
                   "Children": [],
@@ -1623,7 +1490,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "InitialWtFunction",
                   "Children": [],
@@ -1823,12 +1690,12 @@
                   "Name": "DMDemands",
                   "Children": [
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.DivideFunction, Models",
                       "Name": "Structural",
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].LAIFunction.DeltaLAI.Value()",
+                          "VariableName": "[Leaf].DeltaLAI.Value()",
                           "Name": "DeltaLAI",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1836,36 +1703,10 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Leaf].LAI",
-                          "Name": "SpecificLeafAreaMax",
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "",
-                              "Name": "Memo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.1,
-                                6.0
-                              ],
-                              "Y": [
-                                30.0,
-                                45.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].SpecificLeafArea",
+                          "Name": "SLA",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2049,6 +1890,217 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Leaf].LAI",
+                  "Name": "SpecificLeafArea",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.1,
+                        6.0
+                      ],
+                      "Y": [
+                        0.03,
+                        0.045
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "DeltaLAI",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "EndCanopyDevelopment",
+                      "Name": "Vegetative",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Delta",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].AreaLargestLeaf",
+                              "Name": "AreaLargestLeaf",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "XProperty": "[Leaf].AppearedCohortNo",
+                              "Name": "RelativeArea",
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    2.0,
+                                    7.0,
+                                    10.0,
+                                    18.0
+                                  ],
+                                  "Y": [
+                                    0.6666,
+                                    1.0,
+                                    1.0,
+                                    0.83
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Soybean].Structure.TotalStemPopn",
+                              "Name": "StemNumber",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "XProperty": "[Leaf].NodeNumber",
+                              "Name": "Branches",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    6.0,
+                                    7.0,
+                                    8.0,
+                                    9.0
+                                  ],
+                                  "Y": [
+                                    1.0,
+                                    1.0,
+                                    2.0,
+                                    2.0,
+                                    2.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "LAR",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].VegetativeThermalTime",
+                                  "Name": "TT",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Structure].Phyllochron",
+                                  "Name": "Phyllochron",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "EndCanopyDevelopment",
+                      "End": "Maturity",
+                      "Name": "Reproductive",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Constant",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.006,
+                  "Units": null,
+                  "Name": "AreaLargestLeaf",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6020,7 +6072,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67"
+                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                "[Leaf].AreaLargestLeaf.FixedValue=0.009"
               ],
               "Name": "Hooper_MG40",
               "Children": [],
@@ -6035,7 +6088,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67"
+                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                "[Leaf].AreaLargestLeaf.FixedValue=0.009"
               ],
               "Name": "Stephens_MG40",
               "Children": [],
@@ -6053,7 +6107,8 @@
                 "[Phenology].PhotoperiodModifier.XYPairs.X = 12.39, 15.61",
                 "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                 "[Grain].MaximumNConc.FixedValue = 0.067",
-                "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5"
+                "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                "[Leaf].AreaLargestLeaf.FixedValue=0.012"
               ],
               "Name": "Davis",
               "Children": [
@@ -6108,7 +6163,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67"
+                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                "[Leaf].AreaLargestLeaf.FixedValue=0.0112"
               ],
               "Name": "Buchanan",
               "Children": [],
@@ -6123,7 +6179,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67"
+                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                "[Leaf].AreaLargestLeaf.FixedValue=0.009"
               ],
               "Name": "Djakal",
               "Children": [],
@@ -6140,7 +6197,8 @@
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 457",
                 "[Phenology].PhotoperiodModifier.XYPairs.X = 13.4, 16.0",
                 "[Grain].MaximumNConc.FixedValue = 0.065",
-                "[Shell].PotentialHarvestIndex.FixedValue = 0.5"
+                "[Shell].PotentialHarvestIndex.FixedValue = 0.5",
+                "[Leaf].AreaLargestLeaf.FixedValue=0.013"
               ],
               "Name": "PioneerP93M11_MG31",
               "Children": [],
@@ -14743,7 +14801,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -14839,7 +14897,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -14935,7 +14993,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -15031,7 +15089,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -15127,7 +15185,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -15223,7 +15281,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -15319,7 +15377,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -15605,7 +15663,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "DailyReport",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Leaf.AppearedCohortNo",
+                                  "YFieldName": "Soybean.Leaf.NodeNumber",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
@@ -16810,7 +16868,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -16906,7 +16964,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17002,7 +17060,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17098,7 +17156,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17282,7 +17340,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17378,7 +17436,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17484,7 +17542,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17580,7 +17638,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17676,7 +17734,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17772,7 +17830,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17868,7 +17926,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -17964,7 +18022,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -18060,7 +18118,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -18166,7 +18224,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -18262,7 +18320,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -18358,7 +18416,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -18454,7 +18512,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -18550,7 +18608,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -18646,7 +18704,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -18752,7 +18810,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -19226,20 +19284,20 @@
                                   "Value": "1997-12-23"
                                 },
                                 {
-                                  "Key": "RowSpacing",
-                                  "Value": "760"
-                                },
-                                {
                                   "Key": "SowingDepth",
                                   "Value": "50"
                                 },
                                 {
-                                  "Key": "SowingRate",
-                                  "Value": "32"
-                                },
-                                {
                                   "Key": "CultivarName",
                                   "Value": "PioneerP932T16R_MG32"
+                                },
+                                {
+                                  "Key": "RowSpacing",
+                                  "Value": "760"
+                                },
+                                {
+                                  "Key": "SowingRate",
+                                  "Value": "32"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -20201,7 +20259,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -20297,7 +20355,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -20393,7 +20451,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -20500,7 +20558,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -20637,7 +20695,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -20733,7 +20791,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -20829,7 +20887,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -20985,7 +21043,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -21092,7 +21150,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -21359,7 +21417,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "DailyReport",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Leaf.AppearedCohortNo",
+                                  "YFieldName": "Soybean.Leaf.NodeNumber",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
@@ -21644,7 +21702,7 @@
                                   "Minimum": 0.0,
                                   "Maximum": 1.0,
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -21710,7 +21768,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -21776,7 +21834,7 @@
                                   "Minimum": 0.0,
                                   "Maximum": 1.0,
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -21958,7 +22016,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -22054,7 +22112,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -22150,7 +22208,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -22246,7 +22304,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -22430,7 +22488,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -22526,7 +22584,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -22632,7 +22690,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -22728,7 +22786,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -22824,7 +22882,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -22920,7 +22978,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23016,7 +23074,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23112,7 +23170,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23208,7 +23266,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23314,7 +23372,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23410,7 +23468,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23506,7 +23564,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23602,7 +23660,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23698,7 +23756,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23794,7 +23852,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -23900,7 +23958,7 @@
                                   "Minimum": "NaN",
                                   "Maximum": "NaN",
                                   "Interval": "NaN",
-                                  "DateTimeAxis": true,
+                                  "DateTimeAxis": false,
                                   "CrossesAtZero": false
                                 }
                               ],
@@ -26259,7 +26317,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "DailyReport",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Leaf.AppearedCohortNo",
+                                  "YFieldName": "Soybean.Leaf.NodeNumber",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
@@ -29062,7 +29120,7 @@
                                   "Checkpoint": "Current",
                                   "TableName": "DailyReport",
                                   "XFieldName": "Clock.Today",
-                                  "YFieldName": "Soybean.Leaf.AppearedCohortNo",
+                                  "YFieldName": "Soybean.Leaf.NodeNumber",
                                   "X2FieldName": null,
                                   "Y2FieldName": null,
                                   "ShowInLegend": false,
@@ -37230,7 +37288,7 @@
                           "Minimum": 0.0,
                           "Maximum": 1.0,
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -37296,7 +37354,7 @@
                           "Minimum": 0.0,
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -37373,7 +37431,7 @@
                           "Minimum": 0.0,
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -37469,7 +37527,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -37535,7 +37593,7 @@
                           "Minimum": 0.0,
                           "Maximum": 1.0,
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -37601,7 +37659,7 @@
                           "Minimum": 0.0,
                           "Maximum": 1.0,
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         }
                       ],
@@ -50557,7 +50615,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -50653,7 +50711,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -50749,7 +50807,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -50845,7 +50903,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -50941,7 +50999,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -51037,7 +51095,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -51133,7 +51191,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -51289,7 +51347,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -54549,7 +54607,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -54655,7 +54713,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -54751,7 +54809,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -54847,7 +54905,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -54943,7 +55001,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -55039,7 +55097,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -55135,7 +55193,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -55231,7 +55289,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -55348,7 +55406,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -55444,7 +55502,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -55540,7 +55598,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -55636,7 +55694,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -55732,7 +55790,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -55828,7 +55886,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -59119,7 +59177,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -59275,7 +59333,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -59381,7 +59439,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -59487,7 +59545,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             },
                             {
@@ -59498,7 +59556,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -59594,7 +59652,7 @@
                               "Minimum": 0.0,
                               "Maximum": 1.0,
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -59660,7 +59718,7 @@
                               "Minimum": 0.0,
                               "Maximum": 1.0,
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -59726,7 +59784,7 @@
                               "Minimum": 0.0,
                               "Maximum": 1.0,
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -60834,7 +60892,7 @@
                               "Minimum": "NaN",
                               "Maximum": "NaN",
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -60930,7 +60988,7 @@
                               "Minimum": 0.0,
                               "Maximum": 1.0,
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -60996,7 +61054,7 @@
                               "Minimum": 0.0,
                               "Maximum": 1.0,
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
@@ -61062,7 +61120,7 @@
                               "Minimum": 0.0,
                               "Maximum": 1.0,
                               "Interval": "NaN",
-                              "DateTimeAxis": true,
+                              "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
