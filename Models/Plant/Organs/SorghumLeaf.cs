@@ -1159,6 +1159,8 @@ namespace Models.PMF.Organs
                     if (MathUtilities.IsPositive(laiN))
                     {
                         DltLAI = (n - laiN) / NewLeafSLN.Value();
+                        // fixme
+                        BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
                         requiredN -= laiN;
                         nProvided += laiN;
                         BAT.StructuralAllocation[leafIndex] -= laiN;
