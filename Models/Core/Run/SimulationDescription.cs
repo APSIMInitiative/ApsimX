@@ -15,7 +15,7 @@
     public class SimulationDescription : IRunnable
     {
         /// <summary>The top level simulations instance.</summary>
-        private Simulations topLevelModel;
+        private IModel topLevelModel;
 
         /// <summary>The base simulation.</summary>
         private Simulation baseSimulation;
@@ -40,7 +40,7 @@
                 IModel topLevel = sim;
                 while (topLevel.Parent != null)
                     topLevel = topLevel.Parent;
-                topLevelModel = topLevel as Simulations;
+                topLevelModel = topLevel;
             }
 
             if (name == null && baseSimulation != null)
@@ -121,7 +121,15 @@
 
                 // Give the simulation the descriptors.
                 newSimulation.Descriptors = Descriptors;
-                newSimulation.Services = topLevelModel.GetServices();
+                if (topLevelModel is Simulations sims)
+                {
+                    // If the top-level model is a simulations object, it will have access
+                    // to services such as the checkpoints. This should be passed into the
+                    // simulation to be used in link resolution. If we don't provide these
+                    // services to the simulation, it will not be able to resolve links to
+                    // checkpoints.
+                    newSimulation.Services = sims.GetServices();
+                }
                 return newSimulation;
             }
             catch (Exception err)
