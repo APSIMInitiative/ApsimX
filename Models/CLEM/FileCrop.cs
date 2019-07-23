@@ -12,6 +12,7 @@ using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
+using System.Globalization;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileCrop.cs" company="APSIM Initiative">
@@ -293,14 +294,14 @@ namespace Models.CLEM
                 CropName = dr["CropName"].ToString(),
                 Year = int.Parse(dr["Year"].ToString()),
                 Month = int.Parse(dr["Month"].ToString()),
-                AmtKg = double.Parse(dr["AmtKg"].ToString())
+                AmtKg = double.Parse(dr["AmtKg"].ToString(), CultureInfo.InvariantCulture)
             };
 
             //Npct column is optional 
             //Only try to read it in if it exists in the file.
             if (nitrogenPercentIndex != -1)
             {
-                cropdata.Npct = double.Parse(dr["Npct"].ToString());
+                cropdata.Npct = double.Parse(dr["Npct"].ToString(), CultureInfo.InvariantCulture);
             }
             else
             {

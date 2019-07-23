@@ -14,6 +14,7 @@ namespace UserInterface.Views
     using OxyPlot.Axes;
     using OxyPlot.GtkSharp;
     using Interfaces;
+    using System.Globalization;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -155,7 +156,7 @@ namespace UserInterface.Views
                 List<DateTime> dates = new List<DateTime>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
                     if (!string.IsNullOrEmpty(row[0] as string))
-                        dates.Add(DateTime.Parse((string)row[0]));
+                        dates.Add(DateTime.Parse((string)row[0], CultureInfo.InvariantCulture));
                 return dates.ToArray();
             }
         }
