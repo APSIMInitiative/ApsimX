@@ -539,7 +539,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
-            if (parentPlant.SowingData?.Depth < PlantZone.Depth)
+            if (parentPlant.SowingData?.Depth <= PlantZone.Depth)
             {
                 if (dmConversionEfficiency.Value() > 0.0)
                 {
