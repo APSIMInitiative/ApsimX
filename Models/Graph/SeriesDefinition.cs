@@ -379,7 +379,7 @@
                 localFilter = localFilter.Replace(")", "");
 
                 // Look for individual filter clauses (e.g. A = B).
-                string clausePattern = @"\[?(?<FieldName>[^\s\]]+)\]?\s*(=|>|<|>=|<=)\s*\w";
+                string clausePattern = @"\[?(?<FieldName>[^\s\]]+)\]?\s*(=|>|<|>=|<=)\s*(|'|\[|\w)";
                 match = Regex.Match(localFilter, clausePattern);
                 while (match.Success)
                 {
