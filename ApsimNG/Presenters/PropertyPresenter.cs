@@ -763,7 +763,7 @@ namespace UserInterface.Presenters
                 }
                 else if (property.DataType == typeof(DateTime[]))
                 {
-                    value = stringValues.Select(d => DateTime.Parse(d)).ToArray();
+                    value = stringValues.Select(d => DateTime.Parse(d, CultureInfo.InvariantCulture)).ToArray();
                 }
                 else
                 {
