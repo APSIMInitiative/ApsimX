@@ -116,7 +116,7 @@
                     soilOrganicMatter.FInert = MapConcentration(soilOrganicMatter.FInert, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.FInert));
                     soilOrganicMatter.OC = MapConcentration(soilOrganicMatter.OC, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.OC));
                     soilOrganicMatter.SoilCN = MapConcentration(soilOrganicMatter.SoilCN, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.SoilCN));
-                    soilOrganicMatter.RootWt = MapConcentration(soilOrganicMatter.RootWt, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.RootWt));
+                    soilOrganicMatter.RootWt = MapMass(soilOrganicMatter.RootWt, soilOrganicMatter.Thickness, thickness, false);
                     soilOrganicMatter.Thickness = thickness;
 
                     soilOrganicMatter.OCMetadata = StringUtilities.CreateStringArray("Mapped", thickness.Length); ;
