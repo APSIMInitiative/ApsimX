@@ -192,6 +192,8 @@
                 sample.SW = null;
             if (!MathUtilities.ValuesInArray(sample.NO3))
                 sample.NO3 = null;
+            if (!MathUtilities.ValuesInArray(sample.NH4))
+                sample.NH4 = null;
             if (!MathUtilities.ValuesInArray(sample.CL))
                 sample.CL = null;
             if (!MathUtilities.ValuesInArray(sample.EC))

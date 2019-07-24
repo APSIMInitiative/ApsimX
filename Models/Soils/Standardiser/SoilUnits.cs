@@ -32,12 +32,12 @@
             foreach (Sample sample in samples)
             {
                 // Convert sw units to volumetric.
-                if (sample.SW != null)
+                if (MathUtilities.ValuesInArray(sample.SW))
                     sample.SW = SWVolumetric(sample, soil);
                 sample.SWUnits = Sample.SWUnitsEnum.Volumetric;
 
                 // Convert no3 units to ppm.
-                if (sample.NO3 != null)
+                if (MathUtilities.ValuesInArray(sample.NO3))
                 {
                     double[] bd = Layers.BDMapped(soil, sample.Thickness);
                     sample.NO3 = Nppm(sample.NO3, sample.Thickness, sample.NO3Units, bd);
@@ -45,7 +45,7 @@
                 sample.NO3Units = Sample.NUnitsEnum.ppm;
 
                 // Convert nh4 units to ppm.
-                if (sample.NH4 != null)
+                if (MathUtilities.ValuesInArray(sample.NH4))
                 {
                     double[] bd = Layers.BDMapped(soil, sample.Thickness);
                     sample.NH4 = Nppm(sample.NH4, sample.Thickness, sample.NH4Units, bd);
@@ -53,12 +53,12 @@
                 sample.NH4Units = Sample.NUnitsEnum.ppm;
 
                 // Convert OC to total (%)
-                if (sample.OC != null)
+                if (MathUtilities.ValuesInArray(sample.OC))
                     sample.OC = OCTotalPercent(sample.OC, sample.OCUnits);
                 sample.OCUnits = Sample.OCSampleUnitsEnum.Total;
 
                 // Convert PH to water.
-                if (sample.PH != null)
+                if (MathUtilities.ValuesInArray(sample.PH))
                     sample.PH = PHWater(sample.PH, sample.PHUnits);
                 sample.PHUnits = Sample.PHSampleUnitsEnum.Water;
             }
