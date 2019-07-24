@@ -16,5 +16,15 @@ namespace Models.Soils
         /// Name of the crop
         /// </summary>
         string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the KL value.
+        /// </summary>
+        double[] KL { get; set; }
+
+        /// <summary>
+        /// Gets or sets the exploration factor
+        /// </summary>
+        double[] XF { get; set; }
     }
 }
