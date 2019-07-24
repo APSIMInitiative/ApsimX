@@ -202,7 +202,7 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase))
+                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase))
                         { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
@@ -385,7 +385,7 @@ namespace Models.PMF.Phen
                 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage))
+                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage)|| (CurrentPhase is DAWSPhase))
                     {
                          Emerged = true;
                     }
@@ -430,7 +430,8 @@ namespace Models.PMF.Phen
         [EventSubscribe("Harvesting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
-                //Jump phenology to the end
+            //Jump phenology to the end
+             if(this.Parent.Name != "SimpleFruitTree") //Unless you are a perennial fruit tree.  There must be a better way of doing this
                 SetToStage((double)(phases.Count));
         }
 
