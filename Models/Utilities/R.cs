@@ -51,7 +51,6 @@ namespace Models.Utilities
         public R()
         {
             rScript = GetRExePath();
-            Console.WriteLine("RScript executable: " + rScript);
             // Create a temporary working directory.
             workingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             if (!Directory.Exists(workingDirectory)) // I would be very suprised if it did already exist
@@ -126,11 +125,17 @@ namespace Models.Utilities
             string message;
             if (proc.ExitCode != 0)
             {
-                message = "Error from R: " + Environment.NewLine +
-                                 proc.StdErr + Environment.NewLine +
-                                 "Script:" + Environment.NewLine +
-                                 File.ReadAllText(fileName) +
-                                 proc.StdErr;
+                StringBuilder error = new StringBuilder("Error from R:");
+                error.AppendLine();
+                error.AppendLine(proc.StdErr);
+                error.AppendLine($"Script path: '{fileName}'");
+                error.AppendLine("Contents of script directory:");
+                foreach (string file in Directory.GetFiles(Path.GetDirectoryName(fileName)))
+                    error.AppendLine(file);
+                error.AppendLine("Script:");
+                error.AppendLine(File.ReadAllText(fileName));
+
+                message = error.ToString();
                 if (throwOnError)
                     throw new Exception(message);
             }
