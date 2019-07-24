@@ -147,12 +147,28 @@
                 analysis.ECMetadata = metadata;
                 analysis.ESP = MapConcentration(analysis.ESP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ESP));
                 analysis.ESPMetadata = metadata;
-                analysis.ParticleSizeClay = MapConcentration(analysis.ParticleSizeClay, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeClay));
-                analysis.ParticleSizeClayMetadata = metadata;
-                analysis.ParticleSizeSand = MapConcentration(analysis.ParticleSizeSand, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeSand));
-                analysis.ParticleSizeSandMetadata = metadata;
-                analysis.ParticleSizeSilt = MapConcentration(analysis.ParticleSizeSilt, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeSilt));
-                analysis.ParticleSizeSiltMetadata = metadata;
+                if (analysis.ParticleSizeClay != null && analysis.ParticleSizeClay.Length == analysis.Thickness.Length)
+                {
+                    analysis.ParticleSizeClay = MapConcentration(analysis.ParticleSizeClay, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeClay));
+                    analysis.ParticleSizeClayMetadata = metadata;
+                }
+                else
+                    analysis.ParticleSizeClay = null;
+                if (analysis.ParticleSizeSand != null && analysis.ParticleSizeSand.Length == analysis.Thickness.Length)
+                {
+                    analysis.ParticleSizeSand = MapConcentration(analysis.ParticleSizeSand, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeSand));
+                    analysis.ParticleSizeSandMetadata = metadata;
+                }
+                else
+                    analysis.ParticleSizeSand = null;
+                if (analysis.ParticleSizeSilt != null && analysis.ParticleSizeSilt.Length == analysis.Thickness.Length)
+                {
+                    analysis.ParticleSizeSilt = MapConcentration(analysis.ParticleSizeSilt, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeSilt));
+                    analysis.ParticleSizeSiltMetadata = metadata;
+                }
+                else
+                    analysis.ParticleSizeSilt = null;
+
                 analysis.PH = MapConcentration(analysis.PH, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.PH));
                 analysis.PHMetadata = metadata;
                 analysis.Thickness = thickness;

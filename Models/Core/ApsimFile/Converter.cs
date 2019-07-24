@@ -560,6 +560,7 @@
 
         /// <summary>
         /// Upgrades to version 58. Renames 'ParamThickness' to 'Thickness' in Weirdo.
+        /// Also change calls to property soil.SWAtWaterThickness to soil.Thickness.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -573,6 +574,12 @@
                     weirdo["Thickness"] = paramThicknessNode;
                     weirdo.Remove("ParamThickness");
                 }
+            }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                if (manager.Replace(".SWAtWaterThickness", ".Thickness"))
+                    manager.Save();
             }
         }
 
