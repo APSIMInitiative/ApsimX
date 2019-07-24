@@ -187,12 +187,12 @@
                     sample.SW = MapSW(sample.SW, sample.Thickness, thickness, soil);
                 if (sample.NH4 != null)
                 { 
-                    sample.NH4 = MapConcentration(sample.NH4ppm, sample.Thickness, thickness, 0.01);
+                    sample.NH4 = MapConcentration(sample.NH4ppm, sample.Thickness, thickness, 0.2);
                     sample.NH4Units = Sample.NUnitsEnum.ppm;
                 }
                 if (sample.NO3 != null)
                 {
-                    sample.NO3 = MapConcentration(sample.NO3ppm, sample.Thickness, thickness, 0.01);
+                    sample.NO3 = MapConcentration(sample.NO3ppm, sample.Thickness, thickness, 1.0);
                     sample.NO3Units = Sample.NUnitsEnum.ppm;
                 }
 

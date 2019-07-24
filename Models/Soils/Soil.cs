@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
+    using Models.Soils.Standardiser;
     using System;
     using System.Linq;
     using System.Xml.Serialization;
@@ -595,9 +596,6 @@
                     return MeasuredCrop;
                 }
 
-                ISoilCrop Predicted = PredictedCrop(CropName);
-                if (Predicted != null)
-                    return Predicted;
                 throw new Exception("Soil could not find crop: " + CropName);
             }
             else return null;
@@ -624,7 +622,7 @@
             double[] cl = Cl;
             if (MathUtilities.ValuesInArray(cl))
             {
-                measuredCrop.KL = Map(StandardKL, StandardThickness, Thickness, MapType.Concentration, StandardKL.Last());
+                measuredCrop.KL = Layers.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
                 for (int i = 0; i < Thickness.Length; i++)
                     measuredCrop.KL[i] *= Math.Min(1.0, 4.0 * Math.Exp(-0.005 * cl[i]));
             }
@@ -633,7 +631,7 @@
                 double[] esp = ESP;
                 if (MathUtilities.ValuesInArray(esp))
                 {
-                    measuredCrop.KL = Map(StandardKL, StandardThickness, Thickness, MapType.Concentration, StandardKL.Last());
+                    measuredCrop.KL = Layers.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
                     for (int i = 0; i < Thickness.Length; i++)
                         measuredCrop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
                 }
@@ -642,7 +640,7 @@
                     double[] ec = EC;
                     if (MathUtilities.ValuesInArray(ec))
                     {
-                        measuredCrop.KL = Map(StandardKL, StandardThickness, Thickness, MapType.Concentration, StandardKL.Last());
+                        measuredCrop.KL = Layers.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
                         for (int i = 0; i < Thickness.Length; i++)
                             measuredCrop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
                     }
@@ -659,249 +657,6 @@
                             LLMapped(CropName, waterNode.Thickness),
                             DULMapped(waterNode.Thickness),
                             XFMapped(CropName, waterNode.Thickness));
-        }
-
-        #endregion
-
-        #region Predicted Crops
-        /// <summary>The black vertosol crop list</summary>
-        static string[] BlackVertosolCropList = new string[] { "Wheat", "Sorghum", "Cotton" };
-        /// <summary>The grey vertosol crop list</summary>
-        static string[] GreyVertosolCropList = new string[] { "Wheat", "Sorghum", "Cotton" };
-        /// <summary>The predicted thickness</summary>
-        static double[] PredictedThickness  = new double[] { 150, 150, 300, 300, 300, 300, 300 };
-        /// <summary>The predicted xf</summary>
-        static double[] PredictedXF = new double[] { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
-        /// <summary>The wheat kl</summary>
-        static double[] WheatKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
-        /// <summary>The sorghum kl</summary>
-        static double[] SorghumKL = new double[] { 0.07, 0.07, 0.07, 0.05, 0.05, 0.04, 0.03 };
-        /// <summary>The barley kl</summary>
-        static double[] BarleyKL = new double[] { 0.07, 0.07, 0.07, 0.05, 0.05, 0.03, 0.02 };
-        /// <summary>The chickpea kl</summary>
-        static double[] ChickpeaKL = new double[] { 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06 };
-        /// <summary>The mungbean kl</summary>
-        static double[] MungbeanKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.00, 0.00 };
-        /// <summary>The cotton kl</summary>
-        static double[] CottonKL = new double[] { 0.10, 0.10, 0.10, 0.10, 0.09, 0.07, 0.05 };
-        /// <summary>The canola kl</summary>
-        static double[] CanolaKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
-        /// <summary>The pigeon pea kl</summary>
-        static double[] PigeonPeaKL = new double[] { 0.06, 0.06, 0.06, 0.05, 0.04, 0.02, 0.01 };
-        /// <summary>The maize kl</summary>
-        static double[] MaizeKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
-        /// <summary>The cowpea kl</summary>
-        static double[] CowpeaKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
-        /// <summary>The sunflower kl</summary>
-        static double[] SunflowerKL = new double[] { 0.01, 0.01, 0.08, 0.06, 0.04, 0.02, 0.01 };
-        /// <summary>The fababean kl</summary>
-        static double[] FababeanKL = new double[] { 0.08, 0.08, 0.08, 0.08, 0.06, 0.04, 0.03 };
-        /// <summary>The lucerne kl</summary>
-        static double[] LucerneKL = new double[] { 0.01, 0.01, 0.01, 0.01, 0.09, 0.09, 0.09 };
-        /// <summary>The perennial kl</summary>
-        static double[] PerennialKL = new double[] { 0.01, 0.01, 0.01, 0.01, 0.09, 0.07, 0.05 };
-
-        /// <summary>
-        /// 
-        /// </summary>
-        class BlackVertosol
-        {
-            /// <summary>The cotton a</summary>
-            internal static double[] CottonA = new double[] { 0.832, 0.868, 0.951, 0.988, 1.043, 1.095, 1.151 };
-            /// <summary>The sorghum a</summary>
-            internal static double[] SorghumA = new double[] { 0.699, 0.802, 0.853, 0.907, 0.954, 1.003, 1.035 };
-            /// <summary>The wheat a</summary>
-            internal static double[] WheatA = new double[] { 0.124, 0.049, 0.024, 0.029, 0.146, 0.246, 0.406 };
-
-            /// <summary>The cotton b</summary>
-            internal static double CottonB = -0.0070;
-            /// <summary>The sorghum b</summary>
-            internal static double SorghumB = -0.0038;
-            /// <summary>The wheat b</summary>
-            internal static double WheatB = 0.0116;
-
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        class GreyVertosol
-        {
-            /// <summary>The cotton a</summary>
-            internal static double[] CottonA = new double[] { 0.853, 0.851, 0.883, 0.953, 1.022, 1.125, 1.186 };
-            /// <summary>The sorghum a</summary>
-            internal static double[] SorghumA = new double[] { 0.818, 0.864, 0.882, 0.938, 1.103, 1.096, 1.172 };
-            /// <summary>The wheat a</summary>
-            internal static double[] WheatA = new double[] { 0.660, 0.655, 0.701, 0.745, 0.845, 0.933, 1.084 };
-            /// <summary>The barley a</summary>
-            internal static double[] BarleyA = new double[] { 0.847, 0.866, 0.835, 0.872, 0.981, 1.036, 1.152 };
-            /// <summary>The chickpea a</summary>
-            internal static double[] ChickpeaA = new double[] { 0.435, 0.452, 0.481, 0.595, 0.668, 0.737, 0.875 };
-            /// <summary>The fababean a</summary>
-            internal static double[] FababeanA = new double[] { 0.467, 0.451, 0.396, 0.336, 0.190, 0.134, 0.084 };
-            /// <summary>The mungbean a</summary>
-            internal static double[] MungbeanA = new double[] { 0.779, 0.770, 0.834, 0.990, 1.008, 1.144, 1.150 };
-            /// <summary>The cotton b</summary>
-            internal static double CottonB = -0.0082;
-            /// <summary>The sorghum b</summary>
-            internal static double SorghumB = -0.007;
-            /// <summary>The wheat b</summary>
-            internal static double WheatB = -0.0032;
-            /// <summary>The barley b</summary>
-            internal static double BarleyB = -0.0051;
-            /// <summary>The chickpea b</summary>
-            internal static double ChickpeaB = 0.0029;
-            /// <summary>The fababean b</summary>
-            internal static double FababeanB = 0.02455;
-            /// <summary>The mungbean b</summary>
-            internal static double MungbeanB = -0.0034;
-        }
-
-        /// <summary>Return a list of predicted crop names or an empty string[] if none found.</summary>
-        /// <value>The predicted crop names.</value>
-        public string[] PredictedCropNames
-        {
-            get
-            {
-                if (SoilType != null)
-                {
-                    if (SoilType.Equals("Black Vertosol", StringComparison.CurrentCultureIgnoreCase))
-                        return BlackVertosolCropList;
-                    else if (SoilType.Equals("Grey Vertosol", StringComparison.CurrentCultureIgnoreCase))
-                        return GreyVertosolCropList;
-                }
-                return new string[0];
-            }
-        }
-
-        /// <summary>Return a predicted SoilCrop for the specified crop name or null if not found.</summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <returns></returns>
-        private ISoilCrop PredictedCrop(string CropName)
-        {
-            double[] A = null;
-            double B = double.NaN;
-            double[] KL = null;
-
-            if (SoilType == null)
-                return null;
-
-            if (SoilType.Equals("Black Vertosol", StringComparison.CurrentCultureIgnoreCase))
-            {
-                if (CropName.Equals("Cotton", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = BlackVertosol.CottonA;
-                    B = BlackVertosol.CottonB;
-                    KL = CottonKL;
-                }
-                else if (CropName.Equals("Sorghum", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = BlackVertosol.SorghumA;
-                    B = BlackVertosol.SorghumB;
-                    KL = SorghumKL;
-                }
-                else if (CropName.Equals("Wheat", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = BlackVertosol.WheatA;
-                    B = BlackVertosol.WheatB;
-                    KL = WheatKL;
-                }
-            }
-            else if (SoilType.Equals("Grey Vertosol", StringComparison.CurrentCultureIgnoreCase))
-            {
-                if (CropName.Equals("Cotton", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.CottonA;
-                    B = GreyVertosol.CottonB;
-                    KL = CottonKL;
-                }
-                else if (CropName.Equals("Sorghum", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.SorghumA;
-                    B = GreyVertosol.SorghumB;
-                    KL = SorghumKL;
-                }
-                else if (CropName.Equals("Wheat", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.WheatA;
-                    B = GreyVertosol.WheatB;
-                    KL = WheatKL;
-                }
-                else if (CropName.Equals("Barley", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.BarleyA;
-                    B = GreyVertosol.BarleyB;
-                    KL = BarleyKL;
-                }
-                else if (CropName.Equals("Chickpea", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.ChickpeaA;
-                    B = GreyVertosol.ChickpeaB;
-                    KL = ChickpeaKL;
-                }
-                else if (CropName.Equals("Fababean", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.FababeanA;
-                    B = GreyVertosol.FababeanB;
-                    KL = FababeanKL;
-                }
-                else if (CropName.Equals("Mungbean", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.MungbeanA;
-                    B = GreyVertosol.MungbeanB;
-                    KL = MungbeanKL;
-                }
-            }
-
-
-            if (A == null)
-                return null;
-
-            double[] LL = PredictedLL(A, B);
-            LL = Map(LL, PredictedThickness, waterNode.Thickness, MapType.Concentration, LL.Last());
-            KL = Map(KL, PredictedThickness, waterNode.Thickness, MapType.Concentration, KL.Last());
-            double[] XF = Map(PredictedXF, PredictedThickness, waterNode.Thickness, MapType.Concentration, PredictedXF.Last());
-            string[] Metadata = StringUtilities.CreateStringArray("Estimated", waterNode.Thickness.Length);
-
-            SoilCrop soilCrop = new SoilCrop()
-            {
-                LL = LL,
-                LLMetadata = Metadata,
-                KL = KL,
-                KLMetadata = Metadata,
-                XF = XF,
-                XFMetadata = Metadata
-            };
-            return soilCrop as ISoilCrop;
-        }
-
-        /// <summary>Calculate and return a predicted LL from the specified A and B values.</summary>
-        /// <param name="A">a.</param>
-        /// <param name="B">The b.</param>
-        /// <returns></returns>
-        private double[] PredictedLL(double[] A, double B)
-        {
-            double[] LL15 = LL15Mapped(PredictedThickness);
-            double[] DUL = DULMapped(PredictedThickness);
-            double[] LL = new double[PredictedThickness.Length];
-            for (int i = 0; i != PredictedThickness.Length; i++)
-            {
-                double DULPercent = DUL[i] * 100.0;
-                LL[i] = DULPercent * (A[i] + B * DULPercent);
-                LL[i] /= 100.0;
-
-                // Bound the predicted LL values.
-                LL[i] = Math.Max(LL[i], LL15[i]);
-                LL[i] = Math.Min(LL[i], DUL[i]);
-            }
-
-            //  make the top 3 layers the same as the the top 3 layers of LL15
-            if (LL.Length >= 3)
-            {
-                LL[0] = LL15[0];
-                LL[1] = LL15[1];
-                LL[2] = LL15[2];
-            }
-            return LL;
         }
 
         #endregion
