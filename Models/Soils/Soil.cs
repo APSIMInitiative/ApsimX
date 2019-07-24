@@ -28,6 +28,8 @@
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
         /// </summary>
+        /// 
+        [XmlIgnore]
         public WEIRDO Weirdo;
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;

@@ -27,7 +27,10 @@
             foreach (Sample sample in Apsim.Children(soil, typeof(Sample)))
                 SetSampleThickness(sample, targetThickness, soil);
 
-            SetSoilWaterThickness(soil.SoilWater as SoilWater, targetThickness);
+            if (soil.SoilWater != null)
+                SetSoilWaterThickness(soil.SoilWater as SoilWater, targetThickness);
+            if (soil.Weirdo != null)
+                soil.Weirdo.MapVariables(targetThickness);
             SetAnalysisThickness(analysisNode, targetThickness);
             SetSoilOrganicMatterThickness(soil.SoilOrganicMatter, targetThickness);
             SetWaterThickness(waterNode, targetThickness, soil);

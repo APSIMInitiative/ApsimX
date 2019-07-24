@@ -15,6 +15,7 @@ using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Functions;
+using Models.Soils.Standardiser;
 
 namespace Models.Soils
 {
@@ -44,6 +45,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double CNCov { get; set; }
+
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double CNRed { get; set; }
@@ -204,10 +206,7 @@ namespace Models.Soils
         #endregion
 
         #region Class Dependancy Links
-        ///[Link]
-        ///private Water Water = null;
-        [Link]
-        private LayerStructure Layering = null;
+
         [Link]
         private Soil Soil = null;
         [Link]
@@ -245,45 +244,6 @@ namespace Models.Soils
         #endregion
 
         #region Parameters
-        private double[] _Thickness;
-        /// <summary>
-        /// The thickness of each soil layer for parameter values
-        /// </summary>
-        public double[] ParamThickness
-        {
-            get
-            {
-                return _Thickness;
-            }
-            set
-            {
-                _Thickness = value;
-            }
-        }
-        /// <summary>
-        /// Soil layer thickness for each layer in cm (only used in the GUI) (cm)
-        /// </summary>
-        /// <remarks>
-        /// This "Depth" variable is only needed for the "Depth" column in the "SoilWater" node of the GUI.
-        /// Just converts back and forth between "Depth" (in cm as string) AND "Thickness" (in mm as double).
-        /// </remarks>
-        /// <value>
-        /// The depth.
-        /// </value>
-        [XmlIgnore]
-        [Units("cm")]
-        [Description("Layer Depth")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(ParamThickness);
-            }
-            set
-            {
-                ParamThickness = Soil.ToThickness(value);
-            }
-        }
         /// <summary>Gets or sets the l L15.</summary>
         /// <value>The l L15.</value>
         [Summary]
@@ -598,7 +558,6 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Thickness = Layering.Thickness;
             ProfileLayers = Thickness.Length;
             PoreCompartments = PoreBounds.Length - 1;
             AdsorptionCapacity = new double[ProfileLayers];
@@ -615,18 +574,6 @@ namespace Models.Soils
             SaturatedWaterDepth = new double[ProfileLayers];
             HourlyWaterExtraction = new double[ProfileLayers];
             RootLengthDensity = new double[ProfileLayers];
-            double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
-
-            MappedSAT = SAT;
-            MappedDUL = DUL;
-            MappedLL15 = LL15;
-            MappedCFlow = Soil.Map(CflowScaled, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedUpperRepellentWC = Soil.Map(UpperRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedLowerRepellentWC = Soil.Map(LowerRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedMinRepellancyFactor = Soil.Map(MinRepellancyFactor, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedXF = Soil.Map(XF, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
 
             Pores = new Pore[ProfileLayers][];
             PoreWater = new double[ProfileLayers][];
@@ -801,6 +748,22 @@ namespace Models.Soils
         #endregion
 
         #region Water Balance Methods
+        internal void MapVariables(double[] targetThickness)
+        {
+            double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
+
+            MappedSAT = Layers.MapConcentration(SAT, Thickness, targetThickness, SAT[SAT.Length-1]);
+            MappedDUL = Layers.MapConcentration(DUL, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedLL15 = Layers.MapConcentration(LL15, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedCFlow = Layers.MapConcentration(CflowScaled, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedXFlow = Layers.MapConcentration(XFlow, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedPsiBub = Layers.MapConcentration(PsiBub, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedUpperRepellentWC = Layers.MapConcentration(UpperRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedLowerRepellentWC = Layers.MapConcentration(LowerRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedMinRepellancyFactor = Layers.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedXF = Layers.MapConcentration(XF, Thickness, targetThickness, SAT[SAT.Length - 1]);
+        }
+
         private void doPrecipitation()
         {
             if (Irrigation > 0)
