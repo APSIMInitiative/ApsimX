@@ -38,6 +38,16 @@ namespace Models.Core
         /// <summary>Invoked when the simulation is completed.</summary>
         public event EventHandler Completed;
 
+        /// <summary>Return total area.</summary>
+        public double Area
+        {
+            get
+            {
+                return Apsim.Children(this, typeof(Zone)).Sum(z => (z as Zone).Area);
+            }
+        }
+
+
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
         /// </summary>
