@@ -679,8 +679,7 @@
                         break;
                 if (SoilOC == null)
                     return null;
-                return Map(SoilOC, SoilOCThickness, Thickness,
-                           MapType.Concentration, SoilOC.Last());
+                return SoilOC;
             }
         }
 
@@ -703,115 +702,26 @@
                     return null;
                 double[] SoilON = MathUtilities.Divide(SoilOC, SoilOrganicMatter.SoilCN);
 
-                return Map(SoilON, SoilOCThickness, Thickness,
-                           MapType.Concentration, SoilON.Last());
+                return SoilON;
             }
         }
 
         /// <summary>FBiom. Units: 0-1</summary>
-        /// <value>The f biom.</value>
         [Units("0-1")]
-        public double[] FBiom
-        {
-            get
-            {
-                if (SoilOrganicMatter.FBiom == null) return null;
-                return Map(SoilOrganicMatter.FBiom, SoilOrganicMatter.Thickness, Thickness,
-                           MapType.Concentration, LastValue(SoilOrganicMatter.FBiom));
-            }
-        }
+        public double[] FBiom { get { return SoilOrganicMatter.FBiom; } }
 
         /// <summary>FInert. Units: 0-1</summary>
-        /// <value>The f inert.</value>
         [Units("0-1")]
-        public double[] FInert
-        {
-            get
-            {
-                if (SoilOrganicMatter.FInert == null) return null;
-                return Map(SoilOrganicMatter.FInert, SoilOrganicMatter.Thickness, Thickness,
-                           MapType.Concentration, LastValue(SoilOrganicMatter.FInert));
-            }
-        }
+        public double[] FInert { get { return SoilOrganicMatter.FInert; } }
 
         /// <summary>Initial Root Wt</summary>
-        /// <value>Initial Root Wt</value>
         [Units("kg/ha")]
-        public double[] InitialRootWt
-        {
-            get
-            {
-                if (SoilOrganicMatter.RootWt == null) return null;
-                return Map(SoilOrganicMatter.RootWt, SoilOrganicMatter.Thickness, Thickness,
-                           MapType.Mass, LastValue(SoilOrganicMatter.RootWt));
-            }
-        }
+        public double[] InitialRootWt { get { return SoilOrganicMatter.RootWt; } }
 
         /// <summary>Initial Root Wt</summary>
-        /// <value>Initial Root Wt</value>
         [Units("kg/ha")]
-        public double[] InitialSoilCNR
-        {
-            get
-            {
-                return MathUtilities.Divide(OC, ON);
-            }
-        }
+        public double[] InitialSoilCNR { get { return MathUtilities.Divide(OC, ON); } }
 
-        #endregion
-
-        #region Analysis
-        /// <summary>Rocks. Units: %</summary>
-        /// <value>The rocks.</value>
-        [Units("0-1")]
-        public double[] Rocks 
-        { 
-            get 
-            {
-                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-                return Map(analysis.Rocks, analysis.Thickness, Thickness, MapType.Concentration);
-            } 
-        }
-
-        /// <summary>Particle size sand</summary>
-        /// <value>The particle size sand.</value>
-        public double[] ParticleSizeSand
-        {
-            get
-            {
-                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-                if (analysis.ParticleSizeSand == null) return null;
-                return Map(analysis.ParticleSizeSand, analysis.Thickness, Thickness,
-                           MapType.Concentration, LastValue(analysis.ParticleSizeSand));
-            }
-        }
-
-        /// <summary>Particle size silt</summary>
-        /// <value>The particle size silt.</value>
-        public double[] ParticleSizeSilt
-        {
-            get
-            {
-                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-                if (analysis.ParticleSizeSilt == null) return null;
-                return Map(analysis.ParticleSizeSilt, analysis.Thickness, Thickness,
-                           MapType.Concentration, LastValue(analysis.ParticleSizeSilt));
-            }
-        }
-
-        /// <summary>Particle size silt</summary>
-        /// <value>The particle size clay.</value>
-        public double[] ParticleSizeClay
-        {
-            get
-            {
-                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-                
-                if (analysis.ParticleSizeClay == null) return null;
-                return Map(analysis.ParticleSizeClay, analysis.Thickness, Thickness,
-                           MapType.Concentration, LastValue(analysis.ParticleSizeClay));
-            }
-        }
         #endregion
 
         #region Sample
@@ -834,16 +744,8 @@
         {
             get
             {
-                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                {
-                    if (MathUtilities.ValuesInArray(Sample.NO3ppm))
-                    {
-                        double[] Values = Sample.NO3ppm;
-                        double[] Thicknesses = Sample.Thickness;                
-                        return Map(Values, Thicknesses, Thickness, MapType.Concentration, 1.0);
-                    }
-                }
-                return null;
+                var sample = Apsim.Child(this, typeof(Sample)) as Sample;
+                return sample?.NO3;
             }
         }
 
@@ -856,16 +758,8 @@
         {
             get
             {
-                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                {
-                    if (MathUtilities.ValuesInArray(Sample.NH4))
-                    {
-                        double[] Values = Sample.NH4ppm;
-                        double[] Thicknesses = Sample.Thickness;                
-                        return Map(Values, Thicknesses, Thickness, MapType.Concentration, 0.2);
-                    }
-                }
-                return null;
+                var sample = Apsim.Child(this, typeof(Sample)) as Sample;
+                return sample?.NH4;
             }
         }
 
@@ -884,9 +778,6 @@
                 foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     if (OverlaySampleOnTo(Sample.CL, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
-                if (Values != null)
-                    return Map(Values, Thicknesses, Thickness,
-                               MapType.Concentration, 0.0);
                 return Values;
             }
         }
@@ -906,9 +797,6 @@
                 foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     if (OverlaySampleOnTo(Sample.ESP, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
-                if (Values != null)
-                    return Map(Values, Thicknesses, Thickness,
-                               MapType.Concentration, LastValue(Values));
                 return Values;
             }
         }
@@ -927,9 +815,6 @@
                 foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     if (OverlaySampleOnTo(Sample.EC, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
-                if (Values != null)
-                    return Map(Values, Thicknesses, Thickness,
-                               MapType.Concentration, LastValue(Values));
                 return null;
             }
         }
@@ -949,71 +834,9 @@
                     if (MathUtilities.ValuesInArray(Sample.PH) && 
                         OverlaySampleOnTo(Sample.PHWater, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
-                if (Values != null)
-                    return Map(Values, Thicknesses, Thickness,
-                               MapType.Concentration, LastValue(Values));
                 return null;
             }
         }
-
-        #endregion
-
-        #region Phosphorus
-        /// <summary>LabileP at standard thickness</summary>
-        /// <value>The labile p.</value>
-        public double[] LabileP
-        {
-            get
-            {
-                Phosphorus phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
-                if (phosphorus == null)
-                    return null;
-                return Map(phosphorus.LabileP, phosphorus.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>Sorption at standard thickness</summary>
-        /// <value>The sorption.</value>
-        public double[] Sorption
-        {
-            get
-            {
-                Phosphorus phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
-                
-                if (phosphorus == null)
-                    return null;
-                return Map(phosphorus.Sorption, phosphorus.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>BandedP at standard thickness</summary>
-        /// <value>The banded p.</value>
-        public double[] BandedP
-        {
-            get
-            {
-                Phosphorus phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
-                
-                if (phosphorus == null)
-                    return null;
-                return Map(phosphorus.BandedP, phosphorus.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
-        /// <summary>RockP at standard thickness</summary>
-        /// <value>The rock p.</value>
-        public double[] RockP
-        {
-            get
-            {
-                Phosphorus phosphorus = Apsim.Child(this, typeof(Phosphorus)) as Phosphorus;
-                
-                if (phosphorus == null)
-                    return null;
-                return Map(phosphorus.RockP, phosphorus.Thickness, Thickness, MapType.Concentration);
-            }
-        }
-
 
         #endregion
 
@@ -1037,14 +860,6 @@
             return Map(waterNode.AirDry, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.AirDry.Last());
         }
 
-        /// <summary>Lower limit 15 bar - mapped to the specified layer structure. Units: mm/mm</summary>
-        /// <param name="ToThickness">To thickness.</param>
-        /// <returns></returns>
-        public double[] LL15Mapped(double[] ToThickness)
-        {
-            return Map(waterNode.LL15, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.LL15.Last());
-        }
-
         /// <summary>Drained upper limit - mapped to the specified layer structure. Units: mm/mm</summary>
         /// <param name="ToThickness">To thickness.</param>
         /// <returns></returns>
@@ -1053,50 +868,6 @@
             return Map(waterNode.DUL, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.DUL.Last());
         }
 
-        /// <summary>SW - mapped to the specified layer structure. Units: mm/mm</summary>
-        /// <param name="Values">The values.</param>
-        /// <param name="Thicknesses">The thicknesses.</param>
-        /// <param name="ToThickness">To thickness.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Cannot find crop lower limit or LL15 in soil</exception>
-        public double[] SWMapped(double[] Values, double[] Thicknesses, double[] ToThickness)
-        {
-            if (Thicknesses == ToThickness)
-                return Values;
-
-            // Get the last item in the sw array and its indx.
-            double LastSW = LastValue(Values);
-            double LastThickness = LastValue(Thicknesses);
-            int LastIndex = Values.Length - 1;
-
-            Array.Resize(ref Thicknesses, Thicknesses.Length + 3); // Increase array size by 3.
-            Array.Resize(ref Values, Values.Length + 3);
-
-            Thicknesses[LastIndex + 1] = LastThickness;
-            Thicknesses[LastIndex + 2] = LastThickness;
-            Thicknesses[LastIndex + 3] = 3000;
-
-            Values[LastIndex + 1] = LastSW * 0.8;
-            Values[LastIndex + 2] = LastSW * 0.4;
-            Values[LastIndex + 3] = 0.0; // This will be constrained below to crop LL below.
-
-            // Get the first crop ll or ll15.
-            double[] LowerBound = null;
-            if (waterNode.Crops.Count > 0)
-                LowerBound = LLMapped(waterNode.Crops[0].Name, Thicknesses);
-
-            if (LowerBound == null)
-                LowerBound = LL15Mapped(Thicknesses);
-            if (LowerBound == null)
-                throw new Exception("Cannot find crop lower limit or LL15 in soil");
-
-            // Make sure all SW values below LastIndex don't go below CLL.
-            for (int i = LastIndex + 1; i < Thicknesses.Length; i++)
-                if (i < Values.Length && i < LowerBound.Length)
-                    Values[i] = Math.Max(Values[i], LowerBound[i]);
-
-            return Map(Values, Thicknesses, ToThickness, MapType.Concentration);
-        }
         /// <summary>
         /// The lower limit to water extraction for each layer
         /// </summary>
@@ -1106,6 +877,7 @@
         {
             return LLMapped(CropName, Thickness);
         }
+
         /// <summary>Crop lower limit mapped. Units: mm/mm</summary>
         /// <param name="CropName">Name of the crop.</param>
         /// <param name="ToThickness">To thickness.</param>

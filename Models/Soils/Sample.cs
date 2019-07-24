@@ -10,6 +10,7 @@ namespace Models.Soils
     using System.Xml.Serialization;
     using Models.Core;
     using APSIM.Shared.Utilities;
+    using Models.Soils.Standardiser;
 
     /// <summary>
     /// The class represents a soil sample.
@@ -194,108 +195,25 @@ namespace Models.Soils
         /// </summary>
         public NUnitsEnum NO3Units { get; set; }
 
-        /// <summary>Change the units used for NO3.</summary>
-        /// <param name="ToUnits">To units.</param>
-        public void NO3UnitsSet(NUnitsEnum ToUnits)
-        {
-            if (ToUnits != NO3Units)
-            {
-                // convert the numbers
-                if (ToUnits == NUnitsEnum.ppm)
-                    NO3 = NO3ppm;
-                else
-                    NO3 = NO3kgha;
-                NO3Units = ToUnits;
-            }
-        }
-
         /// <summary>
         /// Gets or sets the units of NH4
         /// </summary>
         public NUnitsEnum NH4Units { get; set; }
-
-        /// <summary>Change the units used for NH4.</summary>
-        /// <param name="ToUnits">To units.</param>
-        public void NH4UnitsSet(NUnitsEnum ToUnits)
-        {
-            if (ToUnits != NH4Units)
-            {
-                // convert the numbers
-                if (ToUnits == NUnitsEnum.ppm)
-                    NH4 = NH4ppm;
-                else
-                    NH4 = NH4kgha;
-                NH4Units = ToUnits;
-            }
-        }
 
         /// <summary>
         /// Gets or sets the units of SW
         /// </summary>
         public SWUnitsEnum SWUnits { get; set; }
 
-        /// <summary>Change the units used for SW.</summary>
-        /// <param name="ToUnits">To units.</param>
-        public void SWUnitsSet(SWUnitsEnum ToUnits)
-        {
-            if (ToUnits != SWUnits)
-            {
-                // convert the numbers
-                if (ToUnits == SWUnitsEnum.Gravimetric)
-                    SW = SWGravimetric;
-                else if (ToUnits == SWUnitsEnum.mm)
-                    SW = SWmm;
-                else if (ToUnits == SWUnitsEnum.Volumetric)
-                    SW = SWVolumetric;
-                SWUnits = ToUnits;
-            }
-        }
-
         /// <summary>
         /// Gets or sets the units of organic carbon
         /// </summary>
         public OCSampleUnitsEnum OCUnits { get; set; }
 
-        /// <summary>Ocs the units set.</summary>
-        /// <param name="ToUnits">To units.</param>
-        public void OCUnitsSet(OCSampleUnitsEnum ToUnits)
-        {
-            if (ToUnits != OCUnits)
-            {
-                // convert the numbers
-                if (ToUnits == OCSampleUnitsEnum.WalkleyBlack)
-                    OC = OCWalkleyBlack;
-                else
-                    OC = OCTotal;
-                OCUnits = ToUnits;
-            }
-        }
-
-
         /// <summary>
         /// Gets or sets the units of P
         /// </summary>
         public PHSampleUnitsEnum PHUnits { get; set; }
-
-        /// <summary>Phes the units set.</summary>
-        /// <param name="ToUnits">To units.</param>
-        public void PHUnitsSet(PHSampleUnitsEnum ToUnits)
-        {
-            if (ToUnits != PHUnits)
-            {
-                // convert the numbers
-                if (ToUnits == PHSampleUnitsEnum.Water)
-                {
-                    PH = PHWater;
-                }
-                else
-                {
-                    PH = PHCaCl2;
-                }
-                PHUnits = ToUnits;
-            }
-        }
-
 
         #endregion
 
@@ -313,7 +231,7 @@ namespace Models.Soils
                     double[] values = (double[])this.NO3.Clone();
                     if (this.NO3Units != NUnitsEnum.ppm)
                     {
-                        double[] bd = Soil.BDMapped(this.Thickness);
+                        double[] bd = Layers.BDMapped(Soil, this.Thickness);
                         for (int i = 0; i < values.Length; i++)
                         {
                             if (!Double.IsNaN(values[i]))
@@ -344,7 +262,7 @@ namespace Models.Soils
                     double[] values = (double[])this.NO3.Clone();
                     if (this.NO3Units != NUnitsEnum.kgha)
                     {
-                        double[] bd = Soil.BDMapped(this.Thickness);
+                        double[] bd = Layers.BDMapped(Soil, this.Thickness);
                         for (int i = 0; i < values.Length; i++)
                         {
                             if (!Double.IsNaN(values[i]))
@@ -373,7 +291,7 @@ namespace Models.Soils
                     double[] values = (double[])this.NH4.Clone();
                     if (this.NH4Units != NUnitsEnum.ppm)
                     {
-                        double[] bd = Soil.BDMapped(this.Thickness);
+                        double[] bd = Layers.BDMapped(Soil, this.Thickness);
                         for (int i = 0; i < values.Length; i++)
                         {
                             if (!Double.IsNaN(values[i]))
@@ -404,7 +322,7 @@ namespace Models.Soils
                     double[] values = (double[])this.NH4.Clone();
                     if (this.NH4Units != NUnitsEnum.kgha)
                     {
-                        double[] bd = Soil.BDMapped(this.Thickness);
+                        double[] bd = Layers.BDMapped(Soil, this.Thickness);
                         for (int i = 0; i < values.Length; i++)
                         {
                             if (!Double.IsNaN(values[i]))
@@ -438,7 +356,7 @@ namespace Models.Soils
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
-                        return MathUtilities.Multiply(MathUtilities.Multiply(this.SW, this.Soil.BDMapped(this.Thickness)), this.Thickness);
+                        return MathUtilities.Multiply(MathUtilities.Multiply(this.SW, Layers.BDMapped(Soil, this.Thickness)), this.Thickness);
                     }
                     else
                     {
@@ -461,7 +379,7 @@ namespace Models.Soils
                 {
                     if (this.SWUnits == SWUnitsEnum.Volumetric)
                     {
-                        return MathUtilities.Divide(this.SW, this.Soil.BDMapped(this.Thickness));
+                        return MathUtilities.Divide(this.SW, Layers.BDMapped(Soil, this.Thickness));
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
@@ -469,7 +387,7 @@ namespace Models.Soils
                     }
                     else
                     {
-                        return MathUtilities.Divide(MathUtilities.Divide(this.SW, this.Soil.BDMapped(this.Thickness)), this.Thickness);
+                        return MathUtilities.Divide(MathUtilities.Divide(this.SW, Layers.BDMapped(Soil, this.Thickness)), this.Thickness);
                     }
                 }
                 return null;
@@ -491,7 +409,7 @@ namespace Models.Soils
                     }
                     else if (this.SWUnits == SWUnitsEnum.Gravimetric)
                     {
-                        return MathUtilities.Multiply(this.SW, this.Soil.BDMapped(this.Thickness));
+                        return MathUtilities.Multiply(this.SW, Layers.BDMapped(Soil, this.Thickness));
                     }
                     else
                     {

@@ -229,9 +229,6 @@
             }
         }
 
-        /// <summary>The type of mapping.</summary>
-        private enum MapType { Mass, Concentration, UseBD }
-
         /// <summary>Map soil variables (using concentration) from one layer structure to another.</summary>
         /// <param name="fromValues">The from values.</param>
         /// <param name="fromThickness">The from thickness.</param>
@@ -368,8 +365,8 @@
         /// <param name="toThickness">To thickness.</param>
         /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
         /// <returns>The from values mapped to the specified thickness</returns>
-        private static double[] MapMass(double[] fromValues, double[] fromThickness, double[] toThickness,
-                                        bool allowMissingValues = false)
+        public static double[] MapMass(double[] fromValues, double[] fromThickness, double[] toThickness,
+                                       bool allowMissingValues = false)
         {
             if (fromValues == null || fromThickness == null)
                 return null;
