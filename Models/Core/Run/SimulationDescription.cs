@@ -121,15 +121,7 @@
 
                 // Give the simulation the descriptors.
                 newSimulation.Descriptors = Descriptors;
-                if (topLevelModel is Simulations sims)
-                {
-                    // If the top-level model is a simulations object, it will have access
-                    // to services such as the checkpoints. This should be passed into the
-                    // simulation to be used in link resolution. If we don't provide these
-                    // services to the simulation, it will not be able to resolve links to
-                    // checkpoints.
-                    newSimulation.Services = sims.GetServices();
-                }
+                newSimulation.Services = GetServices();
                 return newSimulation;
             }
             catch (Exception err)
@@ -137,6 +129,27 @@
                 var message = "Error in file: " + baseSimulation.FileName + " Simulation: " + Name;
                 throw new Exception(message, err);
             }
+        }
+
+        private List<object> GetServices()
+        {
+            List<object> services = new List<object>();
+            if (topLevelModel is Simulations sims)
+            {
+                // If the top-level model is a simulations object, it will have access
+                // to services such as the checkpoints. This should be passed into the
+                // simulation to be used in link resolution. If we don't provide these
+                // services to the simulation, it will not be able to resolve links to
+                // checkpoints.
+                services = sims.GetServices();
+            }
+            else
+            {
+                IModel storage = Apsim.Find(topLevelModel, typeof(IDataStore));
+                services.Add(storage);
+            }
+
+            return services;
         }
 
         /// <summary>
