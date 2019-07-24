@@ -186,9 +186,9 @@
                 if (sample.SW != null)
                     sample.SW = MapSW(sample.SW, sample.Thickness, thickness, soil);
                 if (sample.NH4 != null)
-                    sample.NH4 = MapConcentration(sample.NH4, sample.Thickness, thickness, 0.01);
+                    sample.NH4 = MapConcentration(sample.NH4ppm, sample.Thickness, thickness, 0.01);
                 if (sample.NO3 != null)
-                    sample.NO3 = MapConcentration(sample.NO3, sample.Thickness, thickness, 0.01);
+                    sample.NO3 = MapConcentration(sample.NO3ppm, sample.Thickness, thickness, 0.01);
 
                 // The elements below will be overlaid over other arrays of values so we want 
                 // to have missing values (double.NaN) used at the bottom of the profile.
