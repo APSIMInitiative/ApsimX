@@ -297,7 +297,7 @@ namespace UserInterface.Presenters
                                 throw new Exception("Encountered an error while parsing date: " + err.Message);
                         }
                         rowDate = rowDate.AddDays(day - 1);                 // calc date
-                        data.Rows[r][0] = rowDate.ToShortDateString();      // store in Date col
+                        data.Rows[r][0] = rowDate.ToString(CultureInfo.InvariantCulture);      // store in Date col
                     }
 
                     if (dayCol > yearCol)
