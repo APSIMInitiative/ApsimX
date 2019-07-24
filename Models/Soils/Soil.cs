@@ -413,7 +413,7 @@
             get 
             {
                 if (SoilWater == null || !(SoilWater is SoilWater)) return null;
-                return Map((SoilWater as SoilWater).SWCON, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+                return (SoilWater as SoilWater).SWCON;
             }
         }
 
@@ -426,7 +426,7 @@
             get
                 {
                 if (SoilWater == null) return null;
-                return Map((SoilWater as SoilWater).KLAT, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+                return (SoilWater as SoilWater).KLAT;
             }
         }
 

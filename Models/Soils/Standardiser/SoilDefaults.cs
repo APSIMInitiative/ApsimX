@@ -46,7 +46,7 @@
                 CheckSampleForMissingValues(sample, soil);
 
             // Make sure there are the correct number of KS values.
-            if (water.KS != null && water.KS.Length > 0)
+            if (water?.KS != null && water?.KS.Length > 0)
                 water.KS = FillMissingValues(water.KS, water.Thickness.Length, 0.0);
         }
 
