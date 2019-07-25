@@ -5216,22 +5216,49 @@
                               "Name": "nRequired",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "$type": "Models.Functions.SubtractFunction, Models",
                                   "Name": "laiToday",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].LAI",
-                                      "Name": "LAI",
+                                      "$type": "Models.Memo, Models",
+                                      "Text": "laiToday = lai + dltLai - dltSlai",
+                                      "Name": "Memo",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
+                                      "$type": "Models.Functions.AddFunction, Models",
+                                      "Name": "AddFunction",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Leaf].LAI",
+                                          "Name": "LAI",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Leaf].DltLAI",
+                                          "Name": "DltLAI",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].DltLAI",
-                                      "Name": "DltLAI",
+                                      "VariableName": "[Leaf].DltSenescedLai",
+                                      "Name": "dltSlai",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
