@@ -768,7 +768,10 @@ namespace Models.PMF.Organs
                 laiEquilibWaterToday = LAI;
 
             avLaiEquilibWater = updateAvLaiEquilibWater(laiEquilibWaterToday, 10);
-            var sdRatio = WaterDemand < 0.001 ? 1.0 : WaterDemand / Arbitrator.WatSupply;
+
+            //var sdRatio = WaterDemand < 0.001 ? 1.0 : WaterDemand / Arbitrator.WatSupply;
+            //WaterDemand is not used currently - jb
+            var sdRatio = Arbitrator.WDemand < 0.001 ? 1.0 : MathUtilities.Divide(Arbitrator.WatSupply, Arbitrator.WDemand, 0.0);
             avSDRatio = updateAvSDRatio(sdRatio, 5);
             //// average of the last 10 days of laiEquilibWater`
             //laiEquilibWater.push_back(laiEquilibWaterToday);
