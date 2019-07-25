@@ -185,7 +185,7 @@ namespace Models.PMF
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
 
-                    myZone.AvailableSW[layer] = myZone.soil.Water[layer] - myZone.soil.LL15mm[layer];
+                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - myZone.soil.LL15mm[layer], 0);
                     myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
 
                     if (layer == currentLayer)
