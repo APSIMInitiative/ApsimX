@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.Run
 {
     using APSIM.Shared.JobRunning;
+    using Models.Soils.Standardiser;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -122,6 +123,12 @@
                 // Give the simulation the descriptors.
                 newSimulation.Descriptors = Descriptors;
                 newSimulation.Services = GetServices();
+
+                // Standardise the soil.
+                var soils = Apsim.ChildrenRecursively(newSimulation, typeof(Soils.Soil));
+                foreach (Soils.Soil soil in soils)
+                    SoilStandardiser.Standardise(soil);
+
                 return newSimulation;
             }
             catch (Exception err)

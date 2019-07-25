@@ -212,8 +212,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnSelectionChanged(object sender, EventArgs e)
         {
-            if (Changed != null)
-                Changed.Invoke(this, e);
+            try
+            {
+                if (Changed != null)
+                    Changed.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
