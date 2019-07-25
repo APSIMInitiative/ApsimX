@@ -176,8 +176,8 @@
         private void OnBeginRun(object sender, EventArgs e)
         {
             R r = new R();
-            Console.WriteLine(r.InstallPackage("boot"));
-            Console.WriteLine(r.InstallPackage("sensitivity"));
+            r.InstallPackage("boot");
+            r.InstallPackage("sensitivity");
         }
 
         /// <summary>
@@ -192,8 +192,8 @@
                 {
                     // Write a script to get random numbers from R.
                     string script = string.Format
-                        ("library('boot')" + Environment.NewLine +
-                         "library('sensitivity')" + Environment.NewLine +
+                        ($"library('boot', lib.loc='{R.PackagesDirectory}')" + Environment.NewLine +
+                         $"library('sensitivity', lib.loc='{R.PackagesDirectory}')" + Environment.NewLine +
                          "n <- {0}" + Environment.NewLine +
                          "nparams <- {1}" + Environment.NewLine +
                          "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
