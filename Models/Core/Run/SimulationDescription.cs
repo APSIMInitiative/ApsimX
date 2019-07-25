@@ -38,9 +38,10 @@
             baseSimulation = sim;
             if (sim != null)
             {
-                topLevelModel = sim;
-                while (topLevelModel.Parent != null)
-                    topLevelModel = topLevelModel.Parent;
+                IModel topLevel = sim;
+                while (topLevel.Parent != null)
+                    topLevel = topLevel.Parent;
+                topLevelModel = topLevel;
             }
 
             if (name == null && baseSimulation != null)
@@ -106,37 +107,22 @@
 
                 Simulation newSimulation;
                 if (doClone)
-                {
                     newSimulation = Apsim.Clone(baseSimulation) as Simulation;
-
-                    // If there is a child DataStore 
-                    // remove it and use the same one as in baseSimulation. This is
-                    // because we want to use the same DataStore for all simulations
-                    // and not have a separate DataStore instance for each simulation.
-                    Model goodStorage;
-                    if (topLevelModel == null)
-                        goodStorage = Apsim.Child(newSimulation, typeof(IDataStore)) as Model;
-                    else
-                        goodStorage = Apsim.Child(topLevelModel, typeof(IDataStore)) as Model;
-                    var unwantedStorage = Apsim.Child(newSimulation, typeof(IDataStore)) as Model;
-                    if (unwantedStorage != null)
-                        Apsim.Delete(unwantedStorage);
-                    if (goodStorage != null)
-                        newSimulation.Children.Add(goodStorage);
-                }
                 else
                     newSimulation = baseSimulation;
 
-                if (Name == null)
+                if (string.IsNullOrWhiteSpace(Name))
                     newSimulation.Name = baseSimulation.Name;
                 else
                     newSimulation.Name = Name;
+
                 newSimulation.Parent = null;
                 Apsim.ParentAllChildren(newSimulation);
                 replacementsToApply.ForEach(r => r.Replace(newSimulation));
 
                 // Give the simulation the descriptors.
                 newSimulation.Descriptors = Descriptors;
+                newSimulation.Services = GetServices();
 
                 // Standardise the soil.
                 var soils = Apsim.ChildrenRecursively(newSimulation, typeof(Soils.Soil));
@@ -150,6 +136,27 @@
                 var message = "Error in file: " + baseSimulation.FileName + " Simulation: " + Name;
                 throw new Exception(message, err);
             }
+        }
+
+        private List<object> GetServices()
+        {
+            List<object> services = new List<object>();
+            if (topLevelModel is Simulations sims)
+            {
+                // If the top-level model is a simulations object, it will have access
+                // to services such as the checkpoints. This should be passed into the
+                // simulation to be used in link resolution. If we don't provide these
+                // services to the simulation, it will not be able to resolve links to
+                // checkpoints.
+                services = sims.GetServices();
+            }
+            else
+            {
+                IModel storage = Apsim.Find(topLevelModel, typeof(IDataStore));
+                services.Add(storage);
+            }
+
+            return services;
         }
 
         /// <summary>
