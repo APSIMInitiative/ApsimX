@@ -1166,7 +1166,9 @@ namespace Models.PMF.Organs
                         BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
                         requiredN -= laiN;
                         nProvided += laiN;
-                        BAT.StructuralAllocation[leafIndex] -= laiN;
+
+                        // There is no guard clause here in old apsim.
+                        BAT.StructuralAllocation[leafIndex] = Math.Max(0, BAT.StructuralAllocation[leafIndex] - laiN);
                     }
                 }
 
