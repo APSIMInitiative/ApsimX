@@ -45,19 +45,20 @@
             if (!MathUtilities.AreEqual(toThickness, soil.Thickness))
             {
                 bool needToConstrainCropLL = false;
-                foreach (var crop in soil.Crops)
-                {
-                    crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
-                    crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
-
-                    if (crop is SoilCrop)
+                if (soil.Crops != null)
+                    foreach (var crop in soil.Crops)
                     {
-                        needToConstrainCropLL = true;
+                        crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
+                        crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
 
-                        var soilCrop = crop as SoilCrop;
-                        soilCrop.LL = MapConcentration(soilCrop.LL, soil.Thickness, toThickness, MathUtilities.LastValue(soilCrop.LL));
+                        if (crop is SoilCrop)
+                        {
+                            needToConstrainCropLL = true;
+
+                            var soilCrop = crop as SoilCrop;
+                            soilCrop.LL = MapConcentration(soilCrop.LL, soil.Thickness, toThickness, MathUtilities.LastValue(soilCrop.LL));
+                        }
                     }
-                }
 
                 soil.BD = MapConcentration(soil.BD, soil.Thickness, toThickness, MathUtilities.LastValue(soil.BD));
                 soil.AirDry = MapConcentration(soil.AirDry, soil.Thickness, toThickness, MathUtilities.LastValue(soil.AirDry));

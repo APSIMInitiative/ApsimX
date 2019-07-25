@@ -1240,7 +1240,7 @@ namespace Models.PMF.Organs
             Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            if (soil.Crop(parentPlant.Name) == null && soil.Weirdo == null)
+            if (soil.Weirdo == null && soil.Crop(parentPlant.Name) == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
             PlantZone = new ZoneState(parentPlant, this, soil, 0, initialDM.Value(), parentPlant.Population, maximumNConc.Value(),
