@@ -31,8 +31,8 @@
                 {
                     if (crop.XF == null)
                     {
-                        crop.XF = MathUtilities.CreateArrayOfValues(1.0, crop.Thickness.Length);
-                        crop.XFMetadata = StringUtilities.CreateStringArray("Estimated", crop.Thickness.Length);
+                        crop.XF = MathUtilities.CreateArrayOfValues(1.0, water.Thickness.Length);
+                        crop.XFMetadata = StringUtilities.CreateStringArray("Estimated", water.Thickness.Length);
                     }
                     if (crop.KL == null)
                         FillInKLForCrop(crop);
@@ -85,11 +85,13 @@
             int i = StringUtilities.IndexOfCaseInsensitive(cropNames, crop.Name);
             if (i != -1)
             {
+                var water = Apsim.Child(crop.Parent, typeof(Water)) as Water;
+
                 double[] KLs = GetRowOfArray(defaultKLs, i);
 
-                double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(crop.Thickness);
-                crop.KL = new double[crop.Thickness.Length];
-                for (int l = 0; l < crop.Thickness.Length; l++)
+                double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(water.Thickness);
+                crop.KL = new double[water.Thickness.Length];
+                for (int l = 0; l < water.Thickness.Length; l++)
                 {
                     bool didInterpolate;
                     crop.KL[l] = MathUtilities.LinearInterpReal(cumThickness[l], defaultKLThickness, KLs, out didInterpolate);
@@ -172,7 +174,7 @@
         {
             var water = Apsim.Child(soil, typeof(Water)) as Water;
 
-            for (int i = 0; i < crop.Thickness.Length; i++)
+            for (int i = 0; i < water.Thickness.Length; i++)
             {
                 if (crop.LL != null && double.IsNaN(crop.LL[i]))
                     crop.LL[i] = water.LL15[i];

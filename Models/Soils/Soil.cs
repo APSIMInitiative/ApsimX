@@ -815,7 +815,7 @@
                 foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
                     if (OverlaySampleOnTo(Sample.EC, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
-                return null;
+                return Values;
             }
         }
 
@@ -834,7 +834,7 @@
                     if (MathUtilities.ValuesInArray(Sample.PH) && 
                         OverlaySampleOnTo(Sample.PHWater, Sample.Thickness, ref Values, ref Thicknesses))
                         break;
-                return null;
+                return Values;
             }
         }
 
@@ -913,6 +913,7 @@
         {
             return XFMapped(CropName, Thickness);
         }
+
         /// <summary>Crop XF mapped. Units: 0-1</summary>
         /// <param name="CropName">Name of the crop.</param>
         /// <param name="ToThickness">To thickness.</param>

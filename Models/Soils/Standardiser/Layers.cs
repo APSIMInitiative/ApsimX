@@ -219,11 +219,11 @@
         /// <param name="soil">The soil the crop belongs to.</param>
         private static void SetCropThickness(SoilCrop crop, double[] thickness, Soil soil)
         {
-            if (!MathUtilities.AreEqual(thickness, crop.Thickness))
+            if (!MathUtilities.AreEqual(thickness, soil.Thickness))
             {
-                crop.LL = MapConcentration(crop.LL, crop.Thickness, thickness, MathUtilities.LastValue(crop.LL));
-                crop.KL = MapConcentration(crop.KL, crop.Thickness, thickness, MathUtilities.LastValue(crop.KL));
-                crop.XF = MapConcentration(crop.XF, crop.Thickness, thickness, MathUtilities.LastValue(crop.XF));
+                crop.LL = MapConcentration(crop.LL, soil.Thickness, thickness, MathUtilities.LastValue(crop.LL));
+                crop.KL = MapConcentration(crop.KL, soil.Thickness, thickness, MathUtilities.LastValue(crop.KL));
+                crop.XF = MapConcentration(crop.XF, soil.Thickness, thickness, MathUtilities.LastValue(crop.XF));
 
                 crop.LL = MathUtilities.Constrain(crop.LL, AirDryMapped(soil, thickness), DULMapped(soil, thickness));
             }
@@ -455,7 +455,8 @@
         /// <returns></returns>
         private static double[] LLMapped(SoilCrop crop, double[] ToThickness)
         {
-            return MapConcentration(crop.LL, crop.Thickness, ToThickness, MathUtilities.LastValue(crop.LL));
+            var waterNode = Apsim.Child(crop.Parent, typeof(Water)) as Water;
+            return MapConcentration(crop.LL, waterNode.Thickness, ToThickness, MathUtilities.LastValue(crop.LL));
         }
 
         /// <summary>Bulk density - mapped to the specified layer structure. Units: mm/mm</summary>

@@ -157,7 +157,6 @@
             Assert.AreEqual(sam.NH4, new double[] { 0.5, 0.1, 0.1 });
 
             SoilCrop crop = s.Children[1].Children[0] as SoilCrop;
-            Assert.AreEqual(crop.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(crop.LL, new double[] { 0.29, 0.29, 0.32, 0.38 });
             Assert.AreEqual(crop.KL, new double[] { 0.1, 0.1, 0.08, 0.06 });
             Assert.AreEqual(crop.XF, new double[] { 1, 1, 1, 1 });
