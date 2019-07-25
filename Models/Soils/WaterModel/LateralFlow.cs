@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Soils;
     using APSIM.Shared.Utilities;
     using Core;
     using Functions;
@@ -37,7 +36,7 @@ namespace Models.WaterModel
     {
         /// <summary>The water movement model.</summary>
         [Link]
-        private SoilModel soil = null;
+        private WaterBalance soil = null;
 
         /// <summary>The discharge_width (m)</summary>
         public double DischargeWidth { get; set; }

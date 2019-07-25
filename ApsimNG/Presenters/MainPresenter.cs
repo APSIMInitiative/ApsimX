@@ -891,7 +891,10 @@
             {
                 IPresenter presenter = Presenters1[e.Index - 1];
                 e.AllowClose = true;
-                if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
+
+                if (presenter is ExplorerPresenter)
+                    e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
+
                 if (e.AllowClose)
                 {
                     presenter.Detach();

@@ -65,7 +65,10 @@
             newModel.Parent = match.Parent;
             newModel.Name = match.Name;
             match.Parent.Children.Remove(match as Model);
-            newModel.OnCreated();
+
+            newModel.Parent.OnCreated();
+            foreach (var model in Apsim.ChildrenRecursively(newModel.Parent))
+                model.OnCreated();
         }
     }
 
