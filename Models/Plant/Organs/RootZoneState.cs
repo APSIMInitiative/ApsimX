@@ -3,6 +3,8 @@ using Models.Core;
 using System;
 using Models.Functions;
 using Models.Interfaces;
+using System.Linq;
+using Models.Soils.Standardiser;
 
 namespace Models.PMF.Organs
 {
@@ -155,7 +157,7 @@ namespace Models.PMF.Organs
             //distribute root biomass evenly through root depth
             double[] fromLayer = new double[1] { depth };
             double[] fromMass = new double[1] { initialDM };
-            double[] toMass = soil.Map(fromMass, fromLayer, soil.Thickness, Soil.MapType.Mass, 0.0);
+            double[] toMass = Layers.MapMass(fromMass, fromLayer, soil.Thickness);
 
             for (int layer = 0; layer < soil.Thickness.Length; layer++)
             {
@@ -208,7 +210,6 @@ namespace Models.PMF.Organs
         {
             // Do Root Front Advance
             int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
-            double[] xf = soil.XF(plant.Name);
 
             //sorghum calc
             var rootDepthWaterStress = 1.0;
@@ -223,30 +224,31 @@ namespace Models.PMF.Organs
                 rootDepthWaterStress = root.RootDepthStressFactor.Value();
             }
 
-            //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
+            double MaxDepth;
+            double[] xf = null;
             if (soil.Weirdo == null)
             {
+                var soilCrop = soil.Crop(plant.Name);
+                xf = soilCrop.XF;
                 var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
                 var dltRoot = rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
                 Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
-            }
-            else
-                Depth = Depth + rootFrontVelocity.Value(RootLayer);
-
-            // Limit root depth for impeded layers
-            double MaxDepth = 0;
-            for (int i = 0; i < soil.Thickness.Length; i++)
-            {
-                if (soil.Weirdo == null)
+                MaxDepth = 0;
+                // Limit root depth for impeded layers
+                for (int i = 0; i < soil.Thickness.Length; i++)
                 {
                     if (xf[i] > 0)
                         MaxDepth += soil.Thickness[i];
                     else
                         break;
                 }
-                else
-                    MaxDepth += soil.Thickness[i];
             }
+            else
+            {
+                Depth = Depth + rootFrontVelocity.Value(RootLayer);
+                MaxDepth = soil.Thickness.Sum();
+            }
+
             // Limit root depth for the crop specific maximum depth
             MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
             Depth = Math.Min(Depth, MaxDepth);

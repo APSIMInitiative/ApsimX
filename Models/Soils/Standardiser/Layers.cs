@@ -45,9 +45,8 @@
             if (!MathUtilities.AreEqual(toThickness, soil.Thickness))
             {
                 bool needToConstrainCropLL = false;
-                foreach (var cropName in soil.CropNames)
+                foreach (var crop in soil.Crops)
                 {
-                    var crop = soil.Crop(cropName);
                     crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
                     crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
 
@@ -70,7 +69,7 @@
 
                 if (needToConstrainCropLL)
                 {
-                    foreach (ISoilCrop crop in water.Crops)
+                    foreach (var crop in soil.Crops)
                     {
                         if (crop is SoilCrop)
                         {
@@ -337,8 +336,8 @@
 
             // Get the first crop ll or ll15.
             double[] LowerBound;
-            if (waterNode != null && waterNode.Crops.Count > 0)
-                LowerBound = LLMapped(waterNode.Crops[0] as SoilCrop, thickness.ToArray());
+            if (waterNode != null && soil.Crops.Count > 0)
+                LowerBound = LLMapped(soil.Crops[0] as SoilCrop, thickness.ToArray());
             else
                 LowerBound = LL15Mapped(soil, thickness.ToArray());
             if (LowerBound == null)
@@ -455,7 +454,7 @@
         /// <returns></returns>
         private static double[] LLMapped(SoilCrop crop, double[] ToThickness)
         {
-            var waterNode = Apsim.Child(crop.Parent, typeof(Water)) as Water;
+            var waterNode = crop.Parent as Water;
             return MapConcentration(crop.LL, waterNode.Thickness, ToThickness, MathUtilities.LastValue(crop.LL));
         }
 

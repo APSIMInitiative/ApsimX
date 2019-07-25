@@ -442,7 +442,6 @@
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\MultiPoreWater\HydraulicProperties.cs" />
-    <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
     <Compile Include="Soils\Nutrients\Solute.cs" />
     <Compile Include="Soils\OutputLayers.cs" />
@@ -452,7 +451,6 @@
     <Compile Include="Soils\MultiPoreWater\HourlyData.cs" />
     <Compile Include="Soils\MultiPoreWater\WEIRDO.cs" />
     <Compile Include="Soils\MultiPoreWater\Pore.cs" />
-    <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatch.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatch.Processes.cs" />

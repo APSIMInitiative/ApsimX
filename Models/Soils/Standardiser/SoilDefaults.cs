@@ -38,6 +38,10 @@
                         FillInKLForCrop(crop);
 
                     CheckCropForMissingValues(crop, soil);
+
+                    // Modify wheat crop for sub soil constraints.
+                    if (crop.Name.Equals("wheat", StringComparison.InvariantCultureIgnoreCase))
+                        ModifyKLForSubSoilConstraints(crop, soil);
                 }
             }
 
@@ -85,7 +89,7 @@
             int i = StringUtilities.IndexOfCaseInsensitive(cropNames, crop.Name);
             if (i != -1)
             {
-                var water = Apsim.Child(crop.Parent, typeof(Water)) as Water;
+                var water = crop.Parent as Water;
 
                 double[] KLs = GetRowOfArray(defaultKLs, i);
 
@@ -583,6 +587,55 @@
                 LL[2] = LL15[2];
             }
             return LL;
+        }
+
+
+        /// <summary>Standard thicknesses</summary>
+        private static readonly double[] StandardThickness = new double[] { 100, 100, 200, 200, 200, 200, 200 };
+        /// <summary>Standard Kls</summary>
+        private static readonly double[] StandardKL = new double[] { 0.06, 0.06, 0.04, 0.04, 0.04, 0.04, 0.02 };
+
+        /// <summary>
+        /// Modify the KL values for subsoil constraints.
+        /// </summary>
+        /// <remarks>
+        /// From:
+        /// Hochman, Z., Dang, Y.P., Schwenke, G.D., Dalgliesh, N.P., Routley, R., McDonald, M., 
+        ///     Daniells, I.G., Manning, W., Poulton, P.L., 2007. 
+        ///     Simulating the effects of saline and sodic subsoils on wheat crops 
+        ///     growing on Vertosols. Australian Journal of Agricultural Research 58, 802–810. doi:10.1071/ar06365
+        /// </remarks>
+        /// <param name="crop"></param>
+        /// <param name="soil">The soil the crop belongs to.</param>
+        private static void ModifyKLForSubSoilConstraints(SoilCrop crop, Soil soil)
+        {
+            double[] cl = soil.Cl;
+            if (MathUtilities.ValuesInArray(cl))
+            {
+                crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
+                for (int i = 0; i < soil.Thickness.Length; i++)
+                    crop.KL[i] *= Math.Min(1.0, 4.0 * Math.Exp(-0.005 * cl[i]));
+            }
+            else
+            {
+                double[] esp = soil.ESP;
+                if (MathUtilities.ValuesInArray(esp))
+                {
+                    crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
+                    for (int i = 0; i < soil.Thickness.Length; i++)
+                        crop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
+                }
+                else
+                {
+                    double[] ec = soil.EC;
+                    if (MathUtilities.ValuesInArray(ec))
+                    {
+                        crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
+                        for (int i = 0; i < soil.Thickness.Length; i++)
+                            crop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
+                    }
+                }
+            }
         }
     }
 }

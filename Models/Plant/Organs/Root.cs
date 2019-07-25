@@ -851,10 +851,11 @@ namespace Models.PMF.Organs
             else
             {
                 var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
+                var soilCrop = myZone.soil.Crop(parentPlant.Name);
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
-                    double[] kl = myZone.soil.KL(parentPlant.Name);
-                    double[] ll = myZone.soil.LL(parentPlant.Name);
+                    double[] kl = soilCrop.KL;
+                    double[] ll = soilCrop.LL;
 
                     double[] lldep = new double[myZone.soil.Thickness.Length];
                     double[] available = new double[myZone.soil.Thickness.Length];
@@ -880,8 +881,8 @@ namespace Models.PMF.Organs
                 }
                 else
                 {
-                    double[] kl = myZone.soil.KL(parentPlant.Name);
-                    double[] ll = myZone.soil.LL(parentPlant.Name);
+                    double[] kl = soilCrop.KL;
+                    double[] ll = soilCrop.LL;
 
                     double[] supply = new double[myZone.soil.Thickness.Length];
                     LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
@@ -1080,8 +1081,10 @@ namespace Models.PMF.Organs
         /// <summary>Computes root total water supply.</summary>
         public double TotalExtractableWater()
         {
-            double[] LL = PlantZone.soil.LL(parentPlant.Name);
-            double[] KL = PlantZone.soil.KL(parentPlant.Name);
+            var soilCrop = PlantZone.soil.Crop(parentPlant.Name);
+
+            double[] LL = soilCrop.LL;
+            double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.soil.Water;
             double[] DZ = PlantZone.soil.Thickness;
 
@@ -1099,8 +1102,10 @@ namespace Models.PMF.Organs
         /// <summary>It adds an extra layer proportion calc to extractableWater calc.</summary>
         public double PlantAvailableWaterSupply()
         {
-            double[] LL = PlantZone.soil.LL(parentPlant.Name);
-            double[] KL = PlantZone.soil.KL(parentPlant.Name);
+            var soilCrop = PlantZone.soil.Crop(parentPlant.Name);
+
+            double[] LL = soilCrop.LL;
+            double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.soil.Water;
             double[] DZ = PlantZone.soil.Thickness;
             double[] available = new double[PlantZone.soil.Thickness.Length];

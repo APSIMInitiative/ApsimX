@@ -336,7 +336,7 @@
                 {
                     if (this.model.Name == "Water" &&
                         property.Name == "Depth" &&
-                        typeof(ISoilCrop).IsAssignableFrom(model.GetType()))
+                        typeof(SoilCrop).IsAssignableFrom(model.GetType()))
                     {
                     }
                     else if (property.PropertyType == typeof(double[]) || 
@@ -346,10 +346,10 @@
                     }
                     else if (property.PropertyType.FullName.Contains("SoilCrop"))
                     {
-                        List<ISoilCrop> crops = property.GetValue(model, null) as List<ISoilCrop>;
+                        List<SoilCrop> crops = property.GetValue(model, null) as List<SoilCrop>;
                         if (crops != null)
                         {
-                            foreach (ISoilCrop crop in crops)
+                            foreach (SoilCrop crop in crops)
                             {
                                 this.FindAllProperties(crop as Model);
                             }

@@ -5,6 +5,8 @@
     using Models.Core;
     using Models.Soils.Standardiser;
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Serialization;
 
@@ -563,100 +565,24 @@
 
         #region Crops
 
-        /// <summary>A list of crop names. Never returns null.</summary>
-        [XmlIgnore]
-        public string[] CropNames
+        /// <summary>Return a list of soil-crop parameterisations.</summary>
+        public List<SoilCrop> Crops
         {
             get
             {
-                if (waterNode != null)
-                    return waterNode.CropNames;
-                else
-                    return new string[0];
+                return waterNode?.Children.Cast<SoilCrop>().ToList();
             }
         }
 
         /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Soil could not find crop:  + CropName</exception>
-        public ISoilCrop Crop(string CropName) 
+        /// <param name="cropName">Name of the crop.</param>
+        public SoilCrop Crop(string cropName) 
         {
-            if (!CropName.EndsWith("Soil"))
-                CropName += "Soil";
-
-            if (waterNode != null)
-            {
-                ISoilCrop MeasuredCrop = waterNode.Crop(CropName);
-                if (MeasuredCrop != null)
-                {
-                    if (MeasuredCrop is SoilCrop && 
-                        CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
-                        ModifyKLForSubSoilConstraints(MeasuredCrop as SoilCrop);
-                    return MeasuredCrop;
-                }
-
-                throw new Exception("Soil could not find crop: " + CropName);
-            }
-            else return null;
-        }
-
-        /// <summary>Standard thicknesses</summary>
-        readonly double[] StandardThickness = new double[] { 100, 100, 200, 200, 200, 200, 200 };
-        /// <summary>Standard Kls</summary>
-        readonly double[] StandardKL = new double[] { 0.06, 0.06, 0.04, 0.04, 0.04, 0.04, 0.02 };
-
-        /// <summary>
-        /// Modify the KL values for subsoil constraints.
-        /// </summary>
-        /// <remarks>
-        /// From:
-        /// Hochman, Z., Dang, Y.P., Schwenke, G.D., Dalgliesh, N.P., Routley, R., McDonald, M., 
-        ///     Daniells, I.G., Manning, W., Poulton, P.L., 2007. 
-        ///     Simulating the effects of saline and sodic subsoils on wheat crops 
-        ///     growing on Vertosols. Australian Journal of Agricultural Research 58, 802–810. doi:10.1071/ar06365
-        /// </remarks>
-        /// <param name="measuredCrop"></param>
-        private void ModifyKLForSubSoilConstraints(SoilCrop measuredCrop)
-        {
-            double[] cl = Cl;
-            if (MathUtilities.ValuesInArray(cl))
-            {
-                measuredCrop.KL = Layers.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
-                for (int i = 0; i < Thickness.Length; i++)
-                    measuredCrop.KL[i] *= Math.Min(1.0, 4.0 * Math.Exp(-0.005 * cl[i]));
-            }
-            else
-            {
-                double[] esp = ESP;
-                if (MathUtilities.ValuesInArray(esp))
-                {
-                    measuredCrop.KL = Layers.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
-                    for (int i = 0; i < Thickness.Length; i++)
-                        measuredCrop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
-                }
-                else
-                {
-                    double[] ec = EC;
-                    if (MathUtilities.ValuesInArray(ec))
-                    {
-                        measuredCrop.KL = Layers.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
-                        for (int i = 0; i < Thickness.Length; i++)
-                            measuredCrop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
-                    }
-                }
-            }
-        }
-
-        /// <summary>Return the plant available water CAPACITY at water node thickness. Units: mm/mm</summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <returns></returns>
-        public double[] PAWCCropAtWaterThickness(string CropName)
-        {
-            return CalcPAWC(waterNode.Thickness,
-                            LLMapped(CropName, waterNode.Thickness),
-                            DULMapped(waterNode.Thickness),
-                            XFMapped(CropName, waterNode.Thickness));
+            cropName = cropName + "Soil";
+            var foundCrop = Crops?.Find(crop => crop.Name.Equals(cropName, StringComparison.InvariantCultureIgnoreCase));
+            if (foundCrop == null)
+                throw new Exception("Cannot find a soil-crop parameterisation for " + cropName);
+            return foundCrop;
         }
 
         #endregion
@@ -841,234 +767,6 @@
         #endregion
 
         #region Mapping
-        /// <summary>Bulk density - mapped to the specified layer structure. Units: mm/mm</summary>
-        /// <param name="ToThickness">To thickness.</param>
-        /// <returns></returns>
-        internal double[] BDMapped(double[] ToThickness)
-        {
-            if(waterNode != null)
-            return Map(waterNode.BD, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.BD.Last());
-            else
-                return Map(Weirdo.BD, Weirdo.Thickness, ToThickness, MapType.Concentration, Weirdo.BD.Last());
-        }
-
-        /// <summary>AirDry - mapped to the specified layer structure. Units: mm/mm</summary>
-        /// <param name="ToThickness">To thickness.</param>
-        /// <returns></returns>
-        public double[] AirDryMapped(double[] ToThickness)
-        {
-            return Map(waterNode.AirDry, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.AirDry.Last());
-        }
-
-        /// <summary>Drained upper limit - mapped to the specified layer structure. Units: mm/mm</summary>
-        /// <param name="ToThickness">To thickness.</param>
-        /// <returns></returns>
-        public double[] DULMapped(double[] ToThickness)
-        {
-            return Map(waterNode.DUL, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.DUL.Last());
-        }
-
-        /// <summary>
-        /// The lower limit to water extraction for each layer
-        /// </summary>
-        /// <param name="CropName"></param>
-        /// <returns></returns>
-        public double[] LL(string CropName)
-        {
-            return LLMapped(CropName, Thickness);
-        }
-
-        /// <summary>Crop lower limit mapped. Units: mm/mm</summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <param name="ToThickness">To thickness.</param>
-        /// <returns></returns>
-        internal double[] LLMapped(string CropName, double[] ToThickness)
-        {
-            SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            if (SoilCrop == null)
-                return null;
-
-            if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
-                return SoilCrop.LL;
-            double[] Values = Map(SoilCrop.LL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));
-            if (Values == null) return null;
-            double[] AirDry = AirDryMapped(ToThickness);
-            double[] DUL = DULMapped(ToThickness);
-            if (AirDry == null || DUL == null)
-                return null;
-            for (int i = 0; i < Values.Length; i++)
-            {
-                Values[i] = Math.Max(Values[i], AirDry[i]);
-                Values[i] = Math.Min(Values[i], DUL[i]);
-            }
-            return Values;
-        }
-
-        /// <summary>
-        /// The extension resistance to crop root growth from the soil
-        /// </summary>
-        /// <param name="CropName"></param>
-        /// <returns></returns>
-        public double[] XF(string CropName)
-        {
-            return XFMapped(CropName, Thickness);
-        }
-
-        /// <summary>Crop XF mapped. Units: 0-1</summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <param name="ToThickness">To thickness.</param>
-        /// <returns></returns>
-
-        internal double[] XFMapped(string CropName, double[] ToThickness)
-        {
-            if (Weirdo != null)
-            {
-                return Weirdo.MappedXF;
-            }
-            else
-            {
-                SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-                if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
-                    return SoilCrop.XF;
-                return Map(SoilCrop.XF, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.XF));
-            }
-        }
-        /// <summary>
-        /// The potential water extraction rate constant for each layer
-        /// </summary>
-        /// <param name="CropName"></param>
-        /// <returns></returns>
-        public double[] KL(string CropName)
-        {
-            return KLMapped(CropName, Thickness);
-        }
-        internal double[] KLMapped (string CropName, double[] ToThickness)
-        {
-            SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
-            //if (CropName.Equals("Wheat", StringComparison.InvariantCultureIgnoreCase))
-            //    ModifyKLForSubSoilConstraints(SoilCrop);
-            if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
-                return SoilCrop.KL;
-            return Map(SoilCrop.KL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.KL));
-        }
-        /// <summary>different methods for mapping soil variables </summary>
-        public enum MapType
-        {
-            /// <summary>How heavy things are</summary>
-            Mass,
-            /// <summary>The concentration of things</summary>
-            Concentration,
-            /// <summary>Using bulk density</summary>
-            UseBD
-        }
-        /// <summary>Map soil variables from one layer structure to another.</summary>
-        /// <param name="FValues">The f values.</param>
-        /// <param name="FThickness">The f thickness.</param>
-        /// <param name="ToThickness">To thickness.</param>
-        /// <param name="MapType">Type of the map.</param>
-        /// <param name="DefaultValueForBelowProfile">The default value for below profile.</param>
-        /// <returns></returns>
-        public double[] Map(double[] FValues, double[] FThickness,
-                             double[] ToThickness, MapType MapType = MapType.Concentration,
-                             double DefaultValueForBelowProfile = double.NaN)
-        {
-            if (FValues == null || FThickness == null || FValues.Length != FThickness.Length)
-                return null;
-
-            if (MathUtilities.AreEqual(FThickness, ToThickness))
-                return FValues;
-
-            double[] FromThickness = (double[]) FThickness.Clone();
-            double[] FromValues = (double[])FValues.Clone();
-
-            if (FromValues == null)
-                return null;
-
-            // remove missing layers.
-            for (int i = 0; i < FromValues.Length; i++)
-            {
-                if (double.IsNaN(FromValues[i]) || double.IsNaN(FromThickness[i]))
-                {
-                    FromValues[i] = double.NaN;
-                    FromThickness[i] = double.NaN;
-                }
-            }
-            FromValues = MathUtilities.RemoveMissingValuesFromBottom(FromValues);
-            FromThickness = MathUtilities.RemoveMissingValuesFromBottom(FromThickness);
-
-            if (MathUtilities.AreEqual(FromThickness, ToThickness))
-                return FromValues;
-
-            if (FromValues.Length != FromThickness.Length)
-                return null;
-
-            // Add the default value if it was specified.
-            if (!double.IsNaN(DefaultValueForBelowProfile))
-            {
-                Array.Resize(ref FromThickness, FromThickness.Length + 1);
-                Array.Resize(ref FromValues, FromValues.Length + 1);
-                FromThickness[FromThickness.Length - 1] = 3000;  // to push to profile deep.
-                FromValues[FromValues.Length - 1] = DefaultValueForBelowProfile;
-            }
-
-            // If necessary convert FromValues to a mass.
-            if (MapType == Soil.MapType.Concentration)
-                FromValues = MathUtilities.Multiply(FromValues, FromThickness);
-            else if (MapType == Soil.MapType.UseBD)
-            {
-                double[] BD = waterNode.BD;
-                for (int Layer = 0; Layer < FromValues.Length; Layer++)
-                    FromValues[Layer] = FromValues[Layer] * BD[Layer] * FromThickness[Layer] / 100;
-            }
-
-            // Remapping is achieved by first constructing a map of
-            // cumulative mass vs depth
-            // The new values of mass per layer can be linearly
-            // interpolated back from this shape taking into account
-            // the rescaling of the profile.
-
-            double[] CumDepth = new double[FromValues.Length + 1];
-            double[] CumMass = new double[FromValues.Length + 1];
-            CumDepth[0] = 0.0;
-            CumMass[0] = 0.0;
-            for (int Layer = 0; Layer < FromThickness.Length; Layer++)
-            {
-                CumDepth[Layer + 1] = CumDepth[Layer] + FromThickness[Layer];
-                CumMass[Layer + 1] = CumMass[Layer] + FromValues[Layer];
-            }
-
-            //look up new mass from interpolation pairs
-            double[] ToMass = new double[ToThickness.Length];
-            for (int Layer = 1; Layer <= ToThickness.Length; Layer++)
-            {
-                double LayerBottom = MathUtilities.Sum(ToThickness, 0, Layer, 0.0);
-                double LayerTop = LayerBottom - ToThickness[Layer - 1];
-                bool DidInterpolate;
-                double CumMassTop = MathUtilities.LinearInterpReal(LayerTop, CumDepth,
-                    CumMass, out DidInterpolate);
-                double CumMassBottom = MathUtilities.LinearInterpReal(LayerBottom, CumDepth,
-                    CumMass, out DidInterpolate);
-                ToMass[Layer - 1] = CumMassBottom - CumMassTop;
-            }
-
-            // If necessary convert FromValues back into their former units.
-            if (MapType == Soil.MapType.Concentration)
-                ToMass = MathUtilities.Divide(ToMass, ToThickness);
-            else if (MapType == Soil.MapType.UseBD)
-            {
-                double[] BD = BDMapped(ToThickness);
-                for (int Layer = 0; Layer < FromValues.Length; Layer++)
-                    ToMass[Layer] = ToMass[Layer] * 100.0 / BD[Layer] / ToThickness[Layer];
-            }
-
-            for (int i = 0; i < ToMass.Length; i++)
-                if (double.IsNaN(ToMass[i]))
-                    ToMass[i] = 0.0;
-            return ToMass;
-        }
-
-
-        // <param name="units">The units of the associated field or property</param>
 
         /// <summary>Overlay sample values onto soil values.</summary>
         /// <param name="SampleValues">The sample values.</param>
@@ -1288,36 +986,6 @@
             return depth_of_root_in_layer / thickness[layerIndex];
         }
 
-        /// <summary>Codes to meta data.</summary>
-        /// <param name="Codes">The codes.</param>
-        /// <returns></returns>
-        static public string[] CodeToMetaData(string[] Codes)
-        {
-            string[] Metadata = new string[Codes.Length];
-            for (int i = 0; i < Codes.Length; i++)
-                if (Codes[i] == "FM")
-                    Metadata[i] = "Field measured and checked for sensibility";
-                else if (Codes[i] == "C_grav")
-                    Metadata[i] = "Calculated from gravimetric moisture when profile wet but drained";
-                else if (Codes[i] == "E")
-                    Metadata[i] = "Estimated based on local knowledge";
-                else if (Codes[i] == "U")
-                    Metadata[i] = "Unknown source or quality of data";
-                else if (Codes[i] == "LM")
-                    Metadata[i] = "Laboratory measured";
-                else if (Codes[i] == "V")
-                    Metadata[i] = "Volumetric measurement";
-                else if (Codes[i] == "M")
-                    Metadata[i] = "Mass measured";
-                else if (Codes[i] == "C_bd")
-                    Metadata[i] = "Calculated from measured, estimated or calculated BD";
-                else if (Codes[i] == "C_pt")
-                    Metadata[i] = "Developed using a pedo-transfer function";
-                else
-                    Metadata[i] = Codes[i];
-            return Metadata;
-        }
-
         /// <summary>
         /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
         /// </summary>
@@ -1349,18 +1017,6 @@
                     PAWC[layer] = 0;
                 }
             return PAWC;
-        }
-
-        /// <summary>Return the last value that isn't a missing value.</summary>
-        /// <param name="Values">The values.</param>
-        /// <returns></returns>
-        private double LastValue(double[] Values)
-        {
-            if (Values == null) return double.NaN;
-            for (int i = Values.Length - 1; i >= 0; i--)
-                if (!double.IsNaN(Values[i]))
-                    return Values[i];
-            return double.NaN;
         }
 
         /// <summary>
@@ -1414,9 +1070,8 @@
                     Msg += "Invalid winter date of: " + (SoilWater as SoilWater).WinterDate + "\r\n";
             }
 
-            foreach (string Crop in CropNames)
+            foreach (var soilCrop in Crops)
             {
-                SoilCrop soilCrop = this.Crop(Crop) as SoilCrop;
                 if (soilCrop != null)
                 {
                     double[] LL = soilCrop.LL;
@@ -1426,7 +1081,7 @@
                     if (!MathUtilities.ValuesInArray(LL) ||
                         !MathUtilities.ValuesInArray(KL) ||
                         !MathUtilities.ValuesInArray(XF))
-                        Msg += "Values for LL, KL or XF are missing for crop " + Crop + "\r\n";
+                        Msg += "Values for LL, KL or XF are missing for crop " + soilCrop.Name + "\r\n";
 
                     else
                     {
@@ -1435,34 +1090,34 @@
                             int RealLayerNumber = layer + 1;
 
                             if (KL[layer] == MathUtilities.MissingValue)
-                                Msg += Crop + " KL value missing"
+                                Msg += soilCrop.Name + " KL value missing"
                                          + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
                             else if (MathUtilities.GreaterThan(KL[layer], 1, 3))
-                                Msg += Crop + " KL value of " + KL[layer].ToString("f3")
+                                Msg += soilCrop.Name + " KL value of " + KL[layer].ToString("f3")
                                          + " in layer " + RealLayerNumber.ToString() + " is greater than 1"
                                          + "\r\n";
 
                             if (XF[layer] == MathUtilities.MissingValue)
-                                Msg += Crop + " XF value missing"
+                                Msg += soilCrop.Name + " XF value missing"
                                          + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
                             else if (MathUtilities.GreaterThan(XF[layer], 1, 3))
-                                Msg += Crop + " XF value of " + XF[layer].ToString("f3")
+                                Msg += soilCrop.Name + " XF value of " + XF[layer].ToString("f3")
                                          + " in layer " + RealLayerNumber.ToString() + " is greater than 1"
                                          + "\r\n";
 
                             if (LL[layer] == MathUtilities.MissingValue)
-                                Msg += Crop + " LL value missing"
+                                Msg += soilCrop.Name + " LL value missing"
                                          + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
                             else if (MathUtilities.LessThan(LL[layer], waterNode.AirDry[layer], 3))
-                                Msg += Crop + " LL of " + LL[layer].ToString("f3")
+                                Msg += soilCrop.Name + " LL of " + LL[layer].ToString("f3")
                                              + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + waterNode.AirDry[layer].ToString("f3")
                                            + "\r\n";
 
                             else if (MathUtilities.GreaterThan(LL[layer], waterNode.DUL[layer], 3))
-                                Msg += Crop + " LL of " + LL[layer].ToString("f3")
+                                Msg += soilCrop.Name + " LL of " + LL[layer].ToString("f3")
                                              + " in layer " + RealLayerNumber.ToString() + " is above drained upper limit of " + waterNode.DUL[layer].ToString("f3")
                                            + "\r\n";
                         }

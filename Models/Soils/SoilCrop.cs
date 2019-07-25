@@ -8,7 +8,7 @@
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Water))]
-    public class SoilCrop : Model, ISoilCrop
+    public class SoilCrop : Model
     {
         /// <summary>Crop lower limit</summary>
         [Summary]

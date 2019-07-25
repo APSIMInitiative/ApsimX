@@ -161,7 +161,8 @@ namespace Models.PMF
                 myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
                 myZone.Supply = new double[myZone.soil.Thickness.Length];
 
-                double[] kl = myZone.soil.KL(Plant.Name);
+                var soilCrop = Soil.Crop(Plant.Name);
+                double[] kl = soilCrop.KL;
 
                 if (root.Depth != myZone.Depth)
                 {
