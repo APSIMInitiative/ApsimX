@@ -67,7 +67,7 @@ namespace Models.Utilities
             if (!Directory.Exists(workingDirectory)) // I would be very suprised if it did already exist
                 Directory.CreateDirectory(workingDirectory);
 
-            string startupCommand = ".libPaths(c(.libPaths(), getwd()))";
+            string startupCommand = $".libPaths(c(.libPaths(), '{PackagesDirectory}'))";
             string startupFile = Path.Combine(workingDirectory, ".Rprofile");
             if (!File.Exists(startupFile))
                 File.WriteAllText(startupFile, startupCommand);
