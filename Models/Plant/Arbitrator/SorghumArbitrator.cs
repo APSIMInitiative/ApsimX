@@ -95,8 +95,6 @@ namespace Models.PMF
         #endregion
         private List<IModel> uptakeModels = null;
         private List<IModel> zones = null;
-        private bool firstEstimate;
-        private List<ZoneWaterAndN> cachedZones;
 
         /// <summary>Called at the start of the simulation.</summary>
         /// <param name="sender">The sender of the event</param>
@@ -106,12 +104,6 @@ namespace Models.PMF
         {
             uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
             zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
-        }
-
-        [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs e)
-        {
-            firstEstimate = true;
         }
 
         #region IUptake interface
@@ -228,12 +220,6 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                // ----- fixme -----
-                if (!firstEstimate)
-                    return cachedZones;
-                firstEstimate = false;
-                // ----- fixme -----
-
                 var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 //this function is called 4 times as part of estimates
@@ -260,9 +246,10 @@ namespace Models.PMF
                 // In new apsim, root only uses structural, metabolic is always 0. Therefore, we have to include root's structural
                 // NDemand in this calculation.
                 var nDemand = Math.Max(0, N.TotalMetabolicDemand + N.StructuralDemand[rootIndex] - grainDemand); // to replicate calcNDemand in old sorghum 
+                                
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
-                cachedZones = new List<ZoneWaterAndN>();
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
 
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
@@ -347,7 +334,7 @@ namespace Models.PMF
                     if (MathUtilities.IsNegative(N.UptakeSupply[rootIndex]))
                         throw new Exception($"-ve uptake supply for organ {(Organs[rootIndex] as IModel).Name}");
                     nSupply += MathUtilities.Sum(organNO3Supply) * zone.Zone.Area;
-                    cachedZones.Add(UptakeDemands);
+                    zones.Add(UptakeDemands);
                 }
 
                 var nDemandInKg = nDemand / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
@@ -355,13 +342,13 @@ namespace Models.PMF
                 {
                     //Reduce the PotentialUptakes that we pass to the soil arbitrator
                     double ratio = Math.Min(1.0, nDemandInKg / nSupply);
-                    foreach (ZoneWaterAndN UptakeDemands in cachedZones)
+                    foreach (ZoneWaterAndN UptakeDemands in zones)
                     {
                         UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
                         UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, ratio);
                     }
                 }
-                return cachedZones;
+                return zones;
             }
             return null;
         }
