@@ -15,7 +15,7 @@ using UserInterface.Presenters;
 using System.Text.RegularExpressions;
 using System.Data;
 using System.Data.SQLite;
-
+using System.Globalization;
 
 namespace ApsimNG.Cloud
 {
@@ -579,7 +579,7 @@ namespace ApsimNG.Cloud
                 (
                     delegate (Match m)
                     {
-                        return string.Format("{0:0}", (DateTime.Parse(m.Value) - new DateTime(1900, 1, 1)).TotalDays + 2);
+                        return string.Format("{0:0}", (DateTime.Parse(m.Value) - new DateTime(1900, 1, 1)).TotalDays + 2, CultureInfo.InvariantCulture);
                     }
                 )
             );

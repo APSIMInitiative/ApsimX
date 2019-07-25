@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 57; } }
+        public static int LatestVersion { get { return 58; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -556,6 +556,31 @@
             foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
                 if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
                     JsonUtilities.AddModel(organ, typeof(RetranslocateNonStructural), "RetranslocateNitrogen");
+        }
+
+        /// <summary>
+        /// Upgrades to version 58. Renames 'ParamThickness' to 'Thickness' in Weirdo.
+        /// Also change calls to property soil.SWAtWaterThickness to soil.Thickness.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion58(JObject root, string fileName)
+        {
+            foreach (JObject weirdo in JsonUtilities.ChildrenRecursively(root, "WEIRDO"))
+            {
+                var paramThicknessNode = weirdo["ParamThickness"];
+                if (paramThicknessNode != null)
+                {
+                    weirdo["Thickness"] = paramThicknessNode;
+                    weirdo.Remove("ParamThickness");
+                }
+            }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                if (manager.Replace(".SWAtWaterThickness", ".Thickness"))
+                    manager.Save();
+            }
         }
 
         /// <summary>

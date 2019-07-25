@@ -176,8 +176,8 @@
         private void OnBeginRun(object sender, EventArgs e)
         {
             R r = new R();
-            Console.WriteLine(r.InstallPackage("boot"));
-            Console.WriteLine(r.InstallPackage("sensitivity"));
+            r.InstallPackage("boot");
+            r.InstallPackage("sensitivity");
         }
 
         /// <summary>

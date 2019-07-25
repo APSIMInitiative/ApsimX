@@ -104,7 +104,7 @@ namespace Models.PMF
             AllocateMetabolic(rachisIndex, rachisAlloc, BAT);
             AllocateMetabolic(stemIndex, stemAlloc, BAT);
 
-            if(!MathUtilities.FloatsAreEqual(leafAlloc+rachisAlloc+stemAlloc, NotAllocated))
+            if(!MathUtilities.FloatsAreEqual(leafAlloc+rachisAlloc+stemAlloc, NotAllocated, 0.0001))
             {
                 //this is to check that nDemand is equal to old sorghum N demand calc
                 throw new Exception("Proportional allocation of Metabolic N doesn't balance");
