@@ -137,10 +137,10 @@
         {
             get
             {
-                if (this.reader != null)
-                    return this.reader.FirstDate;
-                else
+                if (this.reader == null && !this.OpenDataFile())
                     return new DateTime(0);
+
+                return this.reader.FirstDate;
             }
         }
 
@@ -151,10 +151,10 @@
         {
             get
             {
-                if (this.reader != null)
-                    return this.reader.LastDate;
-                else
+                if (this.reader == null && !this.OpenDataFile())
                     return new DateTime(0);
+
+                return this.reader.LastDate;
             }
         }
 

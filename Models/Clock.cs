@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using Models.Core.Run;
+    using Models.Interfaces;
     using System;
     using System.Xml.Serialization;
 
@@ -187,13 +188,57 @@
             }
         }
 
+        /// <summary>
+        /// Gets the start date for the simulation.
+        /// </summary>
+        /// <remarks>
+        /// If the user did not
+        /// not provide a start date, attempt to locate a weather file
+        /// and use its start date. If no weather file can be found,
+        /// throw an exception.
+        /// </remarks>
+        private DateTime GetStartDate()
+        {
+            if (StartDate != DateTime.MinValue)
+                return StartDate;
+
+            // If no start date provided, try and find a weather component and use its start date.
+            IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+            if (weather != null)
+                return weather.StartDate;
+
+            throw new Exception($"Invalid simulation start date specified in {Apsim.FullPath(this)}: {StartDate}.");
+        }
+
+        /// <summary>
+        /// Gets the end date for the simulation.
+        /// </summary>
+        /// <remarks>
+        /// If the user did not
+        /// not provide a end date, attempt to locate a weather file
+        /// and use its end date. If no weather file can be found,
+        /// throw an exception.
+        /// </remarks>
+        private DateTime GetEndDate()
+        {
+            if (EndDate != DateTime.MinValue)
+                return EndDate;
+
+            // If no start date provided, try and find a weather component and use its start date.
+            IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+            if (weather != null)
+                return weather.EndDate;
+
+            throw new Exception($"Invalid simulation end date specified in {Apsim.FullPath(this)}: {EndDate}.");
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Today = StartDate;
+            Today = GetStartDate();
         }
 
         /// <summary>An event handler to signal start of a simulation.</summary>
@@ -217,7 +262,8 @@
                 if (CLEMValidate != null)
                     CLEMValidate.Invoke(this, args);
 
-            while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
+            DateTime endDate = GetEndDate();
+            while (Today <= endDate && !e.CancelToken.IsCancellationRequested)
                 {
                     if (DoWeather != null)
                         DoWeather.Invoke(this, args);
