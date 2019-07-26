@@ -1,7 +1,7 @@
-﻿using APSIM.Shared.Soils;
-
-namespace Models.WaterModel
+﻿namespace Models.WaterModel
 {
+    using APSIM.Shared.APSoil;
+
     /// <summary>Interface for a soil.</summary>
     public interface ISoil
     {
@@ -15,6 +15,6 @@ namespace Models.WaterModel
         double PotentialRunoff { get; }
 
         /// <summary>Provides access to the soil properties.</summary>
-        APSIM.Shared.Soils.Soil Properties { get; }
+        Soil Properties { get; }
     }
 }

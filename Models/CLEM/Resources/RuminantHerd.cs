@@ -160,14 +160,17 @@ namespace Models.CLEM.Resources
                             breedFemales[0].SucklingOffspringList.Add(suckling);
 
                             // add this suckling to mother's offspring count.
-                            breedFemales[0].NumberOfOffspring++;
+                            breedFemales[0].CarryingCount++;
 
                             // check if a twin and if so apply next individual to same mother.
                             // otherwise remove this mother from the list
                             if (numberThisPregnancy == 1)
                             {
                                 breedFemales.RemoveAt(0);
-                                numberThisPregnancy = breedFemales[0].CalulateNumberOfOffspringThisPregnancy();
+                                //if (breedFemales.Count > 0)
+                                //{
+                                //    numberThisPregnancy = breedFemales[0].CalulateNumberOfOffspringThisPregnancy();
+                                //}
                             }
                             else
                             {

@@ -5,7 +5,7 @@ namespace UnitTests.Soils
     using Models;
     using Models.WaterModel;
     using System;
-    using APSIM.Shared.Soils;
+    using APSIM.Shared.APSoil;
     using Models.Core;
 
     [Serializable]
@@ -21,7 +21,7 @@ namespace UnitTests.Soils
 
         public double PotentialRunoff { get; set; }
 
-        public APSIM.Shared.Soils.Soil Properties { get; set; }
+        public Soil Properties { get; set; }
 
         public double[] Water { get; set; }
     }
