@@ -724,6 +724,7 @@
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
     <None Include="Resources\FodderBeet.json" />
+    <EmbeddedResource Include="Resources\Nutrient.json" />
     <None Include="Resources\Oats1.json" />
     <None Include="Resources\Potato.json" />
     <None Include="Resources\Potato1.json" />

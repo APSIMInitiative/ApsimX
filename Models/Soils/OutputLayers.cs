@@ -145,7 +145,7 @@
         [Units("%")]
         public double[] OC
         {
-            get { return Layers.MapConcentration(Soil.OC, Soil.Thickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(Soil.Initial.OC, Soil.Thickness, Thickness, double.NaN); }
         }
     }
 }

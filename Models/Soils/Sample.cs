@@ -496,6 +496,10 @@ namespace Models.Soils
         }
         #endregion
 
+        /// <summary>Organic nitrogen. Units: %</summary>
+        [Units("%")]
+        public double[] ON { get { return MathUtilities.Divide(OC, Soil.SoilCN); } }
+
         /// <summary>
         /// Gets the soil associated with this sample
         /// </summary>

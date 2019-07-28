@@ -28,6 +28,7 @@
         /// <summary>Gets the water.</summary>
         private Water waterNode;
 
+
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
         /// </summary>
@@ -131,6 +132,10 @@
         /// <summary>Gets the soil nitrogen.</summary>
         private ISoilTemperature temperatureModel;
 
+        /// <summary>Gets the initial conditions node.</summary>
+        [XmlIgnore] 
+        public Sample Initial { get; private set; }
+
         /// <summary>Called when model has been created.</summary>
         public override void OnCreated()
         {
@@ -155,6 +160,7 @@
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
             SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
+            Initial = Children.Find(child => child is Sample) as Sample;
             }
 
         /// <summary>
@@ -588,49 +594,6 @@
         #endregion
 
         #region Soil organic matter
-        /// <summary>Organic carbon. Units: %</summary>
-        /// <value>The oc.</value>
-        [Units("%")]
-        public double[] OC
-        {
-            get
-            {
-                double[] SoilOC = SoilOrganicMatter.OCTotal;
-                double[] SoilOCThickness = SoilOrganicMatter.Thickness;
-
-                // Try and find a sample with OC in it.
-                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    if (MathUtilities.ValuesInArray(Sample.OC) && 
-                        OverlaySampleOnTo(Sample.OCTotal, Sample.Thickness, ref SoilOC, ref SoilOCThickness))
-                        break;
-                if (SoilOC == null)
-                    return null;
-                return SoilOC;
-            }
-        }
-
-        /// <summary>Organic nitrogen. Units: %</summary>
-        /// <value>The on.</value>
-        [Units("%")]
-        public double[] ON
-        {
-            get
-            {
-                double[] SoilOC = SoilOrganicMatter.OCTotal;
-                double[] SoilOCThickness = SoilOrganicMatter.Thickness;
-
-                // Try and find a sample with OC in it.
-                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    if (MathUtilities.ValuesInArray(Sample.OC) &&
-                        OverlaySampleOnTo(Sample.OCTotal, Sample.Thickness, ref SoilOC, ref SoilOCThickness))
-                        break;
-                if (SoilOC == null)
-                    return null;
-                double[] SoilON = MathUtilities.Divide(SoilOC, SoilOrganicMatter.SoilCN);
-
-                return SoilON;
-            }
-        }
 
         /// <summary>FBiom. Units: 0-1</summary>
         [Units("0-1")]
@@ -644,219 +607,18 @@
         [Units("kg/ha")]
         public double[] InitialRootWt { get { return SoilOrganicMatter.RootWt; } }
 
+        /// <summary>Initial soil CN ratio</summary>
+        [Units("kg/ha")]
+        public double[] SoilCN { get { return SoilOrganicMatter.SoilCN; } }
+
         /// <summary>Initial Root Wt</summary>
         [Units("kg/ha")]
-        public double[] InitialSoilCNR { get { return MathUtilities.Divide(OC, ON); } }
+        public double[] InitialSoilCNR { get { return MathUtilities.Divide(Initial.OC, Initial.ON); } }
 
         #endregion
-
-        #region Sample
-
-        /// <summary>Find the specified sample. Will throw if not found.</summary>
-        /// <param name="SampleName">Name of the sample.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Cannot find soil sample named:  + SampleName</exception>
-        public Sample FindSample(string SampleName)
-        {
-            foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                if (Sample.Name.Equals(SampleName, StringComparison.CurrentCultureIgnoreCase))
-                    return Sample;
-            throw new Exception("Cannot find soil sample named: " + SampleName);
-        }
-
-        /// <summary>Nitrate (ppm).</summary>
-        [Units("ppm")]
-        public double[] InitialNO3N
-        {
-            get
-            {
-                var sample = Apsim.Child(this, typeof(Sample)) as Sample;
-                return sample?.NO3;
-            }
-        }
 
         /// <summary>Gets the temperature of each layer</summary>
         public double[] Temperature { get { return temperatureModel.Value; } }
-
-        /// <summary>Ammonia (ppm).</summary>
-        [Units("ppm")]
-        public double[] InitialNH4N
-        {
-            get
-            {
-                var sample = Apsim.Child(this, typeof(Sample)) as Sample;
-                return sample?.NH4;
-            }
-        }
-
-        /// <summary>Cloride from either a sample or from Analysis. Units: mg/kg</summary>
-        [Units("mg/kg")]
-        public double[] Cl
-        {
-            get
-            {
-                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-                
-                double[] Values = analysis.CL;
-                double[] Thicknesses = analysis.Thickness;
-
-                // Try and find a sample with CL in it.
-                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    if (OverlaySampleOnTo(Sample.CL, Sample.Thickness, ref Values, ref Thicknesses))
-                        break;
-                return Values;
-            }
-        }
-
-        /// <summary>ESP from either a sample or from Analysis. Units: %</summary>
-        [Units("%")]
-        public double[] ESP
-        {
-            get
-            {
-                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-                
-                double[] Values = analysis.ESP;
-                double[] Thicknesses = analysis.Thickness;
-
-                // Try and find a sample with ESP in it.
-                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    if (OverlaySampleOnTo(Sample.ESP, Sample.Thickness, ref Values, ref Thicknesses))
-                        break;
-                return Values;
-            }
-        }
-
-        /// <summary>EC from either a sample or from Analysis. Units: 1:5 dS/m</summary>
-        public double[] EC
-        {
-            get
-            {
-                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-                
-                double[] Values = analysis.EC;
-                double[] Thicknesses = analysis.Thickness;
-
-                // Try and find a sample with EC in it.
-                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    if (OverlaySampleOnTo(Sample.EC, Sample.Thickness, ref Values, ref Thicknesses))
-                        break;
-                return Values;
-            }
-        }
-
-        /// <summary>PH from either a sample or from Analysis. Units: 1:5 Water</summary>
-        public double[] PH
-        {
-            get
-            {
-                Analysis analysis = Apsim.Child(this, typeof(Analysis)) as Analysis;
-                
-                double[] Values = analysis.PHWater;
-                double[] Thicknesses = analysis.Thickness;
-
-                // Try and find a sample with PH in it.
-                foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    if (MathUtilities.ValuesInArray(Sample.PH) && 
-                        OverlaySampleOnTo(Sample.PHWater, Sample.Thickness, ref Values, ref Thicknesses))
-                        break;
-                return Values;
-            }
-        }
-
-        #endregion
-
-        #region Mapping
-
-        /// <summary>Overlay sample values onto soil values.</summary>
-        /// <param name="SampleValues">The sample values.</param>
-        /// <param name="SampleThickness">The sample thickness.</param>
-        /// <param name="SoilValues">The soil values.</param>
-        /// <param name="SoilThickness">The soil thickness.</param>
-        /// <returns></returns>
-        private static bool OverlaySampleOnTo(double[] SampleValues, double[] SampleThickness,
-                                               ref double[] SoilValues, ref double[] SoilThickness)
-        {
-            if (MathUtilities.ValuesInArray(SampleValues))
-            {
-                double[] Values = (double[])SampleValues.Clone();
-                double[] Thicknesses = (double[])SampleThickness.Clone();
-                InFillValues(ref Values, ref Thicknesses, SoilValues, SoilThickness);
-                SoilValues = Values;
-                SoilThickness = Thicknesses;
-                return true;
-            }
-            return false;
-        }
-
-
-        /// <summary>Takes values from SoilValues and puts them at the bottom of SampleValues.</summary>
-        /// <param name="SampleValues">The sample values.</param>
-        /// <param name="SampleThickness">The sample thickness.</param>
-        /// <param name="SoilValues">The soil values.</param>
-        /// <param name="SoilThickness">The soil thickness.</param>
-        private static void InFillValues(ref double[] SampleValues, ref double[] SampleThickness,
-                                         double[] SoilValues, double[] SoilThickness)
-        {
-            //-------------------------------------------------------------------------
-            //  e.g. IF             SoilThickness  Values   SampleThickness	SampleValues
-            //                           0-100		2         0-100				10
-            //                         100-250	    3	     100-600			11
-            //                         250-500		4		
-            //                         500-750		5
-            //                         750-900		6
-            //						  900-1200		7
-            //                        1200-1500		8
-            //                        1500-1800		9
-            //
-            // will produce:		SampleThickness	        Values
-            //						     0-100				  10
-            //						   100-600				  11
-            //						   600-750				   5
-            //						   750-900				   6
-            //						   900-1200				   7
-            //						  1200-1500				   8
-            //						  1500-1800				   9
-            //
-            //-------------------------------------------------------------------------
-            if (SoilValues == null || SoilThickness == null) return;
-
-            // remove missing layers.
-            for (int i = 0; i < SampleValues.Length; i++)
-            {
-                if (double.IsNaN(SampleValues[i]) || double.IsNaN(SampleThickness[i]))
-                {
-                    SampleValues[i] = double.NaN;
-                    SampleThickness[i] = double.NaN;
-                }
-            }
-            SampleValues = MathUtilities.RemoveMissingValuesFromBottom(SampleValues);
-            SampleThickness = MathUtilities.RemoveMissingValuesFromBottom(SampleThickness);
-
-            double CumSampleDepth = MathUtilities.Sum(SampleThickness);
-
-            //Work out if we need to create a dummy layer so that the sample depths line up 
-            //with the soil depths
-            double CumSoilDepth = 0.0;
-            for (int SoilLayer = 0; SoilLayer < SoilThickness.Length; SoilLayer++)
-            {
-                CumSoilDepth += SoilThickness[SoilLayer];
-                if (CumSoilDepth > CumSampleDepth)
-                {
-                    Array.Resize(ref SampleThickness, SampleThickness.Length + 1);
-                    Array.Resize(ref SampleValues, SampleValues.Length + 1);
-                    int i = SampleThickness.Length - 1;
-                    SampleThickness[i] = CumSoilDepth - CumSampleDepth;
-                    if (SoilValues[SoilLayer] == MathUtilities.MissingValue)
-                        SampleValues[i] = 0.0;
-                    else
-                        SampleValues[i] = SoilValues[SoilLayer];
-                    CumSampleDepth = CumSoilDepth;
-                }
-            }
-        }
-
-        #endregion
 
         #region Utility
         /// <summary>Convert an array of thickness (mm) to depth strings (cm)</summary>
@@ -1187,31 +949,31 @@
                                + "\r\n";
             }
 
-            if (OC.Length == 0)
+            if (Initial.OC.Length == 0)
                 throw new Exception("Cannot find OC values in soil");
 
             for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
             {
                 int RealLayerNumber = layer + 1;
-                if (OC[layer] == MathUtilities.MissingValue)
+                if (Initial.OC[layer] == MathUtilities.MissingValue)
                     Msg += "OC value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (MathUtilities.LessThan(OC[layer], 0.01, 3))
-                    Msg += "OC value of " + OC[layer].ToString("f3")
+                else if (MathUtilities.LessThan(Initial.OC[layer], 0.01, 3))
+                    Msg += "OC value of " + Initial.OC[layer].ToString("f3")
                                   + " in layer " + RealLayerNumber.ToString() + " is less than 0.01"
                                   + "\r\n";
 
-                if (PH[layer] == MathUtilities.MissingValue)
+                if (Initial.PH[layer] == MathUtilities.MissingValue)
                     Msg += "PH value missing"
                              + " in layer " + RealLayerNumber.ToString() + "\r\n";
 
-                else if (MathUtilities.LessThan(PH[layer], 3.5, 3))
-                    Msg += "PH value of " + PH[layer].ToString("f3")
+                else if (MathUtilities.LessThan(Initial.PH[layer], 3.5, 3))
+                    Msg += "PH value of " + Initial.PH[layer].ToString("f3")
                                   + " in layer " + RealLayerNumber.ToString() + " is less than 3.5"
                                   + "\r\n";
-                else if (MathUtilities.GreaterThan(PH[layer], 11, 3))
-                    Msg += "PH value of " + PH[layer].ToString("f3")
+                else if (MathUtilities.GreaterThan(Initial.PH[layer], 11, 3))
+                    Msg += "PH value of " + Initial.PH[layer].ToString("f3")
                                   + " in layer " + RealLayerNumber.ToString() + " is greater than 11"
                                   + "\r\n";
             }
@@ -1240,9 +1002,9 @@
                                             + "\r\n";
                     }
 
-                if (!MathUtilities.ValuesInArray(InitialNO3N))
+                if (!MathUtilities.ValuesInArray(Initial.NO3))
                     Msg += "No starting NO3 values found.\r\n";
-                if (!MathUtilities.ValuesInArray(InitialNH4N))
+                if (!MathUtilities.ValuesInArray(Initial.NH4))
                     Msg += "No starting NH4 values found.\r\n";
 
 

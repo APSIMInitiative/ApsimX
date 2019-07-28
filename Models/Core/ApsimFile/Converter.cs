@@ -585,6 +585,7 @@
 
         /// <summary>
         /// Upgrades to version 59. Renames 'SoilCropOilPalm' to 'SoilCrop'.
+        /// Renames Soil.SoilOrganicMatter.OC to Soil.Initial.OC
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -592,8 +593,31 @@
         {
             foreach (var soilCropOilPalmNode in JsonUtilities.ChildrenRecursively(root, "SoilCropOilPalm"))
                 soilCropOilPalmNode["$type"] = "Models.Soils.SoilCrop, Models";
-        }
 
+            foreach (var report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilOrganicMatter.OC", ".Initial.OC");
+            }
+
+            foreach (var series in JsonUtilities.ChildrenRecursively(root, "Series"))
+            {
+                if (series["XFieldName"] != null)
+                {
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace(".SoilOrganicMatter.OC", ".Initial.OC");
+                }
+                if (series["YFieldName"] != null)
+                {
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace(".SoilOrganicMatter.OC", ".Initial.OC");
+                }
+            }
+
+            foreach (var expressionFunction in JsonUtilities.ChildrenRecursively(root, "ExpressionFunction"))
+            {
+                var expression = expressionFunction["Expression"].ToString();
+                expression = expression.Replace(".SoilOrganicMatter.OC", ".Initial.OC");
+                expressionFunction["Expression"] = expression;
+            }
+        }
         /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>

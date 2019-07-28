@@ -240,16 +240,6 @@
                         sample.NO3[i] = 1.0;
                     if (sample.NH4 != null && double.IsNaN(sample.NH4[i]))
                         sample.NH4[i] = 0.1;
-                    if (sample.CL != null && double.IsNaN(sample.CL[i]))
-                        sample.CL[i] = 0;
-                    if (sample.EC != null && double.IsNaN(sample.EC[i]))
-                        sample.EC[i] = 0;
-                    if (sample.ESP != null && double.IsNaN(sample.ESP[i]))
-                        sample.ESP[i] = 0;
-                    if (sample.PH != null && (double.IsNaN(sample.PH[i]) || sample.PH[i] == 0.0))
-                        sample.PH[i] = 7.0;
-                    if (sample.OC != null && (double.IsNaN(sample.OC[i]) || sample.OC[i] == 0.0))
-                        sample.OC[i] = 0.5;
                 }
             }
         }
@@ -609,7 +599,8 @@
         /// <param name="soil">The soil the crop belongs to.</param>
         private static void ModifyKLForSubSoilConstraints(SoilCrop crop, Soil soil)
         {
-            double[] cl = soil.Cl;
+            var initialConditions = soil.Children.Find(child => child is Sample) as Sample;
+            double[] cl = initialConditions.CL;
             if (MathUtilities.ValuesInArray(cl))
             {
                 crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
@@ -618,7 +609,7 @@
             }
             else
             {
-                double[] esp = soil.ESP;
+                double[] esp = initialConditions.ESP;
                 if (MathUtilities.ValuesInArray(esp))
                 {
                     crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
@@ -627,7 +618,7 @@
                 }
                 else
                 {
-                    double[] ec = soil.EC;
+                    double[] ec = initialConditions.EC;
                     if (MathUtilities.ValuesInArray(ec))
                     {
                         crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
