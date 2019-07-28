@@ -563,8 +563,14 @@ namespace Models.PMF.Organs
             dltStressedLAI = 0;
             if (LeafInitialised)
             {
-                dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
-                dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
+                // fixme
+                int emergence = 3; //= phenology.StartStagePhaseIndex("Emergence");
+                int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
+                if (phenology.Stage >= emergence && phenology.Stage <= flag)
+                {
+                    dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
+                    dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
+                }
                 //old model calculated BiomRUE at the end of the day
                 //this is done at strat of the day
                 BiomassRUE = Photosynthesis.Value();
@@ -762,7 +768,10 @@ namespace Models.PMF.Organs
                 laiEquilibWaterToday = LAI;
 
             avLaiEquilibWater = updateAvLaiEquilibWater(laiEquilibWaterToday, 10);
-            var sdRatio = WaterDemand < 0.001 ? 1.0 : WaterDemand / Arbitrator.WatSupply;
+
+            //var sdRatio = WaterDemand < 0.001 ? 1.0 : WaterDemand / Arbitrator.WatSupply;
+            //WaterDemand is not used currently - jb
+            var sdRatio = Arbitrator.WDemand < 0.001 ? 1.0 : MathUtilities.Divide(Arbitrator.WatSupply, Arbitrator.WDemand, 0.0);
             avSDRatio = updateAvSDRatio(sdRatio, 5);
             //// average of the last 10 days of laiEquilibWater`
             //laiEquilibWater.push_back(laiEquilibWaterToday);
@@ -816,12 +825,9 @@ namespace Models.PMF.Organs
 
             if (MathUtilities.IsPositive(Live.Wt))
             {
-                // In Old Apsim, this was calculated as: DltSenescedLai / slaToday
-                // However, DltSenescedLai can be greater than slaToday if we senesce most of the leaf.
-                // In this scenario, DltSenescedBiomass could end up greater than Live.Wt (!)
-                // To fix this, we divide start-of-day (pre-senescence) sla.
-                var DltSenescedBiomass = Live.Wt * MathUtilities.Divide(DltSenescedLai, LAI, 0);
-                var SenescingProportion = DltSenescedBiomass / Live.Wt;
+                // This is equivalent to dividing by slaToday
+                double DltSenescedBiomass = Live.Wt * MathUtilities.Divide(DltSenescedLai, laiToday, 0);
+                double SenescingProportion = DltSenescedBiomass / Live.Wt;
 
                 if (MathUtilities.IsGreaterThan(DltSenescedBiomass, Live.Wt))
                     throw new Exception($"Attempted to senesce more biomass than exists on leaf '{Name}'");
@@ -1151,13 +1157,18 @@ namespace Models.PMF.Organs
                 {
                     double n = DltLAI * NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
-                    laiN = Math.Min(laiN, BAT.StructuralAllocation[leafIndex]);
+                    // dh - we don't make this check in old apsim
+                    //laiN = Math.Min(laiN, BAT.StructuralAllocation[leafIndex]);
                     if (MathUtilities.IsPositive(laiN))
                     {
                         DltLAI = (n - laiN) / NewLeafSLN.Value();
+                        // fixme
+                        BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
                         requiredN -= laiN;
                         nProvided += laiN;
-                        BAT.StructuralAllocation[leafIndex] -= laiN;
+
+                        // There is no guard clause here in old apsim.
+                        BAT.StructuralAllocation[leafIndex] = Math.Max(0, BAT.StructuralAllocation[leafIndex] - laiN);
                     }
                 }
 
@@ -1270,8 +1281,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         protected virtual void SetDMDemand(object sender, EventArgs e)
         {
-            var leaves = Culms[0].CurrentLeafNumber - Culms[0].DltNewLeafAppeared;
-
             DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
             DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
             DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value()); // / dmConversionEfficiency.Value());
