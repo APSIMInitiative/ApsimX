@@ -75,6 +75,10 @@ namespace Models.PMF
         [XmlIgnore]
         public double[] Diffusion { get; private set; }
 
+        /// <summary>
+        /// Today's dltTT.
+        /// </summary>
+        public double DltTT { get; set; }
 
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
@@ -173,7 +177,7 @@ namespace Models.PMF
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
 
-                    myZone.AvailableSW[layer] = myZone.soil.Water[layer] - myZone.soil.LL15mm[layer];
+                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - myZone.soil.LL15mm[layer], 0);
                     myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
 
                     if (layer == currentLayer)
@@ -426,6 +430,12 @@ namespace Models.PMF
 
         #endregion
 
+        [EventSubscribe("DoPhenology")]
+        private void OnDoPhenology(object sender, EventArgs e)
+        {
+            DltTT = (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()");
+        }
+
         #region Plant interface methods
 
         /// <summary>Does the retranslocation.</summary>
@@ -447,13 +457,22 @@ namespace Models.PMF
                     if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
                     {
                         arbitrator.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
-                        // Then calculate how much DM (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
-                        for (int i = 0; i < Organs.Length; i++)
-                            if (MathUtilities.IsPositive(BAT.RetranslocationSupply[i]))
-                            {
-                                double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
-                                BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
-                            }
+
+                        int leafIndex = 2;
+                        int stemIndex = 4;
+
+                        double grainDifferential = BiomassRetranslocated;
+
+                        // Retranslocate from stem.
+                        double stemWtAvail = BAT.RetranslocationSupply[stemIndex];
+                        double stemRetrans = Math.Min(grainDifferential, stemWtAvail);
+                        BAT.Retranslocation[stemIndex] += stemRetrans;
+                        grainDifferential -= stemRetrans;
+
+                        double leafWtAvail = BAT.RetranslocationSupply[leafIndex];
+                        double leafRetrans = Math.Min(grainDifferential, leafWtAvail);
+                        BAT.Retranslocation[leafIndex] += Math.Min(grainDifferential, leafWtAvail);
+                        grainDifferential -= leafRetrans;
                     }
                 }
             }
