@@ -192,8 +192,8 @@
                 {
                     // Write a script to get random numbers from R.
                     string script = string.Format
-                        ($"library('boot', lib.loc='{R.PackagesDirectory}')" + Environment.NewLine +
-                         $"library('sensitivity', lib.loc='{R.PackagesDirectory}')" + Environment.NewLine +
+                        ("library('boot')" + Environment.NewLine +
+                         "library('sensitivity')" + Environment.NewLine +
                          "n <- {0}" + Environment.NewLine +
                          "nparams <- {1}" + Environment.NewLine +
                          "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
@@ -400,7 +400,7 @@
             File.WriteAllText(rFileName, script);
             R r = new R();
 
-            string result = r.Run(rFileName, "");
+            string result = r.Run(rFileName);
             string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");
             if (!File.Exists(tempFile))
                 File.Create(tempFile).Close();
