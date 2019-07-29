@@ -172,8 +172,8 @@ namespace Models.PMF
                 {
                     myZone.Depth += 0;
                 }
-                var currentLayer = Soils.Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
-                var currentLayerProportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
+                var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
+                var currentLayerProportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
@@ -359,7 +359,7 @@ namespace Models.PMF
             myZone.MassFlow = new double[myZone.soil.Thickness.Length];
             myZone.Diffusion = new double[myZone.soil.Thickness.Length];
 
-            int currentLayer = Soils.Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
+            int currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
             for (int layer = 0; layer <= currentLayer; layer++)
             {
                 var swdep = myZone.StartWater[layer]; //mm
@@ -379,7 +379,7 @@ namespace Models.PMF
 
                 if (layer == currentLayer)
                 {
-                    var proportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
+                    var proportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
                     myZone.Diffusion[layer] *= proportion;
                 }
 

@@ -274,33 +274,6 @@ namespace Models.Soils
         public double[] Thickness { get; set; }
 
         /// <summary>
-        /// Soil layer thickness for each layer in cm (only used in the GUI) (cm)
-        /// </summary>
-        /// <remarks>
-        /// This "Depth" variable is only needed for the "Depth" column in the "SoilWater" node of the GUI.
-        /// Just converts back and forth between "Depth" (in cm as string) AND "Thickness" (in mm as double).
-        /// </remarks>
-        /// <value>
-        /// The depth.
-        /// </value>
-        [XmlIgnore]
-        [Units("cm")]
-        [Caption("Depth")]
-        [Description("Soil layer thickness for each layer")]
-        public string[] Depth
-            {
-            get
-                {
-                return Soil.ToDepthStrings(Thickness);
-                }
-            set
-                {
-                Thickness = Soil.ToThickness(value);
-                }
-            }
-
-
-        /// <summary>
         /// Fractional amount of water above DUL that can drain under gravity per day
         /// </summary>
         /// <remarks>

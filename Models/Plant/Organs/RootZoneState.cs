@@ -209,7 +209,7 @@ namespace Models.PMF.Organs
         public void GrowRootDepth()
         {
             // Do Root Front Advance
-            int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
+            int RootLayer = soil.LayerIndexOfDepth(Depth);
 
             //sorghum calc
             var rootDepthWaterStress = 1.0;
@@ -271,12 +271,12 @@ namespace Models.PMF.Organs
             double[] RAw = new double[soil.Thickness.Length];
             for (int layer = 0; layer < soil.Thickness.Length; layer++)
             {
-                if (layer <= Soil.LayerIndexOfDepth(Depth, soil.Thickness))
+                if (layer <= soil.LayerIndexOfDepth(Depth))
                     if (LayerLive[layer].Wt > 0)
                     {
                         RAw[layer] = - WaterUptake[layer] / LayerLive[layer].Wt
                                    * soil.Thickness[layer]
-                                   * Soil.ProportionThroughLayer(layer, Depth, soil.Thickness);
+                                   * soil.ProportionThroughLayer(layer, Depth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
                     }
                     else if (layer > 0)

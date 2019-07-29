@@ -204,18 +204,25 @@
             }
         }
 
+        /// <summary>Return the soil layer cumulative thicknesses (mm)</summary>
+        public double[] ThicknessCumulative { get { return MathUtilities.Cumulative(Thickness).ToArray(); } }
+
         /// <summary>Gets the depth mid points (mm).</summary>
         [Units("mm")]
-        public double[] DepthMidPoints { get { return Soil.ToMidPoints(Thickness); } }
-
-        /// <summary>Gets the depths (mm) of each layer.</summary>
-        [Units("mm")]
-        [Description("Depth")]
-        public string[] Depth
+        public double[] DepthMidPoints
         {
             get
             {
-                return Soil.ToDepthStrings(Thickness);
+                var cumulativeThickness = MathUtilities.Cumulative(Thickness).ToArray();
+                var midPoints = new double[cumulativeThickness.Length];
+                for (int layer = 0; layer != cumulativeThickness.Length; layer++)
+                {
+                    if (layer == 0)
+                        midPoints[layer] = cumulativeThickness[layer] / 2.0;
+                    else
+                        midPoints[layer] = (cumulativeThickness[layer] + cumulativeThickness[layer - 1]) / 2.0;
+                }
+                return midPoints;
             }
         }
 
@@ -567,187 +574,6 @@
             }
         }
 
-        #endregion
-
-        #region Crops
-
-        /// <summary>Return a list of soil-crop parameterisations.</summary>
-        public List<SoilCrop> Crops
-        {
-            get
-            {
-                return waterNode?.Children.Cast<SoilCrop>().ToList();
-            }
-        }
-
-        /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
-        /// <param name="cropName">Name of the crop.</param>
-        public SoilCrop Crop(string cropName) 
-        {
-            cropName = cropName + "Soil";
-            var foundCrop = Crops?.Find(crop => crop.Name.Equals(cropName, StringComparison.InvariantCultureIgnoreCase));
-            if (foundCrop == null)
-                throw new Exception("Cannot find a soil-crop parameterisation for " + cropName);
-            return foundCrop;
-        }
-
-        #endregion
-
-        #region Soil organic matter
-
-        /// <summary>FBiom. Units: 0-1</summary>
-        [Units("0-1")]
-        public double[] FBiom { get { return SoilOrganicMatter.FBiom; } }
-
-        /// <summary>FInert. Units: 0-1</summary>
-        [Units("0-1")]
-        public double[] FInert { get { return SoilOrganicMatter.FInert; } }
-
-        /// <summary>Initial Root Wt</summary>
-        [Units("kg/ha")]
-        public double[] InitialRootWt { get { return SoilOrganicMatter.RootWt; } }
-
-        /// <summary>Initial soil CN ratio</summary>
-        [Units("kg/ha")]
-        public double[] SoilCN { get { return SoilOrganicMatter.SoilCN; } }
-
-        /// <summary>Initial Root Wt</summary>
-        [Units("kg/ha")]
-        public double[] InitialSoilCNR { get { return MathUtilities.Divide(Initial.OC, Initial.ON); } }
-
-        #endregion
-
-        /// <summary>Gets the temperature of each layer</summary>
-        public double[] Temperature { get { return temperatureModel.Value; } }
-
-        #region Utility
-        /// <summary>Convert an array of thickness (mm) to depth strings (cm)</summary>
-        /// <param name="Thickness">The thickness.</param>
-        /// <returns></returns>
-        static public string[] ToDepthStrings(double[] Thickness)
-        {
-            if (Thickness == null)
-                return null;
-            string[] Strings = new string[Thickness.Length];
-            double DepthSoFar = 0;
-            for (int i = 0; i != Thickness.Length; i++)
-            {
-                if (Thickness[i] == MathUtilities.MissingValue)
-                    Strings[i] = "";
-                else
-                {
-                    double ThisThickness = Thickness[i] / 10; // to cm
-                    double TopOfLayer = DepthSoFar;
-                    double BottomOfLayer = DepthSoFar + ThisThickness;
-                    Strings[i] = TopOfLayer.ToString() + "-" + BottomOfLayer.ToString();
-                    DepthSoFar = BottomOfLayer;
-                }
-            }
-            return Strings;
-        }
-        /// <summary>
-        /// Convert an array of depth strings (cm) to thickness (mm) e.g.
-        /// "0-10", "10-30"
-        /// To
-        /// 100, 200
-        /// </summary>
-        /// <param name="DepthStrings">The depth strings.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Invalid layer string:  + DepthStrings[i] +
-        ///                                   . String must be of the form: 10-30</exception>
-        static public double[] ToThickness(string[] DepthStrings)
-        {
-            double[] Thickness = new double[DepthStrings.Length];
-            for (int i = 0; i != DepthStrings.Length; i++)
-            {
-                if (DepthStrings[i] == "")
-                    Thickness[i] = MathUtilities.MissingValue;
-                else
-                {
-                    int PosDash = DepthStrings[i].IndexOf('-');
-                    if (PosDash == -1)
-                        throw new Exception("Invalid layer string: " + DepthStrings[i] +
-                                  ". String must be of the form: 10-30");
-                    double TopOfLayer;
-                    double BottomOfLayer;
-
-                    if (!Double.TryParse(DepthStrings[i].Substring(0, PosDash), out TopOfLayer))
-                        throw new Exception("Invalid string for layer top: '" + DepthStrings[i].Substring(0, PosDash) + "'");
-                    if (!Double.TryParse(DepthStrings[i].Substring(PosDash + 1), out BottomOfLayer))
-                        throw new Exception("Invalid string for layer bottom: '" + DepthStrings[i].Substring(PosDash + 1) + "'");
-                    Thickness[i] = (BottomOfLayer - TopOfLayer) * 10;
-                }
-            }
-            return Thickness;
-        }
-        /// <summary>To the mid points.</summary>
-        /// <param name="Thickness">The thickness.</param>
-        /// <returns></returns>
-        static public double[] ToMidPoints(double[] Thickness)
-        {
-            //-------------------------------------------------------------------------
-            // Return cumulative thickness midpoints for each layer - mm
-            //-------------------------------------------------------------------------
-            double[] CumThickness = ToCumThickness(Thickness);
-            double[] MidPoints = new double[CumThickness.Length];
-            for (int Layer = 0; Layer != CumThickness.Length; Layer++)
-            {
-                if (Layer == 0)
-                    MidPoints[Layer] = CumThickness[Layer] / 2.0;
-                else
-                    MidPoints[Layer] = (CumThickness[Layer] + CumThickness[Layer - 1]) / 2.0;
-            }
-            return MidPoints;
-        }
-        /// <summary>To the cum thickness.</summary>
-        /// <param name="Thickness">The thickness.</param>
-        /// <returns></returns>
-        static public double[] ToCumThickness(double[] Thickness)
-        {
-            // ------------------------------------------------
-            // Return cumulative thickness for each layer - mm
-            // ------------------------------------------------
-            double[] CumThickness = new double[Thickness.Length];
-            if (Thickness.Length > 0)
-            {
-                CumThickness[0] = Thickness[0];
-                for (int Layer = 1; Layer != Thickness.Length; Layer++)
-                    CumThickness[Layer] = Thickness[Layer] + CumThickness[Layer - 1];
-            }
-            return CumThickness;
-        }
-
-        /// <summary>Layers the index.</summary>
-        /// <param name="depth">The depth.</param>
-        /// <param name="thickness">Layer thicknesses</param>
-        public static int LayerIndexOfDepth(double depth, double[] thickness)
-        {
-            double CumDepth = 0;
-            for (int i = 0; i < thickness.Length; i++)
-            {
-                CumDepth = CumDepth + thickness[i];
-                if (CumDepth >= depth) { return i; }
-            }
-            throw new Exception("Depth deeper than bottom of soil profile");
-        }
-
-        /// <summary>Returns the proportion that 'depth' is through the layer.</summary>
-        /// <param name="layerIndex">The layer index</param>
-        /// <param name="depth">The depth</param>
-        /// <param name="thickness">Layer thicknesses</param>
-        public static double ProportionThroughLayer(int layerIndex, double depth, double[] thickness)
-        {
-            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
-            for (int i = 0; i <= layerIndex; i++)
-                depth_to_layer_bottom += thickness[i];
-
-            double depth_to_layer_top = depth_to_layer_bottom - thickness[layerIndex];
-            double depth_to_root = Math.Min(depth_to_layer_bottom, depth);
-            double depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
-
-            return depth_of_root_in_layer / thickness[layerIndex];
-        }
-
         /// <summary>
         /// Plant available water for the specified crop. Will throw if crop not found. Units: mm/mm
         /// </summary>
@@ -781,9 +607,82 @@
             return PAWC;
         }
 
-        /// <summary>
-        /// Calculate conversion factor from kg/ha to ppm (mg/kg)
-        /// </summary>
+        #endregion
+
+        /// <summary>Return a list of soil-crop parameterisations.</summary>
+        public List<SoilCrop> Crops
+        {
+            get
+            {
+                return waterNode?.Children.Cast<SoilCrop>().ToList();
+            }
+        }
+
+        /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
+        /// <param name="cropName">Name of the crop.</param>
+        public SoilCrop Crop(string cropName) 
+        {
+            cropName = cropName + "Soil";
+            var foundCrop = Crops?.Find(crop => crop.Name.Equals(cropName, StringComparison.InvariantCultureIgnoreCase));
+            if (foundCrop == null)
+                throw new Exception("Cannot find a soil-crop parameterisation for " + cropName);
+            return foundCrop;
+        }
+
+        /// <summary>FBiom. Units: 0-1</summary>
+        [Units("0-1")]
+        public double[] FBiom { get { return SoilOrganicMatter.FBiom; } }
+
+        /// <summary>FInert. Units: 0-1</summary>
+        [Units("0-1")]
+        public double[] FInert { get { return SoilOrganicMatter.FInert; } }
+
+        /// <summary>Initial Root Wt</summary>
+        [Units("kg/ha")]
+        public double[] InitialRootWt { get { return SoilOrganicMatter.RootWt; } }
+
+        /// <summary>Initial soil CN ratio</summary>
+        [Units("kg/ha")]
+        public double[] SoilCN { get { return SoilOrganicMatter.SoilCN; } }
+
+        /// <summary>Initial Root Wt</summary>
+        [Units("kg/ha")]
+        public double[] InitialSoilCNR { get { return MathUtilities.Divide(Initial.OC, Initial.ON); } }
+
+        /// <summary>Gets the temperature of each layer</summary>
+        public double[] Temperature { get { return temperatureModel.Value; } }
+
+        /// <summary>Calculates the layer index for a specified depth.</summary>
+        /// <param name="depth">The depth to search for.</param>
+        /// <returns>The layer index or throws on error.</returns>
+        public int LayerIndexOfDepth(double depth)
+        {
+            double CumDepth = 0;
+            for (int i = 0; i < Thickness.Length; i++)
+            {
+                CumDepth = CumDepth + Thickness[i];
+                if (CumDepth >= depth) { return i; }
+            }
+            throw new Exception("Depth deeper than bottom of soil profile");
+        }
+
+        /// <summary>Returns the proportion that 'depth' is through the layer.</summary>
+        /// <param name="layerIndex">The layer index</param>
+        /// <param name="depth">The depth</param>
+        public double ProportionThroughLayer(int layerIndex, double depth)
+        {
+            double depth_to_layer_bottom = 0;   // depth to bottom of layer (mm)
+            for (int i = 0; i <= layerIndex; i++)
+                depth_to_layer_bottom += Thickness[i];
+
+            double depth_to_layer_top = depth_to_layer_bottom - Thickness[layerIndex];
+            double depth_to_root = Math.Min(depth_to_layer_bottom, depth);
+            double depth_of_root_in_layer = Math.Max(0.0, depth_to_root - depth_to_layer_top);
+
+            return depth_of_root_in_layer / Thickness[layerIndex];
+        }
+
+        /// <summary>Calculate conversion factor from kg/ha to ppm (mg/kg)</summary>
         /// <param name="values"></param>
         /// <returns></returns>
         public double[] kgha2ppm(double[] values)
@@ -793,9 +692,8 @@
                 ppm[i] = values[i] * MathUtilities.Divide(100.0, BD[i] * Thickness[i], 0.0);
             return ppm;
         }
-        /// <summary>
-        /// Calculate conversion factor from ppm to kg/ha
-        /// </summary>
+
+        /// <summary>Calculate conversion factor from ppm to kg/ha</summary>
         /// <param name="values"></param>
         /// <returns></returns>
         public double[] ppm2kgha(double[] values)
@@ -805,216 +703,5 @@
                 kgha[i] = values[i] * MathUtilities.Divide(BD[i] * Thickness[i], 100, 0.0);
             return kgha;
         }
-        #endregion
-
-        #region Checking
-        /// <summary>
-        /// Checks validity of soil water parameters
-        /// This is a port of the soilwat2_check_profile routine. Returns a blank string if
-        /// no errors were found.
-        /// </summary>
-        /// <param name="IgnoreStartingWaterN">if set to <c>true</c> [ignore starting water n].</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Cannot find OC values in soil</exception>
-        public string Check(bool IgnoreStartingWaterN)
-        {
-            const double min_sw = 0.0;
-            const double specific_bd = 2.65; // (g/cc)
-            string Msg = "";
-
-            // Check the summer / winter dates.
-            if (SoilWater is SoilWater)
-            {
-                DateTime Temp;
-                if (!DateTime.TryParse((SoilWater as SoilWater).SummerDate, out Temp))
-                    Msg += "Invalid summer date of: " + (SoilWater as SoilWater).SummerDate + "\r\n";
-                if (!DateTime.TryParse((SoilWater as SoilWater).WinterDate, out Temp))
-                    Msg += "Invalid winter date of: " + (SoilWater as SoilWater).WinterDate + "\r\n";
-            }
-
-            foreach (var soilCrop in Crops)
-            {
-                if (soilCrop != null)
-                {
-                    double[] LL = soilCrop.LL;
-                    double[] KL = soilCrop.KL;
-                    double[] XF = soilCrop.XF;
-
-                    if (!MathUtilities.ValuesInArray(LL) ||
-                        !MathUtilities.ValuesInArray(KL) ||
-                        !MathUtilities.ValuesInArray(XF))
-                        Msg += "Values for LL, KL or XF are missing for crop " + soilCrop.Name + "\r\n";
-
-                    else
-                    {
-                        for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
-                        {
-                            int RealLayerNumber = layer + 1;
-
-                            if (KL[layer] == MathUtilities.MissingValue)
-                                Msg += soilCrop.Name + " KL value missing"
-                                         + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                            else if (MathUtilities.GreaterThan(KL[layer], 1, 3))
-                                Msg += soilCrop.Name + " KL value of " + KL[layer].ToString("f3")
-                                         + " in layer " + RealLayerNumber.ToString() + " is greater than 1"
-                                         + "\r\n";
-
-                            if (XF[layer] == MathUtilities.MissingValue)
-                                Msg += soilCrop.Name + " XF value missing"
-                                         + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                            else if (MathUtilities.GreaterThan(XF[layer], 1, 3))
-                                Msg += soilCrop.Name + " XF value of " + XF[layer].ToString("f3")
-                                         + " in layer " + RealLayerNumber.ToString() + " is greater than 1"
-                                         + "\r\n";
-
-                            if (LL[layer] == MathUtilities.MissingValue)
-                                Msg += soilCrop.Name + " LL value missing"
-                                         + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                            else if (MathUtilities.LessThan(LL[layer], waterNode.AirDry[layer], 3))
-                                Msg += soilCrop.Name + " LL of " + LL[layer].ToString("f3")
-                                             + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + waterNode.AirDry[layer].ToString("f3")
-                                           + "\r\n";
-
-                            else if (MathUtilities.GreaterThan(LL[layer], waterNode.DUL[layer], 3))
-                                Msg += soilCrop.Name + " LL of " + LL[layer].ToString("f3")
-                                             + " in layer " + RealLayerNumber.ToString() + " is above drained upper limit of " + waterNode.DUL[layer].ToString("f3")
-                                           + "\r\n";
-                        }
-                    }
-                }
-            }
-
-            // Check other profile variables.
-            for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
-            {
-                double max_sw = MathUtilities.Round(1.0 - waterNode.BD[layer] / specific_bd, 3);
-                int RealLayerNumber = layer + 1;
-
-                if (waterNode.AirDry[layer] == MathUtilities.MissingValue)
-                    Msg += " Air dry value missing"
-                             + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                else if (MathUtilities.LessThan(waterNode.AirDry[layer], min_sw, 3))
-                    Msg += " Air dry lower limit of " + waterNode.AirDry[layer].ToString("f3")
-                                       + " in layer " + RealLayerNumber.ToString() + " is below acceptable value of " + min_sw.ToString("f3")
-                               + "\r\n";
-
-                if (waterNode.LL15[layer] == MathUtilities.MissingValue)
-                    Msg += "15 bar lower limit value missing"
-                             + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                else if (MathUtilities.LessThan(waterNode.LL15[layer], waterNode.AirDry[layer], 3))
-                    Msg += "15 bar lower limit of " + waterNode.LL15[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is below air dry value of " + waterNode.AirDry[layer].ToString("f3")
-                               + "\r\n";
-
-                if (waterNode.DUL[layer] == MathUtilities.MissingValue)
-                    Msg += "Drained upper limit value missing"
-                             + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                else if (MathUtilities.LessThan(waterNode.DUL[layer], waterNode.LL15[layer], 3))
-                    Msg += "Drained upper limit of " + waterNode.DUL[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is at or below lower limit of " + waterNode.LL15[layer].ToString("f3")
-                               + "\r\n";
-
-                if (waterNode.SAT[layer] == MathUtilities.MissingValue)
-                    Msg += "Saturation value missing"
-                             + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                else if (MathUtilities.LessThan(waterNode.SAT[layer], waterNode.DUL[layer], 3))
-                    Msg += "Saturation of " + waterNode.SAT[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is at or below drained upper limit of " + waterNode.DUL[layer].ToString("f3")
-                               + "\r\n";
-
-                else if (MathUtilities.GreaterThan(waterNode.SAT[layer], max_sw, 3))
-                {
-                    double max_bd = (1.0 - waterNode.SAT[layer]) * specific_bd;
-                    Msg += "Saturation of " + waterNode.SAT[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is above acceptable value of  " + max_sw.ToString("f3")
-                               + ". You must adjust bulk density to below " + max_bd.ToString("f3")
-                               + " OR saturation to below " + max_sw.ToString("f3")
-                               + "\r\n";
-                }
-
-                if (waterNode.BD[layer] == MathUtilities.MissingValue)
-                    Msg += "BD value missing"
-                             + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                else if (MathUtilities.GreaterThan(waterNode.BD[layer], 2.65, 3))
-                    Msg += "BD value of " + waterNode.BD[layer].ToString("f3")
-                                 + " in layer " + RealLayerNumber.ToString() + " is greater than the theoretical maximum of 2.65"
-                               + "\r\n";
-            }
-
-            if (Initial.OC.Length == 0)
-                throw new Exception("Cannot find OC values in soil");
-
-            for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
-            {
-                int RealLayerNumber = layer + 1;
-                if (Initial.OC[layer] == MathUtilities.MissingValue)
-                    Msg += "OC value missing"
-                             + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                else if (MathUtilities.LessThan(Initial.OC[layer], 0.01, 3))
-                    Msg += "OC value of " + Initial.OC[layer].ToString("f3")
-                                  + " in layer " + RealLayerNumber.ToString() + " is less than 0.01"
-                                  + "\r\n";
-
-                if (Initial.PH[layer] == MathUtilities.MissingValue)
-                    Msg += "PH value missing"
-                             + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                else if (MathUtilities.LessThan(Initial.PH[layer], 3.5, 3))
-                    Msg += "PH value of " + Initial.PH[layer].ToString("f3")
-                                  + " in layer " + RealLayerNumber.ToString() + " is less than 3.5"
-                                  + "\r\n";
-                else if (MathUtilities.GreaterThan(Initial.PH[layer], 11, 3))
-                    Msg += "PH value of " + Initial.PH[layer].ToString("f3")
-                                  + " in layer " + RealLayerNumber.ToString() + " is greater than 11"
-                                  + "\r\n";
-            }
-
-            if (!IgnoreStartingWaterN)
-            {
-                if (!MathUtilities.ValuesInArray(InitialWaterVolumetric))
-                    Msg += "No starting soil water values found.\r\n";
-                else
-                    for (int layer = 0; layer != waterNode.Thickness.Length; layer++)
-                    {
-                        int RealLayerNumber = layer + 1;
-
-                        if (InitialWaterVolumetric[layer] == MathUtilities.MissingValue)
-                            Msg += "Soil water value missing"
-                                        + " in layer " + RealLayerNumber.ToString() + "\r\n";
-
-                        else if (MathUtilities.GreaterThan(InitialWaterVolumetric[layer], waterNode.SAT[layer], 3))
-                            Msg += "Soil water of " + InitialWaterVolumetric[layer].ToString("f3")
-                                            + " in layer " + RealLayerNumber.ToString() + " is above saturation of " + waterNode.SAT[layer].ToString("f3")
-                                            + "\r\n";
-
-                        else if (MathUtilities.LessThan(InitialWaterVolumetric[layer], waterNode.AirDry[layer], 3))
-                            Msg += "Soil water of " + InitialWaterVolumetric[layer].ToString("f3")
-                                            + " in layer " + RealLayerNumber.ToString() + " is below air-dry value of " + waterNode.AirDry[layer].ToString("f3")
-                                            + "\r\n";
-                    }
-
-                if (!MathUtilities.ValuesInArray(Initial.NO3))
-                    Msg += "No starting NO3 values found.\r\n";
-                if (!MathUtilities.ValuesInArray(Initial.NH4))
-                    Msg += "No starting NH4 values found.\r\n";
-
-
-            }
-
-
-            return Msg;
-        }
-
-        #endregion
-
     }
 }

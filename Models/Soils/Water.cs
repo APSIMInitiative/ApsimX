@@ -16,23 +16,6 @@
         /// <summary>Gets or sets the thickness.</summary>
         public double[] Thickness { get; set; }
 
-        /// <summary>Gets or sets the depth.</summary>
-        [Summary]
-        [XmlIgnore]
-        [Units("cm")]
-        [Description("Depth")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(Thickness);
-            }
-            set
-            {
-                Thickness = Soil.ToThickness(value);
-            }
-        }
-
         /// <summary>Gets or sets the bd.</summary>
         [Summary]
         [Description("BD")]

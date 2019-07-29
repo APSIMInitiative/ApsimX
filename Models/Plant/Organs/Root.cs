@@ -722,7 +722,7 @@ namespace Models.PMF.Organs
                     if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.soil.Thickness.Length)
                         myZone.Diffusion = new double[myZone.soil.Thickness.Length];
 
-                    var currentLayer = Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
+                    var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         var swdep = water[layer]; //mm
@@ -740,7 +740,7 @@ namespace Models.PMF.Organs
 
                         if (layer == currentLayer)
                         {
-                            var proportion = Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
+                            var proportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
                             no3Diffusion *= proportion;
                         }
 
@@ -850,7 +850,7 @@ namespace Models.PMF.Organs
                 return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
-                var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
+                var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
                 var soilCrop = myZone.soil.Crop(parentPlant.Name);
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
@@ -861,14 +861,14 @@ namespace Models.PMF.Organs
                     double[] available = new double[myZone.soil.Thickness.Length];
 
                     double[] supply = new double[myZone.soil.Thickness.Length];
-                    LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
+                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
                         available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
                         if (currentLayer == layer)
                         {
-                            var layerproportion = Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness);
+                            var layerproportion = myZone.soil.ProportionThroughLayer(layer, myZone.Depth);
                             available[layer] *= layerproportion;
                         }
 
@@ -885,10 +885,10 @@ namespace Models.PMF.Organs
                     double[] ll = soilCrop.LL;
 
                     double[] supply = new double[myZone.soil.Thickness.Length];
-                    LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
+                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
                     for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                     {
-                        if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
+                        if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
                         {
                             supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
                             (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * rootProportionInLayer(layer, myZone));
@@ -926,7 +926,7 @@ namespace Models.PMF.Organs
                 return Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
             }
                 
-            return Soil.ProportionThroughLayer(layer, zone.Depth, zone.soil.Thickness);
+            return zone.soil.ProportionThroughLayer(layer, zone.Depth);
         }
 
         //------------------------------------------------------------------------------------------------
@@ -1091,7 +1091,7 @@ namespace Models.PMF.Organs
             double supply = 0;
             for (int layer = 0; layer < LL.Length; layer++)
             {
-                if (layer <= Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness))
+                if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
                     supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
                         rootProportionInLayer(layer, PlantZone));
             }
@@ -1111,7 +1111,7 @@ namespace Models.PMF.Organs
             double[] available = new double[PlantZone.soil.Thickness.Length];
             double[] supply = new double[PlantZone.soil.Thickness.Length];
 
-            var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
+            var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
             var layertop = MathUtilities.Sum(PlantZone.soil.Thickness, 0, Math.Max(0, currentLayer - 1));
             var layerBottom = MathUtilities.Sum(PlantZone.soil.Thickness, 0, currentLayer);
             var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
@@ -1318,7 +1318,7 @@ namespace Models.PMF.Organs
                     //Dead.Add(Loss);
                     Senesced.Add(Loss);
 
-                    var currentLayer = Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness);
+                    var currentLayer = PlantZone.soil.LayerIndexOfDepth(PlantZone.Depth);
                     int layer = currentLayer;
                     double dmSenesced = Live.StructuralWt * senescedFrac; //sorghum only uses structural // same as Loss.StructuralWt
                     double senNConc = Live.N / Live.StructuralWt;

@@ -30,14 +30,7 @@
             NH4Solute = Apsim.Find(this, "NH4") as ISolute;
             UreaSolute = Apsim.Find(this, "Urea") as ISolute;
         }
-
-        /// <summary>Gets the depth boundaries of each layer.</summary>
-        [XmlIgnore]
-        [Units("cm")]
-        [Caption("Depth")]
-        [Description("Soil layer depth positions")]
-        public string[] Depth { get { return Soil.ToDepthStrings(Thickness); } }
-            
+        
         /// <summary>Gets or sets the thickness of each layer.</summary>
         [Units("mm")]
         [Caption("Thickness")]

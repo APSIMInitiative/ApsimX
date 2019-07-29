@@ -597,18 +597,21 @@
             foreach (var report in JsonUtilities.ChildrenRecursively(root, "Report"))
             {
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilOrganicMatter.OC", ".Initial.OC");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].PH", "[Soil].Initial.PH");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].EC", "[Soil].Initial.EC");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].ESP", "[Soil].Initial.ESP");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Cl", "[Soil].Initial.CL");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].OC", "[Soil].Initial.OC");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNO3N", "[Soil].Initial.NO3");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNH4N", "[Soil].Initial.NH4");
             }
 
             foreach (var series in JsonUtilities.ChildrenRecursively(root, "Series"))
             {
                 if (series["XFieldName"] != null)
-                {
                     series["XFieldName"] = series["XFieldName"].ToString().Replace(".SoilOrganicMatter.OC", ".Initial.OC");
-                }
                 if (series["YFieldName"] != null)
-                {
                     series["YFieldName"] = series["YFieldName"].ToString().Replace(".SoilOrganicMatter.OC", ".Initial.OC");
-                }
             }
 
             foreach (var expressionFunction in JsonUtilities.ChildrenRecursively(root, "ExpressionFunction"))
@@ -617,7 +620,15 @@
                 expression = expression.Replace(".SoilOrganicMatter.OC", ".Initial.OC");
                 expressionFunction["Expression"] = expression;
             }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                var changeMade = manager.Replace("Soil.ToCumThickness(soil.Thickness)", "soil.ThicknessCumulative");
+                if (changeMade)
+                    manager.Save();
+            }
         }
+
         /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>

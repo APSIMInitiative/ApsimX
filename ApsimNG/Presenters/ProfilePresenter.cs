@@ -331,27 +331,32 @@
             // be either double[] or string[] type.
             foreach (PropertyInfo property in model.GetType().GetProperties())
             {
-                bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
-                if (hasDescription && property.CanRead)
+                if (property.Name == "Thickness")
+                    propertiesInGrid.Add(new VariableProperty(model, property));
+                else
                 {
-                    if (this.model.Name == "Water" &&
-                        property.Name == "Depth" &&
-                        typeof(SoilCrop).IsAssignableFrom(model.GetType()))
+                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
+                    if (hasDescription && property.CanRead)
                     {
-                    }
-                    else if (property.PropertyType == typeof(double[]) || 
-                        property.PropertyType == typeof(string[]))
-                    {
-                        this.propertiesInGrid.Add(new VariableProperty(model, property));
-                    }
-                    else if (property.PropertyType.FullName.Contains("SoilCrop"))
-                    {
-                        List<SoilCrop> crops = property.GetValue(model, null) as List<SoilCrop>;
-                        if (crops != null)
+                        if (this.model.Name == "Water" &&
+                            property.Name == "Depth" &&
+                            typeof(SoilCrop).IsAssignableFrom(model.GetType()))
                         {
-                            foreach (SoilCrop crop in crops)
+                        }
+                        else if (property.PropertyType == typeof(double[]) ||
+                            property.PropertyType == typeof(string[]))
+                        {
+                            this.propertiesInGrid.Add(new VariableProperty(model, property));
+                        }
+                        else if (property.PropertyType.FullName.Contains("SoilCrop"))
+                        {
+                            List<SoilCrop> crops = property.GetValue(model, null) as List<SoilCrop>;
+                            if (crops != null)
                             {
-                                this.FindAllProperties(crop as Model);
+                                foreach (SoilCrop crop in crops)
+                                {
+                                    this.FindAllProperties(crop as Model);
+                                }
                             }
                         }
                     }
@@ -407,7 +412,15 @@
 
                 if (table.Columns.IndexOf(columnName) == -1)
                 {
-                    DataColumn newCol = table.Columns.Add(columnName, property.DataType.GetElementType());
+                    var columnType = property.DataType.GetElementType();
+                    if (property.Name == "Thickness")
+                    {
+                        columnName = "Depth\r\n(mm)";
+                        columnCaption = columnName;
+                        columnType = typeof(string);
+                        values = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings((double[])values);
+                    }
+                    DataColumn newCol = table.Columns.Add(columnName, columnType);
                     newCol.Caption = columnCaption;
                 }
                 else
@@ -464,7 +477,8 @@
                     {
                         // Get an array of values for this property.
                         Array values;
-                        if (this.propertiesInGrid[i].DataType.GetElementType() == typeof(double))
+                        if (propertiesInGrid[i].Name != "Thickness" &&
+                            propertiesInGrid[i].DataType.GetElementType() == typeof(double))
                         {
                             values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
                             if (!MathUtilities.ValuesInArray((double[])values))
@@ -484,6 +498,9 @@
 
                         // Is the value any different to the former property value?
                         bool changedValues;
+                        if (propertiesInGrid[i].Name == "Thickness")
+                            values = APSIM.Shared.APSoil.SoilUtilities.ToThickness((string[])values);
+
                         if (this.propertiesInGrid[i].DataType == typeof(double[]))
                         {
                             changedValues = !MathUtilities.AreEqual((double[])values, (double[])this.propertiesInGrid[i].Value);

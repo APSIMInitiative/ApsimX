@@ -21,24 +21,6 @@ namespace Models.Soils
         /// <value>The thickness.</value>
         public double[] Thickness { get; set; }
 
-        /// <summary>Gets or sets the depth.</summary>
-        /// <value>The depth.</value>
-        [Summary]
-        [Description("Depth")]
-        [XmlIgnore]
-        [Units("cm")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(Thickness);
-            }
-            set
-            {
-                Thickness = Soil.ToThickness(value);
-            }
-        }
-
         /// <summary>Gets or sets the rocks.</summary>
         /// <value>The rocks.</value>
         [Description("Rocks")]

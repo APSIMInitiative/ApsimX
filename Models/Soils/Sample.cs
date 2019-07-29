@@ -111,26 +111,6 @@ namespace Models.Soils
         /// </summary>
         public double[] Thickness { get; set; }
 
-        /// <summary>
-        /// Gets or sets the depth strings e.g. 0-10
-        /// </summary>
-        [Summary]
-        [Description("Depth")]
-        [XmlIgnore]
-        [Units("cm")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(this.Thickness);
-            }
-
-            set
-            {
-                this.Thickness = Soil.ToThickness(value);
-            }
-        }
-
         #region Raw variables serialised and edited in GUI
 
         /// <summary>

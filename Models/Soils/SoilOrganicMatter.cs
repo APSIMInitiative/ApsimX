@@ -43,23 +43,6 @@ namespace Models.Soils
         [Units("mm")]
         public double[] Thickness { get; set; }
 
-        /// <summary>Soil layer thickness for each layer in cm (only used in the GUI)</summary>
-        /// <value>The depth.</value>
-        [Summary]
-        [Units("cm")]
-        [Description("Depth")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(Thickness);
-            }
-            set
-            {
-                Thickness = Soil.ToThickness(value);
-            }
-        }
-
         /// <summary>Organic carbon concentration (0.1 - 10%)</summary>
         /// <value>The oc.</value>
         [Summary]
