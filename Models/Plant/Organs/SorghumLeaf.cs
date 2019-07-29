@@ -467,6 +467,17 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
+        /// Update globals
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("EndOfDay")]
+        private void UpdateVars(object sender, EventArgs e)
+        {
+            sdRatio = Arbitrator.WDemand < 0.001 ? 1.0 : Math.Min(1, MathUtilities.Divide(Arbitrator.WatSupply, Arbitrator.WDemand, 0.0));
+        }
+
+        /// <summary>
         /// Calculates final leaf number. Doesn't update any globals.
         /// </summary>
         /// <returns></returns>
@@ -663,6 +674,7 @@ namespace Models.PMF.Organs
         /// <summary>Delta of LAI removed due to Frost Senescence.</summary>
         public double DltSenescedLaiFrost { get; set; }
 
+        private double sdRatio;
         private double totalLaiEqlbLight;
         private double avgLaiEquilibLight;
         private Queue<double> laiEqlbLightTodayQ;
@@ -769,9 +781,6 @@ namespace Models.PMF.Organs
 
             avLaiEquilibWater = updateAvLaiEquilibWater(laiEquilibWaterToday, 10);
 
-            //var sdRatio = WaterDemand < 0.001 ? 1.0 : WaterDemand / Arbitrator.WatSupply;
-            //WaterDemand is not used currently - jb
-            var sdRatio = Arbitrator.WDemand < 0.001 ? 1.0 : MathUtilities.Divide(Arbitrator.WatSupply, Arbitrator.WDemand, 0.0);
             avSDRatio = updateAvSDRatio(sdRatio, 5);
             //// average of the last 10 days of laiEquilibWater`
             //laiEquilibWater.push_back(laiEquilibWaterToday);
