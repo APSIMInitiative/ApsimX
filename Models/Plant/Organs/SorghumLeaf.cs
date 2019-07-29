@@ -850,12 +850,12 @@ namespace Models.PMF.Organs
                     var metabolicWtSenescing = Live.MetabolicWt * SenescingProportion;
                     Live.MetabolicWt -= metabolicWtSenescing;
                     Dead.MetabolicWt += metabolicWtSenescing;
-                    Senesced.StructuralWt += structuralWtSenescing;
+                    Senesced.MetabolicWt += metabolicWtSenescing;
 
                     var storageWtSenescing = Live.StorageWt * SenescingProportion;
                     Live.StorageWt -= storageWtSenescing;
                     Dead.StorageWt += storageWtSenescing;
-                    Senesced.StructuralWt += structuralWtSenescing;
+                    Senesced.StorageWt += storageWtSenescing;
 
                     double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
                     DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
