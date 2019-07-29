@@ -624,6 +624,13 @@
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 var changeMade = manager.Replace("Soil.ToCumThickness(soil.Thickness)", "soil.ThicknessCumulative");
+
+                if (manager.Replace("mySoil.Depth.Length", "mySoil.Thickness.Length"))
+                    changeMade = true;
+
+                if (manager.Replace("soil.Depth.Length", "soil.Thickness.Length"))
+                    changeMade = true;
+
                 if (changeMade)
                     manager.Save();
             }
