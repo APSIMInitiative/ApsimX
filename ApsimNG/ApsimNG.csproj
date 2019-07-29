@@ -208,6 +208,7 @@
     <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
+    <Compile Include="EventArguments\GridCellChangedArgs.cs" />
     <Compile Include="EventArguments\GridCellPasteArgs.cs" />
     <Compile Include="EventArguments\CopyEventArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />

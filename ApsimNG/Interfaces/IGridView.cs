@@ -37,6 +37,11 @@ namespace UserInterface.Interfaces
         event EventHandler<GridCellsChangedArgs> CellsChanged;
 
         /// <summary>
+        /// This event is invoked when the value of a cell changes.
+        /// </summary>
+        event EventHandler<GridCellChangedArgs> CellChanged;
+
+        /// <summary>
         /// Invoked when a grid cell header is clicked.
         /// </summary>
         event EventHandler<GridColumnClickedArgs> GridColumnClicked;
@@ -44,7 +49,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Occurs when user clicks a button on the cell.
         /// </summary>
-        event EventHandler<GridCellsChangedArgs> ButtonClick;
+        event EventHandler<GridCellChangedArgs> ButtonClick;
 
         /// <summary>
         /// Invoked when the user needs context items for the intellisense.

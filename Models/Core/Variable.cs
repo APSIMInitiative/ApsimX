@@ -56,7 +56,7 @@
         /// <summary>
         /// Gets the data type of the property
         /// </summary>
-        public override Type DataType { get { return null; } }
+        public override Type DataType { get { return Value?.GetType(); } }
 
         /// <summary>
         /// Returns a description of the property or null if not found.

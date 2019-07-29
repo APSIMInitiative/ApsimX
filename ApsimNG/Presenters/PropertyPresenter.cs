@@ -107,7 +107,7 @@ namespace UserInterface.Presenters
                 FormatTestGrid();
             }
 
-            grid.CellsChanged += OnCellValueChanged;
+            grid.CellChanged += OnCellChanged;
             grid.ButtonClick += OnFileBrowseClick;
             this.presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -131,7 +131,7 @@ namespace UserInterface.Presenters
             try
             {
                 base.Detach();
-                grid.CellsChanged -= OnCellValueChanged;
+                grid.CellChanged -= OnCellChanged;
                 grid.ButtonClick -= OnFileBrowseClick;
                 presenter.CommandHistory.ModelChanged -= OnModelChanged;
                 intellisense.ItemSelected -= OnIntellisenseItemSelected;
@@ -154,7 +154,6 @@ namespace UserInterface.Presenters
             bool hasData = properties.Count > 0;
             table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
-
             FillTable(table);
             grid.DataSource = table;
             FormatGrid();
@@ -735,6 +734,46 @@ namespace UserInterface.Presenters
                     presenter.MainPresenter.ShowError(ex);
                 }
             }
+        }
+
+        /// <summary>
+        /// User has changed the value of a cell. Validate the change
+        /// apply the change.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Event parameters</param>
+        private void OnCellChanged(object sender, GridCellChangedArgs args)
+        {
+            if (args.NewValue == args.OldValue || args.RowIndex >= properties.Count)
+                return;
+
+            IVariable property = properties[args.RowIndex];
+            Type dataType = property.DataType;
+
+            object newValue = null;
+
+            if (string.IsNullOrWhiteSpace(args.NewValue))
+            {
+                // User has entered an empty string. Get the default value for this property type.
+                if (dataType.IsEnum)
+                    // This is probably impossible, because cells with an enum
+                    // property use a drop-down input control.
+                    throw new Exception($"Invalid value for property '{property.Name}' - value cannot be null.");
+
+                if (dataType.IsValueType)
+                    // property is not nullable (int, bool, struct, etc)
+                    newValue = Activator.CreateInstance(dataType);
+                else
+                    newValue = null;
+            }
+            else
+            {
+                newValue = Convert.ChangeType(args.NewValue, dataType);
+                if (newValue == null)
+                    throw new Exception($"Invalid value for property '{property.Name}' - '{args.NewValue} is not valid for this data type.");
+            }
+
+            SetPropertyValue(properties[args.RowIndex], newValue);
         }
 
         /// <summary>

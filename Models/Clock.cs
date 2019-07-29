@@ -3,6 +3,7 @@
     using Models.Core;
     using Models.Core.Run;
     using Models.Interfaces;
+    using Newtonsoft.Json;
     using System;
     using System.Xml.Serialization;
 
@@ -25,15 +26,77 @@
 
         /// <summary>Gets or sets the start date.</summary>
         /// <value>The start date.</value>
+        /// <remarks>Settable from the GUI.</remarks>
         [Summary]
         [Description("The start date of the simulation")]
-        public DateTime StartDate { get; set; }
+        public DateTime? Start { get; set; }
 
         /// <summary>Gets or sets the end date.</summary>
         /// <value>The end date.</value>
+        /// <remarks>Settable from the GUI.</remarks>
         [Summary]
         [Description("The end date of the simulation")]
-        public DateTime EndDate { get; set; }
+        public DateTime? End { get; set; }
+
+        /// <summary>
+        /// Gets the start date for the simulation.
+        /// </summary>
+        /// <remarks>
+        /// If the user did not
+        /// not provide a start date, attempt to locate a weather file
+        /// and use its start date. If no weather file can be found,
+        /// throw an exception.
+        /// </remarks>
+        [JsonIgnore]
+        public DateTime StartDate
+        {
+            get
+            {
+                if (Start != null)
+                    return (DateTime)Start;
+
+                // If no start date provided, try and find a weather component and use its start date.
+                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                if (weather != null)
+                    return weather.StartDate;
+
+                throw new Exception($"No start date provided in clock {Apsim.FullPath(this)} and no weather file could be found.");
+            }
+            set
+            {
+                Start = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the end date for the simulation.
+        /// </summary>
+        /// <remarks>
+        /// If the user did not
+        /// not provide a end date, attempt to locate a weather file
+        /// and use its end date. If no weather file can be found,
+        /// throw an exception.
+        /// </remarks>
+        [JsonIgnore]
+        public DateTime EndDate
+        {
+            get
+            {
+                if (End != null)
+                    return (DateTime)End;
+
+                // If no start date provided, try and find a weather component and use its start date.
+                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                if (weather != null)
+                    return weather.EndDate;
+
+                throw new Exception($"No end date provided in {Apsim.FullPath(this)}: and no weather file could be found.");
+            }
+            set
+            {
+                End = value;
+            }
+        }
 
         // Public events that we're going to publish.
         /// <summary>Occurs when [start of simulation].</summary>
@@ -188,57 +251,13 @@
             }
         }
 
-        /// <summary>
-        /// Gets the start date for the simulation.
-        /// </summary>
-        /// <remarks>
-        /// If the user did not
-        /// not provide a start date, attempt to locate a weather file
-        /// and use its start date. If no weather file can be found,
-        /// throw an exception.
-        /// </remarks>
-        private DateTime GetStartDate()
-        {
-            if (StartDate != DateTime.MinValue)
-                return StartDate;
-
-            // If no start date provided, try and find a weather component and use its start date.
-            IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
-            if (weather != null)
-                return weather.StartDate;
-
-            throw new Exception($"Invalid simulation start date specified in {Apsim.FullPath(this)}: {StartDate}.");
-        }
-
-        /// <summary>
-        /// Gets the end date for the simulation.
-        /// </summary>
-        /// <remarks>
-        /// If the user did not
-        /// not provide a end date, attempt to locate a weather file
-        /// and use its end date. If no weather file can be found,
-        /// throw an exception.
-        /// </remarks>
-        private DateTime GetEndDate()
-        {
-            if (EndDate != DateTime.MinValue)
-                return EndDate;
-
-            // If no start date provided, try and find a weather component and use its start date.
-            IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
-            if (weather != null)
-                return weather.EndDate;
-
-            throw new Exception($"Invalid simulation end date specified in {Apsim.FullPath(this)}: {EndDate}.");
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Today = GetStartDate();
+            Today = StartDate;
         }
 
         /// <summary>An event handler to signal start of a simulation.</summary>
@@ -262,8 +281,7 @@
             if (CLEMValidate != null)
                 CLEMValidate.Invoke(this, args);
 
-            DateTime endDate = GetEndDate();
-            while (Today <= endDate && !e.CancelToken.IsCancellationRequested)
+            while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
             {
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);

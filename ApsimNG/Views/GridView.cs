@@ -220,6 +220,11 @@
         public event EventHandler<GridCellsChangedArgs> CellsChanged;
 
         /// <summary>
+        /// This event is invoked when the value of a cell changes.
+        /// </summary>
+        public event EventHandler<GridCellChangedArgs> CellChanged;
+
+        /// <summary>
         /// Invoked when a grid cell header is clicked.
         /// </summary>
         public event EventHandler<GridColumnClickedArgs> GridColumnClicked;
@@ -227,7 +232,7 @@
         /// <summary>
         /// Occurs when user clicks a button on the cell.
         /// </summary>
-        public event EventHandler<GridCellsChangedArgs> ButtonClick;
+        public event EventHandler<GridCellChangedArgs> ButtonClick;
 
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.').
@@ -1899,13 +1904,20 @@
                 object value = DataSource.Rows[where.RowIndex][where.ColumnIndex];
                 if (value != null && value != DBNull.Value)
                 {
-                    DataSource.Rows[where.RowIndex][where.ColumnIndex] = !(bool)DataSource.Rows[where.RowIndex][where.ColumnIndex];
+                    bool oldValue = (bool)value;
+                    bool newValue = !oldValue; ;
+                    DataSource.Rows[where.RowIndex][where.ColumnIndex] = newValue;
                     if (CellsChanged != null)
                     {
                         GridCellsChangedArgs args = new GridCellsChangedArgs();
                         args.ChangedCells = new List<IGridCell>();
                         args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
                         CellsChanged(this, args);
+                    }
+                    if (CellChanged != null)
+                    {
+                        GridCellChangedArgs args = new GridCellChangedArgs(rowNo, colNo, oldValue.ToString(), newValue.ToString());
+                        CellChanged(this, args);
                     }
                 }
             }
@@ -1993,6 +2005,11 @@
                         args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
                         CellsChanged(this, args);
                     }
+                    if (CellChanged != null)
+                    {
+                        GridCellChangedArgs args = new GridCellChangedArgs(where.RowIndex, where.ColumnIndex, oldtext, newText);
+                        CellChanged(this, args);
+                    }
                 }
             }
         }
@@ -2015,6 +2032,13 @@
 
                 // Make sure our table has enough rows.
                 string newtext = e.NewText;
+
+                if (CellChanged != null)
+                {
+                    GridCellChangedArgs args = new GridCellChangedArgs(where.RowIndex, where.ColumnIndex, valueBeforeEdit.ToString(), newtext);
+                    CellChanged(this, args);
+                }
+
                 object newValue = oldValue;
                 bool isInvalid = false;
                 if (newtext == null)
@@ -2285,9 +2309,10 @@
                 IGridCell cell = GetCurrentCell;
                 if (cell != null && cell.EditorType == EditorTypeEnum.Button)
                 {
-                    GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
-                    cellClicked.ChangedCells = new List<IGridCell>();
-                    cellClicked.ChangedCells.Add(cell);
+                    //GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
+                    //cellClicked.ChangedCells = new List<IGridCell>();
+                    //cellClicked.ChangedCells.Add(cell);
+                    GridCellChangedArgs toggleArgs = new GridCellChangedArgs(cell.RowIndex, cell.ColumnIndex,)
                     ButtonClick(this, cellClicked);
                 }
             }
