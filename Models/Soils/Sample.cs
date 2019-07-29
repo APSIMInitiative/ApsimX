@@ -157,34 +157,44 @@ namespace Models.Soils
         /// <summary>
         /// Gets or sets organic carbon. Units will be as specified by OCUnits
         /// </summary>
+        [Summary]
         [Description("OC")]
+        [Display(Format = "N2", ShowTotal = true)]
         public double[] OC { get; set; }
 
         /// <summary>
         /// Gets or sets electrical conductivity (1:5 dS/m)
         /// </summary>
+        [Summary]
         [Description("EC")]
         [Units("1:5 dS/m")]
+        [Display(Format = "N3", ShowTotal = true)]
         public double[] EC { get; set; }
 
         /// <summary>
         /// Gets or sets chloride (mg/kg)
         /// </summary>
+        [Summary]
         [Description("CL")]
         [Units("mg/kg")]
+        [Display(Format = "N3", ShowTotal = true)]
         public double[] CL { get; set; }
 
         /// <summary>
         /// Gets or sets ESP (%)
         /// </summary>
+        [Summary]
         [Description("ESP")]
         [Units("%")]
+        [Display(Format = "N3", ShowTotal = true)]
         public double[] ESP { get; set; }
 
         /// <summary>
         /// Gets or sets PH. Units will be as specified by PHUnits
         /// </summary>
+        [Summary]
         [Description("PH")]
+        [Display(Format = "N1", ShowTotal = true)]
         public double[] PH { get; set; }
 
         #endregion

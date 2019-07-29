@@ -88,7 +88,7 @@
             initial.PH = MergeArrays(initial.PH, analysis.PH);
             initial.ESP = MergeArrays(initial.ESP, analysis.ESP);
             initial.EC = MergeArrays(initial.EC, analysis.EC);
-            initial.CL = MergeArrays(initial.EC, analysis.CL);
+            initial.CL = MergeArrays(initial.CL, analysis.CL);
 
             soilOrganicMatter.OC = null;
             soil.Children.Remove(analysis);
