@@ -467,6 +467,17 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
+        /// Do daily initialisation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("StartOfDay")]
+        private void DoDailyInitialisation(object sender, EventArgs e)
+        {
+            dltNGreen = 0;
+        }
+
+        /// <summary>
         /// Update globals
         /// </summary>
         /// <param name="sender"></param>
@@ -674,6 +685,7 @@ namespace Models.PMF.Organs
         /// <summary>Delta of LAI removed due to Frost Senescence.</summary>
         public double DltSenescedLaiFrost { get; set; }
 
+        private double dltNGreen;
         private double sdRatio;
         private double totalLaiEqlbLight;
         private double avgLaiEquilibLight;
@@ -1177,7 +1189,9 @@ namespace Models.PMF.Organs
                         nProvided += laiN;
 
                         // There is no guard clause here in old apsim.
-                        BAT.StructuralAllocation[leafIndex] = Math.Max(0, BAT.StructuralAllocation[leafIndex] - laiN);
+                        //BAT.StructuralAllocation[leafIndex] = Math.Max(0, BAT.StructuralAllocation[leafIndex] - laiN);
+                        //BAT.StructuralAllocation[leafIndex] -= laiN;
+                        dltNGreen -= laiN;
                     }
                 }
 
@@ -1334,7 +1348,7 @@ namespace Models.PMF.Organs
         /// <param name="nitrogen">The nitrogen allocation</param>
         public virtual void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            Live.StructuralN += nitrogen.Structural;
+            Live.StructuralN += nitrogen.Structural + dltNGreen;
             Live.StorageN += nitrogen.Storage;
             Live.MetabolicN += nitrogen.Metabolic;
 
