@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.Xml.Serialization;
-using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -22,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantmanage.htm")]
     public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
@@ -210,11 +209,11 @@ namespace Models.CLEM.Activities
             // max sires
             if(MaximumSiresKept < 1 & MaximumSiresKept > 0)
             {
-                SiresKept = Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept), CultureInfo.InvariantCulture);
+                SiresKept = Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept));
             }
             else
             {
-                SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
+                SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept));
             }
 
             if(FillBreedingMalesAtStartup)
@@ -317,17 +316,6 @@ namespace Models.CLEM.Activities
                 foreach (var ind in herd.Where(a => a.Age >= ((a.Gender == Sex.Female) ? MaximumBreederAge : MaximumBullAge)))
                 {
                     ind.SaleFlag = HerdChangeReason.MaxAgeSale;
-
-                    // ensure females are not pregnant and add warning if pregnant old females found.
-                    if (ind.Gender == Sex.Female && (ind as RuminantFemale).IsPregnant)
-                    {
-                        string warning = "Some females sold at maximum age in [a=" + this.Name + "] were pregant.\nConsider changing the MaximumBreederAge in [RuminantActivityManage] or ensure [RuminantType.MaxAgeMating] is less than or equal to the MaximumBreederAge to avoid selling pregnant individuals.";
-                        if(!Warnings.Exists(warning))
-                        {
-                            Warnings.Add(warning);
-                            Summary.WriteWarning(this, warning);
-                        }
-                    }
                 }
 
                 // MALES
@@ -430,7 +418,7 @@ namespace Models.CLEM.Activities
                 // This is not required in CLEM as they have been sold in this method, and it wont be until this method is called again that the next lot are sold.
                 // Like IAT-NABSA we will account for mortality losses in the next year in our breeder purchases
                 // Account for whole individuals only.
-                int numberDyingInNextYear = Convert.ToInt32(Math.Floor(numberFemaleBreedingInHerd * mortalityRate), CultureInfo.InvariantCulture);
+                int numberDyingInNextYear = Convert.ToInt32(Math.Floor(numberFemaleBreedingInHerd * mortalityRate));
                 // adjust for future mortality
                 excessBreeders -= numberDyingInNextYear;
 
@@ -501,14 +489,14 @@ namespace Models.CLEM.Activities
                             // IAT-NABSA had buy mortality base% more to account for deaths before these individuals grow to breeding age
                             // These individuals are already of breeding age so we will ignore this in CLEM
                             // minimum of (max kept x prop in single purchase) and (the number needed + annual mortality)
-                            int numberToBuy = Math.Min(excessBreeders,Convert.ToInt32(Math.Ceiling(MaximumProportionBreedersPerPurchase*MaximumBreedersKept), CultureInfo.InvariantCulture));
-                            int numberPerPurchaseCohort = Convert.ToInt32(Math.Ceiling(numberToBuy / Convert.ToDouble(NumberOfBreederPurchaseAgeClasses, CultureInfo.InvariantCulture)), CultureInfo.InvariantCulture);
+                            int numberToBuy = Math.Min(excessBreeders,Convert.ToInt32(Math.Ceiling(MaximumProportionBreedersPerPurchase*MaximumBreedersKept)));
+                            int numberPerPurchaseCohort = Convert.ToInt32(Math.Ceiling(numberToBuy / Convert.ToDouble(NumberOfBreederPurchaseAgeClasses)));
 
                             int numberBought = 0;
                             while(numberBought < numberToBuy)
                             {
-                                int breederClass = Convert.ToInt32(numberBought / numberPerPurchaseCohort, CultureInfo.InvariantCulture);
-                                ageOfBreeder = Convert.ToInt32(minBreedAge + (breederClass * 12), CultureInfo.InvariantCulture);
+                                int breederClass = Convert.ToInt32(numberBought / numberPerPurchaseCohort);
+                                ageOfBreeder = Convert.ToInt32(minBreedAge + (breederClass * 12));
 
                                 RuminantFemale newBreeder = new RuminantFemale(ageOfBreeder, Sex.Female, 0, breedParams)
                                 {
@@ -655,7 +643,7 @@ namespace Models.CLEM.Activities
             }
             else if (MaximumSiresKept < 1)
             {
-                html += "The number of breeding males will be determined as <span class=\"setvalue\">" + MaximumSiresKept.ToString("###%") + "</span> of the maximum female breeder herd. Currently <span class=\"setvalue\">"+(Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept), CultureInfo.InvariantCulture).ToString("#,##0")) +"</span> individuals";
+                html += "The number of breeding males will be determined as <span class=\"setvalue\">" + MaximumSiresKept.ToString("###%") + "</span> of the maximum female breeder herd. Currently <span class=\"setvalue\">"+(Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept)).ToString("#,##0")) +"</span> individuals";
             }
             else
             {

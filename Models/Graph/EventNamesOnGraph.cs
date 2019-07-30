@@ -91,7 +91,7 @@ namespace Models.Graph
                 // Try to find a definition that has the correct simulation name.
                 foreach (var definition in definitions)
                 {
-                    var simulationNameDescriptor = definition.Descriptors?.Find(desc => desc.Name == "SimulationName");
+                    var simulationNameDescriptor = definition.Descriptors.Find(desc => desc.Name == "SimulationName");
                     if (simulationNameDescriptor != null && simulationNameDescriptor.Value == SimulationName)
                         data = definition.Data;
                 }

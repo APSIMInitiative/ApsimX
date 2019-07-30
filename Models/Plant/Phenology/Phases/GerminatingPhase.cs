@@ -62,7 +62,7 @@ namespace Models.PMF.Phen
             {
                 if(phenology.SorghumFlag != null)
                 {
-                    if (phenology.DaysAfterSowing > 0)
+                    if (phenology.DaysAfterSowing > 1)
                     {
                         proceedToNextPhase = true;
                         propOfDayToUse = 1;

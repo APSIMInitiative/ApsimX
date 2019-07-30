@@ -21,7 +21,6 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity processes one resource into another resource with associated labour and costs.")]
-    [HelpUri(@"Content/Features/activities/All resources/ProcessResource.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivityProcess : CLEMActivityBase
     {
@@ -128,7 +127,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded;
+            double daysNeeded = 0;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -144,7 +144,6 @@
     </Compile>
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
-    <Compile Include="Classes\CustomMenuToolButton.cs" />
     <Compile Include="Classes\Grid\CellRendererActiveButton.cs" />
     <Compile Include="Classes\Grid\CellRendererDropDown.cs" />
     <Compile Include="Classes\Grid\ColRenderAttributes.cs" />
@@ -473,12 +472,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityShear.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceUnitsConverter.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\DecumulateFunction.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileSQLiteCrop.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\WhiteClover.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\RotBubbleChart.png" />
+    <Content Include="Resources\LargeImages\RotBubbleChart.png" />
+    <Content Include="Resources\RotBubbleChart.png" />
+    <Content Include="Resources\TreeViewImages\RotBubbleChart.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CompositeFactor.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PivotTable.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourPriceGroup.png" />
@@ -668,7 +664,6 @@
     <EmbeddedResource Include="Resources\LargeImages\Peanut.png" />
     <EmbeddedResource Include="Resources\LargeImages\Potato.png" />
     <EmbeddedResource Include="Resources\LargeImages\Rice.png" />
-    <EmbeddedResource Include="Resources\LargeImages\RotBubbleChart.png" />
     <EmbeddedResource Include="Resources\LargeImages\Slurp.png" />
     <EmbeddedResource Include="Resources\LargeImages\Sorghum.png" />
     <EmbeddedResource Include="Resources\LargeImages\Soybean.png" />
@@ -678,7 +673,6 @@
     <EmbeddedResource Include="Resources\LargeImages\Chicory.png" />
     <EmbeddedResource Include="Resources\Function.png" />
     <EmbeddedResource Include="Resources\Property.png" />
-    <EmbeddedResource Include="Resources\RotBubbleChart.png" />
     <EmbeddedResource Include="Resources\help.png" />
     <EmbeddedResource Include="Resources\DebugDoc.xsl" />
     <Content Include="ApsimLogo.ico" />
@@ -730,7 +724,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SoltaniChickpeaPhenology.png" />
     <EmbeddedResource Include="Resources\MenuImages\NoTask.png" />
-    <EmbeddedResource Include="Resources\LargeImages\FodderBeet.png" />
+    <EmbeddedResource Include="Resources\LargeImages\Fodderbeet.png" />
     <EmbeddedResource Include="Resources\MenuImages\Moon.png" />
     <EmbeddedResource Include="Resources\MenuImages\Sun.png" />
     <EmbeddedResource Include="Resources\ElementaryEffectEquation.png" />
@@ -748,12 +742,13 @@
     <EmbeddedResource Include="Resources\AgPastureRemoveBiomass.png" />
     <EmbeddedResource Include="Resources\AgPastureRootDistribution.png" />
     <EmbeddedResource Include="Resources\AgPastureTissueDynamics.png" />
-    <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
-    <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
     <None Include="Resources\Apsim1.png" />
+    <None Include="Resources\XYPairsGraph1.xml" />
+    <None Include="Resources\WaterGraph1.xml" />
+    <None Include="Resources\InitialWaterGraph1.xml" />
     <EmbeddedResource Include="Resources\success.wav" />
     <None Include="Resources\XYPairsGraph.xml" />
     <None Include="Resources\window_delete.png" />

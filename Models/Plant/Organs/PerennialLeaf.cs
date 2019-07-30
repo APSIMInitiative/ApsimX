@@ -209,9 +209,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
         public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
-        
-        /// <summary>Gets the width of the canopy (mm).</summary>
-        public double Width { get { return 0; } }
 
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]

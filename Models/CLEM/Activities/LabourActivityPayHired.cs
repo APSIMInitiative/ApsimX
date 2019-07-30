@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs payment of all hired labour in the time step.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Labour/PayHiredLabour.htm")]
+    [HelpUri(@"content/features/activities/labour/payhired.htm")]
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject
     {
         /// <summary>

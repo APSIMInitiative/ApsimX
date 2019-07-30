@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Globalization;
     using System.IO;
     using System.Reflection;
     using APSIM.Shared.Utilities;
@@ -145,7 +144,7 @@
                 newRow[1] = relativeModelPath;
                 newRow[2] = clock.Today;
                 newRow[3] = message;
-                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Warning, CultureInfo.InvariantCulture);
+                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Warning);
                 messages.Rows.Add(newRow);
             }
         }
@@ -169,7 +168,7 @@
                 newRow[1] = relativeModelPath;
                 newRow[2] = clock.Today;
                 newRow[3] = message;
-                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Error, CultureInfo.InvariantCulture);
+                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Error);
                 messages.Rows.Add(newRow);
             }
         }
@@ -795,7 +794,7 @@
                         propertyName += " (" + units + ")";
                     }
 
-                    bool showTotal = Convert.ToInt32(row["Total"], CultureInfo.InvariantCulture) == 1;
+                    bool showTotal = Convert.ToInt32(row["Total"]) == 1;
                     AddArrayToTable(propertyName, row["DataType"].ToString(), displayFormat, showTotal, row["Value"], generalDataTable);
                 }
                 else

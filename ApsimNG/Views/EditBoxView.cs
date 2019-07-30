@@ -1,5 +1,4 @@
 ﻿using System;
-using Gdk;
 using Gtk;
 using UserInterface.EventArguments;
 
@@ -149,11 +148,16 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
-            bool controlSpace = (args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask && args.Event.Key == Gdk.Key.space;
-            bool controlShiftSpace = controlSpace && (args.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
-            bool isPeriod = args.Event.Key == Gdk.Key.period;
-            if (isPeriod || controlSpace || controlShiftSpace)
+            if ((args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask && args.Event.Key == Gdk.Key.space)
             {
+                /*
+                Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
+                p.Y += (int)textEditor.LineHeight;
+                // Need to convert to screen coordinates....
+                int x, y, frameX, frameY;
+                MasterView.MainWindow.GetOrigin(out frameX, out frameY);
+                textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
+                */
                 if (IntellisenseItemsNeeded != null)
                 {
                     int x, y;
@@ -163,10 +167,8 @@ namespace UserInterface.Views
                     {
                         Coordinates = coordinates,
                         Code = textentry1.Text,
-                        ControlSpace = controlSpace,
-                        ControlShiftSpace = controlShiftSpace,
-                        Offset = Offset,
-                        ColNo = this.textentry1.CursorPosition
+                        ControlShiftSpace = true,
+                        Offset = Offset
                     };
                     lastText = textentry1.Text;
                     IntellisenseItemsNeeded.Invoke(this, e);
@@ -200,8 +202,8 @@ namespace UserInterface.Views
                 return;
             if (string.IsNullOrEmpty(triggerWord))
             {
-                textentry1.Text += text;
-                textentry1.Position = textentry1.Text.Length;
+                textentry1.Text = text;
+                textentry1.Position = text.Length;
             }
             else if (!textentry1.Text.Contains(triggerWord))
                 textentry1.Text += text;
@@ -214,7 +216,7 @@ namespace UserInterface.Views
                 {
                     string textBeforeWord = textBeforeCursor.Substring(0, index);
                     string textAfterWord = textBeforeCursor.Substring(index + triggerWord.Length);
-                    textentry1.Text = textBeforeWord + triggerWord + text + textAfterWord + textAfterCursor;
+                    textentry1.Text = textBeforeWord + text + textAfterWord + textAfterCursor;
                     textentry1.Position = textBeforeWord.Length + text.Length;
                 }
                 else

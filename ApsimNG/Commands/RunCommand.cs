@@ -7,7 +7,6 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Linq;
     using System.Media;
     using System.Timers;
@@ -192,7 +191,7 @@
                          numSimulationsRun + " of " +
                          (numSimulations) + " completed)", Simulation.MessageType.Information);
 
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete, CultureInfo.InvariantCulture));
+                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(percentComplete));
             }
         }
     }

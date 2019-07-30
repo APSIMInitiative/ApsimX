@@ -5,7 +5,6 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -38,7 +37,7 @@
                 bool changed = XmlConverters.DoConvert(ref st, Math.Min(toVersion, XmlConverters.LastVersion), fileName);
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(st);
-                int fileVersion = Convert.ToInt32(XmlUtilities.Attribute(doc.DocumentElement, "Version"), CultureInfo.InvariantCulture);
+                int fileVersion = Convert.ToInt32(XmlUtilities.Attribute(doc.DocumentElement, "Version"));
                 if (fileVersion == toVersion)
                     return new ConverterReturnType()
                     { DidConvert = changed, RootXml = doc };
@@ -235,9 +234,9 @@
             {
                 double rootWt;
                 if (SOM["RootWt"] is JArray)
-                    rootWt = Convert.ToDouble(SOM["RootWt"][0], CultureInfo.InvariantCulture); // This can happen when importing old APSIM file.
+                    rootWt = Convert.ToDouble(SOM["RootWt"][0]); // This can happen when importing old APSIM file.
                 else
-                    rootWt = Convert.ToDouble(SOM["RootWt"], CultureInfo.InvariantCulture);
+                    rootWt = Convert.ToDouble(SOM["RootWt"]);
                 SOM.Remove("RootWt");
                 double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
 
@@ -454,9 +453,9 @@
             {
                 double soilcnr;
                 if (SOM["SoilCN"] is JArray)
-                    soilcnr = Convert.ToDouble(SOM["SoilCN"][0], CultureInfo.InvariantCulture); // This can happen when importing old APSIM file.
+                    soilcnr = Convert.ToDouble(SOM["SoilCN"][0]); // This can happen when importing old APSIM file.
                 else
-                    soilcnr = Convert.ToDouble(SOM["SoilCN"], CultureInfo.InvariantCulture);
+                    soilcnr = Convert.ToDouble(SOM["SoilCN"]);
                 SOM.Remove("SoilCN");
                 double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
 

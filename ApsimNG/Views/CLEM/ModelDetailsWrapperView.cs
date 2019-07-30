@@ -13,7 +13,6 @@ namespace UserInterface.Views
     using System.IO;
     using System.Net.NetworkInformation;
     using System.Net;
-    using System.Globalization;
 
     /// <summary>
     /// This provides a wrapper view to display model type, description and help link
@@ -43,7 +42,7 @@ namespace UserInterface.Views
             };
             Pango.FontDescription font = new Pango.FontDescription
             {
-                Size = Convert.ToInt32(16 * Pango.Scale.PangoScale, CultureInfo.InvariantCulture),
+                Size = Convert.ToInt32(16 * Pango.Scale.PangoScale),
                 Weight = Pango.Weight.Semibold
             };
             modelTypeLabel.ModifyFont(font);
@@ -79,7 +78,7 @@ namespace UserInterface.Views
             };
             font = new Pango.FontDescription
             {
-                Size = Convert.ToInt32(8 * Pango.Scale.PangoScale, CultureInfo.InvariantCulture),
+                Size = Convert.ToInt32(8 * Pango.Scale.PangoScale),
                 Weight = Pango.Weight.Normal,
             };
             modelVersionLabel.ModifyFont(font);
@@ -144,7 +143,7 @@ namespace UserInterface.Views
                     {
                         // set to web address
                         // not currently available during development until web help is launched
-                        helpURL = "http://www.apsim.info/CLEM/" + ModelHelpURL.TrimStart('/');
+                        // helpURL = "http://www.apsim.info/CLEM/Help/" + ModelHelpURL.TrimStart('/');
                     }
                     if (helpURL == "")
                     {

@@ -5044,7 +5044,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].AboveGround.N</string>
         <string>[Wheat].Grain.Protein</string>
         <string>[Wheat].Grain.Size</string>
-        <string>[Wheat].Structure.HaunStage.Value()</string>
+        <string>[Wheat].Structure.HaunStage.Value()TerminalSpikelet.Value()</string>
         <string>[Wheat].Structure.FinalLeafNumber.Value()</string>
         <string>[Wheat].Structure.MainStemPopn</string>
         <string>[Wheat].SowingData.Cultivar</string>
@@ -5138,7 +5138,7 @@ The Ear composite biomass object includes the Live and dead pools of all organs 
         <string>[Wheat].StemPlusSpike.Wt</string>
         <string>[Wheat].StemPlusSpike.N</string>
         <string>[Wheat].SowingData.Cultivar</string>
-        <string>[Wheat].Structure.HaunStage.Value()</string>
+        <string>[Wheat].Structure.HaunStage.Value()TerminalSpikelet.Value()</string>
         <string>[Wheat].Structure.HaunStage.Value()</string>
         <string>[Wheat].Structure.Height</string>
         <string>[Wheat].Structure.LeafTipsAppeared</string>

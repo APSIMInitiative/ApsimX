@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [Description("This activity is used within a crop management activity to obtain production values from the crop file.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
-    [HelpUri(@"Content/Features/Activities/Crop/ManageCropProduct.htm")]
+    [HelpUri(@"content/features/activities/crop/managecropproduct.htm")]
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
     {
         [Link]
@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Model for the crop input file
         /// </summary>
-        private IFileCrop fileCrop;
+        private FileCrop fileCrop;
 
         /// <summary>
         /// Parent of this Model that gets the land for growing this crop.
@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = Apsim.ChildrenRecursively(Simulation).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
+            fileCrop = Apsim.ChildrenRecursively(Simulation).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as FileCrop;
             if (fileCrop == null)
             {
                 throw new ApsimXException(this, String.Format("Unable to locate model for crop input file [x={0}] referred to in [a={1}]", this.ModelNameFileCrop, this.Name));
@@ -335,9 +335,8 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-
-            double daysNeeded;
-            double numberUnits;
+            double daysNeeded = 0;
+            double numberUnits = 0;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:

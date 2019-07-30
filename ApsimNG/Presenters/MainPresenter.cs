@@ -532,35 +532,24 @@
                                 "View Cloud Jobs",
                                         new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
                                         this.OnViewCloudJobs);
-
+            if (!ProcessUtilities.CurrentOS.IsLinux)
+            {
+                startPage.AddButton(
+                                "Toggle Theme",
+                                new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
+                                OnToggleTheme);
+            }
+            startPage.AddButton(
+                                "Help",
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
+                                        this.OnHelp);
 #if DEBUG
             startPage.AddButton(
                                 "Convert XML File",
                                 new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                 this.OnShowConverter);
 #endif
-
-            // Settings menu
-            startPage.AddButtonWithMenu(
-                                        "Settings",
-                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"));
-
-            startPage.AddButtonToMenu(
-                                      "Settings",
-                                      "Change Font",
-                                      new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
-                                      this.OnChooseFont);
-
-            startPage.AddButtonToMenu(
-                                      "Settings",
-                                      "Toggle Theme",
-                                      new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
-                                      OnToggleTheme);
-
-            startPage.AddButton(
-                            "Help",
-                            new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
-                            this.OnHelp);
+            
             // Populate the view's listview.
             startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
 
@@ -1091,23 +1080,6 @@
         }
 
         /// <summary>
-        /// Invoked when the user clicks the 'choose font' button.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnChooseFont(object sender, EventArgs args)
-        {
-            try
-            {
-                view.ShowFontChooser();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Shows the file converter view.
         /// </summary>
         /// <param name="sender"></param>
@@ -1202,6 +1174,7 @@
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
                 Utility.Configuration.Settings.StatusPanelHeight = this.view.StatusPanelHeight;
+                Utility.Configuration.Settings.BaseFontSize = this.view.FontSize;
             }
         }
 

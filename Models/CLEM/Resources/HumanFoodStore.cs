@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all human food store types for the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStore.htm")]
+    [HelpUri(@"content/features/resources/human food store/humanfoodstore.htm")]
     public class HumanFoodStore: ResourceBaseWithTransactions
     {
         /// <summary>

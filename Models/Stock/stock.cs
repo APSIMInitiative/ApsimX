@@ -8,7 +8,6 @@ namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using Models.Core;
     using Models.PMF.Interfaces;
     using Models.Soils;
@@ -4424,7 +4423,7 @@ namespace Models.GrazPlan
         {
             StockBuy stock = new StockBuy();
             stock.Genotype = genotype;
-            stock.Number = Convert.ToInt32(number, CultureInfo.InvariantCulture);
+            stock.Number = Convert.ToInt32(number);
             stock.Sex = sex;
             stock.Age = age;
             stock.Weight = weight;
@@ -4459,7 +4458,7 @@ namespace Models.GrazPlan
         {
             StockSell selling = new StockSell();
             selling.Group = group;
-            selling.Number = Convert.ToInt32(number, CultureInfo.InvariantCulture);
+            selling.Number = Convert.ToInt32(number);
             OutputSummary.WriteMessage(this, "Selling " + number.ToString() + " animals");
             this.stockModel.DoStockManagement(this.stockModel, selling, this.localWeather.TheDay, this.localWeather.Latitude);
         }

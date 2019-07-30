@@ -285,11 +285,25 @@ namespace Models.PMF.Organs
 
         /// <summary>Stress.</summary>
         [Description("Nitrogen Photosynthesis Stress")]
-        public double NitrogenPhotoStress { get; set; }
+        public double NitrogenPhotoStress
+        {
+            get
+            {
+                var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
+                return Math.Max(photoStress, 0.0);
+            }
+        }
 
         /// <summary>Stress.</summary>
         [Description("Nitrogen Phenology Stress")]
-        public double NitrogenPhenoStress { get; set; }
+        public double NitrogenPhenoStress
+        {
+            get
+            {
+                var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
+                return MathUtilities.Bound(phenoStress, 0.0, 1.0);
+            }
+        }
 
         /// <summary>Stress.</summary>
         [Description("Phosphorus Stress")]
@@ -338,14 +352,6 @@ namespace Models.PMF.Organs
                     //first culm is the main culm
                     AddCulm(new CulmParameters() { Density = SowingDensity });
                 }
-
-                Live.StructuralWt = initialWtFunction.Value() * SowingDensity;
-                Live.StorageWt = 0.0;
-                LAI = initialLAIFunction.Value() * smm2sm * SowingDensity;
-                SLN = initialSLNFunction.Value();
-
-                Live.StructuralN = LAI * SLN;
-                Live.StorageN = 0;
             }
         }
 
@@ -409,8 +415,6 @@ namespace Models.PMF.Organs
             // save current state
             if (parentPlant.IsEmerged)
                 StartLive = Live;
-            dltPotentialLAI = 0;
-            dltStressedLAI = 0;
             if (LeafInitialised)
             {
                 dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
@@ -463,11 +467,6 @@ namespace Models.PMF.Organs
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
 
-            var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
-            NitrogenPhotoStress = Math.Max(photoStress, 0.0);
-
-            var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
-            NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);
         }
 
         /// <summary>sen_radn_crit.</summary>
@@ -957,15 +956,13 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Adjustment function for calculating leaf demand.
-        /// This should always be equal to -1 * structural N Demand.
+        /// Adjustment function for calculating leaf demand
         /// </summary>
         public double calculateClassicDemandDelta()
         {
             if (MathUtilities.IsNegative(Live.N))
                 throw new Exception($"Negative N in sorghum leaf '{Name}'");
             //n demand as calculated in apsim classic is different ot implementation of structural and metabolic
-            // Same as metabolic demand in new apsim.
             var classicLeafDemand = Math.Max(0.0, calcLAI() * TargetSLN.Value() - Live.N);
             //need to remove pmf nDemand calcs from totalDemand to then add in what it should be from classic
             var pmfLeafDemand = nDemands.Structural.Value() + nDemands.Metabolic.Value();
@@ -1002,7 +999,7 @@ namespace Models.PMF.Organs
                     return nProvided;
 
                 // take from decreasing dltLai 
-                if (!forLeaf && MathUtilities.IsPositive(DltLAI))
+                if (MathUtilities.IsPositive(DltLAI))
                 {
                     double n = DltLAI * NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
@@ -1278,11 +1275,13 @@ namespace Models.PMF.Organs
             {
                 Clear();
                 SowingDensity = data.Population;
-                Live.StructuralWt = 0;
-                Live.StorageWt = 0;
-                LAI = 0;
-                SLN = 0;
-                Live.StructuralN = 0;
+
+                Live.StructuralWt = initialWtFunction.Value() * SowingDensity;
+                Live.StorageWt = 0.0;
+                LAI = initialLAIFunction.Value() * smm2sm * SowingDensity;
+                SLN = initialSLNFunction.Value();
+
+                Live.StructuralN = LAI * SLN;
                 Live.StorageN = 0;
             }
         }

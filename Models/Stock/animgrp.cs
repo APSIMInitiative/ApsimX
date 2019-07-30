@@ -3,7 +3,6 @@ namespace Models.GrazPlan
     using StdUnits;
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
 
     /// <summary>
     /// Record containing the different sources from which an animal acquires energy, protein etc                                
@@ -414,13 +413,13 @@ namespace Models.GrazPlan
                 for (Idx = 0; Idx <= Count - 1; Idx++)
                 {
                     if ((NM == 0) || (CurrM > 0))
-                        FData[Idx].iNoMales = Convert.ToInt32(Math.Truncate(NM * StdMath.XDiv(FData[Idx].iNoMales, CurrM)), CultureInfo.InvariantCulture);
+                        FData[Idx].iNoMales = Convert.ToInt32(Math.Truncate(NM * StdMath.XDiv(FData[Idx].iNoMales, CurrM)));
                     else
-                        FData[Idx].iNoMales = Convert.ToInt32(Math.Truncate(NM * StdMath.XDiv(FData[Idx].iNoFemales, CurrF)), CultureInfo.InvariantCulture);
+                        FData[Idx].iNoMales = Convert.ToInt32(Math.Truncate(NM * StdMath.XDiv(FData[Idx].iNoFemales, CurrF)));
                     if ((NF == 0) || (CurrF > 0))
-                        FData[Idx].iNoFemales = Convert.ToInt32(Math.Truncate(NF * StdMath.XDiv(FData[Idx].iNoFemales, CurrF)), CultureInfo.InvariantCulture);
+                        FData[Idx].iNoFemales = Convert.ToInt32(Math.Truncate(NF * StdMath.XDiv(FData[Idx].iNoFemales, CurrF)));
                     else
-                        FData[Idx].iNoFemales = Convert.ToInt32(Math.Truncate(NF * StdMath.XDiv(FData[Idx].iNoMales, CurrM)), CultureInfo.InvariantCulture);
+                        FData[Idx].iNoFemales = Convert.ToInt32(Math.Truncate(NF * StdMath.XDiv(FData[Idx].iNoMales, CurrM)));
                     MLeft -= FData[Idx].iNoMales;
                     FLeft -= FData[Idx].iNoFemales;
                 }
@@ -520,8 +519,8 @@ namespace Models.GrazPlan
 
                 for (idx = 0; idx <= Count - 1; idx++)
                 {
-                    TransferNo[0, idx] = Convert.ToInt32(Math.Round(TransferPropn[0] * FData[idx].iNoMales), CultureInfo.InvariantCulture);
-                    TransferNo[1, idx] = Convert.ToInt32(Math.Round(TransferPropn[1] * FData[idx].iNoFemales), CultureInfo.InvariantCulture);
+                    TransferNo[0, idx] = Convert.ToInt32(Math.Round(TransferPropn[0] * FData[idx].iNoMales));
+                    TransferNo[1, idx] = Convert.ToInt32(Math.Round(TransferPropn[1] * FData[idx].iNoFemales));
                     for (Jdx = 0; Jdx <= 1; Jdx++)
                         TransfersDone[Jdx] += TransferNo[Jdx, idx];
                 }
@@ -531,7 +530,7 @@ namespace Models.GrazPlan
                     while (TransfersDone[Jdx] < TransfersReqd[Jdx])                     // Too few transfers                        
                     {
                         iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(RandFactory.RandomValue() * (TotalNo[Jdx] - TransfersDone[Jdx])),
-                                        (TotalNo[Jdx] - TransfersDone[Jdx]) - 1), CultureInfo.InvariantCulture);
+                                        (TotalNo[Jdx] - TransfersDone[Jdx]) - 1));
                         idx = -1;
                         iLast = 0;
                         do
@@ -552,7 +551,7 @@ namespace Models.GrazPlan
                     while (TransfersDone[Jdx] > TransfersReqd[Jdx])           // Too many transfers                       
                     {
                         iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(RandFactory.RandomValue() * TransfersDone[Jdx]),
-                                        TransfersDone[Jdx] - 1), CultureInfo.InvariantCulture);
+                                        TransfersDone[Jdx] - 1));
                         idx = -1;
                         iLast = 0;
                         do
@@ -621,7 +620,7 @@ namespace Models.GrazPlan
                     N = N + dN;
                 }
                 if (N > 0.0)
-                    Result = Convert.ToInt32(Math.Round(AxN / N), CultureInfo.InvariantCulture);
+                    Result = Convert.ToInt32(Math.Round(AxN / N));
                 else
                     Result = 0;
             }
@@ -1712,7 +1711,7 @@ namespace Models.GrazPlan
                 iFemaleYoung = aGroup.Young.NoFemales;
                 iYoungToLose = N * aGroup.NoFemales;
 
-                iMalesToLose = Convert.ToInt32(Math.Round(iYoungToLose * StdMath.XDiv(iMaleYoung, iMaleYoung + iFemaleYoung)), CultureInfo.InvariantCulture);
+                iMalesToLose = Convert.ToInt32(Math.Round(iYoungToLose * StdMath.XDiv(iMaleYoung, iMaleYoung + iFemaleYoung)));
                 iMalesToLose = Math.Min(iMalesToLose, iMaleYoung);
 
                 iFemalesToLose = iYoungToLose - iMalesToLose;
@@ -2687,7 +2686,7 @@ namespace Models.GrazPlan
 
             if (Mothers != null)
             {
-                SplitM = Convert.ToInt32(Math.Round(StdMath.XDiv(Number * 1.0 * NoMales, NoAnimals)), CultureInfo.InvariantCulture);
+                SplitM = Convert.ToInt32(Math.Round(StdMath.XDiv(Number * 1.0 * NoMales, NoAnimals)));
                 SplitF = Number - SplitM;
             }
             else if ((ReproStatus == GrazType.ReproType.Male) || (ReproStatus == GrazType.ReproType.Castrated))
@@ -2776,7 +2775,7 @@ namespace Models.GrazPlan
                 }
                 else if (NoOffspring == 2)
                 {
-                    NoToSplit = Convert.ToInt32(Math.Min(Young.MaleNo, Young.FemaleNo), CultureInfo.InvariantCulture) / 2;    // One male, one female                     
+                    NoToSplit = Convert.ToInt32(Math.Min(Young.MaleNo, Young.FemaleNo)) / 2;    // One male, one female                     
                     if (((Young.FemaleNo - NoToSplit) % 2) != 0)  //if odd                      // Ensures Young.FemaleNo (and hence        
                         NoToSplit++;                                                            //   Young.MaleNo) is even after the call   
                     SplitNumbers(ref NewGroups, NoToSplit, NoToSplit, NoToSplit);               //   to SplitBySex                          
@@ -4498,7 +4497,7 @@ namespace Models.GrazPlan
                 iKeptLambs = YoungGroup.NoAnimals;
                 for (NY = 3; NY >= 2; NY--)
                 {
-                    iLambsByParity[NY] = Convert.ToInt32(Math.Truncate((PropnRemainingLambsAs[this.NoOffspring, NY] * iKeptLambs) + 0.5), CultureInfo.InvariantCulture);
+                    iLambsByParity[NY] = Convert.ToInt32(Math.Truncate((PropnRemainingLambsAs[this.NoOffspring, NY] * iKeptLambs) + 0.5));
                     iEwesByParity[NY] = (iLambsByParity[NY] / NY);
                     iLambsByParity[NY] = NY * iEwesByParity[NY];
                 }
@@ -4850,7 +4849,7 @@ namespace Models.GrazPlan
                 else if (iAge < Math.Round(AParams.MortAge[1]))
                 {
                     fDayDeath = AParams.MortRate[2];
-                    iDayCount = Convert.ToInt32(Math.Min(iOverDays, Math.Round(AParams.MortAge[1]) - iAge), CultureInfo.InvariantCulture);
+                    iDayCount = Convert.ToInt32(Math.Min(iOverDays, Math.Round(AParams.MortAge[1]) - iAge));
                 }
                 else
                 {

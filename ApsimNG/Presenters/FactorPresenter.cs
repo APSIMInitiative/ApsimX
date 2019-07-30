@@ -71,7 +71,7 @@
         /// <param name="e">Event arguments</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            if (string.IsNullOrEmpty(e.ObjectName))
+            if (e.ObjectName == string.Empty)
             {
                 e.ObjectName = ".";
             }

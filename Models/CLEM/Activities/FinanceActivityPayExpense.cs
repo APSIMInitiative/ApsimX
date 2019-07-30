@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs payment of a specified expense.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Finances/PayExpenses.htm")]
+    [HelpUri(@"content/features/activities/finances/payexpenses.htm")]
     public class FinanceActivityPayExpense : CLEMActivityBase
     {
         /// <summary>
@@ -76,19 +76,18 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>
+            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
+            resourcesNeeded.Add(new ResourceRequest()
             {
-                new ResourceRequest()
-                {
-                    Resource = bankAccount,
-                    ResourceType = typeof(Finance),
-                    AllowTransmutation = false,
-                    Required = this.Amount,
-                    ResourceTypeName = this.AccountName,
-                    ActivityModel = this,
-                    Reason = ((IsOverhead) ? "Overhead" : "Expense")
-                }
-            };
+                Resource = bankAccount,
+                ResourceType = typeof(Finance),
+                AllowTransmutation = false,
+                Required = this.Amount,
+                ResourceTypeName = this.AccountName,
+                ActivityModel = this,
+                Reason = ((IsOverhead) ? "Overhead" : "Expense")
+            }
+            );
             return resourcesNeeded;
         }
 

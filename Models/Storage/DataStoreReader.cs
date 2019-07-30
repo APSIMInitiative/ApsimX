@@ -5,7 +5,6 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
 
@@ -148,7 +147,7 @@
             {
                 var data = Connection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
-                    simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture));
+                    simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }
 
             // Read in checkpoint ids.
@@ -156,7 +155,7 @@
             {
                 var data = Connection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
-                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture));
+                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
             }
 
             // For each table in the database, read in field names.

@@ -11,7 +11,6 @@ namespace UserInterface.Commands
     using System.Text;
     using System.IO;
     using APSIM.Shared.Utilities;
-    using System.Globalization;
 
     /// <summary>
     /// Provides functionality for reading .bib (bibliography) files (http://www.bibtex.org/Format/)
@@ -142,7 +141,7 @@ namespace UserInterface.Commands
                     if (yearString == string.Empty)
                         return 0;
                     else
-                        return Convert.ToInt32(yearString, CultureInfo.InvariantCulture);
+                        return Convert.ToInt32(yearString);
                 }
             }
 

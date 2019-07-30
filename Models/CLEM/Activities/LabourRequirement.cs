@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(LabourActivityOffFarm))]
     [Description("Defines the amount and type of labour required for an activity. This model component must have at least one LabourFilterGroup nested below in the UI tree structure")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Labour/LabourRequirement.htm")]
+    [HelpUri(@"content/features/activities/labour/labourrequirement.htm")]
     public class LabourRequirement: CLEMModel, IValidatableObject
     {
         /// <summary>

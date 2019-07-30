@@ -135,7 +135,7 @@ namespace UserInterface.Interfaces
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
-        void DrawRegion(
+        void DrawArea(
             string title,
             IEnumerable x1,
             IEnumerable y1,
@@ -145,26 +145,6 @@ namespace UserInterface.Interfaces
             Models.Graph.Axis.AxisType yAxisType,
             Color colour,
             bool showInLegend);
-
-        /// <summary>
-        /// Draw an  area series with the specified arguments. Similar to a
-        /// line series, but the area under the curve will be filled with colour.
-        /// </summary>
-        /// <param name="title">The series title</param>
-        /// <param name="x">The x values for the series</param>
-        /// <param name="y">The y values for the series</param>
-        /// <param name="xAxisType">The axis type the x values are related to</param>
-        /// <param name="yAxisType">The axis type the y values are related to</param>
-        /// <param name="colour">The series color</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
-        void DrawArea(
-            string title,
-            IEnumerable x,
-            IEnumerable y,
-            Axis.AxisType xAxisType,
-            Axis.AxisType yAxisType,
-            Color colour,
-            bool showOnLegend);
 
         /// <summary>
         /// Draw text on the graph at the specified coordinates.

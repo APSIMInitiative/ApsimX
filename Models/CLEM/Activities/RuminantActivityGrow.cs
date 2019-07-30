@@ -25,11 +25,11 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrow.htm")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantgrow.htm")]
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]
-        private readonly Clock Clock = null;
+        private Clock Clock = null;
 
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
             // Reference: SCA p.
             double kl = ind.BreedParams.ELactationEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.ELactationEfficiencyIntercept;
             double milkTime = ind.DaysLactating;
-            double milkCurve;
+            double milkCurve = 0;
             // determine milk production curve to use
             // if milking is taking place use the non-suckling curve for duration of lactation
             // otherwise use the suckling curve where there is a larger drop off in milk production
@@ -276,7 +276,6 @@ namespace Models.CLEM.Activities
                 double totalMethane = 0;
                 foreach (Ruminant ind in herd.Where(a => a.BreedParams.Name == breed).OrderByDescending(a => a.Age))
                 {
-                    ind.MetabilicIntake = ind.Intake;
                     this.Status = ActivityStatus.Success;
                     if (ind.Weaned)
                     {
@@ -290,7 +289,6 @@ namespace Models.CLEM.Activities
                         // TODO: NABSA restricts Diet_DMD to 75% before supplements. Why?
                         // Our flow has already taken in supplements by this stage and cannot be distinguished
                         // Maybe this limit should be placed on some feed to limit DMD to 75% for non supp feeds
-                        // A Ash stated that the 75% limit is no longer required and DMD above 75% is possible even if unlikely.
 
                         // TODO: Check equation. NABSA doesn't include the 0.9
                         // Crude protein required generally 130g per kg of digestable feed.
@@ -311,29 +309,28 @@ namespace Models.CLEM.Activities
                             double ratioSupplyRequired = (crudeProteinSupply + crudeProteinRequired) / (2 * crudeProteinRequired);
                             //TODO: add min protein to parameters
                             ratioSupplyRequired = Math.Max(ratioSupplyRequired, 0.3);
-                            ind.MetabilicIntake *= ratioSupplyRequired;
+                            ind.Intake *= ratioSupplyRequired;
                         }
 
                         // old. I think IAT
                         //double ratioSupplyRequired = Math.Max(0.3, Math.Min(1.3, crudeProteinSupply / crudeProteinRequired));
 
                         // TODO: check if we still need to apply modification to only the non-supplemented component of intake
-                        // Used to be 1.2 * Potential
-                        ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-                        ind.MetabilicIntake = Math.Min(ind.MetabilicIntake, ind.Intake);
+
+                        ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake * 1.2);
                     }
                     else
                     {
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
                         ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-                        ind.MetabilicIntake = Math.Min(ind.MetabilicIntake, ind.Intake);
                     }
 
                     // TODO: nabsa adjusts potential intake for digestability of fodder here.
                     // This is now done in RuminantActivityGrazePasture
 
                     // calculate energy
-                    CalculateEnergy(ind, out double methane);
+                    double methane = 0;
+                    CalculateEnergy(ind, out methane);
 
                     // Sum and produce one event for breed at end of loop
                     totalMethane += methane;
@@ -378,7 +375,8 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         private void CalculateEnergy(Ruminant ind, out double methaneProduced)
         {
-            double intakeDaily = ind.MetabilicIntake / 30.4;
+            double intakeDaily = ind.Intake / 30.4;
+            double potentialIntakeDaily = ind.PotentialIntake / 30.4;
 
             // Sme 1 for females and castrates
             // TODO: castrates not implemented
@@ -397,8 +395,9 @@ namespace Models.CLEM.Activities
             double km = ind.BreedParams.EMaintEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EMaintEfficiencyIntercept;
             // Reference: SCA p.49
             double kg = ind.BreedParams.EGrowthEfficiencyCoefficient * energyMetabolic / EnergyGross + ind.BreedParams.EGrowthEfficiencyIntercept;
-            double energyPredictedBodyMassChange;
-            double energyMaintenance;
+
+            double energyPredictedBodyMassChange = 0;
+            double energyMaintenance = 0;
             if (!ind.Weaned)
             {
                 // calculate engergy and growth from milk intake
@@ -414,7 +413,7 @@ namespace Models.CLEM.Activities
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
                 double kgl = 1;
-                if ((ind.MetabilicIntake + ind.MilkIntake) > 0)
+                if ((ind.Intake + ind.MilkIntake) > 0)
                 {
                     // average energy efficiency for maintenance
                     kml = ((ind.MilkIntake * 0.7) + (intakeDaily * km)) / (ind.MilkIntake + intakeDaily);
@@ -427,7 +426,8 @@ namespace Models.CLEM.Activities
 
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * ind.AgeZeroCorrected);
                 ind.EnergyBalance = energyMilkConsumed - energyMaintenance + energyMetablicFromIntake;
-                double feedingValue;
+
+                double feedingValue = 0;
                 if (ind.EnergyBalance > 0)
                 {
                     feedingValue = 2 * 0.7 * ind.EnergyBalance / (kgl * energyMaintenance) - 1;
@@ -454,7 +454,7 @@ namespace Models.CLEM.Activities
                     if (femaleind.IsLactating)
                     {
                         // recalculate milk production based on DMD of food provided
-                        energyMilk = CalculateMilkProduction(femaleind);
+                        energyMilk = CalculateMilkProduction(femaleind); 
                     }
                     else
                     {
@@ -484,9 +484,9 @@ namespace Models.CLEM.Activities
                 // 0.000082 is -0.03 Age in Years/365 for days 
                 energyMaintenance = ind.BreedParams.Kme * sme * (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / km) * Math.Exp(-ind.BreedParams.EMaintExponent * maintenanceAge) + (ind.BreedParams.EMaintIntercept * energyMetablicFromIntake);
                 ind.EnergyBalance = energyMetablicFromIntake - energyMaintenance - energyMilk - energyFoetus; // milk will be zero for non lactating individuals.
-                double feedingValue;
 
                 // Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
+                double feedingValue = 0;
                 if (ind.EnergyBalance > 0)
                 {
                     feedingValue = 2 * ((kg * ind.EnergyBalance) / (km * energyMaintenance) - 1);
@@ -500,6 +500,7 @@ namespace Models.CLEM.Activities
                 // Reference:  MJ of Energy required per kg Empty body gain (SCA p.43)
                 double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 + feedingValue + (ind.BreedParams.GrowthEnergyIntercept1 - feedingValue) / (1 + Math.Exp(-6 * (weightToReferenceRatio - 0.4)));
                 // Determine Empty body change from Eebg and Ebal, and increase by 9% for LW change
+                energyPredictedBodyMassChange = 0;
                 if (ind.EnergyBalance > 0)
                 {
                     energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * kg * ind.EnergyBalance / energyEmptyBodyGain;
@@ -567,7 +568,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // weight based mortality
-            List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * a.BreedParams.ProportionOfMaxWeightToSurvive)).ToList();
+            List<Ruminant> died = herd.Where(a => a.Weight < (a.HighWeight * (1.0 - a.BreedParams.ProportionOfMaxWeightToSurvive))).ToList();
             // set died flag
             died.Select(a => { a.SaleFlag = HerdChangeReason.DiedUnderweight; return a; }).ToList();
             ruminantHerd.RemoveRuminant(died, this);
@@ -589,7 +590,7 @@ namespace Models.CLEM.Activities
                         // if mother's weight >= criticalCowWeight * SFR
                         mortalityRate = Math.Exp(-Math.Pow(ind.BreedParams.JuvenileMortalityCoefficient * (ind.Mother.Weight / ind.Mother.NormalisedAnimalWeight), ind.BreedParams.JuvenileMortalityExponent));
                     }
-                    mortalityRate += ind.BreedParams.MortalityBase;
+                    mortalityRate = mortalityRate + ind.BreedParams.MortalityBase;
                     mortalityRate = Math.Min(mortalityRate, ind.BreedParams.JuvenileMortalityMaximum);
                 }
                 else

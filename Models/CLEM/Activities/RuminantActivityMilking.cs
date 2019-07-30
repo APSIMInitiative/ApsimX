@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs milking based upon the current herd filtering.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMilking.htm")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantmilking.htm")]
     public class RuminantActivityMilking: CLEMRuminantActivityBase
     {
         private object milkStore;

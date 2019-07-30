@@ -52,10 +52,6 @@ namespace Models.CLEM
         /// </summary>
         Born,
         /// <summary>
-        /// Individual sold as marked for sale
-        /// </summary>
-        MarkedSale,
-        /// <summary>
         /// Trade individual sold weight/age
         /// </summary>
         TradeSale,

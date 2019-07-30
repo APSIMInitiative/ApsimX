@@ -11,7 +11,6 @@ namespace Models.WaterModel
     using Models.Core;
     using Soils;
     using System;
-    using System.Globalization;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -214,7 +213,7 @@ namespace Models.WaterModel
             // Allow irrigation to infiltrate.
             if (!irrigation.WillRunoff)
             {
-                int irrigationLayer = SoilUtilities.FindLayerIndex(properties, Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
+                int irrigationLayer = SoilUtilities.FindLayerIndex(properties, Convert.ToInt32(irrigation.Depth));
                 Water[irrigationLayer] = irrigation.IrrigationApplied;
                 Infiltration += irrigation.IrrigationApplied;
 

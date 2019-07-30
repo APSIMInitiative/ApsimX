@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether a resource level meets a set criteria.")]
-    [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
+    [HelpUri(@"content/features/timers/resourcelevel.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
@@ -155,7 +155,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        public virtual void OnActivityPerformed(EventArgs e)
+        protected virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }

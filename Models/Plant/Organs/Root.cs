@@ -861,7 +861,7 @@ namespace Models.PMF.Organs
 
                     double[] supply = new double[myZone.soil.Thickness.Length];
                     LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
-                    for (int layer = 0; layer <= currentLayer; layer++)
+                    for (int layer = 0; layer < currentLayer; layer++)
                     {
                         lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
                         available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
@@ -876,6 +876,8 @@ namespace Models.PMF.Organs
                         supply[layer] = Math.Max(0.0, kl[layer] * klMod * available[layer] * proportionThroughLayer);
                     }
 
+                    if (MathUtilities.Sum(supply) < 0.0)
+                        return supply;
                     return supply;
                 }
                 else
@@ -1309,53 +1311,9 @@ namespace Models.PMF.Organs
 
 
                     Biomass Loss = Live * senescedFrac;
-                    //Live.Subtract(Loss);
-                    //Dead.Add(Loss);
+                    Live.Subtract(Loss);
+                    Dead.Add(Loss);
                     Senesced.Add(Loss);
-
-                    var currentLayer = Soil.LayerIndexOfDepth(PlantZone.Depth, PlantZone.soil.Thickness);
-                    int layer = currentLayer;
-                    double dmSenesced = Live.StructuralWt * senescedFrac; //sorghum only uses structural // same as Loss.StructuralWt
-                    double senNConc = Live.N / Live.StructuralWt;
-                    double nSenesced = dmSenesced * senNConc; // = Live.N * senescedFrac
-
-                    while (layer >= 0 && (MathUtilities.IsPositive(dmSenesced) || MathUtilities.IsPositive(nSenesced)))
-                    {
-                        if (MathUtilities.IsPositive(dmSenesced))
-                        {
-                            if (PlantZone.LayerLive[layer].StructuralWt >= dmSenesced)
-                            {
-                                PlantZone.LayerLive[layer].StructuralWt -= dmSenesced;
-                                PlantZone.LayerDead[layer].StructuralWt += dmSenesced;
-                                dmSenesced = 0.0;
-                            }
-                            else
-                            {
-                                dmSenesced -= PlantZone.LayerLive[layer].StructuralWt;
-                                PlantZone.LayerDead[layer].StructuralWt += PlantZone.LayerLive[layer].StructuralWt;
-                                PlantZone.LayerLive[layer].StructuralWt = 0.0;
-                            }
-                        }
-                        if(MathUtilities.IsPositive(nSenesced))
-                        { 
-                            if (PlantZone.LayerLive[layer].N >= nSenesced)
-                            {
-                                PlantZone.LayerLive[layer].StructuralN -= nSenesced;
-                                PlantZone.LayerDead[layer].StructuralN += nSenesced;
-                                nSenesced = 0.0;
-                            }
-                            else
-                            {
-                                nSenesced -= PlantZone.LayerLive[layer].StructuralN;
-                                PlantZone.LayerDead[layer].StructuralN += PlantZone.LayerLive[layer].StructuralN;
-                                PlantZone.LayerLive[layer].StructuralN = 0.0;
-                            }
-                        }
-                        --layer;
-                    }
-                    if (MathUtilities.IsPositive(dmSenesced) || MathUtilities.IsPositive(nSenesced))
-                        throw new Exception("Error in Root senescence calc");
-                    needToRecalculateLiveDead = true;
                 }
                 else
                 {

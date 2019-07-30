@@ -8,7 +8,6 @@ using System.Runtime.Serialization;
 using Models.Core;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
-using System.Globalization;
 
 namespace Models.CLEM.Resources
 {
@@ -22,7 +21,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
+    [HelpUri(@"content/features/resources/ruminant/ruminantherd.htm")]
     public class RuminantHerd: ResourceBaseWithTransactions
     {
         /// <summary>
@@ -194,7 +193,7 @@ namespace Models.CLEM.Resources
                         // calculate number of births assuming conception at min age first mating
                         // therefore first birth min age + gestation length
 
-                        female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
+                        female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2)) - 1;
                         female.AgeAtLastBirth = ageFirstBirth + (currentIPI* female.NumberOfBirths);
                         female.AgeAtLastConception = female.AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
                         female.SuccessfulPregnancy = true;
@@ -241,14 +240,13 @@ namespace Models.CLEM.Resources
             Herd.Add(ind);
             LastIndividualChanged = ind;
 
-            ResourceTransaction details = new ResourceTransaction
-            {
-                Gain = 1,
-                Activity = model as CLEMModel,
-                Reason = ind.SaleFlag.ToString(),
-                ResourceType = ind.BreedParams,
-                ExtraInformation = ind
-            };
+            ResourceTransaction details = new ResourceTransaction();
+            details.Gain = 1;
+            details.Activity = model.Name; 
+            details.ActivityType = model.GetType().Name; 
+            details.Reason = ind.SaleFlag.ToString(); 
+            details.ResourceType = this.Name;
+            details.ExtraInformation = ind;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -285,14 +283,13 @@ namespace Models.CLEM.Resources
             LastIndividualChanged = ind;
 
             // report transaction of herd change
-            ResourceTransaction details = new ResourceTransaction
-            {
-                Loss = 1,
-                Activity = model as CLEMModel,
-                Reason = ind.SaleFlag.ToString(),
-                ResourceType = ind.BreedParams,
-                ExtraInformation = ind
-            };
+            ResourceTransaction details = new ResourceTransaction();
+            details.Loss = 1;
+            details.Activity = model.Name;
+            details.ActivityType = model.GetType().Name;
+            details.Reason = ind.SaleFlag.ToString();
+            details.ResourceType = this.Name;
+            details.ExtraInformation = ind;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

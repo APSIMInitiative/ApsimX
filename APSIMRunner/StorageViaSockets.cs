@@ -116,7 +116,7 @@
             throw new NotImplementedException();
         }
 
-        public int GetSimulationID(string simulationName, string folderName)
+        public int GetSimulationID(string simulationName)
         {
             throw new NotImplementedException();
         }

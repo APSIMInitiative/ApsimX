@@ -1,7 +1,6 @@
 using StdUnits;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace Models.GrazPlan
 {
@@ -280,7 +279,7 @@ namespace Models.GrazPlan
 
         private int getGestation()
         {
-            return Convert.ToInt32(Math.Round(PregC[1]), CultureInfo.InvariantCulture);
+            return Convert.ToInt32(Math.Round(PregC[1]));
         }
 
         /// <summary>
@@ -439,7 +438,7 @@ namespace Models.GrazPlan
                     result = SelfWeanPropn;
                 else
                 {
-                    Idx = Convert.ToInt32(sTagList[2], CultureInfo.InvariantCulture);
+                    Idx = Convert.ToInt32(sTagList[2]);
 
                     if (sTagList[1] == "n")
                         result = GrowthC[Idx];
@@ -618,7 +617,7 @@ namespace Models.GrazPlan
                     SelfWeanPropn = fValue;
                 else
                 {
-                    Idx = Convert.ToInt32(sTagList[2], CultureInfo.InvariantCulture);
+                    Idx = Convert.ToInt32(sTagList[2]);
 
                     if (sTagList[1] == "n")
                         GrowthC[Idx] = fValue;

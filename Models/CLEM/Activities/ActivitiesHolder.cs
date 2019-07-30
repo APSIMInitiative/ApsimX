@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all activities used in the CLEM simulation")]
-    [HelpUri(@"Content/Features/Activities/ActivitiesHolder.htm")]
+    [HelpUri(@"content/features/activities/activitiesholder.htm")]
     [Version(1, 0, 1, "")]
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
@@ -242,29 +242,7 @@ namespace Models.CLEM.Activities
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                if (child.Enabled)
-                {
-                    child.ReportAllAllActivitiesPerformed();
-                }
-            }
-
-            // report all timers that were due this time step
-            foreach (IActivityTimer timer in Apsim.ChildrenRecursively(this, typeof(IActivityTimer)))
-            {
-                if (timer.ActivityDue)
-                {
-                    // report activity performed.
-                    ActivityPerformedEventArgs timerActivity = new ActivityPerformedEventArgs
-                    {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = (timer as IModel).Name
-                        }
-                    };
-                    timerActivity.Activity.SetGuID((timer as CLEMModel).UniqueID);
-                    timer.OnActivityPerformed(timerActivity);
-                }
+                child.ReportAllAllActivitiesPerformed();
             }
 
             // add timestep activity for reporting
@@ -285,10 +263,7 @@ namespace Models.CLEM.Activities
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                if (child.Enabled)
-                {
-                    child.ClearAllAllActivitiesPerformedStatus();
-                }
+                child.ClearAllAllActivitiesPerformedStatus();
             }
         }
 

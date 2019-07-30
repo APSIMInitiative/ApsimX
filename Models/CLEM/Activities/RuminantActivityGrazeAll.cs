@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of all herds and pastures (paddocks) in the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantgraze.htm")]
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase
     {
         [Link]
@@ -52,14 +52,12 @@ namespace Models.CLEM.Activities
                 // do not include common land pasture..
                 foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
                 {
-                    RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture
-                    {
-                        GrazeFoodStoreModel = pastureType,
-                        Clock = Clock,
-                        Parent = this,
-                        Name = "Graze_" + (pastureType as Model).Name,
-                        OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
-                    };
+                    RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture();
+                    ragp.GrazeFoodStoreModel = pastureType;
+                    ragp.Clock = Clock;
+                    ragp.Parent = this;
+                    ragp.Name = "Graze_" + (pastureType as Model).Name;
+                    ragp.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
                     ragp.ActivityPerformed += BubblePaddock_ActivityPerformed;
                     ragp.Resources = this.Resources;
                     ragp.InitialiseHerd(true, true);

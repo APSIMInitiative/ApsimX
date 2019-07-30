@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
-using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -24,10 +23,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
-    [Version(1, 0, 3, "Removed the inter-parturition calculation and influence on uncontrolled mating\nIt is assumed that the individual based model will track conception timing based on the individual's body condition.")]
-    [Version(1, 0, 2, "Added calculation for proportion offspring male parameter")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBreed.htm")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantbreed.htm")]
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
         [Link]
@@ -44,7 +41,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Use artificial insemination (no bulls required)
         /// </summary>
-        [Description("Use controlled mating/artificial insemination (no bulls required)")]
+        [Description("Use artificial insemination (no bulls required)")]
         [Required]
         public bool UseAI { get; set; }
 
@@ -91,7 +88,7 @@ namespace Models.CLEM.Activities
                 // go back (gestation - 1) months
                 // this won't include those individuals due to give birth on day 1.
 
-                int monthsAgoStart = Clock.Today.Month - (Convert.ToInt32(Math.Truncate(herd.FirstOrDefault().BreedParams.GestationLength), CultureInfo.InvariantCulture) - 1);
+                int monthsAgoStart = Clock.Today.Month - (Convert.ToInt32(Math.Truncate(herd.FirstOrDefault().BreedParams.GestationLength)) - 1);
                 int monthsAgoStop = -1;
 
                 for (int i = monthsAgoStart; i <= monthsAgoStop; i++)
@@ -132,7 +129,7 @@ namespace Models.CLEM.Activities
 
                                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                                 {
-                                    if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                                    if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                                     {
                                         // calculate conception
                                         double conceptionRate = ConceptionRate(female) * maleLimiter;
@@ -150,10 +147,10 @@ namespace Models.CLEM.Activities
                         {
                             if (this.TimingCheck(previousDate))
                             {
-                                numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
+                                numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count());
                                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                                 {
-                                    if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
+                                    if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                                     {
                                         // calculate conception
                                         double conceptionRate = ConceptionRate(female);
@@ -181,7 +178,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalBreeding")]
         private void OnCLEMAnimalBreeding(object sender, EventArgs e)
         {
-            List<Ruminant> herd = CurrentHerd(true); 
+            List<Ruminant> herd = CurrentHerd(true); //ruminantHerd.Herd.Where(a => a.BreedParams.Name == HerdName).ToList();
 
             int aDay = Clock.Today.Year;
 
@@ -271,7 +268,7 @@ namespace Models.CLEM.Activities
                         {
                             // Foetal mortality is now performed each timestep at base of this method
                             object newCalf = null;
-                            bool isMale = (ZoneCLEM.RandomGenerator.NextDouble() <= female.BreedParams.ProportionOffspringMale);
+                            bool isMale = (ZoneCLEM.RandomGenerator.NextDouble() >= 0.5);
                             double weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
                             if (isMale)
                             {
@@ -314,15 +311,17 @@ namespace Models.CLEM.Activities
                         double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
                         double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
 
-                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
+                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                         {
-                            // calculate conception
-                            double conceptionRate = ConceptionRate(female) * maleLimiter;
-                            // Temporarally removed max uncontrolled mating conception rate
-                            //conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
-                            if (conceptionRate > 0 && ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                            if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                             {
-                                female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
+                                // calculate conception
+                                double conceptionRate = ConceptionRate(female) * maleLimiter;
+                                conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
+                                if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                                {
+                                    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
+                                }
                             }
                         }
                     }
@@ -332,18 +331,21 @@ namespace Models.CLEM.Activities
                 {
                     if (this.TimingOK)
                     {
-                        numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
-                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
+                        numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count());
+                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                         {
-                            // calculate conception
-                            double conceptionRate = ConceptionRate(female);
-                            if (numberServiced <= numberPossible & conceptionRate > 0) // labour/finance limited number
+                            if (!female.IsPregnant && !female.IsLactating && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                             {
-                                if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                                // calculate conception
+                                double conceptionRate = ConceptionRate(female);
+                                if (numberServiced <= numberPossible) // labour/finance limited number
                                 {
-                                    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
+                                    if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                                    {
+                                        female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
+                                    }
+                                    numberServiced++;
                                 }
-                                numberServiced++;
                             }
                         }
                     }
@@ -358,33 +360,23 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         private double ConceptionRate(RuminantFemale female)
         {
-            bool isConceptionReady = false;
-            if (!female.IsPregnant)
-            {
-                if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
-                {
-                    isConceptionReady = true;
-                }
-                else
-                {
-                    // add one to age to ensure that conception is due this timestep
-                    if ((female.Age + 1 - female.AgeAtLastBirth) * 30.4 > female.BreedParams.MinimumDaysBirthToConception)
-                    {
-                        // only based upon period since birth
-                        isConceptionReady = true;
+            double rate = 0;
 
-                        // DEVELOPMENT NOTE:
-                        // The following IPI calculation and check present in NABSA has been removed for testing
-                        // It is assumed that the individual based model with weight influences will handle the old IPI calculation 
-                        // These parameters can now be removed form the RuminantType list
-                        //double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow(female.ProportionOfNormalisedWeight, female.BreedParams.InterParturitionIntervalCoefficient) * 30.4;
-                        //double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
-                        //isConceptionReady = (female.Age+1 >= ageNextConception);
-                    }
-                }
+            bool isConceptionReady = false;
+            if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
+            {
+                isConceptionReady = true;
+            }
+            else
+            {
+                double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow((female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
+                // calculate inter-parturition interval
+                currentIPI = Math.Max(currentIPI, female.BreedParams.GestationLength * 30.4 + female.BreedParams.MinimumDaysBirthToConception); // 2nd param was 61
+                double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
+                isConceptionReady = (female.Age >= ageNextConception);
             }
 
-            // if first mating and of age or sufficient time since last birth
+            // if first mating and of age or suffcient time since last birth/conception
             if(isConceptionReady)
             {
                 // Get conception rate from conception model associated with the Ruminant Type parameters
@@ -394,7 +386,7 @@ namespace Models.CLEM.Activities
                 }
                 return female.BreedParams.ConceptionModel.ConceptionRate(female);
             }
-            return 0;
+            return rate / 100;
         }
 
         /// <summary>

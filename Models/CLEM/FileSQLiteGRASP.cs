@@ -11,7 +11,6 @@ using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
-using System.Globalization;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileSQLiteGRASP.cs" company="CSIRO">
@@ -34,7 +33,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This component reads a SQLite database with GRASP data for native pasture production used in the CLEM simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/DataReaders/GRASPDataReaderSQL.htm")]
+    [HelpUri(@"content/features/datareaders/graspdatareadersql.htm")]
     public class FileSQLiteGRASP : CLEMModel, IFileGRASP, IValidatableObject
     {
         /// <summary>
@@ -148,7 +147,7 @@ namespace Models.CLEM
                 int i = 0;
                 foreach (DataRow row in res.Rows)
                 {
-                    results[i] = Convert.ToDouble(row[0], CultureInfo.InvariantCulture);
+                    results[i] = Convert.ToDouble(row[0]);
                     i++;
                 }
                 return results;
@@ -231,6 +230,18 @@ namespace Models.CLEM
                 else
                 {
                     return this.FileName;
+                }
+            }
+            set
+            {
+                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                if (simulations != null)
+                {
+                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
+                }
+                else
+                {
+                    this.FileName = value;
                 }
             }
         }
@@ -339,7 +350,7 @@ namespace Models.CLEM
         /// <param name="ecolCalculationDate"></param>
         /// <param name="ecolCalculationInterval"></param>
         /// <returns></returns>
-        public List<PastureDataType> GetIntervalsPastureData(int region, string soil, int grassBasalArea, int landCondition, int stockingRate,
+        public List<PastureDataType> GetIntervalsPastureData(int region, int soil, int grassBasalArea, int landCondition, int stockingRate,
                                          DateTime ecolCalculationDate, int ecolCalculationInterval)
         {
             int startYear = ecolCalculationDate.Year;
@@ -375,10 +386,6 @@ namespace Models.CLEM
             }
 
             DataTable results = SQLiteReader.ExecuteQuery(sqlQuery);
-            if(results.Rows.Count == 0)
-            {
-                return null;
-            }
             results.DefaultView.Sort = "Year, Month";
 
             List<PastureDataType> pastureDetails = new List<PastureDataType>();
@@ -406,7 +413,7 @@ namespace Models.CLEM
         /// <param name="landCondition"></param>
         /// <param name="stockingRate"></param>
         private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
-            int region, string soil, int grassBasalArea, int landCondition, int stockingRate)
+            int region, int soil, int grassBasalArea, int landCondition, int stockingRate)
         {
             string errormessageStart = "Problem with GRASP input file." + System.Environment.NewLine
                         + "For Region: " + region + ", Soil: " + soil 

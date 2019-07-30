@@ -2637,10 +2637,7 @@ namespace Models.Soils
             for (int layer = 0; layer < Math.Min(nLayers, deltaN.Length); layer++)
             {
                 if (Math.Abs(deltaN[layer]) > epsilon)
-                {
                     hasChanges = true;
-                    break;
-                }
             }
 
             // check partitioning and pass the appropriate values to patches

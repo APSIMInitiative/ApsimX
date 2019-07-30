@@ -33,12 +33,6 @@ namespace Models.CLEM
         public string SelectedTab { get; set; }
 
         /// <summary>
-        /// Warning log for this CLEM model
-        /// </summary>
-        [XmlIgnore]
-        public WarningLog Warnings = new WarningLog();
-
-        /// <summary>
         /// Allows unique id of activity to be set 
         /// </summary>
         /// <param name="id"></param>
@@ -157,7 +151,6 @@ namespace Models.CLEM
         {
             string overall = "activity";
             string extra = "";
-            double opacity = 1;
 
             if(this.ModelSummaryStyle == HTMLSummaryStyle.Default)
             {
@@ -211,37 +204,15 @@ namespace Models.CLEM
                     break;
             }
 
-            if(!this.Enabled)
-            {
-                if(this.Parent.Enabled)
-                {
-                    opacity = 0.4;
-                }
-            }
-
             string html = "";
             html += "\n<div class=\"holder"+ ((extra == "") ? "main" : "sub") + " " + overall  +"\">";
             html += "\n<div class=\"clearfix "+overall+"banner"+extra+"\">" + this.ModelSummaryNameTypeHeader() + "</div>";
-            html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\" style=\"opacity: "+opacity.ToString()+";\">";
+            html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\">";
 
-            //if(this.GetType().IsSubclassOf(typeof(CLEMResourceTypeBase)))
-            //{
-            //    // add units when completed
-            //    string units = (this as IResourceType).Units;
-            //    if (units != "NA")
-            //    {
-            //        html += "\n<div class=\"activityentry\">This resource is measured in  ";
-            //        if (units == null || units == "")
-            //        {
-            //            html += "<span class=\"errorlink\">Not specified</span>";
-            //        }
-            //        else
-            //        {
-            //            html += "<span class=\"setvalue\">" + units + "</span>";
-            //        }
-            //        html += "</div>";
-            //    }
-            //}
+            if(this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+            {
+                // add units when completed
+            }
             return html;
         }
 
@@ -260,26 +231,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public virtual string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            if (this.GetType().IsSubclassOf(typeof(CLEMResourceTypeBase)))
-            {
-                // add units when completed
-                string units = (this as IResourceType).Units;
-                if (units != "NA")
-                {
-                    html += "\n<div class=\"activityentry\">This resource is measured in  ";
-                    if (units == null || units == "")
-                    {
-                        html += "<span class=\"errorlink\">Not specified</span>";
-                    }
-                    else
-                    {
-                        html += "<span class=\"setvalue\">" + units + "</span>";
-                    }
-                    html += "</div>";
-                }
-            }
-            return html;
+            return "";
         }
 
         /// <summary>
@@ -298,7 +250,7 @@ namespace Models.CLEM
         public string ModelSummaryNameTypeHeader()
         {
             string html = "";
-            html += "<div class=\"namediv\">" + this.Name +  ((!this.Enabled)?" - DISABLED!":"")+ "</div>";
+            html += "<div class=\"namediv\">" + this.Name + "</div>";
             if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
             {
                 html += "<div class=\"partialdiv\"";

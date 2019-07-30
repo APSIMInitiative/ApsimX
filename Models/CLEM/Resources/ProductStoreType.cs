@@ -19,15 +19,9 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a product store type (e.g. Cotton).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Products/ProductStoreType.htm")]
+    [HelpUri(@"content/features/resources/products/productstoretype.htm")]
     public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
     {
-        /// <summary>
-        /// Unit type
-        /// </summary>
-        [Description("Units (nominal)")]
-        public string Units { get; set; }
-
         /// <summary>
         /// Starting amount
         /// </summary>
@@ -85,7 +79,7 @@ namespace Models.CLEM.Resources
         /// <param name="reason">Name of individual adding resource</param>
         public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
-            double addAmount;
+            double addAmount = 0;
             if (resourceAmount.GetType().Name == "FoodResourcePacket")
             {
                 addAmount = (resourceAmount as FoodResourcePacket).Amount;
@@ -103,13 +97,12 @@ namespace Models.CLEM.Resources
             {
                 amount += addAmount;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    Gain = addAmount,
-                    Activity = activity,
-                    Reason = reason,
-                    ResourceType = this
-                };
+                ResourceTransaction details = new ResourceTransaction();
+                details.Gain = addAmount;
+                details.Activity = activity.Name;
+                details.ActivityType = activity.GetType().Name;
+                details.Reason = reason;
+                details.ResourceType = this.Name;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -132,13 +125,12 @@ namespace Models.CLEM.Resources
             this.amount -= amountRemoved;
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction
-            {
-                ResourceType = this,
-                Loss = amountRemoved,
-                Activity = request.ActivityModel,
-                Reason = request.Reason
-            };
+            ResourceTransaction details = new ResourceTransaction();
+            details.ResourceType = this.Name;
+            details.Loss = amountRemoved;
+            details.Activity = request.ActivityModel.Name;
+            details.ActivityType = request.ActivityModel.GetType().Name;
+            details.Reason = request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

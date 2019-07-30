@@ -169,9 +169,6 @@ namespace Models.PMF.Organs
         [Units("mm")]
         public double Depth { get { return Structure.Height; } }
 
-        /// <summary>Gets the width of the canopy (mm).</summary>
-        public double Width { get { return 0; } }
-
         /// <summary>Gets  FRGR.</summary>
         [Description("Relative growth rate for calculating stomata conductance which fed the Penman-Monteith function")]
         [Units("0-1")]
@@ -703,7 +700,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if ((MicroClimatePresent) && (LightProfile != null))
+                if (MicroClimatePresent)
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)

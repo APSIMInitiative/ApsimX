@@ -21,15 +21,9 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This resource represents a labour type (e.g. Joe, 36 years old, male).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
+    [HelpUri(@"content/features/resources/labour/labourtype.htm")]
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
-        /// <summary>
-        /// Unit type
-        /// </summary>
-        [Description("Units (nominal)")]
-        public string Units { get { return "NA"; } }
-
         /// <summary>
         /// Age in years.
         /// </summary>
@@ -168,13 +162,14 @@ namespace Models.CLEM.Resources
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
             double addAmount = (double)resourceAmount;
-            this.AvailableDays += addAmount;
+            this.AvailableDays = this.AvailableDays + addAmount;
             ResourceTransaction details = new ResourceTransaction
             {
                 Gain = addAmount,
-                Activity = activity,
+                Activity = activity.Name,
+                ActivityType = activity.GetType().Name,
                 Reason = reason,
-                ResourceType = this
+                ResourceType = this.Name
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -200,9 +195,10 @@ namespace Models.CLEM.Resources
             LastActivityRequestID = request.ActivityID;
             ResourceTransaction details = new ResourceTransaction
             {
-                ResourceType = this,
+                ResourceType = this.Name,
                 Loss = amountRemoved,
-                Activity = request.ActivityModel,
+                Activity = request.ActivityModel.Name,
+                ActivityType = request.ActivityModel.GetType().Name,
                 Reason = request.Reason
             };
             LastTransaction = details;

@@ -19,15 +19,9 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Equipment))]
     [Description("This resource represents an equipment store type (e.g. Tractor, bore).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Equipment/Equipmenttype.htm")]
+    [HelpUri(@"content/features/resources/equipment/equipmenttype.htm")]
     public class EquipmentType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
-        /// <summary>
-        /// Unit type
-        /// </summary>
-        [Description("Units (nominal)")]
-        public string Units { get; set; }
-
         /// <summary>
         /// Starting amount
         /// </summary>
@@ -115,13 +109,12 @@ namespace Models.CLEM.Resources
             {
                 amount += addAmount;
 
-                ResourceTransaction details = new ResourceTransaction
-                {
-                    Gain = addAmount,
-                    Activity = activity,
-                    Reason = reason,
-                    ResourceType = this
-                };
+                ResourceTransaction details = new ResourceTransaction();
+                details.Gain = addAmount;
+                details.Activity = activity.Name;
+                details.ActivityType = activity.GetType().Name;
+                details.Reason = reason;
+                details.ResourceType = this.Name;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -144,13 +137,12 @@ namespace Models.CLEM.Resources
             this.amount -= amountRemoved;
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction
-            {
-                ResourceType = this,
-                Loss = amountRemoved,
-                Activity = request.ActivityModel,
-                Reason = request.Reason
-            };
+            ResourceTransaction details = new ResourceTransaction();
+            details.ResourceType = this.Name;
+            details.Loss = amountRemoved;
+            details.Activity = request.ActivityModel.Name;
+            details.ActivityType = request.ActivityModel.GetType().Name;
+            details.Reason = request.Reason;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

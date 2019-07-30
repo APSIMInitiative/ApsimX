@@ -22,7 +22,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/RuminantFilter.htm")]
+    [HelpUri(@"content/features/filters/ruminantfilter.htm")]
     public class RuminantFilter: CLEMModel
     {
         /// <summary>

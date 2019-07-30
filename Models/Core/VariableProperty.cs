@@ -60,13 +60,13 @@ namespace Models.Core
                 int posColon = arraySpecifier.IndexOf(':');
                 if (posColon == -1)
                 {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier, CultureInfo.InvariantCulture);
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier);
                     this.upperArraySpecifier = this.lowerArraySpecifier;
                 }
                 else
                 {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon), CultureInfo.InvariantCulture);
-                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1), CultureInfo.InvariantCulture);
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon));
+                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
                 }
             }
             else
@@ -695,7 +695,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(bool))
                 {
-                    this.property.SetValue(this.Object, Convert.ToBoolean(value, CultureInfo.InvariantCulture), null);
+                    this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
                 }
                 else if (this.DataType == typeof(DateTime))
                 {

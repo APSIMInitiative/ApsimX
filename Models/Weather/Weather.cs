@@ -7,7 +7,6 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Xml.Serialization;
 
     ///<summary>
@@ -456,49 +455,49 @@
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
 
             if (this.radiationIndex != -1)
-                this.Radn = Convert.ToSingle(values[this.radiationIndex], CultureInfo.InvariantCulture);
+                this.Radn = Convert.ToSingle(values[this.radiationIndex]);
             else
                 this.Radn = this.reader.ConstantAsDouble("radn");
 
             if (this.maximumTemperatureIndex != -1)
-                this.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
+                this.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex]);
             else
                 this.MaxT = this.reader.ConstantAsDouble("maxt");
 
             if (this.minimumTemperatureIndex != -1)
-                this.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
+                this.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex]);
             else
                 this.MinT = this.reader.ConstantAsDouble("mint");
 
             if (this.rainIndex != -1)
-                this.Rain = Convert.ToSingle(values[this.rainIndex], CultureInfo.InvariantCulture);
+                this.Rain = Convert.ToSingle(values[this.rainIndex]);
             else
                 this.Rain = this.reader.ConstantAsDouble("rain");
 				
             if (this.evaporationIndex == -1)
                 this.PanEvap = double.NaN;
             else
-                this.PanEvap = Convert.ToSingle(values[this.evaporationIndex], CultureInfo.InvariantCulture);
+                this.PanEvap = Convert.ToSingle(values[this.evaporationIndex]);
 
             if (this.rainfallHoursIndex == -1)
                 this.RainfallHours = double.NaN;
             else
-                this.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
+                this.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex]);
 
             if (this.vapourPressureIndex == -1)
                 this.VP = Math.Max(0, MetUtilities.svp(this.MinT));
             else
-                this.VP = Convert.ToSingle(values[this.vapourPressureIndex], CultureInfo.InvariantCulture);
+                this.VP = Convert.ToSingle(values[this.vapourPressureIndex]);
 
             if (this.windIndex == -1)
                 this.Wind = 3.0;
             else
-                this.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
+                this.Wind = Convert.ToSingle(values[this.windIndex]);
 
             if (this.DiffuseFractionIndex == -1)
                 this.DiffuseFraction = -1;
             else
-                this.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
+                this.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex]);
 
             if (this.dayLengthIndex == -1)  // Daylength is not a column - check for a constant
             {
@@ -508,7 +507,7 @@
                    this.DayLength = -1;
             }
             else
-                this.DayLength = Convert.ToSingle(values[this.dayLengthIndex], CultureInfo.InvariantCulture);
+                this.DayLength = Convert.ToSingle(values[this.dayLengthIndex]);
 
 
             if (this.PreparingNewWeatherData != null)
@@ -531,9 +530,6 @@
                 {
                     this.reader = new ApsimTextFile();
                     this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
-
-                    if (this.reader.Headings == null)
-                        throw new Exception("Cannot find the expected header in weather file: " + this.FullFileName);
 
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");

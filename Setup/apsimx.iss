@@ -158,8 +158,6 @@ Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
 Source: ..\Examples\*; DestDir: {commondocs}\Apsim\Examples; Flags: recursesubdirs
-Source: ..\Tests\UnderReview\*; DestDir: {app}\UnderReview; Flags: recursesubdirs
-Source: ..\Tests\UnderReview\*; DestDir: {commondocs}\Apsim\UnderReview; Flags: recursesubdirs
 
 [INI]
 

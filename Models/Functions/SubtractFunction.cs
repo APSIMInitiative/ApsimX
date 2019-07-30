@@ -4,7 +4,6 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using APSIM.Shared.Utilities;
-using System.Globalization;
 
 namespace Models.Functions
 {
@@ -108,7 +107,7 @@ namespace Models.Functions
                 double doubleValue = (child as Constant).FixedValue;
                 if (Math.IEEERemainder(doubleValue, doubleValue) == 0)
                 {
-                    int intValue = Convert.ToInt32(doubleValue, CultureInfo.InvariantCulture);
+                    int intValue = Convert.ToInt32(doubleValue);
                     string writtenInteger = Integer.ToWritten(intValue);
                     writtenInteger = writtenInteger.Replace(" ", "");  // don't want spaces.
                     if (writtenInteger.Equals(child.Name, StringComparison.CurrentCultureIgnoreCase))

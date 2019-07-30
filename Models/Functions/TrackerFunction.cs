@@ -6,7 +6,6 @@
     using System.Reflection;
     using Models.Core;
     using Models.PMF.Phen;
-    using System.Globalization;
 
     /// <summary>
     /// # [Name]
@@ -58,7 +57,7 @@
                 return 0;
             if (Statistic.StartsWith("value back "))
             {
-                double accumulationTarget = Convert.ToDouble(Statistic.Replace("value back ", ""), CultureInfo.InvariantCulture);
+                double accumulationTarget = Convert.ToDouble(Statistic.Replace("value back ", ""));
 
                 // Go backwards through referenceValues until we reach our accumulation target.
                 double accumulationValue = 0;

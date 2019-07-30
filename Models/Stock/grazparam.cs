@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -74,11 +73,11 @@ namespace Models.GrazPlan
                 iPosn = sIndexStr.IndexOf(':');
                 if (iPosn >= 0)                                                        // Integer subrange                      
                 {
-                    int start = Convert.ToInt32(sIndexStr.Substring(0, iPosn), CultureInfo.InvariantCulture);
-                    int endpos = Convert.ToInt32(sIndexStr.Substring(iPosn + 1, sIndexStr.Length - iPosn - 1), CultureInfo.InvariantCulture);
+                    int start = Convert.ToInt32(sIndexStr.Substring(0, iPosn));
+                    int endpos = Convert.ToInt32(sIndexStr.Substring(iPosn + 1, sIndexStr.Length - iPosn - 1));
                     for (Idx = start; Idx <= endpos; Idx++)
                     {
-                        sSubDefnStrings[iOffset + 1] = Convert.ToString(Idx, CultureInfo.InvariantCulture);
+                        sSubDefnStrings[iOffset + 1] = Convert.ToString(Idx);
                         Array.Resize(ref FItems, FItems.Length + 1);
                         FItems[FItems.Length - 1] = new ParameterDefinition(sSubDefnStrings, aType, iOffset + 1);
                     }
@@ -1391,7 +1390,7 @@ namespace Models.GrazPlan
                         {
                             try
                             {
-                                iValue = System.Convert.ToInt32(sValue, CultureInfo.InvariantCulture);
+                                iValue = System.Convert.ToInt32(sValue);
                                 setIntParam(sTagList, iValue);
                             }
                             catch

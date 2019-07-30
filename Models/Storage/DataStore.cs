@@ -80,11 +80,6 @@
         public DataStore(string fileNameToUse)
         {
             FileName = fileNameToUse;
-            SQLite database = new SQLite();
-            database.OpenDatabase(fileName, true);
-            connection = database;
-            dbReader.SetConnection(connection);
-            dbWriter.SetConnection(connection);
         }
 
         /// <summary>Constructor</summary>

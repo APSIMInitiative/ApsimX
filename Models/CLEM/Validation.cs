@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,7 +81,7 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+            double maxvalue = Convert.ToDouble(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if ((maxvalue >= 0)&&(maxvalue<=100))
@@ -121,7 +120,7 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+            double maxvalue = Convert.ToDouble(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if ((maxvalue >= 0) && (maxvalue <= 1))
@@ -160,7 +159,7 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            int monthvalue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
+            int monthvalue = Convert.ToInt32(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
             if ((monthvalue >= 1) && (monthvalue <= 12))
@@ -188,7 +187,7 @@ namespace Models.CLEM
         /// <param name="value"></param>
         public GreaterThanValueAttribute(object value)
         {
-            compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+            compareValue = Convert.ToDouble(value);
         }
 
         private double compareValue { get; set; }
@@ -230,7 +229,7 @@ namespace Models.CLEM
         /// <param name="value"></param>
         public GreaterThanEqualValueAttribute(object value)
         {
-            compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+            compareValue = Convert.ToDouble(value);
         }
 
         private double compareValue { get; set; }
@@ -286,7 +285,7 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+            double maxvalue = Convert.ToDouble(value);
             string[] memberNames = new string[] { validationContext.MemberName };
 
             // check valid property name
@@ -295,7 +294,7 @@ namespace Models.CLEM
                 throw new Exception(String.Format("Invalid property name [{0}] provided for validation attribute [GreaterThan] on property [{1}] in [{2}]", compareToFieldName, validationContext.MemberName, validationContext.ObjectInstance.ToString()));
             }
 
-            double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null), CultureInfo.InvariantCulture);
+            double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null));
 
             if (maxvalue > minvalue)
             {
@@ -345,7 +344,7 @@ namespace Models.CLEM
                 throw new Exception(String.Format("Invalid property name [{0}] provided for validation attribute [DateGreaterThan] on property [{1}] in [{2}]", compareToFieldName, validationContext.MemberName, validationContext.ObjectInstance.ToString()));
             }
 
-            double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null), CultureInfo.InvariantCulture);
+            double minvalue = Convert.ToDouble(validationContext.ObjectType.GetProperty(compareToFieldName).GetValue(validationContext.ObjectInstance, null));
 
             if (maxvalue >= minvalue)
             {

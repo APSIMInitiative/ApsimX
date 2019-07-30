@@ -142,11 +142,7 @@ namespace Models.PMF.Organs
         [Units("mm")]
         [XmlIgnore]
         public double Depth { get; set; }
-
-        /// <summary>Gets the width of the canopy (mm).</summary>
-        public double Width { get { return 0; } }
-
-
+    
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
         [XmlIgnore]

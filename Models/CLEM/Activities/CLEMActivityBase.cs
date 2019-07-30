@@ -228,27 +228,21 @@ namespace Models.CLEM.Activities
         /// </summary>
         protected void ResourcesForAllActivityInitialisation()
         {
-            if (this.Enabled)
-            {
-                // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-                GetResourcesRequiredForInitialisation();
+            // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
+            GetResourcesRequiredForInitialisation();
 
-                // get resources required for all dynamically created CLEMActivityBase activities
-                if (ActivityList != null)
+            // get resources required for all dynamically created CLEMActivityBase activities
+            if (ActivityList != null)
+            {
+                foreach (CLEMActivityBase activity in ActivityList)
                 {
-                    foreach (CLEMActivityBase activity in ActivityList)
-                    {
-                        activity.GetResourcesForAllActivityInitialisation();
-                    }
+                    activity.GetResourcesForAllActivityInitialisation();
                 }
-                // get resources required for all children of type CLEMActivityBase
-                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-                {
-                    if (activity.Enabled)
-                    {
-                        activity.GetResourcesForAllActivityInitialisation();
-                    }
-                }
+            }
+            // get resources required for all children of type CLEMActivityBase
+            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+            {
+                activity.GetResourcesForAllActivityInitialisation();
             }
         }
 
@@ -258,27 +252,24 @@ namespace Models.CLEM.Activities
         /// </summary>
         public virtual void GetResourcesForAllActivities(CLEMModel model)
         {
-            if (this.Enabled)
+            if (this.TimingOK)
             {
-                if (this.TimingOK)
+                ResourcesForAllActivities(model);
+            }
+            else
+            {
+                this.Status = ActivityStatus.Ignored;
+                if (ActivityList != null)
                 {
-                    ResourcesForAllActivities(model);
-                }
-                else
-                {
-                    this.Status = ActivityStatus.Ignored;
-                    if (ActivityList != null)
-                    {
-                        foreach (CLEMActivityBase activity in ActivityList)
-                        {
-                            activity.Status = ActivityStatus.Ignored;
-                        }
-                    }
-                    // get resources required for all children of type CLEMActivityBase
-                    foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+                    foreach (CLEMActivityBase activity in ActivityList)
                     {
                         activity.Status = ActivityStatus.Ignored;
                     }
+                }
+                // get resources required for all children of type CLEMActivityBase
+                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+                {
+                    activity.Status = ActivityStatus.Ignored;
                 }
             }
         }

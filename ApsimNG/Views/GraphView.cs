@@ -21,8 +21,6 @@ namespace UserInterface.Views
     using OxyPlot.GtkSharp;
     using EventArguments;
     using APSIM.Shared.Utilities;
-    using System.Linq;
-    using System.Globalization;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -443,7 +441,7 @@ namespace UserInterface.Views
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
-        public void DrawRegion(
+        public void DrawArea(
             string title,
             IEnumerable x1,
             IEnumerable y1,
@@ -459,8 +457,7 @@ namespace UserInterface.Views
             series.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
-            if (showOnLegend)
-                series.Title = title;
+
             if (points != null && points2 != null)
             {
                 foreach (DataPoint point in points)
@@ -476,33 +473,6 @@ namespace UserInterface.Views
             series.CanTrackerInterpolatePoints = false;
 
             this.plot1.Model.Series.Add(series);
-        }
-
-        /// <summary>
-        /// Draw an  area series with the specified arguments. Similar to a
-        /// line series, but the area under the curve will be filled with colour.
-        /// </summary>
-        /// <param name="title">The series title</param>
-        /// <param name="x">The x values for the series</param>
-        /// <param name="y">The y values for the series</param>
-        /// <param name="xAxisType">The axis type the x values are related to</param>
-        /// <param name="yAxisType">The axis type the y values are related to</param>
-        /// <param name="colour">The series color</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
-        public void DrawArea(
-            string title,
-            IEnumerable x,
-            IEnumerable y,
-            Models.Graph.Axis.AxisType xAxisType,
-            Models.Graph.Axis.AxisType yAxisType,
-            Color colour,
-            bool showOnLegend)
-        {
-            // Just use a region series (colours area between two curves), and use y = 0 for the second curve.
-            List<double> y2 = new List<double>();
-            y2.AddRange(Enumerable.Repeat(0d, ((ICollection)y).Count));
-
-            DrawRegion(title, x, y, x, y2, xAxisType, yAxisType, colour, showOnLegend);
         }
 
         /// <summary>
@@ -1070,7 +1040,7 @@ namespace UserInterface.Views
                 this.EnsureAxisExists(axisType, typeof(DateTime));
                 do
                 {
-                    DateTime d = Convert.ToDateTime(enumerator.Current, CultureInfo.InvariantCulture);
+                    DateTime d = Convert.ToDateTime(enumerator.Current);
                     dataPointValues.Add(DateTimeAxis.ToDouble(d));
                     if (d < smallestDate)
                         smallestDate = d;
@@ -1215,8 +1185,8 @@ namespace UserInterface.Views
                 Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
                 if (legendArea.Contains(location))
                 {
-                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
-                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
+                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top);
+                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height) / this.plot1.Model.Series.Count;
                     int seriesIndex = y / itemHeight;
                     if (this.OnLegendClick != null)
                     {

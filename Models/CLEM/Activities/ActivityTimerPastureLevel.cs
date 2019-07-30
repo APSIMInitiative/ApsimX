@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether a pasture biomass (t/ha) is within a specified range.")]
-    [HelpUri(@"Content/Features/Timers/PastureLevel.htm")]
+    [HelpUri(@"content/features/timers/pasturelevel.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
@@ -98,7 +98,22 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                return (GrazeFoodStoreModel.KilogramsPerHa >= MinimumPastureLevel && GrazeFoodStoreModel.KilogramsPerHa < MaximumPastureLevel);
+                if (GrazeFoodStoreModel.KilogramsPerHa >= MinimumPastureLevel && GrazeFoodStoreModel.KilogramsPerHa < MaximumPastureLevel)
+                {
+                    // report activity performed.
+                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                    {
+                        Activity = new BlankActivity()
+                        {
+                            Status = ActivityStatus.Timer,
+                            Name = this.Name
+                        }
+                    };
+                    this.OnActivityPerformed(activitye);
+                    activitye.Activity.SetGuID(this.UniqueID);
+                    return true;
+                }
+                return false;
             }
         }
 
@@ -115,7 +130,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        public virtual void OnActivityPerformed(EventArgs e)
+        protected virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }

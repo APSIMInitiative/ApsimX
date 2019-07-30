@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvest dates of the CropActivityManageProduct above.")]
-    [HelpUri(@"Content/Features/Timers/CropHarvest.htm")]
+    [HelpUri(@"content/features/timers/cropharvest.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
@@ -190,7 +190,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        public virtual void OnActivityPerformed(EventArgs e)
+        protected virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }

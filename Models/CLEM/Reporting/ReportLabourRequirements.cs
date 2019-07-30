@@ -18,7 +18,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This report presents a summary of labour required for all activities.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Reporting/LabourRequirements.htm")]
+    [HelpUri(@"content/features/reporting/labourrequirements.htm")]
     public class ReportLabourRequirements: Model
     {
     }

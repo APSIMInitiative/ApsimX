@@ -83,7 +83,7 @@
                 var vs = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
                 if (vs.Count() > 0)
                 {
-                    VersionAttribute verAtt = vs.ToList<Attribute>().Cast<VersionAttribute>().OrderBy(a => a.ToString()).Last() as VersionAttribute;
+                    VersionAttribute verAtt = vs.ToList<Attribute>().Last() as VersionAttribute;
                     if (verAtt != null)
                     {
                         string v = "Version ";

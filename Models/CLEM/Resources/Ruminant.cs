@@ -107,12 +107,6 @@ namespace Models.CLEM.Resources
             set
             {
                 weight = value;
-
-                // if highweight has not been defined set to initial weight
-                if (HighWeight == 0)
-                {
-                    HighWeight = weight;
-                }
                 HighWeight = Math.Max(HighWeight, weight);
             }
         }
@@ -220,12 +214,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <units>kg/month</units>
         public double PotentialIntake { get; set; }
-
-        /// <summary>
-        /// Current monthly metabolic intake after crude protein adjustment
-        /// </summary>
-        /// <units>kg/month</units>
-        public double MetabilicIntake { get; set; }
 
         /// <summary>
         /// Number in this class (1 if individual model)
@@ -475,10 +463,11 @@ namespace Models.CLEM.Resources
             this.Gender = setGender;
             this.BreedParams = setParams;
 
-            if (setWeight <= 0)
+            if (weight <= 0)
             {
                 // use normalised weight
-                this.Weight = NormalisedAnimalWeight;
+                weight = NormalisedAnimalWeight;
+
             }
             else
             {

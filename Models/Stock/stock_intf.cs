@@ -8,7 +8,6 @@ namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using StdUnits;
 
@@ -2224,7 +2223,7 @@ namespace Models.GrazPlan
                 if (mainGenotype.Animal == GrazType.AnimalType.Cattle)
                     daysSinceShearing = 0;
                 else if (this.IsGiven(cohortsInfo.MeanGFW) && (cohortsInfo.FleeceDays == 0))
-                    daysSinceShearing = Convert.ToInt32(Math.Truncate(365.25 * cohortsInfo.MeanGFW / mainGenotype.PotentialGFW), CultureInfo.InvariantCulture);
+                    daysSinceShearing = Convert.ToInt32(Math.Truncate(365.25 * cohortsInfo.MeanGFW / mainGenotype.PotentialGFW));
                 else
                     daysSinceShearing = cohortsInfo.FleeceDays;
 
@@ -2236,7 +2235,7 @@ namespace Models.GrazPlan
                     else
                         ageInfoList[cohortIdx].Propn = (1.0 - survival) * Math.Pow(survival, cohortIdx - cohortsInfo.MinYears)
                                                         / (1.0 - Math.Pow(survival, numCohorts));
-                    ageInfoList[cohortIdx].AgeDays = Convert.ToInt32(Math.Truncate(365.25 * cohortIdx) + cohortsInfo.AgeOffsetDays, CultureInfo.InvariantCulture);
+                    ageInfoList[cohortIdx].AgeDays = Convert.ToInt32(Math.Truncate(365.25 * cohortIdx) + cohortsInfo.AgeOffsetDays);
 
                     // Normal weight for age
                     ageInfoList[cohortIdx].NormalBaseWt = this.GrowthCurve(ageInfoList[cohortIdx].AgeDays, cohortsInfo.ReproClass, mainGenotype);
@@ -2282,7 +2281,7 @@ namespace Models.GrazPlan
                 totalAnimals = 0;
                 for (cohortIdx = cohortsInfo.MinYears; cohortIdx <= cohortsInfo.MaxYears; cohortIdx++)
                 {
-                    ageInfoList[cohortIdx].Numbers[0, 0] = Convert.ToInt32(Math.Truncate(ageInfoList[cohortIdx].Propn * cohortsInfo.Number), CultureInfo.InvariantCulture);
+                    ageInfoList[cohortIdx].Numbers[0, 0] = Convert.ToInt32(Math.Truncate(ageInfoList[cohortIdx].Propn * cohortsInfo.Number));
                     totalAnimals += ageInfoList[cohortIdx].Numbers[0, 0];
                 }
                 for (cohortIdx = cohortsInfo.MinYears; cohortIdx <= cohortsInfo.MaxYears; cohortIdx++)
@@ -2342,7 +2341,7 @@ namespace Models.GrazPlan
                                                         ageInfoList[cohortIdx].SizeAtMating,
                                                         condition);
                             for (preg = 1; preg <= 3; preg++)
-                                shiftNumber[preg] = Convert.ToInt32(Math.Round(pregRate[preg] * ageInfoList[cohortIdx].Numbers[0, 0]), CultureInfo.InvariantCulture);
+                                shiftNumber[preg] = Convert.ToInt32(Math.Round(pregRate[preg] * ageInfoList[cohortIdx].Numbers[0, 0]));
                             for (preg = 1; preg <= 3; preg++)
                             {
                                 ageInfoList[cohortIdx].Numbers[preg, 0] += shiftNumber[preg];
@@ -2443,7 +2442,7 @@ namespace Models.GrazPlan
                             for (preg = 0; preg <= 3; preg++)
                             {
                                 for (lact = 1; lact <= 3; lact++)
-                                    shiftNumber[lact] = Convert.ToInt32(Math.Round(lactRate[lact] * ageInfoList[cohortIdx].Numbers[preg, 0]), CultureInfo.InvariantCulture);
+                                    shiftNumber[lact] = Convert.ToInt32(Math.Round(lactRate[lact] * ageInfoList[cohortIdx].Numbers[preg, 0]));
                                 for (lact = 1; lact <= 3; lact++)
                                 {
                                     ageInfoList[cohortIdx].Numbers[preg, lact] += shiftNumber[lact];
@@ -2767,7 +2766,7 @@ namespace Models.GrazPlan
                     {
                         numToCastrate = Math.Min(number, this.At(idx).Young.MaleNo);
                         if (numToCastrate < this.At(idx).Young.MaleNo)
-                            this.Split(idx, Convert.ToInt32(Math.Round((double)number / numToCastrate * this.At(idx).NoAnimals), CultureInfo.InvariantCulture));  // TODO: check this conversion
+                            this.Split(idx, Convert.ToInt32(Math.Round((double)number / numToCastrate * this.At(idx).NoAnimals)));  // TODO: check this conversion
                         this.At(idx).Young.Castrate();
                         number = number - numToCastrate;
                     }
@@ -2817,9 +2816,9 @@ namespace Models.GrazPlan
                             {
                                 // If there are more lambs/calves present than are to be weaned, split the excess off                       
                                 if (weanMales && weanFemales)                                                               
-                                    mothersToWean = Convert.ToInt32(Math.Round((double)numToWean / this.At(idx).NoOffspring), CultureInfo.InvariantCulture);
+                                    mothersToWean = Convert.ToInt32(Math.Round((double)numToWean / this.At(idx).NoOffspring));   
                                 else                                                                                        
-                                    mothersToWean = Convert.ToInt32(Math.Round(numToWean / (this.At(idx).NoOffspring / 2.0)), CultureInfo.InvariantCulture);
+                                    mothersToWean = Convert.ToInt32(Math.Round(numToWean / (this.At(idx).NoOffspring / 2.0)));
                                 if (mothersToWean < this.At(idx).NoAnimals)
                                     this.Split(idx, mothersToWean);
                             }
@@ -2943,7 +2942,7 @@ namespace Models.GrazPlan
                 splitSD = (splitWt - liveWt) / (varRatio * liveWt);                 // NB SplitWt is a live weight value     
 
                 removePropn = StdMath.CumNormal(splitSD);                           // Normal distribution of weights assumed
-                numToRemove = Convert.ToInt32(Math.Round(numAnimals * removePropn), CultureInfo.InvariantCulture);
+                numToRemove = Convert.ToInt32(Math.Round(numAnimals * removePropn));
 
                 if (numToRemove > 0)
                 {
@@ -3453,7 +3452,7 @@ namespace Models.GrazPlan
                 this.ParseRepro(sheepValue.Sex.ToLower(), ref animalInit.Sex);
             else
                 animalInit.Sex = GrazType.ReproType.Castrated;
-            animalInit.AgeDays = Convert.ToInt32(sheepValue.Age, CultureInfo.InvariantCulture);
+            animalInit.AgeDays = Convert.ToInt32(sheepValue.Age);
             animalInit.Weight = sheepValue.Weight;
             animalInit.MaxPrevWt = sheepValue.MaxPrevWt;
             animalInit.FleeceWt = sheepValue.FleeceWt;
@@ -3494,7 +3493,7 @@ namespace Models.GrazPlan
                 this.ParseRepro(cattleValue.Sex.ToLower(), ref animalInit.Sex);
             else
                 animalInit.Sex = GrazType.ReproType.Castrated;
-            animalInit.AgeDays = Convert.ToInt32(cattleValue.Age, CultureInfo.InvariantCulture);
+            animalInit.AgeDays = Convert.ToInt32(cattleValue.Age);
             animalInit.Weight = cattleValue.Weight;
             animalInit.MaxPrevWt = cattleValue.MaxPrevWt;
             animalInit.MatedTo = cattleValue.MatedTo;
@@ -3883,7 +3882,7 @@ namespace Models.GrazPlan
                     purchaseInfo.Number = Math.Max(0, stockInfo.Number);
                     if (!this.ParseRepro(stockInfo.Sex, ref purchaseInfo.Repro))
                         throw new Exception("Event BUY does not support sex='" + stockInfo.Sex + "'");
-                    purchaseInfo.AgeDays = Convert.ToInt32(Math.Round(MONTH2DAY * stockInfo.Age), CultureInfo.InvariantCulture);  // Age in months
+                    purchaseInfo.AgeDays = Convert.ToInt32(Math.Round(MONTH2DAY * stockInfo.Age));  // Age in months                
                     purchaseInfo.LiveWt = stockInfo.Weight;
                     purchaseInfo.GFW = stockInfo.FleeceWt;
                     purchaseInfo.CondScore = stockInfo.CondScore;
@@ -3976,13 +3975,13 @@ namespace Models.GrazPlan
                         tagNo = stockInfo.OtherTag;
 
                         if (strParam == "age")
-                            model.SplitAge(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
+                            model.SplitAge(param1, Convert.ToInt32(Math.Round(value)));
                         else if (strParam == "weight")
                             model.SplitWeight(param1, value);
                         else if (strParam == "young")
                             model.SplitYoung(param1);
                         else if (strParam == "number")
-                            model.Split(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
+                            model.Split(param1, Convert.ToInt32(Math.Round(value)));
                         else
                             throw new Exception("Stock: invalid keyword (" + strParam + ") in \"split\" event");
                         if ((tagNo > 0) && (model.Count() > numGroups))     // if a tag for any new group is given
@@ -4008,7 +4007,7 @@ namespace Models.GrazPlan
                     else if (strParam == "young")
                         model.SplitYoung(param1);
                     else if (strParam == "number")
-                        model.Split(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
+                        model.Split(param1, Convert.ToInt32(Math.Round(value)));
                     else
                         throw new Exception("Stock: invalid keyword (" + strParam + ") in \"split\" event");
                     if ((tagNo > 0) && (model.Count() > numGroups))     // if a tag for the new group is given

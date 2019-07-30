@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This represents a list of labour availability settings")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Labour/LabourAvailability.htm")]
+    [HelpUri(@"content/features/resources/labour/labouravailability.htm")]
     public class LabourAvailabilityList: LabourSpecifications
     {
 

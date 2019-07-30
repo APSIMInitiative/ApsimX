@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -233,10 +232,10 @@ namespace StdUnits
         {
             FNextRandom = -1;
             if (SeedVal != 0)   //if want repeatable start point
-                FSeed = Convert.ToUInt32(SeedVal, CultureInfo.InvariantCulture);
+                FSeed = Convert.ToUInt32(SeedVal);
             else
             {
-                FSeed = Convert.ToUInt32(SysRandom.Next(), CultureInfo.InvariantCulture);
+                FSeed = Convert.ToUInt32(SysRandom.Next());
             }
             MyRandomize();
         }

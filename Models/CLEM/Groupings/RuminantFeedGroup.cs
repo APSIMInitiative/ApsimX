@@ -18,7 +18,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/RuminantFeedGroup.htm")]
+    [HelpUri(@"content/features/filters/ruminantreedgroup.htm")]
     public class RuminantFeedGroup: CLEMModel, IValidatableObject
     {
         /// <summary>
@@ -119,26 +119,8 @@ namespace Models.CLEM.Groupings
                 default:
                     break;
             }
-            html += "</span> ";
-            switch (ft)
-            {
-                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    html += "combined is fed to all individuals";
-                    break;
-                case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    html += "is fed to each individual";
-                    break;
-                default:
-                    html += "is fed to the individuals";
-                    break;
-            }
-            html += " that match the following conditions:";
-
+            html += "</span> is fed to the individuals that match the following conditions:";
             html += "</div>";
-            if (ft == RuminantFeedActivityTypes.SpecifiedDailyAmount)
-            {
-                html += "<div class=\"warningbanner\">Note: This is a specified daily amount fed to the entire herd. If insufficient, this will reduce individual's potential intake</div>";
-            }
             return html;
         }
 

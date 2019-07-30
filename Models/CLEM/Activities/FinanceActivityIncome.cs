@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity receives income")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Finances/Income.htm")]
+    [HelpUri(@"content/features/activities/finances/income.htm")]
     public class FinanceActivityIncome : CLEMActivityBase
     {
         /// <summary>

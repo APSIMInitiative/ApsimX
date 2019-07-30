@@ -56,7 +56,10 @@ namespace Models.Soils.Arbitrator
     /// 5) The approach will automatically arbitrate supply of N between zones, layers, and types (nitrate vs ammonium) with the preferences of all derived by the plant model code.
     /// </summary>
     [Serializable]
+    //[ViewName("UserInterface.Views.GridView")]
+    //[PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(Zone))]
     public class SoilArbitrator : Model
     {
         private List<IModel> uptakeModels = null;
@@ -73,8 +76,6 @@ namespace Models.Soils.Arbitrator
             uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
             zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone)).Cast<Zone>().ToList();
             InitialSoilState = new SoilState(zones);
-            if (!(this.Parent is Simulation))
-                throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");
         }
 
         /// <summary>Called by clock to do water arbitration</summary>

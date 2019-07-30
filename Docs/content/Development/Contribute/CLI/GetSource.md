@@ -9,7 +9,7 @@ The APSIM source code is located on GitHub so you will need to have a GitHub log
 
 This document assumes that your APSIM Next Generation folder is ~/ApsimX/.
 
-## (Optional) Fork the two repositories
+## Fork the two repositories
 
 There are two repositories: 
 
@@ -17,7 +17,7 @@ There are two repositories:
 
 2. [https://github.com/APSIMInitiative/APSIM.Shared](https://github.com/APSIMInitiative/APSIM.Shared) - This contains many utilities and classes that are shared between many projects.
 
-Both of these will need to be 'forked' to your GitHub account if you plan to change files in both repositories.
+Both of these will need to be 'forked' to your GitHub account if you plan to change files in both repositories. A fork creates a clone of the main repositories. 
 
 
 * Click on the fork link in the top right hand corner of the [APSIM repository](https://github.com/APSIMInitiative/ApsimX]) on GitHub. Clicking this will create a copy of the APSIM repository in your GitHub account.
@@ -26,24 +26,34 @@ Both of these will need to be 'forked' to your GitHub account if you plan to cha
 
 First, you will need to install the git client (if you don't already have it installed): 
 
-```sudo apt install git```
+````sudo apt-get install git````
 	
-## Clone the two Repositories
+## Clone ApsimX to your computer
 
-To bring the source code from GitHub to your computer, you will need to clone the two repositories. The ApsimX and APSIM.Shared directories should be siblings. For example if you clone ApsimX to ~/ApsimX, you should clone APSIM.Shared to ~/APSIM.Shared.
+First, navigate to the directory you wish to clone ApsimX to:
 
-```
-git clone https://github.com/APSIMInitiative/ApsimX
-git clone https://github.com/APSIMInitiative/APSIM.Shared
-```
+````cd ~/````
+	
+To bring the source code from your GitHub account to your computer, you will need to clone the repository. 
+
+````git clone https://github.com/hol430/ApsimX ApsimX```` (replace this URL with the URL of your repository)
+
+## Clone APSIM.Shared to your computer
+ 
+You then need to do the same for the APSIM.Shared repository. The ApsimX and APSIM.Shared folders should be sibling folders on your computer e.g. you if used ~/ as the root folder for the two repositories, you should end up with a ~/ApsimX and a ~/APSIM.Shared folder.
+
+````git clone https://github.com/hol430/APSIM.Shared APSIM.Shared```` (replace this URL with the URL of your repository)
+
+At this point, you have all source code. If you plant on modifying APSIM.Shared, you need to create a link to your APSIM.Shared fork that you created earlier. 
+
+If you require additional help, use ````git help clone```` or ````man git````
 
 ## Add a remote repository
 
-If you forked either of the repositories, you will need to add your remote repository:
+You will also need to add the master APSIM repository as a remote repository, in order to pull from it. For example:
 
-```
-cd ApsimX
-git remote add $remote_name https://github.com/$username/ApsimX
-```
+````cd ApsimX````
 
-Replace $username with your github username and $remote_name with a name of your choosing. This will be the name you use to refer to your remote repository. You will need to perform this step for both repositories if you forked both.
+````git remote add MasterRepo https://github.com/APSIMInitiative/ApsimX````
+
+This will add the main APSIM repository as a remote repository called MasterRepo.

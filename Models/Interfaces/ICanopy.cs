@@ -37,9 +37,6 @@ namespace Models.Interfaces
         /// <summary>Gets the canopy depth (mm)</summary>
         double Depth { get; }
 
-        /// <summary>Gets the canopy depth (mm)</summary>
-        double Width { get; }
-
         /// <summary>Sets the potential evapotranspiration.</summary>
         double PotentialEP { get; set; }
 

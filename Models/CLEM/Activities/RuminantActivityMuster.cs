@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMustering.htm")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantmustering.htm")]
     public class RuminantActivityMuster: CLEMRuminantActivityBase
     {
         /// <summary>
@@ -77,8 +77,7 @@ namespace Models.CLEM.Activities
                 // set new location ID
                 if(ind.Location != pastureName)
                 {
-                    this.Status = ActivityStatus.Success;
-                    //this.SetStatusSuccess();
+                    this.SetStatusSuccess();
                 }
 
                 ind.Location = pastureName;
@@ -167,7 +166,7 @@ namespace Models.CLEM.Activities
         public override void DoActivity()
         {
             // check if labour provided or PartialResources allowed
-            Status = ActivityStatus.Ignored;
+            Status = ActivityStatus.NotNeeded;
             if (this.TimingOK)
             {
                 if ((this.Status == ActivityStatus.Success || this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))

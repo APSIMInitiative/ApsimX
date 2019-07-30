@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
-using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -23,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages weaning of suckling ruminant individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
+    [HelpUri(@"content/features/activities/ruminant/ruminantwean.htm")]
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
         /// <summary>
@@ -70,6 +69,7 @@ namespace Models.CLEM.Activities
             if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
             {
                 grazeStore = GrazeFoodStoreName.Split('.').Last();
+                var foodStore = Resources.GetResourceItem(this, GrazeFoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             }
             else
             {
@@ -103,25 +103,15 @@ namespace Models.CLEM.Activities
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
+                        Status = ActivityStatus.Success;
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
-                    if (weanedCount > Convert.ToInt32(count * labourlimit, CultureInfo.InvariantCulture))
+                    if (weanedCount > Convert.ToInt32(count * labourlimit))
                     {
-                        this.Status = ActivityStatus.Partial;
                         break;
                     }
                 }
-
-                if(weanedCount > 0)
-                {
-                    SetStatusSuccess();
-                }
-                else
-                {
-                    this.Status = ActivityStatus.NotNeeded;
-                }
-
             }
         }
 
@@ -173,6 +163,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
+            Status = ActivityStatus.NotNeeded;
             return;
         }
 
