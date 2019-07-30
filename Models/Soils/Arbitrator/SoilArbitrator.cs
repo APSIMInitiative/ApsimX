@@ -104,9 +104,9 @@ namespace Models.Soils.Arbitrator
             InitialSoilState.Initialise();
 
             Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, uptakeModels);
-            Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate1 * 0.5, uptakeModels);
-            Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5, uptakeModels);
-            Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3, uptakeModels);
+            Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, InitialSoilState/* - UptakeEstimate1 * 0.5*/, uptakeModels);
+            Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState/* - UptakeEstimate2 * 0.5*/, uptakeModels);
+            Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState/* - UptakeEstimate3*/, uptakeModels);
 
             List<ZoneWaterAndN> listOfZoneUptakes = new List<ZoneWaterAndN>();
             List <CropUptakes> ActualUptakes = new List<CropUptakes>();
