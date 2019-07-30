@@ -375,12 +375,12 @@ namespace Models.PMF
             for (int layer = 0; layer <= currentLayer; layer++)
             {
                 var swdep = myZone.StartWater[layer]; //mm
-                var flow = myZone.WaterUptake[layer];
+                var dltSwdep = myZone.WaterUptake[layer];
                 
                 //NO3N is in kg/ha - old sorghum used g/m^2
-                var no3conc = zone.NO3N[layer] * kgha2gsm / swdep;
-                var no3massFlow = no3conc * (-flow);
-                myZone.MassFlow[layer] = no3massFlow;
+                var no3conc = MathUtilities.Divide(zone.NO3N[layer] * kgha2gsm, swdep, 0);
+                var no3massFlow = no3conc * (-dltSwdep);
+                myZone.MassFlow[layer] = Math.Min(no3massFlow, zone.NO3N[layer] * kgha2gsm);
 
                 //diffusion
                 var swAvailFrac = MathUtilities.Divide(myZone.AvailableSW[layer], myZone.PotentialAvailableSW[layer], 0);
