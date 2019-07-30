@@ -246,12 +246,12 @@ namespace Models.CLEM.Activities
             foreach (var location in breeders)
             {
                 // determine all foetus and newborn mortality of all pregnant females.
-                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsPregnant | a.BirthDue).ToList())
+                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsPregnant).ToList())
                 {
                     // calculate foetus and newborn mortality 
                     // total mortality / (gestation months + 1) to get monthly mortality
                     // done here before births to account for post birth motality as well..
-                    // IsPregnant or BirthDue month
+                    // IsPregnant status does not change until births occur in next section so will include mortality in month of birth
                     // needs to be caclulated for each offspring carried.
                     for (int i = 0; i < female.CarryingCount; i++)
                     {
