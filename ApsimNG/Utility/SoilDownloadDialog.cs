@@ -16,6 +16,7 @@
     using UserInterface.Commands;
     using UserInterface.Presenters;
     using UserInterface.Views;
+    using System.Globalization;
 
     /// <summary>
     /// Class for displaying a dialog to select a soil description to be downloaded from ASRIS or ISRIC
@@ -848,8 +849,8 @@
                     newSoil.Name = "Synthetic soil derived from ISRIC SoilGrids REST API";
                     newSoil.DataSource = "ISRIC SoilGrids";
                     newSoil.SoilType = soilType;
-                    newSoil.Latitude = Double.Parse(entryLatitude.Text);
-                    newSoil.Longitude = Double.Parse(entryLongitude.Text);
+                    newSoil.Latitude = Double.Parse(entryLatitude.Text, CultureInfo.InvariantCulture);
+                    newSoil.Longitude = Double.Parse(entryLongitude.Text, CultureInfo.InvariantCulture);
 
                     // ISRIC values are for "levels", not "intervals", so we need to convert to layers
                     // Following Andrew Moore's lead on layer thickness and weightings.
@@ -913,7 +914,7 @@
                     analysis.ParticleSizeSilt = ConvertLayers(silt, layerCount);
                     analysis.ParticleSizeClay = ConvertLayers(clay, layerCount);
                     analysis.Rocks = ConvertLayers(coarse, layerCount);
-                    analysis.PHUnits = Analysis.PHUnitsEnum.Water;
+                    analysis.PHUnits = Sample.PHSampleUnitsEnum.Water;
                     analysis.PH = ConvertLayers(phWater, layerCount);
                     analysis.CEC = ConvertLayers(cationEC, layerCount);
                     // Obviously using the averaging in "ConvertLayers" for texture classes is not really correct, but should be OK as a first pass if we don't have sharply contrasting layers
@@ -958,7 +959,7 @@
                     wheat.KL = kl;
                     wheat.LL = ll;
 
-                    organicMatter.OCUnits = SoilOrganicMatter.OCUnitsEnum.Total;
+                    organicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
                     organicMatter.OC = ConvertLayers(ocdrc, layerCount);
 
                     double rootWt = Math.Max(0.0, Math.Min(3000.0, 2.5 * (ppt - 100.0)));

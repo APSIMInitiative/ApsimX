@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 namespace Models.WaterModel
 {
-    using APSIM.Shared.Soils;
     using APSIM.Shared.Utilities;
     using Core;
     using Interfaces;

@@ -176,8 +176,8 @@
         private void OnBeginRun(object sender, EventArgs e)
         {
             R r = new R();
-            Console.WriteLine(r.InstallPackage("boot"));
-            Console.WriteLine(r.InstallPackage("sensitivity"));
+            r.InstallPackage("boot");
+            r.InstallPackage("sensitivity");
         }
 
         /// <summary>
@@ -400,7 +400,7 @@
             File.WriteAllText(rFileName, script);
             R r = new R();
 
-            string result = r.Run(rFileName, "");
+            string result = r.Run(rFileName);
             string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");
             if (!File.Exists(tempFile))
                 File.Create(tempFile).Close();
