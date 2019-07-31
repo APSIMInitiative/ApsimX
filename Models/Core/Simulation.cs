@@ -164,6 +164,13 @@ namespace Models.Core
             Locater.Clear();
         }
 
+        /// <summary>Returns an instance of an events service</summary>
+        /// <param name="model">The model the service is for</param>
+        public IEvent GetEventService(IModel model)
+        {
+            return new Events(model);
+        }
+
         /// <summary>Gets the next job to run</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()
         {
@@ -220,7 +227,7 @@ namespace Models.Core
             }
 
             var links = new Links(Services);
-            var events = new Events(this);
+            var events = GetEventService(this);
 
             try
             {

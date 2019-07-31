@@ -165,10 +165,6 @@ namespace Models
         /// </summary>
         [Link] public Simulation MySimulation;
         /// <summary>
-        /// Holds the event service
-        /// </summary>
-        [Link] public Simulations MySimulations;
-        /// <summary>
         /// For logging
         /// </summary>
         [Link] public Summary Summary;
@@ -185,7 +181,7 @@ namespace Models
         {
             currentState = InitialState;
 
-            (MySimulations?.GetEventService(this) as Events).Publish("transition", null);
+            (MySimulation?.GetEventService(this) as Events).Publish("transition", null);
             Summary.WriteMessage(this, "Initialised, state=" + currentState + "(of "+ Nodes.Count + " total)");
         }
 
@@ -218,7 +214,7 @@ namespace Models
                 }
                 if (bestScore > 0.0)
                 {
-                    Events eventService = (Events)MySimulations?.GetEventService(this);
+                    Events eventService = (Events)MySimulation?.GetEventService(this);
 
                     if (currentState != "")
                     {
