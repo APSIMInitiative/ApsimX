@@ -164,11 +164,11 @@ namespace Models.Core
             Locater.Clear();
         }
 
-        /// <summary>Returns an instance of an events service</summary>
+        /// <summary>Returns an events service</summary>
         /// <param name="model">The model the service is for</param>
         public IEvent GetEventService(IModel model)
         {
-            return new Events(model);
+            return (new Events(model));
         }
 
         /// <summary>Gets the next job to run</summary>

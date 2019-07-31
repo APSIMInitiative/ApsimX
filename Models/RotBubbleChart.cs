@@ -180,10 +180,13 @@ namespace Models
         private void OnCommence(object sender, EventArgs e)
         {
             currentState = InitialState;
-
-            (MySimulation?.GetEventService(this) as Events).Publish("transition", null);
+            eventService = (Events) MySimulation.GetEventService(this);
+            eventService.Publish("transition", null);
             Summary.WriteMessage(this, "Initialised, state=" + currentState + "(of "+ Nodes.Count + " total)");
         }
+
+        [NonSerialized]
+        private Events eventService = null;
 
         [EventSubscribe("DoManagement")]
         private void OnDoManagement(object sender, EventArgs e)
@@ -200,7 +203,7 @@ namespace Models
                     double score = 1;
                     foreach (string testCondition in arc.testCondition)
                     {
-                        var v = MySimulation?.Get(testCondition);
+                        var v = MySimulation.Get(testCondition);
                         if (v == null) throw new Exception("Test condition \"" + testCondition + "\" returned nothing");
                         //Summary.WriteMessage(this, "process 1: test=" + testCondition + " value=" + v);
                         double c = System.Convert.ToDouble(v);
@@ -214,8 +217,6 @@ namespace Models
                 }
                 if (bestScore > 0.0)
                 {
-                    Events eventService = (Events)MySimulation?.GetEventService(this);
-
                     if (currentState != "")
                     {
                         eventService.Publish("transition_from_" + currentState, null);
