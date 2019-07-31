@@ -1,7 +1,6 @@
 ﻿//
 // TO DO
 //
-// icons missing from 'add model' , explorer tree etc
 // implement node colours & descriptions, separate name from id
 // dynamic / auto layout of new nodes & arcs
 // implement command history

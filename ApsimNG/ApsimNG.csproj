@@ -218,9 +218,11 @@
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="EventArguments\RotBubbleChartArgs.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
     <Compile Include="Interfaces\IPropertyTreeView.cs" />
     <Compile Include="Interfaces\IRotBubbleChartView.cs" />
+    <Compile Include="Menus\ContextMenuHelper.cs" />
     <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
     <Compile Include="Presenters\CLEM\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMFileCropPresenter.cs" />
