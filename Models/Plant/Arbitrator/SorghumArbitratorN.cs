@@ -268,21 +268,16 @@ namespace Models.PMF
         /// <param name="BAT">The organs.</param>
         public double AllocateStructuralFromLeaf(SorghumLeaf leaf, int iSupply, int iSink, BiomassArbitrationType BAT)
         {
-            //leaf called
             double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink]);
             if (MathUtilities.IsPositive(StructuralRequirement))
             {
-                double currentRetranslocatedN = leaf.DltRetranslocatedN; //-ve number
-
                 bool forLeaf = iSupply == iSink;
                 double providedN = leaf.provideNRetranslocation(BAT, StructuralRequirement, forLeaf);
                 BAT.StructuralAllocation[iSink] += providedN;
 
-                double afterRetranslocatedN = leaf.DltRetranslocatedN;
-                //Leaf keeps track of retranslocation - the return value can include DltLAI which is not techncally retraslocated
-                //Let leaf handle the updating
+                // Leaf's dltRetranslocatedN is negative (as in old apsim).
+                BAT.Retranslocation[iSupply] = Math.Abs(leaf.DltRetranslocatedN);
 
-                BAT.Retranslocation[iSupply] += Math.Abs(afterRetranslocatedN - currentRetranslocatedN);
                 return providedN;
             }
             return 0.0;

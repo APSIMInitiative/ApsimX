@@ -659,7 +659,7 @@ namespace Models.PMF.Organs
         /// <summary>Total LAII as a result of senescence.</summary>
         public double SenescedLai { get; set; }
 
-        /// <summary>Delta of N retranslocated.</summary>
+        /// <summary>Amount of N retranslocated today.</summary>
         public double DltRetranslocatedN { get; set; }
         /// <summary>Delta of N removed due to Senescence.</summary>
         public double DltSenescedN { get; set; }
@@ -1176,8 +1176,7 @@ namespace Models.PMF.Organs
                         requiredN -= laiN;
                         nProvided += laiN;
 
-                        // There is no guard clause here in old apsim.
-                        BAT.StructuralAllocation[leafIndex] = Math.Max(0, BAT.StructuralAllocation[leafIndex] - laiN);
+                        DltRetranslocatedN -= laiN;
                     }
                 }
 
