@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 57,
+  "Version": 58,
   "Name": "Simulations",
   "Children": [
     {
@@ -8966,7 +8966,6 @@
               "Children": [
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -8984,6 +8983,18 @@
                   "LocationAccuracy": null,
                   "DataSource": null,
                   "Comments": null,
+                  "AirDry": [
+                    0.08,
+                    0.19,
+                    0.23,
+                    0.26,
+                    0.26,
+                    0.28,
+                    0.25,
+                    0.28,
+                    0.3,
+                    0.31
+                  ],
                   "Name": "HRS",
                   "Children": [
                     {
@@ -16340,7 +16351,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "StagePMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": null,
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -16652,7 +16674,6 @@
               "Children": [
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -16670,6 +16691,18 @@
                   "LocationAccuracy": null,
                   "DataSource": null,
                   "Comments": null,
+                  "AirDry": [
+                    0.08,
+                    0.19,
+                    0.23,
+                    0.26,
+                    0.26,
+                    0.28,
+                    0.25,
+                    0.28,
+                    0.3,
+                    0.31
+                  ],
                   "Name": "HRS",
                   "Children": [
                     {
@@ -24840,7 +24873,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "StagePMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": null,
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -25170,7 +25214,6 @@
               "Children": [
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -25188,6 +25231,18 @@
                   "LocationAccuracy": null,
                   "DataSource": null,
                   "Comments": null,
+                  "AirDry": [
+                    0.08,
+                    0.19,
+                    0.23,
+                    0.26,
+                    0.26,
+                    0.28,
+                    0.25,
+                    0.28,
+                    0.3,
+                    0.31
+                  ],
                   "Name": "HRS",
                   "Children": [
                     {
@@ -26729,36 +26784,6 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "DeadN",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report",
-              "XFieldName": "day_of_year",
-              "YFieldName": "Leaf.Dead.N",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "DeadN1",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -34937,7 +34962,6 @@
               "Children": [
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -34955,6 +34979,18 @@
                   "LocationAccuracy": null,
                   "DataSource": null,
                   "Comments": null,
+                  "AirDry": [
+                    0.08,
+                    0.19,
+                    0.23,
+                    0.26,
+                    0.26,
+                    0.28,
+                    0.25,
+                    0.28,
+                    0.3,
+                    0.31
+                  ],
                   "Name": "HRS",
                   "Children": [
                     {
@@ -40825,6 +40861,111 @@
               ],
               "LegendPosition": 0,
               "DisabledSeries": [],
+              "Name": "NSupply",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "day_of_year",
+                  "YFieldName": "nSupply",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "NSupplyPMF",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 1,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "WaterStress",
+                  "XFieldName": "day_of_year",
+                  "YFieldName": "n_supply_soil",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "NSupply710",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This is the nSupply variable which gets passed into:\n\n`void Nitrogen::partition(void)` in old apsim\n\n`public void DoAllocation(...)` in new apsim",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "DisabledSeries": [],
               "Name": "Demand",
               "Children": [
                 {
@@ -40912,102 +41053,6 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Demand7101",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 3,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 0,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                }
-              ],
-              "LegendPosition": 0,
-              "DisabledSeries": [],
-              "Name": "Supply",
-              "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16747854,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 1,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "WaterStress",
-                  "XFieldName": "day_of_year",
-                  "YFieldName": "n_supply_soil",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Depth7101",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -1663232,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "Report",
-                  "XFieldName": "day_of_year",
-                  "YFieldName": "Arbitrator.NSupply",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Depth1",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -43771,7 +43816,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "StagePMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": null,
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -43867,7 +43923,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "dltTTPMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": null,
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -43963,7 +44030,18 @@
                   "CumulativeX": false,
                   "Filter": "",
                   "Name": "dltTTFM_PMF",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.EventNamesOnGraph, Models",
+                      "ColumnName": "Sorghum.Phenology.CurrentStageName",
+                      "SimulationName": null,
+                      "Name": "EventNamesOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
