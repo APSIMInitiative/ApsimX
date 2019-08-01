@@ -224,8 +224,6 @@ namespace Models
         private class FakeWeatherReader : Accumulator
         {
             private DataTable metTable;
-            DateTime StartDate;
-            DateTime EndDate;
             private int iRow;
             private int nRows;
 
@@ -234,8 +232,14 @@ namespace Models
                 metTable = metData;
                 nRows = metTable.Rows.Count;
                 iRow = 0;
-                StartDate = RowDate(0);
-                EndDate = RowDate(nRows - 1);
+                DateTime StartDate = RowDate(0);
+                DateTime EndDate = RowDate(nRows - 1);
+                // Modify nRows so that we wrap around appropriately
+                DateTime dayBeforeStart = StartDate.AddDays(-1.0);
+                DateTime wrapDate = new DateTime(EndDate.Year, dayBeforeStart.Month, dayBeforeStart.Day);
+                if (wrapDate.CompareTo(EndDate) > 0)
+                    wrapDate = wrapDate.AddYears(-1);
+                nRows -= (EndDate - wrapDate).Days;
             }
 
             private DateTime RowDate(int row)
