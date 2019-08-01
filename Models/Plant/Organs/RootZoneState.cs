@@ -110,6 +110,12 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
         public double[] Diffusion { get;  set; }
 
+        /// <summary>Esw</summary>
+        public double Esw { get; private set; }
+
+        /// <summary>EswCap</summary>
+        public double EswCap { get; private set; }
+
 
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
@@ -201,6 +207,7 @@ namespace Models.PMF.Organs
                 }
             }
         }
+
         /// <summary>
         /// Growth depth of roots in this zone
         /// </summary>
@@ -209,17 +216,15 @@ namespace Models.PMF.Organs
             // Do Root Front Advance
             int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
             double[] xf = soil.XF(plant.Name);
-
             //sorghum calc
             var rootDepthWaterStress = 1.0;
             if (root.RootDepthStressFactor != null)
             {
                 //calc StressFactorLookup   
-                var extractable = soil.SoilWater.ESW[RootLayer];
+                Esw = soil.SoilWater.ESW[RootLayer];
                 var llDep = soil.LL15[RootLayer] * soil.Thickness[RootLayer];
-                var capacity = soil.DULmm[RootLayer] - llDep;
-
-                root.SWAvailabilityRatio = APSIM.Shared.Utilities.MathUtilities.Divide(extractable, capacity, 10);
+                EswCap = soil.DULmm[RootLayer] - llDep;
+                root.SWAvailabilityRatio = APSIM.Shared.Utilities.MathUtilities.Divide(Esw, EswCap, 10);
                 rootDepthWaterStress = root.RootDepthStressFactor.Value();
             }
 
