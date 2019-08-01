@@ -201,6 +201,13 @@ namespace Models.PMF
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();
                 WatSupply = totalSupply; 
+
+                // Set reporting variables.
+                Avail = myZone.AvailableSW;
+                PotAvail = myZone.PotentialAvailableSW;
+                TotalAvail = myZone.AvailableSW.Sum();
+                TotalPotAvail = myZone.PotentialAvailableSW.Sum();
+
                 //used for SWDef PhenologyStress table lookup
                 SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0),0.0,10.0);
 
@@ -220,6 +227,18 @@ namespace Models.PMF
 
         ///Same as SDRatio?? used to calculate Photosynthesis stress in calculating yield (Grain)
         public double PhotoStress { get; set; }
+
+        /// <summary>Available SW by layer.</summary>
+        public double[] Avail { get; private set; }
+
+        /// <summary>Pot. Available SW by layer.</summary>
+        public double[] PotAvail { get; private set; }
+
+        /// <summary>Total available SW.</summary>
+        public double TotalAvail { get; private set; }
+
+        /// <summary>Total potential available SW.</summary>
+        public double TotalPotAvail { get; private set; }
 
         /// <summary>
         /// Calculate the potential N uptake for today. Should return null if crop is not in the ground (this is not true for old sorghum).
