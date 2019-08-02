@@ -61,12 +61,13 @@ namespace Models.PMF
             //var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
 
             // dh - Old apsim calls organ->calcNDemand() to get demands. This is equivalent to metabolic NDemand in new apsim.
-            //      Root had no separation of structural/metabolic N in old apsim. New apsim is similar, except it's all in
+            //      Root and grain had no separation of structural/metabolic N in old apsim. New apsim is similar, except it's all in
             //      structural demand, so we need to remember to take that into account as well.
-            var totalPlantNDemand = BAT.TotalMetabolicDemand + BAT.StructuralDemand[rootIndex] - grainDemand; // to replicate calcNDemand in old sorghum 
-            if (MathUtilities.IsPositive(totalPlantNDemand))
+            double totalDemand = BAT.TotalMetabolicDemand + BAT.StructuralDemand[rootIndex] + BAT.StructuralDemand[grainIndex];
+            double plantNDemand = Math.Max(0, totalDemand - grainDemand); // to replicate calcNDemand in old sorghum 
+            if (MathUtilities.IsPositive(plantNDemand))
             {
-                BAT.SupplyDemandRatioN = MathUtilities.Divide(BAT.TotalUptakeSupply, totalPlantNDemand, 0);
+                BAT.SupplyDemandRatioN = MathUtilities.Divide(BAT.TotalUptakeSupply, plantNDemand, 0);
                 BAT.SupplyDemandRatioN = Math.Min(BAT.SupplyDemandRatioN, 1);
                 // BAT.SupplyDemandRatioN = Math.Max(BAT.SupplyDemandRatioN, 0); // ?
             }
@@ -92,13 +93,13 @@ namespace Models.PMF
 
             double totalMetabolicDemand = leafDemand + rachisDemand + stemDemand;
 
-            double leafProportion = MathUtilities.Divide(leafDemand, totalMetabolicDemand, 0);
-            double rachisProportion = MathUtilities.Divide(rachisDemand, totalMetabolicDemand, 0);
-            double stemProportion = MathUtilities.Divide(stemDemand, totalMetabolicDemand, 0);
+            double leafProportion = MathUtilities.Bound(MathUtilities.Divide(leafDemand, totalMetabolicDemand, 0), 0, 1);
+            double rachisProportion = MathUtilities.Bound(MathUtilities.Divide(rachisDemand, totalMetabolicDemand, 0), 0, 1);
+            double stemProportion = MathUtilities.Bound(MathUtilities.Divide(stemDemand, totalMetabolicDemand, 0), 0, 1);
 
-            double leafAlloc = Math.Min(1, NotAllocated * leafProportion);
-            double rachisAlloc = Math.Min(1, NotAllocated * rachisProportion);
-            double stemAlloc = Math.Min(1, NotAllocated * stemProportion);
+            double leafAlloc = NotAllocated * leafProportion;
+            double rachisAlloc = NotAllocated * rachisProportion;
+            double stemAlloc = NotAllocated - leafAlloc - rachisAlloc;
 
             AllocateMetabolic(leafIndex, leafAlloc, BAT);
             AllocateMetabolic(rachisIndex, rachisAlloc, BAT);
@@ -177,6 +178,7 @@ namespace Models.PMF
             var forLeaffromStem = AllocateStructuralFromStem(stemIndex, leafIndex, N, dm, Organs[stemIndex] as GenericOrgan);
             var forLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, leafIndex, N);
 
+            // Retranslocate to grain
             double fromRachis = AllocateStructuralFromRachis(rachisIndex, grainIndex, N, dm, Organs[rachisIndex] as GenericOrgan);
             double fromStem = AllocateStructuralFromStem(stemIndex, grainIndex, N, dm, Organs[stemIndex] as GenericOrgan);
             double fromLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, grainIndex, N);
