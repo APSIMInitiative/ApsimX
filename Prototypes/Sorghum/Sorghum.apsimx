@@ -91,6 +91,10 @@
               "SWAvailRatio": 0.0,
               "SDRatio": 0.0,
               "PhotoStress": 0.0,
+              "Avail": null,
+              "PotAvail": null,
+              "TotalAvail": 0.0,
+              "TotalPotAvail": 0.0,
               "Name": "Arbitrator",
               "Children": [
                 {
@@ -2984,6 +2988,10 @@
             },
             {
               "$type": "Models.PMF.Organs.Root, Models",
+              "Xfc": 0.0,
+              "Esw": 0.0,
+              "EswCap": 0.0,
+              "SwDep": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -8780,8 +8788,8 @@
           "$type": "Models.Map, Models",
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
-            "Latitude": -3.3379539614164719,
-            "Longitude": 140.80078125000003
+            "Latitude": -3.33795396141647,
+            "Longitude": 140.80078125
           },
           "Zoom": 3.0,
           "Name": "Map",
