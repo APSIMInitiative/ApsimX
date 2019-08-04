@@ -495,6 +495,9 @@ namespace Models.PMF
                     double BiomassRetranslocated = 0;
                     if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
                     {
+                        var phenology = Apsim.Find(this, typeof(Phen.Phenology)) as Phen.Phenology;
+                        if (phenology.Beyond("EndGrainFill"))
+                            return;
                         arbitrator.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
 
                         int leafIndex = 2;

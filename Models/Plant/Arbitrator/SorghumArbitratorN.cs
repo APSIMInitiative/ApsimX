@@ -135,11 +135,14 @@ namespace Models.PMF
                 double MetabolicAllocation = Math.Min(MetabolicRequirement, allocation);
 
                 //to stop it from givig it too much metabolic - push the flowover from metabolic into storage
-                BAT.MetabolicAllocation[i] += MetabolicAllocation; 
+                BAT.MetabolicAllocation[i] += MetabolicAllocation;
 
                 //do storage if there is any leftover
                 double storageAllocation = allocation - MetabolicAllocation;
                 BAT.StorageAllocation[i] += storageAllocation;
+
+                if (storageAllocation > BAT.StorageDemand[i])
+                    BAT.StorageDemand[i] += storageAllocation;
             }
         }
 
