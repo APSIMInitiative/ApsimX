@@ -65,6 +65,13 @@ namespace Models.PMF.Organs
         /// <summary>The TotalLAI for this Culm</summary>
         public double TotalLAI { get; set; }
 
+        /// <summary>The aX0 for this Culm</summary>
+        public double aX0 { get; set; }
+        /// <summary>The aMaxSlope for this Culm</summary>
+        public double aMaxSlope{ get; set; }
+        /// <summary>The aMaxIntercept for this Culm</summary>
+        public double aMaxIntercept { get; set; }
+
         /// <summary>Add number of new leaf appeared</summary>
         public void UpdateLeafNumber(double dltNewLeafAppeared, double updatedFinalLeaf)
         {
@@ -88,9 +95,11 @@ namespace Models.PMF.Organs
 
         private double calcIndividualLeafSize(double leafNo)
         {
-            double aX0 = 0.687;
-            double aMaxSlope = 22.25;
-            double aMaxIntercept = 92.45;
+
+            //double aX0 = 0.687;
+            //double aMaxSlope = 22.25;
+            //double aMaxIntercept = 92.45;
+
             double largestLeafPlateau = 0.0;
             // use finalLeafNo to calculate the size of the individual leafs
             // Eqn 5 from Improved methods for predicting individual leaf area and leaf senescence in maize

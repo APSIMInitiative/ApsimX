@@ -328,10 +328,11 @@ namespace Models.PMF
                         var maxDiffusionConst = root.MaxDiffusion.Value();
 
                         double ttElapsed = (Apsim.Find(this, "TTFMFromFlowering") as Functions.IFunction).Value();
-                        if (ttElapsed > 570)
+                        double NUptakeCease = (Apsim.Find(this, "NUptakeCease") as Functions.IFunction).Value();
+                        if (ttElapsed > NUptakeCease)
                             totalMassFlow = 0;
 
-                        if (totalMassFlow < nDemand && ttElapsed < 570) // fixme && ttElapsed < nUptakeCease
+                        if (totalMassFlow < nDemand && ttElapsed < NUptakeCease) // fixme && ttElapsed < nUptakeCease
                         {
                             actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
                             actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
