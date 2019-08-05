@@ -32,7 +32,7 @@
                     samples[0].SWUnits = samples[i].SWUnits;
                 }
 
-                if (MathUtilities.ValuesInArray(samples[i].NO3N.PPM))
+                if (samples[i].NO3N != null && MathUtilities.ValuesInArray(samples[i].NO3N.PPM))
                 {
                     samples[0].NO3N = samples[i].NO3N;
                     samples[0].NO3Units = samples[i].NO3Units;

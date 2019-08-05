@@ -71,10 +71,11 @@
               "SWUnits": 0,
               "NO3N": {
                 "$type": "Models.Soils.NitrogenValue, Models",
-                "PPM": [
-                  7.7988852518820382,
-                  4.6180953035143109
-                ]
+                "Values": [
+                  16.0,
+                  10.0
+                ],
+                "StoredAsPPM": false
               }
             }
           ]
