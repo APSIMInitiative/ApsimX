@@ -190,9 +190,9 @@
                     sample.NH4 = MapConcentration(sample.NH4ppm, sample.Thickness, thickness, 0.2);
                     sample.NH4Units = Sample.NUnitsEnum.ppm;
                 }
-                if (sample.NO3 != null)
+                if (sample.NO3N != null)
                 {
-                    sample.NO3 = MapConcentration(sample.NO3ppm, sample.Thickness, thickness, 1.0);
+                    sample.NO3N.PPM = MapConcentration(sample.NO3N.PPM, sample.Thickness, thickness, 1.0);
                     sample.NO3Units = Sample.NUnitsEnum.ppm;
                 }
 

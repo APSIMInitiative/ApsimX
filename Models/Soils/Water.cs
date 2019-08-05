@@ -14,6 +14,7 @@
     public class Water : Model
     {
         /// <summary>Gets or sets the thickness.</summary>
+        [Description("Depth (mm)")]
         public double[] Thickness { get; set; }
 
         /// <summary>Gets or sets the bd.</summary>

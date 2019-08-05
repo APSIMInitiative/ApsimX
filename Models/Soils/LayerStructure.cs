@@ -18,10 +18,7 @@ namespace Models.Soils
     public class LayerStructure : Model
     {
         /// <summary>Gets or sets the thickness.</summary>
-        /// <value>The thickness.</value>
-        [Units("mm")]
-        [Caption("Thickness")]
-        [Description("Soil layer thickness for each layer")]
+        [Description("Depth (mm)")]
         public double[] Thickness { get; set; }       
     }
 }

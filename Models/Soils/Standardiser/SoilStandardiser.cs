@@ -32,11 +32,11 @@
                     samples[0].SWUnits = samples[i].SWUnits;
                 }
 
-                if (MathUtilities.ValuesInArray(samples[i].NO3))
+                if (MathUtilities.ValuesInArray(samples[i].NO3N.PPM))
                 {
-                    samples[0].NO3 = samples[i].NO3;
+                    samples[0].NO3N = samples[i].NO3N;
                     samples[0].NO3Units = samples[i].NO3Units;
-                    MathUtilities.ReplaceMissingValues(samples[0].NO3, 0.01);
+                    MathUtilities.ReplaceMissingValues(samples[0].NO3N.PPM, 0.01);
                 }
 
                 if (MathUtilities.ValuesInArray(samples[i].NH4))

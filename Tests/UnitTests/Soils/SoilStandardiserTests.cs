@@ -56,14 +56,16 @@
                     new Sample
                     {
                         Thickness = new double[] { 1000 },
-                        NO3 = new double[] { 27 },
+                        NO3N = new NitrogenValue()
+                        {
+                            PPM = new double[] { 27 }
+                        },
                         OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     }
                 }
             };
-            Apsim.ParentAllChildren(soil);
-            soil.OnCreated();
+            Apsim.InitialiseModel(soil);
 
             SoilStandardiser.Standardise(soil);
 
@@ -128,7 +130,10 @@
                     new Sample
                     {
                         Thickness = new double[] { 1000 },
-                        NO3 = new double[] { 27 },
+                        NO3N = new NitrogenValue()
+                        {
+                            PPM = new double[] { 27 }
+                        },
                         OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     },
@@ -138,8 +143,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(soil);
-            soil.OnCreated();
+            Apsim.InitialiseModel(soil);
 
             SoilStandardiser.Standardise(soil);
 
@@ -196,15 +200,17 @@
                     new Sample
                     {
                         Thickness = new double[] { 100, 200 },
-                        NO3 = new double[] { 27, 16 },
+                        NO3N = new NitrogenValue()
+                        {
+                            PPM = new double[] { 27, 16 }
+                        },
                         NH4 = new double[] { 2, double.NaN },
                         PH = new double[] { 6.4, double.NaN },
                         NO3Units = Sample.NUnitsEnum.ppm
                     }
                 }
             };
-            Apsim.ParentAllChildren(soil);
-            soil.OnCreated();
+            Apsim.InitialiseModel(soil);
 
             SoilStandardiser.Standardise(soil);
 
@@ -213,7 +219,7 @@
             Assert.AreEqual(Apsim.Children(soil, typeof(Sample)).Count, 1);
             Assert.AreEqual(sample.Name, "Initial");
             Assert.AreEqual(sample.SW, new double[] { 0.1, 0.2 } );
-            Assert.AreEqual(sample.NO3, new double[] { 27, 16 });
+            Assert.AreEqual(sample.NO3N.PPM, new double[] { 27, 16 });
             Assert.AreEqual(sample.NH4, new double[] { 2, 0.01 });
             Assert.AreEqual(sample.OC, new double[] { 2.0, 0.9 });
             Assert.AreEqual(sample.PH, new double[] { 6.4, 6.9 });

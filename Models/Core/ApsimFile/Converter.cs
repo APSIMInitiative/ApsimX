@@ -123,7 +123,11 @@
                         sample["$type"] = "Models.Soils.Sample, Models";
                         sample["Name"] = "Initial conditions";
                         sample["Thickness"] = new JArray(new double[] { 1800 });
-                        sample["NO3"] = new JArray(new double[] { 10 });
+
+                        var nitrogenValue = new JObject();
+                        nitrogenValue["$type"] = "Models.Soils.NitrogenValue, Models";
+                        nitrogenValue["PPM"] = new JArray(new double[] { 3 });
+                        sample["NO3N"] = nitrogenValue;
                         sample["NH4"] = new JArray(new double[] { 1 });
                         sample["NO3Units"] = "kgha";
                         sample["NH4Units"] = "kgha";
@@ -583,6 +587,24 @@
             }
         }
 
+        private static void ConvertKgHaToPPM(JArray values)
+        {
+            var sample = JsonUtilities.Parent(values);
+            var soil = JsonUtilities.Parent(sample) as JObject;
+            var water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "Water");
+
+            // Get soil thickness and bulk density.
+            var soilThickness = water["Thickness"].Values<double>().ToArray();
+            var soilBD = water["BD"].Values<double>().ToArray();
+
+            // Get sample thickness and bulk density.
+            var sampleThickness = sample["Thickness"].Values<double>().ToArray();
+            var sampleBD = Soils.Standardiser.Layers.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last());
+
+            for (int i = 0; i < values.Count; i++)
+                values[i] = values[i].Value<double>() * 100 / (sampleBD[i] * sampleThickness[i]);
+        }
+
         /// <summary>
         /// Upgrades to version 59. Renames 'SoilCropOilPalm' to 'SoilCrop'.
         /// Renames Soil.SoilOrganicMatter.OC to Soil.Initial.OC
@@ -591,6 +613,22 @@
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion59(JObject root, string fileName)
         {
+            foreach (var sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
+            {
+                var array = sample["NO3"] as JArray;
+                if (array != null)
+                {
+                    var nitrogenValue = new JObject();
+                    nitrogenValue["$type"] = "Models.Soils.NitrogenValue, Models";
+
+                    var storedAsPPM = sample["NO3Units"]?.ToString() != "1";
+
+                    nitrogenValue["Values"] = array;
+                    nitrogenValue["StoredAsPPM"] = storedAsPPM;
+                    sample.Remove("NO3");
+                    sample["NO3N"] = nitrogenValue;
+                }
+            }
             foreach (var soilCropOilPalmNode in JsonUtilities.ChildrenRecursively(root, "SoilCropOilPalm"))
                 soilCropOilPalmNode["$type"] = "Models.Soils.SoilCrop, Models";
 
@@ -602,7 +640,7 @@
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].ESP", "[Soil].Initial.ESP");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Cl", "[Soil].Initial.CL");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].OC", "[Soil].Initial.OC");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNO3N", "[Soil].Initial.NO3");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNO3N", "[Soil].Initial.NO3N.PPM");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNH4N", "[Soil].Initial.NH4");
             }
 

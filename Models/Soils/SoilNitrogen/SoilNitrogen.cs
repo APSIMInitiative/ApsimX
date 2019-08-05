@@ -158,7 +158,7 @@ namespace Models.Soils
             enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
             enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
             ph = Soil.Initial.PH;
-            NO3ppm = Soil.Initial.NO3;
+            NO3ppm = Soil.Initial.NO3N.PPM;
             NH4ppm = Soil.Initial.NH4;
             ureappm = new double[Soil.Thickness.Length];
 

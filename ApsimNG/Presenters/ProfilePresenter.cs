@@ -1,17 +1,17 @@
 ﻿namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Utilities;
+    using Commands;
+    using Models.Core;
+    using Models.Graph;
+    using Models.Soils;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
     using System.Linq;
     using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using EventArguments;
-    using Interfaces;
-    using Models.Core;
-    using Models.Graph;
-    using Models.Soils;
     using Views;
 
     /// <summary>
@@ -34,6 +34,8 @@
 
     public class ProfilePresenter : IPresenter
     {
+        private static Color[] cropColors = { Color.FromArgb(173, 221, 142), Color.FromArgb(247, 252, 185) };
+
         /// <summary>
         /// The underlying model that this presenter is to work with.
         /// </summary>
@@ -62,7 +64,7 @@
         /// <summary>
         /// A list of all properties in the profile grid.
         /// </summary>
-        private List<VariableProperty> propertiesInGrid = new List<VariableProperty>();
+        private List<PropertyColumn> propertiesInGrid = new List<PropertyColumn>();
 
         /// <summary>
         /// Presenter for the profile grid.
@@ -78,11 +80,6 @@
         /// The parent zone of our model.
         /// </summary>
         private IModel parentForGraph;
-
-        /// <summary>
-        /// When the user right clicks a column header, this field contains the index of that column
-        /// </summary>
-        private int indexOfClickedVariable;
 
         /// <summary>
         /// Attach the model to the view.
@@ -114,9 +111,7 @@
             this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
 
             if (this.graph == null)
-            {
                 this.view.ShowGraph(false);
-            }
             else
             {
                 // The graph's series contain many variables such as [Soil].LL. We now replace
@@ -140,11 +135,10 @@
                     this.graphPresenter = new GraphPresenter();
                     for (int col = 0; col < this.propertiesInGrid.Count; col++)
                     {
-                        VariableProperty property = this.propertiesInGrid[col];
-                        string columnName = property.Description;
+                        string columnName = propertiesInGrid[col].ColumnName;
 
                         // crop colours
-                        if (property.CropName != null && columnName.Contains("LL"))
+                        if (columnName.Contains("LL"))
                         {
                             Series cropLLSeries = new Series();
                             cropLLSeries.Name = columnName;
@@ -156,7 +150,7 @@
                             cropLLSeries.XAxis = Axis.AxisType.Top;
                             cropLLSeries.YAxis = Axis.AxisType.Left;
                             cropLLSeries.YFieldName = (parentForGraph is Soil ? Apsim.FullPath(parentForGraph) : "[Soil]") + ".DepthMidPoints";
-                            cropLLSeries.XFieldName = Apsim.FullPath(property.Object as Model) + "." + property.Name;
+                            //cropLLSeries.XFieldName = Apsim.FullPath(property.Object as Model) + "." + property.Name;
                             cropLLSeries.Parent = this.graph;
 
                             this.graph.Children.Add(cropLLSeries);
@@ -170,15 +164,15 @@
 
             // Trap the invoking of the ProfileGrid 'CellValueChanged' event so that
             // we can save the contents.
-            this.view.ProfileGrid.CellsChanged += this.OnProfileGridCellValueChanged;
+            this.view.ProfileGrid.CellsHaveChanged += this.OnProfileGridCellValueChanged;
 
             // Trap the right click on column header so that we can potentially put
             // units on the context menu.
-            this.view.ProfileGrid.GridColumnClicked += this.OnGridColumnClicked;
+            this.view.ProfileGrid.ColumnMenuClicked += this.OnColumnMenuItemClicked;
 
             // Trap the model changed event so that we can handle undo.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
-            
+
             this.view.ShowView(true);
         }
 
@@ -187,22 +181,19 @@
         /// </summary>
         public void Detach()
         {
-            this.view.ProfileGrid.EndEdit();
-            this.view.ProfileGrid.CellsChanged -= this.OnProfileGridCellValueChanged;
-            this.view.ProfileGrid.GridColumnClicked -= this.OnGridColumnClicked;
+            view.ProfileGrid.EndEdit();
+            SaveGrid();
+
+            this.view.ProfileGrid.CellsHaveChanged -= this.OnProfileGridCellValueChanged;
+            this.view.ProfileGrid.ColumnMenuClicked -= this.OnColumnMenuItemClicked;
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
             propertyPresenter.Detach();
-            profileGrid.Detach();
             if (this.graphPresenter != null)
-            {
                 this.graphPresenter.Detach();
-            }
 
             if (this.parentForGraph != null && this.graph != null)
-            {
                 this.parentForGraph.Children.Remove(this.graph);
-            }
         }
 
         /// <summary>
@@ -210,228 +201,69 @@
         /// </summary>
         private void PopulateGrid()
         {
-            DataTable table = this.CreateTable();
-            this.view.ProfileGrid.DataSource = table;
+            view.ProfileGrid.SetColumns(propertiesInGrid.Cast<GridColumnMetaData>().ToList());
 
             // Remove, from the PropertyGrid, the properties being displayed in the ProfileGrid.
-            this.propertyPresenter.RemoveProperties(this.propertiesInGrid);
-            this.view.ShowPropertyGrid(!this.propertyPresenter.IsEmpty);
-
-            // Format the profile grid.
-            this.FormatGrid(table);
+            propertyPresenter.RemoveProperties(propertiesInGrid.Select(property => property.PropertyName));
+            view.ShowPropertyGrid(!propertyPresenter.IsEmpty);
         }
 
-        /// <summary>
-        /// Format the grid based on the data in the specified table.
-        /// </summary>
-        /// <param name="table">The table to use to format the grid.</param>
-        private void FormatGrid(DataTable table)
-        {
-            Color[] cropColors = { Color.FromArgb(173, 221, 142), Color.FromArgb(247, 252, 185) };
-            Color[] predictedCropColors = { Color.FromArgb(233, 191, 255), Color.FromArgb(244, 226, 255) };
-
-            int cropIndex = 0;
-            int predictedCropIndex = 0;
-
-            Color foregroundColour = Color.Black;
-            Color backgroundColour = Color.White;
-
-            for (int col = 0; col < this.propertiesInGrid.Count; col++)
-            {
-                VariableProperty property = this.propertiesInGrid[col];
-
-                string columnName = property.Description;
-
-                // crop colours
-                if (property.CropName != null)
-                {
-                    if (property.Metadata.Contains("Estimated"))
-                    {
-                        backgroundColour = predictedCropColors[predictedCropIndex];
-                        foregroundColour = Color.Gray;
-                        if (columnName.Contains("XF"))
-                        {
-                            predictedCropIndex++;
-                        }
-
-                        if (predictedCropIndex >= predictedCropColors.Length)
-                        {
-                            predictedCropIndex = 0;
-                        }
-                    }
-                    else
-                    {
-                        backgroundColour = cropColors[cropIndex];
-                        if (columnName.Contains("XF"))
-                        {
-                            cropIndex++;
-                        }
-
-                        if (cropIndex >= cropColors.Length)
-                        {
-                            cropIndex = 0;
-                        }
-                    }
-                }
-
-                // tool tips
-                string[] toolTips = null;
-                if (property.IsReadOnly)
-                {
-                    foregroundColour = Color.Gray;
-                    toolTips = StringUtilities.CreateStringArray("Calculated", this.view.ProfileGrid.RowCount);
-                }
-                else
-                {
-                    foregroundColour = Color.Black;
-                    toolTips = property.Metadata;
-                }
-
-                string format = property.Format;
-                if (format == null || format == string.Empty)
-                {
-                    format = "N3";
-                }
-
-                IGridColumn gridColumn = this.view.ProfileGrid.GetColumn(col);
-                gridColumn.Format = format;
-                gridColumn.BackgroundColour = backgroundColour;
-                gridColumn.ForegroundColour = foregroundColour;
-                gridColumn.ReadOnly = property.IsReadOnly;
-                for (int rowIndex = 0; rowIndex < toolTips.Length; rowIndex++)
-                {
-                    IGridCell cell = this.view.ProfileGrid.GetCell(col, rowIndex);
-                    cell.ToolTip = toolTips[rowIndex];
-                }
-
-                // colour the column headers of total columns.
-                try
-                {
-                    if (!double.IsNaN(property.Total))
-                    {
-                        gridColumn.HeaderForegroundColour = Color.Red;
-                    }
-                }
-                catch (Exception err)
-                {
-                    explorerPresenter.MainPresenter.ShowError(err);
-                }
-            }
-
-            this.view.ProfileGrid.RowCount = 100;
-        }
-
-        /// <summary>
-        /// Setup the profile grid based on the properties in the model.
-        /// </summary>
-        /// <param name="model">The underlying model we are to use to find the properties</param>
+        /// <summary>Find all properties to display in the grid.</summary>
+        /// <param name="model">The underlying model we are to use to find the properties.</param>
         private void FindAllProperties(Model model)
         {
-            // Properties must be public with a getter and a setter. They must also
-            // be either double[] or string[] type.
+            // When user clicks on a SoilCrop, there is no thickness column. In this
+            // situation get thickness column from parent model.
+            if (model is SoilCrop && propertiesInGrid.Count == 0)
+            {
+                var thicknessProperty = model.Parent.GetType().GetProperty("Thickness");
+                propertiesInGrid.Add(new ThicknessColumn(thicknessProperty, model.Parent));
+            }
+
             foreach (PropertyInfo property in model.GetType().GetProperties())
             {
-                if (property.Name == "Thickness")
-                    propertiesInGrid.Add(new VariableProperty(model, property));
-                else
+                var description = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false);
+                if (property.PropertyType.IsArray && description != null)
                 {
-                    bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
-                    if (hasDescription && property.CanRead)
-                    {
-                        if (this.model.Name == "Water" &&
-                            property.Name == "Depth" &&
-                            typeof(SoilCrop).IsAssignableFrom(model.GetType()))
-                        {
-                        }
-                        else if (property.PropertyType == typeof(double[]) ||
-                            property.PropertyType == typeof(string[]))
-                        {
-                            this.propertiesInGrid.Add(new VariableProperty(model, property));
-                        }
-                        else if (property.PropertyType.FullName.Contains("SoilCrop"))
-                        {
-                            List<SoilCrop> crops = property.GetValue(model, null) as List<SoilCrop>;
-                            if (crops != null)
-                            {
-                                foreach (SoilCrop crop in crops)
-                                {
-                                    this.FindAllProperties(crop as Model);
-                                }
-                            }
-                        }
-                    }
+                    PropertyColumn column;
+
+                    if (property.Name == "Thickness")
+                        column = new ThicknessColumn(property, model);
+                    else if (property.PropertyType == typeof(NitrogenValue))
+                        column = new NitrogenValueColumn(property, model);
+                    else
+                        column = new PropertyColumn(property, model);
+
+                    if (model is SoilCrop)
+                        FormatSoilCropColumn(column);
+
+                    propertiesInGrid.Add(column);
+
+                    if (property.Name == "XF")
+                        propertiesInGrid.Add(new PAWCColumn(model, propertiesInGrid));
                 }
             }
+
+            foreach (var soilCrop in model.Children.FindAll(child => child is SoilCrop))
+                FindAllProperties(soilCrop);
         }
 
-        /// <summary>
-        /// Setup the profile grid based on the properties in the model.
-        /// The column index of the cell that has changed.
-        /// </summary>
-        /// <returns>The filled data table. Never returns null.</returns>
-        private DataTable CreateTable()
+        /// <summary>Format the SoilCrop column.</summary>
+        /// <param name="column">The column to format.</param>
+        private void FormatSoilCropColumn(PropertyColumn column)
         {
-            DataTable table = new DataTable();
+            var soilCrop = column.ObjectWithProperty as SoilCrop;
 
-            foreach (VariableProperty property in this.propertiesInGrid)
-            {
-                string columnName = property.Description;
-                string columnCaption = property.Caption;
-                if (property.UnitsLabel != null)
-                {
-                    columnName += "\r\n" + property.UnitsLabel;
-                    columnCaption += "\r\n" + property.UnitsLabel;
-                }
+            column.ColumnName = soilCrop.Name.Replace("Soil", "") + " " + column.ColumnName;
 
-                // add a total to the column header if necessary.
-                double total;
-                try
-                {
-                    total = property.Total;
-                }
-                catch (Exception err)
-                {
-                    total = double.NaN;
-                    explorerPresenter.MainPresenter.ShowError(err);
-                }
-                if (!double.IsNaN(total))
-                {
-                    columnName = columnName + "\r\n" + total.ToString("N1");
-                    columnCaption = columnCaption + "\r\n" + total.ToString("N1");
-                }
+            // Colour the crop column.
+            var crops = soilCrop.Parent.Children.Where(child => child is SoilCrop).ToList();
+            int cropIndex = crops.IndexOf(soilCrop);
+            int colourIndex = cropIndex % cropColors.Length;
+            column.ForegroundColour = cropColors[colourIndex];
 
-                Array values = null;
-                try
-                {
-                    values = property.Value as Array;
-                }
-                catch (Exception err)
-                {
-                    explorerPresenter.MainPresenter.ShowError(err);
-                }
-
-                if (table.Columns.IndexOf(columnName) == -1)
-                {
-                    var columnType = property.DataType.GetElementType();
-                    if (property.Name == "Thickness")
-                    {
-                        columnName = "Depth\r\n(mm)";
-                        columnCaption = columnName;
-                        columnType = typeof(string);
-                        values = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings((double[])values);
-                    }
-                    DataColumn newCol = table.Columns.Add(columnName, columnType);
-                    newCol.Caption = columnCaption;
-                }
-                else
-                {
-                    // empty
-                }
-
-                DataTableUtilities.AddColumnOfObjects(table, columnName, values);
-            }
-
-            return table;
+            // Make the soil crop columns wider to fit the crop name in column title.
+            column.Width = 90;
         }
 
         /// <summary>
@@ -439,18 +271,11 @@
         /// </summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The event arguments</param>
-        private void OnProfileGridCellValueChanged(object sender, GridCellsChangedArgs e)
+        private void OnProfileGridCellValueChanged(object sender, EventArgs e)
         {
-            this.SaveGrid();
-
-            // Refresh all calculated columns.
-            this.RefreshCalculatedColumns();
-
             // Refresh the graph.
             if (this.graph != null)
-            {
                 this.graphPresenter.DrawGraph();
-            }
         }
 
         /// <summary>
@@ -460,139 +285,27 @@
         {
             try
             {
-                this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-
-                // Get the data source of the profile grid.
-                DataTable data = this.view.ProfileGrid.DataSource;
+                explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
                 // Maintain a list of all property changes that we need to make.
-                List<Commands.ChangeProperty.Property> properties = new List<Commands.ChangeProperty.Property>();
+                var properties = new List<ChangeProperty.Property>();
 
-                // Loop through all non-readonly properties, get an array of values from the data table
-                // for the property and then set the property value.
-                for (int i = 0; i < this.propertiesInGrid.Count; i++)
-                {
-                    // If this property is NOT readonly then set its value.
-                    if (!this.propertiesInGrid[i].IsReadOnly)
-                    {
-                        // Get an array of values for this property.
-                        Array values;
-                        if (propertiesInGrid[i].Name != "Thickness" &&
-                            propertiesInGrid[i].DataType.GetElementType() == typeof(double))
-                        {
-                            values = DataTableUtilities.GetColumnAsDoubles(data, data.Columns[i].ColumnName);
-                            if (!MathUtilities.ValuesInArray((double[])values))
-                            {
-                                values = null;
-                            }
-                            else
-                            {
-                                values = MathUtilities.RemoveMissingValuesFromBottom((double[])values);
-                            }
-                        }
-                        else
-                        {
-                            values = DataTableUtilities.GetColumnAsStrings(data, data.Columns[i].ColumnName);
-                            values = MathUtilities.RemoveMissingValuesFromBottom((string[])values);
-                        }
-
-                        // Is the value any different to the former property value?
-                        bool changedValues;
-                        if (propertiesInGrid[i].Name == "Thickness")
-                            values = APSIM.Shared.APSoil.SoilUtilities.ToThickness((string[])values);
-
-                        if (this.propertiesInGrid[i].DataType == typeof(double[]))
-                        {
-                            changedValues = !MathUtilities.AreEqual((double[])values, (double[])this.propertiesInGrid[i].Value);
-                        }
-                        else
-                        {
-                            changedValues = !MathUtilities.AreEqual((string[])values, (string[])this.propertiesInGrid[i].Value);
-                        }
-
-                        if (changedValues)
-                        {
-                            // Store the property change.
-                            Commands.ChangeProperty.Property property = 
-                                new Commands.ChangeProperty.Property(this.propertiesInGrid[i].Object, this.propertiesInGrid[i].Name, values);
-                            properties.Add(property);
-                        }
-                    }
-                }
+                // Loop through all changed properties and set the property value.
+                foreach (var column in propertiesInGrid.Where(column => column.ValuesHaveChanged))
+                    properties.Add(column.GetChangeProperty());
 
                 // If there are property changes pending, then commit the changes in a block.
                 if (properties.Count > 0)
                 {
-                    Commands.ChangeProperty command = new Commands.ChangeProperty(properties);
-                    this.explorerPresenter.CommandHistory.Add(command);
+                    var command = new ChangeProperty(properties);
+                    explorerPresenter.CommandHistory.Add(command);
                 }
 
-                this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+                explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
             }
             catch (Exception e)
             {
-                if (e is System.Reflection.TargetInvocationException)
-                {
-                    e = (e as System.Reflection.TargetInvocationException).InnerException;
-                }
-
-                this.explorerPresenter.MainPresenter.ShowError(e);
-            }
-        }
-
-        /// <summary>
-        /// Refresh the values of all calculated columns in the profile grid.
-        /// </summary>
-        private void RefreshCalculatedColumns()
-        {
-            // Loop through all calculated properties, get an array of values from the property
-            // a give to profile grid.
-            for (int i = 0; i < this.propertiesInGrid.Count; i++)
-            {
-                if (this.propertiesInGrid[i].IsReadOnly && i > 0)
-                {
-                    try
-                    {
-                        VariableProperty property = this.propertiesInGrid[i];
-                        int col = i;
-                        int row = 0;
-                        foreach (object value in property.Value as IEnumerable<double>)
-                        {
-                            object valueForCell = value;
-                            bool missingValue = (double)value == MathUtilities.MissingValue || double.IsNaN((double)value);
-
-                            if (missingValue)
-                            {
-                                valueForCell = null;
-                            }
-
-                            IGridCell cell = this.view.ProfileGrid.GetCell(col, row);
-                            cell.Value = valueForCell;
-
-                            row++;
-                        }
-
-                        // add a total to the column header if necessary.
-                        double total = property.Total;
-                        if (!double.IsNaN(total))
-                        {
-                            string columnName = property.Description;
-                            if (property.UnitsLabel != null)
-                            {
-                                columnName += "\r\n" + property.UnitsLabel;
-                            }
-
-                            columnName = columnName + "\r\n" + total.ToString("N1") + " mm";
-
-                            IGridColumn column = this.view.ProfileGrid.GetColumn(col);
-                            column.HeaderText = columnName;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        explorerPresenter.MainPresenter.ShowError(e);
-                    }
-                }
+                explorerPresenter.MainPresenter.ShowError(e);
             }
         }
 
@@ -603,7 +316,6 @@
         private void OnModelChanged(object changedModel)
         {
             this.PopulateGrid();
-            this.RefreshCalculatedColumns();
             if (this.graphPresenter != null)
             {
                 this.graphPresenter.DrawGraph();
@@ -615,44 +327,166 @@
         /// </summary>
         /// <param name="sender">Sender of event</param>
         /// <param name="e">Event arguments</param>
-        private void OnGridColumnClicked(object sender, GridColumnClickedArgs e)
+        private void OnColumnMenuItemClicked(object sender, GridCellColumnMenuClickedArgs e)
         {
-            if (e.RightClick)
+            var newColumnName = e.ColumnClicked.ColumnName;
+            int posOpenBracket = newColumnName.IndexOf('(');
+            int posCloseBracket = newColumnName.IndexOf(')');
+            newColumnName = newColumnName.Remove(posOpenBracket, posCloseBracket - posOpenBracket + 1);
+            newColumnName = newColumnName.Insert(posOpenBracket, "(" + e.MenuNameClicked + ")");
+            e.ColumnClicked.ColumnName = newColumnName;
+            e.ColumnClicked.ValuesHaveChanged = true;
+        }
+
+        /// <summary>Encapsulates metadata about a column on the grid.</summary>
+        private class PropertyColumn : GridColumnMetaData
+        {
+            public object ObjectWithProperty;
+            public string PropertyName;
+
+            /// <summary>Constructor.</summary>
+            /// <param name="property">The property.</param>
+            /// <param name="obj">The instance containing the property.</param>
+            public PropertyColumn(PropertyInfo property, object obj)
             {
-                this.view.ProfileGrid.ClearContextActions(!e.OnHeader);
-                this.indexOfClickedVariable = e.Column.ColumnIndex;
-                VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-                if (property.AllowableUnits.Length > 0)
+                if (property != null)
                 {
-                    if (!e.OnHeader)
-                        this.view.ProfileGrid.AddContextSeparator();
-                    foreach (VariableProperty.NameLabelPair unit in property.AllowableUnits)
+                    ObjectWithProperty = obj;
+                    PropertyName = property.Name;
+                    ColumnDataType = property.PropertyType.GetElementType();
+
+                    var description = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false);
+                    if (description == null)
+                        ColumnName = property.Name;
+                    else
+                        ColumnName += description.ToString();
+
+                    // Add units to column name.
+                    var units = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false);
+                    if (units != null)
+                        ColumnName += "\r\n" + units.ToString();
+
+                    // Add display attributes.
+                    var display = ReflectionUtilities.GetAttribute(property, typeof(DisplayAttribute), false) as DisplayAttribute;
+                    if (display != null)
                     {
-                        this.view.ProfileGrid.AddContextOption(unit.Name, unit.Label, this.OnUnitClick, unit.Name == property.Units);
+                        Format = display.Format;
+                        AddTotalToColumnName = display.ShowTotal;
                     }
+
+                    Values = property.GetValue(obj) as IEnumerable;
+                    IsReadOnly = !property.CanWrite;
+                    Width = -1;
                 }
+            }
+
+            /// <summary>Returns a Property set command.</summary>
+            public virtual ChangeProperty.Property GetChangeProperty()
+            {
+                return new ChangeProperty.Property(ObjectWithProperty, PropertyName, Values);
             }
         }
 
-        /// <summary>
-        /// The unit menu item has been clicked by user.
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnUnitClick(object sender, EventArgs e)
+        /// <summary>Encapsulates a thickness column.</summary>
+        private class ThicknessColumn : PropertyColumn
         {
-            try
+            /// <summary>Constructor.</summary>
+            /// <param name="property">The property.</param>
+            /// <param name="obj">The instance containing the property.</param>
+            public ThicknessColumn(PropertyInfo property, object obj) 
+                : base(property, obj)
             {
-                VariableProperty property = this.propertiesInGrid[this.indexOfClickedVariable];
-                if (sender is Gtk.MenuItem)
+                ColumnName = "Depth\r\n(mm)";
+                ColumnDataType = typeof(string);
+                Values = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings((double[])property.GetValue(obj));
+            }
+
+            /// <summary>Returns a Property set command.</summary>
+            public override ChangeProperty.Property GetChangeProperty()
+            {
+                var thickness = APSIM.Shared.APSoil.SoilUtilities.ToThickness((string[]) Values);
+                return new ChangeProperty.Property(ObjectWithProperty, PropertyName, thickness);
+            }
+        }
+
+        /// <summary>Encapsulates a NitrogenValue column.</summary>
+        private class NitrogenValueColumn : PropertyColumn
+        {
+            /// <summary>Constructor.</summary>
+            /// <param name="property">The property.</param>
+            /// <param name="obj">The instance containing the property.</param>
+            public NitrogenValueColumn(PropertyInfo property, object obj)
+                : base(property, obj)
+            {
+                ObjectWithProperty = property.GetValue(obj);
+                PropertyName = property.Name;
+                ColumnDataType = typeof(double);
+                HeaderContextMenuItems = new string[] { "ppm", "kg/ha" };
+
+                var nitrogenValue = ObjectWithProperty as NitrogenValue;
+
+                if (nitrogenValue.StoredAsPPM)
                 {
-                    string unitsString = (sender as Gtk.MenuItem).Name;
-                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(property, "Units", unitsString));
+                    ColumnName += "\r\n(ppm)";
+                    Values = nitrogenValue.PPM;
+                }
+                else
+                {
+                    ColumnName += "\r\n(kg/ha)";
+                    Values = nitrogenValue.KgHa;
                 }
             }
-            catch (Exception err)
+
+            /// <summary>Returns a Property set command.</summary>
+            public override ChangeProperty.Property GetChangeProperty()
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                if (ColumnName.Contains("(ppm)"))
+                    return new ChangeProperty.Property(ObjectWithProperty, "PPM", Values);
+                else
+                    return new ChangeProperty.Property(ObjectWithProperty, "KgHa", Values);
+            }
+        }
+
+        /// <summary>Encapsulates a PAWC column.</summary>
+        private class PAWCColumn : PropertyColumn
+        {
+            /// <summary>Constructor.</summary>
+            /// <param name="property">The property.</param>
+            /// <param name="obj">The instance containing the property.</param>
+            public PAWCColumn(IModel soilCrop,
+                              List<PropertyColumn> propertiesInGrid)
+                : base(null, null)
+            {
+                ColumnName = soilCrop.Name.Replace("Soil", "") + " PAWC\r\n(mm)";
+                ColumnDataType = typeof(double);
+                IsReadOnly = true;
+                AddTotalToColumnName = true;
+                Width = 100;
+                ForegroundColour = Color.Red;
+
+                var cropName = soilCrop.Name.Replace("Soil", "");
+                var thicknessColumn = propertiesInGrid.Find(prop => prop.ColumnName.StartsWith("Depth"));
+                var llColumn = propertiesInGrid.Find(prop => prop.ColumnName.StartsWith(cropName + " LL"));
+                var dulColumn = propertiesInGrid.Find(prop => prop.ColumnName.StartsWith("DUL"));
+                var xfColumn = propertiesInGrid.Find(prop => prop.ColumnName.StartsWith(cropName + " XF"));
+
+                // When user clicks on a SoilCrop, there is no DUL column. In
+                // this situation get dul from the parent model.
+                double[] dul;
+                if (dulColumn == null)
+                    dul = (soilCrop.Parent as Water).DUL;
+                else
+                    dul = dulColumn.Values as double[];
+
+                var thickness = APSIM.Shared.APSoil.SoilUtilities.ToThickness((string[])thicknessColumn.Values);
+                var pawcVolumetric = Soil.CalcPAWC(thickness, llColumn.Values as double[], dul, xfColumn.Values as double[]);
+                Values = MathUtilities.Multiply(pawcVolumetric, thickness);
+            }
+
+            /// <summary>Returns a Property set command.</summary>
+            public override ChangeProperty.Property GetChangeProperty()
+            {
+                return null;
             }
         }
     }

@@ -271,6 +271,7 @@ namespace Models.Soils
         /// <value>
         /// The thickness.
         /// </value>
+        [Description("Depth (mm)")]
         public double[] Thickness { get; set; }
 
         /// <summary>

@@ -37,15 +37,15 @@
                 sample.SWUnits = Sample.SWUnitsEnum.Volumetric;
 
                 // Convert no3 units to ppm.
-                if (MathUtilities.ValuesInArray(sample.NO3))
+                if (sample.NO3N != null && MathUtilities.ValuesInArray(sample.NO3N.PPM))
                 {
                     double[] bd = Layers.BDMapped(soil, sample.Thickness);
-                    sample.NO3 = Nppm(sample.NO3, sample.Thickness, sample.NO3Units, bd);
+                    sample.NO3N.PPM = Nppm(sample.NO3N.PPM, sample.Thickness, sample.NO3Units, bd);
                 }
                 sample.NO3Units = Sample.NUnitsEnum.ppm;
 
                 // Convert nh4 units to ppm.
-                if (MathUtilities.ValuesInArray(sample.NH4))
+                if (sample.NH4 != null && MathUtilities.ValuesInArray(sample.NH4))
                 {
                     double[] bd = Layers.BDMapped(soil, sample.Thickness);
                     sample.NH4 = Nppm(sample.NH4, sample.Thickness, sample.NH4Units, bd);

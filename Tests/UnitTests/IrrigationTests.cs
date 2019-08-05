@@ -100,7 +100,10 @@
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
                                 SW = new double[] { 0.103, 0.238, 0.253, 0.247, 0.247, 0.247 },
-                                NO3 = new double[] { 23, 7, 2, 1, 1, 1 },
+                                NO3N = new NitrogenValue()
+                                {
+                                    PPM = new double[] { 23, 7, 2, 1, 1, 1 }
+                                },
                                 OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN },
                                 SWUnits = Sample.SWUnitsEnum.Gravimetric
                             },

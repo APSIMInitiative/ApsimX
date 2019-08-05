@@ -883,7 +883,7 @@
                     // Initialise nitrogen to 0.0
                     initialNitrogen.Name = "Initial nitrogen";
                     initialNitrogen.NH4 = new double[layerCount];
-                    initialNitrogen.NO3 = new double[layerCount];
+                    initialNitrogen.NO3N.PPM = new double[layerCount];
 
                     double tAvg = (maxTemp + minTemp) / 2.0;
                     soilWater.CNCov = 0.0;

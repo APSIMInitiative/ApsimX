@@ -109,6 +109,7 @@ namespace Models.Soils
         /// <summary>
         /// Gets or sets the sample thickness (mm)
         /// </summary>
+        [Description("Depth (mm)")]
         public double[] Thickness { get; set; }
 
         #region Raw variables serialised and edited in GUI
@@ -116,9 +117,9 @@ namespace Models.Soils
         /// <summary>
         /// Gets or sets the nitrate NO3. Units will be as specified by NO3Units
         /// </summary>
-        [Description("NO3")]
+        [Description("NO3N")]
         [Display(Format = "N1", ShowTotal = true)]
-        public double[] NO3 { get; set; }
+        public NitrogenValue NO3N { get; set; }
 
         /// <summary>
         /// Gets or sets ammonia NH4. Units will be as specified by NH4Units
@@ -207,67 +208,15 @@ namespace Models.Soils
 
         #endregion
 
+        /// <summary>Called when the sample is created.</summary>
+        public override void OnCreated()
+        {
+            var soil = Apsim.Parent(this, typeof(Soil)) as Soil;
+            NO3N?.OnCreated(soil);
+        }
+
+
         #region Properties for returning variables with particular units
-
-        /// <summary>
-        /// Gets NO3. Units: ppm.
-        /// </summary>
-        public double[] NO3ppm
-        {
-            get
-            {
-                if (this.NO3 != null && this.Soil != null)
-                {
-                    double[] values = (double[])this.NO3.Clone();
-                    if (this.NO3Units != NUnitsEnum.ppm)
-                    {
-                        double[] bd = Layers.BDMapped(Soil, this.Thickness);
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (!Double.IsNaN(values[i]))
-                            {
-                                values[i] = values[i] * 100 / (bd[i] * this.Thickness[i]);
-                            }
-                        }
-                    }
-
-                    return values;
-                }
-
-                return null;
-            }
-        }
-        
-        /// <summary>
-        /// Gets NO3. Units: kg/ha.
-        /// </summary>
-        [Summary]
-        [Display(Format = "N1", ShowTotal = true)]
-        public double[] NO3kgha
-        {
-            get
-            {
-                if (this.NO3 != null && this.Soil != null)
-                {
-                    double[] values = (double[])this.NO3.Clone();
-                    if (this.NO3Units != NUnitsEnum.kgha)
-                    {
-                        double[] bd = Layers.BDMapped(Soil, this.Thickness);
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (!Double.IsNaN(values[i]))
-                            {
-                                values[i] = values[i] / 100 * (bd[i] * this.Thickness[i]);
-                            }
-                        }
-                    }
-
-                    return values;
-                }
-
-                return null;
-            }
-        }
         
         /// <summary>
         /// Gets NH4. Units: ppm.
