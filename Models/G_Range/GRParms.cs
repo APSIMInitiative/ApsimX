@@ -699,7 +699,8 @@ namespace Models
                             sand[0] += Soil.ParticleSizeSand[i] * weight;
                             silt[0] += Soil.ParticleSizeSilt[i] * weight;
                             clay[0] += Soil.ParticleSizeClay[i] * weight;
-                            gravel[0] += Soil.Rocks[i] * weight;
+                            if (Soil.Rocks != null)
+                                gravel[0] += Soil.Rocks[i] * weight;
                             bulkDensity[0] += Soil.BD[i] * weight;
                             organicCarbon[0] += Soil.OC[i] * weight; 
                             if (useApsimHydraulics)
@@ -714,7 +715,8 @@ namespace Models
                             sand[3] += Soil.ParticleSizeSand[i] * weight;
                             silt[3] += Soil.ParticleSizeSilt[i] * weight;
                             clay[3] += Soil.ParticleSizeClay[i] * weight;
-                            gravel[3] += Soil.Rocks[i] * weight;
+                            if (Soil.Rocks != null)
+                                gravel[3] += Soil.Rocks[i] * weight;
                             bulkDensity[3] += Soil.BD[i] * weight;
                             organicCarbon[3] += Soil.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -749,7 +751,8 @@ namespace Models
                             sand[0] += Soil.ParticleSizeSand[i] * weight;
                             silt[0] += Soil.ParticleSizeSilt[i] * weight;
                             clay[0] += Soil.ParticleSizeClay[i] * weight;
-                            gravel[0] += Soil.Rocks[i] * weight;
+                            if (Soil.Rocks != null)
+                                gravel[0] += Soil.Rocks[i] * weight;
                             bulkDensity[0] += Soil.BD[i] * weight;
                             organicCarbon[0] += Soil.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -764,7 +767,8 @@ namespace Models
                             sand[1] += Soil.ParticleSizeSand[i] * weight;
                             silt[1] += Soil.ParticleSizeSilt[i] * weight;
                             clay[1] += Soil.ParticleSizeClay[i] * weight;
-                            gravel[1] += Soil.Rocks[i] * weight;
+                            if (Soil.Rocks != null)
+                                gravel[1] += Soil.Rocks[i] * weight;
                             bulkDensity[1] += Soil.BD[i] * weight;
                             organicCarbon[1] += Soil.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -779,7 +783,8 @@ namespace Models
                             sand[2] += Soil.ParticleSizeSand[i] * weight;
                             silt[2] += Soil.ParticleSizeSilt[i] * weight;
                             clay[2] += Soil.ParticleSizeClay[i] * weight;
-                            gravel[2] += Soil.Rocks[i] * weight;
+                            if (Soil.Rocks != null)
+                                gravel[2] += Soil.Rocks[i] * weight;
                             bulkDensity[2] += Soil.BD[i] * weight;
                             organicCarbon[2] += Soil.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -794,7 +799,8 @@ namespace Models
                             sand[3] += Soil.ParticleSizeSand[i] * weight;
                             silt[3] += Soil.ParticleSizeSilt[i] * weight;
                             clay[3] += Soil.ParticleSizeClay[i] * weight;
-                            gravel[3] += Soil.Rocks[i] * weight;
+                            if (Soil.Rocks != null)
+                                gravel[3] += Soil.Rocks[i] * weight;
                             bulkDensity[3] += Soil.BD[i] * weight;
                             organicCarbon[3] += Soil.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -813,7 +819,8 @@ namespace Models
                     Array.Copy(Soil.ParticleSizeSand, sand, nSoilLayers);
                     Array.Copy(Soil.ParticleSizeSilt, silt, nSoilLayers);
                     Array.Copy(Soil.ParticleSizeClay, clay, nSoilLayers);
-                    Array.Copy(Soil.Rocks, gravel, nSoilLayers);
+                    if (Soil.Rocks != null)
+                        Array.Copy(Soil.Rocks, gravel, nSoilLayers);
                     Array.Copy(Soil.BD, bulkDensity, nSoilLayers);
                     Array.Copy(Soil.OC, organicCarbon, nSoilLayers);
                     if (useApsimHydraulics)
@@ -1059,16 +1066,21 @@ namespace Models
         /// </summary>
         private void LoadGlobals()
         {
-            double latitude = Latitude;
-            double longitude = Longitude;
-
             // How should we handle knowing our location? We want to know early on - but the Weather component does start reading until weather is needed,
             // and it doesn't always provide longitude in any case.
             // For now, I'm usually going to rely on the user explicitly entering a latitude and longitude.
-            if (Double.IsNaN(latitude))
-                latitude = Weather.Latitude;
-            if (Double.IsNaN(longitude) && Weather is Weather)
-                longitude = (Weather as Weather).Longitude;
+            if ((Double.IsNaN(Latitude) || Double.IsNaN(Longitude)) && Weather is Weather)
+                (Weather as Weather).OpenDataFile();
+            if (Double.IsNaN(Latitude))
+                Latitude = Weather.Latitude;
+            if (Double.IsNaN(Longitude) && Weather is Weather)
+                Longitude = (Weather as Weather).Longitude;
+
+            if (Double.IsNaN(Latitude) || Double.IsNaN(Longitude))
+                throw new ApsimXException(this, "Could not obtain values for latitude and longitude");
+
+            double latitude = Latitude;
+            double longitude = Longitude;
 
             // We need to work out the "cell" that corresponds to our latitude and longitude
             // The code below is roughly correct, but it might need a bit of additional thought about boundary cases.
@@ -1107,7 +1119,10 @@ namespace Models
             globe.subGravel = (double)dataRow["Sub_gravel"];
             globe.subBulkDensity = (double)dataRow["Sub_bulk"];
             globe.subOrganicCarbon = (double)dataRow["Sub_carbon"];
-            globe.landscapeType = (int)dataRow["Sage"];
+            if (BiomeType == BiomeEnum.Unspecified)
+                globe.landscapeType = (int)dataRow["Sage"];
+            else
+                globe.landscapeType = (int)BiomeType;
             globe.precipAverage = (double)dataRow["Prcp_avg"];
             globe.temperatureAverage = (double)dataRow["Temp_avg"];
             globe.decidTreeCover = (double)dataRow["Decid"];
@@ -1242,6 +1257,11 @@ namespace Models
                 parm.monthToRemoveAnnuals = ReadDoubleVal(parmsStrings[iLine++]);
 
                 ReadDoubleArray(parmsStrings[iLine++], out tempArray);
+                // What is going on with relativeSeedProduction? In the Fortran source, in association with 
+                // the division by 10000, there is the comment: "To avoid overflows.  Perhaps include a check of the summed values."
+                // Using the original value of 10000 as the divisor seems to result in simulations have lots of bare cover, 
+                // even though there is significant biomass.
+                // It's not clear to me what the "relative" seed production is relative to...
                 parm.relativeSeedProduction = new double[nFacets];
                 for (int i = 0; i < nFacets; i++)
                     parm.relativeSeedProduction[i] = tempArray[i] /

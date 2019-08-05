@@ -891,7 +891,11 @@ namespace Models
 
             // Convert to g / m2 for the facet cover, and add to the soil
             // Rng(icell) % fixnit = Rng(icell) % fixnit
+#if G_RANGE_BUG
             mineralNitrogen[soilIndex] = mineralNitrogen[soilIndex] + fixNit;
+#else
+            mineralNitrogen[surfaceIndex] = mineralNitrogen[surfaceIndex] + fixNit;
+#endif
             // Incorporate runoff from the cell.By rights, this should have a minor effect on our large cells.
             // Note different units on runoff here than in SAVANNA.CM in Century, most likely, MM in Savanna.
             runoffN = parms.precipNDeposition[1] * runoff;
