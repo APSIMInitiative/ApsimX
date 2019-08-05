@@ -118,7 +118,7 @@ namespace Models.Soils
         /// Gets or sets the nitrate NO3. Units will be as specified by NO3Units
         /// </summary>
         [Description("NO3N")]
-        [Display(Format = "N1", ShowTotal = true)]
+        [Summary]
         public NitrogenValue NO3N { get; set; }
 
         /// <summary>

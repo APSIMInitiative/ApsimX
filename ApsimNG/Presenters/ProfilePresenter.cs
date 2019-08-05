@@ -223,7 +223,8 @@
             foreach (PropertyInfo property in model.GetType().GetProperties())
             {
                 var description = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false);
-                if (property.PropertyType.IsArray && description != null)
+                if ((property.PropertyType.IsArray || property.PropertyType == typeof(NitrogenValue)) 
+                    && description != null)
                 {
                     PropertyColumn column;
 

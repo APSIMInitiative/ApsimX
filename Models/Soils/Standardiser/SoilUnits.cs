@@ -37,10 +37,10 @@
                 sample.SWUnits = Sample.SWUnitsEnum.Volumetric;
 
                 // Convert no3 units to ppm.
-                if (sample.NO3N != null && MathUtilities.ValuesInArray(sample.NO3N.PPM))
+                if (sample.NO3N != null && !sample.NO3N.StoredAsPPM)
                 {
-                    double[] bd = Layers.BDMapped(soil, sample.Thickness);
-                    sample.NO3N.PPM = Nppm(sample.NO3N.PPM, sample.Thickness, sample.NO3Units, bd);
+                    var ppm = sample.NO3N.PPM;
+                    sample.NO3N.PPM = ppm;
                 }
                 sample.NO3Units = Sample.NUnitsEnum.ppm;
 

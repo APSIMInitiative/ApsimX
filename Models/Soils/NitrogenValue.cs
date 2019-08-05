@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils
 {
+    using Models.Core;
     using Newtonsoft.Json;
     using System;
 
@@ -23,6 +24,8 @@
 
         /// <summary>Gets or sets the values as parts per million.</summary>
         [JsonIgnore]
+        [Display(Format = "N2", ShowTotal = true)]
+        [Units("ppm")]
         public double[] PPM
         {
             get
@@ -48,6 +51,8 @@
 
         /// <summary>Gets or sets the values as kg/ha.</summary>
         [JsonIgnore]
+        [Display(Format = "N1", ShowTotal = true)]
+        [Units("kg/ha")]
         public double[] KgHa
         {
             get

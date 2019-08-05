@@ -192,8 +192,11 @@
                 }
                 if (sample.NO3N != null)
                 {
-                    sample.NO3N.PPM = MapConcentration(sample.NO3N.PPM, sample.Thickness, thickness, 1.0);
-                    sample.NO3Units = Sample.NUnitsEnum.ppm;
+                    if (sample.NO3N.StoredAsPPM)
+                        sample.NO3N.PPM = MapConcentration(sample.NO3N.PPM, sample.Thickness, thickness, 1.0);
+                    else
+                        sample.NO3N.KgHa = MapMass(sample.NO3N.KgHa, sample.Thickness, thickness);
+                    //sample.NO3Units = Sample.NUnitsEnum.ppm;
                 }
 
                 // The elements below will be overlaid over other arrays of values so we want 
