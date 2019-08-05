@@ -404,9 +404,9 @@
                               <object class="GtkCalendar" id="calendarStart">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="year">2000</property>
-                                <property name="month">6</property>
-                                <property name="day">30</property>
+                                <property name="year">1984</property>
+                                <property name="month">0</property>
+                                <property name="day">1</property>
                                 <property name="show_details">False</property>
                               </object>
                               <packing>
