@@ -717,12 +717,28 @@
             }
         }
 
+        /// <summary>
+        /// Open a dialog for downloading a new soil description
+        /// </summary>
         public void DownloadSoil()
         {
             Model model = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Model;
             if (model != null)
             { 
                 Utility.SoilDownloadDialog dlg = new Utility.SoilDownloadDialog();
+                dlg.ShowFor(model, (view as ExplorerView), this.view.Tree.SelectedNode, this);
+            }
+        }
+
+        /// <summary>
+        /// Open a dialog for downloading a new weather file
+        /// </summary>
+        public void DownloadWeather()
+        {
+            Model model = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Model;
+            if (model != null)
+            {
+                Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
                 dlg.ShowFor(model, (view as ExplorerView), this.view.Tree.SelectedNode, this);
             }
         }

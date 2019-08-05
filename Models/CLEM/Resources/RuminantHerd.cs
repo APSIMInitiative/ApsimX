@@ -144,8 +144,6 @@ namespace Models.CLEM.Resources
                                 // AL removed the -9 as this would make it conception month not birth month
                                 breedFemales[0].AgeAtLastBirth = breedFemales[0].Age - suckling.Age;
                                 breedFemales[0].AgeAtLastConception = breedFemales[0].AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
-                                breedFemales[0].SuccessfulPregnancy = true;
-
                             }
 
                             // add this offspring to birth count
@@ -160,17 +158,13 @@ namespace Models.CLEM.Resources
                             breedFemales[0].SucklingOffspringList.Add(suckling);
 
                             // add this suckling to mother's offspring count.
-                            breedFemales[0].CarryingCount++;
+                            breedFemales[0].NumberOfOffspring++;
 
                             // check if a twin and if so apply next individual to same mother.
                             // otherwise remove this mother from the list
                             if (numberThisPregnancy == 1)
                             {
                                 breedFemales.RemoveAt(0);
-                                //if (breedFemales.Count > 0)
-                                //{
-                                //    numberThisPregnancy = breedFemales[0].CalulateNumberOfOffspringThisPregnancy();
-                                //}
                             }
                             else
                             {
@@ -200,7 +194,6 @@ namespace Models.CLEM.Resources
                         female.NumberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
                         female.AgeAtLastBirth = ageFirstBirth + (currentIPI* female.NumberOfBirths);
                         female.AgeAtLastConception = female.AgeAtLastBirth - breedFemales[0].BreedParams.GestationLength;
-                        female.SuccessfulPregnancy = true;
 
                         // fill breeding stats prior to simulation start
                         // assumes all previous births successful

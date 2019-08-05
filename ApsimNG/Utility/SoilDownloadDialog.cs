@@ -238,7 +238,6 @@
         /// <param name="e">Event arguments</param>
         private void BtnOk_Clicked(object sender, EventArgs e)
         {
-            bool result = false;
             Soil newSoil = null;
             if (radioAus.Active)
             {

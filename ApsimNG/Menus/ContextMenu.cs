@@ -351,6 +351,17 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Event handler for a User interface "Download Weather" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Download Weather...", AppliesTo = new Type[] { typeof(Weather), typeof(Simulation) })]
+        public void DownloadWeather(object sender, EventArgs e)
+        {
+            this.explorerPresenter.DownloadWeather();
+        }
+
+        /// <summary>
         /// Accept the current test output as the official baseline for future comparison. 
         /// </summary>
         /// <param name="sender">Sender of the event</param>
