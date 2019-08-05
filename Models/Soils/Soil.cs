@@ -258,6 +258,37 @@
             }
         }
 
+        /// <summary>
+        /// Calculate and return SW relative to the Water node thicknesses.
+        /// Although there are no references in C# code to this property, it is
+        /// used in the initial water chart in the GUI.
+        /// </summary>
+        [XmlIgnore]
+        public double[] SWAtWaterThickness
+        {
+            get
+            {
+                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
+
+                if (initialWater != null)
+                    return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
+                else
+                {
+                    foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
+                    {
+                        if (MathUtilities.ValuesInArray(Sample.SW))
+                        {
+                            if (waterNode != null)
+                                return SWMapped(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness);
+                            else
+                                return Map(Sample.SWVolumetric, Sample.Thickness, Weirdo.Thickness);
+                        }
+                    }
+                }
+                return null;
+            }
+        }
+
         /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
         public double[] AirDry
