@@ -4008,6 +4008,16 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 570.0,
+                  "Units": "",
+                  "Name": "NUptakeCease",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -5760,6 +5770,36 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.687,
+                  "Units": null,
+                  "Name": "aX0",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 22.25,
+                  "Units": null,
+                  "Name": "aMaxSlope",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 92.45,
+                  "Units": null,
+                  "Name": "aMaxIntercept",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -8615,9 +8655,45 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
-                        "[Phenology].TTEndJuvToInit.FixedValue = 200"
+                        "[Phenology].TTEndJuvToInit.FixedValue = 252",
+                        "[Phenology].TTTargetPhotoSensitive.EmergenceToEndJuve.Add.PhotoModifier.XYPairs.Y[1] = 122",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.001427844",
+                        "[Leaf].PartitionRate.FixedValue = 0.018",
+                        "[Root].NUptakeCease.FixedValue = 10",
+                        "[Leaf].leafInitRate.FixedValue = 26.1",
+                        "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
+                        "",
+                        "[Leaf].aMaxSlope.FixedValue = 8.9",
+                        "[Leaf].aMaxIntercept.FixedValue = 245.3"
                       ],
                       "Name": "M35-1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 179",
+                        "[Phenology].TTTargetPhotoSensitive.EmergenceToEndJuve.Add.PhotoModifier.XYPairs.Y[1] = 25",
+                        "",
+                        "[Leaf].aMaxSlope.FixedValue = 0.0",
+                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                      ],
+                      "Name": "QL41xQL36",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 114.4",
+                        "[Phenology].TTTargetPhotoSensitive.EmergenceToEndJuve.Add.PhotoModifier.XYPairs.Y[1] = 87.34"
+                      ],
+                      "Name": "QL39xQL36",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -8639,29 +8715,7 @@
                       "Command": [
                         "[Phenology].TTEndJuvToInit.FixedValue = 220"
                       ],
-                      "Name": "QL41xQL36",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].TTEndJuvToInit.FixedValue = 220"
-                      ],
                       "Name": "ATx623xRTx430",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.Cultivar, Models",
-                      "Command": [
-                        "[Phenology].TTEndJuvToInit.FixedValue = 220"
-                      ],
-                      "Name": "QL39xQL36",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -10449,7 +10503,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "day_of_year",
-              "YFieldName": "RootGrrenN",
+              "YFieldName": "RootGreenN",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -18551,7 +18605,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "day_of_year",
-              "YFieldName": "RootGrrenN",
+              "YFieldName": "RootGreenN",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -27485,7 +27539,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "day_of_year",
-              "YFieldName": "RootGrrenN",
+              "YFieldName": "RootGreenN",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,

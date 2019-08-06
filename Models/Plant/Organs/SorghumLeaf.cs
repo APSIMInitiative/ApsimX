@@ -524,6 +524,10 @@ namespace Models.PMF.Organs
             culm.VerticalAdjustment = parameters.VerticalAdjustment;
             culm.Density = SowingDensity;
 
+            culm.aX0 = (Apsim.Find(this, "aX0") as Functions.IFunction).Value();
+            culm.aMaxSlope = (Apsim.Find(this, "aMaxSlope") as Functions.IFunction).Value();
+            culm.aMaxIntercept = (Apsim.Find(this, "aMaxIntercept") as Functions.IFunction).Value();
+
             Culms.Add(culm);
         }
 
