@@ -156,7 +156,8 @@ namespace UserInterface.Views
                 List<DateTime> dates = new List<DateTime>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
                     if (!string.IsNullOrEmpty(row[0] as string))
-                        dates.Add(DateTime.Parse((string)row[0], CultureInfo.InvariantCulture));
+                        // Use the current culture
+                        dates.Add(DateTime.Parse((string)row[0]));
                 return dates.ToArray();
             }
         }
