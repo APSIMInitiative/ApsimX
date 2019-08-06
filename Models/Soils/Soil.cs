@@ -291,6 +291,7 @@
 
         /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] AirDry
         {
             get
