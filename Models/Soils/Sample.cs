@@ -110,6 +110,7 @@ namespace Models.Soils
         /// Gets or sets the sample thickness (mm)
         /// </summary>
         [Description("Depth (mm)")]
+        [Summary]
         public double[] Thickness { get; set; }
 
         #region Raw variables serialised and edited in GUI

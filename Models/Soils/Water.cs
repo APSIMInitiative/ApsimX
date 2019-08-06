@@ -15,6 +15,7 @@
     {
         /// <summary>Gets or sets the thickness.</summary>
         [Description("Depth (mm)")]
+        [Summary]
         public double[] Thickness { get; set; }
 
         /// <summary>Gets or sets the bd.</summary>

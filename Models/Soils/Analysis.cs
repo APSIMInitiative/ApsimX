@@ -20,6 +20,7 @@ namespace Models.Soils
         /// <summary>Gets or sets the thickness.</summary>
         /// <value>The thickness.</value>
         [Description("Depth (mm)")]
+        [Summary]
         public double[] Thickness { get; set; }
 
         /// <summary>Gets or sets the rocks.</summary>

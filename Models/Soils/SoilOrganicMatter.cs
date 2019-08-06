@@ -41,6 +41,7 @@ namespace Models.Soils
         /// <summary>Soil layer thickness for each layer (mm)</summary>
         /// <value>The thickness.</value>
         [Description("Depth (mm)")]
+        [Summary]
         public double[] Thickness { get; set; }
 
         /// <summary>Organic carbon concentration (0.1 - 10%)</summary>
