@@ -153,7 +153,7 @@ namespace UserInterface.Commands
             section.Add(version);
             // Convert all models in file to tags.
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
-            explorerPresenter.ApsimXFile.Links.Resolve(explorerPresenter.ApsimXFile, true, true);
+            // No need to resolve links here - they will be resolved in each simulation individually.
             foreach (IModel child in explorerPresenter.ApsimXFile.Children)
             {
                 AutoDocumentation.DocumentModel(child, tags, headingLevel:1, indent:0);
