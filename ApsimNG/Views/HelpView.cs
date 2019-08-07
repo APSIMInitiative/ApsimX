@@ -24,11 +24,6 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
         private Dialog window;
 
         /// <summary>
-        /// Reference to the main view.
-        /// </summary>
-        private MainView parent;
-
-        /// <summary>
         /// Label containing link to the next gen website.
         /// </summary>
         private LinkButton website;
@@ -43,7 +38,7 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
             window.WindowPosition = WindowPosition.Center;
             window.DeleteEvent += OnDelete;
             window.Destroyed += OnClose;
-
+            window.Resizable = false;
             VBox container = new VBox(true, 10);
             container.Homogeneous = false;
 
@@ -59,15 +54,12 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
             citation.Selectable = true;
             citation.UseMarkup = true;
 
-            // fixme - This label is very wide. If we tell it to wrap,
-            // then it will wrap but will be very narrow and will not
-            // resize if we increase the size of the window. Therefore,
-            // we tell it to wrap and also set a max width, which will
-            // be used as the default width. Unfortunately, this means
-            // that the dialog cannot be shrunk (resized smaller).
+            // fixme - this is very crude. Unfortunately, if we turn on
+            // word wrapping, the label's text will not resize if we
+            // resize the window, and the default width will be very
+            // narrow. This will force the label to be 640px wide.
+            citation.WidthRequest = 640;
             citation.Wrap = true;
-            int maxLineLength = citation.Text.Split(Environment.NewLine.ToCharArray()).Max(l => l.Length);
-            citation.MaxWidthChars = maxLineLength;
 
             citationFrame.Add(citation);
             container.PackStart(citationFrame, true, true, 0);
