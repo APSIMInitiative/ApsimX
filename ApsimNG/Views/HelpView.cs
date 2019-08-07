@@ -8,6 +8,16 @@ namespace UserInterface.Views
 {
     public class HelpView : ViewBase
     {
+        private const string citationMarkup = @"<b>APSIM Next Generation citation:</b>
+
+Holzworth, Dean, N.I.Huth, J.Fainges, H.Brown, E.Zurcher, R.Cichota, S.Verrall, N.I.Herrmann, B.Zheng, and V.Snow. “APSIM Next Generation: Overcoming Challenges in Modernising a Farming Systems Model.” Environmental Modelling &amp; Software 103(May 1, 2018): 43–51.https://doi.org/10.1016/j.envsoft.2018.02.002.
+
+<b>APSIM Acknowledgement</b>
+
+The APSIM Initiative would appreciate an acknowledgement in your research paper if you or your team have utilised APSIM in its development. For ease, we suggest the following wording:
+
+<i>Acknowledgment is made to the APSIM Initiative which takes responsibility for quality assurance and a structured innovation programme for APSIM's modelling software, which is provided free for research and development use (see www.apsim.info for details)</i>";
+
         /// <summary>
         /// Window in which help info is displayed.
         /// </summary>
@@ -35,32 +45,33 @@ namespace UserInterface.Views
             window.Destroyed += OnClose;
 
             VBox container = new VBox(true, 10);
+            container.Homogeneous = false;
 
             Frame websiteFrame = new Frame("Website");
             website = new LinkButton("https://apsimnextgeneration.netlify.com", "Apsim Next Generation Website");
             website.Clicked += OnWebsiteClicked;
+            website.SetAlignment(0, 0);
             websiteFrame.Add(website);
             container.PackStart(websiteFrame, false, false, 0);
 
             Frame citationFrame = new Frame("Acknowledgement");
-            Label citation = new Label();
+            Label citation = new Label(citationMarkup);
+            citation.Selectable = true;
             citation.UseMarkup = true;
+
+            // fixme - This label is very wide. If we tell it to wrap,
+            // then it will wrap but will be very narrow and will not
+            // resize if we increase the size of the window. Therefore,
+            // we tell it to wrap and also set a max width, which will
+            // be used as the default width. Unfortunately, this means
+            // that the dialog cannot be shrunk (resized smaller).
             citation.Wrap = true;
-            string citationRule = @"<b>APSIM Next Generation citation:</b>
+            int maxLineLength = citation.Text.Split(Environment.NewLine.ToCharArray()).Max(l => l.Length);
+            citation.MaxWidthChars = maxLineLength;
 
-Holzworth, Dean, N.I.Huth, J.Fainges, H.Brown, E.Zurcher, R.Cichota, S.Verrall, N.I.Herrmann, B.Zheng, and V.Snow. “APSIM Next Generation: Overcoming Challenges in Modernising a Farming Systems Model.” Environmental Modelling & Software 103(May 1, 2018): 43–51.https://doi.org/10.1016/j.envsoft.2018.02.002.
-
-<b>APSIM Acknowledgement</b>
-
-The APSIM Initiative would appreciate an acknowledgement in your research paper if you or your team have utilised APSIM in its development. For ease, we suggest the following wording:
-
-<i>Acknowledgment is made to the APSIM Initiative which takes responsibility for quality assurance and a structured innovation programme for APSIM's modelling software, which is provided free for research and development use (see www.apsim.info for details)</i>";
-            citation.Markup = citationRule;
             citationFrame.Add(citation);
-            container.PackStart(citationFrame, false, false, 0);
-
+            container.PackStart(citationFrame, true, true, 0);
             window.AddActionWidget(container, ResponseType.None);
-
             mainWidget = window;
         }
 
