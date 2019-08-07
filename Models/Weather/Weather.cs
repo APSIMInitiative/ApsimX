@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Xml.Serialization;
 
     ///<summary>
@@ -112,7 +113,13 @@
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 else
-                    return this.FileName;
+                {
+                    Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                    if (simulations != null)
+                        return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
+                    else
+                        return this.FileName;
+                }
             }
             set
             {
@@ -455,49 +462,49 @@
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
 
             if (this.radiationIndex != -1)
-                this.Radn = Convert.ToSingle(values[this.radiationIndex]);
+                this.Radn = Convert.ToSingle(values[this.radiationIndex], CultureInfo.InvariantCulture);
             else
                 this.Radn = this.reader.ConstantAsDouble("radn");
 
             if (this.maximumTemperatureIndex != -1)
-                this.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex]);
+                this.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
             else
                 this.MaxT = this.reader.ConstantAsDouble("maxt");
 
             if (this.minimumTemperatureIndex != -1)
-                this.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex]);
+                this.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
             else
                 this.MinT = this.reader.ConstantAsDouble("mint");
 
             if (this.rainIndex != -1)
-                this.Rain = Convert.ToSingle(values[this.rainIndex]);
+                this.Rain = Convert.ToSingle(values[this.rainIndex], CultureInfo.InvariantCulture);
             else
                 this.Rain = this.reader.ConstantAsDouble("rain");
 				
             if (this.evaporationIndex == -1)
                 this.PanEvap = double.NaN;
             else
-                this.PanEvap = Convert.ToSingle(values[this.evaporationIndex]);
+                this.PanEvap = Convert.ToSingle(values[this.evaporationIndex], CultureInfo.InvariantCulture);
 
             if (this.rainfallHoursIndex == -1)
                 this.RainfallHours = double.NaN;
             else
-                this.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex]);
+                this.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
 
             if (this.vapourPressureIndex == -1)
                 this.VP = Math.Max(0, MetUtilities.svp(this.MinT));
             else
-                this.VP = Convert.ToSingle(values[this.vapourPressureIndex]);
+                this.VP = Convert.ToSingle(values[this.vapourPressureIndex], CultureInfo.InvariantCulture);
 
             if (this.windIndex == -1)
                 this.Wind = 3.0;
             else
-                this.Wind = Convert.ToSingle(values[this.windIndex]);
+                this.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
 
             if (this.DiffuseFractionIndex == -1)
                 this.DiffuseFraction = -1;
             else
-                this.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex]);
+                this.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
 
             if (this.dayLengthIndex == -1)  // Daylength is not a column - check for a constant
             {
@@ -507,7 +514,7 @@
                    this.DayLength = -1;
             }
             else
-                this.DayLength = Convert.ToSingle(values[this.dayLengthIndex]);
+                this.DayLength = Convert.ToSingle(values[this.dayLengthIndex], CultureInfo.InvariantCulture);
 
 
             if (this.PreparingNewWeatherData != null)

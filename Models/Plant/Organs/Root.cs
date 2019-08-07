@@ -539,12 +539,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
-            if (parentPlant.SowingData?.Depth < PlantZone.Depth)
+            if (parentPlant.SowingData?.Depth <= PlantZone.Depth)
             {
                 if (dmConversionEfficiency.Value() > 0.0)
                 {
-                    DMDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
-                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
+                    DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value()) * parentPlant.populationFactor;
+                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value()) * parentPlant.populationFactor;
                     DMDemand.Metabolic = 0;
                 }
                 else
@@ -861,7 +861,7 @@ namespace Models.PMF.Organs
 
                     double[] supply = new double[myZone.soil.Thickness.Length];
                     LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
-                    for (int layer = 0; layer < currentLayer; layer++)
+                    for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
                         available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
@@ -876,8 +876,6 @@ namespace Models.PMF.Organs
                         supply[layer] = Math.Max(0.0, kl[layer] * klMod * available[layer] * proportionThroughLayer);
                     }
 
-                    if (MathUtilities.Sum(supply) < 0.0)
-                        return supply;
                     return supply;
                 }
                 else

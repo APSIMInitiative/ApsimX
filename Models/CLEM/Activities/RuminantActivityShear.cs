@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -159,7 +160,7 @@ namespace Models.CLEM.Activities
                             // no clip taken
                             break;
                         case LabourUnitType.perHead:
-                            int numberShorn = Convert.ToInt32(herd.Count() * LabourLimitProportion);
+                            int numberShorn = Convert.ToInt32(herd.Count() * LabourLimitProportion, CultureInfo.InvariantCulture);
                             woolTotal = herd.Take(numberShorn).Sum(a => a.Wool);
                             herd.Take(numberShorn).ToList().ForEach(a => a.Wool = 0);
                             break;

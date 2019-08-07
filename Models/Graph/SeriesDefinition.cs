@@ -277,12 +277,12 @@
                     // Incorporate our scope filter if we haven't limited filter to particular simulations.
                     if (!filter.Contains("SimulationName IN"))
                         filter = AddToFilter(filter, scopeFilter);
-
-                    if (!string.IsNullOrEmpty(userFilter))
-                        filter = AddToFilter(filter, userFilter);
                 }
                 else
                     filter = AddToFilter(filter, scopeFilter);
+
+                if (!string.IsNullOrEmpty(userFilter))
+                    filter = AddToFilter(filter, userFilter);
 
                 // Get a list of fields to read from data store.
                 var fieldsToRead = new List<string>();
@@ -379,11 +379,11 @@
                 localFilter = localFilter.Replace(")", "");
 
                 // Look for individual filter clauses (e.g. A = B).
-                string clausePattern = @"(?<FieldName>\S+)\s*=|>|<|>=|<=\s*\w\s+";
+                string clausePattern = @"\[?(?<FieldName>[^\s\]]+)\]?\s*(=|>|<|>=|<=)\s*(|'|\[|\w)";
                 match = Regex.Match(localFilter, clausePattern);
                 while (match.Success)
                 {
-                    if (match.Groups["FieldName"].Value != null)
+                    if (!string.IsNullOrWhiteSpace(match.Groups["FieldName"].Value))
                     {
                         fieldNames.Add(match.Groups["FieldName"].Value);
                         localFilter = localFilter.Remove(match.Index, match.Length);

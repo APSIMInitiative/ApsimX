@@ -103,7 +103,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalStock")]
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
-            this.Status = ActivityStatus.Ignored;
             // this event happens after management has marked individuals for purchase or sale.
             if (Clock.Today.Month == AssessmentMonth)
             {
@@ -155,6 +154,10 @@ namespace Models.CLEM.Activities
                     // get prediction
                     HandleDestocking(shortfallAE, paddockGroup.Key);
                 }
+            }
+            else
+            {
+                this.Status = ActivityStatus.Ignored;
             }
         }
 

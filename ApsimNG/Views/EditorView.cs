@@ -15,6 +15,7 @@ namespace UserInterface.Views
     using Utility;
     using Presenters;
     using Cairo;
+    using System.Globalization;
 
     /// <summary>
     /// This is IEditorView interface
@@ -262,7 +263,7 @@ namespace UserInterface.Views
             get
             {
                 DocumentLocation loc = textEditor.Caret.Location;
-                return new System.Drawing.Rectangle(loc.Column, loc.Line, Convert.ToInt32(scroller.Hadjustment.Value), Convert.ToInt32(scroller.Vadjustment.Value));
+                return new System.Drawing.Rectangle(loc.Column, loc.Line, Convert.ToInt32(scroller.Hadjustment.Value, CultureInfo.InvariantCulture), Convert.ToInt32(scroller.Vadjustment.Value, CultureInfo.InvariantCulture));
             }
 
             set

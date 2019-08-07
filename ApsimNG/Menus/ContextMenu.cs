@@ -21,7 +21,6 @@ namespace UserInterface.Presenters
     using Utility;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
-    using Models.Core.Runners;
     using System.Reflection;
     using System.Linq;
     using System.Text;
@@ -88,7 +87,8 @@ namespace UserInterface.Presenters
             try
             {
                 // Run all child model post processors.
-                RunOrganiser.RunPostSimulationTools(explorerPresenter.ApsimXFile, storage);
+                var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
+                runner.Run();
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
@@ -291,8 +291,13 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
+                    Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
+                    if (multiProcessRunner)
+                        typeOfRun = Runner.RunTypeEnum.MultiProcess;
+
                     Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                    this.command = new RunCommand(model, this.explorerPresenter, multiProcessRunner);
+                    var runner = new Runner(model, runType:typeOfRun, wait: false);
+                    this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
                     this.command.Do(null);
                 }
             }
@@ -337,10 +342,21 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Soil) })]
+        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Soil), typeof(Zone) })]
         public void DownloadSoil(object sender, EventArgs e)
         {
             this.explorerPresenter.DownloadSoil();
+        }
+
+        /// <summary>
+        /// Event handler for a User interface "Download Weather" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Download Weather...", AppliesTo = new Type[] { typeof(Weather), typeof(Simulation) })]
+        public void DownloadWeather(object sender, EventArgs e)
+        {
+            this.explorerPresenter.DownloadWeather();
         }
 
         /// <summary>
@@ -721,7 +737,7 @@ namespace UserInterface.Presenters
                             continue;
 
                         // Resolve links (this doesn't seem to work properly).
-                        explorerPresenter.ApsimXFile.Links.Resolve(child, throwOnFail: false);
+                        explorerPresenter.ApsimXFile.Links.Resolve(child);
                         MemberInfo[] members = null;
                         Type childType = child.GetType();
 

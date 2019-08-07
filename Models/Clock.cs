@@ -1,10 +1,10 @@
-﻿using System;
-using System.Xml.Serialization;
-using Models.Core;
-using System.Threading;
-
-namespace Models
+﻿namespace Models
 {
+    using Models.Core;
+    using Models.Core.Run;
+    using System;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// The clock model
     /// </summary>
@@ -79,6 +79,8 @@ namespace Models
         public event EventHandler DoUpdateWaterDemand;
         /// <summary>Occurs when [do water arbitration].</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
+        /// <summary>Occurs between DoWaterArbitration and DoPhenology. Performs sorghum final leaf no calcs.</summary>
+        public event EventHandler PrePhenology;
         /// <summary>Occurs when [do phenology].</summary>                             
         public event EventHandler DoPhenology;                                         // Plant 
         /// <summary>Occurs when [do potential plant growth].</summary>
@@ -198,7 +200,7 @@ namespace Models
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoCommence")]
-        private void OnDoCommence(object sender, Core.Runners.RunSimulation.CommenceArgs e)
+        private void OnDoCommence(object sender, CommenceArgs e)
         {
                 if (DoInitialSummary != null)
                     DoInitialSummary.Invoke(this, args);
@@ -261,6 +263,9 @@ namespace Models
 
                     if (DoWaterArbitration != null)
                         DoWaterArbitration.Invoke(this, args);
+
+                    if (PrePhenology != null)
+                        PrePhenology.Invoke(this, args);
 
                     if (DoPhenology != null)
                         DoPhenology.Invoke(this, args);

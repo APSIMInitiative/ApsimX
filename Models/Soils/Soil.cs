@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Interfaces;
     using Models.Core;
+    using Models.Soils.Standardiser;
     using System;
     using System.Linq;
     using System.Xml.Serialization;
@@ -28,6 +29,8 @@
         /// <summary>
         /// The multipore water model.  An alternativie soil water model that is not yet fully functional
         /// </summary>
+        /// 
+        [XmlIgnore]
         public WEIRDO Weirdo;
         /// <summary>A reference to the layer structure node or null if not present.</summary>
         private LayerStructure structure;
@@ -152,6 +155,11 @@
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
             }
 
+        /// <summary>
+        /// Water node of soil.
+        /// </summary>
+        public Water WaterNode { get { return waterNode; } }
+
         #region Water
         /// <summary>The layering used to parameterise the water node</summary>
         public double[] WaterNodeThickness
@@ -165,14 +173,26 @@
 
         /// <summary>Return the soil layer thicknesses (mm)</summary>
         [Units("mm")]
+        [XmlIgnore]
         public double[] Thickness 
         {
             get
             {
-                if (structure != null)
-                    return structure.Thickness;
-                else
+                if (waterNode != null)
                     return waterNode.Thickness;
+                else if (Weirdo != null)
+                    return Weirdo.Thickness;
+                else
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.Thickness = value;
+                else if (Weirdo != null)
+                    Weirdo.Thickness = value;
+                else
+                    throw new Exception("Cannot set thickness. No water model found");
             }
         }
 
@@ -193,18 +213,26 @@
 
         /// <summary>Bulk density at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] BD
         {
             get
             {
-                if (waterNode != null && structure == null)
+                if (waterNode != null)
                     return waterNode.BD;
-                else if (waterNode != null)
-                    return Map(waterNode.BD, waterNode.Thickness, Thickness, MapType.Concentration, waterNode.BD.Last());
                 else if (Weirdo != null)
-                    return Map(Weirdo.BD, Weirdo.ParamThickness, Thickness, MapType.Concentration, Weirdo.BD.Last());
+                    return Weirdo.BD;
                 else
-                    throw new Exception("Whoops, No soil models to provide a BD value");
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.BD = value;
+                else if (Weirdo != null)
+                    Weirdo.BD = value;
+                else
+                    throw new Exception("Cannot set BD. No water model found");
             }
         }
 
@@ -214,10 +242,8 @@
         {
             get
             {
-                if(waterNode !=null)
-                return SWMapped(SWAtWaterThickness, waterNode.Thickness, Thickness);
-                else 
-                    return SWMapped(Weirdo.InitialSoilWater, Weirdo.Thickness, Thickness); //Fix me.  This call seems redundant, move if test up a function
+                var sample = Apsim.Child(this, typeof(Sample)) as Sample;
+                return sample?.SW;
             }
         }
 
@@ -232,48 +258,48 @@
             }
         }
 
-        /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
-        public double[] SWAtWaterThickness
+        /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
+        [Units("mm/mm")]
+        [XmlIgnore]
+        public double[] AirDry
         {
             get
             {
-                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
-
-                if (initialWater != null)
-                    return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
+                if (waterNode != null)
+                    return waterNode.AirDry;
                 else
-                {
-                    foreach (Sample Sample in Apsim.Children(this, typeof(Sample)))
-                    {
-                        if (MathUtilities.ValuesInArray(Sample.SW))
-                        {
-                            if (waterNode != null)
-                            return SWMapped(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness);
-                            else
-                                return Map(Sample.SWVolumetric, Sample.Thickness, Weirdo.Thickness);
-                        }
-                    }
-                }
-                return null;
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.AirDry = value;
             }
         }
 
-        /// <summary>Return AirDry at standard thickness. Units: mm/mm</summary>
-        [Units("mm/mm")]
-        public double[] AirDry { get { return Map(waterNode.AirDry, waterNode.Thickness, Thickness, MapType.Concentration); } }
 
         /// <summary>Return lower limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] LL15
         {
             get
             {
-                if (waterNode != null && structure == null)
+                if (waterNode != null)
                     return waterNode.LL15;
-                else if (waterNode != null)
-                    return Map(waterNode.LL15, waterNode.Thickness, Thickness, MapType.Concentration);
+                else if (Weirdo != null)
+                    return Weirdo.LL15;
                 else
-                    return Map(Weirdo.LL15, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.LL15 = value;
+                else if (Weirdo != null)
+                    Weirdo.LL15 = value;
+                else
+                    throw new Exception("Cannot set LL15. No water model found");
             }
         }
 
@@ -289,16 +315,26 @@
 
         /// <summary>Return drained upper limit at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] DUL
         {
             get
             {
-                if (waterNode != null && structure == null)
+                if (waterNode != null)
                     return waterNode.DUL;
-                else if (waterNode !=null)
-                    return Map(waterNode.DUL, waterNode.Thickness, Thickness, MapType.Concentration);
+                else if (Weirdo != null)
+                    return Weirdo.DUL;
                 else
-                    return Map(Weirdo.DUL, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.DUL = value;
+                else if (Weirdo != null)
+                    Weirdo.DUL = value;
+                else
+                    throw new Exception("Cannot set DUL. No water model found");
             }
         }
 
@@ -314,16 +350,26 @@
 
         /// <summary>Return saturation at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
+        [XmlIgnore]
         public double[] SAT
         {
             get
             {
-                if (waterNode != null && structure == null)
+                if (waterNode != null)
                     return waterNode.SAT;
-                else if (waterNode != null)
-                    return Map(waterNode.SAT, waterNode.Thickness, Thickness, MapType.Concentration);
+                else if (Weirdo != null)
+                    return Weirdo.SAT;
                 else
-                    return Map(Weirdo.SAT, Weirdo.ParamThickness, Thickness, MapType.Concentration);
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.SAT = value;
+                else if (Weirdo != null)
+                    Weirdo.SAT = value;
+                else
+                    throw new Exception("Cannot set SAT. No water model found");
             }
         }
 
@@ -339,7 +385,28 @@
 
         /// <summary>KS at standard thickness. Units: mm/mm</summary>
         [Units("mm/mm")]
-        public double[] KS { get { return Map(waterNode.KS, waterNode.Thickness, Thickness, MapType.Concentration); } }
+        [XmlIgnore]
+        public double[] KS
+        {
+            get
+            {
+                if (waterNode != null)
+                    return waterNode.KS;
+                else if (Weirdo != null)
+                    return Weirdo.Ksat;
+                else
+                    return null;
+            }
+            set
+            {
+                if (waterNode != null)
+                    waterNode.KS = value;
+                else if (Weirdo != null)
+                    Weirdo.Ksat = value;
+                else
+                    throw new Exception("Cannot set KS. No water model found");
+            }
+        }
 
         /// <summary>SWCON at standard thickness. Units: 0-1</summary>
         [Units("0-1")]
@@ -348,7 +415,7 @@
             get 
             {
                 if (SoilWater == null || !(SoilWater is SoilWater)) return null;
-                return Map((SoilWater as SoilWater).SWCON, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+                return (SoilWater as SoilWater).SWCON;
             }
         }
 
@@ -361,7 +428,7 @@
             get
                 {
                 if (SoilWater == null) return null;
-                return Map((SoilWater as SoilWater).KLAT, (SoilWater as SoilWater).Thickness, Thickness, MapType.Concentration, 0);
+                return (SoilWater as SoilWater).KLAT;
             }
         }
 
@@ -493,26 +560,22 @@
             }
         }
 
-        /// <summary>Plant available water at standard thickness at water node thickness. Units:mm/mm</summary>
-        [Units("mm/mm")]
-        public double[] PAWAtWaterThickness
-        {
-            get
-            {
-                return CalcPAWC(waterNode.Thickness,
-                                waterNode.LL15,
-                                SWAtWaterThickness,
-                                null);
-            }
-        }
         #endregion
 
         #region Crops
 
-        /// <summary>A list of crop names.</summary>
-        /// <value>The crop names.</value>
+        /// <summary>A list of crop names. Never returns null.</summary>
         [XmlIgnore]
-        public string[] CropNames { get { return waterNode.CropNames; } }
+        public string[] CropNames
+        {
+            get
+            {
+                if (waterNode != null)
+                    return waterNode.CropNames;
+                else
+                    return new string[0];
+            }
+        }
 
         /// <summary>Return a specific crop to caller. Will throw if crop doesn't exist.</summary>
         /// <param name="CropName">Name of the crop.</param>
@@ -534,9 +597,6 @@
                     return MeasuredCrop;
                 }
 
-                ISoilCrop Predicted = PredictedCrop(CropName);
-                if (Predicted != null)
-                    return Predicted;
                 throw new Exception("Soil could not find crop: " + CropName);
             }
             else return null;
@@ -563,7 +623,7 @@
             double[] cl = Cl;
             if (MathUtilities.ValuesInArray(cl))
             {
-                measuredCrop.KL = Map(StandardKL, StandardThickness, Thickness, MapType.Concentration, StandardKL.Last());
+                measuredCrop.KL = Layers.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
                 for (int i = 0; i < Thickness.Length; i++)
                     measuredCrop.KL[i] *= Math.Min(1.0, 4.0 * Math.Exp(-0.005 * cl[i]));
             }
@@ -572,7 +632,7 @@
                 double[] esp = ESP;
                 if (MathUtilities.ValuesInArray(esp))
                 {
-                    measuredCrop.KL = Map(StandardKL, StandardThickness, Thickness, MapType.Concentration, StandardKL.Last());
+                    measuredCrop.KL = Layers.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
                     for (int i = 0; i < Thickness.Length; i++)
                         measuredCrop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
                 }
@@ -581,7 +641,7 @@
                     double[] ec = EC;
                     if (MathUtilities.ValuesInArray(ec))
                     {
-                        measuredCrop.KL = Map(StandardKL, StandardThickness, Thickness, MapType.Concentration, StandardKL.Last());
+                        measuredCrop.KL = Layers.MapConcentration(StandardKL, StandardThickness, Thickness, StandardKL.Last());
                         for (int i = 0; i < Thickness.Length; i++)
                             measuredCrop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
                     }
@@ -598,271 +658,6 @@
                             LLMapped(CropName, waterNode.Thickness),
                             DULMapped(waterNode.Thickness),
                             XFMapped(CropName, waterNode.Thickness));
-        }
-
-        /// <summary>
-        /// Plant available water for the specified crop at water node thickness. Will throw if crop not found. Units: mm/mm
-        /// </summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <returns></returns>
-        public double[] PAWCropAtWaterThickness(string CropName)
-        {
-            return CalcPAWC(waterNode.Thickness,
-                            LLMapped(CropName, waterNode.Thickness),
-                            SWAtWaterThickness,
-                            XFMapped(CropName, waterNode.Thickness));
-        }
-
-        /// <summary>
-        /// Plant available water for the specified crop at water node thickness. Will throw if crop not found. Units: mm
-        /// </summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <returns></returns>
-        public double[] PAWmmAtWaterThickness(string CropName)
-        {
-            return MathUtilities.Multiply(PAWCropAtWaterThickness(CropName), waterNode.Thickness);
-        }
-        #endregion
-
-        #region Predicted Crops
-        /// <summary>The black vertosol crop list</summary>
-        static string[] BlackVertosolCropList = new string[] { "Wheat", "Sorghum", "Cotton" };
-        /// <summary>The grey vertosol crop list</summary>
-        static string[] GreyVertosolCropList = new string[] { "Wheat", "Sorghum", "Cotton" };
-        /// <summary>The predicted thickness</summary>
-        static double[] PredictedThickness  = new double[] { 150, 150, 300, 300, 300, 300, 300 };
-        /// <summary>The predicted xf</summary>
-        static double[] PredictedXF = new double[] { 1.00, 1.00, 1.00, 1.00, 1.00, 1.00, 1.00 };
-        /// <summary>The wheat kl</summary>
-        static double[] WheatKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
-        /// <summary>The sorghum kl</summary>
-        static double[] SorghumKL = new double[] { 0.07, 0.07, 0.07, 0.05, 0.05, 0.04, 0.03 };
-        /// <summary>The barley kl</summary>
-        static double[] BarleyKL = new double[] { 0.07, 0.07, 0.07, 0.05, 0.05, 0.03, 0.02 };
-        /// <summary>The chickpea kl</summary>
-        static double[] ChickpeaKL = new double[] { 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06 };
-        /// <summary>The mungbean kl</summary>
-        static double[] MungbeanKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.00, 0.00 };
-        /// <summary>The cotton kl</summary>
-        static double[] CottonKL = new double[] { 0.10, 0.10, 0.10, 0.10, 0.09, 0.07, 0.05 };
-        /// <summary>The canola kl</summary>
-        static double[] CanolaKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
-        /// <summary>The pigeon pea kl</summary>
-        static double[] PigeonPeaKL = new double[] { 0.06, 0.06, 0.06, 0.05, 0.04, 0.02, 0.01 };
-        /// <summary>The maize kl</summary>
-        static double[] MaizeKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
-        /// <summary>The cowpea kl</summary>
-        static double[] CowpeaKL = new double[] { 0.06, 0.06, 0.06, 0.04, 0.04, 0.02, 0.01 };
-        /// <summary>The sunflower kl</summary>
-        static double[] SunflowerKL = new double[] { 0.01, 0.01, 0.08, 0.06, 0.04, 0.02, 0.01 };
-        /// <summary>The fababean kl</summary>
-        static double[] FababeanKL = new double[] { 0.08, 0.08, 0.08, 0.08, 0.06, 0.04, 0.03 };
-        /// <summary>The lucerne kl</summary>
-        static double[] LucerneKL = new double[] { 0.01, 0.01, 0.01, 0.01, 0.09, 0.09, 0.09 };
-        /// <summary>The perennial kl</summary>
-        static double[] PerennialKL = new double[] { 0.01, 0.01, 0.01, 0.01, 0.09, 0.07, 0.05 };
-
-        /// <summary>
-        /// 
-        /// </summary>
-        class BlackVertosol
-        {
-            /// <summary>The cotton a</summary>
-            internal static double[] CottonA = new double[] { 0.832, 0.868, 0.951, 0.988, 1.043, 1.095, 1.151 };
-            /// <summary>The sorghum a</summary>
-            internal static double[] SorghumA = new double[] { 0.699, 0.802, 0.853, 0.907, 0.954, 1.003, 1.035 };
-            /// <summary>The wheat a</summary>
-            internal static double[] WheatA = new double[] { 0.124, 0.049, 0.024, 0.029, 0.146, 0.246, 0.406 };
-
-            /// <summary>The cotton b</summary>
-            internal static double CottonB = -0.0070;
-            /// <summary>The sorghum b</summary>
-            internal static double SorghumB = -0.0038;
-            /// <summary>The wheat b</summary>
-            internal static double WheatB = 0.0116;
-
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        class GreyVertosol
-        {
-            /// <summary>The cotton a</summary>
-            internal static double[] CottonA = new double[] { 0.853, 0.851, 0.883, 0.953, 1.022, 1.125, 1.186 };
-            /// <summary>The sorghum a</summary>
-            internal static double[] SorghumA = new double[] { 0.818, 0.864, 0.882, 0.938, 1.103, 1.096, 1.172 };
-            /// <summary>The wheat a</summary>
-            internal static double[] WheatA = new double[] { 0.660, 0.655, 0.701, 0.745, 0.845, 0.933, 1.084 };
-            /// <summary>The barley a</summary>
-            internal static double[] BarleyA = new double[] { 0.847, 0.866, 0.835, 0.872, 0.981, 1.036, 1.152 };
-            /// <summary>The chickpea a</summary>
-            internal static double[] ChickpeaA = new double[] { 0.435, 0.452, 0.481, 0.595, 0.668, 0.737, 0.875 };
-            /// <summary>The fababean a</summary>
-            internal static double[] FababeanA = new double[] { 0.467, 0.451, 0.396, 0.336, 0.190, 0.134, 0.084 };
-            /// <summary>The mungbean a</summary>
-            internal static double[] MungbeanA = new double[] { 0.779, 0.770, 0.834, 0.990, 1.008, 1.144, 1.150 };
-            /// <summary>The cotton b</summary>
-            internal static double CottonB = -0.0082;
-            /// <summary>The sorghum b</summary>
-            internal static double SorghumB = -0.007;
-            /// <summary>The wheat b</summary>
-            internal static double WheatB = -0.0032;
-            /// <summary>The barley b</summary>
-            internal static double BarleyB = -0.0051;
-            /// <summary>The chickpea b</summary>
-            internal static double ChickpeaB = 0.0029;
-            /// <summary>The fababean b</summary>
-            internal static double FababeanB = 0.02455;
-            /// <summary>The mungbean b</summary>
-            internal static double MungbeanB = -0.0034;
-        }
-
-        /// <summary>Return a list of predicted crop names or an empty string[] if none found.</summary>
-        /// <value>The predicted crop names.</value>
-        public string[] PredictedCropNames
-        {
-            get
-            {
-                if (SoilType != null)
-                {
-                    if (SoilType.Equals("Black Vertosol", StringComparison.CurrentCultureIgnoreCase))
-                        return BlackVertosolCropList;
-                    else if (SoilType.Equals("Grey Vertosol", StringComparison.CurrentCultureIgnoreCase))
-                        return GreyVertosolCropList;
-                }
-                return new string[0];
-            }
-        }
-
-        /// <summary>Return a predicted SoilCrop for the specified crop name or null if not found.</summary>
-        /// <param name="CropName">Name of the crop.</param>
-        /// <returns></returns>
-        private ISoilCrop PredictedCrop(string CropName)
-        {
-            double[] A = null;
-            double B = double.NaN;
-            double[] KL = null;
-
-            if (SoilType == null)
-                return null;
-
-            if (SoilType.Equals("Black Vertosol", StringComparison.CurrentCultureIgnoreCase))
-            {
-                if (CropName.Equals("Cotton", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = BlackVertosol.CottonA;
-                    B = BlackVertosol.CottonB;
-                    KL = CottonKL;
-                }
-                else if (CropName.Equals("Sorghum", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = BlackVertosol.SorghumA;
-                    B = BlackVertosol.SorghumB;
-                    KL = SorghumKL;
-                }
-                else if (CropName.Equals("Wheat", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = BlackVertosol.WheatA;
-                    B = BlackVertosol.WheatB;
-                    KL = WheatKL;
-                }
-            }
-            else if (SoilType.Equals("Grey Vertosol", StringComparison.CurrentCultureIgnoreCase))
-            {
-                if (CropName.Equals("Cotton", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.CottonA;
-                    B = GreyVertosol.CottonB;
-                    KL = CottonKL;
-                }
-                else if (CropName.Equals("Sorghum", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.SorghumA;
-                    B = GreyVertosol.SorghumB;
-                    KL = SorghumKL;
-                }
-                else if (CropName.Equals("Wheat", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.WheatA;
-                    B = GreyVertosol.WheatB;
-                    KL = WheatKL;
-                }
-                else if (CropName.Equals("Barley", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.BarleyA;
-                    B = GreyVertosol.BarleyB;
-                    KL = BarleyKL;
-                }
-                else if (CropName.Equals("Chickpea", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.ChickpeaA;
-                    B = GreyVertosol.ChickpeaB;
-                    KL = ChickpeaKL;
-                }
-                else if (CropName.Equals("Fababean", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.FababeanA;
-                    B = GreyVertosol.FababeanB;
-                    KL = FababeanKL;
-                }
-                else if (CropName.Equals("Mungbean", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    A = GreyVertosol.MungbeanA;
-                    B = GreyVertosol.MungbeanB;
-                    KL = MungbeanKL;
-                }
-            }
-
-
-            if (A == null)
-                return null;
-
-            double[] LL = PredictedLL(A, B);
-            LL = Map(LL, PredictedThickness, waterNode.Thickness, MapType.Concentration, LL.Last());
-            KL = Map(KL, PredictedThickness, waterNode.Thickness, MapType.Concentration, KL.Last());
-            double[] XF = Map(PredictedXF, PredictedThickness, waterNode.Thickness, MapType.Concentration, PredictedXF.Last());
-            string[] Metadata = StringUtilities.CreateStringArray("Estimated", waterNode.Thickness.Length);
-
-            SoilCrop soilCrop = new SoilCrop()
-            {
-                LL = LL,
-                LLMetadata = Metadata,
-                KL = KL,
-                KLMetadata = Metadata,
-                XF = XF,
-                XFMetadata = Metadata
-            };
-            return soilCrop as ISoilCrop;
-        }
-
-        /// <summary>Calculate and return a predicted LL from the specified A and B values.</summary>
-        /// <param name="A">a.</param>
-        /// <param name="B">The b.</param>
-        /// <returns></returns>
-        private double[] PredictedLL(double[] A, double B)
-        {
-            double[] LL15 = LL15Mapped(PredictedThickness);
-            double[] DUL = DULMapped(PredictedThickness);
-            double[] LL = new double[PredictedThickness.Length];
-            for (int i = 0; i != PredictedThickness.Length; i++)
-            {
-                double DULPercent = DUL[i] * 100.0;
-                LL[i] = DULPercent * (A[i] + B * DULPercent);
-                LL[i] /= 100.0;
-
-                // Bound the predicted LL values.
-                LL[i] = Math.Max(LL[i], LL15[i]);
-                LL[i] = Math.Min(LL[i], DUL[i]);
-            }
-
-            //  make the top 3 layers the same as the the top 3 layers of LL15
-            if (LL.Length >= 3)
-            {
-                LL[0] = LL15[0];
-                LL[1] = LL15[1];
-                LL[2] = LL15[2];
-            }
-            return LL;
         }
 
         #endregion
@@ -1232,7 +1027,7 @@
             if(waterNode != null)
             return Map(waterNode.BD, waterNode.Thickness, ToThickness, MapType.Concentration, waterNode.BD.Last());
             else
-                return Map(Weirdo.BD, Weirdo.ParamThickness, ToThickness, MapType.Concentration, Weirdo.BD.Last());
+                return Map(Weirdo.BD, Weirdo.Thickness, ToThickness, MapType.Concentration, Weirdo.BD.Last());
         }
 
         /// <summary>AirDry - mapped to the specified layer structure. Units: mm/mm</summary>
@@ -1287,10 +1082,11 @@
             Values[LastIndex + 3] = 0.0; // This will be constrained below to crop LL below.
 
             // Get the first crop ll or ll15.
-            double[] LowerBound;
+            double[] LowerBound = null;
             if (waterNode.Crops.Count > 0)
                 LowerBound = LLMapped(waterNode.Crops[0].Name, Thicknesses);
-            else
+
+            if (LowerBound == null)
                 LowerBound = LL15Mapped(Thicknesses);
             if (LowerBound == null)
                 throw new Exception("Cannot find crop lower limit or LL15 in soil");
@@ -1318,6 +1114,9 @@
         internal double[] LLMapped(string CropName, double[] ToThickness)
         {
             SoilCrop SoilCrop = Crop(CropName) as SoilCrop;
+            if (SoilCrop == null)
+                return null;
+
             if (MathUtilities.AreEqual(waterNode.Thickness, ToThickness))
                 return SoilCrop.LL;
             double[] Values = Map(SoilCrop.LL, waterNode.Thickness, ToThickness, MapType.Concentration, LastValue(SoilCrop.LL));

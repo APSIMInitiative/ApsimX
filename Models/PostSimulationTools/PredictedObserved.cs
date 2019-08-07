@@ -12,6 +12,7 @@ namespace Models.PostSimulationTools
     using System.Data;
     using System.Linq;
     using System.Text;
+    using System.Threading;
 
     /// <summary>
     /// # [Name]
@@ -28,6 +29,9 @@ namespace Models.PostSimulationTools
     [ValidParent(ParentType = typeof(Folder))]
     public class PredictedObserved : Model, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>Gets or sets the name of the predicted table.</summary>
         [Description("Predicted table")]
         [Display(Type = DisplayType.TableName)]
@@ -54,13 +58,7 @@ namespace Models.PostSimulationTools
         public string FieldName3UsedForMatch { get; set; }
 
         /// <summary>Main run method for performing our calculations and storing data.</summary>
-        /// <param name="dataStore">The data store.</param>
-        /// <exception cref="ApsimXException">
-        /// Could not find model data table:  + PredictedTableName
-        /// or
-        /// Could not find observed data table:  + ObservedTableName
-        /// </exception>
-        public void Run(IDataStore dataStore)
+        public void Run()
         {
             if (PredictedTableName != null && ObservedTableName != null)
             {
@@ -181,6 +179,8 @@ namespace Models.PostSimulationTools
                     List<string> unitNames = new List<string>();
 
                     // write units to table.
+                    reader.Refresh();
+
                     foreach (string fieldName in commonCols)
                     {
                         string units = reader.Units(PredictedTableName, fieldName);
@@ -193,8 +193,29 @@ namespace Models.PostSimulationTools
                             unitNames.Add(unitsMinusBrackets);
                         }
                     }
+
                     if (unitNames.Count > 0)
+                    {
+                        // The Writer replaces tables, rather than appends to them,
+                        // so we actually need to re-write the existing units table values
+                        // Is there a better way to do this?
+                        DataView allUnits = new DataView(reader.GetData("_Units"));
+                        allUnits.Sort = "TableName";
+                        DataTable tableNames = allUnits.ToTable(true, "TableName");
+                        foreach (DataRow row in tableNames.Rows)
+                        {
+                            string tableName = row["TableName"] as string;
+                            List<string> colNames = new List<string>();
+                            List<string> unitz = new List<string>();
+                            foreach (DataRowView rowView in allUnits.FindRows(tableName))
+                            {
+                                colNames.Add(rowView["ColumnHeading"].ToString());
+                                unitz.Add(rowView["Units"].ToString());
+                            }
+                            dataStore.Writer.AddUnits(tableName, colNames, unitz);
+                        }
                         dataStore.Writer.AddUnits(Name, unitFieldNames, unitNames);
+                    }
                 }
                 else
                 {

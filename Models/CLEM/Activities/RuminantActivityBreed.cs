@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
+using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -90,7 +91,7 @@ namespace Models.CLEM.Activities
                 // go back (gestation - 1) months
                 // this won't include those individuals due to give birth on day 1.
 
-                int monthsAgoStart = Clock.Today.Month - (Convert.ToInt32(Math.Truncate(herd.FirstOrDefault().BreedParams.GestationLength)) - 1);
+                int monthsAgoStart = Clock.Today.Month - (Convert.ToInt32(Math.Truncate(herd.FirstOrDefault().BreedParams.GestationLength), CultureInfo.InvariantCulture) - 1);
                 int monthsAgoStop = -1;
 
                 for (int i = monthsAgoStart; i <= monthsAgoStop; i++)
@@ -149,7 +150,7 @@ namespace Models.CLEM.Activities
                         {
                             if (this.TimingCheck(previousDate))
                             {
-                                numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count());
+                                numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
                                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                                 {
                                     if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
@@ -244,14 +245,16 @@ namespace Models.CLEM.Activities
             // for each location where parts of this herd are located
             foreach (var location in breeders)
             {
-                // determine all foetus and newborn mortality.
-                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                // determine all foetus and newborn mortality of all pregnant females.
+                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsPregnant).ToList())
                 {
-                    if (female.IsPregnant)
+                    // calculate foetus and newborn mortality 
+                    // total mortality / (gestation months + 1) to get monthly mortality
+                    // done here before births to account for post birth motality as well..
+                    // IsPregnant status does not change until births occur in next section so will include mortality in month of birth
+                    // needs to be caclulated for each offspring carried.
+                    for (int i = 0; i < female.CarryingCount; i++)
                     {
-                        // calculate foetus and newborn mortality 
-                        // total mortality / (gestation months + 1) to get monthly mortality
-                        // done here before births to account for post birth motality as well..
                         if (ZoneCLEM.RandomGenerator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                         {
                             female.OneOffspringDies();
@@ -260,8 +263,10 @@ namespace Models.CLEM.Activities
                 }
 
                 // check for births of all pregnant females.
+                int month = Clock.Today.Month;
                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                 {
+
                     if (female.BirthDue)
                     {
                         female.WeightLossDueToCalf = 0;
@@ -301,6 +306,7 @@ namespace Models.CLEM.Activities
                         female.UpdateBirthDetails();
                     }
                 }
+
                 // uncontrolled conception
                 if (!UseAI)
                 {
@@ -331,7 +337,7 @@ namespace Models.CLEM.Activities
                 {
                     if (this.TimingOK)
                     {
-                        numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count());
+                        numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
                         foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
                         {
                             // calculate conception

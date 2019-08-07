@@ -23,5 +23,11 @@ namespace Models.CLEM
         /// <returns>Whether the activity is due based on the specified date</returns>
         bool Check(DateTime dateToCheck);
 
+        /// <summary>
+        /// Timer due and performed trigger
+        /// </summary>
+        /// <param name="e"></param>
+        void OnActivityPerformed(EventArgs e);
+
     }
 }

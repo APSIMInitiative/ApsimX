@@ -5,7 +5,7 @@
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
-    using Models.Core.Runners;
+    using Models.Core.Run;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -151,6 +151,7 @@
             this.view.Tree.AllowDrop -= this.OnAllowDrop;
             this.view.Tree.Droped -= this.OnDrop;
             this.view.Tree.Renamed -= this.OnRename;
+            this.view.Tree.ContextMenu.Destroy();
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
@@ -572,8 +573,8 @@
                 {
                     MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
-                    RunOrganiser organiser = new RunOrganiser(ApsimXFile, model, false);
-                    var errors = organiser.GenerateApsimXFiles(path, (int percent) => 
+                    var runner = new Runner(model);
+                    var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) => 
                     {
                         MainPresenter.ShowProgress(percent, false);
                     });
@@ -716,13 +717,29 @@
             }
         }
 
+        /// <summary>
+        /// Open a dialog for downloading a new soil description
+        /// </summary>
         public void DownloadSoil()
         {
-            Models.Soils.Soil currentSoil = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Models.Soils.Soil;
-            if (currentSoil != null)
-            {
+            Model model = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Model;
+            if (model != null)
+            { 
                 Utility.SoilDownloadDialog dlg = new Utility.SoilDownloadDialog();
-                dlg.ShowFor(currentSoil, (view as ExplorerView), this.view.Tree.SelectedNode, this);
+                dlg.ShowFor(model, (view as ExplorerView), this.view.Tree.SelectedNode, this);
+            }
+        }
+
+        /// <summary>
+        /// Open a dialog for downloading a new weather file
+        /// </summary>
+        public void DownloadWeather()
+        {
+            Model model = Apsim.Get(this.ApsimXFile, this.CurrentNodePath) as Model;
+            if (model != null)
+            {
+                Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
+                dlg.ShowFor(model, (view as ExplorerView), this.view.Tree.SelectedNode, this);
             }
         }
 
