@@ -64,7 +64,9 @@
             // Set the main window location and size.
             this.view.WindowLocation = Utility.Configuration.Settings.MainFormLocation;
             this.view.WindowSize = Utility.Configuration.Settings.MainFormSize;
-            this.view.WindowMaximised = Utility.Configuration.Settings.MainFormMaximized;
+            // Maximize settings do not save correctly on OS X
+            if (!ProcessUtilities.CurrentOS.IsMac)
+                this.view.WindowMaximised = Utility.Configuration.Settings.MainFormMaximized;
 
             // Set the main window caption with version information.
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -1218,6 +1220,7 @@
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
                 Utility.Configuration.Settings.StatusPanelHeight = this.view.StatusPanelHeight;
+                Utility.Configuration.Settings.Save();
             }
         }
 
