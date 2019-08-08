@@ -538,8 +538,17 @@ namespace UserInterface.Views
                 return;
             }
             LineSeries previous = plot1.Model.Series.OfType<LineSeries>().Last();
+
+            // This will work if the previous series was an area series.
             double[] x1 = previous.Points.Select(p => p.X).ToArray();
             double[] y1 = previous.Points.Select(p => p.Y).ToArray();
+
+            // This will work if the previous series was a line/scatter series.
+            if (x1 == null || x1.Length < 1)
+                x1 = previous.ItemsSource.Cast<DataPoint>().Select(p => p.X).ToArray();
+
+            if (y1 == null || y1.Length < 1)
+                y1 = previous.ItemsSource.Cast<DataPoint>().Select(p => p.Y).ToArray();
 
             List<double> y2 = new List<double>();
             for (int i = 0; i < x1.Length; i++)
@@ -1055,7 +1064,7 @@ namespace UserInterface.Views
             Models.Graph.Axis.AxisType yAxisType)
         {
             List<DataPoint> points = new List<DataPoint>();
-            if (x != null && y != null && x != null && y != null)
+            if (x != null && y != null && Count(x) > 0 && Count(y) > 0)
             {
                 // Create a new data point for each x.
                 double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
@@ -1070,6 +1079,22 @@ namespace UserInterface.Views
             }
             else
                 return null;
+        }
+
+        /// <summary>
+        /// Determines the length of a non-generic IEnumerable.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <remarks>
+        /// https://stackoverflow.com/a/5604189
+        /// </remarks>
+        private int Count(IEnumerable source)
+        {
+            int c = 0;
+            var e = source.GetEnumerator();
+                while (e.MoveNext())
+                    c++;
+            return c;
         }
 
         /// <summary>
@@ -1119,8 +1144,8 @@ namespace UserInterface.Views
             List<double> dataPointValues = new List<double>();
             double x; // Used only as an out parameter, to maintain backward
                       // compatibility with older versions VS/C#.
-            enumerator.MoveNext();
-
+            if (!enumerator.MoveNext())
+                return null;
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));
