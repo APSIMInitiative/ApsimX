@@ -470,6 +470,13 @@ namespace UserInterface.Views
             series.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
+
+            // If the X data is not monotonic, the area will not be
+            // filled with colour. In this case, show a warning to the
+            // user so they know why their area series is not working.
+            EnsureMonotonic(points.Select(p => p.X).ToArray());
+            EnsureMonotonic(points2.Select(p => p.X).ToArray());
+
             if (showOnLegend)
                 series.Title = title;
             if (points != null && points2 != null)
@@ -487,6 +494,22 @@ namespace UserInterface.Views
             series.CanTrackerInterpolatePoints = false;
 
             this.plot1.Model.Series.Add(series);
+        }
+
+        /// <summary>
+        /// Checks that the given data is equidistant. Shows a warning
+        /// message if this is not true.
+        /// </summary>
+        /// <param name="x">Data to be tested.</param>
+        private void EnsureMonotonic(double[] x)
+        {
+            double diff = x[1] - x[0];
+            for (int i = 1; i < x.Length; i++)
+            {
+                double newDiff = x[i] - x[i - 1];
+                if (!MathUtilities.FloatsAreEqual(diff, newDiff))
+                    MasterView.ShowMessage("WARNING: x data is not monotonic at index {i}; x = [..., {x[i - 2]}, {x[i - 1]}, {x[i]}, ...]", Models.Core.Simulation.ErrorLevel.Warning, withButton: false);
+            }
         }
 
         /// <summary>
@@ -513,7 +536,7 @@ namespace UserInterface.Views
             List<double> y2 = new List<double>();
             y2.AddRange(Enumerable.Repeat(0d, ((ICollection)y).Count));
 
-            DrawRegion(title, x, y, x, y2, xAxisType, yAxisType, colour, showOnLegend);
+            DrawRegion(title, x, y2, x, y, xAxisType, yAxisType, colour, showOnLegend);
         }
 
         /// <summary>
@@ -544,7 +567,7 @@ namespace UserInterface.Views
                 // a region series (colours area between two curves), and use
                 // y = 0 for the second curve.
                 List<double> y0 = new List<double>();
-                y0.AddRange(Enumerable.Repeat(0d, ((ICollection)y).Count));
+                y0.AddRange(Enumerable.Repeat(0d, y.Length));
                 DrawRegion(title, x, y, x, y0, xAxisType, yAxisType, colour, showOnLegend);
                 return;
             }
@@ -589,7 +612,7 @@ namespace UserInterface.Views
                 else if (xType == typeof(DateTime))
                     index = Array.IndexOf(x, DateTimeAxis.ToDateTime(xVal));
                 else
-                    index = Array.IndexOf(x, xVal); // this is unlikely to work
+                    index = i; // Array.IndexOf(x, xVal); // this is unlikely to work
 
                 double yVal = y1[i];
                 if (index >= 0)
@@ -598,7 +621,7 @@ namespace UserInterface.Views
                     yVal += MathUtilities.LinearInterpReal(xVal, x.Cast<double>().ToArray(), y, out bool didInterp);
                 y2.Add(yVal);
             }
-            DrawRegion(title, x, y2, x1, y1, xAxisType, yAxisType, colour, showOnLegend);
+            DrawRegion(title, x1, y2, x1, y1, xAxisType, yAxisType, colour, showOnLegend);
         }
 
         /// <summary>
