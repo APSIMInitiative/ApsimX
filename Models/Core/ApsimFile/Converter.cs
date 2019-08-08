@@ -5,6 +5,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -15,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 57; } }
+        public static int LatestVersion { get { return 58; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -37,7 +38,7 @@
                 bool changed = XmlConverters.DoConvert(ref st, Math.Min(toVersion, XmlConverters.LastVersion), fileName);
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(st);
-                int fileVersion = Convert.ToInt32(XmlUtilities.Attribute(doc.DocumentElement, "Version"));
+                int fileVersion = Convert.ToInt32(XmlUtilities.Attribute(doc.DocumentElement, "Version"), CultureInfo.InvariantCulture);
                 if (fileVersion == toVersion)
                     return new ConverterReturnType()
                     { DidConvert = changed, RootXml = doc };
@@ -234,9 +235,9 @@
             {
                 double rootWt;
                 if (SOM["RootWt"] is JArray)
-                    rootWt = Convert.ToDouble(SOM["RootWt"][0]); // This can happen when importing old APSIM file.
+                    rootWt = Convert.ToDouble(SOM["RootWt"][0], CultureInfo.InvariantCulture); // This can happen when importing old APSIM file.
                 else
-                    rootWt = Convert.ToDouble(SOM["RootWt"]);
+                    rootWt = Convert.ToDouble(SOM["RootWt"], CultureInfo.InvariantCulture);
                 SOM.Remove("RootWt");
                 double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
 
@@ -453,9 +454,9 @@
             {
                 double soilcnr;
                 if (SOM["SoilCN"] is JArray)
-                    soilcnr = Convert.ToDouble(SOM["SoilCN"][0]); // This can happen when importing old APSIM file.
+                    soilcnr = Convert.ToDouble(SOM["SoilCN"][0], CultureInfo.InvariantCulture); // This can happen when importing old APSIM file.
                 else
-                    soilcnr = Convert.ToDouble(SOM["SoilCN"]);
+                    soilcnr = Convert.ToDouble(SOM["SoilCN"], CultureInfo.InvariantCulture);
                 SOM.Remove("SoilCN");
                 double[] thickness = MathUtilities.StringsToDoubles(JsonUtilities.Values(SOM, "Thickness"));
 
@@ -555,6 +556,31 @@
             foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
                 if (JsonUtilities.ChildWithName(organ, "RetranslocateNitrogen") == null)
                     JsonUtilities.AddModel(organ, typeof(RetranslocateNonStructural), "RetranslocateNitrogen");
+        }
+
+        /// <summary>
+        /// Upgrades to version 58. Renames 'ParamThickness' to 'Thickness' in Weirdo.
+        /// Also change calls to property soil.SWAtWaterThickness to soil.Thickness.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion58(JObject root, string fileName)
+        {
+            foreach (JObject weirdo in JsonUtilities.ChildrenRecursively(root, "WEIRDO"))
+            {
+                var paramThicknessNode = weirdo["ParamThickness"];
+                if (paramThicknessNode != null)
+                {
+                    weirdo["Thickness"] = paramThicknessNode;
+                    weirdo.Remove("ParamThickness");
+                }
+            }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                if (manager.Replace(".SWAtWaterThickness", ".Thickness"))
+                    manager.Save();
+            }
         }
 
         /// <summary>

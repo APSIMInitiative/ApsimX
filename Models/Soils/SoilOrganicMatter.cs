@@ -47,6 +47,7 @@ namespace Models.Soils
         /// <value>The depth.</value>
         [Summary]
         [Units("cm")]
+        [XmlIgnore]
         [Description("Depth")]
         public string[] Depth
         {
@@ -108,33 +109,18 @@ namespace Models.Soils
         /// <summary>The PPM</summary>
         private const double ppm = 1000000.0;
 
-
-        // Support for OC units.
-        /// <summary>
-        /// 
-        /// </summary>
-        public enum OCUnitsEnum 
-        {
-            /// <summary>The total</summary>
-            [Description("Total %")]
-            Total,
-
-            /// <summary>The walkley black</summary>
-            [Description("Walkley Black %")]
-            WalkleyBlack 
-        }
         /// <summary>Gets or sets the oc units.</summary>
         /// <value>The oc units.</value>
-        public OCUnitsEnum OCUnits { get; set; }
+        public Sample.OCSampleUnitsEnum OCUnits { get; set; }
 
         /// <summary>Ocs the units set.</summary>
         /// <param name="ToUnits">To units.</param>
-        public void OCUnitsSet(OCUnitsEnum ToUnits)
+        public void OCUnitsSet(Sample.OCSampleUnitsEnum ToUnits)
         {
             if (ToUnits != OCUnits)
             {
                 // convert the numbers
-                if (ToUnits == OCUnitsEnum.WalkleyBlack)
+                if (ToUnits == Sample.OCSampleUnitsEnum.WalkleyBlack)
                     OC = MathUtilities.Divide_Value(OC, 1.3);
                 else
                     OC = MathUtilities.Multiply_Value(OC, 1.3);
@@ -150,7 +136,7 @@ namespace Models.Soils
         {
             get
             {
-                if (OCUnits == OCUnitsEnum.WalkleyBlack)
+                if (OCUnits == Sample.OCSampleUnitsEnum.WalkleyBlack)
                     return MathUtilities.Multiply_Value(OC, 1.3);
                 else
                     return OC;

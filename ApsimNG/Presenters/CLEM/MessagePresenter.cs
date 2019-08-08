@@ -4,6 +4,7 @@ using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -196,7 +197,7 @@ namespace UserInterface.Presenters
                             title = "Success";
                             DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
                             int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
-                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
+                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString(), CultureInfo.InvariantCulture);
                             msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
                         }
 

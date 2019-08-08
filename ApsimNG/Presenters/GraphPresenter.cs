@@ -236,8 +236,8 @@ namespace UserInterface.Presenters
                     {
                         graphView.DrawArea(
                             definition.Title,
-                            definition.X.Cast<double>().ToArray(),
-                            definition.Y.Cast<double>().ToArray(),
+                            definition.X,
+                            definition.Y,
                             definition.XAxis,
                             definition.YAxis,
                             colour,

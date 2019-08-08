@@ -193,32 +193,18 @@ namespace Models.Soils
         /// <value>The particle size clay metadata.</value>
         public string[] ParticleSizeClayMetadata { get; set; }
 
-        // Support for PH units.
-        /// <summary>
-        /// An enumerated type for ph units
-        /// </summary>
-        public enum PHUnitsEnum 
-        {
-            /// <summary>water</summary>
-            [Description("1:5 water")]
-            Water,
-
-            /// <summary>CaCl2</summary>
-            [Description("CaCl2")]
-            CaCl2 
-        }
         /// <summary>Gets or sets the ph units.</summary>
         /// <value>The ph units.</value>
-        public PHUnitsEnum PHUnits { get; set; }
+        public Sample.PHSampleUnitsEnum PHUnits { get; set; }
 
         /// <summary>Phes the units set.</summary>
         /// <param name="ToUnits">To units.</param>
-        public void PHUnitsSet(PHUnitsEnum ToUnits)
+        public void PHUnitsSet(Sample.PHSampleUnitsEnum ToUnits)
         {
             if (ToUnits != PHUnits)
             {
                 // convert the numbers
-                if (ToUnits == PHUnitsEnum.Water)
+                if (ToUnits == Sample.PHSampleUnitsEnum.Water)
                 {
                     // pH in water = (pH in CaCl X 1.1045) - 0.1375
                     PH = MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(PH, 1.1045), 0.1375);
@@ -266,7 +252,7 @@ namespace Models.Soils
         {
             get
             {
-                if (PHUnits == PHUnitsEnum.CaCl2)
+                if (PHUnits == Sample.PHSampleUnitsEnum.CaCl2)
                 {
                     // pH in water = (pH in CaCl X 1.1045) - 0.1375
                     return MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(PH, 1.1045), 0.1375);

@@ -410,14 +410,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
-        /// Intake coefficient in relation to Live Weight
+        /// Intake coefficient in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
         [Description("Intake coefficient in relation to Live Weight")]
         [Required, GreaterThanValue(0)]
         public double IntakeCoefficient { get; set; }
         /// <summary>
-        /// Intake intercept In relation to SRW
+        /// Intake intercept in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
         [Description("Intake intercept in relation to SRW")]
@@ -490,7 +490,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Enforce strict feeding limits
         /// </summary>
-        [Category("Advanced", "Diet")]
+        [Category("Basic", "Diet")]
         [Description("Enforce strict feeding limits")]
         [Required]
         public bool StrictFeedingLimits { get; set; }

@@ -1,9 +1,10 @@
 ﻿namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
+    using APSIM.Shared.JobRunning;
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Reflection;
     using System.Threading;
@@ -36,7 +37,7 @@
             checkpointData.RowFilter = "Name='Current'";
             if (checkpointData.Count == 1)
             {
-                int currentCheckId = Convert.ToInt32(checkpointData[0]["ID"]);
+                int currentCheckId = Convert.ToInt32(checkpointData[0]["ID"], CultureInfo.InvariantCulture);
 
                 // Get the current version and the date time now to write to the checkpoint table.
                 string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -48,7 +49,7 @@
                 if (checkpointData.Count == 1)
                 {
                     // Yes checkpoint already exists - delete old data.
-                    newCheckId = Convert.ToInt32(checkpointData[0]["ID"]);
+                    newCheckId = Convert.ToInt32(checkpointData[0]["ID"], CultureInfo.InvariantCulture);
                     foreach (var tableName in writer.Connection.GetTableNames())
                     {
                         List<string> columnNames = writer.Connection.GetColumnNames(tableName);

@@ -38,7 +38,6 @@ namespace Models.CLEM.Resources
 
                 if (price == null)
                 {
-                    //if (!priceWarningRaised)
                     if (!Warnings.Exists("price"))
                     {
                         string warn = "No pricing is available for [r=" + this.Name + "]";
@@ -48,7 +47,6 @@ namespace Models.CLEM.Resources
                         }
                         warn += "\nNo financial transactions will occur as no packet size set.\nAdd [r=ResourcePricing] component to [r=" + this.Name + "] to improve purchase and sales.";
                         Summary.WriteWarning(this, warn);
-//                        priceWarningRaised = true;
                         Warnings.Add("price");
                     }
                     return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
@@ -65,18 +63,40 @@ namespace Models.CLEM.Resources
         /// <returns>Value to report</returns>
         public object ConvertTo(string converterName, double amount)
         {
-            // get converter.
-            ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
-            if (converter != null)
+            // get converted value
+            if(converterName=="$")
             {
-                return amount * converter.Factor;
+                // calculate price as special case using pricing structure if present.
+                ResourcePricing price = Price;
+                if(price.PricePerPacket > 0)
+                {
+                    double packets = amount / price.PacketSize;
+                    // this does not include whole packet restriction as needs to report full value
+                    //if(price.UseWholePackets)
+                    //{
+                    //    packets = Math.Floor(packets);
+                    //}
+                    return packets * price.PricePerPacket;
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
-                string warning = "Unable to find the required unit converter [r=" + converterName + "] in resource [r=" + this.Name + "]";
-                Warnings.Add(warning);
-                Summary.WriteWarning(this, warning);
-                return null;
+                ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
+                if (converter != null)
+                {
+                    return amount * converter.Factor;
+                }
+                else
+                {
+                    string warning = "Unable to find the required unit converter [r=" + converterName + "] in resource [r=" + this.Name + "]";
+                    Warnings.Add(warning);
+                    Summary.WriteWarning(this, warning);
+                    return null;
+                }
             }
         }
 

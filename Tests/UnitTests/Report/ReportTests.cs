@@ -10,6 +10,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using UnitTests.Core;
@@ -94,14 +95,14 @@
             List<int> weeklyNumbers = new List<int>() { 1, 3, 6, 10, 15, 21, 28, 8, 17, 27 };
 
             var runner = new Runner(sims);
-            runner.Run(Runner.RunTypeEnum.MultiThreaded);
+            runner.Run();
 
             var storage = sims.Children[0] as IDataStore;
             DataTable data = storage.Reader.GetData("Report", fieldNames: new List<string>() { "n", "TriangularNumbers", "test" });
-            List<int> predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["TriangularNumbers"])).ToList();
+            List<int> predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["TriangularNumbers"], CultureInfo.InvariantCulture)).ToList();
             Assert.AreEqual(triangularNumbers, predicted, "Error in report aggregation involving [Clock].Today");
 
-            predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["test"])).ToList();
+            predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["test"], CultureInfo.InvariantCulture)).ToList();
             Assert.AreEqual(weeklyNumbers, predicted);
         }
 
@@ -117,7 +118,7 @@
             clock.EndDate = new DateTime(2019, 1, 1);
 
             var runner = new Runner(sims);
-            runner.Run(Runner.RunTypeEnum.MultiThreaded);
+            runner.Run();
 
             var storage = sims.Children[0] as IDataStore;
             DataTable data = storage.Reader.GetData("Report", fieldNames: new List<string>() { "Year", "SigmaDay" });
