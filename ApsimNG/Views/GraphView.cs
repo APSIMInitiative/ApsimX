@@ -294,6 +294,8 @@ namespace UserInterface.Views
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
+        /// <param name="xFieldName">The name of the x variable.</param>
+        /// <param name="yFieldName">The name of the y variable.</param>
         /// <param name="error">The error values for the series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
@@ -308,6 +310,8 @@ namespace UserInterface.Views
              string title,
              IEnumerable x,
              IEnumerable y,
+             string xFieldName,
+             string yFieldName,
              IEnumerable error,
              Models.Graph.Axis.AxisType xAxisType,
              Models.Graph.Axis.AxisType yAxisType,
@@ -327,12 +331,19 @@ namespace UserInterface.Views
                     series.Title = title;
                 else
                     series.ToolTip = title;
+
                 if (colour == Color.Empty)
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
+
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
+
+                series.XFieldName = xFieldName;
+                series.YFieldName = yFieldName;
+
                 series.CanTrackerInterpolatePoints = false;
 
                 bool filled = false;

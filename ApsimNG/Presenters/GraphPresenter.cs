@@ -209,6 +209,8 @@ namespace UserInterface.Presenters
                                                     definition.Title,
                                                     definition.X,
                                                     definition.Y,
+                                                    definition.XFieldName,
+                                                    definition.YFieldName,
                                                     definition.Error,
                                                     definition.XAxis,
                                                     definition.YAxis,
