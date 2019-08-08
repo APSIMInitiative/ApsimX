@@ -249,7 +249,7 @@ namespace UserInterface.Presenters
                     {
                         graphView.DrawStackedArea(
                             definition.Title,
-                            definition.X.Cast<double>().ToArray(),
+                            definition.X.Cast<object>().ToArray(),
                             definition.Y.Cast<double>().ToArray(),
                             definition.XAxis,
                             definition.YAxis,

@@ -520,7 +520,7 @@ namespace UserInterface.Views
         /// Draw a stacked area series with the specified arguments.Similar to
         /// an area series except that the area between this curve and the
         /// previous curve (or y = 0 if this is first) will be filled with
-        /// colour.
+        /// colour. Currently this only works if y-data is numeric.
         /// </summary>
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
@@ -531,7 +531,7 @@ namespace UserInterface.Views
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawStackedArea(
             string title,
-            double[] x,
+            object[] x,
             double[] y,
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType,
@@ -544,10 +544,12 @@ namespace UserInterface.Views
                 // a region series (colours area between two curves), and use
                 // y = 0 for the second curve.
                 List<double> y0 = new List<double>();
-                y0.AddRange(Enumerable.Repeat(0d, y.Length));
+                y0.AddRange(Enumerable.Repeat(0d, ((ICollection)y).Count));
                 DrawRegion(title, x, y, x, y0, xAxisType, yAxisType, colour, showOnLegend);
                 return;
             }
+
+            // Get x/y data from previous series
             LineSeries previous = plot1.Model.Series.OfType<LineSeries>().Last();
 
             // This will work if the previous series was an area series.
@@ -561,21 +563,39 @@ namespace UserInterface.Views
             if (y1 == null || y1.Length < 1)
                 y1 = previous.ItemsSource.Cast<DataPoint>().Select(p => p.Y).ToArray();
 
+            if (x1 == null || x1.Length < 1 || y1 == null || y1.Length < 1)
+                return;
+
+            // Now, for each datapoint in the previous series, we need
+            // to add its y-value onto the corresponding data point in
+            // the new series so that this area series appears to sit
+            // on top of the previous series.
             List<double> y2 = new List<double>();
+
+            Type xType = x[0].GetType();
+            bool xIsFloatingPoint = xType == typeof(double) || xType == typeof(float);
+
             for (int i = 0; i < x1.Length; i++)
             {
-                double xVal = x1[i];
+                double xVal = x1[i]; // x-value in the previous series
 
                 // The previous series might not have exactly the same set of x
                 // values as the new series. First we check if the new series
                 // contains this x value. If it does not, we do a linear interp
                 // to find an appropriate y-value.
-                int index = MathUtilities.SafeIndexOf(x.ToList(), xVal);
+                int index = -1;
+                if (xIsFloatingPoint)
+                    index = MathUtilities.SafeIndexOf(x.Cast<double>().ToList(), xVal);
+                else if (xType == typeof(DateTime))
+                    index = Array.IndexOf(x, DateTimeAxis.ToDateTime(xVal));
+                else
+                    index = Array.IndexOf(x, xVal); // this is unlikely to work
+
                 double yVal = y1[i];
                 if (index >= 0)
-                    yVal += y[index];
-                else
-                    yVal += MathUtilities.LinearInterpReal(xVal, x, y, out bool didInterp);
+                    yVal += y[i];
+                else if (xIsFloatingPoint)
+                    yVal += MathUtilities.LinearInterpReal(xVal, x.Cast<double>().ToArray(), y, out bool didInterp);
                 y2.Add(yVal);
             }
             DrawRegion(title, x, y2, x1, y1, xAxisType, yAxisType, colour, showOnLegend);
@@ -1075,7 +1095,7 @@ namespace UserInterface.Views
             Models.Graph.Axis.AxisType yAxisType)
         {
             List<DataPoint> points = new List<DataPoint>();
-            if (x != null && y != null && Count(x) > 0 && Count(y) > 0)
+            if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
             {
                 // Create a new data point for each x.
                 double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
@@ -1090,22 +1110,6 @@ namespace UserInterface.Views
             }
             else
                 return null;
-        }
-
-        /// <summary>
-        /// Determines the length of a non-generic IEnumerable.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <remarks>
-        /// https://stackoverflow.com/a/5604189
-        /// </remarks>
-        private int Count(IEnumerable source)
-        {
-            int c = 0;
-            var e = source.GetEnumerator();
-                while (e.MoveNext())
-                    c++;
-            return c;
         }
 
         /// <summary>

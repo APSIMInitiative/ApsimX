@@ -185,7 +185,7 @@ namespace UserInterface.Interfaces
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawStackedArea(
             string title,
-            double[] x,
+            object[] x,
             double[] y,
             Models.Graph.Axis.AxisType xAxisType,
             Models.Graph.Axis.AxisType yAxisType,
