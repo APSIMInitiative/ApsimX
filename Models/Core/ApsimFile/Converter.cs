@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 58; } }
+        public static int LatestVersion { get { return 59; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -580,6 +580,21 @@
             {
                 if (manager.Replace(".SWAtWaterThickness", ".Thickness"))
                     manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 59. Sets the StartDate and EndDate properties
+        /// in clock to the values previously stored in Start and End.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion59(JObject root, string fileName)
+        {
+            foreach (JObject clock in JsonUtilities.ChildrenRecursively(root, "Clock"))
+            {
+                clock["Start"] = clock["StartDate"];
+                clock["End"] = clock["EndDate"];
             }
         }
 
