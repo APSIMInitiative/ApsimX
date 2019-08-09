@@ -107,7 +107,7 @@ namespace UserInterface.Presenters
                 FormatTestGrid();
             }
 
-            grid.CellChanged += OnCellChanged;
+            grid.CellsChanged += OnCellsChanged;
             grid.ButtonClick += OnFileBrowseClick;
             this.presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -131,7 +131,7 @@ namespace UserInterface.Presenters
             try
             {
                 base.Detach();
-                grid.CellChanged -= OnCellChanged;
+                grid.CellsChanged -= OnCellsChanged;
                 grid.ButtonClick -= OnFileBrowseClick;
                 presenter.CommandHistory.ModelChanged -= OnModelChanged;
                 intellisense.ItemSelected -= OnIntellisenseItemSelected;
@@ -139,6 +139,7 @@ namespace UserInterface.Presenters
             }
             catch (NullReferenceException)
             {
+                // to keep Neil happy
             }
         }
 
@@ -158,9 +159,7 @@ namespace UserInterface.Presenters
             grid.DataSource = table;
             FormatGrid();
             if (selectedCell != null)
-            {
                 grid.GetCurrentCell = selectedCell;
-            }
         }
 
         /// <summary>
@@ -220,7 +219,7 @@ namespace UserInterface.Presenters
 
                     if (property != null && property.Description != null && property.Writable)
                     {
-                        // Only allow lists that are double[], int[] or string[]
+                        // Only allow lists that are double[], int[], string[] or DateTime[]
                         bool includeProperty = true;
                         if (property.DataType.GetInterface("IList") != null)
                         {
@@ -714,66 +713,72 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// User has changed the value of a cell.
-        /// </summary>
-        /// <param name="sender">Sender object</param>
-        /// <param name="e">Event parameters</param>
-        private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
-        {
-            foreach (IGridCell cell in e.ChangedCells)
-            {
-                try
-                {
-                    if (e.InvalidValue)
-                        throw new Exception("The value you entered was not valid for its datatype.");
-                    if (cell.RowIndex < properties.Count)
-                        SetPropertyValue(properties[cell.RowIndex], cell.Value);
-                }
-                catch (Exception ex)
-                {
-                    presenter.MainPresenter.ShowError(ex);
-                }
-            }
-        }
-
-        /// <summary>
         /// User has changed the value of a cell. Validate the change
         /// apply the change.
         /// </summary>
         /// <param name="sender">Sender object</param>
         /// <param name="args">Event parameters</param>
-        private void OnCellChanged(object sender, GridCellChangedArgs args)
+        private void OnCellsChanged(object sender, GridCellsChangedArgs args)
         {
-            if (args.NewValue == args.OldValue || args.RowIndex >= properties.Count)
-                return;
+            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+            foreach (GridCellChangedArgs cell in args.ChangedCells)
+            {
+                if (cell.NewValue == cell.OldValue || cell.RowIndex >= properties.Count)
+                    continue; // silently fail
 
-            IVariable property = properties[args.RowIndex];
+                // If there are multiple changed cells, each change will be
+                // individually undoable.
+                IVariable property = properties[cell.RowIndex];
+                object newValue = GetNewCellValue(property, cell.NewValue);
+                SetPropertyValue(property, newValue);
+            }
+        }
+
+        /// <summary>
+        /// Gets the new value of the cell from a string containing the
+        /// cell's new contents.
+        /// </summary>
+        /// <param name="cell">Cell which has been changed.</param>
+        public static object GetNewCellValue(IVariable property, string newValue)
+        {
             Type dataType = property.DataType;
 
-            object newValue = null;
-
-            if (string.IsNullOrWhiteSpace(args.NewValue))
+            if (string.IsNullOrWhiteSpace(newValue))
             {
                 // User has entered an empty string. Get the default value for this property type.
                 if (dataType.IsEnum)
-                    // This is probably impossible, because cells with an enum
-                    // property use a drop-down input control.
+                    // Hopefully this is impossible, because cells with an enum
+                    // property use a drop-down input control which shouldn't allow
+                    // selection of null/empty strings. Technically we could return
+                    // the default value for this enum here via `Activator.CreateInstance(dataType)`.
                     throw new Exception($"Invalid value for property '{property.Name}' - value cannot be null.");
 
                 if (dataType.IsValueType)
-                    // property is not nullable (int, bool, struct, etc)
-                    newValue = Activator.CreateInstance(dataType);
+                    // Property is not nullable (int, bool, struct, etc).
+                    // Return default value for this type.
+                    return Activator.CreateInstance(dataType);
                 else
-                    newValue = null;
-            }
-            else
-            {
-                newValue = Convert.ChangeType(args.NewValue, dataType);
-                if (newValue == null)
-                    throw new Exception($"Invalid value for property '{property.Name}' - '{args.NewValue} is not valid for this data type.");
+                    // Property is nullable so return null.
+                    return null;
             }
 
-            SetPropertyValue(properties[args.RowIndex], newValue);
+            try
+            {
+                if (typeof(IPlant).IsAssignableFrom(property.DataType))
+                    return Apsim.Find(property.Object as IModel, newValue);
+
+                if (property.Display != null && property.Display.Type == DisplayType.Model)
+                    return Apsim.Get(property.Object as IModel, newValue);
+
+                if (dataType.IsArray)
+                    return Convert.ChangeType(newValue.Split(','), dataType);
+
+                return Convert.ChangeType(newValue, dataType);
+            }
+            catch (FormatException err)
+            {
+                throw new Exception($"Value '{newValue}' is invalid for property '{property.Name}' - {err.Message}.");
+            }
         }
 
         /// <summary>
@@ -838,7 +843,6 @@ namespace UserInterface.Presenters
         {
             try
             {
-                value = FormatValueForProperty(property, value);
                 ChangeProperty cmd = new ChangeProperty(model, property.Name, value);
                 presenter.CommandHistory.Add(cmd);
             }
@@ -855,9 +859,7 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             if (changedModel == model)
-            {
                 PopulateGrid(model);
-            }
         }
 
         /// <summary>
@@ -870,17 +872,18 @@ namespace UserInterface.Presenters
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
         {
+            // fixme!
             IFileDialog fileChooser = new FileDialog()
             {
                 Action = FileDialog.FileActionType.Open,
                 Prompt = "Select file path",
-                InitialDirectory = e.ChangedCells[0].Value.ToString()
+                InitialDirectory = e.ChangedCells[0].OldValue.ToString()
             };
             string fileName = fileChooser.GetFile();
-            if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
+            if (fileName != null && fileName != e.ChangedCells[0].OldValue.ToString())
             {
-                e.ChangedCells[0].Value = fileName;
-                OnCellValueChanged(sender, e);
+                e.ChangedCells[0].OldValue = fileName;
+                OnCellsChanged(sender, e);
                 PopulateGrid(model);
             }
         }

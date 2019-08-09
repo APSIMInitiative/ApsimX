@@ -98,9 +98,7 @@
         {
             try
             {
-                if (args.InvalidValue)
-                    throw new Exception("The value you entered was not valid for its datatype.");
-                foreach (IGridCell cell in args.ChangedCells)
+                foreach (GridCellChangedArgs cell in args.ChangedCells)
                 {
                     int index = GetModelIndex(cell.RowIndex);
                     IModel removalType = Apsim.Child(model, grid.GetCell(0, index).Value.ToString());
@@ -115,7 +113,7 @@
                             property = new VariableField(model, member as FieldInfo);
                         else
                             throw new Exception(string.Format("Unable to find property {0} in model {1}", grid.GetCell(0, cell.RowIndex).Value.ToString(), removalType.Name));
-                        object value = PropertyPresenter.FormatValueForProperty(property, cell.Value);
+                        object value = PropertyPresenter.FormatValueForProperty(property, cell.NewValue);
 
                         ChangeProperty command = new ChangeProperty(removalType, property.Name, value);
                         presenter.CommandHistory.Add(command);

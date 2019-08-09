@@ -5,7 +5,7 @@ namespace UserInterface.EventArguments
     /// <summary>
     /// Event arguments used when a cell is modified in a grid view.
     /// </summary>
-    public class GridCellChangedArgs : EventArgs
+    public class GridCellChangedArgs
     {
         /// <summary>
         /// Row index of the changed cell.

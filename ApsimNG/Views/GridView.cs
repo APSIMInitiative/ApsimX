@@ -220,11 +220,6 @@
         public event EventHandler<GridCellsChangedArgs> CellsChanged;
 
         /// <summary>
-        /// This event is invoked when the value of a cell changes.
-        /// </summary>
-        public event EventHandler<GridCellChangedArgs> CellChanged;
-
-        /// <summary>
         /// Invoked when a grid cell header is clicked.
         /// </summary>
         public event EventHandler<GridColumnClickedArgs> GridColumnClicked;
@@ -232,7 +227,7 @@
         /// <summary>
         /// Occurs when user clicks a button on the cell.
         /// </summary>
-        public event EventHandler<GridCellChangedArgs> ButtonClick;
+        public event EventHandler<GridCellsChangedArgs> ButtonClick;
 
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.').
@@ -1896,28 +1891,22 @@
             {
                 int colNo = Grid.Columns.ToList().IndexOf(Grid.Columns.FirstOrDefault(c => c.Cells.Contains(sender as CellRenderer)));
                 int rowNo = Int32.Parse(r.Path);
+
                 IGridCell where = colNo >= 0 && rowNo >= 0 ? new GridCell(this, colNo, rowNo) : GetCurrentCell;
                 while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
-                {
                     DataSource.Rows.Add(DataSource.NewRow());
-                }
+
                 object value = DataSource.Rows[where.RowIndex][where.ColumnIndex];
                 if (value != null && value != DBNull.Value)
                 {
                     bool oldValue = (bool)value;
-                    bool newValue = !oldValue; ;
+                    bool newValue = !oldValue;
                     DataSource.Rows[where.RowIndex][where.ColumnIndex] = newValue;
                     if (CellsChanged != null)
                     {
-                        GridCellsChangedArgs args = new GridCellsChangedArgs();
-                        args.ChangedCells = new List<IGridCell>();
-                        args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
+                        var change = new GridCellChangedArgs(where.RowIndex, where.ColumnIndex, oldValue.ToString(), newValue.ToString());
+                        GridCellsChangedArgs args = new GridCellsChangedArgs(change);
                         CellsChanged(this, args);
-                    }
-                    if (CellChanged != null)
-                    {
-                        GridCellChangedArgs args = new GridCellChangedArgs(rowNo, colNo, oldValue.ToString(), newValue.ToString());
-                        CellChanged(this, args);
                     }
                 }
             }
@@ -1980,15 +1969,13 @@
         private void UpdateCellText(IGridCell where, string newText)
         {
             while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
-            {
                 DataSource.Rows.Add(DataSource.NewRow());
-            }
 
             // Put the new value into the table on the correct row.
             if (DataSource != null)
             {
-                string oldtext = AsString(DataSource.Rows[where.RowIndex][where.ColumnIndex]);
-                if (oldtext != newText && newText != null)
+                string oldText = AsString(DataSource.Rows[where.RowIndex][where.ColumnIndex]);
+                if (oldText != newText)
                 {
                     try
                     {
@@ -2000,15 +1987,9 @@
 
                     if (CellsChanged != null)
                     {
-                        GridCellsChangedArgs args = new GridCellsChangedArgs();
-                        args.ChangedCells = new List<IGridCell>();
-                        args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
+                        var change = new GridCellChangedArgs(where.RowIndex, where.ColumnIndex, oldText, newText);
+                        GridCellsChangedArgs args = new GridCellsChangedArgs(change);
                         CellsChanged(this, args);
-                    }
-                    if (CellChanged != null)
-                    {
-                        GridCellChangedArgs args = new GridCellChangedArgs(where.RowIndex, where.ColumnIndex, oldtext, newText);
-                        CellChanged(this, args);
                     }
                 }
             }
@@ -2025,106 +2006,24 @@
             {
                 if (userEditingCell)
                     userEditingCell = false;
+
                 IGridCell where = GetCurrentCell;
                 if (where == null)
                     return;
-                object oldValue = valueBeforeEdit;
 
-                // Make sure our table has enough rows.
-                string newtext = e.NewText;
+                string oldText = valueBeforeEdit?.ToString();
+                string newText = e.NewText;
 
-                if (CellChanged != null)
+                if (CellsChanged != null && newText != oldText)
                 {
-                    GridCellChangedArgs args = new GridCellChangedArgs(where.RowIndex, where.ColumnIndex, valueBeforeEdit.ToString(), newtext);
-                    CellChanged(this, args);
-                }
-
-                object newValue = oldValue;
-                bool isInvalid = false;
-                if (newtext == null)
-                {
-                    newValue = DBNull.Value;
-                }
-
-                Type dataType = oldValue.GetType();
-                if (oldValue == DBNull.Value)
-                {
-                    if (string.IsNullOrEmpty(newtext))
-                        return; // If the old value was null, and we've nothing meaningfull to add, pack up and go home
-                    dataType = DataSource.Columns[where.ColumnIndex].DataType;
-                }
-                if (dataType == typeof(string))
-                    newValue = newtext;
-                else if (dataType == typeof(double))
-                {
-                    double numval;
-                    if (double.TryParse(newtext, out numval))
-                        newValue = numval;
-                    else
-                    {
-                        newValue = double.NaN;
-                        isInvalid = true;
-                    }
-                }
-                else if (dataType == typeof(float))
-                {
-                    float numval;
-                    if (float.TryParse(newtext, out numval))
-                        newValue = numval;
-                    else
-                    {
-                        newValue = float.NaN;
-                        isInvalid = true;
-                    }
-                }
-                else if (dataType == typeof(int))
-                {
-                    int numval;
-                    if (int.TryParse(newtext, out numval))
-                        newValue = numval;
-                    else
-                    {
-                        newValue = 0;
-                        isInvalid = true;
-                    }
-                }
-                else if (dataType == typeof(DateTime))
-                {
-                    DateTime dateval;
-                    if (!DateTime.TryParse(newtext, out dateval))
-                        isInvalid = true;
-                    newValue = dateval;
-                }
-
-                while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
-                {
-                    DataSource.Rows.Add(DataSource.NewRow());
-                }
-
-                // Put the new value into the table on the correct row.
-                if (DataSource != null)
-                {
-                    try
-                    {
-                        DataSource.Rows[where.RowIndex][where.ColumnIndex] = newValue;
-                    }
-                    catch (Exception)
-                    {
-                    }
-                }
-
-                if (valueBeforeEdit != null && valueBeforeEdit.GetType() == typeof(string) && newValue == null)
-                {
-                    newValue = string.Empty;
-                }
-
-                if (CellsChanged != null && valueBeforeEdit.ToString() != newValue.ToString())
-                {
-                    GridCellsChangedArgs args = new GridCellsChangedArgs();
-                    args.ChangedCells = new List<IGridCell>();
-                    args.ChangedCells.Add(GetCell(where.ColumnIndex, where.RowIndex));
-                    args.InvalidValue = isInvalid;
+                    GridCellChangedArgs cell = new GridCellChangedArgs(where.RowIndex, where.ColumnIndex, oldText, newText);
+                    GridCellsChangedArgs args = new GridCellsChangedArgs(cell);
                     CellsChanged(this, args);
+
+                    // Add more rows to the data store if necessary.
+                    // todo - does this really need to happen here and now??
+                    while (DataSource != null && where.RowIndex >= DataSource.Rows.Count)
+                        DataSource.Rows.Add(DataSource.NewRow());
                 }
             }
             catch (Exception err)
@@ -2309,11 +2208,11 @@
                 IGridCell cell = GetCurrentCell;
                 if (cell != null && cell.EditorType == EditorTypeEnum.Button)
                 {
-                    //GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
-                    //cellClicked.ChangedCells = new List<IGridCell>();
-                    //cellClicked.ChangedCells.Add(cell);
-                    GridCellChangedArgs toggleArgs = new GridCellChangedArgs(cell.RowIndex, cell.ColumnIndex,)
-                    ButtonClick(this, cellClicked);
+                    GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
+                    cellClicked.ChangedCells = new List<GridCellChangedArgs>();
+                    // todo - test me (enusre old value and new value are the right way around).
+                    cellClicked.ChangedCells.Add(new GridCellChangedArgs(cell.RowIndex, cell.ColumnIndex, cell.Value.ToString(), (!(bool)cell.Value).ToString()));
+                    ButtonClick?.Invoke(this, cellClicked);
                 }
             }
             catch (Exception err)

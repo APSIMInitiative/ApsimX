@@ -32,6 +32,12 @@ namespace UserInterface.Presenters
     /// a ProfileGrid and the ProfileGrid is displaying some properties as well.
     /// We don't want properties to be on both the ProfileGrid and the PropertyGrid.
     /// </para>
+    /// <para>
+    /// This is similar to the <see cref="PropertyPresenter"/>, except that this
+    /// presenter shows properties for all children that have the same type in a single
+    /// table in the grid view. The rows will be the different properties, and the
+    /// columns will be the different values of that same property for each child.
+    /// </para>
     /// </summary>
     public class PropertyTablePresenter : IPresenter
     {
@@ -648,17 +654,16 @@ namespace UserInterface.Presenters
         {
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-            foreach (IGridCell cell in e.ChangedCells)
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
             {
-                if (e.InvalidValue)
-                {
-                    this.explorerPresenter.MainPresenter.ShowMsgDialog("The value you entered was not valid for its datatype", "Invalid entry", Gtk.MessageType.Warning, Gtk.ButtonsType.Ok);
-                }
                 try
                 {
                     //need to subtract one for column index of the cell due to description column
-                    Model childmodel = this.childrenWithSameType[cell.ColumnIndex - 1] as Model;
-                    this.SetPropertyValue(childmodel, this.properties[cell.ColumnIndex -1][cell.RowIndex], cell.Value);
+                    Model childmodel = this.childrenWithSameType[cell.ColIndex - 1] as Model;
+                    VariableProperty property = properties[cell.ColIndex - 1][cell.RowIndex];
+
+                    object newValue = PropertyPresenter.GetNewCellValue(property, cell.NewValue);
+                    this.SetPropertyValue(childmodel, property, newValue);
                 }
                 catch (Exception ex)
                 {
@@ -676,39 +681,6 @@ namespace UserInterface.Presenters
         /// <param name="value">The value to set the property to</param>
         private void SetPropertyValue(Model childmodel, VariableProperty property, object value)
         {
-            if (property.DataType.IsArray && value != null)
-            {
-                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (property.DataType == typeof(double[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(int[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(string[]))
-                {
-                    value = stringValues;
-                }
-                else
-                {
-                    throw new ApsimXException(childmodel, "Invalid property type: " + property.DataType.ToString());
-                }
-            }
-            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
-            {
-                value = Apsim.Find(childmodel, value.ToString()) as IPlant;
-            }
-            else if (property.DataType == typeof(DateTime))
-            {
-                value = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
-            }
-            else if (property.DataType.IsEnum)
-            {
-                value = Enum.Parse(property.DataType, value.ToString());
-            }
-
             Commands.ChangeProperty cmd = new Commands.ChangeProperty(childmodel, property.Name, value);
             this.explorerPresenter.CommandHistory.Add(cmd, true);
         }
@@ -737,12 +709,12 @@ namespace UserInterface.Presenters
             {
                 Action = FileDialog.FileActionType.Open,
                 Prompt = "Select file path",
-                InitialDirectory = e.ChangedCells[0].Value.ToString()
+                InitialDirectory = e.ChangedCells[0].OldValue.ToString()
             };
             string fileName = fileChooser.GetFile();
-            if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
+            if (fileName != null && fileName != e.ChangedCells[0].OldValue.ToString())
             {
-                e.ChangedCells[0].Value = fileName;
+                e.ChangedCells[0].NewValue = fileName;
                 OnCellValueChanged(sender, e);
                 PopulateGrid(model);
             }

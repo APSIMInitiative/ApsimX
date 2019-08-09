@@ -66,12 +66,10 @@
         /// <param name="e">Event arguments.</param>
         private void OnCellValueChanged2(object sender, GridCellsChangedArgs e)
         {
-            foreach (IGridCell cell in e.ChangedCells)
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
             {
                 try
                 {
-                    if (e.InvalidValue)
-                        throw new Exception("The value you entered was not valid for its datatype.");
                     table = view.Grid2.DataSource;
                     ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", new List<DataTable>() { table });
                     explorerPresenter.CommandHistory.Add(cmd);
