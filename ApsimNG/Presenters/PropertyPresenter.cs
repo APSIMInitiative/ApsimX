@@ -790,7 +790,7 @@ namespace UserInterface.Presenters
 
             try
             {
-                return ReflectionUtilities.StringToObject(property.DataType, newValue);
+                return ReflectionUtilities.StringToObject(property.DataType, newValue, CultureInfo.CurrentCulture);
             }
             catch (FormatException err)
             {
