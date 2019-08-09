@@ -50,12 +50,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
-        private Model model;
+        protected IModel model;
 
         /// <summary>
         /// A list of all properties found in the Model.
         /// </summary>
-        private List<IVariable> properties = new List<IVariable>();
+        protected List<IVariable> properties = new List<IVariable>();
 
         /// <summary>
         /// The category name to filter for on the Category Attribute for the properties
@@ -147,7 +147,7 @@ namespace UserInterface.Presenters
         /// Populate the grid
         /// </summary>
         /// <param name="model">The model to examine for properties</param>
-        public void PopulateGrid(Model model)
+        private void PopulateGrid(IModel model)
         {
             IGridCell selectedCell = grid.GetCurrentCell;
             this.model = model;
@@ -195,14 +195,20 @@ namespace UserInterface.Presenters
             return orderedMembers;
         }
 
+        public void Refresh()
+        {
+            properties.Clear();
+            FindAllProperties(model);
+            PopulateGrid(model);
+        }
+
         /// <summary>
         /// Find all properties from the model and fill this.properties.
         /// </summary>
         /// <param name="model">The mode object</param>
-        public void FindAllProperties(Model model)
+        protected virtual void FindAllProperties(IModel model)
         {
             this.model = model;
-            properties.Clear();
             bool filterByCategory = !((this.CategoryFilter == "") || (this.CategoryFilter == null));
             bool filterBySubcategory = !((this.SubcategoryFilter == "") || (this.SubcategoryFilter == null));
             if (this.model != null)
@@ -350,21 +356,29 @@ namespace UserInterface.Presenters
         /// Fill the specified table with columns and rows based on this.Properties
         /// </summary>
         /// <param name="table">The table that needs to be filled</param>
-        public void FillTable(DataTable table)
+        protected virtual void FillTable(DataTable table)
         {
             foreach (IVariable property in properties)
+                AddPropertyToTable(table, property);
+        }
+
+        /// <summary>
+        /// Adds a property to the DataTable of properties.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="property"></param>
+        protected void AddPropertyToTable(DataTable table, IVariable property)
+        {
+            if (property is VariableObject)
+                table.Rows.Add(new object[] { property.Value, null });
+            else if (property.Value is IModel)
+                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
+            else
             {
-                if (property is VariableObject)
-                    table.Rows.Add(new object[] { property.Value, null });
-                else if (property.Value is IModel)
-                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
-                else
-                {
-                    string description = property.Description;
-                    if (!string.IsNullOrEmpty(property.Units))
-                        description += " (" + property.Units + ")";
-                    table.Rows.Add(new object[] { description, property.ValueWithArrayHandling });
-                }
+                string description = property.Description;
+                if (!string.IsNullOrEmpty(property.Units))
+                    description += " (" + property.Units + ")";
+                table.Rows.Add(new object[] { description, property.ValueWithArrayHandling });
             }
         }
 
@@ -698,6 +712,11 @@ namespace UserInterface.Presenters
             return result.ToArray();
         }
 
+        /// <summary>
+        /// Gets a list of all models of a given type which are in
+        /// scope of a given model.
+        /// </summary>
+        /// <param name="t">Type of models to search for.</param>
         private string[] GetModelNames(Type t)
         {
             List<IModel> models;
@@ -723,15 +742,37 @@ namespace UserInterface.Presenters
             List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
             foreach (GridCellChangedArgs cell in args.ChangedCells)
             {
-                if (cell.NewValue == cell.OldValue || cell.RowIndex >= properties.Count)
+                if (cell.NewValue == cell.OldValue)
                     continue; // silently fail
 
                 // If there are multiple changed cells, each change will be
                 // individually undoable.
-                IVariable property = properties[cell.RowIndex];
+                IVariable property = GetProperty(cell.RowIndex);
+                if (property == null)
+                    return;
+
+                // Parse the input string to the appropriate type.
                 object newValue = GetNewCellValue(property, cell.NewValue);
+
+                // Update the value of the model's property.
                 SetPropertyValue(property, newValue);
+
+                // Update the value shown in the grid.
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = property.ValueWithArrayHandling;
             }
+        }
+
+        /// <summary>
+        /// Gets the property in a given row.
+        /// </summary>
+        /// <remarks>
+        /// This is needed because some presenters override this
+        /// presenter and add separator rows between properties.
+        /// </remarks>
+        /// <param name="row">Row inex.</param>
+        protected virtual IVariable GetProperty(int row)
+        {
+            return properties[row];
         }
 
         /// <summary>
@@ -741,97 +782,20 @@ namespace UserInterface.Presenters
         /// <param name="cell">Cell which has been changed.</param>
         public static object GetNewCellValue(IVariable property, string newValue)
         {
-            Type dataType = property.DataType;
+            if (typeof(IPlant).IsAssignableFrom(property.DataType))
+                return Apsim.Find(property.Object as IModel, newValue);
 
-            if (string.IsNullOrWhiteSpace(newValue))
-            {
-                // User has entered an empty string. Get the default value for this property type.
-                if (dataType.IsEnum)
-                    // Hopefully this is impossible, because cells with an enum
-                    // property use a drop-down input control which shouldn't allow
-                    // selection of null/empty strings. Technically we could return
-                    // the default value for this enum here via `Activator.CreateInstance(dataType)`.
-                    throw new Exception($"Invalid value for property '{property.Name}' - value cannot be null.");
-
-                if (dataType.IsValueType)
-                    // Property is not nullable (int, bool, struct, etc).
-                    // Return default value for this type.
-                    return Activator.CreateInstance(dataType);
-                else
-                    // Property is nullable so return null.
-                    return null;
-            }
+            if (property.Display != null && property.Display.Type == DisplayType.Model)
+                return Apsim.Get(property.Object as IModel, newValue);
 
             try
             {
-                if (typeof(IPlant).IsAssignableFrom(property.DataType))
-                    return Apsim.Find(property.Object as IModel, newValue);
-
-                if (property.Display != null && property.Display.Type == DisplayType.Model)
-                    return Apsim.Get(property.Object as IModel, newValue);
-
-                if (dataType.IsArray)
-                    return Convert.ChangeType(newValue.Split(','), dataType);
-
-                return Convert.ChangeType(newValue, dataType);
+                return ReflectionUtilities.StringToObject(property.DataType, newValue);
             }
             catch (FormatException err)
             {
                 throw new Exception($"Value '{newValue}' is invalid for property '{property.Name}' - {err.Message}.");
             }
-        }
-
-        /// <summary>
-        /// This method takes a value from the grid and formats it appropriately,
-        /// based on the data type of the property to which the value is going to
-        /// be assigned.
-        /// </summary>
-        /// <param name="property">Property to which the value will be assigned.</param>
-        /// <param name="value">Value which is going to be assigned to property.</param>
-        public static object FormatValueForProperty(IVariable property, object value)
-        {
-            if (property.DataType.IsArray && value != null)
-            {
-                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (property.DataType == typeof(double[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(int[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(string[]))
-                {
-                    value = stringValues;
-                }
-                else if (property.DataType == typeof(DateTime[]))
-                {
-                    value = stringValues.Select(d => DateTime.Parse(d, CultureInfo.InvariantCulture)).ToArray();
-                }
-                else
-                {
-                    throw new ApsimXException(property.Object as IModel, "Invalid property type: " + property.DataType.ToString());
-                }
-            }
-            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
-            {
-                value = Apsim.Find(property.Object as IModel, value.ToString()) as IPlant;
-            }
-            else if (property.DataType == typeof(DateTime))
-            {
-                value = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
-            }
-            else if (property.DataType.IsEnum)
-            {
-                value = VariableProperty.ParseEnum(property.DataType, value.ToString());
-            }
-            else if (property.Display != null &&
-                     property.Display.Type == DisplayType.Model)
-            {
-                value = Apsim.Get(property.Object as IModel, value.ToString());
-            }
-            return value;
         }
 
         /// <summary>
@@ -843,7 +807,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ChangeProperty cmd = new ChangeProperty(model, property.Name, value);
+                ChangeProperty cmd = new ChangeProperty(property.Object, property.Name, value);
                 presenter.CommandHistory.Add(cmd);
             }
             catch (Exception err)
