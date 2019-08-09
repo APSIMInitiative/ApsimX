@@ -428,6 +428,8 @@
         /// <param name="e">The event arguments</param>
         private void OnProfileGridCellValueChanged(object sender, GridCellsChangedArgs e)
         {
+            ApplyChangesToGrid(e);
+
             this.SaveGrid();
 
             // Refresh all calculated columns.
@@ -437,6 +439,23 @@
             if (this.graph != null)
             {
                 this.graphPresenter.DrawGraph();
+            }
+        }
+
+        private void ApplyChangesToGrid(GridCellsChangedArgs e)
+        {
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
+            {
+                VariableProperty property = propertiesInGrid[cell.ColIndex];
+                if (!property.IsReadOnly)
+                {
+                    Type dataType = property.DataType;
+                    if (dataType.IsArray) // This should always be true
+                        dataType = dataType.GetElementType();
+
+                    object newValue = ReflectionUtilities.StringToObject(dataType, cell.NewValue);
+                    view.ProfileGrid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = newValue;
+                }
             }
         }
 

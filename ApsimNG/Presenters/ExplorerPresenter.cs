@@ -666,7 +666,6 @@
                 if (newView != null && this.currentRightHandPresenter != null)
                 {
                     // Resolve links in presenter.
-                    ApsimXFile.Links.Resolve(model);
                     ApsimXFile.Links.Resolve(currentRightHandPresenter);
                     this.view.AddRightHandView(newView);
                     this.currentRightHandPresenter.Attach(model, newView, this);

@@ -114,7 +114,7 @@ namespace UserInterface.Presenters
                     changedArgs.Add(new GridCellChangedArgs(row, col, oldValue, newValue));
 
                     // fixme - this should not be set here. What if the item is an array?
-                    cell.Value = Convert.ChangeType(words[j], args.Grid.DataSource.Columns[args.StartCell.ColumnIndex + j + numReadOnlyColumns].DataType);
+                    //cell.Value = Convert.ChangeType(words[j], args.Grid.DataSource.Columns[args.StartCell.ColumnIndex + j + numReadOnlyColumns].DataType);
 
                     cellsChanged.Add(cell);
                 }
