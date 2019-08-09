@@ -113,7 +113,13 @@
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 else
-                    return this.FileName;
+                {
+                    Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                    if (simulations != null)
+                        return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
+                    else
+                        return this.FileName;
+                }
             }
             set
             {

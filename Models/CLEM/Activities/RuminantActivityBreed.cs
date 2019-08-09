@@ -245,14 +245,16 @@ namespace Models.CLEM.Activities
             // for each location where parts of this herd are located
             foreach (var location in breeders)
             {
-                // determine all foetus and newborn mortality.
-                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                // determine all foetus and newborn mortality of all pregnant females.
+                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsPregnant).ToList())
                 {
-                    if (female.IsPregnant)
+                    // calculate foetus and newborn mortality 
+                    // total mortality / (gestation months + 1) to get monthly mortality
+                    // done here before births to account for post birth motality as well..
+                    // IsPregnant status does not change until births occur in next section so will include mortality in month of birth
+                    // needs to be caclulated for each offspring carried.
+                    for (int i = 0; i < female.CarryingCount; i++)
                     {
-                        // calculate foetus and newborn mortality 
-                        // total mortality / (gestation months + 1) to get monthly mortality
-                        // done here before births to account for post birth motality as well..
                         if (ZoneCLEM.RandomGenerator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                         {
                             female.OneOffspringDies();
@@ -261,8 +263,10 @@ namespace Models.CLEM.Activities
                 }
 
                 // check for births of all pregnant females.
+                int month = Clock.Today.Month;
                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                 {
+
                     if (female.BirthDue)
                     {
                         female.WeightLossDueToCalf = 0;
@@ -302,6 +306,7 @@ namespace Models.CLEM.Activities
                         female.UpdateBirthDetails();
                     }
                 }
+
                 // uncontrolled conception
                 if (!UseAI)
                 {

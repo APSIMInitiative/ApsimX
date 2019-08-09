@@ -47,6 +47,7 @@ namespace Models.Soils
         /// <value>The depth.</value>
         [Summary]
         [Units("cm")]
+        [XmlIgnore]
         [Description("Depth")]
         public string[] Depth
         {

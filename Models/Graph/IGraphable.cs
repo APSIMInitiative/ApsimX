@@ -44,7 +44,12 @@
         /// <summary>
         /// An area series - a line series with the area between the line and the x-axis filled with colour.
         /// </summary>
-        Area
+        Area,
+
+        /// <summary>
+        /// A stacked area series - a line series with the area between the line and the x-axis filled with colour.
+        /// </summary>
+        StackedArea
     }
 
     /// <summary>An enumeration for the different types of markers</summary>
