@@ -865,25 +865,23 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Called when user clicks on a file name.
         /// </summary>
-        /// <remarks>
-        /// Does creation of the dialog belong here, or in the view?
-        /// </remarks>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
+        private void OnFileBrowseClick(object sender, GridCellChangedArgs e)
         {
-            // fixme!
+            // todo - add file extension paramter to display attribute?
             IFileDialog fileChooser = new FileDialog()
             {
                 Action = FileDialog.FileActionType.Open,
                 Prompt = "Select file path",
-                InitialDirectory = e.ChangedCells[0].OldValue.ToString()
+                InitialDirectory = e.OldValue
             };
             string fileName = fileChooser.GetFile();
-            if (fileName != null && fileName != e.ChangedCells[0].OldValue.ToString())
+
+            if (!string.IsNullOrWhiteSpace(fileName) && fileName != e.OldValue)
             {
-                e.ChangedCells[0].OldValue = fileName;
-                OnCellsChanged(sender, e);
+                e.NewValue = fileName;
+                OnCellsChanged(sender, new GridCellsChangedArgs(e));
                 PopulateGrid(model);
             }
         }

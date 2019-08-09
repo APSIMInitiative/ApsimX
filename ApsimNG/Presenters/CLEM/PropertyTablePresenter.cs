@@ -699,23 +699,23 @@ namespace UserInterface.Presenters
 
         /// <summary>
         /// Called when user clicks on a file name.
-        /// Does creation of the dialog belong here, or in the view?
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
+        private void OnFileBrowseClick(object sender, GridCellChangedArgs e)
         {
             IFileDialog fileChooser = new FileDialog()
             {
                 Action = FileDialog.FileActionType.Open,
                 Prompt = "Select file path",
-                InitialDirectory = e.ChangedCells[0].OldValue.ToString()
+                InitialDirectory = e.OldValue
             };
             string fileName = fileChooser.GetFile();
-            if (fileName != null && fileName != e.ChangedCells[0].OldValue.ToString())
+
+            if (!string.IsNullOrWhiteSpace(fileName) && fileName != e.OldValue)
             {
-                e.ChangedCells[0].NewValue = fileName;
-                OnCellValueChanged(sender, e);
+                e.NewValue = fileName;
+                OnCellValueChanged(sender, new GridCellsChangedArgs(e));
                 PopulateGrid(model);
             }
         }

@@ -227,7 +227,7 @@
         /// <summary>
         /// Occurs when user clicks a button on the cell.
         /// </summary>
-        public event EventHandler<GridCellsChangedArgs> ButtonClick;
+        public event EventHandler<GridCellChangedArgs> ButtonClick;
 
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.').
@@ -1023,7 +1023,7 @@
                     }
                     else if (render is CellRendererActiveButton)
                     {
-                        (render as CellRendererActiveButton).Toggled -= PixbufRenderToggled;
+                        (render as CellRendererActiveButton).Toggled -= OnChooseFile;
                     }
                     else if (render is CellRendererToggle)
                     {
@@ -1494,7 +1494,7 @@
                 comboRender.EditingStarted += ComboRenderEditing;
                 CellRendererActiveButton pixbufRender = new CellRendererActiveButton();
                 pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
-                pixbufRender.Toggled += PixbufRenderToggled;
+                pixbufRender.Toggled += OnChooseFile;
 
                 colLookup.Add(textRender, i);
 
@@ -2197,22 +2197,21 @@
         }
 
         /// <summary>
-        /// User has clicked a "button".
+        /// User has clicked the choose file button.
         /// </summary>
         /// <param name="o">The calling object.</param>
         /// <param name="args">The event arguments.</param>
-        private void PixbufRenderToggled(object o, ToggledArgs args)
+        private void OnChooseFile(object o, ToggledArgs args)
         {
             try
             {
                 IGridCell cell = GetCurrentCell;
                 if (cell != null && cell.EditorType == EditorTypeEnum.Button)
                 {
-                    GridCellsChangedArgs cellClicked = new GridCellsChangedArgs();
-                    cellClicked.ChangedCells = new List<GridCellChangedArgs>();
-                    // todo - test me (enusre old value and new value are the right way around).
-                    cellClicked.ChangedCells.Add(new GridCellChangedArgs(cell.RowIndex, cell.ColumnIndex, cell.Value.ToString(), (!(bool)cell.Value).ToString()));
-                    ButtonClick?.Invoke(this, cellClicked);
+                    string oldValue = cell.Value.ToString();
+                    GridCellChangedArgs changedArgs = new GridCellChangedArgs(cell.RowIndex, cell.ColumnIndex, oldValue, oldValue);
+
+                    ButtonClick?.Invoke(this, changedArgs);
                 }
             }
             catch (Exception err)
