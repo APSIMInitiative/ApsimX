@@ -25,6 +25,8 @@ namespace UserInterface.Presenters
     using System.Linq;
     using System.Text;
     using Models.Functions;
+    using System.Xml;
+    using Models.PMF;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -160,6 +162,135 @@ namespace UserInterface.Presenters
                 explorerPresenter.MainPresenter.ShowError("Microsoft Azure functionality is currently only available under Windows.");
             }
 
+        }
+
+        [ContextMenu(MenuName = "Import Cultivars",
+                     AppliesTo = new Type[]
+                     {
+                         typeof(CultivarFolder)
+                     })]
+        public void ImportCultivars(object sender, EventArgs e)
+        {
+            try
+            {
+                string fileName = @"C:\Users\hol430\Documents\Sorghum\cultivars.xml";
+                Dictionary<string, string> commands = GetCommandsLookup();
+                Dictionary<string, string> defaults = GetDefaultsLookup();
+
+                XmlDocument doc = new XmlDocument();
+                doc.Load(fileName);
+
+                List<Cultivar> cultivars = new List<Cultivar>();
+                Cultivar buster = null;
+                IModel cultivarFolder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+                foreach (XmlNode node in doc.FirstChild.ChildNodes)
+                {
+                    string cultivarName = node.Name;
+                    Cultivar cultivar = new Cultivar();
+                    cultivar.Name = cultivarName;
+                    List<string> cultivarCommands = new List<string>();
+                    foreach (XmlNode command in node.ChildNodes)
+                    {
+                        string oldCommand = command.Name;
+                        string value = command.FirstChild.Value;
+
+                        if (!commands.ContainsKey(oldCommand))
+                        {
+                            Console.WriteLine($"WARNING - unknown command: '{oldCommand}'.");
+                            continue;// throw new Exception($"Error - unknown command: '{oldCommand}'.");
+                        }
+
+                        if (oldCommand == "photoperiod_slope")
+                        {
+                            string str0 = "[Phenology].PhotoModifier.XYPairs.X[0]";
+                            string str1 = "[Phenology].PhotoModifier.XYPairs.X[1]";
+
+                            string cmd0 = cultivarCommands.FirstOrDefault(c => c == str0);
+                            string cmd1 = cultivarCommands.FirstOrDefault(c => c == str1);
+
+                            if (string.IsNullOrWhiteSpace(cmd0))
+                                cmd0 = Apsim.Get(cultivarFolder, str0.Replace("0", "1")).ToString();
+
+                            if (string.IsNullOrWhiteSpace(cmd1))
+                                cmd1 = Apsim.Get(cultivarFolder, str1.Replace("1", "2")).ToString();
+
+                            string value0 = cmd0.Split('=').Last().Trim();
+                            string value1 = cmd1.Split('=').Last().Trim();
+
+                            double x0 = double.Parse(value0);
+                            double x1 = double.Parse(value1);
+
+                            value = ((x1 - x0) * double.Parse(value)).ToString();
+                        }
+
+                        string newCommand = commands[oldCommand] + " = " + value;
+
+                        if (buster == null || !buster.Command.Contains(newCommand))
+                            cultivarCommands.Add(newCommand);
+                    }
+
+                    if (buster != null)
+                    {
+                        foreach (string command in buster.Command)
+                        {
+                            string cmd = command.Split('=').First();
+                            if (!cultivarCommands.Any(c => c.Contains(cmd)))
+                            {
+                                // Property changed by buster is not changed by this cultivar. Therefore we need to fetch the
+                                // default value used in old apsim.
+
+                            }
+                        }
+                    }
+
+                    cultivar.Command = cultivarCommands.ToArray();
+
+                    if (cultivarName == "Buster")
+                        buster = cultivar;
+                    else
+                        cultivars.Add(cultivar);
+                }
+
+                foreach (Cultivar cv in cultivars)
+                    cultivarFolder.Children.Add(cv);
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine(err.ToString());
+            }
+        }
+
+        private Dictionary<string, string> GetDefaultsLookup()
+        {
+            Dictionary<string, string> defaults = new Dictionary<string, string>();
+
+            return defaults;
+        }
+
+        private Dictionary<string, string> GetCommandsLookup()
+        {
+            Dictionary<string, string> commands = new Dictionary<string, string>();
+            commands.Add("tt_emerg_to_endjuv", "[Phenology].Juvenile.Target.FixedValue");
+            commands.Add("photoperiod_crit1", "[Phenology].PhotoModifier.XYPairs.X[0]");
+            commands.Add("photoperiod_crit2", "[Phenology].PhotoModifier.XYPairs.X[1]");
+            commands.Add("photoperiod_slope", "[Phenology].PhotoModifier.XYPairs.Y[1]");
+            commands.Add("tt_endjuv_to_init", "[Phenology].TTEndJuvToInit.FixedValue");
+            commands.Add("tt_flag_to_flower", "[Phenology].FlagLeafToFlowering.Target.FixedValue");
+            commands.Add("tt_flower_to_start_grain", "[Phenology].FloweringToGrainFilling.Target.FixedValue");
+            commands.Add("tt_flower_to_maturity", "[Phenology].TTFlowerToMaturity.FixedValue");
+            commands.Add("tt_maturity_to_ripe", "[Phenology].MaturityToHarvestRipe.Target.FixedValue");
+            commands.Add("dm_per_seed", "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue");
+            commands.Add("maxGfRate", "[Grain].PotGrainFillRate.MaxGrainFillRate");
+            //commands.Add("x_stem_wt", "???");
+            commands.Add("partition_rate_leaf", "[Leaf].PartitionRate.FixedValue");
+            commands.Add("nUptakeCease", "[Root].NUptakeCease.FixedValue");
+            commands.Add("leaf_init_rate", "[Leaf].leafInitRate.FixedValue");
+            commands.Add("targetLeafSLN", "[Leaf].TargetSLN.PreEventValue.FixedValue");
+            commands.Add("aX0", "[Leaf].aX0.FixedValue");
+            commands.Add("aMaxS", "[Leaf].aMaxSlope.FixedValue");
+            commands.Add("aMaxI", "[Leaf].aMaxIntercept.FixedValue");
+
+            return commands;
         }
 
         /// <summary>
