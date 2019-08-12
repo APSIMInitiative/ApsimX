@@ -60,19 +60,6 @@
       "Name": "DataStore",
       "Children": [
         {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "Report",
-          "ObservedTableName": "Observed",
-          "FieldNameUsedForMatch": "Clock.Today",
-          "FieldName2UsedForMatch": null,
-          "FieldName3UsedForMatch": null,
-          "Name": "PredictedObserved",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileName": "Observed.xlsx",
           "FileNameMetadata": null,
@@ -80,6 +67,19 @@
             "Observed"
           ],
           "Name": "Observed",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "Report",
+          "ObservedTableName": "Observed",
+          "FieldNameUsedForMatch": "Clock.Today",
+          "FieldName2UsedForMatch": null,
+          "FieldName3UsedForMatch": null,
+          "Name": "PredictedObserved",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
