@@ -126,7 +126,7 @@
         #endregion
         
         //[Input()]
-        private const int timestep = 0;     // timestep in minutes
+        private const int timestep = 1440;     // timestep in minutes
         
         // this was not an input in old apsim. // [Input]                                //FIXME - optional input
         private double gMaxT_time = 0.0;       // Time of maximum temperature in hours
@@ -137,10 +137,8 @@
         private double instrum_height = 0.0;    // (m) height of instruments above ground
 
         private double altitude = 0.0;    // (m) altitude at site
-                                          // <Input()> _
-        private double wind = 0.0;    // (km) daily wind run
         
-        private double nu = 0.0;                  // forward/backward differencing coefficient (0-1).
+        private double nu = 0.6;                  // forward/backward differencing coefficient (0-1).
                                                   // A weighting factor which may range from 0 to 1. If nu=0, the flux is determined by the temperature difference
                                                   // at the beginning of the time step. The numerical procedure which results from this choice is called a forward 
                                                   // difference of explicit method. If nu=0.5, the average of the old and new temperatures is used to compute heat flux. 
@@ -165,26 +163,26 @@
         
         private double vol_spec_heat_water = 4.18e6; // [Joules*m-3*K-1]
         
-        private double MaxTTimeDefault = 0.0;
+        private double MaxTTimeDefault = 14;
         
         private double[] gAveTsoil;  // FIXME - optional. Allow setting from set in manager or get from input //init to average soil temperature 
         
-        private string BoundaryLayerConductanceSource = "constant";
+        private string BoundaryLayerConductanceSource = "calc";
         
         private const double BoundaryLayerConductance = 20;
         
-        private const double BoundaryLayerConductanceIterations = 0;    // maximum number of iterations to calculate atmosphere boundary layer conductance
+        private const double BoundaryLayerConductanceIterations = 1;    // maximum number of iterations to calculate atmosphere boundary layer conductance
         
-        private string NetRadiationSource = "eos";
+        private string NetRadiationSource = "calc";
         
         // from met
-        private double DefaultWindSpeed = 0.0;      // default wind speed (m/s)
+        private double DefaultWindSpeed = 3;      // default wind speed (m/s)
         
-        private const double DefaultAltitude = 0.0;    // default altitude (m)
+        private const double DefaultAltitude = 18;    // default altitude (m)
         
-        private const double DefaultInstrumentHeight = 0.0;  // default instrument height (m)
+        private const double DefaultInstrumentHeight = 1.2;  // default instrument height (m)
         
-        private const double BareSoilHeight = 0.0;        // roughness element height of bare soil (mm)
+        private const double BareSoilHeight = 57;        // roughness element height of bare soil (mm)
 
         #region outputs
 
@@ -682,7 +680,7 @@
             gTimeStepSec = System.Convert.ToDouble(timestep) * MIN2SEC;
 
             BoundCheckArray(soil.SoilWater.SW, 0.0, 1.0, "sw");
-            gSW = (double[])soil.SoilWater.SW.Clone();
+            soil.SoilWater.SW.CopyTo(gSW, 1);
             gSW[gNz] = gSW[gNumLayers];
             // Debug(test): multiplyArray(gSW, 0.1)
 
@@ -696,9 +694,9 @@
             gEs = soil.SoilWater.Es;
             // BoundCheck(cover_tot, 0.0, 1.0, "cover_tot")
 
-            if ((wind > 0.0))
-                gWindSpeed = wind * KM2M / (DAY2HR * HR2SEC);
-            else
+            //if ((weather.Wind > 0.0))
+            //    gWindSpeed = weather.Wind * KM2M / (DAY2HR * HR2SEC);
+            //else
                 gWindSpeed = DefaultWindSpeed;
             BoundCheck(gWindSpeed, 0.0, 1000.0, "wind");
 
