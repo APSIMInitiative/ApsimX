@@ -22,9 +22,6 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							git remote add hol353 https://github.com/hol353/APSIM.Shared
-							git fetch hol353
-							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins
@@ -54,9 +51,6 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							git remote add hol353 https://github.com/hol353/APSIM.Shared
-							git fetch hol353
-							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins
@@ -88,9 +82,6 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							git remote add hol353 https://github.com/hol353/APSIM.Shared
-							git fetch hol353
-							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins
@@ -120,9 +111,6 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							git remote add hol353 https://github.com/hol353/APSIM.Shared
-							git fetch hol353
-							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins
@@ -152,9 +140,6 @@ pipeline {
 							git checkout .
 							git clean -xfdq
 							git checkout master
-							git remote add hol353 https://github.com/hol353/APSIM.Shared
-							git fetch hol353
-							git checkout soil-refactor
 							git pull origin master
 							popd
 							cd ApsimX\\Jenkins
