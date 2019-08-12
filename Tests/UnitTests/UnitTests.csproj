@@ -179,6 +179,7 @@
     <EmbeddedResource Include="Core\ApsimFile\OnCreatedError.apsimx" />
     <EmbeddedResource Include="defective.apsim" />
     <EmbeddedResource Include="ImporterTestsOldAPSIM.xml" />
+    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion59 after.json" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
@@ -324,7 +325,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion59 before.json" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

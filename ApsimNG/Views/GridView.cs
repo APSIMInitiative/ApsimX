@@ -643,7 +643,7 @@
                 menuItemText = itemName;
             CheckMenuItem item = new CheckMenuItem(menuItemText);
             item.Name = itemName;
-            item.DrawAsRadio = true;
+            item.DrawAsRadio = false;
             item.Active = active;
             item.Activated += onClick;
             popupMenu.Append(item);
@@ -1606,7 +1606,7 @@
                     args.Column = GetColumn(columnNumber);
                     args.RightClick = true;
                     args.OnHeader = true;
-                    GridColumnClicked.Invoke(this, args);
+                    GridColumnClicked?.Invoke(this, args);
                     if (popupMenu.Children.Length > 4)  // Show only if there is more that the three standard items plus separator
                        popupMenu.Popup();
                 }
