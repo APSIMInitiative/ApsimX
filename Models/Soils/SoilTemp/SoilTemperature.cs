@@ -41,6 +41,9 @@
         [Link]
         private MicroClimate microClimate = null;
 
+        [Link]
+        private Analysis analysis = null;
+
         // ------------------------------------------------------------------------------------------------------------
         // -----------------------------------------------IMPORTANT NOTE-----------------------------------------------
         // Due to FORTRAN's 'flexibility' with arrays there have been a few modifications to array sizes in this
@@ -563,12 +566,12 @@
             // 
             // clay//
             // if clay has more or less elements than the number of layers, throw exception
-            BoundCheck(soil.ParticleSizeClay.Length, gNumLayers, gNumLayers, "clay layers");
-            BoundCheckArray(soil.ParticleSizeClay, 0.01, 100.0, "clay");
+            BoundCheck(analysis.ParticleSizeClay.Length, gNumLayers, gNumLayers, "clay layers");
+            BoundCheckArray(analysis.ParticleSizeClay, 0.01, 100.0, "clay");
 
             double[] clayFrac = new double[gNumLayers + 1];
             for (int layer = 0; layer <= gNumLayers - 1; layer++)
-                clayFrac[layer] = soil.ParticleSizeClay[layer] / 100.0;// convert from % units ased as user input to proportion  // layer
+                clayFrac[layer] = analysis.ParticleSizeClay[layer] / 100.0;// convert from % units ased as user input to proportion  // layer
             var oldGClay = gClay;
             gClay = new double[gNumLayers + 1 + 1];
             if (oldGClay != null)
