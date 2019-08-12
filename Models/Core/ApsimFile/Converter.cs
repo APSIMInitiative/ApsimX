@@ -622,7 +622,8 @@
                     nitrogenValue["$type"] = "Models.Soils.NitrogenValue, Models";
 
                     var storedAsPPM = sample["NO3Units"]?.ToString() == "0" ||
-                                      sample["NO3Units"]?.ToString() == "ppm";
+                                      sample["NO3Units"]?.ToString() == "ppm" ||
+                                      sample["NO3Units"] == null; 
 
                     nitrogenValue["Values"] = array;
                     nitrogenValue["StoredAsPPM"] = storedAsPPM;

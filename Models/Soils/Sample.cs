@@ -126,6 +126,7 @@ namespace Models.Soils
         /// Gets or sets ammonia NH4. Units will be as specified by NH4Units
         /// </summary>
         [Description("NH4")]
+        [Summary]
         [Display(Format = "N1", ShowTotal = true)]
         public double[] NH4 { get; set; }
 
@@ -133,6 +134,7 @@ namespace Models.Soils
         /// Gets or sets soil water. Units will be as specified by SWUnits
         /// </summary>
         [Description("SW")]
+        [Summary]
         [Display(Format = "N3", ShowTotal = true)]
         public double[] SW { get; set; }
 

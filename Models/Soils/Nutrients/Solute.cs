@@ -49,6 +49,8 @@ namespace Models.Soils.Nutrients
         {
             double[] initialppm = Apsim.Get(soil.Initial, Name + "N.PPM", true) as double[];
             if (initialppm == null)
+                initialppm = Apsim.Get(soil.Initial, Name, true) as double[];
+            if (initialppm == null)
                 initialppm = new double[soil.Thickness.Length];
             kgha = soil.ppm2kgha(initialppm);
         }
