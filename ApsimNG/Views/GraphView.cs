@@ -474,8 +474,10 @@ namespace UserInterface.Views
             // If the X data is not monotonic, the area will not be
             // filled with colour. In this case, show a warning to the
             // user so they know why their area series is not working.
-            EnsureMonotonic(points.Select(p => p.X).ToArray());
-            EnsureMonotonic(points2.Select(p => p.X).ToArray());
+            if (points != null)
+                EnsureMonotonic(points.Select(p => p.X).ToArray());
+            if (points2 != null)
+                EnsureMonotonic(points2.Select(p => p.X).ToArray());
 
             if (showOnLegend)
                 series.Title = title;
