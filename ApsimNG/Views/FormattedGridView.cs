@@ -10,6 +10,7 @@
     using System.Data;
     using APSIM.Shared.Utilities;
     using System.Collections;
+    using System.Globalization;
 
     /// <summary>Metadata about a column on the grid.</summary>
     public class GridColumnMetaData
@@ -187,21 +188,25 @@
             bool refreshGrid = false;
             foreach (var changedCell in e.ChangedCells)
             {
-                if (!Convert.IsDBNull(changedCell.Value))
+                var column = columnMetadata[changedCell.ColIndex];
+
+                object newValue = ReflectionUtilities.StringToObject(column.ColumnDataType, changedCell.NewValue, CultureInfo.CurrentCulture);
+                var array = column.Values as Array;
+                if (array == null)
                 {
-                    var column = columnMetadata[changedCell.ColumnIndex];
-                    var array = column.Values as Array;
-                    if (array == null)
-                    {
-                        var numValues = e.ChangedCells.Max(cell => cell.RowIndex);
-                        array = Array.CreateInstance(column.ColumnDataType, numValues + 1);
-                        column.Values = array;
-                    }
-                    array.SetValue(Convert.ChangeType(changedCell.Value, column.ColumnDataType), changedCell.RowIndex);
-                    column.ValuesHaveChanged = true;
-                    if (column.AddTotalToColumnName)
-                        refreshGrid = true;
+                    var numValues = e.ChangedCells.Max(cell => cell.RowIndex);
+                    array = Array.CreateInstance(column.ColumnDataType, numValues + 1);
+                    column.Values = array;
                 }
+                // Update the value which will be passed back to the model.
+                array.SetValue(newValue, changedCell.RowIndex);
+
+                // Update the value shown in the grid.
+                DataSource.Rows[changedCell.RowIndex][changedCell.ColIndex] = newValue;
+
+                column.ValuesHaveChanged = true;
+                if (column.AddTotalToColumnName)
+                    refreshGrid = true;
             }
 
             if (refreshGrid)
