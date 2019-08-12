@@ -125,10 +125,9 @@ namespace Models.Soils
         /// <summary>
         /// Gets or sets ammonia NH4. Units will be as specified by NH4Units
         /// </summary>
-        [Description("NH4")]
+        [Description("NH4N")]
         [Summary]
-        [Display(Format = "N1", ShowTotal = true)]
-        public double[] NH4 { get; set; }
+        public NitrogenValue NH4N { get; set; }
 
         /// <summary>
         /// Gets or sets soil water. Units will be as specified by SWUnits
@@ -216,70 +215,11 @@ namespace Models.Soils
         {
             var soil = Apsim.Parent(this, typeof(Soil)) as Soil;
             NO3N?.OnCreated(soil);
+            NH4N?.OnCreated(soil);
         }
 
 
         #region Properties for returning variables with particular units
-        
-        /// <summary>
-        /// Gets NH4. Units: ppm.
-        /// </summary>
-        public double[] NH4ppm
-        {
-            get
-            {
-                if (this.NH4 != null && this.Soil != null)
-                {
-                    double[] values = (double[])this.NH4.Clone();
-                    if (this.NH4Units != NUnitsEnum.ppm)
-                    {
-                        double[] bd = Layers.BDMapped(Soil, this.Thickness);
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (!Double.IsNaN(values[i]))
-                            {
-                                values[i] = values[i] * 100 / (bd[i] * this.Thickness[i]);
-                            }
-                        }
-                    }
-
-                    return values;
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets NH4. Units: kg/ha.
-        /// </summary>
-        [Summary]
-        [Display(Format = "N1", ShowTotal = true)]
-        public double[] NH4kgha
-        {
-            get
-            {
-                if (this.NH4 != null && this.Soil != null)
-                {
-                    double[] values = (double[])this.NH4.Clone();
-                    if (this.NH4Units != NUnitsEnum.kgha)
-                    {
-                        double[] bd = Layers.BDMapped(Soil, this.Thickness);
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            if (!Double.IsNaN(values[i]))
-                            {
-                                values[i] = values[i] / 100 * (bd[i] * this.Thickness[i]);
-                            }
-                        }
-                    }
-
-                    return values;
-                }
-
-                return null;
-            }
-        }
 
         /// <summary>
         /// Gets SW. Units: mm/mm.

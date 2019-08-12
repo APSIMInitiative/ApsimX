@@ -159,7 +159,7 @@ namespace Models.Soils
             enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
             ph = Soil.Initial.PH;
             NO3ppm = Soil.Initial.NO3N.PPM;
-            NH4ppm = Soil.Initial.NH4;
+            NH4ppm = Soil.Initial.NH4N.PPM;
             ureappm = new double[Soil.Thickness.Length];
 
             // This is needed to initialise values in ApsimX, (they were done in xml file before)

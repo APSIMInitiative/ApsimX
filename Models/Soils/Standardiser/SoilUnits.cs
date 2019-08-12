@@ -45,10 +45,10 @@
                 sample.NO3Units = Sample.NUnitsEnum.ppm;
 
                 // Convert nh4 units to ppm.
-                if (sample.NH4 != null && MathUtilities.ValuesInArray(sample.NH4))
+                if (sample.NH4N != null && !sample.NH4N.StoredAsPPM)
                 {
-                    double[] bd = Layers.BDMapped(soil, sample.Thickness);
-                    sample.NH4 = Nppm(sample.NH4, sample.Thickness, sample.NH4Units, bd);
+                    var ppm = sample.NH4N.PPM;
+                    sample.NH4N.PPM = ppm;
                 }
                 sample.NH4Units = Sample.NUnitsEnum.ppm;
 

@@ -185,10 +185,12 @@
             {
                 if (sample.SW != null)
                     sample.SW = MapSW(sample.SW, sample.Thickness, thickness, soil);
-                if (sample.NH4 != null)
-                { 
-                    sample.NH4 = MapConcentration(sample.NH4ppm, sample.Thickness, thickness, 0.2);
-                    sample.NH4Units = Sample.NUnitsEnum.ppm;
+                if (sample.NH4N != null)
+                {
+                    if (sample.NH4N.StoredAsPPM)
+                        sample.NH4N.PPM = MapConcentration(sample.NH4N.PPM, sample.Thickness, thickness, 0.2);
+                    else
+                        sample.NH4N.KgHa = MapMass(sample.NH4N.KgHa, sample.Thickness, thickness);
                 }
                 if (sample.NO3N != null)
                 {
@@ -196,7 +198,6 @@
                         sample.NO3N.PPM = MapConcentration(sample.NO3N.PPM, sample.Thickness, thickness, 1.0);
                     else
                         sample.NO3N.KgHa = MapMass(sample.NO3N.KgHa, sample.Thickness, thickness);
-                    //sample.NO3Units = Sample.NUnitsEnum.ppm;
                 }
 
                 // The elements below will be overlaid over other arrays of values so we want 

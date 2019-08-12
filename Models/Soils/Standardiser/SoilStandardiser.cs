@@ -39,11 +39,11 @@
                     MathUtilities.ReplaceMissingValues(samples[0].NO3N.PPM, 0.01);
                 }
 
-                if (MathUtilities.ValuesInArray(samples[i].NH4))
+                if (samples[i].NH4N != null && MathUtilities.ValuesInArray(samples[i].NH4N.PPM))
                 {
-                    samples[0].NH4 = samples[i].NH4;
+                    samples[0].NH4N = samples[i].NH4N;
                     samples[0].NH4Units = samples[i].NH4Units;
-                    MathUtilities.ReplaceMissingValues(samples[0].NH4, 0.01);
+                    MathUtilities.ReplaceMissingValues(samples[0].NH4N.PPM, 0.01);
                 }
 
                 if (MathUtilities.ValuesInArray(samples[i].OC))

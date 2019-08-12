@@ -195,7 +195,7 @@
 
             if (!MathUtilities.ValuesInArray(soil.Initial.NO3N.PPM))
                 Msg += "No starting NO3 values found.\r\n";
-            if (!MathUtilities.ValuesInArray(soil.Initial.NH4))
+            if (!MathUtilities.ValuesInArray(soil.Initial.NH4N.PPM))
                 Msg += "No starting NH4 values found.\r\n";
 
             return Msg;

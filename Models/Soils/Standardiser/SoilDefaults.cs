@@ -198,8 +198,8 @@
                 sample.SW = null;
             if (!MathUtilities.ValuesInArray(sample.NO3N.PPM))
                 sample.NO3N = null;
-            if (!MathUtilities.ValuesInArray(sample.NH4))
-                sample.NH4 = null;
+            if (!MathUtilities.ValuesInArray(sample.NH4N.PPM))
+                sample.NH4N.PPM = null;
             if (!MathUtilities.ValuesInArray(sample.CL))
                 sample.CL = null;
             if (!MathUtilities.ValuesInArray(sample.EC))
@@ -215,8 +215,8 @@
                 sample.SW = MathUtilities.FixArrayLength(sample.SW, sample.Thickness.Length);
             if (sample.NO3N != null)
                 sample.NO3N.PPM = MathUtilities.FixArrayLength(sample.NO3N.PPM, sample.Thickness.Length);
-            if (sample.NH4 != null)
-                sample.NH4 = MathUtilities.FixArrayLength(sample.NH4, sample.Thickness.Length);
+            if (sample.NH4N.PPM != null)
+                sample.NH4N.PPM = MathUtilities.FixArrayLength(sample.NH4N.PPM, sample.Thickness.Length);
             if (sample.CL != null)
                 sample.CL = MathUtilities.FixArrayLength(sample.CL, sample.Thickness.Length);
             if (sample.EC != null)
@@ -238,8 +238,8 @@
                         sample.SW[i] = ll15[i];
                     if (sample.NO3N.PPM != null && double.IsNaN(sample.NO3N.PPM[i]))
                         sample.NO3N.PPM[i] = 1.0;
-                    if (sample.NH4 != null && double.IsNaN(sample.NH4[i]))
-                        sample.NH4[i] = 0.1;
+                    if (sample.NH4N.PPM != null && double.IsNaN(sample.NH4N.PPM[i]))
+                        sample.NH4N.PPM[i] = 0.1;
                 }
             }
         }

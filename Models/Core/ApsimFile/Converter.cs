@@ -630,6 +630,22 @@
                     sample.Remove("NO3");
                     sample["NO3N"] = nitrogenValue;
                 }
+
+                array = sample["NH4"] as JArray;
+                if (array != null)
+                {
+                    var nitrogenValue = new JObject();
+                    nitrogenValue["$type"] = "Models.Soils.NitrogenValue, Models";
+
+                    var storedAsPPM = sample["NH4Units"]?.ToString() == "0" ||
+                                      sample["NH4Units"]?.ToString() == "ppm" ||
+                                      sample["NH4Units"] == null;
+
+                    nitrogenValue["Values"] = array;
+                    nitrogenValue["StoredAsPPM"] = storedAsPPM;
+                    sample.Remove("NH4");
+                    sample["NH4N"] = nitrogenValue;
+                }
             }
             foreach (var soilCropOilPalmNode in JsonUtilities.ChildrenRecursively(root, "SoilCropOilPalm"))
                 soilCropOilPalmNode["$type"] = "Models.Soils.SoilCrop, Models";
@@ -643,7 +659,7 @@
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Cl", "[Soil].Initial.CL");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].OC", "[Soil].Initial.OC");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNO3N", "[Soil].Initial.NO3N.PPM");
-                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNH4N", "[Soil].Initial.NH4");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNH4N", "[Soil].Initial.NH4N.PPM");
             }
 
             foreach (var series in JsonUtilities.ChildrenRecursively(root, "Series"))
