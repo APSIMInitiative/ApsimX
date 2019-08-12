@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 58,
+  "Version": 59,
   "Name": "Simulations",
   "Children": [
     {
@@ -27,7 +27,12 @@
             "[Soil].LL15mm",
             "[Soil].DULmm",
             "[Slurp].Leaf.Transpiration",
-            "ave([Soil].InitialWaterVolumetric) * sum([Soil].Thickness) - sum([Soil].SoilWater.SWmm) as ProfileWaterChange",
+            "[Slurp].Leaf.CoverGreen",
+            "[Slurp].Leaf.CoverTotal",
+            "[Slurp].Leaf.Height",
+            "[Slurp].Leaf.LAI",
+            "[Slurp].Root.Depth",
+            "mean([Soil].InitialWaterVolumetric) * sum([Soil].Thickness) - sum([Soil].SoilWater.SWmm) as ProfileWaterChange",
             "sum([Soil].InitialWaterVolumetric)",
             "sum([Soil].Thickness) ",
             "sum([Soil].SoilWater.SWmm)"
@@ -675,40 +680,48 @@
                         200.0,
                         200.0
                       ],
-                      "NO3": [
-                        115.55558228565495,
-                        77.037054857103129,
-                        57.777791142827347,
-                        33.777785591191524,
-                        33.777785591191524,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.33000007633499606,
-                        0.33000007633499606,
-                        0.33000007633499606,
-                        0.33000007633499606,
-                        0.33000007633499606,
-                        0.33000007633499606,
-                        0.32000007402181441
-                      ],
-                      "NH4": [
-                        0.26,
-                        0.26,
-                        0.26,
-                        0.304,
-                        0.304,
-                        0.304,
-                        0.33,
-                        0.33,
-                        0.33,
-                        0.33,
-                        0.33,
-                        0.33,
-                        0.33,
-                        0.33,
-                        0.32
-                      ],
+                      "NO3N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          115.55558228565495,
+                          77.037054857103129,
+                          57.777791142827347,
+                          33.777785591191524,
+                          33.777785591191524,
+                          0.0,
+                          0.0,
+                          0.0,
+                          0.33000007633499606,
+                          0.33000007633499606,
+                          0.33000007633499606,
+                          0.33000007633499606,
+                          0.33000007633499606,
+                          0.33000007633499606,
+                          0.32000007402181441
+                        ],
+                        "StoredAsPPM": false
+                      },
+                      "NH4N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          0.26,
+                          0.26,
+                          0.26,
+                          0.304,
+                          0.304,
+                          0.304,
+                          0.33,
+                          0.33,
+                          0.33,
+                          0.33,
+                          0.33,
+                          0.33,
+                          0.33,
+                          0.33,
+                          0.32
+                        ],
+                        "StoredAsPPM": false
+                      },
                       "SW": [
                         0.253,
                         0.175,
@@ -839,8 +852,8 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Atmosphere",
                             "Location": "48, 338",
-                            "Colour": "255, 255, 255",
-                            "OutlineColour": "255, 255, 255",
+                            "Colour": "White",
+                            "OutlineColour": "White",
                             "Transparent": true
                           },
                           {
@@ -1813,6 +1826,7 @@
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[StateFactors].Script.Nit = 0",
+                    "[SetCropCanopy].Script.Nit = 0",
                     "[Fert]"
                   ],
                   "Paths": null,
@@ -1872,6 +1886,7 @@
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[StateFactors].Script.Nit = 50",
+                    "[SetCropCanopy].Script.Nit = 50",
                     "[Fert]"
                   ],
                   "Paths": null,
@@ -1933,6 +1948,7 @@
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[StateFactors].Script.Nit = 250",
+                    "[SetCropCanopy].Script.Nit = 250",
                     "[Fert]"
                   ],
                   "Paths": null,
@@ -2004,7 +2020,8 @@
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[Irrig]",
-                    "[StateFactors].Script.Irr = Full"
+                    "[StateFactors].Script.Irr = Full",
+                    "[SetCropCanopy].Script.Irr = Full"
                   ],
                   "Paths": null,
                   "Values": null,
@@ -2113,7 +2130,8 @@
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[Irrig]",
-                    "[StateFactors].Script.Irr = Nil"
+                    "[StateFactors].Script.Irr = Nil",
+                    "[SetCropCanopy].Script.Irr = Nil"
                   ],
                   "Paths": null,
                   "Values": null,
@@ -2440,24 +2458,32 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        10.0,
-                        0.28,
-                        2.6,
-                        2.87,
-                        2.43,
-                        1.94,
-                        1.0
-                      ],
-                      "NH4": [
-                        0.12,
-                        0.12,
-                        0.0,
-                        0.19,
-                        3.29,
-                        0.42,
-                        0.75
-                      ],
+                      "NO3N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          10.0,
+                          0.28,
+                          2.6,
+                          2.87,
+                          2.43,
+                          1.94,
+                          1.0
+                        ],
+                        "StoredAsPPM": true
+                      },
+                      "NH4N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          0.12,
+                          0.12,
+                          0.0,
+                          0.19,
+                          3.29,
+                          0.42,
+                          0.75
+                        ],
+                        "StoredAsPPM": true
+                      },
                       "SW": [
                         0.18,
                         0.18,
@@ -3015,11 +3041,11 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SCRUM;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        \r\n        [Description(\"File of ObservedCovers\")]\r\n        public string CoverFile { get; set; }\r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of the crop at full cover\")]\r\n        public double MaximumHeight { get; set; }\r\n        \r\n        [XmlIgnore] private DataTable Covers { get; set; }\r\n\r\n        public string Cover { get; set; }\r\n        public string Irrigation { get; set; }\r\n        public string Treatment { get; set; }\r\n        \r\n        private double CoverRead { get; set; }\r\n        public double leaflai { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            Treatment = Cover + \"_\" + Irrigation;\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(CoverFile, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            Covers = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            foreach (DataRow row in Covers.Rows)\r\n            {\r\n                DateTime TodayDate = Convert.ToDateTime(row[\"Date\"]);\r\n                if (TodayDate.Date == Clock.Today.Date)\r\n                {\r\n                    CoverRead = Convert.ToDouble(row[Treatment]);\r\n                }\r\n            }\r\n        \r\n            if ((bool)zone.Get(\"Slurp.IsAlive\") == true)\r\n            {\r\n                //Only assign cover valuse if crop is emerged\r\n                \r\n                if (CoverRead == 1)\r\n                    leaflai = Math.Log(0.01) / -Ext_coef;\r\n                else\r\n                {\r\n                    if (CoverRead > 0)\r\n                        leaflai = Math.Log(1 - CoverRead) / -Ext_coef;\r\n                    else\r\n                        leaflai = 0;\r\n                }\r\n                //Summary.WriteMessage(this, \"LAI \" + leaflai);\r\n                object LAIResetValue = leaflai;\r\n                zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n                object HeightResetValue = CoverRead * MaximumHeight;\r\n                zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n\r\n        \r\n        [Description(\"File of ObservedCovers\")]\r\n        public string CoverFile { get; set; }\r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of the crop at full cover\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Potential Root extension rate (mm)\")]\r\n        public double PotRootExtension {get; set;}\r\n        \r\n        [XmlIgnore] private DataTable Covers { get; set; }\r\n\r\n        public string Nit { get; set; }\r\n        public string Irr { get; set; }\r\n        public string Treatment { get; set; }\r\n        \r\n        private double CoverRead { get; set; }\r\n        public double leaflai { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            Treatment = \"Nit\" + Nit + \"Irr\" + Irr;\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(CoverFile, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            Covers = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n    \t\tobject LAIResetValue = 0;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = 0;\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);\r\n            object PotRootExtSet = PotRootExtension;\r\n            zone.Set(\"Slurp.Root.RootFrontVelocity.Potential.FixedValue\", PotRootExtSet);\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            foreach (DataRow row in Covers.Rows)\r\n            {\r\n                DateTime TodayDate = Convert.ToDateTime(row[\"Date\"]);\r\n                if (TodayDate.Date == Clock.Today.Date)\r\n                {\r\n                    CoverRead = Convert.ToDouble(row[Treatment]);\r\n                }\r\n            }\r\n        \r\n            if ((bool)zone.Get(\"Slurp.IsAlive\") == true)\r\n            {\r\n                //Only assign cover valuse if crop is emerged\r\n                \r\n                if (CoverRead == 1)\r\n                    leaflai = Math.Log(0.01) / -Ext_coef;\r\n                else\r\n                {\r\n                    if (CoverRead > 0)\r\n                        leaflai = Math.Log(1 - CoverRead) / -Ext_coef;\r\n                    else\r\n                        leaflai = 0;\r\n                }\r\n                //Summary.WriteMessage(this, \"LAI \" + leaflai);\r\n                object LAIResetValue = leaflai;\r\n                zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n                object HeightResetValue = CoverRead * MaximumHeight;\r\n                zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "CoverFile",
-                      "Value": "%root%\\Tests\\Validation\\Slurp\\ShallowSoilTest\\CoverInterpolated.csv"
+                      "Value": "%root%\\Tests\\Validation\\SoilWater\\ObservedCovers\\Lincoln2015_CoverGreen.csv"
                     },
                     {
                       "Key": "Ext_coef",
@@ -3030,11 +3056,11 @@
                       "Value": "600"
                     },
                     {
-                      "Key": "Cover",
+                      "Key": "Nit",
                       "Value": ""
                     },
                     {
-                      "Key": "Irrigation",
+                      "Key": "Irr",
                       "Value": ""
                     },
                     {
@@ -3044,9 +3070,13 @@
                     {
                       "Key": "leaflai",
                       "Value": "0"
+                    },
+                    {
+                      "Key": "PotRootExtension",
+                      "Value": "30"
                     }
                   ],
-                  "Name": "SetCropVariables",
+                  "Name": "SetCropCanopy",
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3088,9 +3118,9 @@
               "CrossesAtZero": false
             }
           ],
-          "LegendPosition": 0,
+          "LegendPosition": 1,
           "DisabledSeries": [],
-          "Name": "Graph",
+          "Name": "LAI",
           "Children": [
             {
               "$type": "Models.Graph.Series, Models",
@@ -3098,8 +3128,8 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": 0,
-              "FactorToVaryColours": "Irr",
-              "FactorToVaryMarkers": "Nit",
+              "FactorToVaryColours": "Nit",
+              "FactorToVaryMarkers": "Irr",
               "FactorToVaryLines": null,
               "Marker": 0,
               "MarkerSize": 0,
@@ -3108,7 +3138,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "sum(Soil.Thickness)",
+              "YFieldName": "Slurp.Leaf.LAI",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -3117,6 +3147,366 @@
               "CumulativeX": false,
               "Filter": null,
               "Name": "Series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 1,
+          "DisabledSeries": [],
+          "Name": "CoverTotal",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "Nit",
+              "FactorToVaryMarkers": "Irr",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Slurp.Leaf.CoverTotal",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 1,
+          "DisabledSeries": [],
+          "Name": "CoverGreen",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "Nit",
+              "FactorToVaryMarkers": "Irr",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Slurp.Leaf.CoverGreen",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 1,
+          "DisabledSeries": [],
+          "Name": "Height",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "Nit",
+              "FactorToVaryMarkers": "Irr",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Slurp.Leaf.Height",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 1,
+          "DisabledSeries": [],
+          "Name": "RootDepth",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "Nit",
+              "FactorToVaryMarkers": "Irr",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Slurp.Root.Depth",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": true,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 1,
+          "DisabledSeries": [],
+          "Name": "ProfileWater",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "Nit",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": "Irr",
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "ProfileWater",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "ProfileWater",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Predicted",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "Nit",
+              "FactorToVaryMarkers": "Irr",
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Observed",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "ProfileWater",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Observed",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
