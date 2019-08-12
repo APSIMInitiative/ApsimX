@@ -1806,8 +1806,8 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\r\n### Lincoln2012 (Rain-Shelter Trail)\r\n\r\nTesting of APSIM Maize under New Zealand conditions was undertaken using the data of [Teixeira_etal_2014].  This dataset includes the impact of three N (0 to 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure.  Observations include biomass growth and nitrogen content of individual organs, soil water contents, leaf area index, phenology and yield components. Total biomass ranged from 8000 kg/ha for dryland nil N crops to up to 28000kg/ha for fully irrigated and N fertilised crops.  Dryland crops recovered 25 percent less N from applied fertilizer than irrigated crops.\r\n",
-          "Name": "memo",
+          "Text": "\r\n### Lincoln2015 (Rain-Shelter Trail)\r\n\r\nThis dataset demonstrates the impact of three N (0, 50 and 250 kg/ha N) and two water regimes (dryland and fully irrigated) using a rain-shelter structure at Lincoln, New Zealand.  A crop of 'Discovery' wheat was sown in October and managed as a typical spring wheat crop.  Soil water content was measured with CS650 soil moisture probes positioned at 7 depths in each plot (192 probes in total) and logged at 15 min intervals for the duration of the experiment.  Total cover was measured using linear PAR sensors in each plot logged for the duration of the experiment and green cover was measured ever 3-4 days with NDVI and interpolated to daily values.  \nSlurp is used to represent the crop in this test so it can focus on soil water and not be blured by the performance of the crop model.  To do this observed values for green and total cover, LAI, and Height were set in Slurp each day using a manager script.\r\n",
+          "Name": "Experimental description",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
@@ -2919,6 +2919,17 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.PMF.Plant, Models",
+                  "CropType": "Slurp",
+                  "IsEnding": false,
+                  "DaysAfterEnding": 0,
+                  "ResourceName": "Slurp",
+                  "Name": "Slurp",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Operations, Models",
                   "Operation": null,
                   "Name": "Irrig",
@@ -2990,21 +3001,60 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        [XmlIgnore] private bool Harvested {get; set;}\r\n                \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        Remove = new RemovalFractions();\r\n        Harvested = false;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if ((Wheat.Phenology.CurrentPhaseName == \"Ripening\") & (Harvested == false))\r\n            {\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.0,\"Live\");\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0,\"Live\");\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.0,\"Dead\");\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0,\"Dead\");\r\n                Remove.SetFractionToRemove(\"Grain\", 0.0);\r\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0.0);\r\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                Remove.SetFractionToRemove(\"Spike\", 0.0);\r\n                Remove.SetFractionToResidue(\"Spike\", 0.0);\r\n                Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                Wheat.Harvest(Remove);\r\n                Harvested = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
-                  "Parameters": [],
-                  "Name": "HarvestOnly",
-                  "IncludeInDocumentation": false,
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n\r\n        \r\n        [Description(\"File of Observed Green Covers\")]\r\n        public string CoverGreenFile { get; set; }\r\n        [Description(\"File of Observed Total Covers\")]\r\n        public string CoverTotalFile { get; set; }\r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of the crop at full cover\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Potential Root extension rate (mm)\")]\r\n        public double PotRootExtension {get; set;}\r\n        \r\n        [XmlIgnore] private DataTable CoverGreens { get; set; }\r\n\t\t[XmlIgnore] private DataTable CoverTotals { get; set; }\r\n\r\n        public string Nit { get; set; }\r\n        public string Irr { get; set; }\r\n        public string Treatment { get; set; }\r\n        \r\n        private double CoverGreenRead { get; set; }\r\n        private double CoverTotalRead { get; set; }\r\n        public double leaflai { get; private set; }\r\n        public double leaflaidead { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            Treatment = \"Nit\" + Nit + \"Irr\" + Irr;\r\n            \r\n            string fullFileNameGreen = PathUtilities.GetAbsolutePath(CoverGreenFile, Simulation.FileName);\r\n            \r\n            ApsimTextFile GreentextFile = new ApsimTextFile();\r\n            GreentextFile.Open(fullFileNameGreen);\r\n            CoverGreens = GreentextFile.ToTable();\r\n            GreentextFile.Close();\r\n\r\n            string fullFileNameTotal = PathUtilities.GetAbsolutePath(CoverTotalFile, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFileTotal = new ApsimTextFile();\r\n            textFileTotal.Open(fullFileNameTotal);\r\n            CoverTotals = textFileTotal.ToTable();\r\n            textFileTotal.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n    \t\tobject LAIResetValue = 0;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = 0;\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);\r\n            object PotRootExtSet = PotRootExtension;\r\n            zone.Set(\"Slurp.Root.RootFrontVelocity.Potential.FixedValue\", PotRootExtSet);\r\n            object LAIDeadResetValue = 0;\r\n            zone.Set(\"Slurp.Leaf.LaiDeadFunction.FixedValue\", LAIDeadResetValue);\r\n            object kDead = Ext_coef;\r\n            zone.Set(\"Slurp.Leaf.KDead\", kDead);\r\n            object GSmax = 0.011;\r\n            zone.Set(\"Slurp.Leaf.Gsmax350\",GSmax);\r\n            object r50 = 150;\r\n            zone.Set(\"Slurp.Leaf.R50\",r50);\r\n            object albedo = 0.25;\r\n            zone.Set(\"Slurp.Leaf.Albedo\",albedo);\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            foreach (DataRow row in CoverGreens.Rows)\r\n            {\r\n                DateTime TodayDate = Convert.ToDateTime(row[\"Date\"]);\r\n                if (TodayDate.Date == Clock.Today.Date)\r\n                {\r\n                    CoverGreenRead = Convert.ToDouble(row[Treatment]);\r\n                }\r\n            }\r\n\r\n            foreach (DataRow row in CoverTotals.Rows)\r\n            {\r\n                DateTime TodayDate = Convert.ToDateTime(row[\"Date\"]);\r\n                if (TodayDate.Date == Clock.Today.Date)\r\n                {\r\n                    CoverTotalRead = Convert.ToDouble(row[Treatment]);\r\n                }\r\n            }\r\n        \r\n            if ((bool)zone.Get(\"Slurp.IsAlive\") == true)\r\n            {\r\n                //Only assign cover valuse if crop is emerged\r\n                \r\n                if (CoverGreenRead == 1)\r\n                    leaflai = Math.Log(0.01) / -Ext_coef;\r\n                else\r\n                {\r\n                    if (CoverGreenRead > 0)\r\n                        leaflai = Math.Log(1 - CoverGreenRead) / -Ext_coef;\r\n                    else\r\n                        leaflai = 0;\r\n                }\r\n\r\n                double CoverDead = CoverTotalRead - CoverGreenRead;\r\n                if (CoverDead == 1)\r\n                    leaflaidead = Math.Log(0.01) / -Ext_coef;\r\n                else\r\n                {\r\n                    if (CoverDead > 0)\r\n                        leaflaidead = Math.Log(1 - CoverDead) / -Ext_coef;\r\n                    else\r\n                        leaflaidead = 0;\r\n                }\r\n                //Summary.WriteMessage(this, \"LAI \" + leaflai);\r\n                object LAIResetValue = leaflai;\r\n                zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n                object HeightResetValue = CoverTotalRead * MaximumHeight;\r\n                zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n                object LAIDeadResetValue = leaflaidead;\r\n                zone.Set(\"Slurp.Leaf.LaiDeadFunction.FixedValue\",LAIDeadResetValue);\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Parameters": [
+                    {
+                      "Key": "CoverGreenFile",
+                      "Value": "%root%\\Tests\\Validation\\SoilWater\\ObservedCovers\\Lincoln2015_CoverGreen.csv"
+                    },
+                    {
+                      "Key": "CoverTotalFile",
+                      "Value": "%root%\\Tests\\Validation\\SoilWater\\ObservedCovers\\Lincoln2015_CoverTotal.csv"
+                    },
+                    {
+                      "Key": "Ext_coef",
+                      "Value": "0.8"
+                    },
+                    {
+                      "Key": "MaximumHeight",
+                      "Value": "600"
+                    },
+                    {
+                      "Key": "PotRootExtension",
+                      "Value": "30"
+                    },
+                    {
+                      "Key": "Nit",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "Irr",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "Treatment",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "leaflai",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "leaflaidead",
+                      "Value": "0"
+                    }
+                  ],
+                  "Name": "SetCropCanopy",
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Plant, Models",
-                  "CropType": "Slurp",
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
-                  "ResourceName": "Slurp",
-                  "Name": "Slurp",
-                  "IncludeInDocumentation": true,
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        [XmlIgnore] private bool Harvested {get; set;}\r\n                \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        Remove = new RemovalFractions();\r\n        Harvested = false;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if ((Wheat.Phenology.CurrentPhaseName == \"Ripening\") & (Harvested == false))\r\n            {\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.0,\"Live\");\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0,\"Live\");\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.0,\"Dead\");\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0,\"Dead\");\r\n                Remove.SetFractionToRemove(\"Grain\", 0.0);\r\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0.0);\r\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                Remove.SetFractionToRemove(\"Spike\", 0.0);\r\n                Remove.SetFractionToResidue(\"Spike\", 0.0);\r\n                Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                Wheat.Harvest(Remove);\r\n                Harvested = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                  "Parameters": [],
+                  "Name": "HarvestOnly",
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3035,48 +3085,6 @@
                   ],
                   "Name": "ProfileWater",
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n\r\n        \r\n        [Description(\"File of ObservedCovers\")]\r\n        public string CoverFile { get; set; }\r\n        [Description(\"Extinction coefficient\")]\r\n        public  double Ext_coef { get; set; }\r\n        [Description(\"Maximum height of the crop at full cover\")]\r\n        public double MaximumHeight { get; set; }\r\n        [Description(\"Potential Root extension rate (mm)\")]\r\n        public double PotRootExtension {get; set;}\r\n        \r\n        [XmlIgnore] private DataTable Covers { get; set; }\r\n\r\n        public string Nit { get; set; }\r\n        public string Irr { get; set; }\r\n        public string Treatment { get; set; }\r\n        \r\n        private double CoverRead { get; set; }\r\n        public double leaflai { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            Treatment = \"Nit\" + Nit + \"Irr\" + Irr;\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(CoverFile, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            Covers = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n    \t\tobject LAIResetValue = 0;\r\n            zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n            object HeightResetValue = 0;\r\n            zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);\r\n            object PotRootExtSet = PotRootExtension;\r\n            zone.Set(\"Slurp.Root.RootFrontVelocity.Potential.FixedValue\", PotRootExtSet);\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            foreach (DataRow row in Covers.Rows)\r\n            {\r\n                DateTime TodayDate = Convert.ToDateTime(row[\"Date\"]);\r\n                if (TodayDate.Date == Clock.Today.Date)\r\n                {\r\n                    CoverRead = Convert.ToDouble(row[Treatment]);\r\n                }\r\n            }\r\n        \r\n            if ((bool)zone.Get(\"Slurp.IsAlive\") == true)\r\n            {\r\n                //Only assign cover valuse if crop is emerged\r\n                \r\n                if (CoverRead == 1)\r\n                    leaflai = Math.Log(0.01) / -Ext_coef;\r\n                else\r\n                {\r\n                    if (CoverRead > 0)\r\n                        leaflai = Math.Log(1 - CoverRead) / -Ext_coef;\r\n                    else\r\n                        leaflai = 0;\r\n                }\r\n                //Summary.WriteMessage(this, \"LAI \" + leaflai);\r\n                object LAIResetValue = leaflai;\r\n                zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n                object HeightResetValue = CoverRead * MaximumHeight;\r\n                zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
-                  "Parameters": [
-                    {
-                      "Key": "CoverFile",
-                      "Value": "%root%\\Tests\\Validation\\SoilWater\\ObservedCovers\\Lincoln2015_CoverGreen.csv"
-                    },
-                    {
-                      "Key": "Ext_coef",
-                      "Value": "0.8"
-                    },
-                    {
-                      "Key": "MaximumHeight",
-                      "Value": "600"
-                    },
-                    {
-                      "Key": "Nit",
-                      "Value": ""
-                    },
-                    {
-                      "Key": "Irr",
-                      "Value": ""
-                    },
-                    {
-                      "Key": "Treatment",
-                      "Value": ""
-                    },
-                    {
-                      "Key": "leaflai",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "PotRootExtension",
-                      "Value": "30"
-                    }
-                  ],
-                  "Name": "SetCropCanopy",
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
