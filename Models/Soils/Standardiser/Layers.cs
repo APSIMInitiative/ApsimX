@@ -45,20 +45,20 @@
             if (!MathUtilities.AreEqual(toThickness, soil.Thickness))
             {
                 bool needToConstrainCropLL = false;
-                foreach (var cropName in soil.CropNames)
-                {
-                    var crop = soil.Crop(cropName);
-                    crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
-                    crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
-
-                    if (crop is SoilCrop)
+                if (soil.Crops != null)
+                    foreach (var crop in soil.Crops)
                     {
-                        needToConstrainCropLL = true;
+                        crop.KL = MapConcentration(crop.KL, soil.Thickness, toThickness, MathUtilities.LastValue(crop.KL));
+                        crop.XF = MapConcentration(crop.XF, soil.Thickness, toThickness, MathUtilities.LastValue(crop.XF));
 
-                        var soilCrop = crop as SoilCrop;
-                        soilCrop.LL = MapConcentration(soilCrop.LL, soil.Thickness, toThickness, MathUtilities.LastValue(soilCrop.LL));
+                        if (crop is SoilCrop)
+                        {
+                            needToConstrainCropLL = true;
+
+                            var soilCrop = crop as SoilCrop;
+                            soilCrop.LL = MapConcentration(soilCrop.LL, soil.Thickness, toThickness, MathUtilities.LastValue(soilCrop.LL));
+                        }
                     }
-                }
 
                 soil.BD = MapConcentration(soil.BD, soil.Thickness, toThickness, MathUtilities.LastValue(soil.BD));
                 soil.AirDry = MapConcentration(soil.AirDry, soil.Thickness, toThickness, MathUtilities.LastValue(soil.AirDry));
@@ -70,7 +70,7 @@
 
                 if (needToConstrainCropLL)
                 {
-                    foreach (ISoilCrop crop in water.Crops)
+                    foreach (var crop in soil.Crops)
                     {
                         if (crop is SoilCrop)
                         {
@@ -185,15 +185,19 @@
             {
                 if (sample.SW != null)
                     sample.SW = MapSW(sample.SW, sample.Thickness, thickness, soil);
-                if (sample.NH4 != null)
-                { 
-                    sample.NH4 = MapConcentration(sample.NH4ppm, sample.Thickness, thickness, 0.2);
-                    sample.NH4Units = Sample.NUnitsEnum.ppm;
-                }
-                if (sample.NO3 != null)
+                if (sample.NH4N != null)
                 {
-                    sample.NO3 = MapConcentration(sample.NO3ppm, sample.Thickness, thickness, 1.0);
-                    sample.NO3Units = Sample.NUnitsEnum.ppm;
+                    if (sample.NH4N.StoredAsPPM)
+                        sample.NH4N.PPM = MapConcentration(sample.NH4N.PPM, sample.Thickness, thickness, 0.2);
+                    else
+                        sample.NH4N.KgHa = MapMass(sample.NH4N.KgHa, sample.Thickness, thickness);
+                }
+                if (sample.NO3N != null)
+                {
+                    if (sample.NO3N.StoredAsPPM)
+                        sample.NO3N.PPM = MapConcentration(sample.NO3N.PPM, sample.Thickness, thickness, 1.0);
+                    else
+                        sample.NO3N.KgHa = MapMass(sample.NO3N.KgHa, sample.Thickness, thickness);
                 }
 
                 // The elements below will be overlaid over other arrays of values so we want 
@@ -219,18 +223,15 @@
         /// <param name="soil">The soil the crop belongs to.</param>
         private static void SetCropThickness(SoilCrop crop, double[] thickness, Soil soil)
         {
-            if (!MathUtilities.AreEqual(thickness, crop.Thickness))
+            if (!MathUtilities.AreEqual(thickness, soil.Thickness))
             {
-                crop.LL = MapConcentration(crop.LL, crop.Thickness, thickness, MathUtilities.LastValue(crop.LL));
-                crop.KL = MapConcentration(crop.KL, crop.Thickness, thickness, MathUtilities.LastValue(crop.KL));
-                crop.XF = MapConcentration(crop.XF, crop.Thickness, thickness, MathUtilities.LastValue(crop.XF));
+                crop.LL = MapConcentration(crop.LL, soil.Thickness, thickness, MathUtilities.LastValue(crop.LL));
+                crop.KL = MapConcentration(crop.KL, soil.Thickness, thickness, MathUtilities.LastValue(crop.KL));
+                crop.XF = MapConcentration(crop.XF, soil.Thickness, thickness, MathUtilities.LastValue(crop.XF));
 
                 crop.LL = MathUtilities.Constrain(crop.LL, AirDryMapped(soil, thickness), DULMapped(soil, thickness));
             }
         }
-
-        /// <summary>The type of mapping.</summary>
-        private enum MapType { Mass, Concentration, UseBD }
 
         /// <summary>Map soil variables (using concentration) from one layer structure to another.</summary>
         /// <param name="fromValues">The from values.</param>
@@ -340,8 +341,8 @@
 
             // Get the first crop ll or ll15.
             double[] LowerBound;
-            if (waterNode != null && waterNode.Crops.Count > 0)
-                LowerBound = LLMapped(waterNode.Crops[0] as SoilCrop, thickness.ToArray());
+            if (waterNode != null && soil.Crops.Count > 0)
+                LowerBound = LLMapped(soil.Crops[0] as SoilCrop, thickness.ToArray());
             else
                 LowerBound = LL15Mapped(soil, thickness.ToArray());
             if (LowerBound == null)
@@ -368,8 +369,8 @@
         /// <param name="toThickness">To thickness.</param>
         /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
         /// <returns>The from values mapped to the specified thickness</returns>
-        private static double[] MapMass(double[] fromValues, double[] fromThickness, double[] toThickness,
-                                        bool allowMissingValues = false)
+        public static double[] MapMass(double[] fromValues, double[] fromThickness, double[] toThickness,
+                                       bool allowMissingValues = false)
         {
             if (fromValues == null || fromThickness == null)
                 return null;
@@ -458,7 +459,8 @@
         /// <returns></returns>
         private static double[] LLMapped(SoilCrop crop, double[] ToThickness)
         {
-            return MapConcentration(crop.LL, crop.Thickness, ToThickness, MathUtilities.LastValue(crop.LL));
+            var waterNode = crop.Parent as Water;
+            return MapConcentration(crop.LL, waterNode.Thickness, ToThickness, MathUtilities.LastValue(crop.LL));
         }
 
         /// <summary>Bulk density - mapped to the specified layer structure. Units: mm/mm</summary>

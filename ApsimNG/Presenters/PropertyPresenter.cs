@@ -168,12 +168,12 @@ namespace UserInterface.Presenters
         /// Remove the specified properties from the grid.
         /// </summary>
         /// <param name="propertysToRemove">The names of all properties to remove</param>
-        public void RemoveProperties(IEnumerable<VariableProperty> propertysToRemove)
+        public void RemoveProperties(IEnumerable<string> propertysToRemove)
         {
-            foreach (VariableProperty property in propertysToRemove)
+            foreach (var property in propertysToRemove)
             {
                 // Try and find the description in our list of properties.
-                int i = properties.FindIndex(p => p.Description == property.Description);
+                int i = properties.FindIndex(p => p.Name == property);
 
                 // If found then remove the property.
                 if (i != -1)
