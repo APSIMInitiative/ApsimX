@@ -811,7 +811,7 @@
 
             fIncorp = MathUtilities.Bound(fIncorp, 0.0, 1.0);
 
-            deepestLayer = Soil.LayerIndexOfDepth(tillageDepth, soil.Thickness);
+            deepestLayer = soil.LayerIndexOfDepth(tillageDepth);
 
             double cumDepth = 0.0;
 

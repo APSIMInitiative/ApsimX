@@ -387,8 +387,6 @@ namespace Models.Soils
         public double[] MappedLowerRepellentWC { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
         public double[] MappedMinRepellancyFactor { get; set; }
-        /// <summary>The factor for root penetration into soil layer</summary>
-        public double[] MappedXF { get; set; }
         #endregion
 
         #region Outputs
@@ -761,7 +759,6 @@ namespace Models.Soils
             MappedUpperRepellentWC = Layers.MapConcentration(UpperRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
             MappedLowerRepellentWC = Layers.MapConcentration(LowerRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
             MappedMinRepellancyFactor = Layers.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedXF = Layers.MapConcentration(XF, Thickness, targetThickness, SAT[SAT.Length - 1]);
         }
 
         private void doPrecipitation()
