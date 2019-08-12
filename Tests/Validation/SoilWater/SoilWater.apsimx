@@ -47,6 +47,15 @@
       "Name": "ABlock_Residues",
       "Children": [
         {
+          "$type": "Models.Memo, Models",
+          "Text": "This experiment was conducted in Plant and Food Researches A Block field near Lincoln, New Zealand.  A uniformly managed, unirrigated barley crop was grown and harvested prior to the estastablishment of this experiment.  A randomised complete block was layed out with 5 x 15 m plots laid out to avoid harvester wheel tracks with 4 replicates of 4 treatments:\n\n - <b>StandingStubble</b> where the stubble that was left by the combine harvester remained standing and any residue that \n - <b>HarvesterWindrow</b> where the residue mown from the other two treatments was piled ontop of the standing stubble to simulate a harvester windrow with the residue from approximately 2 times the area applied\n - <b>MownStubble</b> where stubble was mown at 5cm height and removed from the plots\n - <b>BareSoil</b> where stubble was mown and removed and then plots were ploughed and cultivated to leave a bare soil.\n\nFollowing the establishment of treatments CS616 soil moisture sensors were installed in each plot at 0-20, 20-40 and 40-60 cm depth and logged at 1 hourly intervals from establishment in Autumn through until the following spring.",
+          "Name": "Memo",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Factorial.Factors, Models",
           "Name": "Factors",
           "Children": [
