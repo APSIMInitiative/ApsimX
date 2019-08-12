@@ -12,8 +12,8 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": "The process cannot access the file 'C:\\APSIMClassic\\Tests\\SoilTemp2\\Continuous Wheat.out' because it is being used by another process.",
-          "FileName": "C:\\APSIMClassic\\Tests\\SoilTemp2\\Continuous Wheat.out",
+          "ErrorMessage": "",
+          "FileName": "Continuous Wheat.out",
           "Name": "Input",
           "Children": [],
           "IncludeInDocumentation": true,
