@@ -255,10 +255,12 @@
     <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\FactorView.cs" />
+    <Compile Include="Views\HelpView.cs" />
     <Compile Include="Views\LabelView.cs" />
     <Compile Include="Views\ListView.cs" />
     <Compile Include="Views\MenuItemView.cs" />
     <Compile Include="Views\MethodCompletionView.cs" />
+    <Compile Include="Views\FormattedGridView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
     <Compile Include="Classes\Grid\GridColumn.cs" />
     <Compile Include="Interfaces\IAxisView.cs" />

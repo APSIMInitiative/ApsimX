@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 58; } }
+        public static int LatestVersion { get { return 59; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -123,7 +123,11 @@
                         sample["$type"] = "Models.Soils.Sample, Models";
                         sample["Name"] = "Initial conditions";
                         sample["Thickness"] = new JArray(new double[] { 1800 });
-                        sample["NO3"] = new JArray(new double[] { 10 });
+
+                        var nitrogenValue = new JObject();
+                        nitrogenValue["$type"] = "Models.Soils.NitrogenValue, Models";
+                        nitrogenValue["PPM"] = new JArray(new double[] { 3 });
+                        sample["NO3N"] = nitrogenValue;
                         sample["NH4"] = new JArray(new double[] { 1 });
                         sample["NO3Units"] = "kgha";
                         sample["NH4Units"] = "kgha";
@@ -579,6 +583,111 @@
             foreach (var manager in JsonUtilities.ChildManagers(root))
             {
                 if (manager.Replace(".SWAtWaterThickness", ".Thickness"))
+                    manager.Save();
+            }
+        }
+
+        private static void ConvertKgHaToPPM(JArray values)
+        {
+            var sample = JsonUtilities.Parent(values);
+            var soil = JsonUtilities.Parent(sample) as JObject;
+            var water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "Water");
+
+            // Get soil thickness and bulk density.
+            var soilThickness = water["Thickness"].Values<double>().ToArray();
+            var soilBD = water["BD"].Values<double>().ToArray();
+
+            // Get sample thickness and bulk density.
+            var sampleThickness = sample["Thickness"].Values<double>().ToArray();
+            var sampleBD = Soils.Standardiser.Layers.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last());
+
+            for (int i = 0; i < values.Count; i++)
+                values[i] = values[i].Value<double>() * 100 / (sampleBD[i] * sampleThickness[i]);
+        }
+
+        /// <summary>
+        /// Upgrades to version 59. Renames 'SoilCropOilPalm' to 'SoilCrop'.
+        /// Renames Soil.SoilOrganicMatter.OC to Soil.Initial.OC
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion59(JObject root, string fileName)
+        {
+            foreach (var sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
+            {
+                var array = sample["NO3"] as JArray;
+                if (array != null)
+                {
+                    var nitrogenValue = new JObject();
+                    nitrogenValue["$type"] = "Models.Soils.NitrogenValue, Models";
+
+                    var storedAsPPM = sample["NO3Units"]?.ToString() == "0" ||
+                                      sample["NO3Units"]?.ToString() == "ppm" ||
+                                      sample["NO3Units"] == null; 
+
+                    nitrogenValue["Values"] = array;
+                    nitrogenValue["StoredAsPPM"] = storedAsPPM;
+                    sample.Remove("NO3");
+                    sample["NO3N"] = nitrogenValue;
+                }
+
+                array = sample["NH4"] as JArray;
+                if (array != null)
+                {
+                    var nitrogenValue = new JObject();
+                    nitrogenValue["$type"] = "Models.Soils.NitrogenValue, Models";
+
+                    var storedAsPPM = sample["NH4Units"]?.ToString() == "0" ||
+                                      sample["NH4Units"]?.ToString() == "ppm" ||
+                                      sample["NH4Units"] == null;
+
+                    nitrogenValue["Values"] = array;
+                    nitrogenValue["StoredAsPPM"] = storedAsPPM;
+                    sample.Remove("NH4");
+                    sample["NH4N"] = nitrogenValue;
+                }
+            }
+            foreach (var soilCropOilPalmNode in JsonUtilities.ChildrenRecursively(root, "SoilCropOilPalm"))
+                soilCropOilPalmNode["$type"] = "Models.Soils.SoilCrop, Models";
+
+            foreach (var report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilOrganicMatter.OC", ".Initial.OC");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].PH", "[Soil].Initial.PH");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].EC", "[Soil].Initial.EC");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].ESP", "[Soil].Initial.ESP");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].Cl", "[Soil].Initial.CL");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].OC", "[Soil].Initial.OC");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNO3N", "[Soil].Initial.NO3N.PPM");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].InitialNH4N", "[Soil].Initial.NH4N.PPM");
+            }
+
+            foreach (var series in JsonUtilities.ChildrenRecursively(root, "Series"))
+            {
+                if (series["XFieldName"] != null)
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace(".SoilOrganicMatter.OC", ".Initial.OC");
+                if (series["YFieldName"] != null)
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace(".SoilOrganicMatter.OC", ".Initial.OC");
+            }
+
+            foreach (var expressionFunction in JsonUtilities.ChildrenRecursively(root, "ExpressionFunction"))
+            {
+                var expression = expressionFunction["Expression"].ToString();
+                expression = expression.Replace(".SoilOrganicMatter.OC", ".Initial.OC");
+                expressionFunction["Expression"] = expression;
+            }
+
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                var changeMade = manager.Replace("Soil.ToCumThickness(soil.Thickness)", "soil.ThicknessCumulative");
+
+                if (manager.Replace("mySoil.Depth.Length", "mySoil.Thickness.Length"))
+                    changeMade = true;
+
+                if (manager.Replace("soil.Depth.Length", "soil.Thickness.Length"))
+                    changeMade = true;
+
+                if (changeMade)
                     manager.Save();
             }
         }

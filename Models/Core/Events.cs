@@ -208,22 +208,22 @@
         /// <summary>
         /// A wrapper around an event publisher EventInfo.
         /// </summary>
-        internal class Publisher
+        public class Publisher
         {
             /// <summary>The model instance containing the event hander.</summary>
-            public object Model { get; set; }
+            public object Model { get; private set; }
 
             /// <summary>The reflection event info instance.</summary>
-            private EventInfo eventInfo;
+            public EventInfo EventInfo { get; private set; }
 
             /// <summary>Return the event name.</summary>
-            public string Name {  get { return eventInfo.Name; } }
+            public string Name {  get { return EventInfo.Name; } }
 
             internal void ConnectSubscriber(Subscriber subscriber)
             {
                 // connect subscriber to the event.
-                Delegate eventDelegate = subscriber.CreateDelegate(eventInfo.EventHandlerType);
-                eventInfo.AddEventHandler(Model, eventDelegate);
+                Delegate eventDelegate = subscriber.CreateDelegate(EventInfo.EventHandlerType);
+                EventInfo.AddEventHandler(Model, eventDelegate);
             }
 
             internal void DisconnectAll()
@@ -251,18 +251,17 @@
             /// <summary>Find all event publishers in the specified models.</summary>
             /// <param name="models">The models to scan for event publishers</param>
             /// <returns>The list of event publishers</returns>
-            internal static List<Publisher> FindAll(List<IModel> models)
+            public static List<Publisher> FindAll(List<IModel> models)
             {
                 List<Publisher> publishers = new List<Publisher>();
                 foreach (IModel modelNode in models)
                 {
                     foreach (EventInfo eventInfo in modelNode.GetType().GetEvents(BindingFlags.Instance | BindingFlags.Public))
-                        publishers.Add(new Publisher() { eventInfo = eventInfo, Model = modelNode });
+                        publishers.Add(new Publisher() { EventInfo = eventInfo, Model = modelNode });
                 }
 
                 return publishers;
             }
         }
-
     }
 }
