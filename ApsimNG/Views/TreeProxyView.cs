@@ -17,6 +17,7 @@ namespace UserInterface.Views
     using System.Globalization;
     using System.Drawing;
     using APSIM.Shared.Utilities;
+    using EventArguments;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -227,7 +228,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user finishes editing a cell.
         /// </summary>
-        public event EventHandler OnCellEndEdit;
+        public event EventHandler<GridCellsChangedArgs> OnCellEndEdit;
 
         /// <summary>
         /// Setup the spatial data grid.
@@ -436,11 +437,11 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        private void GridCellEdited(object sender, EventArgs args)
+        private void GridCellEdited(object sender, GridCellsChangedArgs args)
         {
             try
             {
-                OnCellEndEdit?.Invoke(this, EventArgs.Empty);
+                OnCellEndEdit?.Invoke(sender, args);
             }
             catch (Exception err)
             {
