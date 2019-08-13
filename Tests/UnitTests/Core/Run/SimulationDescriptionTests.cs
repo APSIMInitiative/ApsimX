@@ -234,7 +234,10 @@
                             new Sample
                             {
                                 Thickness = new double[] { 1000 },
-                                NO3 = new double[] { 27 },
+                                NO3N = new NitrogenValue()
+                                {
+                                    PPM = new double[] { 27 }
+                                },
                                 OC = new double[] { 1.35 },
                                 SWUnits = Sample.SWUnitsEnum.Volumetric
                             }
@@ -255,13 +258,11 @@
 
             var water = newSim.Children[0].Children[0] as Water;
             var soilOrganicMatter = newSim.Children[0].Children[1] as SoilOrganicMatter;
-            var analysis = newSim.Children[0].Children[2] as Analysis;
-            var sample = newSim.Children[0].Children[3] as Sample;
+            var sample = newSim.Children[0].Children[2] as Sample;
 
             // Make sure layer structures have been standardised.
             Assert.AreEqual(water.Thickness, originalWater.Thickness);
             Assert.AreEqual(soilOrganicMatter.Thickness, originalWater.Thickness);
-            Assert.AreEqual(analysis.Thickness, originalWater.Thickness);
             Assert.AreEqual(sample.Thickness, originalWater.Thickness);
 
             // Make sure sample units are volumetric.

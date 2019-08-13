@@ -29,14 +29,14 @@ namespace Models.Functions
                 throw new Exception("Layer number must be provided to CERES mineralisation water factor Model");
             double pHF = 0;
 
-            if (soil.PH[arrayIndex] < 4.5)
+            if (soil.Initial.PH[arrayIndex] < 4.5)
                 pHF = 0;
-            else if (soil.PH[arrayIndex] < 6)
-                pHF = MathUtilities.Divide(soil.PH[arrayIndex] - 4.5, 6.0 - 4.5, 0);
-            else if (soil.PH[arrayIndex] < 8)
+            else if (soil.Initial.PH[arrayIndex] < 6)
+                pHF = MathUtilities.Divide(soil.Initial.PH[arrayIndex] - 4.5, 6.0 - 4.5, 0);
+            else if (soil.Initial.PH[arrayIndex] < 8)
                 pHF = 1;
-            else if (soil.PH[arrayIndex] < 9)
-                pHF = 1 - MathUtilities.Divide(soil.PH[arrayIndex] - 8.0, 9.0 - 8.0, 0.0);
+            else if (soil.Initial.PH[arrayIndex] < 9)
+                pHF = 1 - MathUtilities.Divide(soil.Initial.PH[arrayIndex] - 8.0, 9.0 - 8.0, 0.0);
             else
                 pHF = 0;
 
