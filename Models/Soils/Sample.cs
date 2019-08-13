@@ -1,51 +1,25 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Sample.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Soils
+﻿namespace Models.Soils
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Soils.Standardiser;
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Xml.Serialization;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Models.Soils.Standardiser;
 
-    /// <summary>
-    /// The class represents a soil sample.
-    /// </summary>
+    /// <summary>The class represents a soil sample.</summary>
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType=typeof(Soil))]
     public class Sample : Model
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Sample" /> class.
-        /// </summary>
+        /// <summary>Constructor.</summary>
         public Sample() 
         { 
             this.Name = "Sample"; 
         }
 
         #region Enumerations
-        /// <summary>
-        /// An enumeration for specifying nitrogen units.
-        /// </summary>
-        public enum NUnitsEnum
-        {
-            /// <summary>
-            /// parts per million
-            /// </summary>
-            ppm,
-
-            /// <summary>
-            /// kilograms per hectare
-            /// </summary>
-            [Description("kg/ha")]
-            kgha
-        }
 
         /// <summary>
         /// An enumeration for specifying soil water units
@@ -183,16 +157,6 @@ namespace Models.Soils
         #endregion
 
         #region Units
-        /// <summary>
-        /// Gets or sets the units of NO3
-        /// </summary>
-        public NUnitsEnum NO3Units { get; set; }
-
-        /// <summary>
-        /// Gets or sets the units of NH4
-        /// </summary>
-        public NUnitsEnum NH4Units { get; set; }
-
         /// <summary>
         /// Gets or sets the units of SW
         /// </summary>

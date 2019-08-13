@@ -209,7 +209,6 @@
                             PPM = new double[] { 2, double.NaN }
                         },
                         PH = new double[] { 6.4, double.NaN },
-                        NO3Units = Sample.NUnitsEnum.ppm
                     }
                 }
             };

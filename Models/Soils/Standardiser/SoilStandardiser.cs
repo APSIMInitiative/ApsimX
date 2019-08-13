@@ -35,14 +35,12 @@
                 if (samples[i].NO3N != null && MathUtilities.ValuesInArray(samples[i].NO3N.PPM))
                 {
                     samples[0].NO3N = samples[i].NO3N;
-                    samples[0].NO3Units = samples[i].NO3Units;
                     MathUtilities.ReplaceMissingValues(samples[0].NO3N.PPM, 0.01);
                 }
 
                 if (samples[i].NH4N != null && MathUtilities.ValuesInArray(samples[i].NH4N.PPM))
                 {
                     samples[0].NH4N = samples[i].NH4N;
-                    samples[0].NH4Units = samples[i].NH4Units;
                     MathUtilities.ReplaceMissingValues(samples[0].NH4N.PPM, 0.01);
                 }
 
