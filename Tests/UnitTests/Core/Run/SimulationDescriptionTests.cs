@@ -258,7 +258,7 @@
 
             var water = newSim.Children[0].Children[0] as Water;
             var soilOrganicMatter = newSim.Children[0].Children[1] as SoilOrganicMatter;
-            var sample = newSim.Children[0].Children[2] as Sample;
+            var sample = newSim.Children[0].Children[3] as Sample;
 
             // Make sure layer structures have been standardised.
             Assert.AreEqual(water.Thickness, originalWater.Thickness);
