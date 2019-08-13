@@ -228,12 +228,7 @@ namespace UserInterface.Presenters
                         // Only allow lists that are double[], int[], string[] or DateTime[]
                         bool includeProperty = true;
                         if (property.DataType.GetInterface("IList") != null)
-                        {
-                            includeProperty = property.DataType == typeof(double[]) ||
-                                              property.DataType == typeof(int[]) ||
-                                              property.DataType == typeof(string[]) ||
-                                              property.DataType == typeof(DateTime[]);
-                        }
+                            includeProperty = true;
 
                         if (Attribute.IsDefined(member, typeof(SeparatorAttribute)))
                         {
