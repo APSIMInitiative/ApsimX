@@ -859,7 +859,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 761.0,
                   "Units": null,
-                  "Name": "TTFIowerToMaturity",
+                  "Name": "TTFlowerToMaturity",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -7229,7 +7229,7 @@
                                     {
                                       "$type": "Models.Functions.OnEventFunction, Models",
                                       "SetEvent": "Flowering",
-                                      "ReSetEvent": null,
+                                      "ReSetEvent": "",
                                       "Name": "PlantMinDM",
                                       "Children": [
                                         {
@@ -7243,67 +7243,56 @@
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.3,
-                                          "Units": null,
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
                                           "Name": "PostEventValue",
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "PlantMinDM",
+                                              "$type": "Models.Functions.DivideFunction, Models",
+                                              "Name": "dmPlantStem",
                                               "Children": [
                                                 {
-                                                  "$type": "Models.Functions.DivideFunction, Models",
-                                                  "Name": "dmPlantStem",
-                                                  "Children": [
-                                                    {
-                                                      "$type": "Models.Functions.VariableReference, Models",
-                                                      "VariableName": "[Stem].Live.Wt",
-                                                      "Name": "dmGreen",
-                                                      "Children": [],
-                                                      "IncludeInDocumentation": true,
-                                                      "Enabled": true,
-                                                      "ReadOnly": false
-                                                    },
-                                                    {
-                                                      "$type": "Models.Functions.VariableReference, Models",
-                                                      "VariableName": "[Plant].SowingData.Density",
-                                                      "Name": "density",
-                                                      "Children": [],
-                                                      "IncludeInDocumentation": true,
-                                                      "Enabled": true,
-                                                      "ReadOnly": false
-                                                    }
-                                                  ],
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Stem].Live.Wt",
+                                                  "Name": "dmGreen",
+                                                  "Children": [],
                                                   "IncludeInDocumentation": true,
                                                   "Enabled": true,
                                                   "ReadOnly": false
                                                 },
                                                 {
-                                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                                  "Name": "SubtractFunction",
-                                                  "Children": [
-                                                    {
-                                                      "$type": "Models.Functions.Constant, Models",
-                                                      "FixedValue": 1.0,
-                                                      "Units": null,
-                                                      "Name": "One",
-                                                      "Children": [],
-                                                      "IncludeInDocumentation": true,
-                                                      "Enabled": true,
-                                                      "ReadOnly": false
-                                                    },
-                                                    {
-                                                      "$type": "Models.Functions.Constant, Models",
-                                                      "FixedValue": 0.2,
-                                                      "Units": null,
-                                                      "Name": "translocFrac",
-                                                      "Children": [],
-                                                      "IncludeInDocumentation": true,
-                                                      "Enabled": true,
-                                                      "ReadOnly": false
-                                                    }
-                                                  ],
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Plant].SowingData.Population",
+                                                  "Name": "density",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.SubtractFunction, Models",
+                                              "Name": "SubtractFunction",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 1.0,
+                                                  "Units": null,
+                                                  "Name": "One",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 0.2,
+                                                  "Units": null,
+                                                  "Name": "translocFrac",
+                                                  "Children": [],
                                                   "IncludeInDocumentation": true,
                                                   "Enabled": true,
                                                   "ReadOnly": false
@@ -7325,7 +7314,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Plant].SowingData.Density",
+                                      "VariableName": "[Plant].SowingData.Population",
                                       "Name": "density",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -8625,14 +8614,104 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 114"
+                      ],
+                      "Name": "early",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 157"
+                      ],
+                      "Name": "medium",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 201"
+                      ],
+                      "Name": "late",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 26",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 202",
+                        "[Leaf].aMaxSlope.FixedValue = 0",
+                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                      ],
+                      "Name": "ATX623xRTX430",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 134.4",
+                        "[Leaf].aMaxSlope.FixedValue = 0",
+                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                      ],
+                      "Name": "A35xQL36",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 25",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 179",
+                        "[Leaf].aMaxSlope.FixedValue = 0",
+                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                      ],
+                      "Name": "QL41xQL36",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 114.4"
+                      ],
+                      "Name": "QL39xQL36",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 122",
                         "[Phenology].TTEndJuvToInit.FixedValue = 252",
-                        "[Phenology].PhotoModifier.XYPairs.Y[1] = 122",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.001427844",
                         "[Leaf].PartitionRate.FixedValue = 0.018",
                         "[Root].NUptakeCease.FixedValue = 10",
                         "[Leaf].leafInitRate.FixedValue = 26.1",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
-                        "",
                         "[Leaf].aMaxSlope.FixedValue = 8.9",
                         "[Leaf].aMaxIntercept.FixedValue = 245.3"
                       ],
@@ -8645,13 +8724,15 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
-                        "[Phenology].TTEndJuvToInit.FixedValue = 179",
-                        "[Phenology].PhotoModifier.XYPairs.Y[1] = 25",
-                        "",
-                        "[Leaf].aMaxSlope.FixedValue = 0.0",
-                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 34",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 228",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0015",
+                        "[Leaf].Photosynthesis.RUE.FixedValue = 1.6",
+                        "[Leaf].PartitionRate.FixedValue = 0.018",
+                        "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
+                        "[Leaf].leafInitRate.FixedValue = 23.2"
                       ],
-                      "Name": "QL41xQL36",
+                      "Name": "CSH13R",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -8660,16 +8741,369 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 11",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 13",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 205",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695"
+                      ],
+                      "Name": "dekalb_DK55",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 88.32",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 120",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695"
+                      ],
+                      "Name": "texas_RS610",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 57.5",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 115",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695"
+                      ],
+                      "Name": "pioneer_s34",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
+                        "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 34.96",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 159",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695"
+                      ],
+                      "Name": "texas_671",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 130",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.00065",
+                        "[Leaf].aX0.FixedValue = 0.83",
+                        "[Leaf].aMaxSlope.FixedValue = 2.3",
+                        "[Leaf].aMaxIntercept.FixedValue = 514",
+                        "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
+                      ],
+                      "Name": "Scorpio",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 185",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Leaf].aX0.FixedValue = 0.71",
+                        "[Leaf].aMaxSlope.FixedValue = 37",
+                        "[Leaf].aMaxIntercept.FixedValue = -101",
+                        "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
+                      ],
+                      "Name": "Apollo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 185",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Leaf].aX0.FixedValue = 0.71",
+                        "[Leaf].aMaxSlope.FixedValue = 37",
+                        "[Leaf].aMaxIntercept.FixedValue = -101",
+                        "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
+                      ],
+                      "Name": "Bazley",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 15",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 118",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.00065",
+                        "[Leaf].aX0.FixedValue = 0.8",
+                        "[Leaf].aMaxSlope.FixedValue = 1",
+                        "[Leaf].aMaxIntercept.FixedValue = 451"
+                      ],
+                      "Name": "Taurus",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 118",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0006",
+                        "[Leaf].aX0.FixedValue = 0.86",
+                        "[Leaf].aMaxSlope.FixedValue = 0",
+                        "[Leaf].aMaxIntercept.FixedValue = 542"
+                      ],
+                      "Name": "P85G33",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0006",
+                        "[Leaf].aX0.FixedValue = 0.81",
+                        "[Leaf].aMaxSlope.FixedValue = 0",
+                        "[Leaf].aMaxIntercept.FixedValue = 578"
+                      ],
+                      "Name": "P84G22",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 135",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0005",
+                        "[Leaf].aX0.FixedValue = 0.84",
+                        "[Leaf].aMaxSlope.FixedValue = 0",
+                        "[Leaf].aMaxIntercept.FixedValue = 495"
+                      ],
+                      "Name": "P84G99",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 20",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 138",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0005",
+                        "[Leaf].aX0.FixedValue = 0.84",
+                        "[Leaf].aMaxSlope.FixedValue = 0",
+                        "[Leaf].aMaxIntercept.FixedValue = 495"
+                      ],
+                      "Name": "P86G56",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 15",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 118",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Leaf].aX0.FixedValue = 0.71",
+                        "[Leaf].aMaxSlope.FixedValue = 37",
+                        "[Leaf].aMaxIntercept.FixedValue = -101"
+                      ],
+                      "Name": "MR43",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 180",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0007",
+                        "[Leaf].aX0.FixedValue = 0.82",
+                        "[Leaf].aMaxSlope.FixedValue = 8.5",
+                        "[Leaf].aMaxIntercept.FixedValue = 378"
+                      ],
+                      "Name": "N_14NUS01",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 20",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 174",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0006",
+                        "[Leaf].aX0.FixedValue = 0.82",
+                        "[Leaf].aMaxSlope.FixedValue = 8.5",
+                        "[Leaf].aMaxIntercept.FixedValue = 378"
+                      ],
+                      "Name": "N_14NUS02",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 15",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 110",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.00045",
+                        "[Leaf].aX0.FixedValue = 0.84",
+                        "[Leaf].aMaxSlope.FixedValue = 9.3",
+                        "[Leaf].aMaxIntercept.FixedValue = 384"
+                      ],
+                      "Name": "N_14NUS03",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
+                        "[Phenology].TTEndJuvToInit.FixedValue = 120",
+                        "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 810",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.00045",
+                        "[Leaf].aX0.FixedValue = 0.81",
+                        "[Leaf].aMaxSlope.FixedValue = 0",
+                        "[Leaf].aMaxIntercept.FixedValue = 445"
+                      ],
+                      "Name": "N_14NUS04",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.CultivarFolder, Models",
+                  "Name": "Old",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        ""
+                      ],
+                      "Name": "Buster",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 252",
+                        "[Phenology].TTTargetPhotoSensitive.EmergenceToEndJuve.Add.PhotoModifier.XYPairs.Y[1] = 122",
+                        "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.001427844",
+                        "[Leaf].PartitionRate.FixedValue = 0.018",
+                        "[Root].NUptakeCease.FixedValue = 10",
+                        "[Leaf].leafInitRate.FixedValue = 26.1",
+                        "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
+                        "",
+                        "[Leaf].aMaxSlope.FixedValue = 8.9",
+                        "[Leaf].aMaxIntercept.FixedValue = 245.3"
+                      ],
+                      "Name": "M35-1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].TTEndJuvToInit.FixedValue = 179",
+                        "[Phenology].TTTargetPhotoSensitive.EmergenceToEndJuve.Add.PhotoModifier.XYPairs.Y[1] = 25",
+                        "",
+                        "[Leaf].aMaxSlope.FixedValue = 0.0",
+                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                      ],
+                      "Name": "QL41xQL36",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
                         "[Phenology].TTEndJuvToInit.FixedValue = 114.4",
-                        "[Phenology].PhotoModifier.XYPairs.X[0] = 11.8",
-                        "[Phenology].PhotoModifier.XYPairs.X[1] = 14",
-                        "[Phenology].PhotoModifier.XYPairs.Y[1] = ",
                         "[Phenology].TTTargetPhotoSensitive.EmergenceToEndJuve.Add.PhotoModifier.XYPairs.Y[1] = 87.34"
                       ],
                       "Name": "QL39xQL36",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -8680,7 +9114,7 @@
                       "Name": "CSH13r",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -8691,7 +9125,7 @@
                       "Name": "ATx623xRTx430",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -8702,12 +9136,12 @@
                       "Name": "A35xQL36",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -9719,18 +10153,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -10015,18 +10437,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -10654,18 +11064,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -10950,18 +11348,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -11490,18 +11876,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -11786,18 +12160,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -12358,18 +12720,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -12654,18 +13004,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -13179,18 +13517,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -13475,18 +13801,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -13961,18 +14275,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -14257,18 +14559,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -14783,18 +15073,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.32,
-                                0.32,
-                                0.32,
-                                0.33
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -15079,18 +15357,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -15630,18 +15896,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.32,
-                                0.32,
-                                0.32,
-                                0.33
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -15926,18 +16180,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -16438,18 +16680,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.32,
-                                0.32,
-                                0.32,
-                                0.33
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -16734,18 +16964,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -17244,18 +17462,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -17540,18 +17746,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -18059,18 +18253,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -18355,18 +18537,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -18835,18 +19005,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -19131,18 +19289,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -19651,18 +19797,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -19947,18 +20081,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -20540,18 +20662,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -20836,18 +20946,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -21396,18 +21494,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -21692,18 +21778,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -22216,18 +22290,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -22512,18 +22574,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -23705,18 +23755,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.25,
-                                0.28,
-                                0.3,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -24001,18 +24039,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -25023,18 +25049,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.32,
-                                0.32,
-                                0.32,
-                                0.33
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -25319,18 +25333,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -25852,18 +25854,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.32,
-                                0.32,
-                                0.32,
-                                0.33
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -26148,18 +26138,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -26642,18 +26620,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.32,
-                                0.32,
-                                0.32,
-                                0.33
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -26938,18 +26904,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -27424,18 +27378,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.32,
-                                0.32,
-                                0.32,
-                                0.33
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -27720,18 +27662,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -28253,18 +28183,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.32,
-                                0.32,
-                                0.32,
-                                0.33
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -28549,18 +28467,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -29043,18 +28949,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.08,
-                                0.19,
-                                0.23,
-                                0.26,
-                                0.26,
-                                0.28,
-                                0.32,
-                                0.32,
-                                0.32,
-                                0.33
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -29339,18 +29233,6 @@
                                     200.0,
                                     200.0,
                                     200.0
-                                  ],
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180"
                                   ],
                                   "OC": [
                                     1.19,
@@ -29881,21 +29763,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -30216,21 +30083,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -30806,21 +30658,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -31141,21 +30978,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -31704,21 +31526,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -32039,21 +31846,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -32602,21 +32394,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -32937,21 +32714,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -33458,21 +33220,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -33793,21 +33540,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -34314,21 +34046,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -34649,21 +34366,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -35170,21 +34872,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -35505,21 +35192,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -36026,21 +35698,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -36361,21 +36018,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -36870,21 +36512,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -37205,21 +36832,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -37714,21 +37326,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -38049,21 +37646,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -38558,21 +38140,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -38893,21 +38460,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -39402,21 +38954,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.21,
-                                0.23,
-                                0.23,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.21,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22,
-                                0.22
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -39737,21 +39274,6 @@
                                     150.0,
                                     150.0,
                                     150.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-150",
-                                    "150-165",
-                                    "165-180",
-                                    "180-195"
                                   ],
                                   "OC": [
                                     0.45,
@@ -40345,19 +39867,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -40654,19 +40163,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -41137,19 +40633,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -41446,19 +40929,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -41943,19 +41413,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -42252,19 +41709,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -42749,19 +42193,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -43058,19 +42489,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -43513,19 +42931,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -43822,19 +43227,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -44286,19 +43678,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -44595,19 +43974,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -45050,19 +44416,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -45359,19 +44712,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -45814,19 +45154,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -46123,19 +45450,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -46572,19 +45886,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -46881,19 +46182,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -47330,19 +46618,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -47639,19 +46914,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -48088,19 +47350,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -48397,19 +47646,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -48846,19 +48082,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.12,
-                                0.15,
-                                0.15,
-                                0.1,
-                                0.11,
-                                0.13,
-                                0.09,
-                                0.08,
-                                0.09,
-                                0.09,
-                                0.09
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -49155,19 +48378,6 @@
                                     150.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-45",
-                                    "45-60",
-                                    "60-75",
-                                    "75-90",
-                                    "90-105",
-                                    "105-120",
-                                    "120-135",
-                                    "135-165",
-                                    "165-195"
                                   ],
                                   "OC": [
                                     0.49,
@@ -49659,15 +48869,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -49916,15 +49117,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -50369,15 +49561,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -50638,15 +49821,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -51085,15 +50259,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -51342,15 +50507,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -51845,15 +51001,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -52102,15 +51249,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -52569,15 +51707,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -52826,15 +51955,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -53311,15 +52431,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -53568,15 +52679,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -54122,15 +53224,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -54379,15 +53472,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -54820,15 +53904,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -55077,15 +54152,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -55518,15 +54584,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -55775,15 +54832,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -56240,15 +55288,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -56497,15 +55536,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -57093,15 +56123,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -57350,15 +56371,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -57914,15 +56926,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -58171,15 +57174,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -58750,15 +57744,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -59007,15 +57992,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -59537,15 +58513,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -59794,15 +58761,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -60283,15 +59241,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -60540,15 +59489,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -61053,15 +59993,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -61322,15 +60253,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -61735,15 +60657,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -61992,15 +60905,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -62423,15 +61327,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -62680,15 +61575,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -63123,15 +62009,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -63380,15 +62257,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -63823,15 +62691,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -64080,15 +62939,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -64490,15 +63340,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -64747,15 +63588,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -65178,15 +64010,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -65435,15 +64258,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -65878,15 +64692,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.28,
-                                0.28,
-                                0.28,
-                                0.3,
-                                0.3
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -66135,15 +64940,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-20",
-                                    "20-40",
-                                    "40-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -66610,15 +65406,6 @@
                                   "LocationAccuracy": null,
                                   "DataSource": null,
                                   "Comments": null,
-                                  "AirDry": [
-                                    0.1,
-                                    0.15,
-                                    0.28,
-                                    0.28,
-                                    0.28,
-                                    0.3,
-                                    0.3
-                                  ],
                                   "Name": "Soil",
                                   "Children": [
                                     {
@@ -66879,15 +65666,6 @@
                                         300.0,
                                         300.0,
                                         300.0
-                                      ],
-                                      "Depth": [
-                                        "0-20",
-                                        "20-40",
-                                        "40-60",
-                                        "60-90",
-                                        "90-120",
-                                        "120-150",
-                                        "150-180"
                                       ],
                                       "OC": [
                                         1.3,
@@ -67307,15 +66085,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.25,
-                                0.26,
-                                0.25,
-                                0.28,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -67576,15 +66345,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -68062,15 +66822,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.25,
-                                0.26,
-                                0.25,
-                                0.28,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -68331,15 +67082,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -68790,15 +67532,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.25,
-                                0.26,
-                                0.25,
-                                0.28,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -69059,15 +67792,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -69518,15 +68242,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.25,
-                                0.26,
-                                0.25,
-                                0.28,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -69787,15 +68502,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -70252,15 +68958,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.25,
-                                0.26,
-                                0.25,
-                                0.28,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -70521,15 +69218,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -70914,15 +69602,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.25,
-                                0.26,
-                                0.25,
-                                0.28,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -71183,15 +69862,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -71648,15 +70318,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.25,
-                                0.26,
-                                0.25,
-                                0.28,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -71917,15 +70578,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -72394,15 +71046,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.25,
-                                0.26,
-                                0.25,
-                                0.28,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -72663,15 +71306,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -73056,15 +71690,6 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
-                              "AirDry": [
-                                0.1,
-                                0.15,
-                                0.25,
-                                0.26,
-                                0.25,
-                                0.28,
-                                0.31
-                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -73325,15 +71950,6 @@
                                     300.0,
                                     300.0,
                                     300.0
-                                  ],
-                                  "Depth": [
-                                    "0-15",
-                                    "15-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
                                   ],
                                   "OC": [
                                     1.3,
@@ -73999,18 +72615,6 @@
                           "LocationAccuracy": null,
                           "DataSource": null,
                           "Comments": null,
-                          "AirDry": [
-                            0.08,
-                            0.19,
-                            0.23,
-                            0.26,
-                            0.26,
-                            0.28,
-                            0.25,
-                            0.28,
-                            0.3,
-                            0.31
-                          ],
                           "Name": "Soil",
                           "Children": [
                             {
@@ -74295,18 +72899,6 @@
                                 200.0,
                                 200.0,
                                 200.0
-                              ],
-                              "Depth": [
-                                "0-10",
-                                "10-20",
-                                "20-40",
-                                "40-60",
-                                "60-80",
-                                "80-100",
-                                "100-120",
-                                "120-140",
-                                "140-160",
-                                "160-180"
                               ],
                               "OC": [
                                 1.19,
@@ -74975,18 +73567,6 @@
                       "LocationAccuracy": null,
                       "DataSource": null,
                       "Comments": null,
-                      "AirDry": [
-                        0.08,
-                        0.19,
-                        0.23,
-                        0.26,
-                        0.26,
-                        0.28,
-                        0.25,
-                        0.28,
-                        0.3,
-                        0.31
-                      ],
                       "Name": "Soil",
                       "Children": [
                         {
@@ -75271,18 +73851,6 @@
                             200.0,
                             200.0,
                             200.0
-                          ],
-                          "Depth": [
-                            "0-10",
-                            "10-20",
-                            "20-40",
-                            "40-60",
-                            "60-80",
-                            "80-100",
-                            "100-120",
-                            "120-140",
-                            "140-160",
-                            "160-180"
                           ],
                           "OC": [
                             1.19,
@@ -75828,16 +74396,6 @@
                       "LocationAccuracy": null,
                       "DataSource": null,
                       "Comments": null,
-                      "AirDry": [
-                        0.14,
-                        0.14,
-                        0.15,
-                        0.16,
-                        0.16,
-                        0.21,
-                        0.28,
-                        0.28
-                      ],
                       "Name": "Soil",
                       "Children": [
                         {
@@ -76169,14 +74727,6 @@
                             300.0,
                             300.0,
                             300.0
-                          ],
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150"
                           ],
                           "OC": [
                             2.0,
