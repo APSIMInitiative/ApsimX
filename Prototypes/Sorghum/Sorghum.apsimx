@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 57,
+  "Version": 58,
   "Name": "Simulations",
   "Children": [
     {
@@ -66,83 +66,6 @@
       "Name": "Replacements",
       "Children": [
         {
-          "$type": "Models.Report.Report, Models",
-          "VariableNames": [
-            "[Sorghum].Phenology.DaysAfterSowing as Das",
-            "[Sorghum].Phenology.CurrentStageName as Stage",
-            "[Sorghum].TotalLive.Wt as BiomassWt",
-            "[Sorghum].Grain.Size * 1000 as GrainSize // FIXME!",
-            "[Sorghum].Grain.NumberFunction as GrainNoFunc",
-            "[Sorghum].Grain.Number as GrainNo",
-            "[Sorghum].Leaf.LAI as LAI",
-            "[Sorghum].Root.Live.Wt as RootGreenWt",
-            "[Sorghum].Leaf.Live.Wt as LeafGreenWt",
-            "[Sorghum].Stem.Live.Wt as StemGreenWt",
-            "[Sorghum].Rachis.Live.Wt as RachisGreenWt",
-            "[Sorghum].Grain.Live.Wt as GrainGreenWt",
-            "[Sorghum].Total.N as BiomassN",
-            "[Sorghum].TotalLive.N as biomass_n",
-            "[Sorghum].Root.Live.N as RootGreenN",
-            "[Sorghum].Leaf.Live.N as LeafGreenN",
-            "[Sorghum].Stem.Live.N as StemGreenN",
-            "[Sorghum].Rachis.Live.N as RachisGreenN",
-            "[Sorghum].Grain.Live.N as GrainGreenN",
-            "[Sorghum].Grain.Live.NConc as GrainGreenNConc",
-            "//[Sorghum].Leaf.Number as LeafNo",
-            "sum([Soil].SoilWater.ESW) as ESW",
-            "sum([Soil].SoilNitrogen.NO3.kgha) as NO3",
-            "[Sorghum].Leaf.SLN as SLN",
-            "sum([Soil].SoilWater.SW) as sw",
-            "// HI",
-            "",
-            "[Sorghum].Leaf.LAI / [Sorghum].Population * 10000 as GPLA",
-            "[Sorghum].Leaf.LAIDead / [Sorghum].Population * 10000 as SPLA",
-            "([Sorghum].Leaf.LAIDead / [Sorghum].Population + [Sorghum].Leaf.LAI / [Sorghum].Population) * 10000 as TPLA // gpla + spla as per old apsim. this assumes paddock area = 1ha",
-            "//[Sorghum].Leaf.LAITotal as TPLA // ??",
-            "[Sorghum].Leaf.LAIDead as SPLA",
-            "// Yield",
-            "[Sorghum].AboveGround.Wt // g/m2 - Biomass (kg/ha) in old Apsim",
-            "",
-            "// Variables in old apsim:",
-            "//",
-            "//DaysAfterSowing as Das",
-            "//Stage",
-            "//GrainSize",
-            "//GrainNo",
-            "//MaxLAI as LaiAnth",
-            "//RootGreenWt",
-            "//LeafGreenWt",
-            "//StemGreenWt",
-            "//RachisGreenWt",
-            "//GrainGreenWt",
-            "//biomass_n",
-            "//RootGreenN",
-            "//LeafGreenN",
-            "//StemGreenN",
-            "//RachisGreenN",
-            "//GrainGreenN",
-            "//GrainGreenNConc",
-            "//LeafNo",
-            "//ESW",
-            "//no3() as NO3",
-            "//SLN",
-            "//sw()",
-            "//HI",
-            "//TPLA",
-            "//SPLA",
-            "//Yield",
-            "//Biomass"
-          ],
-          "EventNames": [
-            "[Sorghum].Harvesting"
-          ],
-          "Name": "outputfile",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
           "$type": "Models.PMF.Plant, Models",
           "CropType": "Sorghum",
           "IsEnding": false,
@@ -161,6 +84,7 @@
             },
             {
               "$type": "Models.PMF.SorghumArbitrator, Models",
+              "DltTT": 0.0,
               "WatSupply": 0.0,
               "NMassFlowSupply": 0.0,
               "NDiffusionSupply": 0.0,
@@ -1199,9 +1123,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 17.101,
-                  "Units": null,
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].FinalLeafNo",
                   "Name": "FinalLeafNo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1450,6 +1373,31 @@
                         1.0
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "StartGrainFill",
+                  "EndStageName": "Maturity",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 0.0,
+                  "FractionRemovedOnHarvest": 0.0,
+                  "FractionRemovedOnGraze": 0.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "TTFMSgfToMaturity",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].CurrentPhase.ProgressionForTimeStep",
+                      "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1833,11 +1781,11 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "DivideFunction",
+                              "Name": "gfFract",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].TTGrainFillToMaturity",
+                                  "VariableName": "[Phenology].TTFMSgfToMaturity",
                                   "Name": "TTGrainFillToMaturity",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1845,10 +1793,28 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].TTStartGrainToNow",
-                                  "Name": "TTStartGrainToNow",
-                                  "Children": [],
+                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "Name": "TTTargetSgfToNow",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].GrainFilling.Target",
+                                      "Name": "GrainFilling",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].Maturing.Target",
+                                      "Name": "Maturity",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -2136,26 +2102,10 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "StartGrainFill",
-                  "EndStageName": "Maturity",
-                  "ResetStageName": null,
-                  "FractionRemovedOnCut": 0.0,
-                  "FractionRemovedOnHarvest": 0.0,
-                  "FractionRemovedOnGraze": 0.0,
-                  "FractionRemovedOnPrune": 0.0,
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].TTFMSgfToMaturity",
                   "Name": "TTStartGrainToNow",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -4044,12 +3994,21 @@
               "$type": "Models.PMF.Organs.SorghumLeaf, Models",
               "Culms": [],
               "StartLive": null,
+              "Albedo": 0.0,
+              "Gsmax350": 0.0,
+              "R50": 0.0,
+              "BaseHeight": 0.0,
+              "Width": 0.0,
+              "FRGR": 0.0,
+              "PotentialEP": 0.0,
+              "LightProfile": null,
               "DltLAI": 0.0,
               "dltPotentialLAI": 0.0,
               "dltStressedLAI": 0.0,
               "LAI": 0.0,
               "SLN": 0.0,
               "CoverGreen": 0.0,
+              "CoverDead": 0.0,
               "Height": 0.0,
               "WaterDemand": 0.0,
               "MicroClimatePresent": false,
@@ -4061,6 +4020,7 @@
               "NitrogenPhotoStress": 0.0,
               "NitrogenPhenoStress": 0.0,
               "PhosphorusStress": 1.0,
+              "FinalLeafNo": 0.0,
               "senRadnCrit": 0.0,
               "senLightTimeConst": 10.0,
               "frostKill": 1.0,
@@ -5196,7 +5156,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].DltStressedLAI",
+                                  "VariableName": "[Leaf].DltLAI",
                                   "Name": "dltLAI",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -5240,22 +5200,49 @@
                               "Name": "nRequired",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "$type": "Models.Functions.SubtractFunction, Models",
                                   "Name": "laiToday",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].LAI",
-                                      "Name": "LAI",
+                                      "$type": "Models.Memo, Models",
+                                      "Text": "laiToday = lai + dltLai - dltSlai",
+                                      "Name": "Memo",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
+                                      "$type": "Models.Functions.AddFunction, Models",
+                                      "Name": "AddFunction",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Leaf].LAI",
+                                          "Name": "LAI",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Leaf].DltLAI",
+                                          "Name": "DltLAI",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].DltLAI",
-                                      "Name": "DltLAI",
+                                      "VariableName": "[Leaf].DltSenescedLai",
+                                      "Name": "dltSlai",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
@@ -5340,7 +5327,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "```\r\nif(stage >= endJuv && stage < maturity)\r\n      dltLAI = Min(dltStressedLAI,dltDmGreen * slaMax * smm2sm);\r\n   else dltLAI = dltStressedLAI;\r\n```",
+                      "Text": "<pre>\n// dh - this is actually calculated in LeafCulms_Fixed::areaActual(void).\n// This version of the function is slightly different to Leaf::areaActual(void)\n// in that the end stage is flag, not maturity.\n\r\nif(stage >= endJuv && stage < flag)\r\n    dltLAI = Min(dltStressedLAI,dltDmGreen * slaMax * smm2sm);\r\nelse\n    dltLAI = dltStressedLAI;\r\n</pre>",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5350,7 +5337,7 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "EndJuvenile",
-                      "End": "Maturity",
+                      "End": "FlagLeaf",
                       "Name": "BetweenEndJuvenileAndMaturity",
                       "Children": [
                         {
@@ -5437,6 +5424,26 @@
                       "Start": "Emergence",
                       "End": "EndJuvenile",
                       "Name": "BetweenEmergenceAndEndJuvenile",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].dltStressedLAI",
+                          "Name": "DltStressedLAI",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "FlagLeaf",
+                      "End": "HarvestRipe",
+                      "Name": "AllOtherTimes",
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
@@ -5579,7 +5586,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "Leaf.Live.Wt",
+                                  "VariableName": "[Leaf].Live.Wt",
                                   "Name": "LiveWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -5588,9 +5595,19 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Plant].SowingData.Density",
+                                  "VariableName": "[Sorghum].SowingData.Population",
                                   "Name": "Density",
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Memo, Models",
+                                      "Text": "This assumes paddock area is 1ha...",
+                                      "Name": "Memo",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -5635,6 +5652,85 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "StomatalConductanceCO2Modifier1",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 10.0,
+                  "Units": null,
+                  "Name": "minLeafNo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 40.0,
+                  "Units": null,
+                  "Name": "maxLeafNo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].TTEmergToFloralInit.Value()",
+                  "Name": "TTEmergToFI",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 21.6,
+                  "Units": "oCd",
+                  "Name": "leafInitRate",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Degree days to initiate each leaf primordium until floral init (deg day)",
+                      "Name": "Description",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 4.0,
+                  "Units": null,
+                  "Name": "seedNo",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Number of leaf primordia present in seed",
+                      "Name": "Description",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -5691,7 +5787,7 @@
                 },
                 {
                   "$type": "Models.PMF.RetranslocateAvailableN, Models",
-                  "Name": "RetranslocateAvailableN",
+                  "Name": "RetranslocateNitrogen",
                   "Children": [
                     {
                       "$type": "Models.Functions.MaximumFunction, Models",
@@ -6726,14 +6822,6 @@
                   "Start": "Emergence",
                   "End": "StartGrainFill",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
-                  "Name": "RetranslocateNitrogen",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -8298,9 +8386,9 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
-                  "Start": "Emergence",
-                  "End": "StartGrainFill",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
                   "Name": "NitrogenDemandSwitch",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8588,6 +8676,83 @@
               "ReadOnly": false
             }
           ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report.Report, Models",
+          "VariableNames": [
+            "[Sorghum].Phenology.DaysAfterSowing as Das",
+            "[Sorghum].Phenology.CurrentStageName as Stage",
+            "[Sorghum].TotalLive.Wt as BiomassWt",
+            "[Sorghum].Grain.Size * 1000 as GrainSize // FIXME!",
+            "[Sorghum].Grain.NumberFunction as GrainNoFunc",
+            "[Sorghum].Grain.Number as GrainNo",
+            "[Sorghum].Leaf.LAI as LAI",
+            "[Sorghum].Root.Live.Wt as RootGreenWt",
+            "[Sorghum].Leaf.Live.Wt as LeafGreenWt",
+            "[Sorghum].Stem.Live.Wt as StemGreenWt",
+            "[Sorghum].Rachis.Live.Wt as RachisGreenWt",
+            "[Sorghum].Grain.Live.Wt as GrainGreenWt",
+            "[Sorghum].Total.N as BiomassN",
+            "[Sorghum].TotalLive.N as biomass_n",
+            "[Sorghum].Root.Live.N as RootGreenN",
+            "[Sorghum].Leaf.Live.N as LeafGreenN",
+            "[Sorghum].Stem.Live.N as StemGreenN",
+            "[Sorghum].Rachis.Live.N as RachisGreenN",
+            "[Sorghum].Grain.Live.N as GrainGreenN",
+            "[Sorghum].Grain.Live.NConc as GrainGreenNConc",
+            "//[Sorghum].Leaf.Number as LeafNo",
+            "sum([Soil].SoilWater.ESW) as ESW",
+            "sum([Soil].SoilNitrogen.NO3.kgha) as NO3",
+            "[Sorghum].Leaf.SLN as SLN",
+            "sum([Soil].SoilWater.SW) as sw",
+            "// HI",
+            "",
+            "[Sorghum].Leaf.LAI / [Sorghum].Population * 10000 as GPLA",
+            "[Sorghum].Leaf.LAIDead / [Sorghum].Population * 10000 as SPLA",
+            "([Sorghum].Leaf.LAIDead / [Sorghum].Population + [Sorghum].Leaf.LAI / [Sorghum].Population) * 10000 as TPLA // gpla + spla as per old apsim. this assumes paddock area = 1ha",
+            "//[Sorghum].Leaf.LAITotal as TPLA // ??",
+            "[Sorghum].Leaf.LAIDead as SPLA",
+            "// Yield",
+            "[Sorghum].AboveGround.Wt // g/m2 - Biomass (kg/ha) in old Apsim",
+            "",
+            "// Variables in old apsim:",
+            "//",
+            "//DaysAfterSowing as Das",
+            "//Stage",
+            "//GrainSize",
+            "//GrainNo",
+            "//MaxLAI as LaiAnth",
+            "//RootGreenWt",
+            "//LeafGreenWt",
+            "//StemGreenWt",
+            "//RachisGreenWt",
+            "//GrainGreenWt",
+            "//biomass_n",
+            "//RootGreenN",
+            "//LeafGreenN",
+            "//StemGreenN",
+            "//RachisGreenN",
+            "//GrainGreenN",
+            "//GrainGreenNConc",
+            "//LeafNo",
+            "//ESW",
+            "//no3() as NO3",
+            "//SLN",
+            "//sw()",
+            "//HI",
+            "//TPLA",
+            "//SPLA",
+            "//Yield",
+            "//Biomass"
+          ],
+          "EventNames": [
+            "[Sorghum].Harvesting"
+          ],
+          "Name": "outputfile",
+          "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -9207,8 +9372,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE1_T1",
                       "Children": [
                         {
@@ -9423,7 +9586,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -9441,6 +9603,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -10107,8 +10281,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE1_T2",
                       "Children": [
                         {
@@ -10349,7 +10521,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -10367,6 +10538,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -10964,8 +11147,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE1_T3",
                       "Children": [
                         {
@@ -11176,7 +11357,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -11194,6 +11374,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -11831,8 +12023,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE2_T1",
                       "Children": [
                         {
@@ -12035,7 +12225,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -12053,6 +12242,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -12703,8 +12904,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE2_T2",
                       "Children": [
                         {
@@ -12847,7 +13046,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -12865,6 +13063,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -13476,8 +13686,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE2_T3",
                       "Children": [
                         {
@@ -13620,7 +13828,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -13638,6 +13845,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -14259,8 +14478,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE3_T1",
                       "Children": [
                         {
@@ -14433,7 +14650,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -14451,6 +14667,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.32,
+                                0.32,
+                                0.32,
+                                0.33
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -15085,8 +15313,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE3_T2",
                       "Children": [
                         {
@@ -15271,7 +15497,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -15289,6 +15514,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.32,
+                                0.32,
+                                0.32,
+                                0.33
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -15884,8 +16121,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE3_T3",
                       "Children": [
                         {
@@ -16070,7 +16305,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -16088,6 +16322,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.32,
+                                0.32,
+                                0.32,
+                                0.33
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -16693,8 +16939,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE4_T1",
                       "Children": [
                         {
@@ -16867,7 +17111,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -16885,6 +17128,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -17487,8 +17742,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE4_T2",
                       "Children": [
                         {
@@ -17673,7 +17926,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -17691,6 +17943,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -18254,8 +18518,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE4_T3",
                       "Children": [
                         {
@@ -18440,7 +18702,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -18458,6 +18719,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -19031,8 +19304,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE5_T1",
                       "Children": [
                         {
@@ -19247,7 +19518,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -19265,6 +19535,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -19899,8 +20181,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE5_T2",
                       "Children": [
                         {
@@ -20127,7 +20407,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -20145,6 +20424,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -20740,8 +21031,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE5_T3",
                       "Children": [
                         {
@@ -20974,7 +21263,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -20992,6 +21280,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -21597,8 +21897,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE6_T1",
                       "Children": [
                         {
@@ -21785,7 +22083,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -21803,6 +22100,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -22453,8 +22762,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE6_T3",
                       "Children": [
                         {
@@ -22653,7 +22960,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -22671,6 +22977,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.25,
+                                0.28,
+                                0.3,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -23292,8 +23610,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE7_T1",
                       "Children": [
                         {
@@ -23426,7 +23742,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -23444,6 +23759,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.32,
+                                0.32,
+                                0.32,
+                                0.33
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -24094,8 +24421,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE7_T2",
                       "Children": [
                         {
@@ -24246,7 +24571,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -24264,6 +24588,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.32,
+                                0.32,
+                                0.32,
+                                0.33
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -24875,8 +25211,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE7_T3",
                       "Children": [
                         {
@@ -25027,7 +25361,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -25045,6 +25378,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.32,
+                                0.32,
+                                0.32,
+                                0.33
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -25666,8 +26011,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE8_T1",
                       "Children": [
                         {
@@ -25800,7 +26143,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -25818,6 +26160,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.32,
+                                0.32,
+                                0.32,
+                                0.33
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -26468,8 +26822,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE8_T2",
                       "Children": [
                         {
@@ -26620,7 +26972,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -26638,6 +26989,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.32,
+                                0.32,
+                                0.32,
+                                0.33
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -27249,8 +27612,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_HE8_T3",
                       "Children": [
                         {
@@ -27401,7 +27762,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -27419,6 +27779,18 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.08,
+                                0.19,
+                                0.23,
+                                0.26,
+                                0.26,
+                                0.28,
+                                0.32,
+                                0.32,
+                                0.32,
+                                0.33
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -28060,8 +28432,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T1",
                       "Children": [
                         {
@@ -28230,7 +28600,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -28248,6 +28617,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -28973,8 +29357,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T2",
                       "Children": [
                         {
@@ -29143,7 +29525,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -29161,6 +29542,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -29859,8 +30255,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T3",
                       "Children": [
                         {
@@ -30029,7 +30423,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -30047,6 +30440,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -30745,8 +31153,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T4",
                       "Children": [
                         {
@@ -30915,7 +31321,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -30933,6 +31338,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -31631,8 +32051,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T5",
                       "Children": [
                         {
@@ -31759,7 +32177,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -31777,6 +32194,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -32475,8 +32907,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T6",
                       "Children": [
                         {
@@ -32603,7 +33033,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -32621,6 +33050,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -33319,8 +33763,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T7",
                       "Children": [
                         {
@@ -33447,7 +33889,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -33465,6 +33906,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -34163,8 +34619,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T8",
                       "Children": [
                         {
@@ -34291,7 +34745,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -34309,6 +34762,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -35007,8 +35475,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T9",
                       "Children": [
                         {
@@ -35123,7 +35589,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -35141,6 +35606,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -35839,8 +36319,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T10",
                       "Children": [
                         {
@@ -35955,7 +36433,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -35973,6 +36450,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -36671,8 +37163,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T11",
                       "Children": [
                         {
@@ -36787,7 +37277,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -36805,6 +37294,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -37503,8 +38007,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW5_GxE_T12",
                       "Children": [
                         {
@@ -37619,7 +38121,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -37637,6 +38138,21 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.21,
+                                0.23,
+                                0.23,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.21,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22,
+                                0.22
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -38345,8 +38861,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T1",
                       "Children": [
                         {
@@ -38550,7 +39064,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -38568,6 +39081,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -39168,8 +39694,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T2",
                       "Children": [
                         {
@@ -39332,7 +39856,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -39350,6 +39873,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -39964,8 +40500,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T3",
                       "Children": [
                         {
@@ -40128,7 +40662,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -40146,6 +40679,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -40760,8 +41306,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T4",
                       "Children": [
                         {
@@ -40924,7 +41468,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -40942,6 +41485,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -41556,8 +42112,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T5",
                       "Children": [
                         {
@@ -41678,7 +42232,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -41696,6 +42249,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -42310,8 +42876,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T6",
                       "Children": [
                         {
@@ -42441,7 +43005,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -42459,6 +43022,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -43073,8 +43649,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T7",
                       "Children": [
                         {
@@ -43195,7 +43769,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -43213,6 +43786,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -43827,8 +44413,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T8",
                       "Children": [
                         {
@@ -43949,7 +44533,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -43967,6 +44550,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -44581,8 +45177,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T9",
                       "Children": [
                         {
@@ -44697,7 +45291,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -44715,6 +45308,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -45329,8 +45935,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T10",
                       "Children": [
                         {
@@ -45445,7 +46049,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -45463,6 +46066,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -46077,8 +46693,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T11",
                       "Children": [
                         {
@@ -46193,7 +46807,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -46211,6 +46824,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -46825,8 +47451,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_BW8_GxE_T12",
                       "Children": [
                         {
@@ -46941,7 +47565,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -46959,6 +47582,19 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.12,
+                                0.15,
+                                0.15,
+                                0.1,
+                                0.11,
+                                0.13,
+                                0.09,
+                                0.08,
+                                0.09,
+                                0.09,
+                                0.09
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -47603,8 +48239,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE13_Buster-I-N",
                       "Children": [
                         {
@@ -47744,7 +48378,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -47762,6 +48395,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -48348,8 +48990,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE13_Buster-I+N",
                       "Children": [
                         {
@@ -48448,7 +49088,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -48466,6 +49105,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -49058,8 +49706,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE13_Buster+I+N",
                       "Children": [
                         {
@@ -49158,7 +49804,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -49176,6 +49821,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -49812,8 +50466,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE13_M35-1-I-N",
                       "Children": [
                         {
@@ -49912,7 +50564,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -49930,6 +50581,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -50530,8 +51190,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE13_M35-1-I+N",
                       "Children": [
                         {
@@ -50630,7 +51288,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -50648,6 +51305,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -51266,8 +51932,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE13_M35-1+I+N",
                       "Children": [
                         {
@@ -51366,7 +52030,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -51384,6 +52047,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -52030,8 +52702,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE14_Buster",
                       "Children": [
                         {
@@ -52171,7 +52841,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -52189,6 +52858,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -52763,8 +53441,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE14_M35-1",
                       "Children": [
                         {
@@ -52863,7 +53539,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -52881,6 +53556,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -53455,8 +54139,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE14_QL41xQL36",
                       "Children": [
                         {
@@ -53555,7 +54237,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -53573,6 +54254,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -54171,8 +54861,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE15_Buster",
                       "Children": [
                         {
@@ -54271,7 +54959,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -54289,6 +54976,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -55018,8 +55714,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE15_M35-1",
                       "Children": [
                         {
@@ -55118,7 +55812,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -55136,6 +55829,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -55824,8 +56526,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE15_QL41xQL36",
                       "Children": [
                         {
@@ -55933,7 +56633,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -55951,6 +56650,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -56663,8 +57371,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE17_T1",
                       "Children": [
                         {
@@ -56763,7 +57469,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -56781,6 +57486,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -57444,8 +58158,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE17_T2",
                       "Children": [
                         {
@@ -57544,7 +58256,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -57562,6 +58273,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -58184,8 +58904,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE17_T3",
                       "Children": [
                         {
@@ -58284,7 +59002,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -58302,6 +59019,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -58948,8 +59674,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE19_T1",
                       "Children": [
                         {
@@ -59048,7 +59772,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -59066,6 +59789,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -59624,8 +60356,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE19_T2",
                       "Children": [
                         {
@@ -59724,7 +60454,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -59742,6 +60471,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -60306,8 +61044,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE19_T3",
                       "Children": [
                         {
@@ -60406,7 +61142,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -60424,6 +61159,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -61000,8 +61744,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE19_T4",
                       "Children": [
                         {
@@ -61100,7 +61842,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -61118,6 +61859,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -61694,8 +62444,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE19_T5",
                       "Children": [
                         {
@@ -61794,7 +62542,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -61812,6 +62559,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -62355,8 +63111,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE19_T6",
                       "Children": [
                         {
@@ -62455,7 +63209,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -62473,6 +63226,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -63037,8 +63799,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE19_T7",
                       "Children": [
                         {
@@ -63137,7 +63897,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -63155,6 +63914,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -63731,8 +64499,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_LE19_T8",
                       "Children": [
                         {
@@ -63831,7 +64597,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -63849,6 +64614,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.28,
+                                0.28,
+                                0.28,
+                                0.3,
+                                0.3
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -64457,8 +65231,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
-                          "Services": [],
                           "Name": "Sorghum_LE19_Base",
                           "Children": [
                             {
@@ -64557,7 +65329,6 @@
                                 },
                                 {
                                   "$type": "Models.Soils.Soil, Models",
-                                  "Weirdo": null,
                                   "RecordNumber": 0,
                                   "ASCOrder": null,
                                   "ASCSubOrder": null,
@@ -64575,6 +65346,15 @@
                                   "LocationAccuracy": null,
                                   "DataSource": null,
                                   "Comments": null,
+                                  "AirDry": [
+                                    0.1,
+                                    0.15,
+                                    0.28,
+                                    0.28,
+                                    0.28,
+                                    0.3,
+                                    0.3
+                                  ],
                                   "Name": "Soil",
                                   "Children": [
                                     {
@@ -65148,8 +65928,6 @@
                   "Children": [
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_Gatton_RUE_1",
                       "Children": [
                         {
@@ -65248,7 +66026,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -65266,6 +66043,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.25,
+                                0.26,
+                                0.25,
+                                0.28,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -65897,8 +66683,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_Gatton_RUE_2",
                       "Children": [
                         {
@@ -65997,7 +66781,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -66015,6 +66798,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.25,
+                                0.26,
+                                0.25,
+                                0.28,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -66619,8 +67411,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_Gatton_RUE_3",
                       "Children": [
                         {
@@ -66719,7 +67509,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -66737,6 +67526,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.25,
+                                0.26,
+                                0.25,
+                                0.28,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -67341,8 +68139,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_Gatton_RUE_4",
                       "Children": [
                         {
@@ -67441,7 +68237,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -67459,6 +68254,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.25,
+                                0.26,
+                                0.25,
+                                0.28,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -68069,8 +68873,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_Gatton_RUE_5",
                       "Children": [
                         {
@@ -68169,7 +68971,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -68187,6 +68988,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.25,
+                                0.26,
+                                0.25,
+                                0.28,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -68725,8 +69535,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_Gatton_RUE_6",
                       "Children": [
                         {
@@ -68825,7 +69633,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -68843,6 +69650,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.25,
+                                0.26,
+                                0.25,
+                                0.28,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -69453,8 +70269,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_Gatton_RUE_7",
                       "Children": [
                         {
@@ -69553,7 +70367,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -69571,6 +70384,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.25,
+                                0.26,
+                                0.25,
+                                0.28,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -70193,8 +71015,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_Gatton_RUE_8",
                       "Children": [
                         {
@@ -70293,7 +71113,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -70311,6 +71130,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.25,
+                                0.26,
+                                0.25,
+                                0.28,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -70849,8 +71677,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
-                      "Services": [],
                       "Name": "Sorghum_Gatton_RUE_9",
                       "Children": [
                         {
@@ -70949,7 +71775,6 @@
                             },
                             {
                               "$type": "Models.Soils.Soil, Models",
-                              "Weirdo": null,
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
@@ -70967,6 +71792,15 @@
                               "LocationAccuracy": null,
                               "DataSource": null,
                               "Comments": null,
+                              "AirDry": [
+                                0.1,
+                                0.15,
+                                0.25,
+                                0.26,
+                                0.25,
+                                0.28,
+                                0.31
+                              ],
                               "Name": "Soil",
                               "Children": [
                                 {
@@ -71680,8 +72514,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
-                  "Services": [],
                   "Name": "CO2TEBaseSimulation",
                   "Children": [
                     {
@@ -71886,7 +72718,6 @@
                         },
                         {
                           "$type": "Models.Soils.Soil, Models",
-                          "Weirdo": null,
                           "RecordNumber": 0,
                           "ASCOrder": null,
                           "ASCSubOrder": null,
@@ -71904,6 +72735,18 @@
                           "LocationAccuracy": null,
                           "DataSource": null,
                           "Comments": null,
+                          "AirDry": [
+                            0.08,
+                            0.19,
+                            0.23,
+                            0.26,
+                            0.26,
+                            0.28,
+                            0.25,
+                            0.28,
+                            0.3,
+                            0.31
+                          ],
                           "Name": "Soil",
                           "Children": [
                             {
@@ -72582,8 +73425,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
-              "Services": [],
               "Name": "Bugesera",
               "Children": [
                 {
@@ -72853,7 +73694,6 @@
                     },
                     {
                       "$type": "Models.Soils.Soil, Models",
-                      "Weirdo": null,
                       "RecordNumber": 0,
                       "ASCOrder": null,
                       "ASCSubOrder": null,
@@ -72871,6 +73711,18 @@
                       "LocationAccuracy": null,
                       "DataSource": null,
                       "Comments": null,
+                      "AirDry": [
+                        0.08,
+                        0.19,
+                        0.23,
+                        0.26,
+                        0.26,
+                        0.28,
+                        0.25,
+                        0.28,
+                        0.3,
+                        0.31
+                      ],
                       "Name": "Soil",
                       "Children": [
                         {
@@ -73646,8 +74498,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
-              "Services": [],
               "Name": "SensibilityBase",
               "Children": [
                 {
@@ -73697,7 +74547,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Soil, Models",
-                      "Weirdo": null,
                       "RecordNumber": 0,
                       "ASCOrder": null,
                       "ASCSubOrder": null,
@@ -73715,6 +74564,16 @@
                       "LocationAccuracy": null,
                       "DataSource": null,
                       "Comments": null,
+                      "AirDry": [
+                        0.14,
+                        0.14,
+                        0.15,
+                        0.16,
+                        0.16,
+                        0.21,
+                        0.28,
+                        0.28
+                      ],
                       "Name": "Soil",
                       "Children": [
                         {

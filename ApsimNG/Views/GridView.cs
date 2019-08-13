@@ -152,6 +152,15 @@
         private ScrolledWindow scrollingWindow = null;
 
         /// <summary>
+        /// For reasons I don't fully understand, combo boxes on the grid don't always work
+        /// as intended on Linux and OS X. We begin editing on a mouse press, but on those 
+        /// platforms, the subsequent mouse release sometimes triggers the end of editing.
+        /// This hack causes editing of the combo box to begin on a mouse release, rather
+        /// than a mouse press, as a clumsy way to avoid the problem.
+        /// </summary>
+        private bool comboEditHack = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
         /// <param name="owner">The owning view.</param>
@@ -173,6 +182,7 @@
             AddContextActionWithAccel("Cut", OnCut, "Ctrl+X");
             AddContextActionWithAccel("Delete", OnDelete, "Delete");
             Grid.ButtonPressEvent += OnButtonDown;
+            Grid.ButtonReleaseEvent += OnButtonUp;
             Grid.Selection.Mode = SelectionMode.None;
             Grid.CursorChanged += OnMoveCursor;
             fixedColView.ButtonPressEvent += OnButtonDown;
@@ -633,7 +643,7 @@
                 menuItemText = itemName;
             CheckMenuItem item = new CheckMenuItem(menuItemText);
             item.Name = itemName;
-            item.DrawAsRadio = true;
+            item.DrawAsRadio = false;
             item.Active = active;
             item.Activated += onClick;
             popupMenu.Append(item);
@@ -845,6 +855,7 @@
                 fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
             }
             Grid.ButtonPressEvent -= OnButtonDown;
+            Grid.ButtonReleaseEvent -= OnButtonUp;
             fixedColView.ButtonPressEvent -= OnButtonDown;
             Grid.FocusInEvent -= FocusInEvent;
             Grid.FocusOutEvent -= FocusOutEvent;
@@ -1595,7 +1606,7 @@
                     args.Column = GetColumn(columnNumber);
                     args.RightClick = true;
                     args.OnHeader = true;
-                    GridColumnClicked.Invoke(this, args);
+                    GridColumnClicked?.Invoke(this, args);
                     if (popupMenu.Children.Length > 4)  // Show only if there is more that the three standard items plus separator
                        popupMenu.Popup();
                 }
@@ -2316,6 +2327,24 @@
             }
         }
 
+        [GLib.ConnectBefore]
+        private void OnButtonUp(object sender, ButtonReleaseEventArgs e)
+        {
+            try
+            {
+                if (comboEditHack)
+                {
+                    comboEditHack = false;
+                    EditSelectedCell();
+                    e.RetVal = true;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         /// <summary>
         /// This prevents the selection changing when the right mouse button is pressed.
         /// Normally, all we want is to display the popup menu, not change the selection.
@@ -2351,13 +2380,16 @@
                                 // If the user has clicked on a selected cell, or if they have double clicked on any cell, we start editing the cell.
                                 if (!userEditingCell && ((newlySelectedRowIndex == selectedCellRowIndex && newlySelectedColumnIndex == selectedCellColumnIndex) || e.Event.Type == Gdk.EventType.TwoButtonPress))
                                 {
-                                    EditSelectedCell();
+                                    comboEditHack = GetCurrentCell.EditorType == EditorTypeEnum.DropDown;
+                                    if (!comboEditHack)
+                                        EditSelectedCell();
                                     e.RetVal = true;
                                 }
                                 else
                                 {
                                     selectedCellColumnIndex = newlySelectedColumnIndex;
                                     selectedCellRowIndex = newlySelectedRowIndex;
+                                    userEditingCell = false; 
                                 }
                             }
                         }

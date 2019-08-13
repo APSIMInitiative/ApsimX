@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Linq;
+using Models.Soils.Standardiser;
 
 namespace Models.Soils
 {
@@ -2363,8 +2364,8 @@ namespace Models.Soils
                 SwimSoluteParameters soluteParam = Apsim.Get(this, solute_names[i],true) as SwimSoluteParameters;
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
-                fip[i] = soil.Map(soluteParam.FIP, soluteParam.Thickness,soil.Thickness, Soil.MapType.Concentration);
-                exco[i] = soil.Map(soluteParam.Exco, soluteParam.Thickness, soil.Thickness, Soil.MapType.Concentration);
+                fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness,soil.Thickness, double.NaN);
+                exco[i] = Layers.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soil.Thickness, double.NaN);
                 cslgw[i] = soluteParam.WaterTableConcentration;
                 d0[i] = soluteParam.D0;
             }

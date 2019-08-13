@@ -79,6 +79,8 @@
         public event EventHandler DoUpdateWaterDemand;
         /// <summary>Occurs when [do water arbitration].</summary>
         public event EventHandler DoWaterArbitration;                                  //Arbitrator
+        /// <summary>Occurs between DoWaterArbitration and DoPhenology. Performs sorghum final leaf no calcs.</summary>
+        public event EventHandler PrePhenology;
         /// <summary>Occurs when [do phenology].</summary>                             
         public event EventHandler DoPhenology;                                         // Plant 
         /// <summary>Occurs when [do potential plant growth].</summary>
@@ -261,6 +263,9 @@
 
                     if (DoWaterArbitration != null)
                         DoWaterArbitration.Invoke(this, args);
+
+                    if (PrePhenology != null)
+                        PrePhenology.Invoke(this, args);
 
                     if (DoPhenology != null)
                         DoPhenology.Invoke(this, args);

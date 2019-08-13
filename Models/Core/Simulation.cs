@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
+using Models.Storage;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,7 @@ namespace Models.Core
                 return Apsim.Children(this, typeof(Zone)).Sum(z => (z as Zone).Area);
             }
         }
+
 
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
@@ -209,7 +211,15 @@ namespace Models.Core
             // Remove disabled models.
             RemoveDisabledModels(this);
 
-            var links = new Links();
+            if (Services == null || Services.Count < 1)
+            {
+                Services = new List<object>();
+                IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                if (storage != null)
+                    Services.Add(Apsim.Find(this, typeof(IDataStore)));
+            }
+
+            var links = new Links(Services);
             var events = new Events(this);
 
             try
