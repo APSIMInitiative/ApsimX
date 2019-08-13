@@ -320,7 +320,7 @@
         /// <param name="toThickness">To thickness.</param>
         /// <param name="soil">The soil.</param>
         /// <returns></returns>
-        private static double[] MapSW(double[] fromValues, double[] fromThickness, double[] toThickness, Soil soil)
+        public static double[] MapSW(double[] fromValues, double[] fromThickness, double[] toThickness, Soil soil)
         {
             if (fromValues == null || fromThickness == null)
                 return null;

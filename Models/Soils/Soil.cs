@@ -294,9 +294,9 @@
                         if (MathUtilities.ValuesInArray(Sample.SW))
                         {
                             if (waterNode != null)
-                                return SWMapped(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness);
+                                return Layers.MapSW(Sample.SWVolumetric, Sample.Thickness, waterNode.Thickness, this);
                             else
-                                return Map(Sample.SWVolumetric, Sample.Thickness, Weirdo.Thickness);
+                                return Layers.MapSW(Sample.SWVolumetric, Sample.Thickness, Weirdo.Thickness, this);
                         }
                     }
                 }
