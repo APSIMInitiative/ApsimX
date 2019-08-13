@@ -144,7 +144,7 @@ namespace Models.PMF.OilPalm
         public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The soil crop</summary>
-        private SoilCropOilPalm soilCrop;
+        private SoilCrop soilCrop;
         /// <summary>The cultivar definition</summary>
         private Cultivar cultivarDefinition;
 
@@ -724,7 +724,7 @@ namespace Models.PMF.OilPalm
             Bunches = new List<BunchType>();
             Roots = new List<RootType>();
 
-            soilCrop = Soil.Crop(Name) as SoilCropOilPalm; 
+            soilCrop = Soil.Crop(Name) as SoilCrop; 
             
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.Thickness.Length];

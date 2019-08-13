@@ -25,6 +25,7 @@ namespace UserInterface.Presenters
     using System.Linq;
     using System.Text;
     using Models.Functions;
+    using Models.Soils.Standardiser;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -329,7 +330,8 @@ namespace UserInterface.Presenters
             Soil currentSoil = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Soil;
             if (currentSoil != null)
             {
-                string errorMessages = currentSoil.Check(false);
+
+                string errorMessages = SoilChecker.Check(currentSoil);
                 if (!string.IsNullOrEmpty(errorMessages))
                     explorerPresenter.MainPresenter.ShowError(errorMessages);
                 else

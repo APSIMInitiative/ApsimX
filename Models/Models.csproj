@@ -253,8 +253,10 @@
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
+    <Compile Include="Soils\NitrogenValue.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
+    <Compile Include="Soils\Standardiser\SoilChecker.cs" />
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
     <Compile Include="Soils\Standardiser\SoilStandardiser.cs" />
@@ -448,7 +450,6 @@
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\MultiPoreWater\HydraulicProperties.cs" />
-    <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
     <Compile Include="Soils\Nutrients\Solute.cs" />
     <Compile Include="Soils\OutputLayers.cs" />
@@ -458,7 +459,6 @@
     <Compile Include="Soils\MultiPoreWater\HourlyData.cs" />
     <Compile Include="Soils\MultiPoreWater\WEIRDO.cs" />
     <Compile Include="Soils\MultiPoreWater\Pore.cs" />
-    <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatch.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatch.Processes.cs" />
@@ -732,6 +732,7 @@
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
     <None Include="Resources\FodderBeet.json" />
+    <EmbeddedResource Include="Resources\Nutrient.json" />
     <None Include="Resources\Oats1.json" />
     <None Include="Resources\Potato.json" />
     <None Include="Resources\Potato1.json" />

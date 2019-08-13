@@ -1,9 +1,9 @@
-﻿using System;
-using Gtk;
-using UserInterface.Interfaces;
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
+    using System;
+    using Gtk;
+    using Interfaces;
+
     interface IProfileView
     {
         /// <summary>
@@ -14,7 +14,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Allow direct access to the profile grid.
         /// </summary>
-        IGridView ProfileGrid { get; }
+        IFormattedGridView ProfileGrid { get; }
 
         /// <summary>
         /// Allow direct access to the graph.
@@ -39,7 +39,7 @@ namespace UserInterface.Views
 
     public class ProfileView : ViewBase, IProfileView
     {
-        private GridView profileGrid;
+        private FormattedGridView profileGrid;
         private GridView propertyGrid;
         private GraphView graph;
         private VPaned vpaned1 = null;
@@ -56,7 +56,7 @@ namespace UserInterface.Views
             propertyGrid = new GridView(this);
             vbox1.PackStart(propertyGrid.MainWidget, true, true, 0);
             //vpaned1.Pack1(PropertyGrid.MainWidget, true, true);
-            profileGrid = new GridView(this);
+            profileGrid = new FormattedGridView(this);
             profileGrid.NumericFormat = "N3";
             vpaned2.Pack1(profileGrid.MainWidget, true, true);
             graph = new GraphView(this);
@@ -100,7 +100,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Allow direct access to the profile grid.
         /// </summary>
-        IGridView IProfileView.ProfileGrid
+        IFormattedGridView IProfileView.ProfileGrid
         {
             get { return profileGrid; }
         }
