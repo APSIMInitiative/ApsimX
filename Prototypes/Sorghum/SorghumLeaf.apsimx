@@ -875,7 +875,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 761.0,
                   "Units": null,
-                  "Name": "TTFIowerToMaturity",
+                  "Name": "TTFlowerToMaturity",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
