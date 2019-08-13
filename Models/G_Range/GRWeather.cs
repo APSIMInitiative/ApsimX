@@ -2,12 +2,9 @@
 
 namespace Models
 {
-    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
-    using Newtonsoft.Json;
     using System.Data;
-    using System.IO;
 
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
