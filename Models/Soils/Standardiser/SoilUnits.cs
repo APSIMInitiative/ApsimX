@@ -42,7 +42,6 @@
                     var ppm = sample.NO3N.PPM;
                     sample.NO3N.PPM = ppm;
                 }
-                sample.NO3Units = Sample.NUnitsEnum.ppm;
 
                 // Convert nh4 units to ppm.
                 if (sample.NH4N != null && !sample.NH4N.StoredAsPPM)
@@ -50,7 +49,6 @@
                     var ppm = sample.NH4N.PPM;
                     sample.NH4N.PPM = ppm;
                 }
-                sample.NH4Units = Sample.NUnitsEnum.ppm;
 
                 // Convert OC to total (%)
                 if (MathUtilities.ValuesInArray(sample.OC))
@@ -83,30 +81,6 @@
                 else
                     return MathUtilities.Divide(sample.SW, sample.Thickness); // from mm to mm/mm
             }
-        }
-
-        /// <summary>Converts n values to ppm.</summary>
-        /// <param name="n">The n values to convert.</param>
-        /// <param name="thickness">The thickness of the values..</param>
-        /// <param name="nunits">The current units of n.</param>
-        /// <param name="bd">The related bulk density.</param>
-        /// <returns>ppm values.</returns>
-        private static double[] Nppm(double[] n, double[] thickness, Sample.NUnitsEnum nunits, double[] bd)
-        {
-            if (nunits == Sample.NUnitsEnum.ppm || n == null)
-                return n;
-
-            // kg/ha to ppm
-            double[] newN = new double[n.Length];
-            for (int i = 0; i < n.Length; i++)
-            {
-                if (Double.IsNaN(n[i]))
-                    newN[i] = double.NaN;
-                else
-                    newN[i] = n[i] * 100 / (bd[i] * thickness[i]);
-            }
-
-            return newN;
         }
 
         /// <summary>Converts OC to total %</summary>
