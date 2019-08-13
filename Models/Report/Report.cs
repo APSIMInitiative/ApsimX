@@ -60,6 +60,12 @@ namespace Models.Report
         private IEvent events = null;
 
         /// <summary>
+        /// The summary file.
+        /// </summary>
+        [Link]
+        private ISummary summary = null;
+
+        /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
@@ -238,8 +244,15 @@ namespace Models.Report
 
             foreach (string fullVariableName in this.VariableNames)
             {
-                if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                try
+                {
+                    if (fullVariableName != string.Empty)
+                        this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                }
+                catch (Exception err)
+                {
+                    summary.WriteWarning(this, err.Message);
+                }
             }
         }
 
