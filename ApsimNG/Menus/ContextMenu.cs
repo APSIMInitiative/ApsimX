@@ -175,20 +175,19 @@ namespace UserInterface.Presenters
             {
                 string fileName = @"C:\Users\hol430\Documents\Sorghum\cultivars.xml";
                 Dictionary<string, string> commands = GetCommandsLookup();
-                Dictionary<string, string> defaults = GetDefaultsLookup();
 
                 XmlDocument doc = new XmlDocument();
                 doc.Load(fileName);
 
                 List<Cultivar> cultivars = new List<Cultivar>();
-                Cultivar buster = null;
+                List<Command> buster = new List<Command>();
                 IModel cultivarFolder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
                 foreach (XmlNode node in doc.FirstChild.ChildNodes)
                 {
                     string cultivarName = node.Name;
                     Cultivar cultivar = new Cultivar();
                     cultivar.Name = cultivarName;
-                    List<string> cultivarCommands = new List<string>();
+                    List<Command> cultivarCommands = new List<Command>();
                     foreach (XmlNode command in node.ChildNodes)
                     {
                         string oldCommand = command.Name;
@@ -196,84 +195,112 @@ namespace UserInterface.Presenters
 
                         if (!commands.ContainsKey(oldCommand))
                         {
-                            Console.WriteLine($"WARNING - unknown command: '{oldCommand}'.");
-                            continue;// throw new Exception($"Error - unknown command: '{oldCommand}'.");
+                            //Console.WriteLine($"WARNING - unknown command: '{oldCommand}'.");
+                            throw new Exception($"Error - unknown command '{oldCommand}' in cultivar '{cultivarName}'.");
                         }
+                        else if (commands[oldCommand] == null)
+                            continue;
 
                         if (oldCommand == "photoperiod_slope")
                         {
-                            string str0 = "[Phenology].PhotoModifier.XYPairs.X[0]";
-                            string str1 = "[Phenology].PhotoModifier.XYPairs.X[1]";
+                            string str0 = "[Phenology].PhotoModifier.XYPairs.X[1]";
+                            string str1 = "[Phenology].PhotoModifier.XYPairs.X[2]";
 
-                            string cmd0 = cultivarCommands.FirstOrDefault(c => c == str0);
-                            string cmd1 = cultivarCommands.FirstOrDefault(c => c == str1);
+                            Command cmd0 = cultivarCommands.FirstOrDefault(c => c.Name == str0);
+                            Command cmd1 = cultivarCommands.FirstOrDefault(c => c.Name == str1);
 
-                            if (string.IsNullOrWhiteSpace(cmd0))
-                                cmd0 = Apsim.Get(cultivarFolder, str0.Replace("0", "1")).ToString();
+                            if (cmd0 == null)
+                                cmd0 = new Command(str0, double.Parse(Apsim.Get(cultivarFolder, str0.Replace("0", "1")).ToString()), oldCommand);
 
-                            if (string.IsNullOrWhiteSpace(cmd1))
-                                cmd1 = Apsim.Get(cultivarFolder, str1.Replace("1", "2")).ToString();
+                            if (cmd1 == null)
+                                cmd1 = new Command(str1, double.Parse(Apsim.Get(cultivarFolder, str1.Replace("1", "2")).ToString()), oldCommand);
 
-                            string value0 = cmd0.Split('=').Last().Trim();
-                            string value1 = cmd1.Split('=').Last().Trim();
-
-                            double x0 = double.Parse(value0);
-                            double x1 = double.Parse(value1);
+                            double x0 = cmd0.Value;
+                            double x1 = cmd1.Value;
 
                             value = ((x1 - x0) * double.Parse(value)).ToString();
                         }
 
-                        string newCommand = commands[oldCommand] + " = " + value;
+                        //string newCommand = commands[oldCommand] + " = " + value;
+                        Command newCommand = new Command(commands[oldCommand], double.Parse(value), oldCommand);
 
-                        if (buster == null || !buster.Command.Contains(newCommand))
+                        if (buster == null || !buster.Any(c => c.Equals(newCommand)) && !MathUtilities.FloatsAreEqual(newCommand.Value, GetNewDefault(cultivarFolder, newCommand.Name)))
                             cultivarCommands.Add(newCommand);
                     }
 
                     if (buster != null)
                     {
-                        foreach (string command in buster.Command)
+                        foreach (Command command in buster)
                         {
-                            string cmd = command.Split('=').First();
-                            if (!cultivarCommands.Any(c => c.Contains(cmd)))
+                            if (!cultivarCommands.Any(c => c.Name == command.Name))
                             {
                                 // Property changed by buster is not changed by this cultivar. Therefore we need to fetch the
                                 // default value used in old apsim.
-
+                                double defaultValue = GetDefault(command.OldName);
+                                cultivarCommands.Add(new Command(command.Name, defaultValue, command.OldName));
                             }
                         }
                     }
 
-                    cultivar.Command = cultivarCommands.ToArray();
+                    cultivar.Command = cultivarCommands.Select(c => c.ToString()).ToArray();
 
                     if (cultivarName == "Buster")
-                        buster = cultivar;
-                    else
-                        cultivars.Add(cultivar);
+                        buster = cultivarCommands;
+
+                    cultivars.Add(cultivar);
                 }
 
                 foreach (Cultivar cv in cultivars)
-                    cultivarFolder.Children.Add(cv);
+                {
+                    Structure.Add(cv, cultivarFolder);
+                    var nodeDescription = explorerPresenter.GetNodeDescription(cv);
+                    var view = explorerPresenter.GetView() as Views.ExplorerView;
+                    view.Tree.AddChild(Apsim.FullPath(cultivarFolder), nodeDescription);
+                }
             }
             catch (Exception err)
             {
-                Console.WriteLine(err.ToString());
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
-        private Dictionary<string, string> GetDefaultsLookup()
+        private double GetNewDefault(IModel relativeTo, string property)
         {
-            Dictionary<string, string> defaults = new Dictionary<string, string>();
+            object result = Apsim.Get(relativeTo, property);
 
-            return defaults;
+            if (result == null)
+                throw new Exception($"Unable to fetch apsimx property '{property}'.");
+
+            if (result is Array)
+            {
+                var match = System.Text.RegularExpressions.Regex.Match(property, @"\[(\d+)\]");
+                if (match.Groups.Count > 1)
+                {
+                    int index = int.Parse(match.Groups[1].Value);
+                    result = (result as Array).GetValue(index);
+                }
+            }
+            else if (result is IFunction)
+                result = (result as IFunction).Value();
+            return (double)result;
+        }
+
+        private double GetDefault(string property)
+        {
+            string fileName = @"C:\Users\hol430\Documents\Sorghum\apsim\Model\Sorghum.xml";
+            XmlDocument doc = new XmlDocument();
+            doc.Load(fileName);
+
+            return double.Parse(XmlUtilities.FindRecursively(doc, property).InnerText);
         }
 
         private Dictionary<string, string> GetCommandsLookup()
         {
             Dictionary<string, string> commands = new Dictionary<string, string>();
             commands.Add("tt_emerg_to_endjuv", "[Phenology].Juvenile.Target.FixedValue");
-            commands.Add("photoperiod_crit1", "[Phenology].PhotoModifier.XYPairs.X[0]");
-            commands.Add("photoperiod_crit2", "[Phenology].PhotoModifier.XYPairs.X[1]");
-            commands.Add("photoperiod_slope", "[Phenology].PhotoModifier.XYPairs.Y[1]");
+            commands.Add("photoperiod_crit1", "[Phenology].PhotoModifier.XYPairs.X[1]");// 1-indexed arrays!!!
+            commands.Add("photoperiod_crit2", "[Phenology].PhotoModifier.XYPairs.X[2]");
+            commands.Add("photoperiod_slope", "[Phenology].PhotoModifier.XYPairs.Y[2]");
             commands.Add("tt_endjuv_to_init", "[Phenology].TTEndJuvToInit.FixedValue");
             commands.Add("tt_flag_to_flower", "[Phenology].FlagLeafToFlowering.Target.FixedValue");
             commands.Add("tt_flower_to_start_grain", "[Phenology].FloweringToGrainFilling.Target.FixedValue");
@@ -281,7 +308,8 @@ namespace UserInterface.Presenters
             commands.Add("tt_maturity_to_ripe", "[Phenology].MaturityToHarvestRipe.Target.FixedValue");
             commands.Add("dm_per_seed", "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue");
             commands.Add("maxGfRate", "[Grain].PotGrainFillRate.MaxGrainFillRate");
-            //commands.Add("x_stem_wt", "???");
+            commands.Add("x_stem_wt", null);
+            commands.Add("y_height", null);
             commands.Add("partition_rate_leaf", "[Leaf].PartitionRate.FixedValue");
             commands.Add("nUptakeCease", "[Root].NUptakeCease.FixedValue");
             commands.Add("leaf_init_rate", "[Leaf].leafInitRate.FixedValue");
@@ -289,8 +317,35 @@ namespace UserInterface.Presenters
             commands.Add("aX0", "[Leaf].aX0.FixedValue");
             commands.Add("aMaxS", "[Leaf].aMaxSlope.FixedValue");
             commands.Add("aMaxI", "[Leaf].aMaxIntercept.FixedValue");
-
+            commands.Add("maxGFRate", "[Grain].PotGrainFillRate.MaxGrainFillRate");
+            commands.Add("rue", "[Leaf].Photosynthesis.RUE.FixedValue");
             return commands;
+        }
+
+        private class Command
+        {
+            public string Name { get; private set; }
+
+            public double Value { get; private set; }
+
+            public string OldName { get; set; }
+
+            public Command(string name, double value, string oldName)
+            {
+                Name = name;
+                Value = value;
+                OldName = oldName;
+            }
+
+            public override string ToString()
+            {
+                return $"{Name} = {Value}";
+            }
+
+            public bool Equals(Command obj)
+            {
+                return Name == obj.Name && MathUtilities.FloatsAreEqual(Value, obj.Value);
+            }
         }
 
         /// <summary>
