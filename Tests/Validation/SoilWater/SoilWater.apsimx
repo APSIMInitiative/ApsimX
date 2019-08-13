@@ -3742,7 +3742,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "In this test we run Slurp against a dataset of Soil water content measured over 3 years under lucerne with different irrigation treatments applied.  Slurp was able to reproduce the tempeoral patterns of the 4 different irrigation treatments with adequate accuracy.",
+          "Text": "This experiment was run over 3 years in Lincoln, New Zealand on a shallow stony soil.  Treatments of Lucerne and Pasture (Ryegrass) were established in the Autumn of 2011 and irrigtion treatments were installed in the spring of 2011 and applied for three years.  Treatments were:\n\n - None where no irrigation was applied\n - TwoPerWeek where irrigation was applied twice per week during spring/summer/autumn to replace water use measured by neutron probe\n - OnePerWeek where the same amout of irrigation was applied as the above treatment but at weekly frequency (i.e fewer, larger irrigations)\n - ThreeWeekly where the same amount of irrigation was applied as abouve but at a 3 weekely frequency (i.e fewer, larger irrigations)\n\nLucerne and pasture were defoliated at differing frequiencies following best mananagment practice resulting in 8-10 regrowth period per year for pasture and 5-6 for lucerne.  Neutron probes were installed to 1.6 m depth using a 20T digger with a pnumatic plate on its boom to drive and extract a pilot rod into the stony sub soil and then an aluminum access tube was installed into the resultant hole.  Neutron probes measurements were tatken at 7 - 10 day intervals during the irrigation season.  CS616 probes were also installed in the top soil at 0-15 and 15-30 cm depths in each plot and logged hourly.\nSlurp is used to represent the crop in this test so it can focus on soil water and not be blured by the performance of the crop model.  To do this observed values for green cover, LAI, and Height were set in Slurp each day using a manager script.\r\n\n",
           "Name": "Memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -4811,10 +4811,7 @@
                     "[SlurpSowingRule].Script.CultivarName=Lucerne",
                     "[SetCropVariables].Script.MaximumHeight = 600",
                     "[SetCropVariables].Script.Cover = Lucerne",
-                    "[SetCropVariables].GsMax = 0.006",
-                    "[SetCropVariables].R50 = 175",
-                    "[SetCropVariables].PotRootExtension = 11",
-                    "[SetCropVariables].Ext_coef = 0.8"
+                    "[SetCropVariables].Script.Ext_coef = 0.8"
                   ],
                   "Paths": null,
                   "Values": null,
@@ -4831,10 +4828,7 @@
                     "[SlurpSowingRule].Script.CultivarName=Pasture",
                     "[SetCropVariables].Script.MaximumHeight = 400",
                     "[SetCropVariables].Script.Cover = Ryegrass",
-                    "[SetCropVariables].GsMax = 0.004",
-                    "[SetCropVariables].R50 = 150",
-                    "[SetCropVariables].PotRootExtension = 10",
-                    "[SetCropVariables].Ext_coef = 0.7"
+                    "[SetCropVariables].Script.Ext_coef = 0.65"
                   ],
                   "Paths": null,
                   "Values": null,
@@ -5618,19 +5612,11 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SCRUM;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        \r\n        [Description(\"File of Yields\")]\r\n        public string CoverFile { get; set; }\r\n       \r\n\r\n        [XmlIgnore] private DataTable Covers { get; set; }\r\n\r\n        public string Cover { get; set; }\r\n        public string Irrigation { get; set; }\r\n        public string Treatment { get; set; }\r\n        public  double Ext_coef { get; set; }\r\n        public double MaximumHeight { get; set; }\r\n        public double PotRootExtension {get; set;}\r\n        public double GsMax {get; set;}\r\n        public double R50 {get; set;}\r\n        private double CoverRead { get; set; }\r\n        public double leaflai { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            Treatment = Cover + \"_\" + Irrigation;\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(CoverFile, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            Covers = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n    \t\tobject PotRootExtSet = PotRootExtension;\r\n            zone.Set(\"Slurp.Root.RootFrontVelocity.Potential.FixedValue\", PotRootExtSet);\r\n            object GSmax = GsMax;\r\n            zone.Set(\"Slurp.Leaf.Gsmax350\",GSmax);\r\n            object r50 = R50;\r\n            zone.Set(\"Slurp.Leaf.R50\",r50);\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            foreach (DataRow row in Covers.Rows)\r\n            {\r\n                DateTime TodayDate = Convert.ToDateTime(row[\"Date\"]);\r\n                if (TodayDate.Date == Clock.Today.Date)\r\n                {\r\n                    CoverRead = Convert.ToDouble(row[Treatment]);\r\n                }\r\n            }\r\n        \r\n            if ((bool)zone.Get(\"Slurp.IsAlive\") == true)\r\n            {\r\n                //Only assign cover valuse if crop is emerged\r\n                \r\n                if (CoverRead == 1)\r\n                    leaflai = Math.Log(0.01) / -Ext_coef;\r\n                else\r\n                {\r\n                    if (CoverRead > 0)\r\n                        leaflai = Math.Log(1 - CoverRead) / -Ext_coef;\r\n                    else\r\n                        leaflai = 0;\r\n                }\r\n                //Summary.WriteMessage(this, \"LAI \" + leaflai);\r\n                object LAIResetValue = leaflai;\r\n                zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n                object HeightResetValue = CoverRead * MaximumHeight;\r\n                zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant SCRUM;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        \r\n        [Description(\"File of Yields\")]\r\n        public string CoverFile { get; set; }\r\n       \r\n\r\n        [XmlIgnore] private DataTable Covers { get; set; }\r\n\r\n        public string Cover { get; set; }\r\n        public string Irrigation { get; set; }\r\n        public string Treatment { get; set; }\r\n        public  double Ext_coef { get; set; }\r\n        public double MaximumHeight { get; set; }\r\n        private double CoverRead { get; set; }\r\n        public double leaflai { get; private set; }\r\n                \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            Treatment = Cover + \"_\" + Irrigation;\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(CoverFile, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            Covers = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            foreach (DataRow row in Covers.Rows)\r\n            {\r\n                DateTime TodayDate = Convert.ToDateTime(row[\"Date\"]);\r\n                if (TodayDate.Date == Clock.Today.Date)\r\n                {\r\n                    CoverRead = Convert.ToDouble(row[Treatment]);\r\n                }\r\n            }\r\n        \r\n            if ((bool)zone.Get(\"Slurp.IsAlive\") == true)\r\n            {\r\n                //Only assign cover valuse if crop is emerged\r\n                \r\n                if (CoverRead == 1)\r\n                    leaflai = Math.Log(0.01) / -Ext_coef;\r\n                else\r\n                {\r\n                    if (CoverRead > 0)\r\n                        leaflai = Math.Log(1 - CoverRead) / -Ext_coef;\r\n                    else\r\n                        leaflai = 0;\r\n                }\r\n                //Summary.WriteMessage(this, \"LAI \" + leaflai);\r\n                object LAIResetValue = leaflai;\r\n                zone.Set(\"Slurp.Leaf.LAIFunction.FixedValue\", LAIResetValue);  \r\n                object HeightResetValue = CoverRead * MaximumHeight;\r\n                zone.Set(\"Slurp.Leaf.HeightFunction.FixedValue\", HeightResetValue);  \r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "CoverFile",
                       "Value": "%root%\\Tests\\Validation\\SoilWater\\ObservedCovers\\LandPCover.csv"
-                    },
-                    {
-                      "Key": "Ext_coef",
-                      "Value": "0.8"
-                    },
-                    {
-                      "Key": "MaximumHeight",
-                      "Value": "600"
                     },
                     {
                       "Key": "Cover",
@@ -5645,8 +5631,12 @@
                       "Value": ""
                     },
                     {
-                      "Key": "leaflai",
-                      "Value": "0"
+                      "Key": "Ext_coef",
+                      "Value": "0.8"
+                    },
+                    {
+                      "Key": "MaximumHeight",
+                      "Value": "600"
                     },
                     {
                       "Key": "PotRootExtension",
@@ -5658,6 +5648,10 @@
                     },
                     {
                       "Key": "R50",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "leaflai",
                       "Value": "0"
                     }
                   ],
