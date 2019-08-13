@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
     using Interfaces;
@@ -71,6 +72,10 @@
                 try
                 {
                     table = view.Grid2.DataSource;
+                    Type dataType = table.Columns[cell.ColIndex].DataType;
+                    object newValue = ReflectionUtilities.StringToObject(dataType, cell.NewValue);
+                    table.Rows[cell.RowIndex][cell.ColIndex] = newValue;
+
                     ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", new List<DataTable>() { table });
                     explorerPresenter.CommandHistory.Add(cmd);
                 }
