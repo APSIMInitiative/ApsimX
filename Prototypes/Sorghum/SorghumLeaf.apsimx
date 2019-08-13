@@ -954,27 +954,10 @@
                           "Name": "Add",
                           "Children": [
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Phenology].Photoperiod.Value()",
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].PhotoModifier",
                               "Name": "PhotoModifier",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    11.5,
-                                    13.5
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    23.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -1024,27 +1007,10 @@
                               "Name": "PostEventValue",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "XProperty": "[Phenology].Photoperiod.Value()",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].PhotoModifier",
                                   "Name": "PhotoModifier",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        11.5,
-                                        13.5
-                                      ],
-                                      "Y": [
-                                        0.0,
-                                        23.0
-                                      ],
-                                      "Name": "XYPairs",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -1098,27 +1064,10 @@
                       "Name": "PostEventValue",
                       "Children": [
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Photoperiod.Value()",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].PhotoModifier",
                           "Name": "PhotoModifier",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                11.5,
-                                13.5
-                              ],
-                              "Y": [
-                                0.0,
-                                23.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -1418,6 +1367,32 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].CurrentPhase.ProgressionForTimeStep",
                       "Name": "ThermalTime",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Phenology].Photoperiod.Value()",
+                  "Name": "PhotoModifier",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        11.5,
+                        13.5
+                      ],
+                      "Y": [
+                        0.0,
+                        23.0
+                      ],
+                      "Name": "XYPairs",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
