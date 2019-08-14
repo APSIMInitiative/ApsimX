@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
+  "ExplorerWidth": 300,
   "Version": 59,
   "Name": "Simulations",
   "Children": [
@@ -46,11 +46,207 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.PostSimulationTools.Probability, Models",
-          "TableName": "BugeseraSensibility",
-          "Exceedence": false,
-          "FieldToSplitOn": "SimulationName",
-          "Name": "Probability",
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE1_T1.out",
+          "Name": "HE1_T1",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE1_T2.out",
+          "Name": "HE1_T2",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE1_T3.out",
+          "Name": "HE1_T3",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE2_T1.out",
+          "Name": "HE2_T1",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE2_T2.out",
+          "Name": "HE2_T2",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE2_T3.out",
+          "Name": "HE2_T3",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE3_T1.out",
+          "Name": "HE3_T1",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE3_T2.out",
+          "Name": "HE3_T2",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE3_T3.out",
+          "Name": "HE3_T3",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE4_T1.out",
+          "Name": "HE4_T1",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE4_T3.out",
+          "Name": "HE4_T2",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE4_T3.out",
+          "Name": "HE4_T3",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE5_T1.out",
+          "Name": "HE5_T1",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE5_T2.out",
+          "Name": "HE5_T2",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE5_T3.out",
+          "Name": "HE5_T3",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE6_T1.out",
+          "Name": "HE6_T1",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE6_T3.out",
+          "Name": "HE6_T3",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE7_T1.out",
+          "Name": "HE7_T1",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE7_T2.out",
+          "Name": "HE7_T2",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE7_T3.out",
+          "Name": "HE7_T3",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE8_T1.out",
+          "Name": "HE8_T1",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE8_T2.out",
+          "Name": "HE8_T2",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.Input, Models",
+          "FileName": "Sorghum_HE8_T3.out",
+          "Name": "HE8_T3",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
