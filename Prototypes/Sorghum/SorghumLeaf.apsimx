@@ -34,7 +34,6 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": "Please select a file to use.",
           "FileName": "Sorghum_SomeStress.out",
           "Name": "SomeStress",
           "Children": [],
@@ -44,7 +43,6 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": "Please select a file to use.",
           "FileName": "Sorghum_NoStress.out",
           "Name": "NoStress",
           "Children": [],
@@ -54,7 +52,6 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": "Please select a file to use.",
           "FileName": "Sorghum_NStress.out",
           "Name": "NStress",
           "Children": [],
@@ -64,7 +61,6 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": "Please select a file to use.",
           "FileName": "Sorghum_WaterStress.out",
           "Name": "WaterStress",
           "Children": [],
@@ -31431,7 +31427,7 @@
                   "Checkpoint": "Current",
                   "TableName": "NStress",
                   "XFieldName": "day_of_year",
-                  "YFieldName": "sw_uptake()",
+                  "YFieldName": "sum(sw_uptake)",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
