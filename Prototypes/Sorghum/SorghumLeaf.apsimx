@@ -144,84 +144,95 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "ThermalTime",
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "TT",
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Germination",
+                      "End": "Flowering",
+                      "Name": "BeforeFlowering",
                       "Children": [
                         {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Germination",
-                          "End": "Flowering",
-                          "Name": "BeforeFlowering",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.AirTemperatureFunction, Models",
-                              "Name": "ThermalTime",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    11.0,
-                                    30.0,
-                                    42.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    19.0,
-                                    0.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].DltTT",
+                          "Name": "DltTT",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Flowering",
+                      "End": "HarvestRipe",
+                      "Name": "PostFlowering",
+                      "Children": [
                         {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Flowering",
-                          "End": "HarvestRipe",
-                          "Name": "PostFlowering",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                              "MaximumTemperatureWeighting": 0.5,
-                              "Name": "WeightedTemperatureFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    5.7,
-                                    23.5
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    17.8
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].DltTTFM",
+                          "Name": "DltTTFM",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].DltTTFM",
+                  "Name": "ThermalTimeFM",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Leaving this here for compatibility reasons...would like to remove it but it might be difficult to find all the references to this component",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "DltTT",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.AirTemperatureFunction, Models",
+                      "Name": "ThermalTime",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            11.0,
+                            30.0,
+                            42.0
                           ],
+                          "Y": [
+                            0.0,
+                            19.0,
+                            0.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -344,89 +355,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "ThermalTimeFM",
+                  "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                  "MaximumTemperatureWeighting": 0.5,
+                  "Name": "DltTTFM",
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "TT",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Germination",
-                          "End": "Flowering",
-                          "Name": "TT",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.AirTemperatureFunction, Models",
-                              "Name": "ThermalTime",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    11.0,
-                                    30.0,
-                                    42.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    19.0,
-                                    0.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Flowering",
-                          "End": "HarvestRipe",
-                          "Name": "TTFM",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                              "MaximumTemperatureWeighting": 0.5,
-                              "Name": "WeightedTemperatureFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    5.7,
-                                    23.5
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    17.8
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        5.7,
+                        23.5
                       ],
+                      "Y": [
+                        0.0,
+                        17.8
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
