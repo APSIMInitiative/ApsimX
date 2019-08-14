@@ -215,9 +215,6 @@ namespace Models.PMF.Organs
         /// <summary>EswCap</summary>
         public double EswCap { get; private set; }
 
-        /// <summary></summary>
-        public double[] SwDep { get; private set; }
-
         /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
         private bool needToRecalculateLiveDead = true;
 
@@ -1320,7 +1317,6 @@ namespace Models.PMF.Organs
         {
             if (parentPlant.IsAlive)
             {
-                SwDep = soil.SoilWater.SWmm;
                 foreach (ZoneState Z in Zones)
                 {
                     Z.GrowRootDepth();
