@@ -468,6 +468,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostUsePricing.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFeedGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeed.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityShear.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceUnitsConverter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\DecumulateFunction.png" />
