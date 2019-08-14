@@ -3749,7 +3749,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime",
+                      "VariableName": "[Arbitrator].DltTT",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
