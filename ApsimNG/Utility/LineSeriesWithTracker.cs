@@ -21,6 +21,16 @@ namespace Utility
         public event EventHandler<HoverPointArgs> OnHoverOverPoint;
 
         /// <summary>
+        /// Name of the variable behind the X data.
+        /// </summary>
+        public string XFieldName { get; set; }
+
+        /// <summary>
+        /// Name of the variable behind the Y data.
+        /// </summary>
+        public string YFieldName { get; set; }
+
+        /// <summary>
         /// Tracker is calling to determine the nearest point.
         /// </summary>
         /// <param name="point">The point clicked</param>
@@ -42,9 +52,7 @@ namespace Utility
                 e.Y = hitResult.DataPoint.Y;
                 OnHoverOverPoint.Invoke(this, e);
                 if (e.HoverText != null)
-                {
-                    hitResult.Series.TrackerFormatString = e.HoverText + "\n{1}: {2}\n{3}: {4}";
-                }
+                    hitResult.Series.TrackerFormatString = e.HoverText + "\n" + XFieldName + ": {2}\n" + YFieldName + ": {4}";
             }
 
             return hitResult;

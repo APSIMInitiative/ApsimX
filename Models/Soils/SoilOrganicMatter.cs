@@ -40,25 +40,9 @@ namespace Models.Soils
 
         /// <summary>Soil layer thickness for each layer (mm)</summary>
         /// <value>The thickness.</value>
-        [Units("mm")]
-        public double[] Thickness { get; set; }
-
-        /// <summary>Soil layer thickness for each layer in cm (only used in the GUI)</summary>
-        /// <value>The depth.</value>
+        [Description("Depth (mm)")]
         [Summary]
-        [Units("cm")]
-        [Description("Depth")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(Thickness);
-            }
-            set
-            {
-                Thickness = Soil.ToThickness(value);
-            }
-        }
+        public double[] Thickness { get; set; }
 
         /// <summary>Organic carbon concentration (0.1 - 10%)</summary>
         /// <value>The oc.</value>
@@ -142,122 +126,5 @@ namespace Models.Soils
             }
         }
 
-
-        /// <summary>
-        /// Humic C that is not subject to mineralization (kg/ha) on the same layer structure as OC.
-        /// </summary>
-        /// <value>The inert c.</value>
-        [Display(Format = "N0")]
-        [Units("kg/ha")]
-        public double[] InertC
-        {
-            get
-            {
-                Soil soil = Parent as Soil;
-                if (soil != null)
-                {
-                    double[] BD = soil.BDMapped(Thickness);
-
-                    double[] InertC = new double[Thickness.Length];
-
-                    for (int i = 0; i < OC.Length; i++)
-                    {
-                        if (Double.IsNaN(FInert[i]) ||
-                            Double.IsNaN(OC[i]) ||
-                            Double.IsNaN(BD[i]))
-                            InertC[i] = double.NaN;
-                        else
-                        {
-                            double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
-                            double oc_ppm = OCTotal[i] / 100 * ppm;
-                            double carbon_tot = oc_ppm / soiln2_fac;
-                            InertC[i] = FInert[i] * carbon_tot;
-                        }
-                    }
-                    return InertC;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Calculate and return the amount of biomass carbon on the same layer structure as OC. 
-        /// </summary>
-        /// <value>The biom c.</value>
-        [Display(Format = "N0")]
-        [Units("kg/ha")]
-        public double[] BiomC
-        {
-            get
-            {
-                Soil soil = Parent as Soil;
-                if (soil != null)
-                {
-                    double[] BD = soil.BDMapped(Thickness);
-                    double[] InertC = this.InertC;
-
-                    double[] BiomC = new double[Thickness.Length];
-                    for (int i = 0; i < Thickness.Length; i++)
-                    {
-                        if (i >= OC.Length ||
-                            i >= FBiom.Length ||
-                            i >= BD.Length ||
-                            i >= InertC.Length ||
-                            i >= BiomC.Length ||
-                            double.IsNaN(OC[i])||
-                            double.IsNaN(FBiom[i])||
-                            double.IsNaN(BD[i]) ||
-                            double.IsNaN(InertC[i]))
-                            BiomC[i] = double.NaN;
-                        else
-                        {
-                            double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
-                            double oc_ppm = OCTotal[i] / 100 * ppm;
-                            double carbon_tot = oc_ppm / soiln2_fac;
-                            BiomC[i] = ((carbon_tot - InertC[i]) * FBiom[i]) / (1.0 + FBiom[i]);
-                        }
-                    }
-                    return BiomC;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Calculate and return the amount of humic carbon on the same layer structure as OC.
-        /// </summary>
-        /// <value>The hum c.</value>
-        [Display(Format = "N0")]
-        [Units("kg/ha")]
-        public double[] HumC
-        {
-            get
-            {
-                Soil soil = Parent as Soil;
-                if (soil != null)
-                {
-                    double[] BD = soil.BDMapped(Thickness);
-                    double[] InertC = this.InertC;
-                    double[] BiomC = this.BiomC;
-
-                    double[] HumC = new double[Thickness.Length];
-
-                    for (int i = 0; i < Thickness.Length; i++)
-                    {
-                        if (double.IsNaN(BiomC[i]))
-                            HumC[i] = double.NaN;
-                        else
-                        {
-                            double soiln2_fac = 100.0 / (BD[i] * Thickness[i]);
-                            double oc_ppm = OCTotal[i] / 100 * ppm;
-                            double carbon_tot = oc_ppm / soiln2_fac;
-                            HumC[i] = carbon_tot - BiomC[i];
-                        }
-                    }
-                    return HumC;
-                }
-                return null;
-            }
-        }
     }
 }
