@@ -202,19 +202,6 @@ namespace Models.PMF.Organs
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
 
-        /// <summary>The soil.</summary>
-        [Link]
-        private Soil soil = null;
-
-        /// <summary>XF in current layer.</summary>
-        public double Xfc { get; set; }
-
-        /// <summary>Esw</summary>
-        public double Esw { get; private set; }
-
-        /// <summary>EswCap</summary>
-        public double EswCap { get; private set; }
-
         /// <summary>Do we need to recalculate (expensive operation) live and dead</summary>
         private bool needToRecalculateLiveDead = true;
 
@@ -1318,12 +1305,7 @@ namespace Models.PMF.Organs
             if (parentPlant.IsAlive)
             {
                 foreach (ZoneState Z in Zones)
-                {
                     Z.GrowRootDepth();
-                    Esw = Z.Esw;
-                    EswCap = Z.EswCap;
-                }
-                Xfc = soil.XF(parentPlant.Name)[Soil.LayerIndexOfDepth(Depth, soil.Thickness)];
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
                     double senescedFrac = senescenceRate.Value();

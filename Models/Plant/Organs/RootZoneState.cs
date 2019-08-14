@@ -112,12 +112,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
         public double[] Diffusion { get;  set; }
 
-        /// <summary>Esw</summary>
-        public double Esw { get; private set; }
-
-        /// <summary>EswCap</summary>
-        public double EswCap { get; private set; }
-
 
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
@@ -209,7 +203,6 @@ namespace Models.PMF.Organs
                 }
             }
         }
-
         /// <summary>
         /// Growth depth of roots in this zone
         /// </summary>
@@ -223,10 +216,11 @@ namespace Models.PMF.Organs
             if (root.RootDepthStressFactor != null)
             {
                 //calc StressFactorLookup   
-                Esw = soil.SoilWater.ESW[RootLayer];
+                var extractable = soil.SoilWater.ESW[RootLayer];
                 var llDep = soil.LL15[RootLayer] * soil.Thickness[RootLayer];
-                EswCap = soil.DULmm[RootLayer] - llDep;
-                root.SWAvailabilityRatio = APSIM.Shared.Utilities.MathUtilities.Divide(Esw, EswCap, 10);
+                var capacity = soil.DULmm[RootLayer] - llDep;
+
+                root.SWAvailabilityRatio = APSIM.Shared.Utilities.MathUtilities.Divide(extractable, capacity, 10);
                 rootDepthWaterStress = root.RootDepthStressFactor.Value();
             }
 
