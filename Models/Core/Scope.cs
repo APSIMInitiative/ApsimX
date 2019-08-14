@@ -88,6 +88,16 @@
         }
 
         /// <summary>
+        /// Returns true iff model x is in scope of model y.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public bool InScopeOf(IModel x, IModel y)
+        {
+            return FindAll(y).Contains(x);
+        }
+
+        /// <summary>
         /// Return true if model is a scoped model
         /// </summary>
         /// <param name="relativeTo"></param>

@@ -31,13 +31,17 @@
                 {
                     if (crop.XF == null)
                     {
-                        crop.XF = MathUtilities.CreateArrayOfValues(1.0, crop.Thickness.Length);
-                        crop.XFMetadata = StringUtilities.CreateStringArray("Estimated", crop.Thickness.Length);
+                        crop.XF = MathUtilities.CreateArrayOfValues(1.0, water.Thickness.Length);
+                        crop.XFMetadata = StringUtilities.CreateStringArray("Estimated", water.Thickness.Length);
                     }
                     if (crop.KL == null)
                         FillInKLForCrop(crop);
 
                     CheckCropForMissingValues(crop, soil);
+
+                    // Modify wheat crop for sub soil constraints.
+                    if (crop.Name.Equals("wheat", StringComparison.InvariantCultureIgnoreCase))
+                        ModifyKLForSubSoilConstraints(crop, soil);
                 }
             }
 
@@ -85,11 +89,13 @@
             int i = StringUtilities.IndexOfCaseInsensitive(cropNames, crop.Name);
             if (i != -1)
             {
+                var water = crop.Parent as Water;
+
                 double[] KLs = GetRowOfArray(defaultKLs, i);
 
-                double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(crop.Thickness);
-                crop.KL = new double[crop.Thickness.Length];
-                for (int l = 0; l < crop.Thickness.Length; l++)
+                double[] cumThickness = APSIM.Shared.APSoil.SoilUtilities.ToCumThickness(water.Thickness);
+                crop.KL = new double[water.Thickness.Length];
+                for (int l = 0; l < water.Thickness.Length; l++)
                 {
                     bool didInterpolate;
                     crop.KL[l] = MathUtilities.LinearInterpReal(cumThickness[l], defaultKLThickness, KLs, out didInterpolate);
@@ -172,7 +178,7 @@
         {
             var water = Apsim.Child(soil, typeof(Water)) as Water;
 
-            for (int i = 0; i < crop.Thickness.Length; i++)
+            for (int i = 0; i < water.Thickness.Length; i++)
             {
                 if (crop.LL != null && double.IsNaN(crop.LL[i]))
                     crop.LL[i] = water.LL15[i];
@@ -190,10 +196,10 @@
         {
             if (!MathUtilities.ValuesInArray(sample.SW))
                 sample.SW = null;
-            if (!MathUtilities.ValuesInArray(sample.NO3))
-                sample.NO3 = null;
-            if (!MathUtilities.ValuesInArray(sample.NH4))
-                sample.NH4 = null;
+            if (sample.NO3N != null && !MathUtilities.ValuesInArray(sample.NO3N.PPM))
+                sample.NO3N = null;
+            if (sample.NH4N != null && !MathUtilities.ValuesInArray(sample.NH4N.PPM))
+                sample.NH4N.PPM = null;
             if (!MathUtilities.ValuesInArray(sample.CL))
                 sample.CL = null;
             if (!MathUtilities.ValuesInArray(sample.EC))
@@ -207,10 +213,10 @@
 
             if (sample.SW != null)
                 sample.SW = MathUtilities.FixArrayLength(sample.SW, sample.Thickness.Length);
-            if (sample.NO3 != null)
-                sample.NO3 = MathUtilities.FixArrayLength(sample.NO3, sample.Thickness.Length);
-            if (sample.NH4 != null)
-                sample.NH4 = MathUtilities.FixArrayLength(sample.NH4, sample.Thickness.Length);
+            if (sample.NO3N != null)
+                sample.NO3N.PPM = MathUtilities.FixArrayLength(sample.NO3N.PPM, sample.Thickness.Length);
+            if (sample.NH4N != null)
+                sample.NH4N.PPM = MathUtilities.FixArrayLength(sample.NH4N.PPM, sample.Thickness.Length);
             if (sample.CL != null)
                 sample.CL = MathUtilities.FixArrayLength(sample.CL, sample.Thickness.Length);
             if (sample.EC != null)
@@ -230,20 +236,10 @@
                 {
                     if (sample.SW != null && double.IsNaN(sample.SW[i]))
                         sample.SW[i] = ll15[i];
-                    if (sample.NO3 != null && double.IsNaN(sample.NO3[i]))
-                        sample.NO3[i] = 1.0;
-                    if (sample.NH4 != null && double.IsNaN(sample.NH4[i]))
-                        sample.NH4[i] = 0.1;
-                    if (sample.CL != null && double.IsNaN(sample.CL[i]))
-                        sample.CL[i] = 0;
-                    if (sample.EC != null && double.IsNaN(sample.EC[i]))
-                        sample.EC[i] = 0;
-                    if (sample.ESP != null && double.IsNaN(sample.ESP[i]))
-                        sample.ESP[i] = 0;
-                    if (sample.PH != null && (double.IsNaN(sample.PH[i]) || sample.PH[i] == 0.0))
-                        sample.PH[i] = 7.0;
-                    if (sample.OC != null && (double.IsNaN(sample.OC[i]) || sample.OC[i] == 0.0))
-                        sample.OC[i] = 0.5;
+                    if (sample.NO3N.PPM != null && double.IsNaN(sample.NO3N.PPM[i]))
+                        sample.NO3N.PPM[i] = 1.0;
+                    if (sample.NH4N != null && double.IsNaN(sample.NH4N.PPM[i]))
+                        sample.NH4N.PPM[i] = 0.1;
                 }
             }
         }
@@ -581,6 +577,56 @@
                 LL[2] = LL15[2];
             }
             return LL;
+        }
+
+
+        /// <summary>Standard thicknesses</summary>
+        private static readonly double[] StandardThickness = new double[] { 100, 100, 200, 200, 200, 200, 200 };
+        /// <summary>Standard Kls</summary>
+        private static readonly double[] StandardKL = new double[] { 0.06, 0.06, 0.04, 0.04, 0.04, 0.04, 0.02 };
+
+        /// <summary>
+        /// Modify the KL values for subsoil constraints.
+        /// </summary>
+        /// <remarks>
+        /// From:
+        /// Hochman, Z., Dang, Y.P., Schwenke, G.D., Dalgliesh, N.P., Routley, R., McDonald, M., 
+        ///     Daniells, I.G., Manning, W., Poulton, P.L., 2007. 
+        ///     Simulating the effects of saline and sodic subsoils on wheat crops 
+        ///     growing on Vertosols. Australian Journal of Agricultural Research 58, 802–810. doi:10.1071/ar06365
+        /// </remarks>
+        /// <param name="crop"></param>
+        /// <param name="soil">The soil the crop belongs to.</param>
+        private static void ModifyKLForSubSoilConstraints(SoilCrop crop, Soil soil)
+        {
+            var initialConditions = soil.Children.Find(child => child is Sample) as Sample;
+            double[] cl = initialConditions.CL;
+            if (MathUtilities.ValuesInArray(cl))
+            {
+                crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
+                for (int i = 0; i < soil.Thickness.Length; i++)
+                    crop.KL[i] *= Math.Min(1.0, 4.0 * Math.Exp(-0.005 * cl[i]));
+            }
+            else
+            {
+                double[] esp = initialConditions.ESP;
+                if (MathUtilities.ValuesInArray(esp))
+                {
+                    crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
+                    for (int i = 0; i < soil.Thickness.Length; i++)
+                        crop.KL[i] *= Math.Min(1.0, 10.0 * Math.Exp(-0.15 * esp[i]));
+                }
+                else
+                {
+                    double[] ec = initialConditions.EC;
+                    if (MathUtilities.ValuesInArray(ec))
+                    {
+                        crop.KL = Layers.MapConcentration(StandardKL, StandardThickness, soil.Thickness, StandardKL.Last());
+                        for (int i = 0; i < soil.Thickness.Length; i++)
+                            crop.KL[i] *= Math.Min(1.0, 3.0 * Math.Exp(-1.3 * ec[i]));
+                    }
+                }
+            }
         }
     }
 }

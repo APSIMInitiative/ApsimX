@@ -350,5 +350,20 @@
             }
         }
 
+        [Test]
+        public void Version59()
+        {
+            string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion59 before.json");
+            string expectedXml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion59 after.json");
+
+            var converter = Converter.DoConvert(xml, 59);
+            Assert.IsTrue(converter.DidConvert);
+
+            using (StringWriter writer = new StringWriter())
+            {
+                writer.Write(converter.Root.ToString());
+                Assert.AreEqual(writer.ToString(), expectedXml);
+            }
+        }
     }
 }
