@@ -32,17 +32,11 @@
                     samples[0].SWUnits = samples[i].SWUnits;
                 }
 
-                if (samples[i].NO3N != null && MathUtilities.ValuesInArray(samples[i].NO3N.PPM))
-                {
+                if (samples[i].NO3N != null && MathUtilities.ValuesInArray(samples[i].NO3N))
                     samples[0].NO3N = samples[i].NO3N;
-                    MathUtilities.ReplaceMissingValues(samples[0].NO3N.PPM, 0.01);
-                }
 
-                if (samples[i].NH4N != null && MathUtilities.ValuesInArray(samples[i].NH4N.PPM))
-                {
+                if (samples[i].NH4N != null && MathUtilities.ValuesInArray(samples[i].NH4N))
                     samples[0].NH4N = samples[i].NH4N;
-                    MathUtilities.ReplaceMissingValues(samples[0].NH4N.PPM, 0.01);
-                }
 
                 if (MathUtilities.ValuesInArray(samples[i].OC))
                 {
@@ -66,6 +60,11 @@
 
                 soil.Children.Remove(samples[i]);
             }
+
+            if (samples[0].NO3N != null)
+                samples[0].NO3N = soil.ppm2kgha(samples[0].NO3N);
+            if (samples[0].NH4N != null)
+                samples[0].NH4N = soil.ppm2kgha(samples[0].NH4N);
         }
         
         /// <summary>Creates an initial sample.</summary>

@@ -153,8 +153,8 @@
 
             Sample sam = s.Children[6] as Sample;
             Assert.AreEqual(sam.Thickness, new double[] { 150, 150, 300 });
-            Assert.AreEqual(sam.NO3N.PPM, new double[] { 6.5, 2.1, 2.1 });
-            Assert.AreEqual(sam.NH4N.PPM, new double[] { 0.5, 0.1, 0.1 });
+            Assert.AreEqual(sam.NO3N, new double[] { 6.5, 2.1, 2.1 });
+            Assert.AreEqual(sam.NH4N, new double[] { 0.5, 0.1, 0.1 });
 
             SoilCrop crop = s.Children[1].Children[0] as SoilCrop;
             Assert.AreEqual(crop.LL, new double[] { 0.29, 0.29, 0.32, 0.38 });

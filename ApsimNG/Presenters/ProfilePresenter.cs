@@ -223,15 +223,12 @@
             foreach (PropertyInfo property in model.GetType().GetProperties())
             {
                 var description = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false);
-                if ((property.PropertyType.IsArray || property.PropertyType == typeof(NitrogenValue)) 
-                    && description != null)
+                if (property.PropertyType.IsArray && description != null)
                 {
                     PropertyColumn column;
 
                     if (property.Name == "Thickness")
                         column = new ThicknessColumn(property, model);
-                    else if (property.PropertyType == typeof(NitrogenValue))
-                        column = new NitrogenValueColumn(property, model);
                     else
                         column = new PropertyColumn(property, model);
 
@@ -407,44 +404,6 @@
             {
                 var thickness = APSIM.Shared.APSoil.SoilUtilities.ToThickness((string[]) Values);
                 return new ChangeProperty.Property(ObjectWithProperty, PropertyName, thickness);
-            }
-        }
-
-        /// <summary>Encapsulates a NitrogenValue column.</summary>
-        private class NitrogenValueColumn : PropertyColumn
-        {
-            /// <summary>Constructor.</summary>
-            /// <param name="property">The property.</param>
-            /// <param name="obj">The instance containing the property.</param>
-            public NitrogenValueColumn(PropertyInfo property, object obj)
-                : base(property, obj)
-            {
-                ObjectWithProperty = property.GetValue(obj);
-                PropertyName = property.Name;
-                ColumnDataType = typeof(double);
-                HeaderContextMenuItems = new string[] { "ppm", "kg/ha" };
-
-                var nitrogenValue = ObjectWithProperty as NitrogenValue;
-
-                if (nitrogenValue.StoredAsPPM)
-                {
-                    ColumnName += "\r\n(ppm)";
-                    Values = nitrogenValue.PPM;
-                }
-                else
-                {
-                    ColumnName += "\r\n(kg/ha)";
-                    Values = nitrogenValue.KgHa;
-                }
-            }
-
-            /// <summary>Returns a Property set command.</summary>
-            public override ChangeProperty.Property GetChangeProperty()
-            {
-                if (ColumnName.Contains("(ppm)"))
-                    return new ChangeProperty.Property(ObjectWithProperty, "PPM", Values);
-                else
-                    return new ChangeProperty.Property(ObjectWithProperty, "KgHa", Values);
             }
         }
 

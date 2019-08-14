@@ -19,8 +19,6 @@
             this.Name = "Sample"; 
         }
 
-        #region Enumerations
-
         /// <summary>
         /// An enumeration for specifying soil water units
         /// </summary>
@@ -78,30 +76,23 @@
             [Description("CaCl2")]
             CaCl2
         }
-        #endregion
 
-        /// <summary>
-        /// Gets or sets the sample thickness (mm)
-        /// </summary>
+        /// <summary>Thickness</summary>
         [Description("Depth (mm)")]
         [Summary]
         public double[] Thickness { get; set; }
 
-        #region Raw variables serialised and edited in GUI
-
-        /// <summary>
-        /// Gets or sets the nitrate NO3. Units will be as specified by NO3Units
-        /// </summary>
+        /// <summary>Nitrate NO3.</summary>
         [Description("NO3N")]
         [Summary]
-        public NitrogenValue NO3N { get; set; }
+        [Units("kg/ha")]
+        public double[] NO3N { get; set; }
 
-        /// <summary>
-        /// Gets or sets ammonia NH4. Units will be as specified by NH4Units
-        /// </summary>
+        /// <summary>Ammonia NH4</summary>
         [Description("NH4N")]
         [Summary]
-        public NitrogenValue NH4N { get; set; }
+        [Units("kg/ha")]
+        public double[] NH4N { get; set; }
 
         /// <summary>
         /// Gets or sets soil water. Units will be as specified by SWUnits
@@ -154,9 +145,6 @@
         [Display(Format = "N1", ShowTotal = true)]
         public double[] PH { get; set; }
 
-        #endregion
-
-        #region Units
         /// <summary>
         /// Gets or sets the units of SW
         /// </summary>
@@ -171,19 +159,6 @@
         /// Gets or sets the units of P
         /// </summary>
         public PHSampleUnitsEnum PHUnits { get; set; }
-
-        #endregion
-
-        /// <summary>Called when the sample is created.</summary>
-        public override void OnCreated()
-        {
-            var soil = Apsim.Parent(this, typeof(Soil)) as Soil;
-            NO3N?.OnCreated(soil);
-            NH4N?.OnCreated(soil);
-        }
-
-
-        #region Properties for returning variables with particular units
 
         /// <summary>
         /// Gets SW. Units: mm/mm.
@@ -340,7 +315,6 @@
                 }
             }
         }
-        #endregion
 
         /// <summary>Organic nitrogen. Units: %</summary>
         [Units("%")]

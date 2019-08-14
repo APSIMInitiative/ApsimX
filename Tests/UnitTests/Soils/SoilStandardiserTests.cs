@@ -56,10 +56,7 @@
                     new Sample
                     {
                         Thickness = new double[] { 1000 },
-                        NO3N = new NitrogenValue()
-                        {
-                            PPM = new double[] { 27 }
-                        },
+                        NO3N = new double[] { 27 },
                         OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     }
@@ -130,10 +127,7 @@
                     new Sample
                     {
                         Thickness = new double[] { 1000 },
-                        NO3N = new NitrogenValue()
-                        {
-                            PPM = new double[] { 27 }
-                        },
+                        NO3N = new double[] { 27 },
                         OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     },
@@ -200,14 +194,8 @@
                     new Sample
                     {
                         Thickness = new double[] { 100, 200 },
-                        NO3N = new NitrogenValue()
-                        {
-                            PPM = new double[] { 27, 16 }
-                        },
-                        NH4N = new NitrogenValue()
-                        {
-                            PPM = new double[] { 2, double.NaN }
-                        },
+                        NO3N = new double[] { 27, 16 },
+                        NH4N = new double[] { 2, double.NaN },
                         PH = new double[] { 6.4, double.NaN },
                     }
                 }
@@ -221,8 +209,8 @@
             Assert.AreEqual(Apsim.Children(soil, typeof(Sample)).Count, 1);
             Assert.AreEqual(sample.Name, "Initial");
             Assert.AreEqual(sample.SW, new double[] { 0.1, 0.2 } );
-            Assert.AreEqual(sample.NO3N.PPM, new double[] { 27, 16 });
-            Assert.AreEqual(sample.NH4N.PPM, new double[] { 2, 0.01 });
+            Assert.AreEqual(sample.NO3N, new double[] { 36.720000000000006, 38.912 });  // kg/ha
+            Assert.AreEqual(sample.NH4N, new double[] { 2.72, double.NaN }); // kg/ha
             Assert.AreEqual(sample.OC, new double[] { 2.0, 0.9 });
             Assert.AreEqual(sample.PH, new double[] { 6.4, 6.9 });
             Assert.AreEqual(sample.EC, new double[] { 100, 200 });

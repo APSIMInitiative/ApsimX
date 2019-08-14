@@ -248,7 +248,6 @@
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
-    <Compile Include="Soils\NitrogenValue.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
     <Compile Include="Soils\Standardiser\SoilChecker.cs" />

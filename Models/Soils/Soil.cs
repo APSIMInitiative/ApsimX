@@ -721,7 +721,7 @@
         {
             double[] ppm = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
-                ppm[i] = values[i] * MathUtilities.Divide(100.0, BD[i] * Thickness[i], 0.0);
+                ppm[i] = values[i] * (100.0 / (BD[i] * Thickness[i]));
             return ppm;
         }
 
@@ -732,7 +732,7 @@
         {
             double[] kgha = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
-                kgha[i] = values[i] * MathUtilities.Divide(BD[i] * Thickness[i], 100, 0.0);
+                kgha[i] = values[i] * (BD[i] * Thickness[i] / 100);
             return kgha;
         }
     }
