@@ -155,7 +155,22 @@ namespace UserInterface.Presenters
                         {
                             parts.RemoveAt(0);
                         }
-                        msgStr = string.Join("\n", parts.ToArray());
+                        msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
+
+                        // remove starter text
+                        string[] starters = new string[]
+                        {
+                            "System.Exception: ",
+                            "Models.Core.ApsimXException: "
+                        };
+
+                        foreach (string start in starters)
+                        {
+                            if (msgStr.Contains(start))
+                            {
+                                msgStr = msgStr.Substring(start.Length);
+                            }
+                        }
 
                         string type = "Message";
                         string title = "Message";
@@ -197,7 +212,7 @@ namespace UserInterface.Presenters
                             title = "Success";
                             DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
                             int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
-                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString(), CultureInfo.InvariantCulture);
+                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
                             msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
                         }
 
