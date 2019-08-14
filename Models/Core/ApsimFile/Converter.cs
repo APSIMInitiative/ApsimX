@@ -679,6 +679,8 @@
             var water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "Water");
 
             // Get soil thickness and bulk density.
+            if (water == null)
+                water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "WEIRDO");
             var soilThickness = water["Thickness"].Values<double>().ToArray();
             var soilBD = water["BD"].Values<double>().ToArray();
 
@@ -701,7 +703,7 @@
             foreach (var sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
             {
                 var no3Node = sample["NO3N"];
-                if (no3Node != null)
+                if (no3Node != null && no3Node.HasValues)
                 {
                     var no3Values = no3Node["Values"] as JArray;
                     if (!no3Node["StoredAsPPM"].Value<bool>())
@@ -709,7 +711,7 @@
                     sample["NO3N"] = no3Values;
                 }
                 var nh4Node = sample["NH4N"];
-                if (nh4Node != null)
+                if (nh4Node != null && nh4Node.HasValues)
                 {
                     var nh4Values = nh4Node["Values"] as JArray;
                     if (!nh4Node["StoredAsPPM"].Value<bool>())
