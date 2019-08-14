@@ -474,7 +474,7 @@ namespace Models.PMF
         [EventSubscribe("DoPhenology")]
         private void OnDoPhenology(object sender, EventArgs e)
         {
-            DltTT = (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()");
+            DltTT = (double)Apsim.Get(this, "[Phenology].DltTT.Value()");
         }
 
         #region Plant interface methods

@@ -1153,7 +1153,7 @@ namespace Models.PMF.Organs
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
-            var dilutionN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+            var dilutionN = Arbitrator.DltTT * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
             dilutionN = Math.Max(dilutionN, 0);
             if(phenology.Between("Germination", "Flowering"))
             {
@@ -1188,7 +1188,7 @@ namespace Models.PMF.Organs
                 laiToday = calcLAI();
                 slnToday = calcSLN(laiToday, nGreenToday);
 
-                var maxN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                var maxN = Arbitrator.DltTT * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
                 maxN = Math.Max(maxN, 0);
                 requiredN = Math.Min(requiredN, maxN);
 
@@ -1220,7 +1220,7 @@ namespace Models.PMF.Organs
                     laiToday = calcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
-                    var maxN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                    var maxN = Arbitrator.DltTT * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
                     double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
@@ -1245,7 +1245,7 @@ namespace Models.PMF.Organs
                     laiToday = calcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
-                    var maxN = phenology.thermalTime.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                    var maxN = Arbitrator.DltTT * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
                     double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
@@ -1277,7 +1277,7 @@ namespace Models.PMF.Organs
             double nGreenToday = Live.N;
             double slnToday = MathUtilities.Divide(nGreenToday, laiToday, 0.0);
             //var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total,LAI,0.0);
-            var dilutionN = phenology.thermalTime.Value() * ( NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+            var dilutionN = Arbitrator.DltTT * ( NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
 
             NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.StorageN + StartLive.MetabolicN, availableLaiN + dilutionN));
 
