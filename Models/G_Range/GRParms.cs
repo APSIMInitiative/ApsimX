@@ -696,13 +696,13 @@ namespace Models
                         if (layerTop <= 300.0)
                         {
                             double weight = (Math.Min(300.0, layerBottom) - layerTop) / Math.Min(300.0, soilBottom);
-                            sand[0] += Soil.ParticleSizeSand[i] * weight;
-                            silt[0] += Soil.ParticleSizeSilt[i] * weight;
-                            clay[0] += Soil.ParticleSizeClay[i] * weight;
-                            if (Soil.Rocks != null)
-                                gravel[0] += Soil.Rocks[i] * weight;
+                            sand[0] += Analysis.ParticleSizeSand[i] * weight;
+                            silt[0] += Analysis.ParticleSizeSilt[i] * weight;
+                            clay[0] += Analysis.ParticleSizeClay[i] * weight;
+                            if (Analysis.Rocks != null)
+                                gravel[0] += Analysis.Rocks[i] * weight;
                             bulkDensity[0] += Soil.BD[i] * weight;
-                            organicCarbon[0] += Soil.OC[i] * weight; 
+                            organicCarbon[0] += Soil.Initial.OC[i] * weight; 
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[0] += Soil.DUL[i] * weight;
@@ -712,13 +712,13 @@ namespace Models
                         if (layerTop < 1000.0 && layerBottom > 300.0 && soilBottom > 300.0)
                         {
                             double weight = (Math.Min(1000.0, layerBottom) - Math.Max(300.0, layerTop)) / Math.Min(700.0, soilBottom - 300.0);
-                            sand[3] += Soil.ParticleSizeSand[i] * weight;
-                            silt[3] += Soil.ParticleSizeSilt[i] * weight;
-                            clay[3] += Soil.ParticleSizeClay[i] * weight;
-                            if (Soil.Rocks != null)
-                                gravel[3] += Soil.Rocks[i] * weight;
+                            sand[3] += Analysis.ParticleSizeSand[i] * weight;
+                            silt[3] += Analysis.ParticleSizeSilt[i] * weight;
+                            clay[3] += Analysis.ParticleSizeClay[i] * weight;
+                            if (Analysis.Rocks != null)
+                                gravel[3] += Analysis.Rocks[i] * weight;
                             bulkDensity[3] += Soil.BD[i] * weight;
-                            organicCarbon[3] += Soil.OC[i] * weight;
+                            organicCarbon[3] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[3] += Soil.DUL[i] * weight;
@@ -748,13 +748,13 @@ namespace Models
                         if (layerTop <= 150.0)
                         {
                             double weight = (Math.Min(150.0, layerBottom) - layerTop) / Math.Min(150.0, soilBottom);
-                            sand[0] += Soil.ParticleSizeSand[i] * weight;
-                            silt[0] += Soil.ParticleSizeSilt[i] * weight;
-                            clay[0] += Soil.ParticleSizeClay[i] * weight;
-                            if (Soil.Rocks != null)
-                                gravel[0] += Soil.Rocks[i] * weight;
+                            sand[0] += Analysis.ParticleSizeSand[i] * weight;
+                            silt[0] += Analysis.ParticleSizeSilt[i] * weight;
+                            clay[0] += Analysis.ParticleSizeClay[i] * weight;
+                            if (Analysis.Rocks != null)
+                                gravel[0] += Analysis.Rocks[i] * weight;
                             bulkDensity[0] += Soil.BD[i] * weight;
-                            organicCarbon[0] += Soil.OC[i] * weight;
+                            organicCarbon[0] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[0] += Soil.DUL[i] * weight;
@@ -764,13 +764,13 @@ namespace Models
                         if (layerTop < 300.0 && layerBottom > 150.0)
                         {
                             double weight = (Math.Min(300.0, layerBottom) - Math.Max(150.0, layerTop)) / Math.Min(150.0, soilBottom - 150.0);
-                            sand[1] += Soil.ParticleSizeSand[i] * weight;
-                            silt[1] += Soil.ParticleSizeSilt[i] * weight;
-                            clay[1] += Soil.ParticleSizeClay[i] * weight;
-                            if (Soil.Rocks != null)
-                                gravel[1] += Soil.Rocks[i] * weight;
+                            sand[1] += Analysis.ParticleSizeSand[i] * weight;
+                            silt[1] += Analysis.ParticleSizeSilt[i] * weight;
+                            clay[1] += Analysis.ParticleSizeClay[i] * weight;
+                            if (Analysis.Rocks != null)
+                                gravel[1] += Analysis.Rocks[i] * weight;
                             bulkDensity[1] += Soil.BD[i] * weight;
-                            organicCarbon[1] += Soil.OC[i] * weight;
+                            organicCarbon[1] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[1] += Soil.DUL[i] * weight;
@@ -780,13 +780,13 @@ namespace Models
                         if (layerTop < 450.0 && layerBottom > 300.0)
                         {
                             double weight = (Math.Min(450.0, layerBottom) - Math.Max(300.0, layerTop)) / Math.Min(150.0, soilBottom - 300.0);
-                            sand[2] += Soil.ParticleSizeSand[i] * weight;
-                            silt[2] += Soil.ParticleSizeSilt[i] * weight;
-                            clay[2] += Soil.ParticleSizeClay[i] * weight;
-                            if (Soil.Rocks != null)
-                                gravel[2] += Soil.Rocks[i] * weight;
+                            sand[2] += Analysis.ParticleSizeSand[i] * weight;
+                            silt[2] += Analysis.ParticleSizeSilt[i] * weight;
+                            clay[2] += Analysis.ParticleSizeClay[i] * weight;
+                            if (Analysis.Rocks != null)
+                                gravel[2] += Analysis.Rocks[i] * weight;
                             bulkDensity[2] += Soil.BD[i] * weight;
-                            organicCarbon[2] += Soil.OC[i] * weight;
+                            organicCarbon[2] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[2] += Soil.DUL[i] * weight;
@@ -796,13 +796,13 @@ namespace Models
                         if (layerTop < 600.0 && layerBottom > 450.0)
                         {
                             double weight = (Math.Min(600.0, layerBottom) - Math.Max(450.0, layerTop)) / Math.Min(150.0, soilBottom - 450.0);
-                            sand[3] += Soil.ParticleSizeSand[i] * weight;
-                            silt[3] += Soil.ParticleSizeSilt[i] * weight;
-                            clay[3] += Soil.ParticleSizeClay[i] * weight;
-                            if (Soil.Rocks != null)
-                                gravel[3] += Soil.Rocks[i] * weight;
+                            sand[3] += Analysis.ParticleSizeSand[i] * weight;
+                            silt[3] += Analysis.ParticleSizeSilt[i] * weight;
+                            clay[3] += Analysis.ParticleSizeClay[i] * weight;
+                            if (Analysis.Rocks != null)
+                                gravel[3] += Analysis.Rocks[i] * weight;
                             bulkDensity[3] += Soil.BD[i] * weight;
-                            organicCarbon[3] += Soil.OC[i] * weight;
+                            organicCarbon[3] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
                             {
                                 fieldCapacity[3] += Soil.DUL[i] * weight;
@@ -816,18 +816,19 @@ namespace Models
                     break;
                 case SoilDataSourceEnum.APSIMPhysical:
                 case SoilDataSourceEnum.APSIM:
-                    Array.Copy(Soil.ParticleSizeSand, sand, nSoilLayers);
-                    Array.Copy(Soil.ParticleSizeSilt, silt, nSoilLayers);
-                    Array.Copy(Soil.ParticleSizeClay, clay, nSoilLayers);
-                    if (Soil.Rocks != null)
-                        Array.Copy(Soil.Rocks, gravel, nSoilLayers);
+                    Array.Copy(Analysis.ParticleSizeSand, sand, nSoilLayers);
+                    Array.Copy(Analysis.ParticleSizeSilt, silt, nSoilLayers);
+                    Array.Copy(Analysis.ParticleSizeClay, clay, nSoilLayers);
+                    if (Analysis.Rocks != null)
+                        Array.Copy(Analysis.Rocks, gravel, nSoilLayers);
                     Array.Copy(Soil.BD, bulkDensity, nSoilLayers);
-                    Array.Copy(Soil.OC, organicCarbon, nSoilLayers);
+                    Array.Copy(Soil.Initial.OC, organicCarbon, nSoilLayers);
                     if (useApsimHydraulics)
                     {
                         Array.Copy(Soil.DUL, fieldCapacity, nSoilLayers);
                         Array.Copy(Soil.LL15, wiltingPoint, nSoilLayers);
-                        parms.soilTranspirationFraction = MathUtilities.Multiply_Value(Soil.KL("Wheat"), 10.0);
+                        if (SoilCrop != null)
+                            parms.soilTranspirationFraction = MathUtilities.Multiply_Value(SoilCrop.KL, 10.0);
                     }
                     break;
             }

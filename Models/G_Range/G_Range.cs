@@ -41,6 +41,12 @@ namespace Models
         [Link(IsOptional =true)]
         Soils.Soil Soil = null;
 
+        [Link]
+        Soils.Analysis Analysis = null;
+
+        [Link(IsOptional = true)]
+        Soils.SoilCrop SoilCrop = null;
+
         //[ScopedLinkByName]
         //private ISolute NO3 = null;
 
