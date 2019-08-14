@@ -193,25 +193,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DltTTFM",
-                  "Name": "ThermalTimeFM",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Leaving this here for compatibility reasons...would like to remove it but it might be difficult to find all the references to this component",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "DltTT",
                   "Children": [
@@ -576,7 +557,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                      "VariableName": "[Phenology].DltTTFM",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -596,7 +577,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                      "VariableName": "[Phenology].DltTTFM",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -652,7 +633,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                      "VariableName": "[Phenology].DltTTFM",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1784,7 +1765,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                                  "VariableName": "[Phenology].DltTTFM",
                                   "Name": "ThermalTime",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2160,7 +2141,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                      "VariableName": "[Phenology].DltTTFM",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2272,7 +2253,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTimeFM.Value()",
+                      "VariableName": "[Phenology].DltTTFM",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -9114,7 +9095,8 @@
             "[Clock].Today.DayOfYear as day_of_year",
             "[Clock].Today.Date as Date",
             "[Phenology].ThermalTime.Value() as TT",
-            "[Phenology].ThermalTimeFM",
+            "[Phenology].DltTT as dltTT",
+            "[Phenology].DltTTFM as dltTTFM",
             "[Phenology].PhenoWaterStress",
             "[Sorghum].Phenology.DaysAfterSowing as Das",
             "[Sorghum].Phenology.Stage as Stage",
@@ -11178,7 +11160,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "day_of_year",
-              "YFieldName": "Phenology.ThermalTimeFM",
+              "YFieldName": "dltTTFM",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -11268,7 +11250,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "day_of_year",
-              "YFieldName": "Phenology.ThermalTimeFM",
+              "YFieldName": "dltTTFM",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -16950,7 +16932,7 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "day_of_year",
-                  "YFieldName": "Phenology.ThermalTimeFM",
+                  "YFieldName": "dltTTFM",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -25470,7 +25452,7 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "day_of_year",
-                  "YFieldName": "Phenology.ThermalTimeFM",
+                  "YFieldName": "dltTTFM",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -35299,7 +35281,7 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "day_of_year",
-                  "YFieldName": "Phenology.ThermalTimeFM",
+                  "YFieldName": "dltTTFM",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -37155,7 +37137,7 @@
               "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "day_of_year",
-              "YFieldName": "Phenology.ThermalTimeFM",
+              "YFieldName": "dltTTFM",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
@@ -47052,7 +47034,7 @@
                   "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "day_of_year",
-                  "YFieldName": "Phenology.ThermalTimeFM",
+                  "YFieldName": "dltTTFM",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
