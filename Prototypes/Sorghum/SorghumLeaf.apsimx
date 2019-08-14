@@ -897,7 +897,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].TTFlowerToMaturity.Value()",
+                      "VariableName": "[Phenology].TTFIowerToMaturity.Value()",
                       "Name": "FlowerToMaturity",
                       "Children": [],
                       "IncludeInDocumentation": true,
