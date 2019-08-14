@@ -68,7 +68,7 @@
 
             var water = soil.Children[0] as Water;
             var soilOrganicMatter = soil.Children[1] as SoilOrganicMatter;
-            var sample = soil.Children[2] as Sample;
+            var sample = soil.Children[3] as Sample;
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300, 300 };
@@ -143,7 +143,7 @@
 
             var water = soil.Children[0] as Water;
             var soilOrganicMatter = soil.Children[1] as SoilOrganicMatter;
-            var sample = soil.Children[2] as Sample;
+            var sample = soil.Children[3] as Sample;
 
             // Make sure layer structures have been standardised.
             var targetThickness = new double[] { 100, 300 };
@@ -204,7 +204,7 @@
 
             SoilStandardiser.Standardise(soil);
 
-            var sample = soil.Children[2] as Sample;
+            var sample = soil.Children[3] as Sample;
 
             Assert.AreEqual(Apsim.Children(soil, typeof(Sample)).Count, 1);
             Assert.AreEqual(sample.Name, "Initial");
@@ -219,7 +219,7 @@
             Assert.IsNull(soilOrganicMatter.OC);
 
             var analysis = soil.Children[2] as Analysis;
-            Assert.IsNull(analysis);
+            Assert.NotNull(analysis);
         }
     }
 }

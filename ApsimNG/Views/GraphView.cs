@@ -471,12 +471,6 @@ namespace UserInterface.Views
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
 
-            // If the X data is not monotonic, the area will not be
-            // filled with colour. In this case, show a warning to the
-            // user so they know why their area series is not working.
-            EnsureMonotonic(points.Select(p => p.X).ToArray());
-            EnsureMonotonic(points2.Select(p => p.X).ToArray());
-
             if (showOnLegend)
                 series.Title = title;
             if (points != null && points2 != null)
@@ -621,7 +615,18 @@ namespace UserInterface.Views
                     yVal += MathUtilities.LinearInterpReal(xVal, x.Cast<double>().ToArray(), y, out bool didInterp);
                 y2.Add(yVal);
             }
+
             DrawRegion(title, x1, y2, x1, y1, xAxisType, yAxisType, colour, showOnLegend);
+
+            // If the X data is not monotonic, the area will not be
+            // filled with colour. In this case, show a warning to the
+            // user so they know why their area series is not working.
+            AreaSeries series = plot1.Model.Series.OfType<AreaSeries>().LastOrDefault();
+            if (series != null)
+            {
+                EnsureMonotonic(series.Points.Select(p => p.X).ToArray());
+                EnsureMonotonic(series.Points2.Select(p => p.X).ToArray());
+            }
         }
 
         /// <summary>

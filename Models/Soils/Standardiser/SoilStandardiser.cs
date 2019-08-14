@@ -88,7 +88,7 @@
             initial.CL = MergeArrays(initial.CL, analysis.CL);
 
             soilOrganicMatter.OC = null;
-            soil.Children.Remove(analysis);
+            //soil.Children.Remove(analysis);
         }
 
 
