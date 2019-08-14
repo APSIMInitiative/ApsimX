@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 58,
+  "Version": 59,
   "Name": "Simulations",
   "Children": [
     {
@@ -9894,8 +9894,8 @@
                         200.0,
                         200.0
                       ],
-                      "NO3": null,
-                      "NH4": null,
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": [
                         0.235,
                         0.252,
@@ -9913,8 +9913,6 @@
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -9938,38 +9936,44 @@
                         200.0,
                         200.0
                       ],
-                      "NO3": [
-                        13.936000000000002,
-                        2.1882200000000003,
-                        3.27978,
-                        2.4840000000000004,
-                        3.0800000000000005,
-                        4.5477,
-                        11.55294,
-                        18.47442,
-                        19.256,
-                        24.41712
-                      ],
-                      "NH4": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
-                      ],
+                      "NO3N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          13.936000000000002,
+                          2.1882200000000003,
+                          3.27978,
+                          2.4840000000000004,
+                          3.0800000000000005,
+                          4.5477,
+                          11.55294,
+                          18.47442,
+                          19.256,
+                          24.41712
+                        ],
+                        "StoredAsPPM": false
+                      },
+                      "NH4N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1
+                        ],
+                        "StoredAsPPM": true
+                      },
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -17578,8 +17582,8 @@
                         200.0,
                         200.0
                       ],
-                      "NO3": null,
-                      "NH4": null,
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": [
                         0.235,
                         0.252,
@@ -17597,8 +17601,6 @@
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -17622,38 +17624,44 @@
                         200.0,
                         200.0
                       ],
-                      "NO3": [
-                        13.936000000000002,
-                        2.1882200000000003,
-                        3.27978,
-                        2.4840000000000004,
-                        3.080000000000001,
-                        4.5477,
-                        11.552939999999998,
-                        18.47442,
-                        19.256,
-                        24.41712
-                      ],
-                      "NH4": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
-                      ],
+                      "NO3N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          13.936000000000002,
+                          2.1882200000000003,
+                          3.27978,
+                          2.4840000000000004,
+                          3.080000000000001,
+                          4.5477,
+                          11.552939999999998,
+                          18.47442,
+                          19.256,
+                          24.41712
+                        ],
+                        "StoredAsPPM": false
+                      },
+                      "NH4N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1
+                        ],
+                        "StoredAsPPM": true
+                      },
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -26094,8 +26102,8 @@
                         200.0,
                         200.0
                       ],
-                      "NO3": null,
-                      "NH4": null,
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": [
                         0.235,
                         0.252,
@@ -26113,8 +26121,6 @@
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -26138,38 +26144,44 @@
                         200.0,
                         200.0
                       ],
-                      "NO3": [
-                        13.936,
-                        2.188,
-                        3.27978,
-                        2.4840000000000004,
-                        3.080000000000001,
-                        4.5477,
-                        11.552939999999998,
-                        18.47442,
-                        19.256,
-                        24.41712
-                      ],
-                      "NH4": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
-                      ],
+                      "NO3N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          13.936,
+                          2.188,
+                          3.27978,
+                          2.4840000000000004,
+                          3.080000000000001,
+                          4.5477,
+                          11.552939999999998,
+                          18.47442,
+                          19.256,
+                          24.41712
+                        ],
+                        "StoredAsPPM": false
+                      },
+                      "NH4N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1
+                        ],
+                        "StoredAsPPM": true
+                      },
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -35985,8 +35997,8 @@
                         200.0,
                         200.0
                       ],
-                      "NO3": null,
-                      "NH4": null,
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": [
                         0.235,
                         0.252,
@@ -36004,8 +36016,6 @@
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -36029,38 +36039,44 @@
                         200.0,
                         200.0
                       ],
-                      "NO3": [
-                        13.936000000000002,
-                        2.1882200000000003,
-                        3.27978,
-                        2.4840000000000004,
-                        3.0800000000000005,
-                        4.5477,
-                        11.55294,
-                        18.47442,
-                        19.256,
-                        24.41712
-                      ],
-                      "NH4": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
-                      ],
+                      "NO3N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          13.936000000000002,
+                          2.1882200000000003,
+                          3.27978,
+                          2.4840000000000004,
+                          3.0800000000000005,
+                          4.5477,
+                          11.55294,
+                          18.47442,
+                          19.256,
+                          24.41712
+                        ],
+                        "StoredAsPPM": false
+                      },
+                      "NH4N": {
+                        "$type": "Models.Soils.NitrogenValue, Models",
+                        "Values": [
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1,
+                          0.1
+                        ],
+                        "StoredAsPPM": true
+                      },
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
