@@ -255,6 +255,7 @@
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <Compile Include="Soils\NitrogenValue.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
+    <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
     <Compile Include="Soils\Standardiser\SoilChecker.cs" />
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
@@ -580,8 +581,6 @@
     <Compile Include="Soils\Soil.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
     <Compile Include="Soils\SoilOrganicMatter.cs" />
-    <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
-    <Compile Include="Soils\SoilTemp\SoilTemperature2.cs" />
     <Compile Include="Soils\SWIM\Swim.cs" />
     <Compile Include="Soils\SWIM\SwimSoluteParameters.cs" />
     <Compile Include="Soils\SWIM\SwimSubsurfaceDrain.cs" />

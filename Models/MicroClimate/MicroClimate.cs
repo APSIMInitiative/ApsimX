@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using System.Linq;
 
 namespace Models
 {
@@ -120,6 +121,18 @@ namespace Models
         [Bounds(Lower = 0.0, Upper = 1.0)]
         [Units("MJ/MJ")]
         public double SoilHeatFluxFraction { get; set; }
+
+        /// <summary>
+        /// Height of the tallest canopy.
+        /// </summary>
+        [Units("mm")]
+        public double CanopyHeight
+        {
+            get
+            {
+                return zoneMicroClimates.Max(m => m.Canopies.Max(c => c.Canopy.Height));
+            }
+        }
 
         /// <summary>The fraction of intercepted rainfall that evaporates at night</summary>
         [Description("The fraction of intercepted rainfall that evaporates at night")]
