@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using Models.PMF.Organs;
+using Models.PMF.Phen;
+using Newtonsoft.Json;
 
 namespace Models.PMF
 {
@@ -56,13 +58,15 @@ namespace Models.PMF
         ///// <summary>The list of organs</summary>
         //private List<IArbitration> Organs = new List<IArbitration>();
 
-        ///// <summary>The list of organs</summary>
         [Link]
         private Root root = null;
 
         [Link]
         private SorghumLeaf leaf = null;
-        
+
+        [Link]
+        private Phenology phenology = null;
+
         #endregion
 
         #region Main outputs
@@ -96,6 +100,13 @@ namespace Models.PMF
         private List<IModel> uptakeModels = null;
         private List<IModel> zones = null;
         private bool firstEstimate;
+
+        /// <summary>
+        /// Total TTFM accumulated from flowering.
+        /// </summary>
+        [JsonIgnore]
+        public double TTFMFromFlowering { get; private set; }
+
         private List<ZoneWaterAndN> cachedZones;
 
         /// <summary>Called at the start of the simulation.</summary>
@@ -112,6 +123,12 @@ namespace Models.PMF
         private void OnStartOfDay(object sender, EventArgs e)
         {
             firstEstimate = true;
+        }
+
+        [EventSubscribe("DoPhenology")]
+        private void OnEndOfDay(object sender, EventArgs e)
+        {
+            DltTT = (double)Apsim.Get(this, "[Phenology].DltTT.Value()");
         }
 
         #region IUptake interface
@@ -323,17 +340,16 @@ namespace Models.PMF
                         var totalDiffusion = MathUtilities.Sum(diffnAvailable);//g/m^2
 
                         var potentialSupply = totalMassFlow + totalDiffusion;
-                        var dltt = root.DltThermalTime.Value();
                         var actualDiffusion = 0.0;
-                        var actualMassFlow = dltt > 0 ? totalMassFlow : 0.0;
+                        var actualMassFlow = DltTT > 0 ? totalMassFlow : 0.0;
                         var maxDiffusionConst = root.MaxDiffusion.Value();
 
-                        double ttElapsed = (Apsim.Find(this, "TTFMFromFlowering") as Functions.IFunction).Value();
+                        UpdateTTElapsed();
                         double NUptakeCease = (Apsim.Find(this, "NUptakeCease") as Functions.IFunction).Value();
-                        if (ttElapsed > NUptakeCease)
+                        if (TTFMFromFlowering > NUptakeCease)
                             totalMassFlow = 0;
 
-                        if (totalMassFlow < nDemand && ttElapsed < NUptakeCease) // fixme && ttElapsed < nUptakeCease
+                        if (totalMassFlow < nDemand && TTFMFromFlowering < NUptakeCease) // fixme && ttElapsed < nUptakeCease
                         {
                             actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
                             actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
@@ -342,7 +358,7 @@ namespace Models.PMF
                             var maxRate = root.MaxNUptakeRate.Value();
 
                             var maxUptakeRateFrac = Math.Min(1.0, (potentialSupply / root.NSupplyFraction.Value())) * root.MaxNUptakeRate.Value();
-                            var maxUptake = Math.Max(0, maxUptakeRateFrac * dltt - actualMassFlow);
+                            var maxUptake = Math.Max(0, maxUptakeRateFrac * DltTT - actualMassFlow);
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
 
@@ -471,10 +487,22 @@ namespace Models.PMF
 
         #endregion
 
-        [EventSubscribe("DoPhenology")]
-        private void OnDoPhenology(object sender, EventArgs e)
+        private void UpdateTTElapsed()
         {
-            DltTT = (double)Apsim.Get(this, "[Phenology].DltTT.Value()");
+            // Can't do this at end of day because it will be too late.
+            // Can't do this in DoPhenology because it will happen before daily
+            // phenology development.
+            int flowering = phenology.StartStagePhaseIndex("Flowering");
+            int maturity = phenology.EndStagePhaseIndex("Maturity");
+            if (phenology.Between(flowering, maturity))
+            {
+                double dltTT;
+                if (phenology.CurrentPhase.Start == "Flowering" && phenology.CurrentPhase is GenericPhase)
+                    dltTT = (phenology.CurrentPhase as GenericPhase).ProgressionForTimeStep;
+                else
+                    dltTT = (double)Apsim.Get(this, "[Phenology].DltTTFM.Value()");
+                TTFMFromFlowering += dltTT;
+            }
         }
 
         #region Plant interface methods
