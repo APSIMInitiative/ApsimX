@@ -1155,7 +1155,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].CurrentPhase.ProgressionForTimeStep",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1180,7 +1180,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].CurrentPhase.ProgressionForTimeStep",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1205,7 +1205,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].CurrentPhase.ProgressionForTimeStep",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
