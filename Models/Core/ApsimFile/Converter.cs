@@ -707,18 +707,21 @@
                 var water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "Water");
                 if (water == null)
                     water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "WEIRDO");
-                var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
-                var sampleThickness = sample["Thickness"].Values<double>().ToArray();
 
                 var no3Node = sample["NO3N"];
                 if (no3Node != null && no3Node.HasValues)
                 {
+                    if (analysis == null)
+                        throw new Exception("Cannot find an analysis node while converting a soil sample.");
+
                     // Convert units to ppm if necessary.
                     var no3Values = no3Node["Values"] as JArray;
                     if (!no3Node["StoredAsPPM"].Value<bool>())
                         ConvertToPPM(no3Values);
 
                     // Make sure layers match analysis layers.
+                    var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
+                    var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                     var values = no3Values.Values<double>().ToArray();
                     var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 1.0);
                     no3Values = new JArray(mappedValues);
@@ -730,12 +733,17 @@
                 var nh4Node = sample["NH4N"];
                 if (nh4Node != null && nh4Node.HasValues)
                 {
+                    if (analysis == null)
+                        throw new Exception("Cannot find an analysis node while converting a soil sample.");
+
                     // Convert units to ppm if necessary.
                     var nh4Values = nh4Node["Values"] as JArray;
                     if (!nh4Node["StoredAsPPM"].Value<bool>())
                         ConvertToPPM(nh4Values);
 
                     // Make sure layers match analysis layers.
+                    var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
+                    var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                     var values = nh4Values.Values<double>().ToArray();
                     var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 0.2);
                     nh4Values = new JArray(mappedValues);

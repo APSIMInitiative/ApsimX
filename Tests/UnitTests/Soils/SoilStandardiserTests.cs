@@ -115,7 +115,7 @@
                     new Analysis
                     {
                         Thickness = new double[] { 100, 200 },
-                        NO3N = new double[] { 27 },
+                        NO3N = new double[] { 27, 6 },
                         CL = new double[] { 38, double.NaN }
                     },
                     new Sample
