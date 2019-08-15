@@ -44,6 +44,7 @@
                     new Analysis
                     {
                         Thickness = new double[] { 100, 200 },
+                        NO3N = new double[] { 27, 10 },
                         CL = new double[] { 38, double.NaN }
                     },
                     new Sample
@@ -56,7 +57,6 @@
                     new Sample
                     {
                         Thickness = new double[] { 1000 },
-                        NO3N = new double[] { 27 },
                         OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     }
@@ -115,6 +115,7 @@
                     new Analysis
                     {
                         Thickness = new double[] { 100, 200 },
+                        NO3N = new double[] { 27 },
                         CL = new double[] { 38, double.NaN }
                     },
                     new Sample
@@ -127,7 +128,6 @@
                     new Sample
                     {
                         Thickness = new double[] { 1000 },
-                        NO3N = new double[] { 27 },
                         OC = new double[] { 1.35 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     },
@@ -180,7 +180,9 @@
                     },
                     new Analysis
                     {
-                        Thickness = new double[] { 100, 200 },
+                        Thickness = new double[] { 50, 50 },
+                        NO3N = new double[] { 27, 16 },
+                        NH4N = new double[] { 2, double.NaN },
                         PH = new double[] { 6.8, 6.9 },
                         EC = new double[] { 100, 200 }
                     },
@@ -194,8 +196,6 @@
                     new Sample
                     {
                         Thickness = new double[] { 100, 200 },
-                        NO3N = new double[] { 27, 16 },
-                        NH4N = new double[] { 2, double.NaN },
                         PH = new double[] { 6.4, double.NaN },
                     }
                 }
@@ -204,21 +204,21 @@
 
             SoilStandardiser.Standardise(soil);
 
-            var sample = soil.Children[3] as Sample;
+            var initial = soil.Children[3] as Sample;
+            var analysis = soil.Children[2] as Analysis;
 
             Assert.AreEqual(Apsim.Children(soil, typeof(Sample)).Count, 1);
-            Assert.AreEqual(sample.Name, "Initial");
-            Assert.AreEqual(sample.SW, new double[] { 0.1, 0.2 } );
-            Assert.AreEqual(sample.NO3N, new double[] { 36.720000000000006, 38.912 });  // kg/ha
-            Assert.AreEqual(sample.NH4N, new double[] { 2.72, double.NaN }); // kg/ha
-            Assert.AreEqual(sample.OC, new double[] { 2.0, 0.9 });
-            Assert.AreEqual(sample.PH, new double[] { 6.4, 6.9 });
-            Assert.AreEqual(sample.EC, new double[] { 100, 200 });
+            Assert.AreEqual(initial.Name, "Initial");
+            Assert.AreEqual(initial.SW, new double[] { 0.1, 0.2 } );
+            Assert.AreEqual(initial.NO3N, new double[] { 29.240000000000002, 2.432 });  // kg/ha
+            Assert.AreEqual(initial.NH4N, new double[] { 1.4960000000000002, 0.4864 }); // kg/ha
+            Assert.AreEqual(initial.OC, new double[] { 2.0, 0.9 });
+            Assert.AreEqual(initial.PH, new double[] { 6.4, 6.9 });
+            Assert.AreEqual(initial.EC, new double[] { 150, 200 });
 
             var soilOrganicMatter = soil.Children[1] as SoilOrganicMatter;
             Assert.IsNull(soilOrganicMatter.OC);
 
-            var analysis = soil.Children[2] as Analysis;
             Assert.NotNull(analysis);
         }
     }

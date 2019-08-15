@@ -677,10 +677,10 @@
             var sample = JsonUtilities.Parent(JsonUtilities.Parent(values));
             var soil = JsonUtilities.Parent(sample) as JObject;
             var water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "Water");
-
-            // Get soil thickness and bulk density.
             if (water == null)
                 water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "WEIRDO");
+
+            // Get soil thickness and bulk density.
             var soilThickness = water["Thickness"].Values<double>().ToArray();
             var soilBD = water["BD"].Values<double>().ToArray();
 
@@ -693,8 +693,8 @@
         }
 
         /// <summary>
-        /// Upgrades to version 59. Renames 'SoilCropOilPalm' to 'SoilCrop'.
-        /// Renames Soil.SoilOrganicMatter.OC to Soil.Initial.OC
+        /// Upgrades to version 60. Move NO3 and NH4 from sample to Analaysis node
+        /// and always store as ppm.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -702,21 +702,47 @@
         {
             foreach (var sample in JsonUtilities.ChildrenRecursively(root, "Sample"))
             {
+                var soil = JsonUtilities.Parent(sample) as JObject;
+                var analysis = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "Analysis");
+                var water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "Water");
+                if (water == null)
+                    water = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "WEIRDO");
+                var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
+                var sampleThickness = sample["Thickness"].Values<double>().ToArray();
+
                 var no3Node = sample["NO3N"];
                 if (no3Node != null && no3Node.HasValues)
                 {
+                    // Convert units to ppm if necessary.
                     var no3Values = no3Node["Values"] as JArray;
                     if (!no3Node["StoredAsPPM"].Value<bool>())
                         ConvertToPPM(no3Values);
-                    sample["NO3N"] = no3Values;
+
+                    // Make sure layers match analysis layers.
+                    var values = no3Values.Values<double>().ToArray();
+                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 1.0);
+                    no3Values = new JArray(mappedValues);
+
+                    // Move from sample to analysis
+                    analysis["NO3N"] = no3Values;
+                    sample["NO3N"] = null;
                 }
                 var nh4Node = sample["NH4N"];
                 if (nh4Node != null && nh4Node.HasValues)
                 {
+                    // Convert units to ppm if necessary.
                     var nh4Values = nh4Node["Values"] as JArray;
                     if (!nh4Node["StoredAsPPM"].Value<bool>())
                         ConvertToPPM(nh4Values);
-                    sample["NH4N"] = nh4Values;
+
+                    // Make sure layers match analysis layers.
+                    var values = nh4Values.Values<double>().ToArray();
+                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 0.2);
+                    nh4Values = new JArray(mappedValues);
+
+                    // Move from sample to analysis
+                    analysis["NH4N"] = nh4Values;
+                    sample["NH4N"] = null;
                 }
             }
         }

@@ -32,12 +32,6 @@
                     samples[0].SWUnits = samples[i].SWUnits;
                 }
 
-                if (samples[i].NO3N != null && MathUtilities.ValuesInArray(samples[i].NO3N))
-                    samples[0].NO3N = samples[i].NO3N;
-
-                if (samples[i].NH4N != null && MathUtilities.ValuesInArray(samples[i].NH4N))
-                    samples[0].NH4N = samples[i].NH4N;
-
                 if (MathUtilities.ValuesInArray(samples[i].OC))
                 {
                     samples[0].OC = samples[i].OC;
@@ -61,10 +55,6 @@
                 soil.Children.Remove(samples[i]);
             }
 
-            if (samples[0].NO3N != null)
-                samples[0].NO3N = soil.ppm2kgha(samples[0].NO3N);
-            if (samples[0].NH4N != null)
-                samples[0].NH4N = soil.ppm2kgha(samples[0].NH4N);
         }
         
         /// <summary>Creates an initial sample.</summary>
@@ -80,6 +70,11 @@
                 soil.Children.Add(initial);
             }
             initial.Name = "Initial";
+
+            if (analysis.NO3N != null)
+                initial.NO3N = soil.ppm2kgha(analysis.NO3N);
+            if (analysis.NH4N != null)
+                initial.NH4N = soil.ppm2kgha(analysis.NH4N);
 
             initial.OC = MergeArrays(initial.OC, soilOrganicMatter.OC);
             initial.PH = MergeArrays(initial.PH, analysis.PH);
