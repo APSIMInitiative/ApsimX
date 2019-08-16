@@ -3890,31 +3890,41 @@
                 },
                 {
                   "$type": "Models.Functions.ArrayFunction, Models",
-                  "Values": "1 1 1",
+                  "Values": "0.4 0.55 0.68 0.79 0.86 0.91 0.93 1 1",
+                  "Units": null,
+                  "Name": "LeafSizeAgeMultiplier",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "The parameters were calculated from Martre and Dmbreville 2018.\r\n\r\nMartre P, Dambreville A. 2018. A Model of Leaf Coordination to Scale-Up Leaf Expansion from the Organ to the Canopy. Plant Physiology 176: 704–716.\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ArrayFunction, Models",
+                  "Values": "0.4 0.55 0.68 0.79 0.86 0.91 0.93 1 1",
                   "Units": null,
                   "Name": "LagDurationAgeMultiplier",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.ArrayFunction, Models",
-                  "Values": "1 1 1",
+                  "Values": "1 1",
                   "Units": null,
                   "Name": "SenescenceDurationAgeMultiplier",
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.ArrayFunction, Models",
-                  "Values": "1 1 1 1 1 1 1 1 1 1 1 1",
-                  "Units": null,
-                  "Name": "LeafSizeAgeMultiplier",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -4368,6 +4378,177 @@
               "Name": "CarbonConcentration",
               "Children": [],
               "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Struct.ApexTiller, Models",
+              "Name": "Apex",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "stemSenescenceAge",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 4.0,
+                      "Units": "number of leaf tips appeared",
+                      "Name": "stemSenescenceAge",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "XProperty": "[Leaf].CoverTotal",
+                      "Name": "CoverEffect",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.5,
+                            0.7,
+                            1.0
+                          ],
+                          "Y": [
+                            0.75,
+                            0.75,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.Graph, Models",
+                              "Caption": null,
+                              "Axis": [
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 0,
+                                  "Title": "Y",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                },
+                                {
+                                  "$type": "Models.Graph.Axis, Models",
+                                  "Type": 3,
+                                  "Title": "X",
+                                  "Inverted": false,
+                                  "Minimum": "NaN",
+                                  "Maximum": "NaN",
+                                  "Interval": "NaN",
+                                  "DateTimeAxis": false,
+                                  "CrossesAtZero": false
+                                }
+                              ],
+                              "LegendPosition": 3,
+                              "DisabledSeries": [],
+                              "Name": "Graph",
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.Series, Models",
+                                  "Type": 1,
+                                  "XAxis": 3,
+                                  "YAxis": 0,
+                                  "ColourArgb": -65536,
+                                  "FactorToVaryColours": null,
+                                  "FactorToVaryMarkers": null,
+                                  "FactorToVaryLines": null,
+                                  "Marker": 11,
+                                  "MarkerSize": 0,
+                                  "Line": 0,
+                                  "LineThickness": 0,
+                                  "Checkpoint": "Current",
+                                  "TableName": null,
+                                  "XFieldName": ".Simulations.Replacements.Wheat.Leaf.Apex.stemSenescenceAge.CoverEffect.XYPairs.X",
+                                  "YFieldName": ".Simulations.Replacements.Wheat.Leaf.Apex.stemSenescenceAge.CoverEffect.XYPairs.Y",
+                                  "X2FieldName": null,
+                                  "Y2FieldName": null,
+                                  "ShowInLegend": false,
+                                  "IncludeSeriesNameInLegend": false,
+                                  "Cumulative": false,
+                                  "CumulativeX": false,
+                                  "Filter": null,
+                                  "Name": "Series",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "XProperty": "[Arbitrator].FN",
+                      "Name": "NitrogenEffect",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Inadequate Nitrogen supply is assumed to affect tillering prior to any effect on photosynthesis or leaf size.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.7,
+                            3.0
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "At terminal spikelet, the tillers with <= (less and equal) 5 appeared leaf tips will not continue to grow (no new leaves). ",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
@@ -5053,6 +5234,14 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -5804,6 +5993,14 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
