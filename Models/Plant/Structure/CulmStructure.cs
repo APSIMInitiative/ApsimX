@@ -85,6 +85,9 @@ namespace Models.PMF.Struct
         [Link]
         private IFunction verticalAdjustment = null;
 
+        [Link]
+        private IFunction aTillerVert = null;
+
         private bool leavesInitialised;
         private double tillersAdded;
         private bool dayofEmergence;
@@ -267,7 +270,7 @@ namespace Models.PMF.Struct
                 {
                     CulmNumber = nCulms,
                     Proportion = fraction,
-                    VerticalAdjustment = tillersAdded * verticalAdjustment.Value(), //add aMaxVert in calc
+                    VerticalAdjustment = tillersAdded * aTillerVert.Value() + verticalAdjustment.Value(), //add aMaxVert in calc
                     LeafAtAppearance = leafAtAppearance,
                     CurrentLeafNo = dltLeafNo
                 });
