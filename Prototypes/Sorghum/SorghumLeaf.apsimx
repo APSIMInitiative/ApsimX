@@ -1556,7 +1556,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.3,
                   "Units": null,
                   "Name": "VerticalAdjustment",
                   "Children": [],
