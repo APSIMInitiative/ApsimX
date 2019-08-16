@@ -36,20 +36,6 @@
                     sample.SW = SWVolumetric(sample, soil);
                 sample.SWUnits = Sample.SWUnitsEnum.Volumetric;
 
-                // Convert no3 units to ppm.
-                if (sample.NO3N != null && !sample.NO3N.StoredAsPPM)
-                {
-                    var ppm = sample.NO3N.PPM;
-                    sample.NO3N.PPM = ppm;
-                }
-
-                // Convert nh4 units to ppm.
-                if (sample.NH4N != null && !sample.NH4N.StoredAsPPM)
-                {
-                    var ppm = sample.NH4N.PPM;
-                    sample.NH4N.PPM = ppm;
-                }
-
                 // Convert OC to total (%)
                 if (MathUtilities.ValuesInArray(sample.OC))
                     sample.OC = OCTotalPercent(sample.OC, sample.OCUnits);

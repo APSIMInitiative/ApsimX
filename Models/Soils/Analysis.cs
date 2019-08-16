@@ -18,10 +18,22 @@ namespace Models.Soils
     public class Analysis : Model
     {
         /// <summary>Gets or sets the thickness.</summary>
-        /// <value>The thickness.</value>
         [Description("Depth (mm)")]
         [Summary]
         public double[] Thickness { get; set; }
+
+        /// <summary>Nitrate NO3.</summary>
+        [Description("NO3N")]
+        [Summary]
+        [Units("ppm")]
+        public double[] NO3N { get; set; }
+
+        /// <summary>Ammonia NH4</summary>
+        [Description("NH4N")]
+        [Summary]
+        [Units("ppm")]
+        public double[] NH4N { get; set; }
+
 
         /// <summary>Gets or sets the rocks.</summary>
         /// <value>The rocks.</value>
