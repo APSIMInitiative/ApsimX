@@ -1566,7 +1566,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.05,
                   "Units": null,
                   "Name": "ATillerVert",
                   "Children": [],
