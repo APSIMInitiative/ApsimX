@@ -26,6 +26,11 @@ namespace Models.PMF.Organs
 
         /// <summary>The planting density for area calculations</summary>
         public double Density { get; set; }
+
+        /// <summary>
+        /// Initial leaf number.
+        /// </summary>
+        public double CurrentLeafNo { get; set; }
     }
 
     ///<summary>

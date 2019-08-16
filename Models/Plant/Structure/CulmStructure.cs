@@ -89,6 +89,7 @@ namespace Models.PMF.Struct
         private double tillersAdded;
         private bool dayofEmergence;
         private double dltTTDayBefore;
+        private double dltLeafNo;
 
         /// <summary>FertileTillerNumber</summary>
         public double FertileTillerNumber { get; set; }
@@ -179,8 +180,8 @@ namespace Models.PMF.Struct
             /// <summary>Calculate the number of new leaf that will appear today.</summary>
         void calcLeafAppearance()
         {
-            double dltNewLeafAppeared = MathUtilities.Bound(MathUtilities.Divide(dltTTDayBefore, phyllochron.Value(), 0), 0.0, remainingLeaves);
-            var newLeafNo = CurrentLeafNo + dltNewLeafAppeared;
+            dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(dltTTDayBefore, phyllochron.Value(), 0), 0.0, remainingLeaves);
+            var newLeafNo = CurrentLeafNo + dltLeafNo;
             var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
             if (newLeafAppeared)
             {
@@ -190,7 +191,7 @@ namespace Models.PMF.Struct
             CurrentLeafNo = newLeafNo;
             for (var i = 0; i < leaf.Culms.Count; ++i)
             {
-                leaf.Culms[i].UpdateLeafNumber(dltNewLeafAppeared, updatedFinalLeaf);
+                leaf.Culms[i].UpdateLeafNumber(dltLeafNo, updatedFinalLeaf);
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -267,7 +268,8 @@ namespace Models.PMF.Struct
                     CulmNumber = nCulms,
                     Proportion = fraction,
                     VerticalAdjustment = tillersAdded * verticalAdjustment.Value(), //add aMaxVert in calc
-                    LeafAtAppearance = leafAtAppearance
+                    LeafAtAppearance = leafAtAppearance,
+                    CurrentLeafNo = dltLeafNo
                 });
 
                 //bell curve distribution is adjusted horizontally by moving the curve to the left.

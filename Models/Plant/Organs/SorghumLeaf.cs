@@ -523,6 +523,7 @@ namespace Models.PMF.Organs
             culm.LeafAtAppearance = parameters.LeafAtAppearance;
             culm.VerticalAdjustment = parameters.VerticalAdjustment;
             culm.Density = SowingDensity;
+            culm.CurrentLeafNumber = parameters.CurrentLeafNo;
 
             culm.aX0 = (Apsim.Find(this, "aX0") as Functions.IFunction).Value();
             culm.aMaxSlope = (Apsim.Find(this, "aMaxSlope") as Functions.IFunction).Value();
