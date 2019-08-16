@@ -693,6 +693,18 @@
         }
 
         /// <summary>
+        /// Does the specified array have non NaN values?
+        /// </summary>
+        /// <param name="no3Values">The array to remove them from.</param>
+        private static bool HasValues(JArray no3Values)
+        {
+            foreach (var value in no3Values)
+                if (value.ToString() != "NaN")
+                    return true;
+            return false;
+        }
+
+        /// <summary>
         /// Upgrades to version 60. Move NO3 and NH4 from sample to Analaysis node
         /// and always store as ppm.
         /// </summary>
@@ -716,20 +728,25 @@
 
                     // Convert units to ppm if necessary.
                     var no3Values = no3Node["Values"] as JArray;
-                    if (!no3Node["StoredAsPPM"].Value<bool>())
-                        ConvertToPPM(no3Values);
 
-                    // Make sure layers match analysis layers.
-                    var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
-                    var sampleThickness = sample["Thickness"].Values<double>().ToArray();
-                    var values = no3Values.Values<double>().ToArray();
-                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 1.0);
-                    no3Values = new JArray(mappedValues);
+                    // Only overlay values if they are not NaN values.
+                    if (HasValues(no3Values))
+                    {
+                        if (!no3Node["StoredAsPPM"].Value<bool>())
+                            ConvertToPPM(no3Values);
 
-                    // Move from sample to analysis
-                    analysis["NO3N"] = no3Values;
-                    sample["NO3N"] = null;
+                        // Make sure layers match analysis layers.
+                        var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
+                        var sampleThickness = sample["Thickness"].Values<double>().ToArray();
+                        var values = no3Values.Values<double>().ToArray();
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 1.0);
+                        no3Values = new JArray(mappedValues);
+
+                        // Move from sample to analysis
+                        analysis["NO3N"] = no3Values;
+                    }
                 }
+                sample["NO3N"] = null;
                 var nh4Node = sample["NH4N"];
                 if (nh4Node != null && nh4Node.HasValues)
                 {
@@ -738,20 +755,25 @@
 
                     // Convert units to ppm if necessary.
                     var nh4Values = nh4Node["Values"] as JArray;
-                    if (!nh4Node["StoredAsPPM"].Value<bool>())
-                        ConvertToPPM(nh4Values);
 
-                    // Make sure layers match analysis layers.
-                    var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
-                    var sampleThickness = sample["Thickness"].Values<double>().ToArray();
-                    var values = nh4Values.Values<double>().ToArray();
-                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 0.2);
-                    nh4Values = new JArray(mappedValues);
+                    // Only overlay values if they are not NaN values.
+                    if (HasValues(nh4Values))
+                    {
+                        if (!nh4Node["StoredAsPPM"].Value<bool>())
+                            ConvertToPPM(nh4Values);
 
-                    // Move from sample to analysis
-                    analysis["NH4N"] = nh4Values;
-                    sample["NH4N"] = null;
+                        // Make sure layers match analysis layers.
+                        var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
+                        var sampleThickness = sample["Thickness"].Values<double>().ToArray();
+                        var values = nh4Values.Values<double>().ToArray();
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, sampleThickness, analysisThickness, 0.2);
+                        nh4Values = new JArray(mappedValues);
+
+                        // Move from sample to analysis
+                        analysis["NH4N"] = nh4Values;
+                    }
                 }
+                sample["NH4N"] = null;
             }
         }
 

@@ -85,6 +85,18 @@
               "SWUnits": 0,
               "NO3N": null,
               "NH4N": null
+            },
+            {
+              "$type": "Models.Soils.Sample, Models",
+              "Thickness": [
+                200.0,
+                200.0
+              ],
+              "NO3Units": 1,
+              "NH4Units": 2,
+              "SWUnits": 0,
+              "NO3N": null,
+              "NH4N": null
             }
           ]
         }
