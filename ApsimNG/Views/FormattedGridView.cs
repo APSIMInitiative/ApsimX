@@ -189,15 +189,25 @@
             {
                 if (!Convert.IsDBNull(changedCell.Value))
                 {
-                    var column = columnMetadata[changedCell.ColumnIndex];
-                    var array = column.Values as Array;
+                    GridColumnMetaData column = columnMetadata[changedCell.ColumnIndex];
+                    Array array = column.Values as Array;
+                    int numValues = e.ChangedCells.Max(cell => cell.RowIndex);
                     if (array == null)
                     {
-                        var numValues = e.ChangedCells.Max(cell => cell.RowIndex);
                         array = Array.CreateInstance(column.ColumnDataType, numValues + 1);
-                        column.Values = array;
+                    }
+
+                    // If we've added a new row, the column metadata will not contain an entry
+                    // for this row (the array will be too short).
+                    if (array.Length <= changedCell.RowIndex)
+                    {
+                        Array newArray = Array.CreateInstance(column.ColumnDataType, numValues + 1);
+                        array.CopyTo(newArray, 0);
+                        array = newArray;
                     }
                     array.SetValue(Convert.ChangeType(changedCell.Value, column.ColumnDataType), changedCell.RowIndex);
+
+                    column.Values = array;
                     column.ValuesHaveChanged = true;
                     if (column.AddTotalToColumnName)
                         refreshGrid = true;
