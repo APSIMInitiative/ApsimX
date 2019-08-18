@@ -1,4 +1,7 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.PMF.Phen;
+using Models.PMF.Struct;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +29,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The planting density for area calculations</summary>
         public double Density { get; set; }
-
-        /// <summary>
-        /// Initial leaf number.
-        /// </summary>
-        public double CurrentLeafNo { get; set; }
     }
 
     ///<summary>
@@ -43,46 +41,154 @@ namespace Models.PMF.Organs
     public class Culm : Model, ICustomDocumentation
     {
         private const double smm2sm = 0.000001;
-        /// <summary>The numeric rank of the cohort appearing</summary>
+
+        /// <summary>
+        /// The numeric rank of the cohort appearing
+        /// </summary>
         public int CulmNumber { get; set; }
 
-        /// <summary>The Leaf Number when the Tiller was added</summary>
-        public double LeafAtAppearance { get; set; }
+        /// <summary>
+        /// The Leaf Number when the Tiller was added
+        /// </summary>
+        public double LeafNoAtAppearance { get; set; }
 
-        /// <summary>Final Leaf Number used to calculate area</summary>
-        public double FinalLeafNumber { get; set; }
-
-        /// <summary>The proportion of a whole tiller</summary>
+        /// <summary>
+        /// The proportion of a whole tiller
+        /// </summary>
         public double Proportion { get; set; }
 
-        /// <summary>The planting density for area calculations</summary>
+        /// <summary>
+        /// The planting density for area calculations
+        /// </summary>
         public double Density { get; set; }
 
-        /// <summary>The area calcs for subsequent tillers are the same shape but not as tall</summary>
+        /// <summary>
+        /// The area calcs for subsequent tillers are the same shape but not as tall
+        /// </summary>
         public double VerticalAdjustment { get; set; }
 
-        /// <summary>The area calcs for subsequent tillers are the same shape but not as tall</summary>
+        /// <summary>
+        /// The area calcs for subsequent tillers are the same shape but not as tall
+        /// </summary>
         public double CurrentLeafNumber { get; set; }
 
-        /// <summary>The amount of new leaf that appeared</summary>
+        /// <summary>
+        /// The amount of new leaf that appeared
+        /// </summary>
         public double DltNewLeafAppeared { get; set; }
 
-        /// <summary>The TotalLAI for this Culm</summary>
+        /// <summary>
+        /// The TotalLAI for this Culm
+        /// </summary>
         public double TotalLAI { get; set; }
 
-        /// <summary>The aX0 for this Culm</summary>
-        public double aX0 { get; set; }
-        /// <summary>The aMaxSlope for this Culm</summary>
-        public double aMaxSlope{ get; set; }
-        /// <summary>The aMaxIntercept for this Culm</summary>
-        public double aMaxIntercept { get; set; }
+        /// <summary>
+        /// The aX0 for this Culm
+        /// </summary>
+        public double AX0 { get; set; }
 
-        /// <summary>Add number of new leaf appeared</summary>
+        /// <summary>
+        /// The aMaxSlope for this Culm
+        /// </summary>
+        public double AMaxSlope{ get; set; }
+
+        /// <summary>
+        /// The aMaxIntercept for this Culm
+        /// </summary>
+        public double AMaxIntercept { get; set; }
+
+        /// <summary>
+        /// Reference to the outside world.
+        /// </summary>
+        private SorghumLeaf leaf;
+
+        /// <summary>
+        /// Reference to the culm structure.
+        /// </summary>
+        private CulmStructure structure;
+
+        /// <summary>
+        /// Rate of change of leaf number?
+        /// </summary>
+        private double noRateChange;
+
+        /// <summary>
+        /// Delta leaf number.
+        /// </summary>
+        private double dltLeafNo;
+
+        /// <summary>
+        /// Final Leaf Number used to calculate area
+        /// </summary>
+        private double finalLeafNumber;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="leaf"></param>
+        public Culm(SorghumLeaf leaf)
+        {
+            this.leaf = leaf;
+            this.structure = Apsim.Find(leaf, "[Structure]") as CulmStructure;
+        }
+
+        /// <summary>
+        /// Add number of new leaf appeared
+        /// </summary>
         public void UpdateLeafNumber(double dltNewLeafAppeared, double updatedFinalLeaf)
         {
             DltNewLeafAppeared = dltNewLeafAppeared;
             CurrentLeafNumber += dltNewLeafAppeared;
-            FinalLeafNumber = updatedFinalLeaf;
+            finalLeafNumber = updatedFinalLeaf;
+        }
+
+        /// <summary>
+        /// Calculates, updates, and returns FinalLeafNo.
+        /// </summary>
+        public double calcFinalLeafNo()
+        {
+            double ttFi = structure.TTFi.Value();
+            double initRate = structure.LeafInitiationRate.Value();
+            double noSeed = structure.LeafNumSeed.Value();
+            double minLeafNo = leaf.MinLeafNo;
+            double maxLeafNo = leaf.MaxLeafNo;
+
+            finalLeafNumber = MathUtilities.Bound(MathUtilities.Divide(ttFi, initRate, 0) + noSeed, minLeafNo, maxLeafNo);
+            return finalLeafNumber;
+        }
+
+        /// <summary>
+        /// Calculates, updates, and returns dltLeafNo.
+        /// </summary>
+        public double calcLeafAppearance()
+        {
+            dltLeafNo = 0;
+
+            // nLeaves is used in partitionDM, so need to retain it in Leaf
+            double remainingLeaves = finalLeafNumber - LeafNoAtAppearance - CurrentLeafNumber;
+
+            if (MathUtilities.IsLessThanOrEqual(remainingLeaves, 0))
+                return 0;
+
+            // Peter's 2 stage version used here, modified to apply to last few leaves before flag
+            // i.e. c_leaf_no_rate_change is leaf number from the top down (e.g. 4)
+
+            double appearanceRate1 = (double)Apsim.Get(leaf, "[Structure].LeafAppRate1.Value()");
+            double appearanceRate2 = (double)Apsim.Get(leaf, "[Structure].LeafAppRate2.Value()");
+            noRateChange = (double)Apsim.Get(leaf, "[Structure].LeafNumRateChange.Value()");
+
+            double leafAppRate = appearanceRate1;
+            if (MathUtilities.IsLessThanOrEqual(remainingLeaves, noRateChange))
+                leafAppRate = appearanceRate2;
+
+            // If leaves are still growing, the cumulative number of phyllochrons or fully expanded
+            // leaves is calculated from thermal time for the day.
+            double dltTT = GetDltTT();
+            dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(dltTT, leafAppRate, 0), 0, remainingLeaves);
+
+            CurrentLeafNumber += dltLeafNo;
+
+            return dltLeafNo;
         }
 
         /// <summary>Add number of new leaf appeared</summary>
@@ -90,17 +196,26 @@ namespace Models.PMF.Organs
         {
             var leafNoCorrection = 1.52;
             //once leaf no is calculated leaf area of largest expanding leaf is determined
-            double leafNoEffective = Math.Min(CurrentLeafNumber + leafNoCorrection, FinalLeafNumber - LeafAtAppearance);
+            double leafNoEffective = Math.Min(CurrentLeafNumber + leafNoCorrection, finalLeafNumber - LeafNoAtAppearance);
             var leafsize = calcIndividualLeafSize(leafNoEffective);
 
-            double leafArea = leafsize * smm2sm * Density * DltNewLeafAppeared; // in dltLai
+            double leafArea = leafsize * smm2sm * Density * dltLeafNo; // in dltLai
             // TotalLAI += leafArea;
             return (leafArea * Proportion);
         }
 
+        private double GetDltTT()
+        {
+            return GetIFunctionValue("[Arbitrator].DltTT");
+        }
+
+        private double GetIFunctionValue(string path)
+        {
+            return (double)Apsim.Get(leaf, path);
+        }
+
         private double calcIndividualLeafSize(double leafNo)
         {
-
             //double aX0 = 0.687;
             //double aMaxSlope = 22.25;
             //double aMaxIntercept = 92.45;
@@ -110,15 +225,15 @@ namespace Models.PMF.Organs
             // Eqn 5 from Improved methods for predicting individual leaf area and leaf senescence in maize
             // (Zea mays) C.J. Birch, G.L. Hammer and K.G. Ricket. Aust. J Agric. Res., 1998, 49, 249-62
             //
-            double correctedFinalLeafNo = FinalLeafNumber;// - leafNoAtAppearance;
-            double largestLeafPos = aX0 * correctedFinalLeafNo; //aX0 = position of the final leaf
+            double correctedFinalLeafNo = finalLeafNumber;// - leafNoAtAppearance;
+            double largestLeafPos = AX0 * correctedFinalLeafNo; //aX0 = position of the final leaf
                                                                 //double leafPlateauStart = 24;
                                                                 //adding new code to handle varieties that grow very high number of leaves
             if (largestLeafPlateau > 1)
             {
                 if (correctedFinalLeafNo > largestLeafPlateau)
                 {
-                    largestLeafPos = aX0 * largestLeafPlateau;
+                    largestLeafPos = AX0 * largestLeafPlateau;
 
                     if (leafNo > largestLeafPos)
                     {
@@ -153,7 +268,7 @@ namespace Models.PMF.Organs
             //Calculation then changed to use the relationship as described in the Carberry paper in Table 2
             //The actual intercept and slope will be determined by the cultivar, and read from the config file (sorghum.xml)
             //aMaxS = 19.5; //not 100% sure what this number should be - tried a range and this provided the best fit forthe test data
-            double largestLeafSize = aMaxSlope * FinalLeafNumber + aMaxIntercept; //aMaxI is the intercept
+            double largestLeafSize = AMaxSlope * finalLeafNumber + AMaxIntercept; //aMaxI is the intercept
 
             //a vertical adjustment is applied to each tiller - this was discussed in a meeting on 22/08/12 and derived 
             //from a set of graphs that I cant find that compared the curves of each tiller

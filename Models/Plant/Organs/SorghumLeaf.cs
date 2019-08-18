@@ -517,17 +517,18 @@ namespace Models.PMF.Organs
         /// <summary>Add a culm to the plant.</summary>
         public void AddCulm(CulmParameters parameters)
         {
-            var culm = new Culm();
+            var culm = new Culm(this);
             culm.CulmNumber = parameters.CulmNumber;
             culm.Proportion = parameters.Proportion;
-            culm.LeafAtAppearance = parameters.LeafAtAppearance;
+            culm.LeafNoAtAppearance = parameters.LeafAtAppearance;
             culm.VerticalAdjustment = parameters.VerticalAdjustment;
             culm.Density = SowingDensity;
-            culm.CurrentLeafNumber = parameters.CurrentLeafNo;
 
-            culm.aX0 = (Apsim.Find(this, "aX0") as Functions.IFunction).Value();
-            culm.aMaxSlope = (Apsim.Find(this, "aMaxSlope") as Functions.IFunction).Value();
-            culm.aMaxIntercept = (Apsim.Find(this, "aMaxIntercept") as Functions.IFunction).Value();
+            culm.calcLeafAppearance();
+
+            culm.AX0 = (Apsim.Find(this, "aX0") as Functions.IFunction).Value();
+            culm.AMaxSlope = (Apsim.Find(this, "aMaxSlope") as Functions.IFunction).Value();
+            culm.AMaxIntercept = (Apsim.Find(this, "aMaxIntercept") as Functions.IFunction).Value();
 
             Culms.Add(culm);
         }

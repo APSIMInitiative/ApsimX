@@ -72,6 +72,18 @@ namespace Models.PMF.Struct
         [Link]
         public IFunction finalLeafNumber = null;
 
+        /// <summary>Leaf initiation rate.</summary>
+        [Link]
+        public IFunction LeafInitiationRate = null;
+
+        /// <summary>Number of seeds in leaf?</summary>
+        [Link]
+        public IFunction LeafNumSeed = null;
+
+        /// <summary>Thermal time from floral init.</summary>
+        [Link]
+        public IFunction TTFi = null;
+
         /// <summary>FertileTillerNumber</summary>
         public double FinalLeafNo { get; set; }
 
@@ -272,7 +284,6 @@ namespace Models.PMF.Struct
                     Proportion = fraction,
                     VerticalAdjustment = tillersAdded * aTillerVert.Value() + verticalAdjustment.Value(), //add aMaxVert in calc
                     LeafAtAppearance = leafAtAppearance,
-                    CurrentLeafNo = dltLeafNo
                 });
 
                 //bell curve distribution is adjusted horizontally by moving the curve to the left.
