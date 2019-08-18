@@ -1099,7 +1099,7 @@
               "$type": "Models.MicroClimate, Models",
               "a_interception": 0.0,
               "b_interception": 0.0,
-              "c_interception": 0.0,
+              "c_interception": 0.55,
               "d_interception": 0.0,
               "soil_albedo": 0.0,
               "SoilHeatFluxFraction": 0.0,
