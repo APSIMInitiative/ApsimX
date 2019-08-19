@@ -831,8 +831,25 @@
                     bool changed = false;
                     foreach (string modelName in modelNames)
                     {
-                        changed |= manager.Replace($"{modelName}.{old}", $"{modelName}.{newName}", true);
-                        changed |= manager.Replace($"[{modelName}].{old}", $"[{modelName}].{newName}", true);
+                        string toReplace = $"{modelName}.{old}";
+                        string replaceWith = $"{modelName}.{newName}";
+                        changed |= manager.Replace(toReplace, replaceWith, true);
+
+                        foreach (KeyValuePair<string, string> parameter in manager.Parameters)
+                        {
+                            string newParam = parameter.Value.Replace(toReplace, replaceWith);
+                            manager.UpdateParameter(parameter.Key, newParam);
+                        }
+
+                        toReplace = $"[{modelName}].{old}";
+                        replaceWith = $"[{modelName}].{newName}";
+                        changed |= manager.Replace(toReplace, replaceWith, true);
+
+                        foreach (KeyValuePair<string, string> parameter in manager.Parameters)
+                        {
+                            string newParam = parameter.Value.Replace(toReplace, replaceWith);
+                            manager.UpdateParameter(parameter.Key, newParam);
+                        }
                     }
                     if (changed)
                         manager.Save();

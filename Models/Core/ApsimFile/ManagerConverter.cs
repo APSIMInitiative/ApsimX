@@ -27,6 +27,22 @@ namespace Models.Core.ApsimFile
         public ManagerConverter() { }
 
         /// <summary>
+        /// Parameters (public properties with a display attribute) of the manager script.
+        /// </summary>
+        public Dictionary<string, string> Parameters
+        {
+            get
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                foreach (var parameter in manager["Parameters"])
+                {
+                    parameters.Add(parameter["Key"].ToString(), parameter["Value"].ToString());
+                }
+                return parameters;
+            }
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="manager">The JSON manager object.</param>
@@ -478,6 +494,18 @@ namespace Models.Core.ApsimFile
             return cleanLine;
         }
 
+        /// <summary>
+        /// Changes the value of a parameter with a given key.
+        /// </summary>
+        /// <param name="key">Key of the paramter.</param>
+        /// <param name="newParam">New value of the parameter.</param>
+        public void UpdateParameter(string key, string newParam)
+        {
+            foreach (var parameter in manager["Parameters"].Children())
+                if (parameter["Key"].ToString() == key)
+                    parameter["Value"] = newParam;
+                    //return;
+        }
     }
 
     /// <summary>A manager declaration</summary>
