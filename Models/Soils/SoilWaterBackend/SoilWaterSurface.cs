@@ -317,9 +317,6 @@ namespace Models.Soils.SoilWaterBackend
         public override void CalcEvaporation()
             {
 
-            evap.CalcEo_AtmosphericPotential(base.Met, base.Canopy);
-            Eo = evap.Eo;
-
             evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover);
             Eos = evap.Eos;
 
@@ -478,9 +475,6 @@ namespace Models.Soils.SoilWaterBackend
         /// </summary>
         public override void CalcEvaporation()
             {
-
-            evap.CalcEo_AtmosphericPotential(base.Met, base.Canopy);
-            Eo = evap.Eo;
 
             evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover);
             Eos = evap.Eos;
