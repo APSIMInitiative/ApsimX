@@ -801,9 +801,12 @@
             changedProperties.Add("MaintenanceRespiration", "MaintenanceRespirationFunction");
             changedProperties.Add("FRGR", "FRGRFunction");
 
+            List<string> modelNames = new List<string>() { "Leaf", "Stover" };
+
             // Go through all SimpleLeafs and rename the appropriate children.
             foreach (JObject leaf in JsonUtilities.ChildrenRecursively(root, "SimpleLeaf"))
             {
+                modelNames.Add(leaf["Name"].ToString());
                 // We removed the Leaf.AppearedCohortNo property.
                 JObject relativeArea = JsonUtilities.FindFromPath(leaf, "DeltaLAI.Vegetative.Delta.RelativeArea");
                 if (relativeArea != null && relativeArea["XProperty"].ToString() == "[Leaf].AppearedCohortNo")
@@ -826,10 +829,11 @@
                     string old = change.Value;
 
                     bool changed = false;
-                    changed |= manager.Replace($"Leaf.{old}", $"Leaf.{newName}", true);
-                    changed |= manager.Replace($"leaf.{old}", $"leaf.{newName}", true);
-                    changed |= manager.Replace($"[Leaf].{old}", $"[Leaf].{newName}", true);
-                    changed |= manager.Replace($"[leaf].{old}", $"[leaf].{newName}", true);
+                    foreach (string modelName in modelNames)
+                    {
+                        changed |= manager.Replace($"{modelName}.{old}", $"{modelName}.{newName}", true);
+                        changed |= manager.Replace($"[{modelName}].{old}", $"[{modelName}].{newName}", true);
+                    }
                     if (changed)
                         manager.Save();
                 }
@@ -847,10 +851,11 @@
                     {
                         string newName = change.Key;
                         string old = change.Value;
-                        command.Value = command.Value.ToString().Replace($"Leaf.{old}", $"Leaf.{newName}");
-                        command.Value = command.Value.ToString().Replace($"leaf.{old}", $"leaf.{newName}");
-                        command.Value = command.Value.ToString().Replace($"[Leaf].{old}", $"[Leaf].{newName}");
-                        command.Value = command.Value.ToString().Replace($"[leaf].{old}", $"[leaf].{newName}");
+                        foreach (string modelName in modelNames)
+                        {
+                            command.Value = command.Value.ToString().Replace($"{modelName}.{old}", $"{modelName}.{newName}");
+                            command.Value = command.Value.ToString().Replace($"[{modelName}].{old}", $"[{modelName}].{newName}");
+                        }
                     }
                 }
             }
