@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 60; } }
+        public static int LatestVersion { get { return 61; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -774,6 +774,21 @@
                     }
                 }
                 sample["NH4N"] = null;
+            }
+        }
+        /// <summary>
+        /// Upgrades to version 61. Fixes SimpleLeaf variable names
+        /// following a refactor of this class.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion61(JObject root, string fileName)
+        {
+            foreach (JObject leaf in JsonUtilities.ChildrenRecursively(root, "SimpleLeaf"))
+            {
+                JObject relativeArea = JsonUtilities.FindFromPath(leaf, "DeltaLAI.Vegetative.Delta.RelativeArea");
+                if (relativeArea["XProperty"].ToString() == "[Leaf].AppearedCohortNo")
+                    relativeArea["XProperty"] = "[Leaf].NodeNumber";
             }
         }
 
