@@ -33,7 +33,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class SimpleLeaf : Model, ICanopy, ILeaf, IHasWaterDemand,  IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
+    public class SimpleLeaf : Model, ICanopy, IHasWaterDemand,  IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
     {
         /// <summary>
         /// The met data
@@ -58,12 +58,6 @@ namespace Models.PMF.Organs
         /// </summary>
         [Link]
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
-
-        /// <summary>
-        /// The micro climate.
-        /// </summary>
-        [Link]
-        private MicroClimate microClimate = null;
 
         /// <summary>
         /// VPD effect on Growth Interpolation Set.
@@ -249,6 +243,30 @@ namespace Models.PMF.Organs
         private IFunction remobilisationCost = null;
 
         /// <summary>
+        /// Tolerance for biomass comparisons.
+        /// </summary>
+        private const double biomassToleranceValue = 0.0000000001;
+
+        /// <summary>
+        /// The live biomass state at start of the computation round.
+        /// </summary>
+        private Biomass startLive = null;
+
+        /// <summary>
+        /// Is leaf initialised?
+        /// </summary>
+        private bool leafInitialised = false;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public SimpleLeaf()
+        {
+            Live = new Biomass();
+            Dead = new Biomass();
+        }
+
+        /// <summary>
         /// Albedo.
         /// </summary>
         [Description("Albedo")]
@@ -274,41 +292,6 @@ namespace Models.PMF.Organs
         public string LeafInitialisationStage { get; set; } = "Emergence";
 
         /// <summary>
-        /// Number of initiated cohorts that have not appeared yet
-        /// </summary>
-        public int ApicalCohortNo { get; set; }
-
-        /// <summary>
-        /// The initialised cohort number.
-        /// </summary>
-        public int InitialisedCohortNo { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool CohortsInitialised { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int TipsAtEmergence { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int CohortsAtInitialisation { get; set; }
-
-        /// <summary>
-        /// 
-        ///</summary>
-        public int AppearedCohortNo { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public double PlantAppearedLeafNo { get; set; }
-
-        /// <summary>
         /// Leaf area index.
         /// </summary>
         [XmlIgnore]
@@ -326,7 +309,7 @@ namespace Models.PMF.Organs
         /// </summary>
         [Units("mm")]
         public double BaseHeight { get; set; }
-        
+
         /// <summary>
         /// The width of an individual plant
         /// </summary>
@@ -353,7 +336,7 @@ namespace Models.PMF.Organs
         /// Sets the light profile. Set by MICROCLIMATE.
         /// </summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-        
+
         /// <summary>
         /// Extinction coefficient (dead).
         /// </summary>
@@ -605,7 +588,7 @@ namespace Models.PMF.Organs
                 return MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
             }
         }
-        
+
         /// <summary>
         /// Gets the cover total.
         /// </summary>
@@ -706,8 +689,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        private bool leafInitialised = false;
-
         /// <summary>
         /// Gets or sets the water allocation.
         /// </summary>
@@ -799,103 +780,17 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Tolerance for biomass comparisons.
-        /// </summary>
-        private const double biomassToleranceValue = 0.0000000001;
-
-        /// <summary>
-        /// The live biomass state at start of the computation round.
-        /// </summary>
-        private Biomass startLive = null;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public SimpleLeaf()
-        {
-            Live = new Biomass();
-            Dead = new Biomass();
-        }
-
-        /// <summary>
-        /// Removes biomass from organs when harvest, graze or cut events are called.
-        /// </summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="amountToRemove">The fractions of biomass to remove</param>
-        public virtual void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
-        {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
-        }
-
-        /// <summary>
-        /// Remove highest leaf.
-        /// </summary>
-        public void RemoveHighestLeaf()
-        {
-        }
-
-        /// <summary>
-        /// Reset leaf numbers
-        /// </summary>
-        public void Reset()
-        {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="proprtionRemoved"></param>
-        public void DoThin(double proprtionRemoved)
-        {
-        }
-
-        /// <summary>
-        /// Calculates the water demand.
-        /// </summary>
-        public double CalculateWaterDemand()
-        {
-            if (waterDemandFunction != null)
-                return waterDemandFunction.Value();
-
-            return WaterDemand;
-        }
-
-        /// <summary>
-        /// Computes the amount of DM available for retranslocation.
-        /// </summary>
-        public double AvailableDMRetranslocation()
-        {
-            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.Reallocation) * dmRetranslocationFactor.Value();
-            if (availableDM < -biomassToleranceValue)
-                throw new Exception("Negative DM retranslocation value computed for " + Name);
-
-            return availableDM;
-        }
-
-        /// <summary>
-        /// Computes the amount of DM available for reallocation.
-        /// </summary>
-        public double AvailableDMReallocation()
-        {
-            double availableDM = startLive.StorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
-            if (availableDM < -biomassToleranceValue)
-                throw new Exception("Negative DM reallocation value computed for " + Name);
-
-            return availableDM;
-        }
-
-        /// <summary>
         /// Calculate and return the nitrogen supply (g/m2).
         /// </summary>
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
         {
             NSupply.Reallocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * senescenceRate.Value() * nReallocationFactor.Value());
-            if (NSupply.Reallocation < -biomassToleranceValue)
+            if (MathUtilities.IsNegative(NSupply.Reallocation))
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
             NSupply.Retranslocation = Math.Max(0, (startLive.StorageN + startLive.MetabolicN) * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
-            if (NSupply.Retranslocation < -biomassToleranceValue)
+            if (MathUtilities.IsNegative(NSupply.Retranslocation))
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
             NSupply.Fixation = 0;
@@ -932,103 +827,6 @@ namespace Models.PMF.Organs
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();
-        }
-
-        /// <summary>
-        /// Sets the dry matter potential allocation.
-        /// </summary>
-        /// <param name="dryMatter">The potential amount of drymatter allocation</param>
-        public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
-        {
-            potentialDMAllocation.Structural = dryMatter.Structural;
-            potentialDMAllocation.Metabolic = dryMatter.Metabolic;
-            potentialDMAllocation.Storage = dryMatter.Storage;
-        }
-
-        /// <summary>
-        /// Sets the dry matter allocation.
-        /// </summary>
-        /// <param name="dryMatter">The actual amount of drymatter allocation</param>
-        public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
-        {
-            // Check retranslocation
-            if (dryMatter.Retranslocation - startLive.StorageWt > biomassToleranceValue)
-                throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
-
-            // get DM lost by respiration (growth respiration)
-            // GrowthRespiration with unit CO2 
-            // GrowthRespiration is calculated as 
-            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
-            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
-            // CO2 (44/12).
-            double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
-
-            GrowthRespiration = 0.0;
-            // allocate structural DM
-            Allocated.StructuralWt = Math.Min(dryMatter.Structural * dmConversionEfficiency.Value(), DMDemand.Structural);
-            Live.StructuralWt += Allocated.StructuralWt;
-            GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
-
-            // allocate non structural DM
-            if ((dryMatter.Storage * dmConversionEfficiency.Value() - DMDemand.Storage) > biomassToleranceValue)
-                throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
-            // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
-            double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
-            if (diffWt > 0)
-            {
-                diffWt *= dmConversionEfficiency.Value();
-                GrowthRespiration += diffWt * growthRespFactor;
-            }
-            Allocated.StorageWt = diffWt;
-            Live.StorageWt += diffWt;
-            // allocate metabolic DM
-            Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
-            GrowthRespiration += Allocated.MetabolicWt * growthRespFactor;
-
-        }
-
-        /// <summary>
-        /// Sets the n allocation.
-        /// </summary>
-        /// <param name="nitrogen">The nitrogen allocation</param>
-        public virtual void SetNitrogenAllocation(BiomassAllocationType nitrogen)
-        {
-            Live.StructuralN += nitrogen.Structural;
-            Live.StorageN += nitrogen.Storage;
-            Live.MetabolicN += nitrogen.Metabolic;
-
-            Allocated.StructuralN += nitrogen.Structural;
-            Allocated.StorageN += nitrogen.Storage;
-            Allocated.MetabolicN += nitrogen.Metabolic;
-
-            // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.Retranslocation))
-                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double StorageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
-            Live.StorageN -= StorageNRetranslocation;
-            Live.MetabolicN -= (nitrogen.Retranslocation - StorageNRetranslocation);
-            Allocated.StorageN -= nitrogen.Retranslocation;
-
-            // Reallocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
-                throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double StorageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
-            Live.StorageN -= StorageNReallocation;
-            Live.MetabolicN -= (nitrogen.Reallocation - StorageNReallocation);
-            Allocated.StorageN -= nitrogen.Reallocation;
-        }
-
-        /// <summary>
-        /// Remove maintenance respiration from live component of organs.
-        /// </summary>
-        /// <param name="respiration">The respiration to remove</param>
-        public virtual void RemoveMaintenanceRespiration(double respiration)
-        {
-            double total = Live.MetabolicWt + Live.StorageWt;
-            if (respiration > total)
-                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
-            Live.MetabolicWt = Live.MetabolicWt - MathUtilities.Divide(respiration * Live.MetabolicWt , total, 0);
-            Live.StorageWt = Live.StorageWt - MathUtilities.Divide(respiration * Live.StorageWt , total, 0);
         }
 
         /// <summary>
@@ -1144,6 +942,150 @@ namespace Models.PMF.Organs
             }
 
             Clear();
+        }
+
+        /// <summary>
+        /// Removes biomass from organs when harvest, graze or cut events are called.
+        /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="amountToRemove">The fractions of biomass to remove</param>
+        public virtual void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
+        {
+            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
+        }
+        
+        /// <summary>
+        /// Calculates the water demand.
+        /// </summary>
+        public double CalculateWaterDemand()
+        {
+            if (waterDemandFunction != null)
+                return waterDemandFunction.Value();
+
+            return WaterDemand;
+        }
+
+        /// <summary>
+        /// Computes the amount of DM available for retranslocation.
+        /// </summary>
+        public double AvailableDMRetranslocation()
+        {
+            double availableDM = Math.Max(0.0, startLive.StorageWt - DMSupply.Reallocation) * dmRetranslocationFactor.Value();
+            if (MathUtilities.IsNegative(availableDM))
+                throw new Exception("Negative DM retranslocation value computed for " + Name);
+
+            return availableDM;
+        }
+
+        /// <summary>
+        /// Computes the amount of DM available for reallocation.
+        /// </summary>
+        public double AvailableDMReallocation()
+        {
+            double availableDM = startLive.StorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
+            if (MathUtilities.IsNegative(availableDM))
+                throw new Exception("Negative DM reallocation value computed for " + Name);
+
+            return availableDM;
+        }
+
+        /// <summary>
+        /// Sets the dry matter potential allocation.
+        /// </summary>
+        /// <param name="dryMatter">The potential amount of drymatter allocation</param>
+        public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
+        {
+            potentialDMAllocation.Structural = dryMatter.Structural;
+            potentialDMAllocation.Metabolic = dryMatter.Metabolic;
+            potentialDMAllocation.Storage = dryMatter.Storage;
+        }
+
+        /// <summary>
+        /// Sets the dry matter allocation.
+        /// </summary>
+        /// <param name="dryMatter">The actual amount of drymatter allocation</param>
+        public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
+        {
+            // Check retranslocation
+            if (MathUtilities.IsGreaterThan(dryMatter.Retranslocation, startLive.StorageWt))
+                throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
+
+            // get DM lost by respiration (growth respiration)
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
+            GrowthRespiration = 0.0;
+
+            // allocate structural DM
+            Allocated.StructuralWt = Math.Min(dryMatter.Structural * dmConversionEfficiency.Value(), DMDemand.Structural);
+            Live.StructuralWt += Allocated.StructuralWt;
+            GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
+
+            // allocate non structural DM
+            if (MathUtilities.IsGreaterThan(dryMatter.Storage * dmConversionEfficiency.Value(), DMDemand.Storage))
+                throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
+
+            // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
+            double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
+            if (MathUtilities.IsPositive(diffWt))
+            {
+                diffWt *= dmConversionEfficiency.Value();
+                GrowthRespiration += diffWt * growthRespFactor;
+            }
+            Allocated.StorageWt = diffWt;
+            Live.StorageWt += diffWt;
+
+            // allocate metabolic DM
+            Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
+            GrowthRespiration += Allocated.MetabolicWt * growthRespFactor;
+
+        }
+
+        /// <summary>
+        /// Sets the n allocation.
+        /// </summary>
+        /// <param name="nitrogen">The nitrogen allocation</param>
+        public virtual void SetNitrogenAllocation(BiomassAllocationType nitrogen)
+        {
+            Live.StructuralN += nitrogen.Structural;
+            Live.StorageN += nitrogen.Storage;
+            Live.MetabolicN += nitrogen.Metabolic;
+
+            Allocated.StructuralN += nitrogen.Structural;
+            Allocated.StorageN += nitrogen.Storage;
+            Allocated.MetabolicN += nitrogen.Metabolic;
+
+            // Retranslocation
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.Retranslocation))
+                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
+            double StorageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
+            Live.StorageN -= StorageNRetranslocation;
+            Live.MetabolicN -= (nitrogen.Retranslocation - StorageNRetranslocation);
+            Allocated.StorageN -= nitrogen.Retranslocation;
+
+            // Reallocation
+            if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
+                throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
+            double StorageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
+            Live.StorageN -= StorageNReallocation;
+            Live.MetabolicN -= (nitrogen.Reallocation - StorageNReallocation);
+            Allocated.StorageN -= nitrogen.Reallocation;
+        }
+
+        /// <summary>
+        /// Remove maintenance respiration from live component of organs.
+        /// </summary>
+        /// <param name="respiration">The respiration to remove</param>
+        public virtual void RemoveMaintenanceRespiration(double respiration)
+        {
+            double total = Live.MetabolicWt + Live.StorageWt;
+            if (respiration > total)
+                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
+            Live.MetabolicWt = Live.MetabolicWt - MathUtilities.Divide(respiration * Live.MetabolicWt , total, 0);
+            Live.StorageWt = Live.StorageWt - MathUtilities.Divide(respiration * Live.StorageWt , total, 0);
         }
 
         /// <summary>
