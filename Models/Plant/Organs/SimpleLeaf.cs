@@ -8,9 +8,8 @@ namespace Models.PMF.Organs
     using Models.PMF.Library;
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
     using Models.PMF.Phen;
-    using Models.PMF.Struct;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass
@@ -40,12 +39,6 @@ namespace Models.PMF.Organs
         /// </summary>
         [Link]
         public IWeather MetData = null;
-
-        /// <summary>
-        /// The structure.
-        /// </summary>
-        [Link(IsOptional = true)]
-        public Structure Structure = null;
 
         /// <summary>
         /// The plant
@@ -90,16 +83,16 @@ namespace Models.PMF.Organs
         private IFunction laiDeadFunction = null;
 
         /// <summary>
-        /// Water Demand Function.
-        /// </summary>
-        [Link(IsOptional = true)]
-        private IFunction waterDemandFunction = null;
-
-        /// <summary>
         /// Carbon concentration.
         /// </summary>
         [Link]
         private IFunction carbonConcentration = null;
+
+        /// <summary>
+        /// Water Demand Function.
+        /// </summary>
+        [Link(IsOptional = true)]
+        private IFunction waterDemandFunction = null;
 
         /// <summary>
         /// The cover function.
@@ -294,7 +287,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Leaf area index.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("m^2/m^2")]
         public double LAI { get; set; }
 
@@ -375,55 +368,55 @@ namespace Models.PMF.Organs
         /// <summary>
         /// The live biomass.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Live { get; private set; }
 
         /// <summary>
         /// The dead biomass.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Dead { get; private set; }
 
         /// <summary>
         /// Gets the total biomass.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Total { get { return Live + Dead; } }
 
         /// <summary>
         /// Gets the biomass allocated (represented actual growth).
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Allocated { get; private set; }
 
         /// <summary>
         /// Gets the biomass senesced (transferred from live to dead material).
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Senesced { get; private set; }
 
         /// <summary>
         /// Gets the biomass detached (sent to soil/surface organic matter).
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Detached { get; private set; }
 
         /// <summary>
         /// Gets the biomass removed from the system (harvested, grazed, etc.).
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Biomass Removed { get; private set; }
 
         /// <summary>
         /// The amount of mass lost each day from maintenance respiration.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaintenanceRespiration { get; private set; }
 
         /// <summary>
         /// Growth Respiration.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double GrowthRespiration { get; private set; }
 
         /// <summary>
@@ -445,7 +438,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets or sets the n fixation cost.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public virtual double NFixationCost
         {
             get
@@ -457,7 +450,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets the maximum N concentration.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MaxNconc
         {
             get
@@ -469,7 +462,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets the minimum N concentration.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double MinNconc
         {
             get
@@ -481,7 +474,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets the minimum N concentration.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CritNconc
         {
             get
@@ -493,7 +486,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets the total (live + dead) dry matter weight.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double Wt
         {
@@ -506,7 +499,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets the total (live + dead) N amount.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m^2")]
         public double N
         {
@@ -519,7 +512,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets the total (live + dead) N concentration.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/g")]
         public double Nconc
         {
@@ -579,7 +572,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Gets the fw.
+        /// Water stress factor.
         /// </summary>
         public double Fw
         {
@@ -616,7 +609,7 @@ namespace Models.PMF.Organs
                         greenCover = 1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI);
                     else
                         greenCover = coverFunction.Value();
-                    return Math.Min(Math.Max(greenCover, 0.0), 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
+                    return MathUtilities.Bound(greenCover, 0.0, 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
                 }
                 else
                     return 0.0;
@@ -670,10 +663,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                double TotalRadn = 0;
+                double totalRadn = 0;
                 for (int i = 0; i < LightProfile.Length; i++)
-                    TotalRadn += LightProfile[i].amount;
-                return TotalRadn;
+                    totalRadn += LightProfile[i].amount;
+                return totalRadn;
             }
         }
 
@@ -692,7 +685,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Gets or sets the water allocation.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WaterAllocation { get; set; }
 
         /// <summary>
@@ -934,7 +927,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         protected void OnPlantEnding(object sender, EventArgs e)
         {
-            if (Wt > 0.0)
+            if (MathUtilities.IsPositive(Wt))
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
@@ -1061,17 +1054,17 @@ namespace Models.PMF.Organs
             // Retranslocation
             if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.Retranslocation))
                 throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double StorageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
-            Live.StorageN -= StorageNRetranslocation;
-            Live.MetabolicN -= (nitrogen.Retranslocation - StorageNRetranslocation);
+            double storageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
+            Live.StorageN -= storageNRetranslocation;
+            Live.MetabolicN -= (nitrogen.Retranslocation - storageNRetranslocation);
             Allocated.StorageN -= nitrogen.Retranslocation;
 
             // Reallocation
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, startLive.StorageN + startLive.MetabolicN))
                 throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double StorageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
-            Live.StorageN -= StorageNReallocation;
-            Live.MetabolicN -= (nitrogen.Reallocation - StorageNReallocation);
+            double storageNReallocation = Math.Min(nitrogen.Reallocation, startLive.StorageN * senescenceRate.Value() * nReallocationFactor.Value());
+            Live.StorageN -= storageNReallocation;
+            Live.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
             Allocated.StorageN -= nitrogen.Reallocation;
         }
 
