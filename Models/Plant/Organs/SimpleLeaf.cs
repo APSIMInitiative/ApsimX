@@ -53,10 +53,10 @@ namespace Models.PMF.Organs
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>
-        /// VPD effect on Growth Interpolation Set.
+        /// Relative growth rate factor.
         /// </summary>
         [Link]
-        private IFunction frgrFunction = null;
+        private IFunction frgr = null;
 
         /// <summary>
         /// The effect of CO2 on stomatal conductance.
@@ -74,13 +74,13 @@ namespace Models.PMF.Organs
         /// The height function.
         /// </summary>
         [Link]
-        private IFunction heightFunction = null;
+        private IFunction height = null;
 
         /// <summary>
         /// The lai dead function.
         /// </summary>
         [Link]
-        private IFunction laiDeadFunction = null;
+        private IFunction laiDead = null;
 
         /// <summary>
         /// Carbon concentration.
@@ -92,37 +92,37 @@ namespace Models.PMF.Organs
         /// Water Demand Function.
         /// </summary>
         [Link(IsOptional = true)]
-        private IFunction waterDemandFunction = null;
+        private IFunction waterDemand = null;
 
         /// <summary>
         /// The cover function.
         /// </summary>
         [Link(IsOptional = true)]
-        private IFunction coverFunction = null;
+        private IFunction cover = null;
 
         /// <summary>
         /// The lai function.
         /// </summary>
         [Link(IsOptional = true)]
-        private IFunction laiFunction = null;
+        private IFunction lai = null;
 
         /// <summary>
         /// The extinction coefficient function.
         /// </summary>
         [Link(IsOptional = true)]
-        private IFunction ExtinctionCoefficientFunction = null;
+        private IFunction extinctionCoefficient = null;
 
         /// <summary>
         /// The height of the base of the canopy.
         /// </summary>
         [Link(IsOptional = true)]
-        private IFunction BaseHeightFunction = null;
+        private IFunction baseHeight = null;
 
         /// <summary>
         /// The with of a single plant.
         /// </summary>
         [Link(IsOptional = true)]
-        private IFunction widthFunction = null;
+        private IFunction width = null;
 
         /// <summary>
         /// Link to biomass removal model.
@@ -142,7 +142,7 @@ namespace Models.PMF.Organs
         /// </summary>
         [ChildLinkByName]
         [Units("/d")]
-        private IFunction detachmentRateFunction = null;
+        private IFunction detachmentRate = null;
 
         /// <summary>
         /// The N retranslocation factor.
@@ -191,7 +191,7 @@ namespace Models.PMF.Organs
         /// </summary>
         [ChildLinkByName]
         [Units("g/m2")]
-        private IFunction initialWtFunction = null;
+        private IFunction initialWt = null;
 
         /// <summary>
         /// The maximum N concentration.
@@ -219,7 +219,7 @@ namespace Models.PMF.Organs
         /// </summary>
         [ChildLinkByName]
         [Units("/d")]
-        private IFunction maintenanceRespirationFunction = null;
+        private IFunction maintenanceRespiration = null;
 
         /// <summary>
         /// Dry matter conversion efficiency.
@@ -605,10 +605,10 @@ namespace Models.PMF.Organs
                 if (plant.IsAlive)
                 {
                     double greenCover = 0.0;
-                    if (coverFunction == null)
-                        greenCover = 1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI);
+                    if (cover == null)
+                        greenCover = 1.0 - Math.Exp(-extinctionCoefficient.Value() * LAI);
                     else
-                        greenCover = coverFunction.Value();
+                        greenCover = cover.Value();
                     return MathUtilities.Bound(greenCover, 0.0, 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
                 }
                 else
@@ -751,24 +751,24 @@ namespace Models.PMF.Organs
                 startLive = Live;
             if (leafInitialised)
             {
-                FRGR = frgrFunction.Value();
-                if (coverFunction == null && ExtinctionCoefficientFunction == null)
+                FRGR = frgr.Value();
+                if (cover == null && extinctionCoefficient == null)
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
-                if (coverFunction != null)
-                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value() * -1)) * plant.populationFactor;
-                if (laiFunction != null)
-                    LAI = laiFunction.Value() * plant.populationFactor;
+                if (cover != null)
+                    LAI = (Math.Log(1 - CoverGreen) / (extinctionCoefficient.Value() * -1)) * plant.populationFactor;
+                if (lai != null)
+                    LAI = lai.Value() * plant.populationFactor;
 
-                Height = heightFunction.Value();
-                if (BaseHeightFunction == null)
+                Height = height.Value();
+                if (baseHeight == null)
                     BaseHeight = 0;
                 else
-                    BaseHeight = BaseHeightFunction.Value();
-                if (widthFunction == null)
+                    BaseHeight = baseHeight.Value();
+                if (width == null)
                     Width = 0;
                 else
-                    Width = widthFunction.Value();
-                LAIDead = laiDeadFunction.Value();
+                    Width = width.Value();
+                LAIDead = laiDead.Value();
             }
         }
 
@@ -871,10 +871,10 @@ namespace Models.PMF.Organs
             {
                 Clear();
                 ClearBiomassFlows();
-                Live.StructuralWt = initialWtFunction.Value();
+                Live.StructuralWt = initialWt.Value();
                 Live.StorageWt = 0.0;
                 Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
-                Live.StorageN = (initialWtFunction.Value() * maximumNConc.Value()) - Live.StructuralN;
+                Live.StorageN = (initialWt.Value() * maximumNConc.Value()) - Live.StructuralN;
             }
         }
 
@@ -898,7 +898,7 @@ namespace Models.PMF.Organs
                 Senesced.Add(Loss);
 
                 // Do detachment
-                double detachedFrac = detachmentRateFunction.Value();
+                double detachedFrac = detachmentRate.Value();
                 if (Dead.Wt * (1.0 - detachedFrac) < biomassToleranceValue)
                     detachedFrac = 1.0;  // remaining amount too small, detach all
                 Biomass detaching = Dead * detachedFrac;
@@ -911,10 +911,10 @@ namespace Models.PMF.Organs
 
                 // Do maintenance respiration
                 MaintenanceRespiration = 0;
-                if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                if (maintenanceRespiration != null && (Live.MetabolicWt + Live.StorageWt) > 0)
                 {
-                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-                    MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespiration.Value();
+                    MaintenanceRespiration += Live.StorageWt * maintenanceRespiration.Value();
                 }
             }
         }
@@ -952,8 +952,8 @@ namespace Models.PMF.Organs
         /// </summary>
         public double CalculateWaterDemand()
         {
-            if (waterDemandFunction != null)
-                return waterDemandFunction.Value();
+            if (waterDemand != null)
+                return waterDemand.Value();
 
             return WaterDemand;
         }

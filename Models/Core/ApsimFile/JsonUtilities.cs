@@ -250,6 +250,19 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Renames a child node if it exists.
+        /// </summary>
+        /// <param name="node">Parent node.</param>
+        /// <param name="childName">Name of the child to be renamed.</param>
+        /// <param name="newName">New name of the child.</param>
+        public static void RenameChildModel(JObject node, string childName, string newName)
+        {
+            JObject child = ChildWithName(node, childName);
+            if (child != null)
+                child["Name"] = newName;
+        }
+
+        /// <summary>
         /// Gets a list of property values.
         /// </summary>
         /// <param name="node">The model node to look under.</param>

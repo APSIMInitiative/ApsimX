@@ -776,6 +776,7 @@
                 sample["NH4N"] = null;
             }
         }
+
         /// <summary>
         /// Upgrades to version 61. Fixes SimpleLeaf variable names
         /// following a refactor of this class.
@@ -789,6 +790,19 @@
                 JObject relativeArea = JsonUtilities.FindFromPath(leaf, "DeltaLAI.Vegetative.Delta.RelativeArea");
                 if (relativeArea["XProperty"].ToString() == "[Leaf].AppearedCohortNo")
                     relativeArea["XProperty"] = "[Leaf].NodeNumber";
+
+                JsonUtilities.RenameChildModel(leaf, "HeightFunction", "Height");
+                JsonUtilities.RenameChildModel(leaf, "LaiDeadFunction", "LaiDead");
+                JsonUtilities.RenameChildModel(leaf, "WaterDemandFunction", "WaterDemand");
+                JsonUtilities.RenameChildModel(leaf, "CoverFunction", "Cover");
+                JsonUtilities.RenameChildModel(leaf, "LAIFunction", "Area");
+                JsonUtilities.RenameChildModel(leaf, "ExtinctionCoefficientFunction", "ExtinctionCoefficient");
+                JsonUtilities.RenameChildModel(leaf, "BaseHeightFunction", "BaseHeight");
+                JsonUtilities.RenameChildModel(leaf, "WidthFunction", "Width");
+                JsonUtilities.RenameChildModel(leaf, "DetachmentRateFunction", "DetachmentRate");
+                JsonUtilities.RenameChildModel(leaf, "InitialWtFunction", "InitialWt");
+                JsonUtilities.RenameChildModel(leaf, "MaintenanceRespirationFunction", "maintenanceRespiration");
+                JsonUtilities.RenameChildModel(leaf, "FRGRFunction", "Frgr");
             }
         }
 
