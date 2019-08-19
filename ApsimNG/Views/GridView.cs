@@ -399,9 +399,19 @@
             int colNo = -1;
             string text = string.Empty;
             CellRendererText textRenderer = cell as CellRendererText;
+
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
+
+                if (!colAttributes.TryGetValue(colNo, out ColRenderAttributes attributes))
+                {
+                    attributes = new ColRenderAttributes();
+                    attributes.BackgroundColor = MainWidget.Style.Base(cellState);
+                    attributes.ForegroundColor = Grid.Style.Foreground(cellState);
+                    colAttributes.Add(colNo, attributes);
+                }
+
                 if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
@@ -411,8 +421,8 @@
                 }
                 else
                 {
-                    cell.CellBackgroundGdk = MainWidget.Style.Base(cellState);
-                    textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
+                    cell.CellBackgroundGdk = attributes.BackgroundColor; ;
+                    textRenderer.ForegroundGdk = attributes.ForegroundColor;
                     textRenderer.Editable = true;
                 }
 
@@ -1473,10 +1483,13 @@
             for (int i = 0; i < numCols; i++)
             {
                 ColRenderAttributes attrib = new ColRenderAttributes();
-                attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
-                attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
-                colAttributes.Add(i, attrib);
-
+                if (!colAttributes.TryGetValue(i, out _))
+                {
+                    // Only fallback to defaults if no custom colour specified.
+                    attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
+                    attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
+                    colAttributes.Add(i, attrib);
+                }
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new CellRendererText();
                 CellRendererToggle toggleRender = new CellRendererToggle();

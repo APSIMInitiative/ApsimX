@@ -19,8 +19,8 @@
         public string Format { get; set; }
         public IEnumerable Values { get; set; }
         public bool ValuesHaveChanged { get; set; }
-        public Color BackgroundColour { get; set; } = Color.Black;
-        public Color ForegroundColour { get; set; } = Color.White;
+        public Color BackgroundColour { get; set; } = Color.Empty;
+        public Color ForegroundColour { get; set; } = Color.Empty;
         public bool IsReadOnly { get; set; }
         public string[] CellToolTips { get; set; }
         public string[] HeaderContextMenuItems { get; set; }
