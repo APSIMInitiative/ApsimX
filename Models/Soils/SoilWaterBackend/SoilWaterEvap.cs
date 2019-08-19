@@ -12,7 +12,6 @@ namespace Models.Soils.SoilWaterBackend
 
         //Outputs
 
-        public double Eo;
         public double Eos;
         public double Es;
 
@@ -58,7 +57,6 @@ namespace Models.Soils.SoilWaterBackend
         //Zero Ouputs
         public void ZeroOutputs()
             {
-            Eo = 0.0;
             Eos = 0.0;
             Es = 0.0;
 
@@ -218,7 +216,7 @@ namespace Models.Soils.SoilWaterBackend
 
         #region Functions
 
-        public void CalcEos_EoReducedDueToShading(CanopyData Canopy, SurfaceCoverData SurfaceCover)
+        public void CalcEos_EoReducedDueToShading(double Eo, CanopyData Canopy, SurfaceCoverData SurfaceCover)
             {
 
             //private void soilwat2_pot_soil_evaporation()
@@ -291,7 +289,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-        public void CalcEs_RitchieEq_LimitedBySW(SoilWaterSoil SoilObject, IClock Clock, double Infiltration)
+        public void CalcEs_RitchieEq_LimitedBySW(double Eo, SoilWaterSoil SoilObject, IClock Clock, double Infiltration)
             {
 
             //private void soilwat2_ritchie_evaporation()

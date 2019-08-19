@@ -1660,7 +1660,7 @@ namespace Models.Soils
             
             // EVAPORATION
 
-            surface.CalcEvaporation();
+            surface.CalcEvaporation(Eo);
 
             surface.RemoveEvaporationFromSoil(ref SoilObject);
 

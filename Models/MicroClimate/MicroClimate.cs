@@ -381,7 +381,7 @@ namespace Models
             double CoverGreen = 0;
             for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
                 if (ZoneMC.Canopies[j].Canopy != null)
-                   CoverGreen+= ZoneMC.RadnGreenFraction(j);
+                   CoverGreen+= (1-CoverGreen)*ZoneMC.Canopies[j].Canopy.CoverGreen;
 
             zonesoilwater.Eo = AtmosphericPotentialEvaporationRate(weather.Radn, 
                                                             weather.MaxT, 
