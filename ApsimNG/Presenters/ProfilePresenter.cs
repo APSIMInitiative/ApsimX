@@ -137,6 +137,9 @@
                     {
                         string columnName = propertiesInGrid[col].ColumnName;
 
+                        if (columnName.Contains("\r\n"))
+                            StringUtilities.SplitOffAfterDelimiter(ref columnName, "\r\n");
+
                         // crop colours
                         if (columnName.Contains("LL"))
                         {
@@ -150,6 +153,7 @@
                             cropLLSeries.XAxis = Axis.AxisType.Top;
                             cropLLSeries.YAxis = Axis.AxisType.Left;
                             cropLLSeries.YFieldName = (parentForGraph is Soil ? Apsim.FullPath(parentForGraph) : "[Soil]") + ".DepthMidPoints";
+                            cropLLSeries.XFieldName = Apsim.FullPath((propertiesInGrid[col].ObjectWithProperty as Model)) + "." + propertiesInGrid[col].PropertyName;
                             //cropLLSeries.XFieldName = Apsim.FullPath(property.Object as Model) + "." + property.Name;
                             cropLLSeries.Parent = this.graph;
 
