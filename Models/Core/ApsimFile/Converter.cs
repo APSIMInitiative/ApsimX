@@ -785,24 +785,74 @@
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion61(JObject root, string fileName)
         {
+            // We renamed a lot of IFunctions and removed the 'Function' suffix.
+            // ie HeightFunction -> Height.
+            Dictionary<string, string> changedProperties = new Dictionary<string, string>();
+            changedProperties.Add("Tallness", "HeightFunction");
+            changedProperties.Add("Area", "LAIFunction");
+            changedProperties.Add("LaiDead", "LaiDeadFunction");
+            changedProperties.Add("WaterDemand", "WaterDemandFunction");
+            changedProperties.Add("Cover", "CoverFunction");
+            changedProperties.Add("ExtinctionCoefficient", "ExtinctionCoefficientFunction");
+            changedProperties.Add("BaseHeight", "BaseHeightFunction");
+            changedProperties.Add("Wideness", "WidthFunction");
+            changedProperties.Add("DetachmentRate", "DetachmentRateFunction");
+            changedProperties.Add("InitialWt", "InitialWtFunction");
+            changedProperties.Add("MaintenanceRespiration", "MaintenanceRespirationFunction");
+            changedProperties.Add("FRGR", "FRGRFunction");
+
+            // Go through all SimpleLeafs and rename the appropriate children.
             foreach (JObject leaf in JsonUtilities.ChildrenRecursively(root, "SimpleLeaf"))
             {
+                // We removed the Leaf.AppearedCohortNo property.
                 JObject relativeArea = JsonUtilities.FindFromPath(leaf, "DeltaLAI.Vegetative.Delta.RelativeArea");
-                if (relativeArea["XProperty"].ToString() == "[Leaf].AppearedCohortNo")
+                if (relativeArea != null && relativeArea["XProperty"].ToString() == "[Leaf].AppearedCohortNo")
                     relativeArea["XProperty"] = "[Leaf].NodeNumber";
 
-                JsonUtilities.RenameChildModel(leaf, "HeightFunction", "Height");
-                JsonUtilities.RenameChildModel(leaf, "LaiDeadFunction", "LaiDead");
-                JsonUtilities.RenameChildModel(leaf, "WaterDemandFunction", "WaterDemand");
-                JsonUtilities.RenameChildModel(leaf, "CoverFunction", "Cover");
-                JsonUtilities.RenameChildModel(leaf, "LAIFunction", "Area");
-                JsonUtilities.RenameChildModel(leaf, "ExtinctionCoefficientFunction", "ExtinctionCoefficient");
-                JsonUtilities.RenameChildModel(leaf, "BaseHeightFunction", "BaseHeight");
-                JsonUtilities.RenameChildModel(leaf, "WidthFunction", "Width");
-                JsonUtilities.RenameChildModel(leaf, "DetachmentRateFunction", "DetachmentRate");
-                JsonUtilities.RenameChildModel(leaf, "InitialWtFunction", "InitialWt");
-                JsonUtilities.RenameChildModel(leaf, "MaintenanceRespirationFunction", "maintenanceRespiration");
-                JsonUtilities.RenameChildModel(leaf, "FRGRFunction", "Frgr");
+                foreach (var change in changedProperties)
+                {
+                    string newName = change.Key;
+                    string old = change.Value;
+                    JsonUtilities.RenameChildModel(leaf, old, newName);
+                }
+            }
+
+            // Attempt some basic find/replace in manager scripts.
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                foreach (var change in changedProperties)
+                {
+                    string newName = change.Key;
+                    string old = change.Value;
+
+                    bool changed = false;
+                    changed |= manager.Replace($"Leaf.{old}", $"Leaf.{newName}", true);
+                    changed |= manager.Replace($"leaf.{old}", $"leaf.{newName}", true);
+                    changed |= manager.Replace($"[Leaf].{old}", $"[Leaf].{newName}", true);
+                    changed |= manager.Replace($"[leaf].{old}", $"[leaf].{newName}", true);
+                    if (changed)
+                        manager.Save();
+                }
+            }
+
+            // Fix some cultivar commands.
+            foreach (JObject cultivar in JsonUtilities.ChildrenRecursively(root, "Cultivar"))
+            {
+                if (!cultivar["Command"].HasValues)
+                    continue;
+
+                foreach (JValue command in cultivar["Command"].Children())
+                {
+                    foreach (var change in changedProperties)
+                    {
+                        string newName = change.Key;
+                        string old = change.Value;
+                        command.Value = command.Value.ToString().Replace($"Leaf.{old}", $"Leaf.{newName}");
+                        command.Value = command.Value.ToString().Replace($"leaf.{old}", $"leaf.{newName}");
+                        command.Value = command.Value.ToString().Replace($"[Leaf].{old}", $"[Leaf].{newName}");
+                        command.Value = command.Value.ToString().Replace($"[leaf].{old}", $"[leaf].{newName}");
+                    }
+                }
             }
         }
 

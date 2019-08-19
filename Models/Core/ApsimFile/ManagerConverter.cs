@@ -318,8 +318,9 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="searchPattern">The pattern to search for.</param>
         /// <param name="replacePattern">The string to replace.</param>
+        /// <param name="caseSensitive">Case sensitive?</param>
         /// <returns></returns>
-        public bool Replace(string searchPattern, string replacePattern)
+        public bool Replace(string searchPattern, string replacePattern, bool caseSensitive = false)
         {
             if (searchPattern == null)
                 return false;
@@ -327,7 +328,8 @@ namespace Models.Core.ApsimFile
             bool replacementDone = false;
             for (int i = 0; i < lines.Count; i++)
             {
-                int pos = lines[i].IndexOf(searchPattern, StringComparison.CurrentCultureIgnoreCase);
+                StringComparison comparison = caseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase;
+                int pos = lines[i].IndexOf(searchPattern, comparison);
                 while (pos != -1)
                 {
                     lines[i] = lines[i].Remove(pos, searchPattern.Length);

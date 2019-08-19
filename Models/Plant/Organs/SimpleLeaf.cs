@@ -74,7 +74,7 @@ namespace Models.PMF.Organs
         /// The height function.
         /// </summary>
         [Link]
-        private IFunction height = null;
+        private IFunction tallness = null;
 
         /// <summary>
         /// The lai dead function.
@@ -122,7 +122,7 @@ namespace Models.PMF.Organs
         /// The with of a single plant.
         /// </summary>
         [Link(IsOptional = true)]
-        private IFunction width = null;
+        private IFunction wideness = null;
 
         /// <summary>
         /// Link to biomass removal model.
@@ -759,15 +759,15 @@ namespace Models.PMF.Organs
                 if (lai != null)
                     LAI = lai.Value() * plant.populationFactor;
 
-                Height = height.Value();
+                Height = tallness.Value();
                 if (baseHeight == null)
                     BaseHeight = 0;
                 else
                     BaseHeight = baseHeight.Value();
-                if (width == null)
+                if (wideness == null)
                     Width = 0;
                 else
-                    Width = width.Value();
+                    Width = wideness.Value();
                 LAIDead = laiDead.Value();
             }
         }
@@ -1104,7 +1104,7 @@ namespace Models.PMF.Organs
                 //// List the parameters, properties, and processes from this organ that need to be documented:
 
                 // document initial DM weight
-                IModel iniWt = Apsim.Child(this, "initialWtFunction");
+                IModel iniWt = Apsim.Child(this, "initialWt");
                 AutoDocumentation.DocumentModel(iniWt, tags, headingLevel + 1, indent);
 
                 // document DM demands
@@ -1208,8 +1208,8 @@ namespace Models.PMF.Organs
 
                 // document canopy
                 tags.Add(new AutoDocumentation.Heading("Canopy Properties", headingLevel + 1));
-                IModel laiF = Apsim.Child(this, "LAIFunction");
-                IModel coverF = Apsim.Child(this, "CoverFunction");
+                IModel laiF = Apsim.Child(this, "Area");
+                IModel coverF = Apsim.Child(this, "Cover");
                 if (laiF != null)
                 {
                     tags.Add(new AutoDocumentation.Paragraph(Name + " has been defined with a LAIFunction, cover is calculated using the Beer-Lambert equation.", indent));
@@ -1220,9 +1220,9 @@ namespace Models.PMF.Organs
                     tags.Add(new AutoDocumentation.Paragraph(Name + " has been defined with a CoverFunction. LAI is calculated using an inverted Beer-Lambert equation", indent));
                     AutoDocumentation.DocumentModel(coverF, tags, headingLevel + 2, indent);
                 }
-                IModel exctF = Apsim.Child(this, "ExtinctionCoefficientFunction");
+                IModel exctF = Apsim.Child(this, "ExtinctionCoefficient");
                 AutoDocumentation.DocumentModel(exctF, tags, headingLevel + 2, indent);
-                IModel heightF = Apsim.Child(this, "HeightFunction");
+                IModel heightF = Apsim.Child(this, "Tallness");
                 AutoDocumentation.DocumentModel(heightF, tags, headingLevel + 2, indent);
 
                 // document senescence and detachment
@@ -1241,7 +1241,7 @@ namespace Models.PMF.Organs
                     AutoDocumentation.DocumentModel(SenRate, tags, headingLevel + 2, indent);
                 }
 
-                IModel DetRate = Apsim.Child(this, "DetachmentRateFunction");
+                IModel DetRate = Apsim.Child(this, "DetachmentRate");
                 if (DetRate is Constant)
                 {
                     if ((DetRate as Constant).Value() == 0)
