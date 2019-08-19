@@ -37,7 +37,7 @@ namespace Models.Interfaces
         double Es { get; }
 
         /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
-        double Eo { get; }
+        double Eo { get; set; }
 
         /// <summary>Gets the amount of water runoff (mm)</summary>
         double Runoff { get; }

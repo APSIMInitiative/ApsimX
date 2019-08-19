@@ -628,7 +628,11 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Eo { get{return surface != null ? surface.Eo : Double.NaN;} }
+        public double Eo
+        {
+            get {return surface != null ? surface.Eo : Double.NaN;}
+            set { surface.Eo = value; }
+        }
 
         /// <summary>
         /// Potential evaporation of water from the soil (after accounting for the effects of cover and residues)

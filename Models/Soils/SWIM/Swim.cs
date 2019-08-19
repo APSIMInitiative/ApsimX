@@ -783,20 +783,7 @@ namespace Models.Soils
         /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
         [XmlIgnore]
         [Units("mm")]
-        public double Eo
-        {
-            get
-            {
-                if (evap_source != "eo")
-                {
-                    double startOfDay = Time(year, day, TimeToMins(apsim_time));
-                    double endOfDay = Time(year, day, TimeToMins(apsim_time) + (int)(apsim_timestep));
-                    return (CEvap(endOfDay) - CEvap(startOfDay)) * 10.0;
-                }
-                else
-                    return Double.NaN;
-            }
-        }
+        public double Eo { get; set; }
 
         [Units("cm")]
         private double[] psix
@@ -2588,9 +2575,8 @@ namespace Models.Soils
             double timeMins = Time(year, day, timeOfDay);
 
             _cover_green_sum = GetGreenCover();
-            double amount = PotEvapotranspiration();
 
-            InsertLoginfo(timeMins, duration, amount, ref SWIMEvapTime, ref SWIMEvapAmt);
+            InsertLoginfo(timeMins, duration, Eo, ref SWIMEvapTime, ref SWIMEvapAmt);
         }
 
         private double GetGreenCover()
