@@ -65,9 +65,6 @@ namespace Models.PMF.Struct
         [Link]
         public IFunction thermalTime = null;
 
-        [Link]
-        private IFunction phyllochron = null;
-
         /// <summary>The main stem final node number</summary>
         [Link]
         public IFunction finalLeafNumber = null;
@@ -100,11 +97,21 @@ namespace Models.PMF.Struct
         [Link]
         private IFunction aTillerVert = null;
 
+        /// <summary>The Initial Appearance rate for phyllocron</summary>
+        [Link]
+        private IFunction initialAppearanceRate = null;
+        /// <summary>The Final Appearance rate for phyllocron</summary>
+        [Link]
+        private IFunction finalAppearanceRate = null;
+        /// <summary>The Final Appearance rate for phyllocron</summary>
+        [Link]
+        private IFunction remainingLeavesForFinalAppearanceRate = null;
+
         private bool leavesInitialised;
         private double tillersAdded;
         private bool dayofEmergence;
         private double dltTTDayBefore;
-        private double dltLeafNo;
+        //private double dltLeafNo;
 
         /// <summary>FertileTillerNumber</summary>
         public double FertileTillerNumber { get; set; }
@@ -136,10 +143,26 @@ namespace Models.PMF.Struct
             if (Sow.Plant == plant)
             {
                 Clear();
+                //allow structure to clear leaf on sowing event, otherwise leaf will reset the culms after tthey have been initialised
+                leaf.Clear();
                 if (Sow.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 FertileTillerNumber = Sow.BudNumber;
                 //TotalStemPopn = MainStemPopn;
+                if (leaf.Culms.Count == 0)
+                {
+                    //first culm is the main culm
+                    leaf.AddCulm(new CulmParameters() {
+                        Density = Sow.Population,
+                        InitialAppearanceRate = initialAppearanceRate.Value(),
+                        FinalAppearanceRate = finalAppearanceRate.Value(),
+                        RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
+                        AMaxIntercept = leaf.AMaxIntercept.Value(),
+                        AMaxSlope = leaf.AMaxSlope.Value(),
+                        AX0 = leaf.AX0.Value()
+                    });
+                }
+
             }
         }
 
@@ -195,18 +218,22 @@ namespace Models.PMF.Struct
             /// <summary>Calculate the number of new leaf that will appear today.</summary>
         void calcLeafAppearance()
         {
-            dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(dltTTDayBefore, phyllochron.Value(), 0), 0.0, remainingLeaves);
-            var newLeafNo = CurrentLeafNo + dltLeafNo;
-            var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
-            if (newLeafAppeared)
+            if(leaf?.Culms.Count > 0)
             {
-                calcCulmAppearance((int)Math.Floor(newLeafNo));
-            }
-            var updatedFinalLeaf = FinalLeafNo;
-            CurrentLeafNo = newLeafNo;
-            for (var i = 0; i < leaf.Culms.Count; ++i)
-            {
-                leaf.Culms[i].UpdateLeafNumber(dltLeafNo, updatedFinalLeaf);
+                leaf.Culms[0].FinalLeafNumber = FinalLeafNo;
+                leaf.Culms[0].calcLeafAppearance(dltTTDayBefore); 
+
+                //MathUtilities.Bound(MathUtilities.Divide(dltTTDayBefore, phyllochron.Value(), 0), 0.0, remainingLeaves);
+                var newLeafNo = leaf.Culms[0].CurrentLeafNumber;
+                var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
+                if (newLeafAppeared)
+                {
+                    calcCulmAppearance((int)Math.Floor(newLeafNo));
+                }
+                for (var i = 1; i < leaf.Culms.Count; ++i)
+                {
+                    leaf.Culms[i].calcLeafAppearance(dltTTDayBefore);
+                }
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -283,7 +310,13 @@ namespace Models.PMF.Struct
                     CulmNumber = nCulms,
                     Proportion = fraction,
                     VerticalAdjustment = tillersAdded * aTillerVert.Value() + verticalAdjustment.Value(), //add aMaxVert in calc
-                    LeafAtAppearance = leafAtAppearance,
+                    LeafNoAtAppearance = leafAtAppearance,
+                    InitialAppearanceRate = initialAppearanceRate.Value(),
+                    FinalAppearanceRate = finalAppearanceRate.Value(),
+                    RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
+                    AMaxIntercept = leaf.AMaxIntercept.Value(),
+                    AMaxSlope = leaf.AMaxSlope.Value(),
+                    AX0 = leaf.AX0.Value()
                 });
 
                 //bell curve distribution is adjusted horizontally by moving the curve to the left.

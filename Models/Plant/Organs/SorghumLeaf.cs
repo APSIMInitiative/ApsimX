@@ -304,7 +304,18 @@ namespace Models.PMF.Organs
         /// <summary>Slope for N Dilutions</summary>
         [ChildLinkByName]
         IFunction MinPlantWt = null;
-        
+
+        /// <summary>/// The aX0 for this Culm </summary>
+        [ChildLinkByName]
+        public IFunction AX0 = null;
+
+        /// <summary> The aMaxSlope for this Culm </summary>
+        [ChildLinkByName]
+        public IFunction AMaxSlope = null;
+
+        /// <summary>The aMaxIntercept for this Culm</summary>
+        [ChildLinkByName]
+        public IFunction AMaxIntercept = null;
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassRUE { get; set; }
@@ -494,11 +505,6 @@ namespace Models.PMF.Organs
             if (phaseChange.StageName == LeafInitialisationStage)
             {
                 LeafInitialised = true;
-                if(Culms.Count == 0)
-                {
-                    //first culm is the main culm
-                    AddCulm(new CulmParameters() { Density = SowingDensity });
-                }
 
                 Live.StructuralWt = initialWtFunction.Value() * SowingDensity;
                 Live.StorageWt = 0.0;
@@ -517,24 +523,24 @@ namespace Models.PMF.Organs
         /// <summary>Add a culm to the plant.</summary>
         public void AddCulm(CulmParameters parameters)
         {
-            var culm = new Culm(this);
-            culm.CulmNumber = parameters.CulmNumber;
-            culm.Proportion = parameters.Proportion;
-            culm.LeafNoAtAppearance = parameters.LeafAtAppearance;
-            culm.VerticalAdjustment = parameters.VerticalAdjustment;
-            culm.Density = SowingDensity;
+            var culm = new Culm(parameters);
+            //culm.CulmNumber = parameters.CulmNumber;
+            //culm.Proportion = parameters.Proportion;
+            //culm.LeafNoAtAppearance = parameters.LeafAtAppearance;
+            //culm.VerticalAdjustment = parameters.VerticalAdjustment;
+            //culm.Density = SowingDensity;
 
-            culm.calcLeafAppearance();
+            //culm.calcLeafAppearance();
 
-            culm.AX0 = (Apsim.Find(this, "aX0") as Functions.IFunction).Value();
-            culm.AMaxSlope = (Apsim.Find(this, "aMaxSlope") as Functions.IFunction).Value();
-            culm.AMaxIntercept = (Apsim.Find(this, "aMaxIntercept") as Functions.IFunction).Value();
+            //culm.AX0 = (Apsim.Find(this, "aX0") as Functions.IFunction).Value();
+            //culm.AMaxSlope = (Apsim.Find(this, "aMaxSlope") as Functions.IFunction).Value();
+            //culm.AMaxIntercept = (Apsim.Find(this, "aMaxIntercept") as Functions.IFunction).Value();
 
             Culms.Add(culm);
         }
 
         /// <summary>Clears this instance.</summary>
-        private void Clear()
+        public void Clear()
         {
             Live = new Biomass();
             Dead = new Biomass();
@@ -548,7 +554,6 @@ namespace Models.PMF.Organs
             Detached.Clear();
             Removed.Clear();
             Height = 0;
-            LAI = 0;
 
             Culms = new List<Culm>();
         
@@ -558,6 +563,14 @@ namespace Models.PMF.Organs
 
             laiEquilibWaterQ = new Queue<double>(10);
             sdRatioQ = new Queue<double>(5);
+
+            Live.StructuralWt = 0;
+            Live.StorageWt = 0;
+            LAI = 0;
+            SLN = 0;
+            Live.StructuralN = 0;
+            Live.StorageN = 0;
+
         }
         #endregion
 
@@ -1445,14 +1458,10 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == parentPlant)
             {
-                Clear();
+                //OnPlantSowing let structure do the clear so culms isn't cleared before initialising the first one
+                //Clear();
                 SowingDensity = data.Population;
-                Live.StructuralWt = 0;
-                Live.StorageWt = 0;
-                LAI = 0;
-                SLN = 0;
-                Live.StructuralN = 0;
-                Live.StorageN = 0;
+
             }
         }
 
