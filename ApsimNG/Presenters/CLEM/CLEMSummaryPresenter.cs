@@ -135,7 +135,7 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[ActContBackGroups]", "#ffffff");
 
                 htmlString = htmlString.Replace("[ContDefaultBack]", "#FAFAFA");
-                htmlString = htmlString.Replace("[ContDefaultBanner]", "#FAFAFA");
+                htmlString = htmlString.Replace("[ContDefaultBanner]", "#000");
 
                 htmlString = htmlString.Replace("[ContFileBack]", "#FCFFFC");
 

@@ -747,19 +747,7 @@
                     {
                         string name = property.Name;
                         VariableProperty prop = null;
-                        if (property.PropertyType == typeof(Soils.NitrogenValue))
-                        {
-                            var nitrogenValue = property.GetValue(model) as Soils.NitrogenValue;
-                            if (nitrogenValue != null)
-                            {
-                                if (nitrogenValue.StoredAsPPM)
-                                    prop = new VariableProperty(nitrogenValue, nitrogenValue.GetType().GetProperty("PPM"));
-                                else
-                                    prop = new VariableProperty(nitrogenValue, nitrogenValue.GetType().GetProperty("KgHa"));
-                            }
-                        }
-                        else
-                            prop = new VariableProperty(model, property);
+                        prop = new VariableProperty(model, property);
 
                         if (prop != null)
                             properties.Add(new Tuple<string, VariableProperty>(name, prop));

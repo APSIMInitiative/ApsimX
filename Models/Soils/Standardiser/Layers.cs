@@ -141,6 +141,8 @@
 
                 string[] metadata = StringUtilities.CreateStringArray("Mapped", thickness.Length);
 
+                analysis.NO3N = MapConcentration(analysis.NO3N, analysis.Thickness, thickness, 1.0);
+                analysis.NH4N = MapConcentration(analysis.NH4N, analysis.Thickness, thickness, 0.2);
                 analysis.CL = MapConcentration(analysis.CL, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.CL));
                 analysis.CLMetadata = metadata;
                 analysis.EC = MapConcentration(analysis.EC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.EC));
@@ -186,19 +188,9 @@
                 if (sample.SW != null)
                     sample.SW = MapSW(sample.SW, sample.Thickness, thickness, soil);
                 if (sample.NH4N != null)
-                {
-                    if (sample.NH4N.StoredAsPPM)
-                        sample.NH4N.PPM = MapConcentration(sample.NH4N.PPM, sample.Thickness, thickness, 0.2);
-                    else
-                        sample.NH4N.KgHa = MapMass(sample.NH4N.KgHa, sample.Thickness, thickness);
-                }
+                    sample.NH4N = MapConcentration(sample.NH4N, sample.Thickness, thickness, 0.2);
                 if (sample.NO3N != null)
-                {
-                    if (sample.NO3N.StoredAsPPM)
-                        sample.NO3N.PPM = MapConcentration(sample.NO3N.PPM, sample.Thickness, thickness, 1.0);
-                    else
-                        sample.NO3N.KgHa = MapMass(sample.NO3N.KgHa, sample.Thickness, thickness);
-                }
+                    sample.NO3N = MapConcentration(sample.NO3N, sample.Thickness, thickness, 1.0);
 
                 // The elements below will be overlaid over other arrays of values so we want 
                 // to have missing values (double.NaN) used at the bottom of the profile.
