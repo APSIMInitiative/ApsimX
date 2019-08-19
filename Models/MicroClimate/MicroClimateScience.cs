@@ -291,6 +291,9 @@ namespace Models
             // find equilibrium evap rate as a
             // function of radiation, albedo, and temp.
             double surface_albedo = Salb + (residue_albedo - Salb) * residue_cover;
+            // set surface_albedo to soil albedo for backward compatibility with soilwat
+            surface_albedo = Salb;
+
             double albedo = max_albedo - (max_albedo - surface_albedo) * (1.0 - _cover_green_sum);
             // wt_ave_temp is mean temp, weighted towards max.
             double wt_ave_temp = 0.6 * MaxT + 0.4 * MinT;
