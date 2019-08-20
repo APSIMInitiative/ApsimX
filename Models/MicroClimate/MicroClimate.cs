@@ -375,7 +375,7 @@ namespace Models
         /// <summary>Calculate the amtospheric potential evaporation rate for each zone</summary>
         private void CalculateEo(ZoneMicroClimate ZoneMC)
         {
-            ISoilWater zonesoilwater = Apsim.Find(ZoneMC.zone, typeof(ISoilWater)) as ISoilWater;
+            ISoilWater zoneSoilWater = Apsim.Find(ZoneMC.zone, typeof(ISoilWater)) as ISoilWater;
             ISurfaceOrganicMatter zoneSurfaceOM = Apsim.Find(ZoneMC.zone, typeof(ISurfaceOrganicMatter)) as ISurfaceOrganicMatter;
 
             double CoverGreen = 0;
@@ -383,10 +383,11 @@ namespace Models
                 if (ZoneMC.Canopies[j].Canopy != null)
                    CoverGreen+= (1-CoverGreen)*ZoneMC.Canopies[j].Canopy.CoverGreen;
 
-            zonesoilwater.Eo = AtmosphericPotentialEvaporationRate(weather.Radn, 
+            if (weather != null && zoneSoilWater != null && zoneSurfaceOM != null)
+               zoneSoilWater.Eo = AtmosphericPotentialEvaporationRate(weather.Radn, 
                                                             weather.MaxT, 
                                                             weather.MinT, 
-                                                            zonesoilwater.Salb, 
+                                                            zoneSoilWater.Salb, 
                                                             zoneSurfaceOM.Cover, 
                                                             CoverGreen); 
         }
