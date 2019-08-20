@@ -764,7 +764,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Wheat.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\WeightedTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Weather.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Water.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Physical.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\VariableReference.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />

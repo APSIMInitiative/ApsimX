@@ -18,7 +18,7 @@ namespace Models.Soils
     {
         #region External links
         [Link]
-        private Water Water = null;
+        private Physical Water = null;
         #endregion
 
         #region Internal States

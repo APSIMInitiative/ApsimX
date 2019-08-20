@@ -582,7 +582,7 @@
     <Compile Include="Soils\SWIM\SwimSubsurfaceDrain.cs" />
     <Compile Include="Soils\SWIM\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
-    <Compile Include="Soils\Water.cs" />
+    <Compile Include="Soils\Physical.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWater.cs" />
     <Compile Include="Summary.cs" />
     <Compile Include="Surface\AddFaecesType.cs" />

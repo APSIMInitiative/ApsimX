@@ -7,7 +7,7 @@
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
-    [ValidParent(ParentType = typeof(Water))]
+    [ValidParent(ParentType = typeof(Physical))]
     public class SoilCrop : Model
     {
         /// <summary>Crop lower limit</summary>
