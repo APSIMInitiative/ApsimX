@@ -104,7 +104,7 @@ namespace Models.PMF.Organs
         /// The lai function.
         /// </summary>
         [Link(IsOptional = true)]
-        private IFunction lai = null;
+        private IFunction area = null;
 
         /// <summary>
         /// The extinction coefficient function.
@@ -759,8 +759,8 @@ namespace Models.PMF.Organs
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
                 if (cover != null)
                     LAI = (Math.Log(1 - CoverGreen) / (extinctionCoefficient.Value() * -1)) * plant.populationFactor;
-                if (lai != null)
-                    LAI = lai.Value() * plant.populationFactor;
+                if (area != null)
+                    LAI = area.Value() * plant.populationFactor;
 
                 Height = tallness.Value();
                 if (baseHeight == null)
