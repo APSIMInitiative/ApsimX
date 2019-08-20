@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 60; } }
+        public static int LatestVersion { get { return 61; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -222,7 +222,7 @@
                 JsonUtilities.AddConstantFunctionIfNotExists(model, "StomatalConductanceCO2Modifier", "1.0");
             }
         }
-
+        
         /// <summary>
         /// </summary>
         /// <param name="root">The root JSON token.</param>
@@ -776,6 +776,61 @@
                 sample["NH4N"] = null;
             }
         }
+
+        /// <summary>
+        /// Upgrades to version 61. Ensures that a micromet model is within every simulation.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion61(JObject root, string fileName)
+        {
+
+            foreach (JObject Sim in JsonUtilities.ChildrenRecursively(root, "Simulation"))
+            {
+                List<JObject> MicroClimates = JsonUtilities.ChildrenRecursively(root, "MicroClimate");
+                if (MicroClimates.Count == 0)
+                    AddMicroClimate(Sim);
+            }
+
+        }
+        /// <summary>
+        /// Add a MicroClimate model to the specified JSON model token.
+        /// </summary>
+        /// <param name="simulation">An APSIM Simulation</param>
+        public static void AddMicroClimate(JObject simulation)
+        {
+            JArray children = simulation["Children"] as JArray;
+            if (children == null)
+            {
+                children = new JArray();
+                simulation["Children"] = children;
+            }
+
+            JObject microClimateModel = new JObject();
+            microClimateModel["$type"] = "Models.MicroClimate, Models";
+            microClimateModel["Name"] = "MicroClimate";
+            microClimateModel["a_interception"] = "0.0";
+            microClimateModel["b_interception"] = "1.0";
+            microClimateModel["c_interception"] = "0.0";
+            microClimateModel["d_interception"] = "0.0";
+            microClimateModel["soil_albedo"] = "0.13";
+            microClimateModel["SoilHeatFluxFraction"] = "0.4";
+            microClimateModel["NightInterceptionFraction"] = "0.5";
+            microClimateModel["ReferenceHeight"] = "2.0";
+            microClimateModel["IncludeInDocumentation"] = "true";
+            microClimateModel["Enabled"] = "true";
+            microClimateModel["ReadOnly"] = "false";
+            var weathers = JsonUtilities.ChildrenOfType(simulation, "Weather");
+
+            // Don't bother with microclimate if no weather component
+            if (weathers.Count != 0)
+            {
+                var weather = weathers.First();
+                int index = children.IndexOf(weather);
+                children.Insert(index+1,microClimateModel);
+            }
+        }
+
 
         /// <summary>
         /// Changes initial Root Wt to an array.

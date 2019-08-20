@@ -364,37 +364,6 @@ namespace Models.Soils
         [Link]
         private List<ISolute> solutes = null;
 
-        // Module Constants (Default Values) (NOT specified in GUI)
-
-        /// <summary>
-        /// Air temperature below which the ratio between eo and eeq decreases (C)
-        /// </summary>
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Units("C")]
-        public double min_crit_temp { get; set; }
-
-        /// <summary>
-        /// Air temperature above which the ratio between eo and eeq increases (C)
-        /// </summary>
-        /// <value>
-        /// The max_crit_temp.
-        /// </value>
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 50.0)]
-        [Units("C")]
-        public double max_crit_temp { get; set; }
-
-        /// <summary>
-        /// Maximum bare ground soil albedo (0-1)
-        /// </summary>
-        /// <value>
-        /// The max_albedo.
-        /// </value>
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 1.0)]        
-        public double max_albedo { get; set; }
-
         /// <summary>
         /// Constant in the calculation of the effect of surface residues on potential evapotranspiration
         /// </summary>
@@ -590,10 +559,6 @@ namespace Models.Soils
 
 
             //Module Constants
-
-            min_crit_temp = 5.0;
-            max_crit_temp = 35.0;
-            max_albedo = 0.23;
             A_to_evap_fact = 0.44;
             canopy_eos_coef = 1.7;
             sw_top_crit = 0.9;
@@ -628,7 +593,11 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Eo { get{return surface != null ? surface.Eo : Double.NaN;} }
+        public double Eo
+        {
+            get {return surface != null ? surface.Eo : Double.NaN;}
+            set { surface.Eo = value; }
+        }
 
         /// <summary>
         /// Potential evaporation of water from the soil (after accounting for the effects of cover and residues)
@@ -1508,9 +1477,6 @@ namespace Models.Soils
             constants.Summary = Summary;
             constants.thismodel = this;
 
-            constants.min_crit_temp                  = min_crit_temp;          
-            constants.max_crit_temp                  = max_crit_temp;          
-            constants.max_albedo                     = max_albedo;             
             constants.A_to_evap_fact                 = A_to_evap_fact;         
             constants.canopy_eos_coef                = canopy_eos_coef;        
             constants.sw_top_crit                    = sw_top_crit;            
@@ -1680,7 +1646,7 @@ namespace Models.Soils
             
             // EVAPORATION
 
-            surface.CalcEvaporation();
+            surface.CalcEvaporation(Eo);
 
             surface.RemoveEvaporationFromSoil(ref SoilObject);
 
