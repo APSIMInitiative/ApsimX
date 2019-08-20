@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 61; } }
+        public static int LatestVersion { get { return 62; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -776,38 +776,6 @@
                 sample["NH4N"] = null;
             }
         }
-        /// <summary>
-        /// Upgrades to version 61. Rename the 'Water' node under soil to 'Physical'
-        /// </summary>
-        /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion61(JObject root, string fileName)
-        {
-            foreach (var water in JsonUtilities.ChildrenRecursively(root, "Water"))
-            {
-                water["$type"] = "Models.Soils.Physical, Models";
-                water["Name"] = "Physical";
-            }
-
-            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
-            {
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".Water.", ".Physical.");
-            }
-
-            foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
-            {
-                var specifications = factor["Specifications"];
-                if (specifications != null)
-                {
-                    var specificationsString = specifications.ToString();
-                    if (specificationsString.Contains(".Water."))
-                    {
-                        specificationsString = specificationsString.Replace(".Water.", ".Physical.");
-                        factor["Specifications"] = specificationsString;
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Upgrades to version 61. Ensures that a micromet model is within every simulation.
@@ -863,6 +831,38 @@
             }
         }
 
+        /// <summary>
+        /// Upgrades to version 61. Rename the 'Water' node under soil to 'Physical'
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion62(JObject root, string fileName)
+        {
+            foreach (var water in JsonUtilities.ChildrenRecursively(root, "Water"))
+            {
+                water["$type"] = "Models.Soils.Physical, Models";
+                water["Name"] = "Physical";
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Water.", ".Physical.");
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
+            {
+                var specifications = factor["Specifications"];
+                if (specifications != null)
+                {
+                    var specificationsString = specifications.ToString();
+                    if (specificationsString.Contains(".Water."))
+                    {
+                        specificationsString = specificationsString.Replace(".Water.", ".Physical.");
+                        factor["Specifications"] = specificationsString;
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Changes initial Root Wt to an array.

@@ -383,12 +383,12 @@
         }
 
         [Test]
-        public void Version61()
+        public void Version62()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion61 before.json");
-            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion61 after.json");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion62 before.json");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion62 after.json");
 
-            var converter = Converter.DoConvert(json, 61);
+            var converter = Converter.DoConvert(json, 62);
             Assert.IsTrue(converter.DidConvert);
 
             using (StringWriter writer = new StringWriter())
