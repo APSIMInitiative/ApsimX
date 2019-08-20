@@ -425,12 +425,11 @@ namespace Models.PMF.Organs
         [Description("Phosphorus Stress")]
         public double PhosphorusStress { get; set; }
 
-        /// <summary>
-        /// Final Leaf Number.
-        /// </summary>
+        /// <summary> /// Final Leaf Number. /// </summary>
         public double FinalLeafNo { get; set; }
 
-        private double SowingDensity { get; set; }
+        /// <summary> /// Sowing Density (Population). /// </summary>
+        public double SowingDensity { get; set; }
 
         private bool LeafInitialised = false;
         #endregion
@@ -521,7 +520,7 @@ namespace Models.PMF.Organs
         #region Component Process Functions
 
         /// <summary>Add a culm to the plant.</summary>
-        public void AddCulm(CulmParameters parameters)
+        public Culm AddCulm(CulmParameters parameters)
         {
             var culm = new Culm(parameters);
             //culm.CulmNumber = parameters.CulmNumber;
@@ -537,6 +536,7 @@ namespace Models.PMF.Organs
             //culm.AMaxIntercept = (Apsim.Find(this, "aMaxIntercept") as Functions.IFunction).Value();
 
             Culms.Add(culm);
+            return culm;
         }
 
         /// <summary>Clears this instance.</summary>

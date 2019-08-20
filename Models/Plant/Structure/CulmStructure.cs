@@ -154,6 +154,7 @@ namespace Models.PMF.Struct
                     //first culm is the main culm
                     leaf.AddCulm(new CulmParameters() {
                         Density = Sow.Population,
+                        InitialProportion = 1,
                         InitialAppearanceRate = initialAppearanceRate.Value(),
                         FinalAppearanceRate = finalAppearanceRate.Value(),
                         RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
@@ -199,6 +200,10 @@ namespace Models.PMF.Struct
         {
             //hack to get finalleafnumber to be finalised a day later
             FinalLeafNo = finalLeafNumber.Value();
+            foreach (var culm in leaf.Culms)
+            {
+                culm.FinalLeafNumber = FinalLeafNo;
+            }
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -218,13 +223,15 @@ namespace Models.PMF.Struct
             /// <summary>Calculate the number of new leaf that will appear today.</summary>
         void calcLeafAppearance()
         {
-            if(leaf?.Culms.Count > 0)
+            if (leaf?.Culms.Count > 0)
             {
                 leaf.Culms[0].FinalLeafNumber = FinalLeafNo;
                 leaf.Culms[0].calcLeafAppearance(dltTTDayBefore); 
 
                 //MathUtilities.Bound(MathUtilities.Divide(dltTTDayBefore, phyllochron.Value(), 0), 0.0, remainingLeaves);
                 var newLeafNo = leaf.Culms[0].CurrentLeafNumber;
+                var newL = Math.Floor(newLeafNo);
+                var curL = Math.Floor(CurrentLeafNo);
                 var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
                 if (newLeafAppeared)
                 {
@@ -232,8 +239,10 @@ namespace Models.PMF.Struct
                 }
                 for (var i = 1; i < leaf.Culms.Count; ++i)
                 {
+                    leaf.Culms[i].FinalLeafNumber = FinalLeafNo;
                     leaf.Culms[i].calcLeafAppearance(dltTTDayBefore);
                 }
+                CurrentLeafNo = newLeafNo;
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -305,10 +314,11 @@ namespace Models.PMF.Struct
             //a new tiller is created with each new leaf, up the number of fertileTillers
             if (tillerFraction + fractionToAdd > 1)
             {
-                leaf.AddCulm(new CulmParameters()
+                var newCulm = leaf.AddCulm(new CulmParameters()
                 {
                     CulmNumber = nCulms,
-                    Proportion = fraction,
+                    Density = leaf.SowingDensity,
+                    InitialProportion = fraction,
                     VerticalAdjustment = tillersAdded * aTillerVert.Value() + verticalAdjustment.Value(), //add aMaxVert in calc
                     LeafNoAtAppearance = leafAtAppearance,
                     InitialAppearanceRate = initialAppearanceRate.Value(),
@@ -318,7 +328,7 @@ namespace Models.PMF.Struct
                     AMaxSlope = leaf.AMaxSlope.Value(),
                     AX0 = leaf.AX0.Value()
                 });
-
+                newCulm.calcLeafAppearance(dltTTDayBefore);
                 //bell curve distribution is adjusted horizontally by moving the curve to the left.
                 //This will cause the first leaf to have the same value as the nth leaf on the main culm.
                 //T3&&T4 were defined during dicussion at initial tillering meeting 27/06/12

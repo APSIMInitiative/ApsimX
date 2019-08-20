@@ -22,7 +22,7 @@ namespace Models.PMF.Organs
         public double LeafNoAtAppearance { get; set; }
 
         /// <summary>The proportion of a whole tiller</summary>
-        public double Proportion { get; set; } = 1.0;
+        public double InitialProportion { get; set; } = 1.0;
 
         /// <summary>The area calcs for subsequent tillers are the same shape but not as tall</summary>
         public double VerticalAdjustment { get; set; }
@@ -62,7 +62,6 @@ namespace Models.PMF.Organs
         /// <summary> The numeric rank of the cohort appearing </summary>
         public int CulmNumber { get; set; }
 
-
         /// <summary> The proportion of a whole tiller</summary>
         public double Proportion { get; set; }
 
@@ -94,6 +93,7 @@ namespace Models.PMF.Organs
         public Culm(CulmParameters parameters)
         {
             culmParameters = parameters;
+            Proportion = culmParameters.InitialProportion;
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Models.PMF.Organs
             var leafsize = calcIndividualLeafSize(leafNoEffective);
 
             double leafArea = leafsize * smm2sm * culmParameters.Density * dltLeafNo; // in dltLai
-            // TotalLAI += leafArea;
+            TotalLAI += leafArea;
             return (leafArea * Proportion);
         }
 
