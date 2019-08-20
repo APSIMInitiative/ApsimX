@@ -34,10 +34,11 @@ namespace Models.Core.ApsimFile
             get
             {
                 Dictionary<string, string> parameters = new Dictionary<string, string>();
+                if (manager["Parameters"] == null)
+                    return parameters;
+
                 foreach (var parameter in manager["Parameters"])
-                {
                     parameters.Add(parameter["Key"].ToString(), parameter["Value"].ToString());
-                }
                 return parameters;
             }
         }
