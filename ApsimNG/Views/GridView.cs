@@ -404,14 +404,6 @@
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
 
-                if (!colAttributes.TryGetValue(colNo, out ColRenderAttributes attributes))
-                {
-                    attributes = new ColRenderAttributes();
-                    attributes.BackgroundColor = MainWidget.Style.Base(cellState);
-                    attributes.ForegroundColor = Grid.Style.Foreground(cellState);
-                    colAttributes.Add(colNo, attributes);
-                }
-
                 if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
@@ -419,11 +411,16 @@
                     cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                     textRenderer.Editable = false;
                 }
-                else
+                else if (colAttributes.TryGetValue(colNo, out ColRenderAttributes attributes) && cellState != StateType.Selected)
                 {
-                    cell.CellBackgroundGdk = attributes.BackgroundColor; ;
+                    cell.CellBackgroundGdk = attributes.BackgroundColor;
                     textRenderer.ForegroundGdk = attributes.ForegroundColor;
                     textRenderer.Editable = true;
+                }
+                else
+                {
+                    cell.CellBackgroundGdk = Grid.Style.Base(cellState);
+                    textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
                 }
 
                 if (view == Grid)
@@ -613,6 +610,13 @@
             if (colAttributes.TryGetValue(col, out colAttr))
             {
                 colAttr.BackgroundColor = color;
+            }
+            else
+            {
+                colAttributes.Add(col, new ColRenderAttributes()
+                {
+                    BackgroundColor = color,
+                });
             }
         }
 
@@ -1477,8 +1481,6 @@
             Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
             fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
             fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
-            Grid.ModifyBase(StateType.Normal, Grid.Style.Background(StateType.Normal));
-            fixedColView.ModifyBase(StateType.Normal, Grid.Style.Background(StateType.Normal));
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {

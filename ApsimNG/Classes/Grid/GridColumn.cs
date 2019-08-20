@@ -153,12 +153,11 @@ namespace UserInterface.Classes
 
             set
             {
-                Gdk.Color colour;
-                if (value == Color.Empty)
-                    colour = gridView.MainWidget.Style.Base(StateType.Normal);
-                else
-                    colour = new Gdk.Color(value.R, value.G, value.B);
-                this.gridView.SetColBackgroundColor(ColumnIndex, colour);
+                if (value != Color.Empty)
+                {
+                    Gdk.Color colour = new Gdk.Color(value.R, value.G, value.B);
+                    this.gridView.SetColBackgroundColor(ColumnIndex, colour);
+                }
             }
         }
 
@@ -175,12 +174,11 @@ namespace UserInterface.Classes
 
             set
             {
-                Gdk.Color colour;
-                if (value == Color.Empty)
-                    colour = gridView.MainWidget.Style.Foreground(StateType.Normal);
-                else
-                    colour = new Gdk.Color(value.R, value.G, value.B);
-                this.gridView.SetColForegroundColor(ColumnIndex, colour);
+                if (value != Color.Empty)
+                {
+                    Gdk.Color colour = new Gdk.Color(value.R, value.G, value.B);
+                    this.gridView.SetColForegroundColor(ColumnIndex, colour);
+                }
             }
         }
 
