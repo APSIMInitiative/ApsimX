@@ -820,11 +820,12 @@
             microClimateModel["IncludeInDocumentation"] = "true";
             microClimateModel["Enabled"] = "true";
             microClimateModel["ReadOnly"] = "false";
-            var weather = JsonUtilities.ChildrenOfType(simulation, "Weather").First();
-            if (weather == null)
-                children.Add(microClimateModel);
-            else
+            var weathers = JsonUtilities.ChildrenOfType(simulation, "Weather");
+
+            // Don't bother with microclimate if no weather component
+            if (weathers.Count != 0)
             {
+                var weather = weathers.First();
                 int index = children.IndexOf(weather);
                 children.Insert(index+1,microClimateModel);
             }
