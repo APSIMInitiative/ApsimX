@@ -34,8 +34,6 @@
 
     public class ProfilePresenter : IPresenter
     {
-        private static Color[] cropColors = { Color.FromArgb(173, 221, 142), Color.FromArgb(247, 252, 185) };
-
         /// <summary>
         /// The underlying model that this presenter is to work with.
         /// </summary>
@@ -261,8 +259,8 @@
             // Colour the crop column.
             var crops = soilCrop.Parent.Children.Where(child => child is SoilCrop).ToList();
             int cropIndex = crops.IndexOf(soilCrop);
-            int colourIndex = cropIndex % cropColors.Length;
-            column.ForegroundColour = cropColors[colourIndex];
+            int colourIndex = cropIndex % ColourUtilities.Colours.Length;
+            column.ForegroundColour = ColourUtilities.Colours[colourIndex];
 
             // Make the soil crop columns wider to fit the crop name in column title.
             column.Width = 90;
