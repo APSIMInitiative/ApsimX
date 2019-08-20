@@ -27,9 +27,6 @@ namespace Models.Soils
         private IClock Clock = null;
 
         [Link]
-        private IWeather MetFile = null;
-
-        [Link]
         private ISummary summary = null;
 
         [Link]
