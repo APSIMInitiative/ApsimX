@@ -149,7 +149,7 @@ namespace Models.Soils.SoilWaterBackend
 
                 //! NIH Need to consider if interception losses were already considered in runoff model calibration
 
-                double waterForRunoff = Met.rain + Runon - (Canopy.interception + SurfaceCover.residueinterception);
+                double waterForRunoff = Canopy.PotentialInfiltration + Runon;
 
                 foreach (IrrigData irrData in Irrig)
                 {
