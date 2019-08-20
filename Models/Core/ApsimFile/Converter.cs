@@ -801,12 +801,21 @@
             changedProperties.Add("MaintenanceRespiration", "MaintenanceRespirationFunction");
             changedProperties.Add("FRGR", "FRGRFunction");
 
+            // Names of nodes which are probably simple leaf. The problem is that
+            // in released models, the model is stored in a separate file to the
+            // simulations. Therefore when we parse/convert the simulation file,
+            // we don't know the names of the simple leaf models, so we are forced
+            // take a guess.
             List<string> modelNames = new List<string>() { "Leaf", "Stover" };
+
+            // Names of nodes which are definitely simple leaf.
+            List<string> definiteSimpleLeaves = new List<string>();
 
             // Go through all SimpleLeafs and rename the appropriate children.
             foreach (JObject leaf in JsonUtilities.ChildrenRecursively(root, "SimpleLeaf"))
             {
                 modelNames.Add(leaf["Name"].ToString());
+                definiteSimpleLeaves.Add(leaf["Name"].ToString());
                 // We removed the Leaf.AppearedCohortNo property.
                 JObject relativeArea = JsonUtilities.FindFromPath(leaf, "DeltaLAI.Vegetative.Delta.RelativeArea");
                 if (relativeArea != null && relativeArea["XProperty"].ToString() == "[Leaf].AppearedCohortNo")
@@ -817,6 +826,26 @@
                     string newName = change.Key;
                     string old = change.Value;
                     JsonUtilities.RenameChildModel(leaf, old, newName);
+                }
+            }
+
+            foreach (JObject reference in JsonUtilities.ChildrenRecursively(root, "VariableReference"))
+            {
+                foreach (string leafName in definiteSimpleLeaves)
+                {
+                    foreach (KeyValuePair<string, string> property in changedProperties)
+                    {
+                        string oldName = property.Value;
+                        string newName = property.Key;
+
+                        string toReplace = $"{leafName}.{oldName}";
+                        string replaceWith = $"{leafName}.{newName}";
+                        reference["VariableName"] = reference["VariableName"].ToString().Replace(toReplace, replaceWith);
+
+                        toReplace = $"[{leafName}].{oldName}";
+                        replaceWith = $"[{leafName}].{newName}";
+                        reference["VariableName"] = reference["VariableName"].ToString().Replace(toReplace, replaceWith);
+                    }
                 }
             }
 
