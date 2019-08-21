@@ -846,7 +846,7 @@ namespace Models.PMF.OilPalm
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            interception = MetData.Rain * InterceptionFraction;
+            interception = MetData.Rain * Math.Min(InterceptionFraction,1.0);
         }
 
         /// <summary>Called when [do plant growth].</summary>
@@ -1207,7 +1207,10 @@ namespace Models.PMF.OilPalm
                 Fvpd = Math.Max(0.0, 1 - (VPD - 18) / (50 - 18));
 
 
-            PEP = (Soil.SoilWater as SoilWater).Eo * cover_green*Math.Min(Fn, Fvpd);
+            PEP = (Soil.SoilWater as SoilWater).Eo * cover_green*Math.Min(Fn, Fvpd) - interception;
+            // interception losses may be greater than PEP - so check if PEP is negative.
+            // Any unevaporated interception losses are discarded - ie assume these evaporate at night etc
+            PEP = Math.Max(0.0, PEP);
 
 
             for (int j = 0; j < Soil.LL15mm.Length; j++)
