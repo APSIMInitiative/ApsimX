@@ -212,6 +212,15 @@
                     if (column.AddTotalToColumnName)
                         refreshGrid = true;
                 }
+                else
+                {
+                    GridColumnMetaData column = columnMetadata[changedCell.ColumnIndex];
+                    Array array = column.Values as Array;
+                    if (column.ColumnDataType == typeof(double) || column.ColumnDataType == typeof(float))
+                        array.SetValue(double.NaN, changedCell.RowIndex);
+                    column.Values = array;
+                    column.ValuesHaveChanged = true;
+                }
             }
 
             if (refreshGrid)
