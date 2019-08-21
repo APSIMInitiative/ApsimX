@@ -832,6 +832,7 @@
         }
 
         /// <summary>
+        /// Upgrades to version 62. Fixes SimpleLeaf variable names
         /// following a refactor of this class.
         /// </summary>
         /// <param name="root">The root JSON token.</param>
@@ -865,6 +866,7 @@
             List<string> definiteSimpleLeaves = new List<string>();
 
             // Go through all SimpleLeafs and rename the appropriate children.
+            foreach (JObject leaf in JsonUtilities.ChildrenRecursively(root, "SimpleLeaf"))
             {
                 modelNames.Add(leaf["Name"].ToString());
                 definiteSimpleLeaves.Add(leaf["Name"].ToString());
@@ -872,14 +874,16 @@
                 JObject relativeArea = JsonUtilities.FindFromPath(leaf, "DeltaLAI.Vegetative.Delta.RelativeArea");
                 if (relativeArea != null && relativeArea["XProperty"].ToString() == "[Leaf].AppearedCohortNo")
                     relativeArea["XProperty"] = "[Leaf].NodeNumber";
-                water["$type"] = "Models.Soils.Physical, Models";
+
                 foreach (var change in changedProperties)
                 {
+                    string newName = change.Key;
                     string old = change.Value;
                     JsonUtilities.RenameChildModel(leaf, old, newName);
                 }
             }
 
+            foreach (JObject reference in JsonUtilities.ChildrenRecursively(root, "VariableReference"))
             {
                 foreach (string leafName in definiteSimpleLeaves)
                 {
@@ -890,6 +894,7 @@
 
                         string toReplace = $"{leafName}.{oldName}";
                         string replaceWith = $"{leafName}.{newName}";
+                        reference["VariableName"] = reference["VariableName"].ToString().Replace(toReplace, replaceWith);
 
                         toReplace = $"[{leafName}].{oldName}";
                         replaceWith = $"[{leafName}].{newName}";
@@ -899,27 +904,30 @@
             }
 
             // Attempt some basic find/replace in manager scripts.
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
+                foreach (var change in changedProperties)
                 {
                     string newName = change.Key;
                     string old = change.Value;
-                if (specification != null)
+
                     bool changed = false;
                     foreach (string modelName in modelNames)
                     {
                         string toReplace = $"{modelName}.{old}";
                         string replaceWith = $"{modelName}.{newName}";
                         changed |= manager.Replace(toReplace, replaceWith, true);
-                    var specificationString = specification.ToString();
+
                         foreach (KeyValuePair<string, string> parameter in manager.Parameters)
                         {
+                            string newParam = parameter.Value.Replace(toReplace, replaceWith);
                             manager.UpdateParameter(parameter.Key, newParam);
                         }
-                    specificationString = specificationString.Replace("[Water]", "[Physical]");
+
                         toReplace = $"[{modelName}].{old}";
                         replaceWith = $"[{modelName}].{newName}";
                         changed |= manager.Replace(toReplace, replaceWith, true);
-                    factor["Specification"] = specificationString;
+
                         foreach (KeyValuePair<string, string> parameter in manager.Parameters)
                         {
                             string newParam = parameter.Value.Replace(toReplace, replaceWith);
@@ -932,12 +940,19 @@
             }
 
             // Fix some cultivar commands.
+            foreach (JObject cultivar in JsonUtilities.ChildrenRecursively(root, "Cultivar"))
             {
+                if (!cultivar["Command"].HasValues)
                     continue;
-                if (specifications != null)
+
                 foreach (JValue command in cultivar["Command"].Children())
                 {
+                    foreach (var change in changedProperties)
                     {
+                        string newName = change.Key;
+                        string old = change.Value;
+                        foreach (string modelName in modelNames)
+                        {
                             command.Value = command.Value.ToString().Replace($"{modelName}.{old}", $"{modelName}.{newName}");
                             command.Value = command.Value.ToString().Replace($"[{modelName}].{old}", $"[{modelName}].{newName}");
                         }
@@ -946,12 +961,12 @@
             }
         }
 
-       /// <summary>
+        /// <summary>
         /// Upgrades to version 61. Rename the 'Water' node under soil to 'Physical'
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
-        private static void UpgradeToVersion62(JObject root, string fileName)
+        private static void UpgradeToVersion63(JObject root, string fileName)
         {
             foreach (var water in JsonUtilities.ChildrenRecursively(root, "Water"))
             {
