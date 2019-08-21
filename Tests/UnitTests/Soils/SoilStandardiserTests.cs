@@ -17,7 +17,7 @@
             {
                 Children = new List<Model>()
                 {
-                    new Water()
+                    new Physical()
                     {
                         Thickness = new double[] { 100, 300, 300 },
                         BD = new double[] { 1.36, 1.216, 1.24 },
@@ -66,7 +66,7 @@
 
             SoilStandardiser.Standardise(soil);
 
-            var water = soil.Children[0] as Water;
+            var water = soil.Children[0] as Physical;
             var soilOrganicMatter = soil.Children[1] as SoilOrganicMatter;
             var sample = soil.Children[3] as Sample;
 
@@ -88,7 +88,7 @@
             {
                 Children = new List<Model>()
                 {
-                    new Water()
+                    new Physical()
                     {
                         Thickness = new double[] { 100, 300, 300 },
                         BD = new double[] { 1.36, 1.216, 1.24 },
@@ -141,7 +141,7 @@
 
             SoilStandardiser.Standardise(soil);
 
-            var water = soil.Children[0] as Water;
+            var water = soil.Children[0] as Physical;
             var soilOrganicMatter = soil.Children[1] as SoilOrganicMatter;
             var sample = soil.Children[3] as Sample;
 
@@ -163,7 +163,7 @@
             {
                 Children = new List<Model>()
                 {
-                    new Water()
+                    new Physical()
                     {
                         Thickness = new double[] { 100, 200 },
                         BD = new double[] { 1.36, 1.216 },

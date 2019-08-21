@@ -157,7 +157,7 @@
             
             // Test the in scope capability of get.
             Assert.AreEqual(simulation.Get("[Graph1].Name"), "Graph1");
-            Assert.AreEqual(simulation.Get("[Soil].Water.Name"), "Water");
+            Assert.AreEqual(simulation.Get("[Soil].Physical.Name"), "Physical");
         }
         
         /// <summary>
@@ -170,10 +170,10 @@
             this.simulation.Set("[Weather].Rain", 111.0);
             Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 111.0);
 
-            double[] thicknessBefore = (double[])Apsim.Get(simulation, "[Water].Thickness");
+            double[] thicknessBefore = (double[])Apsim.Get(simulation, "[Physical].Thickness");
             Assert.AreEqual(6, thicknessBefore.Length); // If APITest.xml is modified, this test will fail and must be updated.
-            Apsim.Set(simulation, "[Water].Thickness[1]", "20");
-            double[] thicknessAfter = (double[])Apsim.Get(simulation, "[Water].Thickness");
+            Apsim.Set(simulation, "[Physical].Thickness[1]", "20");
+            double[] thicknessAfter = (double[])Apsim.Get(simulation, "[Physical].Thickness");
 
             Assert.AreEqual(thicknessBefore.Length, thicknessAfter.Length);
             Assert.AreEqual(20, thicknessAfter[0]);

@@ -15,7 +15,7 @@
         /// <returns>A standardised soil.</returns>
         public static void Standardise(Soil soil)
         {
-            var waterNode = Apsim.Child(soil, typeof(Water)) as Water;
+            var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
             var analysisNode = Apsim.Child(soil, typeof(Analysis)) as Analysis;
             var layerStructure = Apsim.Child(soil, typeof(LayerStructure)) as LayerStructure;
 
@@ -40,7 +40,7 @@
         /// <param name="water">The water.</param>
         /// <param name="toThickness">To thickness.</param>
         /// <param name="soil">Soil</param>
-        private static void SetWaterThickness(Water water, double[] toThickness, Soil soil)
+        private static void SetWaterThickness(Physical water, double[] toThickness, Soil soil)
         {
             if (!MathUtilities.AreEqual(toThickness, soil.Thickness))
             {
@@ -317,7 +317,7 @@
             if (fromValues == null || fromThickness == null)
                 return null;
 
-            var waterNode = Apsim.Child(soil, typeof(Water)) as Water;
+            var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
 
             // convert from values to a mass basis with a dummy bottom layer.
             List<double> values = new List<double>();
@@ -451,7 +451,7 @@
         /// <returns></returns>
         private static double[] LLMapped(SoilCrop crop, double[] ToThickness)
         {
-            var waterNode = crop.Parent as Water;
+            var waterNode = crop.Parent as Physical;
             return MapConcentration(crop.LL, waterNode.Thickness, ToThickness, MathUtilities.LastValue(crop.LL));
         }
 

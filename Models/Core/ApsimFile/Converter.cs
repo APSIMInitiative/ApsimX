@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 62; } }
+        public static int LatestVersion { get { return 63; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -956,6 +956,52 @@
                             command.Value = command.Value.ToString().Replace($"{modelName}.{old}", $"{modelName}.{newName}");
                             command.Value = command.Value.ToString().Replace($"[{modelName}].{old}", $"[{modelName}].{newName}");
                         }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 61. Rename the 'Water' node under soil to 'Physical'
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion63(JObject root, string fileName)
+        {
+            foreach (var water in JsonUtilities.ChildrenRecursively(root, "Water"))
+            {
+                water["$type"] = "Models.Soils.Physical, Models";
+                water["Name"] = "Physical";
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Water.", ".Physical.");
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
+            {
+                var specification = factor["Specification"];
+                if (specification != null)
+                {
+                    var specificationString = specification.ToString();
+                    specificationString = specificationString.Replace(".Water.", ".Physical.");
+                    specificationString = specificationString.Replace("[Water]", "[Physical]");
+                    factor["Specification"] = specificationString;
+                }
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+            {
+                var specifications = factor["Specifications"];
+                if (specifications != null)
+                {
+                    for (int i = 0; i < specifications.Count(); i++)
+                    {
+                        var specificationString = specifications[i].ToString();
+                        specificationString = specificationString.Replace(".Water.", ".Physical.");
+                        specificationString = specificationString.Replace("[Water]", "[Physical]");
+                        specifications[i] = specificationString;
                     }
                 }
             }

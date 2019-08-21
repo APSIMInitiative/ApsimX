@@ -436,7 +436,7 @@
                 // this situation get dul from the parent model.
                 double[] dul;
                 if (dulColumn == null)
-                    dul = (soilCrop.Parent as Water).DUL;
+                    dul = (soilCrop.Parent as Physical).DUL;
                 else
                     dul = dulColumn.Values as double[];
 

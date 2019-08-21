@@ -805,7 +805,7 @@
 
                     newSoil = new Soil(); 
                     Analysis analysis = new Analysis();
-                    Water waterNode = new Water(); 
+                    Physical waterNode = new Physical(); 
                     SoilOrganicMatter organicMatter = new SoilOrganicMatter();
                     SoilWater soilWater = new SoilWater();
                     InitialWater initialWater = new InitialWater();
