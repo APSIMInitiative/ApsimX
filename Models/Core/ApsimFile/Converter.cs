@@ -1060,6 +1060,21 @@
                 if (series["YFieldName"] != null)
                     series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilOrganicMatter", "Organic");
             }
+
+            foreach (var child in JsonUtilities.ChildrenRecursively(root))
+            {
+                if (JsonUtilities.Type(child) == "Morris" || JsonUtilities.Type(child) == "Sobol")
+                {
+                    var parameters = child["Parameters"];
+                    for (int i = 0; i < parameters.Count(); i++)
+                    {
+                        var parameterString = parameters[i]["Path"].ToString();
+                        parameterString = parameterString.Replace(".SoilOrganicMatter.", ".Organic.");
+                        parameterString = parameterString.Replace("[SoilOrganicMatter]", "[Organic]");
+                        parameters[i]["Path"] = parameterString;
+                    }
+                }
+            }
         }
 
         /// <summary>
