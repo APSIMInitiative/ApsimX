@@ -1122,4 +1122,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+	<Exec Condition="'$(OS)' == 'Windows_NT'" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* >nul" />
+  </Target>
 </Project>
