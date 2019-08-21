@@ -1020,12 +1020,14 @@
                 organic["$type"] = "Models.Soils.Organic, Models";
                 organic["Name"] = "Organic";
                 organic["RootCNRatio"] = organic["RootCN"];
+                organic["Carbon"] = organic["OC"];
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
             {
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilOrganicMatter.", ".Organic.");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".RootCN", ".RootCNRatio");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Organic.OC", ".Organic.Carbon");
             }
 
             foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
@@ -1050,6 +1052,7 @@
                         var specificationString = specifications[i].ToString();
                         specificationString = specificationString.Replace(".SoilOrganicMatter.", ".Organic.");
                         specificationString = specificationString.Replace("[SoilOrganicMatter]", "[Organic]");
+                        specificationString = specificationString.Replace(".OC", ".Carbon");
                         specifications[i] = specificationString;
                     }
                 }
@@ -1058,9 +1061,15 @@
             foreach (var series in JsonUtilities.ChildrenOfType(root, "Series"))
             {
                 if (series["XFieldName"] != null)
+                {
                     series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilOrganicMatter", "Organic");
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace(".Organic.OC", ".Organic.Carbon");
+                }
                 if (series["YFieldName"] != null)
+                {
                     series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilOrganicMatter", "Organic");
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace(".Organic.OC", ".Organic.Carbon");
+                }
             }
 
             foreach (var child in JsonUtilities.ChildrenRecursively(root))
@@ -1073,6 +1082,7 @@
                         var parameterString = parameters[i]["Path"].ToString();
                         parameterString = parameterString.Replace(".SoilOrganicMatter.", ".Organic.");
                         parameterString = parameterString.Replace("[SoilOrganicMatter]", "[Organic]");
+                        parameterString = parameterString.Replace(".OC", ".Carbon");
                         parameters[i]["Path"] = parameterString;
                     }
                 }

@@ -217,7 +217,7 @@
                             new Organic
                             {
                                 Thickness = new double[] { 100, 300 },
-                                OC = new double[] { 2, 1 }
+                                Carbon = new double[] { 2, 1 }
                             },
                             new Analysis
                             {

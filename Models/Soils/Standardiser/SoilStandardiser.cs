@@ -76,13 +76,13 @@
             if (analysis.NH4N != null)
                 initial.NH4N = soil.ppm2kgha(analysis.NH4N);
 
-            initial.OC = MergeArrays(initial.OC, soilOrganicMatter.OC);
+            initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
             initial.PH = MergeArrays(initial.PH, analysis.PH);
             initial.ESP = MergeArrays(initial.ESP, analysis.ESP);
             initial.EC = MergeArrays(initial.EC, analysis.EC);
             initial.CL = MergeArrays(initial.CL, analysis.CL);
 
-            soilOrganicMatter.OC = null;
+            soilOrganicMatter.Carbon = null;
             //soil.Children.Remove(analysis);
         }
 

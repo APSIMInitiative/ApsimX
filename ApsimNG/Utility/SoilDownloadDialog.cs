@@ -959,7 +959,7 @@
                     wheat.LL = ll;
 
                     organicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
-                    organicMatter.OC = ConvertLayers(ocdrc, layerCount);
+                    organicMatter.Carbon = ConvertLayers(ocdrc, layerCount);
 
                     double rootWt = Math.Max(0.0, Math.Min(3000.0, 2.5 * (ppt - 100.0)));
                     // For AosimX, root wt needs to be distributed across layers. This conversion logic is adapted from that used in UpgradeToVersion52

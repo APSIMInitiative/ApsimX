@@ -15,7 +15,7 @@
             // Convert soil organic matter OC to total %
             if (soil.SoilOrganicMatter != null)
             {
-                soil.SoilOrganicMatter.OC = OCTotalPercent(soil.SoilOrganicMatter.OC, soil.SoilOrganicMatter.OCUnits);
+                soil.SoilOrganicMatter.Carbon = OCTotalPercent(soil.SoilOrganicMatter.Carbon, soil.SoilOrganicMatter.OCUnits);
                 soil.SoilOrganicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
             }
 

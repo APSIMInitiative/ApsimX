@@ -27,7 +27,7 @@
         [Description("Organic Carbon")]
         [Bounds(Lower = 0.1, Upper = 10.0)]
         [Display(Format = "N2")]
-        public double[] OC { get; set; }
+        public double[] Carbon { get; set; }
 
         /// <summary>Carbon:nirogen ratio.</summary>
         [Summary]
@@ -68,9 +68,9 @@
             {
                 // convert the numbers
                 if (ToUnits == Sample.OCSampleUnitsEnum.WalkleyBlack)
-                    OC = MathUtilities.Divide_Value(OC, 1.3);
+                    Carbon = MathUtilities.Divide_Value(Carbon, 1.3);
                 else
-                    OC = MathUtilities.Multiply_Value(OC, 1.3);
+                    Carbon = MathUtilities.Multiply_Value(Carbon, 1.3);
                 OCUnits = ToUnits;
             }
         }
@@ -82,9 +82,9 @@
             get
             {
                 if (OCUnits == Sample.OCSampleUnitsEnum.WalkleyBlack)
-                    return MathUtilities.Multiply_Value(OC, 1.3);
+                    return MathUtilities.Multiply_Value(Carbon, 1.3);
                 else
-                    return OC;
+                    return Carbon;
             }
         }
 

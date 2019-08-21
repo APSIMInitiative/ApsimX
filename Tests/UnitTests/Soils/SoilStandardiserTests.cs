@@ -39,7 +39,7 @@
                     new Organic
                     {
                         Thickness = new double[] { 100, 300 },
-                        OC = new double[] { 2, 1 }
+                        Carbon = new double[] { 2, 1 }
                     },
                     new Analysis
                     {
@@ -110,7 +110,7 @@
                     new Organic
                     {
                         Thickness = new double[] { 100, 300 },
-                        OC = new double[] { 2, 1 }
+                        Carbon = new double[] { 2, 1 }
                     },
                     new Analysis
                     {
@@ -175,7 +175,7 @@
                     new Organic
                     {
                         Thickness = new double[] { 100, 200 },
-                        OC = new double[] { 2, 1 },
+                        Carbon = new double[] { 2, 1 },
                         FBiom = new double[] { 1, 2 }
                     },
                     new Analysis
@@ -217,7 +217,7 @@
             Assert.AreEqual(initial.EC, new double[] { 150, 200 });
 
             var soilOrganicMatter = soil.Children[1] as Organic;
-            Assert.IsNull(soilOrganicMatter.OC);
+            Assert.IsNull(soilOrganicMatter.Carbon);
 
             Assert.NotNull(analysis);
         }
