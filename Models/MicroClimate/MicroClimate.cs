@@ -62,6 +62,28 @@ namespace Models
         /// <summary>The soil_emissivity</summary>
         private const double SoilEmissivity = 0.96;
 
+        // CERES Eo Model Constants
+        /// <summary>
+        /// Temperature below which eeq decreases (oC)
+        /// </summary>
+        private double min_crit_temp = 5.0;
+
+        /// <summary>
+        /// Temperature above which eeq increases (oC)
+        /// </summary>
+        private double max_crit_temp = 35.0;
+
+        /// <summary>
+        /// albedo at 100% green crop cover (0-1)
+        /// </summary>
+        private double max_albedo = 0.23;
+
+        /// <summary>
+        /// albedo at 100% residue cover (0-1)
+        /// </summary>
+        private double residue_albedo = 0.23;
+
+
         #endregion
 
 
@@ -248,6 +270,7 @@ namespace Models
             get { return NetShortWaveRadiation + NetLongWaveRadiation; }
         }
 
+
         /// <summary>Gets the net short wave radiation (MJ/m2).</summary>
         [Description("Net short wave radiation")]
         [Units("MJ/m^2")]
@@ -315,7 +338,7 @@ namespace Models
             dayLengthLight = MathUtilities.DayLength(Clock.Today.DayOfYear, SunSetAngle, weather.Latitude);
             dayLengthEvap = MathUtilities.DayLength(Clock.Today.DayOfYear, SunAngleNetPositiveRadiation, weather.Latitude);
             // VOS - a temporary kludge to get this running for high latitudes. MicroMet is due for a clean up soon so reconsider then.
-            dayLengthEvap = Math.Max(dayLengthEvap, (dayLengthLight * 2.0 / 3.0)); 
+            dayLengthEvap = Math.Max(dayLengthEvap, (dayLengthLight * 2.0 / 3.0));
 
             if (zoneMicroClimates.Count == 2 && zoneMicroClimates[0].zone is Zones.RectangularZone && zoneMicroClimates[1].zone is Zones.RectangularZone)
             {
@@ -344,11 +367,33 @@ namespace Models
                 CalculatePM(ZoneMC);
                 CalculateOmega(ZoneMC);
                 SetCanopyEnergyTerms(ZoneMC);
+                CalculateEo(ZoneMC);
             }
         }
 
-        ///<summary> Calculate the short wave radiation balance for strip crop system</summary>
-        private void CalculateStripZoneShortWaveRadiation()
+
+        /// <summary>Calculate the amtospheric potential evaporation rate for each zone</summary>
+        private void CalculateEo(ZoneMicroClimate ZoneMC)
+        {
+            ISoilWater zoneSoilWater = Apsim.Find(ZoneMC.zone, typeof(ISoilWater)) as ISoilWater;
+            ISurfaceOrganicMatter zoneSurfaceOM = Apsim.Find(ZoneMC.zone, typeof(ISurfaceOrganicMatter)) as ISurfaceOrganicMatter;
+
+            double CoverGreen = 0;
+            for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
+                if (ZoneMC.Canopies[j].Canopy != null)
+                   CoverGreen+= (1-CoverGreen)*ZoneMC.Canopies[j].Canopy.CoverGreen;
+
+            if (weather != null && zoneSoilWater != null && zoneSurfaceOM != null)
+               zoneSoilWater.Eo = AtmosphericPotentialEvaporationRate(weather.Radn, 
+                                                            weather.MaxT, 
+                                                            weather.MinT, 
+                                                            zoneSoilWater.Salb, 
+                                                            zoneSurfaceOM.Cover, 
+                                                            CoverGreen); 
+        }
+
+    ///<summary> Calculate the short wave radiation balance for strip crop system</summary>
+    private void CalculateStripZoneShortWaveRadiation()
         {
             
             ZoneMicroClimate tallest;
@@ -551,6 +596,10 @@ namespace Models
             for (int i = 0; i <= ZoneMC.numLayers - 1; i++)
                 for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
                     ZoneMC.Canopies[j].interception[i] = MathUtilities.Divide(ZoneMC.Canopies[j].LAI[i], sumLAI, 0.0) * totalInterception;
+
+            ISoilWater zonesoilwater = Apsim.Find(ZoneMC.zone, typeof(ISoilWater)) as ISoilWater;
+            if (zonesoilwater != null)
+                zonesoilwater.PotentialInfiltration = Math.Max(0, weather.Rain - totalInterception);
         }
 
         /// <summary>Calculate the Penman-Monteith water demand</summary>

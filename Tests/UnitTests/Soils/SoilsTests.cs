@@ -24,7 +24,7 @@
             {
                 Children = new List<Model>()
                 {
-                    new Water()
+                    new Physical()
                     {
                         Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                         BD = new double[] { 1.36, 1.216, 1.24, 1.32, 1.372, 1.368 },

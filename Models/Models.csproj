@@ -587,7 +587,7 @@
     <Compile Include="Soils\SWIM\SwimSubsurfaceDrain.cs" />
     <Compile Include="Soils\SWIM\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
-    <Compile Include="Soils\Water.cs" />
+    <Compile Include="Soils\Physical.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWater.cs" />
     <Compile Include="Summary.cs" />
     <Compile Include="Surface\AddFaecesType.cs" />
@@ -733,10 +733,7 @@
     <None Include="ClassDiagram.cd" />
     <None Include="Resources\FodderBeet.json" />
     <EmbeddedResource Include="Resources\Nutrient.json" />
-    <None Include="Resources\Oats1.json" />
     <None Include="Resources\Potato.json" />
-    <None Include="Resources\Potato1.json" />
-    <None Include="Resources\StandardToolbox.apsimx" />
     <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>
@@ -780,12 +777,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
-      <Project>{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}</Project>
-      <Name>APSIM.Shared</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\OilPalm.json">
       <SubType>Designer</SubType>
     </None>
@@ -807,7 +798,12 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj">
+      <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
+      <Name>APSIM.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

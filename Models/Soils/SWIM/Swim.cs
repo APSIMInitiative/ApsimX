@@ -27,9 +27,6 @@ namespace Models.Soils
         private IClock Clock = null;
 
         [Link]
-        private IWeather MetFile = null;
-
-        [Link]
         private ISummary summary = null;
 
         [Link]
@@ -65,13 +62,6 @@ namespace Models.Soils
         string eo_time = null;
         //[Input(IsOptional = true)]
         double eo_durn = Double.NaN;
-
-        //[Input(IsOptional = true)]
-        [Units("mm")]
-        double interception = Double.NaN;
-        //[Input(IsOptional = true)]
-        [Units("mm")]
-        double residueinterception = Double.NaN;
 
         double[] SWIMRainTime = new double[0];
         double[] SWIMRainAmt = new double[0];
@@ -375,26 +365,6 @@ namespace Models.Soils
 
         // Constants read from swim3.xml file in APSIM 7.10 
         
-        /// <summary>
-        /// Temperature below which eeq decreases (oC)
-        /// </summary>
-        private double min_crit_temp = 5.0;
-
-        /// <summary>
-        /// Temperature above which eeq increases (oC)
-        /// </summary>
-        private double max_crit_temp = 35.0;
-
-        /// <summary>
-        /// albedo at 100% green crop cover (0-1)
-        /// </summary>
-        private double max_albedo = 0.23;
-
-        /// <summary>
-        /// albedo at 100% residue cover (0-1)
-        /// </summary>
-        private double residue_albedo = 0.23;
-
         /// <summary>
         /// converts residue specfic area 'A' to"
         /// </summary>
@@ -783,20 +753,7 @@ namespace Models.Soils
         /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
         [XmlIgnore]
         [Units("mm")]
-        public double Eo
-        {
-            get
-            {
-                if (evap_source != "eo")
-                {
-                    double startOfDay = Time(year, day, TimeToMins(apsim_time));
-                    double endOfDay = Time(year, day, TimeToMins(apsim_time) + (int)(apsim_timestep));
-                    return (CEvap(endOfDay) - CEvap(startOfDay)) * 10.0;
-                }
-                else
-                    return Double.NaN;
-            }
-        }
+        public double Eo { get; set; }
 
         [Units("cm")]
         private double[] psix
@@ -1482,7 +1439,6 @@ namespace Models.Soils
             GetSoluteVariables();
             //GetCropVariables();
             residue_cover = surfaceOrganicMatter.Cover;
-            RemoveInterception();
             CNRunoff();
 
             int timeOfDay = TimeToMins(apsim_time);
@@ -2384,10 +2340,14 @@ namespace Models.Soils
 
         }
 
+        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
+        [XmlIgnore]
+        public double PotentialInfiltration { get; set; }
+
         private void GetRainVariables()
         {
             string time;
-            double amount = MetFile.Rain;
+            double amount = PotentialInfiltration;
             double duration = 0.0;
             double intensity;
             if (string.IsNullOrWhiteSpace(rain_time))
@@ -2511,19 +2471,6 @@ namespace Models.Soils
         //    crop_cover = 1.0 - bare;
         //}
 
-        private void RemoveInterception()
-        {
-            double intercep = 0.0;
-            double residueIntercep = 0.0;
-            if (!Double.IsNaN(interception))
-                intercep = interception;
-            if (!Double.IsNaN(residueinterception))
-                residueIntercep = residueinterception;
-            if (intercep < 0.0 || residueIntercep < 0.0 || intercep > 1000.0 || residueIntercep > 1000.0)
-                IssueWarning("Interception value out of bounds");
-            RemoveFromRainfall(intercep + residueIntercep);
-        }
-
         private void RemoveFromRainfall(double amount)
         {
             if (amount > 0.0)
@@ -2588,9 +2535,8 @@ namespace Models.Soils
             double timeMins = Time(year, day, timeOfDay);
 
             _cover_green_sum = GetGreenCover();
-            double amount = PotEvapotranspiration();
 
-            InsertLoginfo(timeMins, duration, amount, ref SWIMEvapTime, ref SWIMEvapAmt);
+            InsertLoginfo(timeMins, duration, Eo, ref SWIMEvapTime, ref SWIMEvapAmt);
         }
 
         private double GetGreenCover()
@@ -2603,49 +2549,6 @@ namespace Models.Soils
                 bare = bare * (1.0 - canopy.CoverGreen);
             }
             return 1.0 - bare;
-        }
-
-        private double PotEvapotranspiration()
-        {
-            // ******* calculate potential evaporation from soil surface (eos) ******
-
-            // find equilibrium evap rate as a
-            // function of radiation, albedo, and temp.
-            double surface_albedo = Salb + (residue_albedo - Salb) * residue_cover;
-            double albedo = max_albedo - (max_albedo - surface_albedo) * (1.0 - _cover_green_sum);
-            // wt_ave_temp is mean temp, weighted towards max.
-            double wt_ave_temp = 0.6 * MetFile.MaxT + 0.4 * MetFile.MinT;
-
-            double eeq = MetFile.Radn * 23.8846 * (0.000204 - 0.000183 * albedo) * (wt_ave_temp + 29.0);
-            // find potential evapotranspiration (pot_eo)
-            // from equilibrium evap rate
-            return eeq * EeqFac();
-        }
-
-        private double EeqFac()
-        {
-            //+  Purpose
-            //                 calculate coefficient for equilibrium evaporation rate
-            if (MetFile.MaxT > max_crit_temp)
-            {
-                // at very high max temps eo/eeq increases
-                // beyond its normal value of 1.1
-                return (MetFile.MaxT - max_crit_temp) * 0.05 + 1.1;
-            }
-            else if (MetFile.MaxT < min_crit_temp)
-            {
-                // at very low max temperatures eo/eeq
-                // decreases below its normal value of 1.1
-                // note that there is a discontinuity at tmax = 5
-                // it would be better at tmax = 6.1, or change the
-                // .18 to .188 or change the 20 to 21.1
-                return 0.01 * Math.Exp(0.18 * (MetFile.MaxT + 20.0));
-            }
-            else
-            {
-                // temperature is in the normal range, eo/eeq = 1.1
-                return 1.1;
-            }
         }
 
         private void SetOtherVariables()

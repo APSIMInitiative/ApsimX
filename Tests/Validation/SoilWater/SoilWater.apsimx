@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 283,
-  "Version": 59,
+  "Version": 60,
   "Name": "Simulations",
   "Children": [
     {
@@ -430,7 +430,6 @@
                                 0.3
                               ],
                               "KLAT": null,
-                              "ResidueInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -446,6 +445,22 @@
                                 300.0,
                                 300.0,
                                 300.0
+                              ],
+                              "NO3N": [
+                                6.50300344798777,
+                                2.1010011139815892,
+                                2.10100111398159,
+                                1.7010009018956203,
+                                1.7010009018956196,
+                                1.7010009018956196
+                              ],
+                              "NH4N": [
+                                0.599004378686979,
+                                0.10000073099949598,
+                                0.10000073099949598,
+                                0.10000073099949598,
+                                0.10000073099949598,
+                                0.10000073099949598
                               ],
                               "Rocks": null,
                               "RocksMetadata": null,
@@ -768,30 +783,8 @@
                                 300.0,
                                 300.0
                               ],
-                              "NO3N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  6.50300344798777,
-                                  2.10100111398159,
-                                  2.10100111398159,
-                                  1.70100090189562,
-                                  1.70100090189562,
-                                  1.70100090189562
-                                ],
-                                "StoredAsPPM": true
-                              },
-                              "NH4N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  0.599004378686979,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.100000730999496
-                                ],
-                                "StoredAsPPM": true
-                              },
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": [
                                 0.4695,
                                 0.4827,
@@ -1850,7 +1843,6 @@
                                 0.3
                               ],
                               "KLAT": null,
-                              "ResidueInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1867,6 +1859,24 @@
                                 50.0,
                                 50.0,
                                 50.0
+                              ],
+                              "NO3N": [
+                                6.50300344798777,
+                                2.10100111398159,
+                                2.1010011139815914,
+                                1.7010009018956203,
+                                1.7010009018956203,
+                                1.7010009018956203,
+                                1.0
+                              ],
+                              "NH4N": [
+                                0.599004378686979,
+                                0.10000073099949595,
+                                0.10000073099949602,
+                                0.10000073099949602,
+                                0.10000073099949602,
+                                0.10000073099949602,
+                                0.1
                               ],
                               "Rocks": null,
                               "RocksMetadata": null,
@@ -2170,32 +2180,8 @@
                                 50.0,
                                 50.0
                               ],
-                              "NO3N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  6.50300344798777,
-                                  2.10100111398159,
-                                  2.10100111398159,
-                                  1.70100090189562,
-                                  1.70100090189562,
-                                  1.70100090189562,
-                                  1.0
-                                ],
-                                "StoredAsPPM": true
-                              },
-                              "NH4N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  0.599004378686979,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.1
-                                ],
-                                "StoredAsPPM": true
-                              },
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": [
                                 0.198,
                                 0.198,
@@ -2699,6 +2685,24 @@
                                 300.0,
                                 300.0
                               ],
+                              "NO3N": [
+                                2.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "NH4N": [
+                                0.65789473684210531,
+                                0.31446540880503138,
+                                0.029498525073746295,
+                                0.030030030030030068,
+                                0.2,
+                                0.2,
+                                0.2
+                              ],
                               "Rocks": null,
                               "RocksMetadata": null,
                               "Texture": null,
@@ -2788,7 +2792,6 @@
                                 0.3
                               ],
                               "KLAT": null,
-                              "ResidueInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2870,26 +2873,8 @@
                                 300.0,
                                 300.0
                               ],
-                              "NO3N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  2.0,
-                                  1.0,
-                                  1.0,
-                                  1.0
-                                ],
-                                "StoredAsPPM": true
-                              },
-                              "NH4N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  1.0,
-                                  0.5,
-                                  0.1,
-                                  0.1
-                                ],
-                                "StoredAsPPM": false
-                              },
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": [
                                 0.19,
                                 0.19,
@@ -4314,7 +4299,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "ResidueInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -4419,6 +4403,30 @@
                                 300.0,
                                 300.0,
                                 300.0
+                              ],
+                              "NO3N": [
+                                1.5,
+                                1.8,
+                                1.5,
+                                1.5,
+                                0.4,
+                                0.2,
+                                0.4,
+                                0.3,
+                                0.3,
+                                0.3
+                              ],
+                              "NH4N": [
+                                0.5,
+                                0.8,
+                                0.5,
+                                0.5,
+                                0.42,
+                                0.42,
+                                0.37,
+                                0.25,
+                                0.3,
+                                0.3
                               ],
                               "Rocks": null,
                               "RocksMetadata": null,
@@ -4525,38 +4533,8 @@
                                 300.0,
                                 300.0
                               ],
-                              "NO3N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  1.5,
-                                  1.8,
-                                  1.5,
-                                  1.5,
-                                  0.4,
-                                  0.2,
-                                  0.4,
-                                  0.3,
-                                  0.3,
-                                  0.3
-                                ],
-                                "StoredAsPPM": true
-                              },
-                              "NH4N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  0.5,
-                                  0.8,
-                                  0.5,
-                                  0.5,
-                                  0.42,
-                                  0.42,
-                                  0.37,
-                                  0.25,
-                                  0.3,
-                                  0.3
-                                ],
-                                "StoredAsPPM": true
-                              },
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
@@ -5435,7 +5413,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "ResidueInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -5541,6 +5518,30 @@
                                 300.0,
                                 300.0
                               ],
+                              "NO3N": [
+                                1.5,
+                                1.8,
+                                1.5,
+                                1.5,
+                                0.4,
+                                0.2,
+                                0.4,
+                                0.3,
+                                0.3,
+                                0.3
+                              ],
+                              "NH4N": [
+                                0.5,
+                                0.8,
+                                0.5,
+                                0.5,
+                                0.42,
+                                0.42,
+                                0.37,
+                                0.25,
+                                0.3,
+                                0.3
+                              ],
                               "Rocks": null,
                               "RocksMetadata": null,
                               "Texture": null,
@@ -5640,38 +5641,8 @@
                                 300.0,
                                 300.0
                               ],
-                              "NO3N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  1.5,
-                                  1.8,
-                                  1.5,
-                                  1.5,
-                                  0.4,
-                                  0.2,
-                                  0.4,
-                                  0.3,
-                                  0.3,
-                                  0.3
-                                ],
-                                "StoredAsPPM": true
-                              },
-                              "NH4N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  0.5,
-                                  0.8,
-                                  0.5,
-                                  0.5,
-                                  0.42,
-                                  0.42,
-                                  0.37,
-                                  0.25,
-                                  0.3,
-                                  0.3
-                                ],
-                                "StoredAsPPM": true
-                              },
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
@@ -6500,7 +6471,6 @@
                             0.0,
                             0.0
                           ],
-                          "ResidueInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6641,6 +6611,40 @@
                             200.0,
                             200.0
                           ],
+                          "NO3N": [
+                            44.4444547252519,
+                            29.629636483501208,
+                            22.222227362625908,
+                            11.111113681313,
+                            11.111113681313,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.1000000231318154,
+                            0.1000000231318154,
+                            0.1000000231318154,
+                            0.1000000231318154,
+                            0.1000000231318154,
+                            0.1000000231318154,
+                            0.1000000231318154
+                          ],
+                          "NH4N": [
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1
+                          ],
                           "Rocks": null,
                           "RocksMetadata": null,
                           "Texture": null,
@@ -6720,48 +6724,8 @@
                             200.0,
                             200.0
                           ],
-                          "NO3N": {
-                            "$type": "Models.Soils.NitrogenValue, Models",
-                            "Values": [
-                              115.55558228565495,
-                              77.037054857103129,
-                              57.777791142827347,
-                              33.777785591191524,
-                              33.777785591191524,
-                              0.0,
-                              0.0,
-                              0.0,
-                              0.33000007633499606,
-                              0.33000007633499606,
-                              0.33000007633499606,
-                              0.33000007633499606,
-                              0.33000007633499606,
-                              0.33000007633499606,
-                              0.32000007402181441
-                            ],
-                            "StoredAsPPM": false
-                          },
-                          "NH4N": {
-                            "$type": "Models.Soils.NitrogenValue, Models",
-                            "Values": [
-                              0.26,
-                              0.26,
-                              0.26,
-                              0.304,
-                              0.304,
-                              0.304,
-                              0.33,
-                              0.33,
-                              0.33,
-                              0.33,
-                              0.33,
-                              0.33,
-                              0.33,
-                              0.33,
-                              0.32
-                            ],
-                            "StoredAsPPM": false
-                          },
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": [
                             0.253,
                             0.175,
@@ -7124,7 +7088,7 @@
                       "Parameters": [],
                       "Name": "ResiduePrecipitationInterception",
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -8286,7 +8250,6 @@
                                 0.8
                               ],
                               "KLAT": null,
-                              "ResidueInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -8303,6 +8266,24 @@
                                 50.0,
                                 50.0,
                                 50.0
+                              ],
+                              "NO3N": [
+                                6.50300344798777,
+                                6.50300344798777,
+                                6.5030034479877692,
+                                2.1010011139815878,
+                                2.1010011139815923,
+                                2.1010011139815878,
+                                2.1010011139815878
+                              ],
+                              "NH4N": [
+                                0.599004378686979,
+                                0.599004378686979,
+                                0.599004378686979,
+                                0.10000073099949588,
+                                0.10000073099949618,
+                                0.10000073099949588,
+                                0.10000073099949588
                               ],
                               "Rocks": null,
                               "RocksMetadata": null,
@@ -8608,36 +8589,8 @@
                                 150.0,
                                 150.0
                               ],
-                              "NO3N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  6.50300344798777,
-                                  2.10100111398159,
-                                  2.10100111398159,
-                                  1.70100090189562,
-                                  1.70100090189562,
-                                  1.70100090189562,
-                                  1.0,
-                                  1.0,
-                                  1.0
-                                ],
-                                "StoredAsPPM": true
-                              },
-                              "NH4N": {
-                                "$type": "Models.Soils.NitrogenValue, Models",
-                                "Values": [
-                                  0.599004378686979,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.100000730999496,
-                                  0.1,
-                                  1.0,
-                                  1.0
-                                ],
-                                "StoredAsPPM": true
-                              },
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": [
                                 0.43,
                                 0.457,
@@ -10257,6 +10210,22 @@
                             500.0,
                             -3300.0
                           ],
+                          "NO3N": [
+                            8.38,
+                            0.74399999999999944,
+                            2.68775,
+                            2.7070370370370376,
+                            2.136,
+                            1.3618181818181818
+                          ],
+                          "NH4N": [
+                            0.12000000000000001,
+                            0.095999999999999988,
+                            0.061750000000000006,
+                            1.3381481481481481,
+                            1.568,
+                            0.36545454545454548
+                          ],
                           "Rocks": null,
                           "RocksMetadata": null,
                           "Texture": null,
@@ -10349,7 +10318,6 @@
                             0.5
                           ],
                           "KLAT": null,
-                          "ResidueInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -10428,32 +10396,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": {
-                            "$type": "Models.Soils.NitrogenValue, Models",
-                            "Values": [
-                              10.0,
-                              0.28,
-                              2.6,
-                              2.87,
-                              2.43,
-                              1.94,
-                              1.0
-                            ],
-                            "StoredAsPPM": true
-                          },
-                          "NH4N": {
-                            "$type": "Models.Soils.NitrogenValue, Models",
-                            "Values": [
-                              0.12,
-                              0.12,
-                              0.0,
-                              0.19,
-                              3.29,
-                              0.42,
-                              0.75
-                            ],
-                            "StoredAsPPM": true
-                          },
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": [
                             0.18,
                             0.18,
@@ -12807,6 +12751,22 @@
                             300.0,
                             300.0
                           ],
+                          "NO3N": [
+                            180.83333333333337,
+                            12.5,
+                            1.3888888888888928,
+                            1.3888888888888928,
+                            0.0,
+                            0.0
+                          ],
+                          "NH4N": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
                           "Rocks": null,
                           "RocksMetadata": null,
                           "Texture": null,
@@ -13095,7 +13055,6 @@
                             0.0,
                             0.0
                           ],
-                          "ResidueInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -13254,30 +13213,8 @@
                             300.0,
                             300.0
                           ],
-                          "NO3N": {
-                            "$type": "Models.Soils.NitrogenValue, Models",
-                            "Values": [
-                              217.0,
-                              30.0,
-                              5.0,
-                              5.0,
-                              0.0,
-                              0.0
-                            ],
-                            "StoredAsPPM": false
-                          },
-                          "NH4N": {
-                            "$type": "Models.Soils.NitrogenValue, Models",
-                            "Values": [
-                              0.0,
-                              0.0,
-                              0.0,
-                              0.0,
-                              0.0,
-                              0.0
-                            ],
-                            "StoredAsPPM": true
-                          },
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,

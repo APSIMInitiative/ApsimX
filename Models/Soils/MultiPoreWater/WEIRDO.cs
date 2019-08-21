@@ -30,6 +30,9 @@ namespace Models.Soils
     public class WEIRDO : Model, ISoilWater
     {
         #region IsoilInterface
+        ///<summary> This doesn't do anything currently</summary>
+        [XmlIgnore]
+        public double PotentialInfiltration { get; set; }
         ///<summary> Model name</summary>
         [XmlIgnore]
         public string WaterModelName { get { return this.Name; } }
@@ -522,7 +525,7 @@ namespace Models.Soils
         /// <summary>
         /// The amount of water that may enter the surface of the soil each hour
         /// </summary>
-        private double PotentialInfiltration { get; set; }
+        private double potentialInfiltration { get; set; }
         /// <summary>
         /// The distance down to the nearest zero potential body of water, for calculating gravitational potential
         /// </summary>
@@ -693,7 +696,7 @@ namespace Models.Soils
                     //Then we work out how much of this may percolate into the profile this TimeStep
                     doPercolationCapacity(TimeStepSplits);
                     //Now we know how much water can infiltrate into the soil, lets put it there if we have some
-                    double TimeStepInfiltration = Math.Min(pond, PotentialInfiltration);
+                    double TimeStepInfiltration = Math.Min(pond, potentialInfiltration);
                     if ((TimeStepInfiltration > 0) && (CalculateInfiltration))
                         doInfiltration(TimeStepInfiltration, h, TimeStepSplits, Subh);
                     //Next we redistribute water down the profile for draiange processes
@@ -870,7 +873,7 @@ namespace Models.Soils
                 }
             }
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
-            PotentialInfiltration = AdsorptionCapacity[0] + Math.Min(PercolationCapacityBelow[0], TransmissionCapacity[0]);
+            potentialInfiltration = AdsorptionCapacity[0] + Math.Min(PercolationCapacityBelow[0], TransmissionCapacity[0]);
         }
         /// <summary>
         /// Calculates the gravitational potential in each layer from its height to the nearest zero potential layer

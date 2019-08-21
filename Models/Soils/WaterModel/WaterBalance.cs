@@ -76,10 +76,6 @@ namespace Models.WaterModel
         [Link]
         private WaterTableModel waterTableModel = null;
 
-        /// <summary>A link to weather data.</summary>
-        [Link]
-        private IWeather weather = null;
-
         /// <summary>A link to a irrigation data.</summary>
         [Link]
         private IIrrigation irrigation = null;
@@ -107,19 +103,15 @@ namespace Models.WaterModel
         [XmlIgnore]
         public double Runon { get; set; }
 
-        /// <summary>The amount of rainfall intercepted by the canopy (mm)</summary>
-        [XmlIgnore]
-        public double CanopyInterception { get; set; }
-
-        /// <summary>The amount of rainfall intercepted by the residue (mm)</summary>
-        [XmlIgnore]
-        public double ResidueInterception { get; set; }
-
         /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
         public double SoluteFluxEfficiency { get; set; }
 
         /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
         public double SoluteFlowEfficiency { get; set; }
+
+        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
+        [XmlIgnore]
+        public double PotentialInfiltration { get; set; }
 
         // --- Outputs -------------------------------------------------------------------
 
@@ -154,15 +146,6 @@ namespace Models.WaterModel
         /// <summary>Flow. Water moving up (mm).</summary>
         [XmlIgnore]
         public double[] Flow { get; private set; }
-
-        /// <summary>Gets todays potential infiltration (mm). Irrigation not included.</summary>
-        public double PotentialInfiltration
-        {
-            get
-            {
-               return weather.Rain + Runon - (CanopyInterception + ResidueInterception);
-            }
-        }
 
         /// <summary>Gets todays potential runoff (mm).</summary>
         public double PotentialRunoff
@@ -265,9 +248,6 @@ namespace Models.WaterModel
             // Set deltas
             NO3.SetKgHa(SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.CalculateNO3(), NO3Values));
             NH4.SetKgHa(SoluteSetterType.Soil, MathUtilities.Subtract(soilNitrogen.CalculateNH4(), NH4Values));
-
-            ResidueInterception = 0;
-            CanopyInterception = 0;
         }
 
         /// <summary>Move water down the profile</summary>
