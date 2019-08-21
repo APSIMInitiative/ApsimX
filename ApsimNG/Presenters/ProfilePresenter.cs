@@ -106,7 +106,7 @@
             this.PopulateGrid();
 
             // Populate the graph.
-            this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
+            this.graph = Utility.Graph.CreateGraphFromResource("WaterGraph");
 
             if (this.graph == null)
                 this.view.ShowGraph(false);
