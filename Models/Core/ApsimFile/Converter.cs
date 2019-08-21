@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 62; } }
+        public static int LatestVersion { get { return 63; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -778,13 +778,12 @@
         }
 
         /// <summary>
-        /// Upgrades to version 61. Ensures that a micromet model is within every simulation.
+        /// Upgrade to version 60. Ensures that a micromet model is within every simulation.
         /// </summary>
-        /// <param name="root">The root JSON token.</param>
-        /// <param name="fileName">The name of the apsimx file.</param>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
         private static void UpgradeToVersion61(JObject root, string fileName)
         {
-
             foreach (JObject Sim in JsonUtilities.ChildrenRecursively(root, "Simulation"))
             {
                 List<JObject> MicroClimates = JsonUtilities.ChildrenRecursively(root, "MicroClimate");
@@ -793,6 +792,7 @@
             }
 
         }
+
         /// <summary>
         /// Add a MicroClimate model to the specified JSON model token.
         /// </summary>
@@ -827,11 +827,126 @@
             {
                 var weather = weathers.First();
                 int index = children.IndexOf(weather);
-                children.Insert(index+1,microClimateModel);
+                children.Insert(index + 1, microClimateModel);
             }
         }
 
         /// <summary>
+        /// following a refactor of this class.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion62(JObject root, string fileName)
+        {
+            // We renamed a lot of IFunctions and removed the 'Function' suffix.
+            // ie HeightFunction -> Height.
+            Dictionary<string, string> changedProperties = new Dictionary<string, string>();
+            changedProperties.Add("Tallness", "HeightFunction");
+            changedProperties.Add("Area", "LAIFunction");
+            changedProperties.Add("LaiDead", "LaiDeadFunction");
+            changedProperties.Add("WaterDemand", "WaterDemandFunction");
+            changedProperties.Add("Cover", "CoverFunction");
+            changedProperties.Add("ExtinctionCoefficient", "ExtinctionCoefficientFunction");
+            changedProperties.Add("BaseHeight", "BaseHeightFunction");
+            changedProperties.Add("Wideness", "WidthFunction");
+            changedProperties.Add("DetachmentRate", "DetachmentRateFunction");
+            changedProperties.Add("InitialWt", "InitialWtFunction");
+            changedProperties.Add("MaintenanceRespiration", "MaintenanceRespirationFunction");
+            changedProperties.Add("FRGR", "FRGRFunction");
+
+            // Names of nodes which are probably simple leaf. The problem is that
+            // in released models, the model is stored in a separate file to the
+            // simulations. Therefore when we parse/convert the simulation file,
+            // we don't know the names of the simple leaf models, so we are forced
+            // take a guess.
+            List<string> modelNames = new List<string>() { "Leaf", "Stover" };
+
+            // Names of nodes which are definitely simple leaf.
+            List<string> definiteSimpleLeaves = new List<string>();
+
+            // Go through all SimpleLeafs and rename the appropriate children.
+            {
+                modelNames.Add(leaf["Name"].ToString());
+                definiteSimpleLeaves.Add(leaf["Name"].ToString());
+                // We removed the Leaf.AppearedCohortNo property.
+                JObject relativeArea = JsonUtilities.FindFromPath(leaf, "DeltaLAI.Vegetative.Delta.RelativeArea");
+                if (relativeArea != null && relativeArea["XProperty"].ToString() == "[Leaf].AppearedCohortNo")
+                    relativeArea["XProperty"] = "[Leaf].NodeNumber";
+                water["$type"] = "Models.Soils.Physical, Models";
+                foreach (var change in changedProperties)
+                {
+                    string old = change.Value;
+                    JsonUtilities.RenameChildModel(leaf, old, newName);
+                }
+            }
+
+            {
+                foreach (string leafName in definiteSimpleLeaves)
+                {
+                    foreach (KeyValuePair<string, string> property in changedProperties)
+                    {
+                        string oldName = property.Value;
+                        string newName = property.Key;
+
+                        string toReplace = $"{leafName}.{oldName}";
+                        string replaceWith = $"{leafName}.{newName}";
+
+                        toReplace = $"[{leafName}].{oldName}";
+                        replaceWith = $"[{leafName}].{newName}";
+                        reference["VariableName"] = reference["VariableName"].ToString().Replace(toReplace, replaceWith);
+                    }
+                }
+            }
+
+            // Attempt some basic find/replace in manager scripts.
+            {
+                {
+                    string newName = change.Key;
+                    string old = change.Value;
+                if (specification != null)
+                    bool changed = false;
+                    foreach (string modelName in modelNames)
+                    {
+                        string toReplace = $"{modelName}.{old}";
+                        string replaceWith = $"{modelName}.{newName}";
+                        changed |= manager.Replace(toReplace, replaceWith, true);
+                    var specificationString = specification.ToString();
+                        foreach (KeyValuePair<string, string> parameter in manager.Parameters)
+                        {
+                            manager.UpdateParameter(parameter.Key, newParam);
+                        }
+                    specificationString = specificationString.Replace("[Water]", "[Physical]");
+                        toReplace = $"[{modelName}].{old}";
+                        replaceWith = $"[{modelName}].{newName}";
+                        changed |= manager.Replace(toReplace, replaceWith, true);
+                    factor["Specification"] = specificationString;
+                        foreach (KeyValuePair<string, string> parameter in manager.Parameters)
+                        {
+                            string newParam = parameter.Value.Replace(toReplace, replaceWith);
+                            manager.UpdateParameter(parameter.Key, newParam);
+                        }
+                    }
+                    if (changed)
+                        manager.Save();
+                }
+            }
+
+            // Fix some cultivar commands.
+            {
+                    continue;
+                if (specifications != null)
+                foreach (JValue command in cultivar["Command"].Children())
+                {
+                    {
+                            command.Value = command.Value.ToString().Replace($"{modelName}.{old}", $"{modelName}.{newName}");
+                            command.Value = command.Value.ToString().Replace($"[{modelName}].{old}", $"[{modelName}].{newName}");
+                        }
+                    }
+                }
+            }
+        }
+
+       /// <summary>
         /// Upgrades to version 61. Rename the 'Water' node under soil to 'Physical'
         /// </summary>
         /// <param name="root">The root JSON token.</param>

@@ -3,20 +3,14 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 //-----------------------------------------------------------------------
+using Models.Core;
+
 namespace Models.PMF.Interfaces
 {
     /// <summary>
     /// Organ interface
     /// </summary>
-    public interface IOrgan
+    public interface IOrgan : IModel
     {
-        /// <summary>
-        /// The Name of the organ.
-        /// </summary>
-        string Name { get; set; }
     }
 }
-
-
-
-   
