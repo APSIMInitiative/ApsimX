@@ -851,14 +851,27 @@
 
             foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
             {
+                var specification = factor["Specification"];
+                if (specification != null)
+                {
+                    var specificationString = specification.ToString();
+                    specificationString = specificationString.Replace(".Water.", ".Physical.");
+                    specificationString = specificationString.Replace("[Water]", "[Physical]");
+                    factor["Specification"] = specificationString;
+                }
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+            {
                 var specifications = factor["Specifications"];
                 if (specifications != null)
                 {
-                    var specificationsString = specifications.ToString();
-                    if (specificationsString.Contains(".Water."))
+                    for (int i = 0; i < specifications.Count(); i++)
                     {
-                        specificationsString = specificationsString.Replace(".Water.", ".Physical.");
-                        factor["Specifications"] = specificationsString;
+                        var specificationString = specifications[i].ToString();
+                        specificationString = specificationString.Replace(".Water.", ".Physical.");
+                        specificationString = specificationString.Replace("[Water]", "[Physical]");
+                        specifications[i] = specificationString;
                     }
                 }
             }

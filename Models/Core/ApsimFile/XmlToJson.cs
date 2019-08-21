@@ -144,7 +144,11 @@ namespace Models.Core.ApsimFile
             "Models.Agroforestry.TreeProxy","Models.AgPasture.PastureSpecies",
             "Models.AgPasture.PastureAboveGroundOrgan","Models.AgPasture.GenericTissue",
             "Models.AgPasture.Sward","Models.Soils.SoilWater+TillageTypesList",
-            "Models.PMF.Organs.Leaf+LeafCohortParameters"
+            "Models.PMF.Organs.Leaf+LeafCohortParameters",
+            "Models.Zones.CircularZone",
+            "Models.Zones.RectangularZone",
+            "Models.CLEM.ZoneCLEM",
+            "Models.Agroforestry.AgroforestrySystem"
         };
 
         /// <summary>
