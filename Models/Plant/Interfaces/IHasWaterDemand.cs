@@ -13,6 +13,5 @@ namespace Models.PMF.Interfaces
 
         /// <summary>Sets the organs water allocation.</summary>
         double WaterAllocation { get; set; }
-
     }  
 }
