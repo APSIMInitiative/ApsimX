@@ -47,6 +47,9 @@ namespace Models.Soils
         const double psiad = -1e6;
         const double psi0 = -0.6e7;
 
+        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
+        public double PrecipitationInterception { get; set; }
+
         #region "Global" variables
         double[] _swf;
 
