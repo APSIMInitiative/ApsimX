@@ -20,7 +20,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PerennialLeaf : Model, IOrgan, ICanopy, ILeaf, IArbitration, IHasWaterDemand, IRemovableBiomass
+    public class PerennialLeaf : Model, IOrgan, ICanopy, IArbitration, IHasWaterDemand, IRemovableBiomass
     {
         /// <summary>The met data</summary>
         [Link]
@@ -105,34 +105,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Detached { get; set; }
 
-        #region Leaf Interface
-        /// <summary>
-        /// Number of initiated cohorts that have not appeared yet
-        /// </summary>
-        public int ApicalCohortNo { get; set; }
-        /// <summary>
-        /// reset leaf numbers
-        /// </summary>
-        public void Reset() { }
-        /// <summary></summary>
-        public bool CohortsInitialised { get; set; }
-        /// <summary></summary>
-        public int TipsAtEmergence { get; set; }
-        /// <summary></summary>
-        public int CohortsAtInitialisation { get; set; }
-        /// <summary></summary>
-        public int AppearedCohortNo { get; set; }
-        /// <summary></summary>
-        public double PlantAppearedLeafNo { get; set; }
-        /// <summary></summary>
-        /// <param name="proprtionRemoved"></param>
-        public void DoThin(double proprtionRemoved) { }
-        /// <summary></summary>
-        public int InitialisedCohortNo { get; set; }
-        /// <summary></summary>
-        public void RemoveHighestLeaf() { }
-        #endregion
-
         #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
@@ -146,10 +118,7 @@ namespace Models.PMF.Organs
         [Description("Daily maximum stomatal conductance(m/s)")]
         public double Gsmax
         {
-            get
-            {
-                return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value();
-            }
+            get { return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value(); }
         }
 
         /// <summary>Gets or sets the gsmax.</summary>
@@ -159,8 +128,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the R50.</summary>
         [Description("R50")]
         public double R50 { get; set; }
-
-
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -177,6 +144,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI + LAIDead; } }
+        
         /// <summary>Gets the SLA</summary>
         public double SpecificLeafArea { get { return MathUtilities.Divide(LAI, Live.Wt, 0.0); } }
 
@@ -208,7 +176,7 @@ namespace Models.PMF.Organs
         public double Height { get; set; }
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+        public double Depth { get { return Height; } }
         
         /// <summary>Gets the width of the canopy (mm).</summary>
         public double Width { get { return 0; } }
@@ -216,28 +184,20 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
         public double FRGR { get; set; }
-
+         
         private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
         public double PotentialEP
         {
             get { return _PotentialEP; }
-            set
-            {
-                _PotentialEP = value;
-                MicroClimatePresent = true;
-            }
+            set { _PotentialEP = value;}
         }
 
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         public double WaterDemand { get; set; }
 
-        /// <summary>
-        /// Flag to test if Microclimate is present
-        /// </summary>
-        public bool MicroClimatePresent { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -373,15 +333,10 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (MicroClimatePresent)
-                {
-                    double TotalRadn = 0;
-                    for (int i = 0; i < LightProfile.Length; i++)
-                        TotalRadn += LightProfile[i].amount;
-                    return TotalRadn;
-                }
-                else
-                   return CoverGreen * MetData.Radn;
+                 double TotalRadn = 0;
+                 for (int i = 0; i < LightProfile.Length; i++)
+                     TotalRadn += LightProfile[i].amount;
+                 return TotalRadn;
             }
         }
 
@@ -759,7 +714,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
-                MicroClimatePresent = false;
                 Clear();
         }
 
@@ -779,9 +733,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                if (MicroClimatePresent == false)
-                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
-
                 Detached.Clear();
                 FRGR = FRGRFunction.Value();
                 Height = HeightFunction.Value();

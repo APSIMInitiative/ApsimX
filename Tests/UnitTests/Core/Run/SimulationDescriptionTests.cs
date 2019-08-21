@@ -195,7 +195,7 @@
                     {
                         Children = new List<Model>()
                         {
-                            new Water()
+                            new Physical()
                             {
                                 Thickness = new double[] { 100, 300, 300 },
                                 BD = new double[] { 1.36, 1.216, 1.24 },
@@ -245,7 +245,7 @@
             Apsim.ParentAllChildren(sim);
 
             var originalSoil = sim.Children[0] as Soil;
-            var originalWater = originalSoil.Children[0] as Water;
+            var originalWater = originalSoil.Children[0] as Physical;
 
             originalSoil.OnCreated();
             
@@ -253,7 +253,7 @@
 
             var newSim = simulationDescription.ToSimulation();
 
-            var water = newSim.Children[0].Children[0] as Water;
+            var water = newSim.Children[0].Children[0] as Physical;
             var soilOrganicMatter = newSim.Children[0].Children[1] as SoilOrganicMatter;
             var sample = newSim.Children[0].Children[3] as Sample;
 

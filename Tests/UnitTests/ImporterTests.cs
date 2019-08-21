@@ -126,7 +126,7 @@
             Assert.AreEqual(initWater.FractionFull, 0.5);
             Assert.AreEqual(initWater.PercentMethod, InitialWater.PercentMethodEnum.FilledFromTop);
 
-            Water w = s.Children[1] as Water;
+            Physical w = s.Children[1] as Physical;
             Assert.AreEqual(w.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(w.BD, new double[] { 1.02, 1.03, 1.02, 1.02 });
             Assert.AreEqual(w.LL15, new double[] { 0.29, 0.29, 0.29, 0.29 });

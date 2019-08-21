@@ -182,6 +182,8 @@
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion59 after.json" />
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion60 after.json" />
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion60 before.json" />
+    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion63 before.json" />
+    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion63 after.json" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
@@ -218,8 +220,8 @@
     <EmbeddedResource Include="Sensitivity\MorrisTestsBroken.apsimx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">
-      <Project>{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}</Project>
+    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
+      <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj">

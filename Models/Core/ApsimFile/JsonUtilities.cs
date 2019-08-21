@@ -197,6 +197,23 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Returns a node of a given path. The path should be period-delimited
+        /// names of subsequent child models. The first name in the path should be
+        /// the name of a child model of `node`.
+        /// model of `node`.
+        /// </summary>
+        /// <param name="node">The node to start searching from.</param>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+        public static JObject FindFromPath(JObject node, string path)
+        {
+            foreach (string name in path.Split('.'))
+                node = ChildWithName(node, name);
+
+            return node;
+        }
+
+        /// <summary>
         /// Return the parent APSIM model token for the specified model token.
         /// </summary>
         /// <param name="modelToken">The model token to find the parent for.</param>
@@ -230,6 +247,19 @@ namespace Models.Core.ApsimFile
                 propertyToken.Remove(); // remove from parent.
                 modelToken[newPropertyName] = valueToken;
             }
+        }
+
+        /// <summary>
+        /// Renames a child node if it exists.
+        /// </summary>
+        /// <param name="node">Parent node.</param>
+        /// <param name="childName">Name of the child to be renamed.</param>
+        /// <param name="newName">New name of the child.</param>
+        public static void RenameChildModel(JObject node, string childName, string newName)
+        {
+            JObject child = ChildWithName(node, childName);
+            if (child != null)
+                child["Name"] = newName;
         }
 
         /// <summary>

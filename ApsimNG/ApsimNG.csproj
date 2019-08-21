@@ -764,7 +764,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Wheat.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\WeightedTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Weather.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Water.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Physical.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\VariableReference.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />
@@ -881,7 +881,7 @@
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj">
       <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
     </ProjectReference>

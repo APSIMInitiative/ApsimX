@@ -26,7 +26,7 @@
     public class Soil : Model, ISoil
     {
         /// <summary>Gets the water.</summary>
-        private Water waterNode;
+        private Physical waterNode;
 
 
         /// <summary>
@@ -154,7 +154,7 @@
         /// <summary>Find our children.</summary>
         private void FindChildren()
         {
-            waterNode = Apsim.Child(this, typeof(Water)) as Water;
+            waterNode = Apsim.Child(this, typeof(Physical)) as Physical;
             Weirdo = Apsim.Child(this, typeof(WEIRDO)) as WEIRDO;
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
@@ -166,7 +166,7 @@
         /// <summary>
         /// Water node of soil.
         /// </summary>
-        public Water WaterNode { get { return waterNode; } }
+        public Physical WaterNode { get { return waterNode; } }
 
         #region Water
         /// <summary>The layering used to parameterise the water node</summary>
