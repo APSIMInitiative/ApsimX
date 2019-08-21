@@ -5,6 +5,7 @@
     using Models.Core;
     using Models.Core.ApsimFile;
     using System;
+    using System.Collections.Generic;
 
     /// <summary>This command changes the 'CurrentNode' in the ExplorerView.</summary>
     public class AddModelCommand : ICommand
@@ -52,7 +53,18 @@
                 parent = Apsim.Get(presenter.ApsimXFile, parentPath) as IModel;
                 if (parent == null)
                     throw new Exception("Cannot find model " + parentPath);
-                modelToAdd = Structure.Add(childString, parent);
+
+                IModel modelToAdd = FileFormat.ReadFromString<IModel>(childString, out List<Exception> exceptions);
+                if (exceptions != null && exceptions.Count > 0)
+                {
+                    presenter.MainPresenter.ShowError(exceptions);
+                    return;
+                }
+
+                if (modelToAdd is Simulations && modelToAdd.Children.Count == 1)
+                    modelToAdd = modelToAdd.Children[0];
+
+                Structure.Add(modelToAdd, parent);
                 var nodeDescription = presenter.GetNodeDescription(modelToAdd);
                 view.Tree.AddChild(Apsim.FullPath(parent), nodeDescription);
                 modelAdded = true;
