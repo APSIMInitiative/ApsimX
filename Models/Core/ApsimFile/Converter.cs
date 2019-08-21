@@ -782,7 +782,7 @@
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private void UpgradeToVersion61(JObject root, string fileName)
+        private static void UpgradeToVersion61(JObject root, string fileName)
         {
             foreach (JObject Sim in JsonUtilities.ChildrenRecursively(root, "Simulation"))
             {
