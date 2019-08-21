@@ -106,7 +106,7 @@
         /// <summary>Sets the soil organic matter thickness.</summary>
         /// <param name="soilOrganicMatter">The soil organic matter.</param>
         /// <param name="thickness">Thickness to change soil water to.</param>
-        private static void SetSoilOrganicMatterThickness(SoilOrganicMatter soilOrganicMatter, double[] thickness)
+        private static void SetSoilOrganicMatterThickness(Organic soilOrganicMatter, double[] thickness)
         {
             if (soilOrganicMatter != null)
             {

@@ -15,7 +15,7 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType=typeof(Soil))]
-    public class SoilOrganicMatter : Model
+    public class Organic : Model
     {
         /// <summary>Gets or sets the root cn.</summary>
         /// <value>The root cn.</value>

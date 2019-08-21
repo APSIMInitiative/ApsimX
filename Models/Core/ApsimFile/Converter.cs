@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 63; } }
+        public static int LatestVersion { get { return 64; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -962,7 +962,7 @@
         }
 
         /// <summary>
-        /// Upgrades to version 61. Rename the 'Water' node under soil to 'Physical'
+        /// Upgrades to version 63. Rename the 'Water' node under soil to 'Physical'
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -1004,6 +1004,61 @@
                         specifications[i] = specificationString;
                     }
                 }
+            }
+        }
+
+
+        /// <summary>
+        /// Upgrades to version 64. Rename the 'SoilOrganicMatter' node under soil to 'Organic'
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion64(JObject root, string fileName)
+        {
+            foreach (var water in JsonUtilities.ChildrenRecursively(root, "SoilOrganicMatter"))
+            {
+                water["$type"] = "Models.Soils.Organic, Models";
+                water["Name"] = "Organic";
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilOrganicMatter.", ".Organic.");
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
+            {
+                var specification = factor["Specification"];
+                if (specification != null)
+                {
+                    var specificationString = specification.ToString();
+                    specificationString = specificationString.Replace(".SoilOrganicMatter.", ".Organic.");
+                    specificationString = specificationString.Replace("[SoilOrganicMatter]", "[Organic]");
+                    factor["Specification"] = specificationString;
+                }
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+            {
+                var specifications = factor["Specifications"];
+                if (specifications != null)
+                {
+                    for (int i = 0; i < specifications.Count(); i++)
+                    {
+                        var specificationString = specifications[i].ToString();
+                        specificationString = specificationString.Replace(".SoilOrganicMatter.", ".Organic.");
+                        specificationString = specificationString.Replace("[SoilOrganicMatter]", "[Organic]");
+                        specifications[i] = specificationString;
+                    }
+                }
+            }
+
+            foreach (var series in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                if (series["XFieldName"] != null)
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilOrganicMatter", "Organic");
+                if (series["YFieldName"] != null)
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilOrganicMatter", "Organic");
             }
         }
 

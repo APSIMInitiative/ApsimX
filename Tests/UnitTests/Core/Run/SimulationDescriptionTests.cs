@@ -214,7 +214,7 @@
                                     }
                                 }
                             },
-                            new SoilOrganicMatter
+                            new Organic
                             {
                                 Thickness = new double[] { 100, 300 },
                                 OC = new double[] { 2, 1 }
@@ -254,7 +254,7 @@
             var newSim = simulationDescription.ToSimulation();
 
             var water = newSim.Children[0].Children[0] as Physical;
-            var soilOrganicMatter = newSim.Children[0].Children[1] as SoilOrganicMatter;
+            var soilOrganicMatter = newSim.Children[0].Children[1] as Organic;
             var sample = newSim.Children[0].Children[3] as Sample;
 
             // Make sure layer structures have been standardised.

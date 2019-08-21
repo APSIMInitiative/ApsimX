@@ -36,7 +36,7 @@
                             }
                         }
                     },
-                    new SoilOrganicMatter
+                    new Organic
                     {
                         Thickness = new double[] { 100, 300 },
                         OC = new double[] { 2, 1 }
@@ -67,7 +67,7 @@
             SoilStandardiser.Standardise(soil);
 
             var water = soil.Children[0] as Physical;
-            var soilOrganicMatter = soil.Children[1] as SoilOrganicMatter;
+            var soilOrganicMatter = soil.Children[1] as Organic;
             var sample = soil.Children[3] as Sample;
 
             // Make sure layer structures have been standardised.
@@ -107,7 +107,7 @@
                             }
                         }
                     },
-                    new SoilOrganicMatter
+                    new Organic
                     {
                         Thickness = new double[] { 100, 300 },
                         OC = new double[] { 2, 1 }
@@ -142,7 +142,7 @@
             SoilStandardiser.Standardise(soil);
 
             var water = soil.Children[0] as Physical;
-            var soilOrganicMatter = soil.Children[1] as SoilOrganicMatter;
+            var soilOrganicMatter = soil.Children[1] as Organic;
             var sample = soil.Children[3] as Sample;
 
             // Make sure layer structures have been standardised.
@@ -172,7 +172,7 @@
                         DUL = new double[] { 0.365, 0.461 },
                         SAT = new double[] { 0.400, 0.481 },
                     },
-                    new SoilOrganicMatter
+                    new Organic
                     {
                         Thickness = new double[] { 100, 200 },
                         OC = new double[] { 2, 1 },
@@ -216,7 +216,7 @@
             Assert.AreEqual(initial.PH, new double[] { 6.4, 6.9 });
             Assert.AreEqual(initial.EC, new double[] { 150, 200 });
 
-            var soilOrganicMatter = soil.Children[1] as SoilOrganicMatter;
+            var soilOrganicMatter = soil.Children[1] as Organic;
             Assert.IsNull(soilOrganicMatter.OC);
 
             Assert.NotNull(analysis);

@@ -86,7 +86,7 @@
                                     }
                                 }
                             },
-                            new SoilOrganicMatter()
+                            new Organic()
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                                 OC = new double[] { 2, 1, 0.5, 0.4, 0.3, 0.2 }
