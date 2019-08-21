@@ -1019,7 +1019,7 @@
             {
                 organic["$type"] = "Models.Soils.Organic, Models";
                 organic["Name"] = "Organic";
-                organic["RootCN"] = "RootCNRatio";
+                organic["RootCNRatio"] = organic["RootCN"];
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
