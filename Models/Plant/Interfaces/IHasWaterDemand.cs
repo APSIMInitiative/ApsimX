@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IHasWaterDemand.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.PMF.Interfaces
+﻿namespace Models.PMF.Interfaces
 {
     /// <summary>An interface that defines what needs to be implemented by an organthat has a water demand.</summary>
     public interface IHasWaterDemand
