@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 56,
+  "Version": 63,
   "Name": "Simulations",
   "Children": [
     {
@@ -468,7 +468,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "InitialWtFunction",
+              "Name": "InitialWt",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -779,7 +779,7 @@
             },
             {
               "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "FRGRFunction",
+              "Name": "FRGR",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -1337,7 +1337,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "0-1",
-              "Name": "MaintenanceRespirationFunction",
+              "Name": "MaintenanceRespiration",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -1355,7 +1355,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "LAIFunction",
+              "Name": "Area",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -1392,7 +1392,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "LaiDeadFunction",
+              "Name": "LaiDead",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -1405,7 +1405,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].LAIFunction.SpecificLeafArea",
+                  "VariableName": "[Leaf].Area.SpecificLeafArea",
                   "Name": "SpecificLeafArea",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -1430,7 +1430,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.9,
               "Units": "0-1",
-              "Name": "ExtinctionCoefficientFunction",
+              "Name": "ExtinctionCoefficient",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -1459,7 +1459,7 @@
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
               "XProperty": "[WhiteClover].Leaf.Live.Wt",
-              "Name": "HeightFunction",
+              "Name": "Tallness",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -1653,7 +1653,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "DetachmentRateFunction",
+              "Name": "DetachmentRate",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -8748,7 +8748,7 @@
                 "[Phenology].ThermalTime.XYPairs.X = 0,22.5,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
-                "[Leaf].HeightFunction.XYPairs.Y = 20,75,110,140,150",
+                "[Leaf].Tallness.XYPairs.Y = 20,75,110,140,150",
                 "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.667",
                 "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.2",
                 "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.1",
@@ -8779,7 +8779,7 @@
                 "[Phenology].ThermalTime.XYPairs.X = 0,21,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = -1,0,5,12.5,15.5,24.5,32.5,35",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.4",
-                "[Leaf].HeightFunction.XYPairs.Y = 20,50,75,97.5,104",
+                "[Leaf].Tallness.XYPairs.Y = 20,50,75,97.5,104",
                 "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.85",
                 "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.05",
                 "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.05",
@@ -8809,7 +8809,7 @@
                 "[Phenology].ThermalTime.XYPairs.X = 0,22.5,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
-                "[Leaf].HeightFunction.XYPairs.Y = 20,65,100,130,135",
+                "[Leaf].Tallness.XYPairs.Y = 20,65,100,130,135",
                 "[Petiole].TargetBiomassProportion.VegetativeInductive.TargetProportion.ProportionToLeaves.FixedValue = 0.7",
                 "[Stolon].BiomassRemovalDefaults.Graze.FractionLiveToRemove = 0.05",
                 "[Taproot].TargetBiomassProportion.AllPhases.TargetProportion.BaseProportion.FixedValue = 0.1",
