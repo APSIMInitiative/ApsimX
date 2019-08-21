@@ -118,10 +118,7 @@ namespace Models.PMF.Organs
         [Description("Daily maximum stomatal conductance(m/s)")]
         public double Gsmax
         {
-            get
-            {
-                return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value();
-            }
+            get { return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value(); }
         }
 
         /// <summary>Gets or sets the gsmax.</summary>
@@ -147,6 +144,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI + LAIDead; } }
+        
         /// <summary>Gets the SLA</summary>
         public double SpecificLeafArea { get { return MathUtilities.Divide(LAI, Live.Wt, 0.0); } }
 
@@ -178,7 +176,7 @@ namespace Models.PMF.Organs
         public double Height { get; set; }
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+        public double Depth { get { return Height; } }
         
         /// <summary>Gets the width of the canopy (mm).</summary>
         public double Width { get { return 0; } }
