@@ -94,6 +94,10 @@ namespace Models
         /// <summary>The weather</summary>
         [Link]
         private IWeather weather = null;
+        
+        /// <summary>The surface organic matter model</summary>
+        [Link]
+        private ISurfaceOrganicMatter residues = null;
 
         /// <summary>List of uptakes</summary>
         private List<ZoneMicroClimate> zoneMicroClimates = new List<ZoneMicroClimate>();
@@ -306,8 +310,8 @@ namespace Models
         /// <summary>Called when simulation commences.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
         {
             foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
                 CreateZoneMicroClimate(newZone);
@@ -326,7 +330,12 @@ namespace Models
             myZoneMC.Reset();
             foreach (ICanopy canopy in Apsim.ChildrenRecursively(newZone, typeof(ICanopy)))
                 myZoneMC.Canopies.Add(new CanopyType(canopy));
+            foreach (ICanopy residue in residues.ResidueLayers)
+            {
+                myZoneMC.Canopies.Add(new CanopyType(residue));
+            }
             zoneMicroClimates.Add(myZoneMC);
+
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
@@ -599,7 +608,10 @@ namespace Models
 
             ISoilWater zonesoilwater = Apsim.Find(ZoneMC.zone, typeof(ISoilWater)) as ISoilWater;
             if (zonesoilwater != null)
+            {
                 zonesoilwater.PotentialInfiltration = Math.Max(0, weather.Rain - totalInterception);
+                zonesoilwater.PrecipitationInterception = totalInterception;
+            }
         }
 
         /// <summary>Calculate the Penman-Monteith water demand</summary>
