@@ -1638,7 +1638,7 @@ namespace Models.AgPasture
                 for (int layer = 0; layer < nLayers; layer++)
                 {
                     DMLayer[layer] += DMLayersTransferedIn[layer];
-                    NamountLayer[layer] += NLayersTransferedIn[layer] - (NRemobilised * MathUtilities.Divide(NLayersTransferedIn[layer] , NTransferedIn,0));
+                    NamountLayer[layer] += NLayersTransferedIn[layer] - (NRemobilised * (NLayersTransferedIn[layer] / NTransferedIn));
                 }
             }
         }
