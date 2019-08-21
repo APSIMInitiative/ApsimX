@@ -60,7 +60,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj">
       <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
     </ProjectReference>

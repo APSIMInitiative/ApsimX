@@ -13,7 +13,6 @@ APSIM can be compiled using Microsoft's [Visual Studio for Mac](https://visualst
 
     ```
     git clone https://github.com/APSIMInitiative/ApsimX
-    git clone https://github.com/APSIMInitiative/APSIM.Shared
     ```
 
 4. Copy the webkit-sharp binary (and its config file) from ApsimX/ApsimNG/Assemblies/ to your ApsimX/Bin/ folder
@@ -23,14 +22,8 @@ APSIM can be compiled using Microsoft's [Visual Studio for Mac](https://visualst
     cp ApsimNG/Assemblies/webkit-* Bin/
     ```
 
-5. Restore nuget packages for APSIM.Shared
-
-    ```
-    cd /path/to/APSIM.Shared
-	nuget restore
-    ```
-6. Set ApsimNG as startup project
+5. Set ApsimNG as startup project
 
     ![Set ApsimNG as startup project](/images/macos-apsimng-startup.png)
 
-7. Build and Run
+6. Build and Run
