@@ -44,7 +44,7 @@
             },
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": "[\r\n  \"[Soil].Physical.DUL[1] = 0.2, 0.25, 0.3, 0.35, 0.4\"\r\n]",
+              "Specification": "[Soil].Physical.DUL[1] = 0.2, 0.25, 0.3, 0.35, 0.4",
               "Name": "DUL",
               "Children": [],
               "IncludeInDocumentation": true,

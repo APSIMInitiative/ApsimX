@@ -44,9 +44,7 @@
             },
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": [
-                "[Soil].Water.DUL[1] = 0.2, 0.25, 0.3, 0.35, 0.4"
-              ],
+              "Specification": "[Soil].Water.DUL[1] = 0.2, 0.25, 0.3, 0.35, 0.4",
               "Name": "DUL",
               "Children": [],
               "IncludeInDocumentation": true,

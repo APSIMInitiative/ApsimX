@@ -148,7 +148,8 @@ namespace Models.Core.ApsimFile
             "Models.Zones.CircularZone",
             "Models.Zones.RectangularZone",
             "Models.CLEM.ZoneCLEM",
-            "Models.Agroforestry.AgroforestrySystem"
+            "Models.Agroforestry.AgroforestrySystem",
+            "Models.PMF.OrganArbitrator"
         };
 
         /// <summary>
@@ -363,6 +364,8 @@ namespace Models.Core.ApsimFile
                             newArray.Add(value);
                         //newArray.Add(nestedArray);
                     }
+                    else if (element is JValue)
+                        newArray.Add(element);
                     else if (modelType == null)
                         newArray.Add(CreateObject(element));
                     else
