@@ -1015,15 +1015,17 @@
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion64(JObject root, string fileName)
         {
-            foreach (var water in JsonUtilities.ChildrenRecursively(root, "SoilOrganicMatter"))
+            foreach (var organic in JsonUtilities.ChildrenRecursively(root, "SoilOrganicMatter"))
             {
-                water["$type"] = "Models.Soils.Organic, Models";
-                water["Name"] = "Organic";
+                organic["$type"] = "Models.Soils.Organic, Models";
+                organic["Name"] = "Organic";
+                organic["RootCN"] = "RootCNRatio";
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
             {
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilOrganicMatter.", ".Organic.");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".RootCN", ".RootCNRatio");
             }
 
             foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))

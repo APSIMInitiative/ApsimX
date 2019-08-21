@@ -988,9 +988,7 @@
                         fInert[layer] = Math.Min(0.99, inert_c / ocdrc[layer] );
                     organicMatter.FInert = ConvertLayers(fInert, layerCount); // Not perfect, but should be good enough
                     organicMatter.FBiom = fBiom;
-                    organicMatter.EnrACoeff = 7.4;
-                    organicMatter.EnrBCoeff = 0.20;
-                    organicMatter.RootCN = 40.0;
+                    organicMatter.RootCNRatio = 40.0;
                     organicMatter.SoilCN = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
 
                     return newSoil;

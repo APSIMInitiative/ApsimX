@@ -118,8 +118,6 @@
                     soilOrganicMatter.SoilCN = MapConcentration(soilOrganicMatter.SoilCN, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.SoilCN));
                     soilOrganicMatter.RootWt = MapMass(soilOrganicMatter.RootWt, soilOrganicMatter.Thickness, thickness, false);
                     soilOrganicMatter.Thickness = thickness;
-
-                    soilOrganicMatter.OCMetadata = StringUtilities.CreateStringArray("Mapped", thickness.Length); ;
                 }
 
                 if (soilOrganicMatter.FBiom != null)
