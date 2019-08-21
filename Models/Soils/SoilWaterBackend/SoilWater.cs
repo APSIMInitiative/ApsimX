@@ -1325,27 +1325,17 @@ namespace Models.Soils
         [Units("mm")]
         private double[] inflow_lat;       //! inflowing lateral water
 
-        //interception can be specified in micromet aka microclimate module (not implemented yet)
-        //used in runoff and in infilitration calculation
-
-        //[Input(IsOptional = true)]
         /// <summary>
-        /// The interception
+        /// 
         /// </summary>
-        [Units("mm")]
-        private double interception;      //! canopy interception loss (mm)
-
-        //[Input(IsOptional = true)]
-        /// <summary>
-        /// Loss of precipitation due in interception of surface residues (mm)
-        /// </summary>
-        /// <remarks>
-        /// residueinterception can be specified in surface organic matter module (not implemented yet)
-        /// used in runoff and in infilitration calculation
-        /// residueinterception is only used in ResiduesTrial.apsimx
-        /// </remarks>
-        [Units("mm")]
-        public double ResidueInterception { get; set; }     //residue interception loss (mm)
+        [XmlIgnore]
+        public double PotentialInfiltration
+        {
+            get
+            { return canopy.PotentialInfiltration;}
+            set
+            { canopy.PotentialInfiltration = value;}
+        }
 
         // Get Variables from other Modules
 
@@ -1409,7 +1399,6 @@ namespace Models.Soils
                     canopy.NumberOfCrops += 1;     //increment number of crops ready for next array resize in next iteration.
                 }
 
-            canopy.interception = interception;
          }
 
         /// <summary>
@@ -1420,7 +1409,6 @@ namespace Models.Soils
             surfaceCover.ZeroSurfaceCover();
 
             surfaceCover.surfaceom_cover = SurfaceOM.Cover;
-            surfaceCover.residueinterception = ResidueInterception;
             }
 
         /// <summary>
@@ -1529,9 +1517,7 @@ namespace Models.Soils
             surfaceCover = new SurfaceCoverData();
 
             //optional daily inputs
-            runon = 0.0;      
-            interception = 0.0;      
-            ResidueInterception = 0.0; 
+            runon = 0.0;       
 
             if (Soil.Thickness != null)
                 {
@@ -1683,9 +1669,6 @@ namespace Models.Soils
 
             // SEND EVENTS OUT
             SendNitrogenChangedEvent();
-
-            //zero this here so it is not used tomorrow. 
-            ResidueInterception = 0.0;
 
         }
 

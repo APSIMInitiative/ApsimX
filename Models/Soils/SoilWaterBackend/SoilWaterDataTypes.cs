@@ -249,6 +249,10 @@ namespace Models.Soils.SoilWaterBackend
     public class CanopyData
         {
 
+        /// <summary>
+        /// This passes the potential infiltration into the SoilWaterSurface.  Not the best place for it but will get thinks moving
+        /// </summary>
+        public double PotentialInfiltration { get; set; }
 
         //GET CROP VARIABLES
             /// <summary>

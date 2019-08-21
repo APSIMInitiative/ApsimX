@@ -72,8 +72,8 @@ namespace Models.Interfaces
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         double[] Flux { get; }
 
-        /// <summary>Loss of precipitation due in interception of surface residues (mm)</summary>
-        double ResidueInterception { get; set; }
+        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
+        double PotentialInfiltration { get; set; }
 
         /// <summary>Sets the water table.</summary>
         /// <param name="InitialDepth">The initial depth.</param>

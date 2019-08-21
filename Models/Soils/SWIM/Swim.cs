@@ -27,9 +27,6 @@ namespace Models.Soils
         private IClock Clock = null;
 
         [Link]
-        private IWeather MetFile = null;
-
-        [Link]
         private ISummary summary = null;
 
         [Link]
@@ -65,13 +62,6 @@ namespace Models.Soils
         string eo_time = null;
         //[Input(IsOptional = true)]
         double eo_durn = Double.NaN;
-
-        //[Input(IsOptional = true)]
-        [Units("mm")]
-        double interception = Double.NaN;
-        //[Input(IsOptional = true)]
-        [Units("mm")]
-        double residueinterception = Double.NaN;
 
         double[] SWIMRainTime = new double[0];
         double[] SWIMRainAmt = new double[0];
@@ -1449,7 +1439,6 @@ namespace Models.Soils
             GetSoluteVariables();
             //GetCropVariables();
             residue_cover = surfaceOrganicMatter.Cover;
-            RemoveInterception();
             CNRunoff();
 
             int timeOfDay = TimeToMins(apsim_time);
@@ -2351,10 +2340,14 @@ namespace Models.Soils
 
         }
 
+        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
+        [XmlIgnore]
+        public double PotentialInfiltration { get; set; }
+
         private void GetRainVariables()
         {
             string time;
-            double amount = MetFile.Rain;
+            double amount = PotentialInfiltration;
             double duration = 0.0;
             double intensity;
             if (string.IsNullOrWhiteSpace(rain_time))
@@ -2477,19 +2470,6 @@ namespace Models.Soils
         //    }
         //    crop_cover = 1.0 - bare;
         //}
-
-        private void RemoveInterception()
-        {
-            double intercep = 0.0;
-            double residueIntercep = 0.0;
-            if (!Double.IsNaN(interception))
-                intercep = interception;
-            if (!Double.IsNaN(residueinterception))
-                residueIntercep = residueinterception;
-            if (intercep < 0.0 || residueIntercep < 0.0 || intercep > 1000.0 || residueIntercep > 1000.0)
-                IssueWarning("Interception value out of bounds");
-            RemoveFromRainfall(intercep + residueIntercep);
-        }
 
         private void RemoveFromRainfall(double amount)
         {

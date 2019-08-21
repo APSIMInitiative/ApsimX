@@ -596,6 +596,10 @@ namespace Models
             for (int i = 0; i <= ZoneMC.numLayers - 1; i++)
                 for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
                     ZoneMC.Canopies[j].interception[i] = MathUtilities.Divide(ZoneMC.Canopies[j].LAI[i], sumLAI, 0.0) * totalInterception;
+
+            ISoilWater zonesoilwater = Apsim.Find(ZoneMC.zone, typeof(ISoilWater)) as ISoilWater;
+            if (zonesoilwater != null)
+                zonesoilwater.PotentialInfiltration = Math.Max(0, weather.Rain - totalInterception);
         }
 
         /// <summary>Calculate the Penman-Monteith water demand</summary>
