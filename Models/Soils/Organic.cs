@@ -22,11 +22,12 @@
         [Summary]
         public double[] Thickness { get; set; }
 
-        /// <summary>Carbon concentration (0.1 - 10%)</summary>
+        /// <summary>Carbon concentration (Total% 0.1 - 10%)</summary>
         [Summary]
         [Description("Organic Carbon")]
         [Bounds(Lower = 0.1, Upper = 10.0)]
         [Display(Format = "N2")]
+        [Units("Total%")]
         public double[] Carbon { get; set; }
 
         /// <summary>Carbon:nirogen ratio.</summary>
@@ -56,37 +57,5 @@
         [Units("kg/ha")]
         [Display(Format = "N1")]
         public double[] RootWt { get; set; }
-
-        /// <summary>Gets or sets the oc units.</summary>
-        public Sample.OCSampleUnitsEnum OCUnits { get; set; }
-
-        /// <summary>Ocs the units set.</summary>
-        /// <param name="ToUnits">To units.</param>
-        public void OCUnitsSet(Sample.OCSampleUnitsEnum ToUnits)
-        {
-            if (ToUnits != OCUnits)
-            {
-                // convert the numbers
-                if (ToUnits == Sample.OCSampleUnitsEnum.WalkleyBlack)
-                    Carbon = MathUtilities.Divide_Value(Carbon, 1.3);
-                else
-                    Carbon = MathUtilities.Multiply_Value(Carbon, 1.3);
-                OCUnits = ToUnits;
-            }
-        }
-
-        /// <summary>Soil organic carbon</summary>
-        [Units("kg/ha")]
-        public double[] OCTotal
-        {
-            get
-            {
-                if (OCUnits == Sample.OCSampleUnitsEnum.WalkleyBlack)
-                    return MathUtilities.Multiply_Value(Carbon, 1.3);
-                else
-                    return Carbon;
-            }
-        }
-
     }
 }

@@ -958,7 +958,6 @@
                     wheat.KL = kl;
                     wheat.LL = ll;
 
-                    organicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
                     organicMatter.Carbon = ConvertLayers(ocdrc, layerCount);
 
                     double rootWt = Math.Max(0.0, Math.Min(3000.0, 2.5 * (ppt - 100.0)));

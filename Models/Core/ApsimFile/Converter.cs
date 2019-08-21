@@ -1021,6 +1021,13 @@
                 organic["Name"] = "Organic";
                 organic["RootCNRatio"] = organic["RootCN"];
                 organic["Carbon"] = organic["OC"];
+                string ocUnits = organic["OCUnits"].ToString();
+                if (ocUnits == "1" || ocUnits == "WalkleyBlack")
+                {
+                    var oc = organic["Carbon"].Values<double>().ToArray();
+                    oc = MathUtilities.Multiply_Value(oc, 1.3);
+                    organic["Carbon"] = new JArray(oc);
+                }
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
@@ -1038,6 +1045,7 @@
                     var specificationString = specification.ToString();
                     specificationString = specificationString.Replace(".SoilOrganicMatter.", ".Organic.");
                     specificationString = specificationString.Replace("[SoilOrganicMatter]", "[Organic]");
+                    specificationString = specificationString.Replace(".Organic.OC", ".Organic.Carbon");
                     factor["Specification"] = specificationString;
                 }
             }
