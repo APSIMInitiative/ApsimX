@@ -1118,10 +1118,52 @@
         /// <param name="fileName">The name of the apsimx file.</param>
         private static void UpgradeToVersion65(JObject root, string fileName)
         {
-            foreach (var organic in JsonUtilities.ChildrenRecursively(root, "Analysis"))
+            foreach (var chemical in JsonUtilities.ChildrenRecursively(root, "Analysis"))
             {
-                organic["$type"] = "Models.Soils.Chemical, Models";
-                organic["Name"] = "Chemical";
+                var soil = JsonUtilities.Parent(chemical);
+                var physical = JsonUtilities.ChildWithName(soil as JObject, "Physical");
+
+                chemical["$type"] = "Models.Soils.Chemical, Models";
+                chemical["Name"] = "Chemical";
+
+                // Move particle size numbers from chemical to physical and make sure layers are mapped.
+                var physicalThickness = physical["Thickness"].Values<double>().ToArray();
+                var chemicalThickness = chemical["Thickness"].Values<double>().ToArray();
+
+                if (chemical["ParticleSizeSand"] != null && chemical["ParticleSizeSand"].HasValues)
+                {
+                    var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
+                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                    physical["ParticleSizeSand"] = new JArray(mappedValues);
+                }
+
+                if (chemical["ParticleSizeSilt"] != null && chemical["ParticleSizeSilt"].HasValues)
+                {
+                    var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
+                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                    physical["ParticleSizeSilt"] = new JArray(mappedValues);
+                }
+
+                if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
+                {
+                    var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
+                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                    physical["ParticleSizeClay"] = new JArray(mappedValues);
+                }
+
+                // convert ph units
+                var phUnits = physical["PHUnits"];
+                if (phUnits != null)
+                {
+                    string phUnitsString = phUnits.ToString();
+                    if (phUnitsString == "1")
+                    {
+                        // pH in water = (pH in CaCl X 1.1045) - 0.1375
+                        var ph = physical["PH"].Values<double>().ToArray();
+                        ph = MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(ph, 1.1045), 0.1375);
+                        chemical["PH"] = new JArray(ph);
+                    }
+                }
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))

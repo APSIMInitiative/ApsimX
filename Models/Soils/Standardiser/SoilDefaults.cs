@@ -126,9 +126,6 @@
             analysis.EC = FillMissingValues(analysis.EC, analysis.Thickness.Length, 0);
             analysis.ESP = FillMissingValues(analysis.ESP, analysis.Thickness.Length, 0);
             analysis.PH = FillMissingValues(analysis.PH, analysis.Thickness.Length, 7.0);
-            analysis.ParticleSizeClay = FillMissingValues(analysis.ParticleSizeClay, analysis.Thickness.Length, 0);
-            analysis.ParticleSizeSand = FillMissingValues(analysis.ParticleSizeSand, analysis.Thickness.Length, 0);
-            analysis.ParticleSizeSilt = FillMissingValues(analysis.ParticleSizeSilt, analysis.Thickness.Length, 0);
         }
 
         /// <summary>Changes all missing values in an array to a valid value.</summary>
