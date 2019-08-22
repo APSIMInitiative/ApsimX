@@ -542,7 +542,7 @@
 
 #if DEBUG
             startPage.AddButton(
-                                "Convert XML File",
+                                "Convert Files",
                                 new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                 this.OnShowConverter);
 #endif

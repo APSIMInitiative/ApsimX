@@ -805,8 +805,8 @@
 
                     newSoil = new Soil(); 
                     Analysis analysis = new Analysis();
-                    Water waterNode = new Water(); 
-                    SoilOrganicMatter organicMatter = new SoilOrganicMatter();
+                    Physical waterNode = new Physical(); 
+                    Organic organicMatter = new Organic();
                     SoilWater soilWater = new SoilWater();
                     InitialWater initialWater = new InitialWater();
                     Sample initialNitrogen = new Sample();
@@ -881,8 +881,8 @@
 
                     // Initialise nitrogen to 0.0
                     initialNitrogen.Name = "Initial nitrogen";
-                    initialNitrogen.NH4N.PPM = new double[layerCount];
-                    initialNitrogen.NO3N.PPM = new double[layerCount];
+                    initialNitrogen.NH4N = new double[layerCount];
+                    initialNitrogen.NO3N = new double[layerCount];
 
                     double tAvg = (maxTemp + minTemp) / 2.0;
                     soilWater.CNCov = 0.0;
@@ -958,8 +958,7 @@
                     wheat.KL = kl;
                     wheat.LL = ll;
 
-                    organicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
-                    organicMatter.OC = ConvertLayers(ocdrc, layerCount);
+                    organicMatter.Carbon = ConvertLayers(ocdrc, layerCount);
 
                     double rootWt = Math.Max(0.0, Math.Min(3000.0, 2.5 * (ppt - 100.0)));
                     // For AosimX, root wt needs to be distributed across layers. This conversion logic is adapted from that used in UpgradeToVersion52
@@ -976,7 +975,7 @@
                     double totFOMfraction = MathUtilities.Sum(rootWtFraction);
                     for (int layer = 0; layer < thickness.Length; layer++)
                         rootWtFraction[layer] /= totFOMfraction;
-                    organicMatter.RootWt = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
+                    organicMatter.FOM = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
 
                     double[] fBiom = { 0.04, 0.04 - 0.03 * (225.0 - 150.0) / (400.0 - 150.0),
                         (400.0 - 300.0) / (450.0 - 300.0) * (0.04 - 0.03 * (350.0 - 150.0) / (400.0 - 150.0)) + (450.0 - 400.0) / (450.0 - 300.0) * 0.01,
@@ -988,10 +987,8 @@
                         fInert[layer] = Math.Min(0.99, inert_c / ocdrc[layer] );
                     organicMatter.FInert = ConvertLayers(fInert, layerCount); // Not perfect, but should be good enough
                     organicMatter.FBiom = fBiom;
-                    organicMatter.EnrACoeff = 7.4;
-                    organicMatter.EnrBCoeff = 0.20;
-                    organicMatter.RootCN = 40.0;
-                    organicMatter.SoilCN = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
+                    organicMatter.FOMCNRatio = 40.0;
+                    organicMatter.SoilCNRatio = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
 
                     return newSoil;
                 }

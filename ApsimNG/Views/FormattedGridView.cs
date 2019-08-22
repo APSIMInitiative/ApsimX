@@ -19,8 +19,8 @@
         public string Format { get; set; }
         public IEnumerable Values { get; set; }
         public bool ValuesHaveChanged { get; set; }
-        public Color BackgroundColour { get; set; } = Color.Black;
-        public Color ForegroundColour { get; set; } = Color.White;
+        public Color BackgroundColour { get; set; } = Color.Empty;
+        public Color ForegroundColour { get; set; } = Color.Empty;
         public bool IsReadOnly { get; set; }
         public string[] CellToolTips { get; set; }
         public string[] HeaderContextMenuItems { get; set; }
@@ -189,18 +189,37 @@
             {
                 if (!Convert.IsDBNull(changedCell.Value))
                 {
-                    var column = columnMetadata[changedCell.ColumnIndex];
-                    var array = column.Values as Array;
+                    GridColumnMetaData column = columnMetadata[changedCell.ColumnIndex];
+                    Array array = column.Values as Array;
+                    int numValues = e.ChangedCells.Max(cell => cell.RowIndex);
                     if (array == null)
                     {
-                        var numValues = e.ChangedCells.Max(cell => cell.RowIndex);
                         array = Array.CreateInstance(column.ColumnDataType, numValues + 1);
-                        column.Values = array;
+                    }
+
+                    // If we've added a new row, the column metadata will not contain an entry
+                    // for this row (the array will be too short).
+                    if (array.Length <= changedCell.RowIndex)
+                    {
+                        Array newArray = Array.CreateInstance(column.ColumnDataType, numValues + 1);
+                        array.CopyTo(newArray, 0);
+                        array = newArray;
                     }
                     array.SetValue(Convert.ChangeType(changedCell.Value, column.ColumnDataType), changedCell.RowIndex);
+
+                    column.Values = array;
                     column.ValuesHaveChanged = true;
                     if (column.AddTotalToColumnName)
                         refreshGrid = true;
+                }
+                else
+                {
+                    GridColumnMetaData column = columnMetadata[changedCell.ColumnIndex];
+                    Array array = column.Values as Array;
+                    if (column.ColumnDataType == typeof(double) || column.ColumnDataType == typeof(float))
+                        array.SetValue(double.NaN, changedCell.RowIndex);
+                    column.Values = array;
+                    column.ValuesHaveChanged = true;
                 }
             }
 

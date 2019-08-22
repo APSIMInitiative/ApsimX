@@ -365,5 +365,38 @@
                 Assert.AreEqual(writer.ToString(), expectedXml);
             }
         }
+
+        [Test]
+        public void Version60()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion60 before.json");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion60 after.json");
+
+            var converter = Converter.DoConvert(json, 60);
+            Assert.IsTrue(converter.DidConvert);
+
+            using (StringWriter writer = new StringWriter())
+            {
+                writer.Write(converter.Root.ToString());
+                Assert.AreEqual(writer.ToString(), expectedJson);
+            }
+        }
+
+        [Test]
+        public void Version63()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion63 before.json");
+            string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.ConverterTestsVersion63 after.json");
+
+            var converter = Converter.DoConvert(json, 63);
+            Assert.IsTrue(converter.DidConvert);
+
+            using (StringWriter writer = new StringWriter())
+            {
+                writer.Write(converter.Root.ToString());
+                Assert.AreEqual(writer.ToString(), expectedJson);
+            }
+        }
+
     }
 }

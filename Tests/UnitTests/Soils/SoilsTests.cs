@@ -24,7 +24,7 @@
             {
                 Children = new List<Model>()
                 {
-                    new Water()
+                    new Physical()
                     {
                         Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                         BD = new double[] { 1.36, 1.216, 1.24, 1.32, 1.372, 1.368 },
@@ -43,10 +43,10 @@
                             }
                         }
                     },
-                    new SoilOrganicMatter
+                    new Organic
                     {
                         Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
-                        OC = new double[] { 2, 1, 0.5, 0.4, 0.3, 0.2 }
+                        Carbon = new double[] { 2, 1, 0.5, 0.4, 0.3, 0.2 }
                     },
                     new Analysis
                     {
@@ -63,10 +63,7 @@
                     new Sample
                     {
                         Thickness = new double[] { 100, 300 },
-                        NO3N = new NitrogenValue()
-                        {
-                            PPM = new double[] { 23, 7 }
-                        },
+                        NO3N = new double[] { 23, 7 },
                         OC = new double[] { 1.35, 1.4 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     }

@@ -399,9 +399,11 @@
             int colNo = -1;
             string text = string.Empty;
             CellRendererText textRenderer = cell as CellRendererText;
+
             if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < DataSource.Columns.Count)
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
+
                 if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
@@ -409,11 +411,16 @@
                     cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                     textRenderer.Editable = false;
                 }
+                else if (colAttributes.TryGetValue(colNo, out ColRenderAttributes attributes) && cellState != StateType.Selected)
+                {
+                    cell.CellBackgroundGdk = attributes.BackgroundColor;
+                    textRenderer.ForegroundGdk = attributes.ForegroundColor;
+                    textRenderer.Editable = true;
+                }
                 else
                 {
-                    cell.CellBackgroundGdk = MainWidget.Style.Base(cellState);
+                    cell.CellBackgroundGdk = Grid.Style.Base(cellState);
                     textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
-                    textRenderer.Editable = true;
                 }
 
                 if (view == Grid)
@@ -603,6 +610,13 @@
             if (colAttributes.TryGetValue(col, out colAttr))
             {
                 colAttr.BackgroundColor = color;
+            }
+            else
+            {
+                colAttributes.Add(col, new ColRenderAttributes()
+                {
+                    BackgroundColor = color,
+                });
             }
         }
 
@@ -1467,16 +1481,17 @@
             Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
             fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
             fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
-            Grid.ModifyBase(StateType.Normal, Grid.Style.Background(StateType.Normal));
-            fixedColView.ModifyBase(StateType.Normal, Grid.Style.Background(StateType.Normal));
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
                 ColRenderAttributes attrib = new ColRenderAttributes();
-                attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
-                attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
-                colAttributes.Add(i, attrib);
-
+                if (!colAttributes.TryGetValue(i, out _))
+                {
+                    // Only fallback to defaults if no custom colour specified.
+                    attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
+                    attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
+                    colAttributes.Add(i, attrib);
+                }
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new CellRendererText();
                 CellRendererToggle toggleRender = new CellRendererToggle();

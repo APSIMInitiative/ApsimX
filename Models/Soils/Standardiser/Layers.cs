@@ -15,7 +15,7 @@
         /// <returns>A standardised soil.</returns>
         public static void Standardise(Soil soil)
         {
-            var waterNode = Apsim.Child(soil, typeof(Water)) as Water;
+            var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
             var analysisNode = Apsim.Child(soil, typeof(Analysis)) as Analysis;
             var layerStructure = Apsim.Child(soil, typeof(LayerStructure)) as LayerStructure;
 
@@ -40,7 +40,7 @@
         /// <param name="water">The water.</param>
         /// <param name="toThickness">To thickness.</param>
         /// <param name="soil">Soil</param>
-        private static void SetWaterThickness(Water water, double[] toThickness, Soil soil)
+        private static void SetWaterThickness(Physical water, double[] toThickness, Soil soil)
         {
             if (!MathUtilities.AreEqual(toThickness, soil.Thickness))
             {
@@ -106,7 +106,7 @@
         /// <summary>Sets the soil organic matter thickness.</summary>
         /// <param name="soilOrganicMatter">The soil organic matter.</param>
         /// <param name="thickness">Thickness to change soil water to.</param>
-        private static void SetSoilOrganicMatterThickness(SoilOrganicMatter soilOrganicMatter, double[] thickness)
+        private static void SetSoilOrganicMatterThickness(Organic soilOrganicMatter, double[] thickness)
         {
             if (soilOrganicMatter != null)
             {
@@ -114,20 +114,18 @@
                 {
                     soilOrganicMatter.FBiom = MapConcentration(soilOrganicMatter.FBiom, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.FBiom));
                     soilOrganicMatter.FInert = MapConcentration(soilOrganicMatter.FInert, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.FInert));
-                    soilOrganicMatter.OC = MapConcentration(soilOrganicMatter.OC, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.OC));
-                    soilOrganicMatter.SoilCN = MapConcentration(soilOrganicMatter.SoilCN, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.SoilCN));
-                    soilOrganicMatter.RootWt = MapMass(soilOrganicMatter.RootWt, soilOrganicMatter.Thickness, thickness, false);
+                    soilOrganicMatter.Carbon = MapConcentration(soilOrganicMatter.Carbon, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.Carbon));
+                    soilOrganicMatter.SoilCNRatio = MapConcentration(soilOrganicMatter.SoilCNRatio, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.SoilCNRatio));
+                    soilOrganicMatter.FOM = MapMass(soilOrganicMatter.FOM, soilOrganicMatter.Thickness, thickness, false);
                     soilOrganicMatter.Thickness = thickness;
-
-                    soilOrganicMatter.OCMetadata = StringUtilities.CreateStringArray("Mapped", thickness.Length); ;
                 }
 
                 if (soilOrganicMatter.FBiom != null)
                     MathUtilities.ReplaceMissingValues(soilOrganicMatter.FBiom, MathUtilities.LastValue(soilOrganicMatter.FBiom));
                 if (soilOrganicMatter.FInert != null)
                     MathUtilities.ReplaceMissingValues(soilOrganicMatter.FInert, MathUtilities.LastValue(soilOrganicMatter.FInert));
-                if (soilOrganicMatter.OC != null)
-                    MathUtilities.ReplaceMissingValues(soilOrganicMatter.OC, MathUtilities.LastValue(soilOrganicMatter.OC));
+                if (soilOrganicMatter.Carbon != null)
+                    MathUtilities.ReplaceMissingValues(soilOrganicMatter.Carbon, MathUtilities.LastValue(soilOrganicMatter.Carbon));
             }
         }
 
@@ -141,6 +139,8 @@
 
                 string[] metadata = StringUtilities.CreateStringArray("Mapped", thickness.Length);
 
+                analysis.NO3N = MapConcentration(analysis.NO3N, analysis.Thickness, thickness, 1.0);
+                analysis.NH4N = MapConcentration(analysis.NH4N, analysis.Thickness, thickness, 0.2);
                 analysis.CL = MapConcentration(analysis.CL, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.CL));
                 analysis.CLMetadata = metadata;
                 analysis.EC = MapConcentration(analysis.EC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.EC));
@@ -186,19 +186,9 @@
                 if (sample.SW != null)
                     sample.SW = MapSW(sample.SW, sample.Thickness, thickness, soil);
                 if (sample.NH4N != null)
-                {
-                    if (sample.NH4N.StoredAsPPM)
-                        sample.NH4N.PPM = MapConcentration(sample.NH4N.PPM, sample.Thickness, thickness, 0.2);
-                    else
-                        sample.NH4N.KgHa = MapMass(sample.NH4N.KgHa, sample.Thickness, thickness);
-                }
+                    sample.NH4N = MapConcentration(sample.NH4N, sample.Thickness, thickness, 0.2);
                 if (sample.NO3N != null)
-                {
-                    if (sample.NO3N.StoredAsPPM)
-                        sample.NO3N.PPM = MapConcentration(sample.NO3N.PPM, sample.Thickness, thickness, 1.0);
-                    else
-                        sample.NO3N.KgHa = MapMass(sample.NO3N.KgHa, sample.Thickness, thickness);
-                }
+                    sample.NO3N = MapConcentration(sample.NO3N, sample.Thickness, thickness, 1.0);
 
                 // The elements below will be overlaid over other arrays of values so we want 
                 // to have missing values (double.NaN) used at the bottom of the profile.
@@ -325,7 +315,7 @@
             if (fromValues == null || fromThickness == null)
                 return null;
 
-            var waterNode = Apsim.Child(soil, typeof(Water)) as Water;
+            var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
 
             // convert from values to a mass basis with a dummy bottom layer.
             List<double> values = new List<double>();
@@ -459,7 +449,7 @@
         /// <returns></returns>
         private static double[] LLMapped(SoilCrop crop, double[] ToThickness)
         {
-            var waterNode = crop.Parent as Water;
+            var waterNode = crop.Parent as Physical;
             return MapConcentration(crop.LL, waterNode.Thickness, ToThickness, MathUtilities.LastValue(crop.LL));
         }
 

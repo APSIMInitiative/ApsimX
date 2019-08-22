@@ -47,12 +47,9 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialppm = Apsim.Get(soil.Initial, Name + "N.PPM", true) as double[];
-            if (initialppm == null)
-                initialppm = Apsim.Get(soil.Initial, Name, true) as double[];
-            if (initialppm == null)
-                initialppm = new double[soil.Thickness.Length];
-            kgha = soil.ppm2kgha(initialppm);
+            kgha = Apsim.Get(soil.Initial, Name + "N") as double[];
+            if (kgha == null)
+                kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
         }
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>
