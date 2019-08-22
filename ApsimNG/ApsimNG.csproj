@@ -782,7 +782,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureWeightedFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureDepthFunction.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SoilOrganicMatter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Organic.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogen.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilCropOilPalm.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilCrop.png" />
@@ -1065,7 +1065,7 @@
     </Reference>
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin\pango-sharp.dll</HintPath>
+      <HintPath>..\DeploymentSupport\Windows\Bin64\pango-sharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PdfSharp, Version=1.50.4000.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
@@ -1122,4 +1122,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+	<Exec Condition="'$(OS)' == 'Windows_NT'" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* >nul" />
+	<Exec Condition="'$(OS)' == 'Windows_NT'" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ >nul" />
+  </Target>
 </Project>
