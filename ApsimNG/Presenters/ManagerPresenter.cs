@@ -132,8 +132,8 @@ namespace UserInterface.Presenters
                 BuildScript();
             if (scriptModel != null)
             {
-                propertyPresenter.FindAllProperties(scriptModel);
-                propertyPresenter.PopulateGrid(scriptModel);
+                propertyPresenter.UpdateModel(scriptModel);
+                propertyPresenter.Refresh();
             }
         }
 

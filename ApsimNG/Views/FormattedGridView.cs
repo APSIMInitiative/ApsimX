@@ -10,6 +10,7 @@
     using System.Data;
     using APSIM.Shared.Utilities;
     using System.Collections;
+    using System.Globalization;
 
     /// <summary>Metadata about a column on the grid.</summary>
     public class GridColumnMetaData
@@ -187,40 +188,25 @@
             bool refreshGrid = false;
             foreach (var changedCell in e.ChangedCells)
             {
-                if (!Convert.IsDBNull(changedCell.Value))
-                {
-                    GridColumnMetaData column = columnMetadata[changedCell.ColumnIndex];
-                    Array array = column.Values as Array;
-                    int numValues = e.ChangedCells.Max(cell => cell.RowIndex);
-                    if (array == null)
-                    {
-                        array = Array.CreateInstance(column.ColumnDataType, numValues + 1);
-                    }
+                var column = columnMetadata[changedCell.ColIndex];
 
-                    // If we've added a new row, the column metadata will not contain an entry
-                    // for this row (the array will be too short).
-                    if (array.Length <= changedCell.RowIndex)
-                    {
-                        Array newArray = Array.CreateInstance(column.ColumnDataType, numValues + 1);
-                        array.CopyTo(newArray, 0);
-                        array = newArray;
-                    }
-                    array.SetValue(Convert.ChangeType(changedCell.Value, column.ColumnDataType), changedCell.RowIndex);
-
-                    column.Values = array;
-                    column.ValuesHaveChanged = true;
-                    if (column.AddTotalToColumnName)
-                        refreshGrid = true;
-                }
-                else
+                object newValue = ReflectionUtilities.StringToObject(column.ColumnDataType, changedCell.NewValue, CultureInfo.CurrentCulture);
+                var array = column.Values as Array;
+                if (array == null)
                 {
-                    GridColumnMetaData column = columnMetadata[changedCell.ColumnIndex];
-                    Array array = column.Values as Array;
-                    if (column.ColumnDataType == typeof(double) || column.ColumnDataType == typeof(float))
-                        array.SetValue(double.NaN, changedCell.RowIndex);
+                    var numValues = e.ChangedCells.Max(cell => cell.RowIndex);
+                    array = Array.CreateInstance(column.ColumnDataType, numValues + 1);
                     column.Values = array;
-                    column.ValuesHaveChanged = true;
                 }
+                // Update the value which will be passed back to the model.
+                array.SetValue(newValue, changedCell.RowIndex);
+
+                // Update the value shown in the grid.
+                DataSource.Rows[changedCell.RowIndex][changedCell.ColIndex] = newValue;
+
+                column.ValuesHaveChanged = true;
+                if (column.AddTotalToColumnName)
+                    refreshGrid = true;
             }
 
             if (refreshGrid)

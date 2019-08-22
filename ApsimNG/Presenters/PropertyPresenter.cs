@@ -50,12 +50,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
-        private Model model;
+        protected IModel model;
 
         /// <summary>
         /// A list of all properties found in the Model.
         /// </summary>
-        private List<IVariable> properties = new List<IVariable>();
+        protected List<IVariable> properties = new List<IVariable>();
 
         /// <summary>
         /// The category name to filter for on the Category Attribute for the properties
@@ -107,7 +107,7 @@ namespace UserInterface.Presenters
                 FormatTestGrid();
             }
 
-            grid.CellsChanged += OnCellValueChanged;
+            grid.CellsChanged += OnCellsChanged;
             grid.ButtonClick += OnFileBrowseClick;
             this.presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -131,7 +131,7 @@ namespace UserInterface.Presenters
             try
             {
                 base.Detach();
-                grid.CellsChanged -= OnCellValueChanged;
+                grid.CellsChanged -= OnCellsChanged;
                 grid.ButtonClick -= OnFileBrowseClick;
                 presenter.CommandHistory.ModelChanged -= OnModelChanged;
                 intellisense.ItemSelected -= OnIntellisenseItemSelected;
@@ -139,6 +139,7 @@ namespace UserInterface.Presenters
             }
             catch (NullReferenceException)
             {
+                // to keep Neil happy
             }
         }
 
@@ -146,7 +147,7 @@ namespace UserInterface.Presenters
         /// Populate the grid
         /// </summary>
         /// <param name="model">The model to examine for properties</param>
-        public void PopulateGrid(Model model)
+        private void PopulateGrid(IModel model)
         {
             IGridCell selectedCell = grid.GetCurrentCell;
             this.model = model;
@@ -154,14 +155,11 @@ namespace UserInterface.Presenters
             bool hasData = properties.Count > 0;
             table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
-
             FillTable(table);
             grid.DataSource = table;
             FormatGrid();
             if (selectedCell != null)
-            {
                 grid.GetCurrentCell = selectedCell;
-            }
         }
 
         /// <summary>
@@ -197,14 +195,20 @@ namespace UserInterface.Presenters
             return orderedMembers;
         }
 
+        public void Refresh()
+        {
+            properties.Clear();
+            FindAllProperties(model);
+            PopulateGrid(model);
+        }
+
         /// <summary>
         /// Find all properties from the model and fill this.properties.
         /// </summary>
         /// <param name="model">The mode object</param>
-        public void FindAllProperties(Model model)
+        protected virtual void FindAllProperties(IModel model)
         {
             this.model = model;
-            properties.Clear();
             bool filterByCategory = !((this.CategoryFilter == "") || (this.CategoryFilter == null));
             bool filterBySubcategory = !((this.SubcategoryFilter == "") || (this.SubcategoryFilter == null));
             if (this.model != null)
@@ -221,15 +225,10 @@ namespace UserInterface.Presenters
 
                     if (property != null && property.Description != null && property.Writable)
                     {
-                        // Only allow lists that are double[], int[] or string[]
+                        // Only allow lists that are double[], int[], string[] or DateTime[]
                         bool includeProperty = true;
                         if (property.DataType.GetInterface("IList") != null)
-                        {
-                            includeProperty = property.DataType == typeof(double[]) ||
-                                              property.DataType == typeof(int[]) ||
-                                              property.DataType == typeof(string[]) ||
-                                              property.DataType == typeof(DateTime[]);
-                        }
+                            includeProperty = true;
 
                         if (Attribute.IsDefined(member, typeof(SeparatorAttribute)))
                         {
@@ -352,21 +351,29 @@ namespace UserInterface.Presenters
         /// Fill the specified table with columns and rows based on this.Properties
         /// </summary>
         /// <param name="table">The table that needs to be filled</param>
-        public void FillTable(DataTable table)
+        protected virtual void FillTable(DataTable table)
         {
             foreach (IVariable property in properties)
+                AddPropertyToTable(table, property);
+        }
+
+        /// <summary>
+        /// Adds a property to the DataTable of properties.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="property"></param>
+        protected void AddPropertyToTable(DataTable table, IVariable property)
+        {
+            if (property is VariableObject)
+                table.Rows.Add(new object[] { property.Value, null });
+            else if (property.Value is IModel)
+                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
+            else
             {
-                if (property is VariableObject)
-                    table.Rows.Add(new object[] { property.Value, null });
-                else if (property.Value is IModel)
-                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
-                else
-                {
-                    string description = property.Description;
-                    if (!string.IsNullOrEmpty(property.Units))
-                        description += " (" + property.Units + ")";
-                    table.Rows.Add(new object[] { description, property.ValueWithArrayHandling });
-                }
+                string description = property.Description;
+                if (!string.IsNullOrEmpty(property.Units))
+                    description += " (" + property.Units + ")";
+                table.Rows.Add(new object[] { description, property.ValueWithArrayHandling });
             }
         }
 
@@ -700,6 +707,11 @@ namespace UserInterface.Presenters
             return result.ToArray();
         }
 
+        /// <summary>
+        /// Gets a list of all models of a given type which are in
+        /// scope of a given model.
+        /// </summary>
+        /// <param name="t">Type of models to search for.</param>
         private string[] GetModelNames(Type t)
         {
             List<IModel> models;
@@ -715,79 +727,70 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// User has changed the value of a cell.
+        /// User has changed the value of a cell. Validate the change
+        /// apply the change.
         /// </summary>
         /// <param name="sender">Sender object</param>
-        /// <param name="e">Event parameters</param>
-        private void OnCellValueChanged(object sender, GridCellsChangedArgs e)
+        /// <param name="args">Event parameters</param>
+        private void OnCellsChanged(object sender, GridCellsChangedArgs args)
         {
-            foreach (IGridCell cell in e.ChangedCells)
+            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+            foreach (GridCellChangedArgs cell in args.ChangedCells)
             {
-                try
-                {
-                    if (e.InvalidValue)
-                        throw new Exception("The value you entered was not valid for its datatype.");
-                    if (cell.RowIndex < properties.Count)
-                        SetPropertyValue(properties[cell.RowIndex], cell.Value);
-                }
-                catch (Exception ex)
-                {
-                    presenter.MainPresenter.ShowError(ex);
-                }
+                if (cell.NewValue == cell.OldValue)
+                    continue; // silently fail
+
+                // If there are multiple changed cells, each change will be
+                // individually undoable.
+                IVariable property = GetProperty(cell.RowIndex);
+                if (property == null)
+                    return;
+
+                // Parse the input string to the appropriate type.
+                object newValue = GetNewCellValue(property, cell.NewValue);
+
+                // Update the value of the model's property.
+                SetPropertyValue(property, newValue);
+
+                // Update the value shown in the grid.
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = property.ValueWithArrayHandling;
             }
         }
 
         /// <summary>
-        /// This method takes a value from the grid and formats it appropriately,
-        /// based on the data type of the property to which the value is going to
-        /// be assigned.
+        /// Gets the property in a given row.
         /// </summary>
-        /// <param name="property">Property to which the value will be assigned.</param>
-        /// <param name="value">Value which is going to be assigned to property.</param>
-        public static object FormatValueForProperty(IVariable property, object value)
+        /// <remarks>
+        /// This is needed because some presenters override this
+        /// presenter and add separator rows between properties.
+        /// </remarks>
+        /// <param name="row">Row inex.</param>
+        protected virtual IVariable GetProperty(int row)
         {
-            if (property.DataType.IsArray && value != null)
+            return properties[row];
+        }
+
+        /// <summary>
+        /// Gets the new value of the cell from a string containing the
+        /// cell's new contents.
+        /// </summary>
+        /// <param name="cell">Cell which has been changed.</param>
+        public static object GetNewCellValue(IVariable property, string newValue)
+        {
+            if (typeof(IPlant).IsAssignableFrom(property.DataType))
+                return Apsim.Find(property.Object as IModel, newValue);
+
+            if (property.Display != null && property.Display.Type == DisplayType.Model)
+                return Apsim.Get(property.Object as IModel, newValue);
+
+            try
             {
-                string[] stringValues = value.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (property.DataType == typeof(double[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(int[]))
-                {
-                    value = MathUtilities.StringsToDoubles(stringValues);
-                }
-                else if (property.DataType == typeof(string[]))
-                {
-                    value = stringValues;
-                }
-                else if (property.DataType == typeof(DateTime[]))
-                {
-                    value = stringValues.Select(d => DateTime.Parse(d, CultureInfo.InvariantCulture)).ToArray();
-                }
-                else
-                {
-                    throw new ApsimXException(property.Object as IModel, "Invalid property type: " + property.DataType.ToString());
-                }
+                return ReflectionUtilities.StringToObject(property.DataType, newValue, CultureInfo.CurrentCulture);
             }
-            else if (typeof(IPlant).IsAssignableFrom(property.DataType))
+            catch (FormatException err)
             {
-                value = Apsim.Find(property.Object as IModel, value.ToString()) as IPlant;
+                throw new Exception($"Value '{newValue}' is invalid for property '{property.Name}' - {err.Message}.");
             }
-            else if (property.DataType == typeof(DateTime))
-            {
-                value = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
-            }
-            else if (property.DataType.IsEnum)
-            {
-                value = VariableProperty.ParseEnum(property.DataType, value.ToString());
-            }
-            else if (property.Display != null &&
-                     property.Display.Type == DisplayType.Model)
-            {
-                value = Apsim.Get(property.Object as IModel, value.ToString());
-            }
-            return value;
         }
 
         /// <summary>
@@ -799,8 +802,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                value = FormatValueForProperty(property, value);
-                ChangeProperty cmd = new ChangeProperty(model, property.Name, value);
+                ChangeProperty cmd = new ChangeProperty(property.Object, property.Name, value);
                 presenter.CommandHistory.Add(cmd);
             }
             catch (Exception err)
@@ -816,32 +818,29 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             if (changedModel == model)
-            {
                 PopulateGrid(model);
-            }
         }
 
         /// <summary>
         /// Called when user clicks on a file name.
         /// </summary>
-        /// <remarks>
-        /// Does creation of the dialog belong here, or in the view?
-        /// </remarks>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnFileBrowseClick(object sender, GridCellsChangedArgs e)
+        private void OnFileBrowseClick(object sender, GridCellChangedArgs e)
         {
+            // todo - add file extension paramter to display attribute?
             IFileDialog fileChooser = new FileDialog()
             {
                 Action = FileDialog.FileActionType.Open,
                 Prompt = "Select file path",
-                InitialDirectory = e.ChangedCells[0].Value.ToString()
+                InitialDirectory = e.OldValue
             };
             string fileName = fileChooser.GetFile();
-            if (fileName != null && fileName != e.ChangedCells[0].Value.ToString())
+
+            if (!string.IsNullOrWhiteSpace(fileName) && fileName != e.OldValue)
             {
-                e.ChangedCells[0].Value = fileName;
-                OnCellValueChanged(sender, e);
+                e.NewValue = fileName;
+                OnCellsChanged(sender, new GridCellsChangedArgs(e));
                 PopulateGrid(model);
             }
         }

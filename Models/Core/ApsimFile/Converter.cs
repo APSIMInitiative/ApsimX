@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 63; } }
+        public static int LatestVersion { get { return 64; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1004,6 +1004,21 @@
                         specifications[i] = specificationString;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 64. Sets the StartDate and EndDate properties
+        /// in clock to the values previously stored in Start and End.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion64(JObject root, string fileName)
+        {
+            foreach (JObject clock in JsonUtilities.ChildrenRecursively(root, "Clock"))
+            {
+                clock["Start"] = clock["StartDate"];
+                clock["End"] = clock["EndDate"];
             }
         }
 
