@@ -1126,42 +1126,33 @@
                 chemical["$type"] = "Models.Soils.Chemical, Models";
                 chemical["Name"] = "Chemical";
 
-                // Move particle size numbers from chemical to physical and make sure layers are mapped.
-                var physicalThickness = physical["Thickness"].Values<double>().ToArray();
-                var chemicalThickness = chemical["Thickness"].Values<double>().ToArray();
-
-                if (chemical["ParticleSizeSand"] != null && chemical["ParticleSizeSand"].HasValues)
+                if (physical != null)
                 {
-                    var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
-                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
-                    physical["ParticleSizeSand"] = new JArray(mappedValues);
-                }
+                    // Move particle size numbers from chemical to physical and make sure layers are mapped.
+                    var physicalThickness = physical["Thickness"].Values<double>().ToArray();
+                    var chemicalThickness = chemical["Thickness"].Values<double>().ToArray();
 
-                if (chemical["ParticleSizeSilt"] != null && chemical["ParticleSizeSilt"].HasValues)
-                {
-                    var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
-                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
-                    physical["ParticleSizeSilt"] = new JArray(mappedValues);
-                }
-
-                if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
-                {
-                    var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
-                    var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
-                    physical["ParticleSizeClay"] = new JArray(mappedValues);
-                }
-
-                // convert ph units
-                var phUnits = physical["PHUnits"];
-                if (phUnits != null)
-                {
-                    string phUnitsString = phUnits.ToString();
-                    if (phUnitsString == "1")
+                    if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
                     {
-                        // pH in water = (pH in CaCl X 1.1045) - 0.1375
-                        var ph = physical["PH"].Values<double>().ToArray();
-                        ph = MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(ph, 1.1045), 0.1375);
-                        chemical["PH"] = new JArray(ph);
+                        var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
+                        if (values.Length < physicalThickness.Length)
+                            Array.Resize(ref values, chemicalThickness.Length);
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        physical["ParticleSizeClay"] = new JArray(mappedValues);
+                    }
+
+                    // convert ph units
+                    var phUnits = physical["PHUnits"];
+                    if (phUnits != null)
+                    {
+                        string phUnitsString = phUnits.ToString();
+                        if (phUnitsString == "1")
+                        {
+                            // pH in water = (pH in CaCl X 1.1045) - 0.1375
+                            var ph = physical["PH"].Values<double>().ToArray();
+                            ph = MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(ph, 1.1045), 0.1375);
+                            chemical["PH"] = new JArray(ph);
+                        }
                     }
                 }
             }
