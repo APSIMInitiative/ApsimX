@@ -3,6 +3,7 @@
     using Commands;
     using EventArguments;
     using Interfaces;
+    using Models.Core;
     using Models.Interfaces;
     using System;
     using System.Collections.Generic;

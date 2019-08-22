@@ -72,6 +72,12 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
 
+            if(this.Parent.GetType() != typeof(RuminantActivityFeed))
+            {
+                html += "<div class=\"warningbanner\">This Ruminant Feed Group must be placed beneath a Ruminant Activity Feed component</div>";
+                return html;
+            }
+
             RuminantFeedActivityTypes ft = (this.Parent as RuminantActivityFeed).FeedStyle;
             html += "\n<div class=\"activityentry\">";
             switch (ft)
@@ -123,17 +129,15 @@ namespace Models.CLEM.Groupings
             switch (ft)
             {
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    html += "combined is fed to all individuals";
+                    html += "combined is fed to all individuals that match the following conditions:";
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    html += "is fed to each individual";
+                    html += "is fed to each individual that matches the following conditions:";
                     break;
                 default:
-                    html += "is fed to the individuals";
+                    html += "is fed to the individuals that match the following conditions:";
                     break;
             }
-            html += " that match the following conditions:";
-
             html += "</div>";
             if (ft == RuminantFeedActivityTypes.SpecifiedDailyAmount)
             {

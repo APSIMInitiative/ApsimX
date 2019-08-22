@@ -1,13 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Scope.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Linq;
 
     /// <summary>
     /// Implements APSIMs scoping rules.
@@ -41,14 +37,14 @@ namespace Models.Core
             // Return all models in zone and all direct children of zones parent.
             modelsInScope = new List<IModel>();
             modelsInScope.Add(scopedParent);
-            modelsInScope.AddRange(Apsim.ChildrenRecursively(scopedParent));
-            while (scopedParent.Parent != null)
+            modelsInScope.AddRange(Apsim.ChildrenRecursively(scopedParent).Where(m => m.Enabled));
+            while (scopedParent.Parent != null && scopedParent.Enabled)
             {
                 scopedParent = scopedParent.Parent;
                 modelsInScope.Add(scopedParent);
                 foreach (IModel child in scopedParent.Children)
                 {
-                    if (!modelsInScope.Contains(child))
+                    if (!modelsInScope.Contains(child) && child.Enabled)
                     {
                         modelsInScope.Add(child);
 
@@ -56,7 +52,7 @@ namespace Models.Core
                         // This ensures that a soil's water node will be in scope of
                         // a manager inside a folder inside a zone.
                         if (!IsScopedModel(child))
-                            modelsInScope.AddRange(Apsim.ChildrenRecursively(child));
+                            modelsInScope.AddRange(Apsim.ChildrenRecursively(child).Where(m=>m.Enabled));
                     }
                 }
             }
@@ -78,6 +74,8 @@ namespace Models.Core
         {
             do
             {
+                if (!relativeTo.Enabled)
+                    return null;
                 if (IsScopedModel(relativeTo))
                     return relativeTo;
                 if (relativeTo.Parent == null)
@@ -87,6 +85,16 @@ namespace Models.Core
             while (relativeTo != null);
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns true iff model x is in scope of model y.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public bool InScopeOf(IModel x, IModel y)
+        {
+            return FindAll(y).Contains(x);
         }
 
         /// <summary>

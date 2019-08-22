@@ -4,6 +4,7 @@ using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -154,7 +155,22 @@ namespace UserInterface.Presenters
                         {
                             parts.RemoveAt(0);
                         }
-                        msgStr = string.Join("\n", parts.ToArray());
+                        msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
+
+                        // remove starter text
+                        string[] starters = new string[]
+                        {
+                            "System.Exception: ",
+                            "Models.Core.ApsimXException: "
+                        };
+
+                        foreach (string start in starters)
+                        {
+                            if (msgStr.Contains(start))
+                            {
+                                msgStr = msgStr.Substring(start.Length);
+                            }
+                        }
 
                         string type = "Message";
                         string title = "Message";

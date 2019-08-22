@@ -14,6 +14,9 @@ namespace UserInterface.Views
     using OxyPlot.Axes;
     using OxyPlot.GtkSharp;
     using Interfaces;
+    using System.Globalization;
+    using System.Drawing;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -155,6 +158,7 @@ namespace UserInterface.Views
                 List<DateTime> dates = new List<DateTime>();
                 foreach (DataRow row in TemporalDataGrid.DataSource.Rows)
                     if (!string.IsNullOrEmpty(row[0] as string))
+                        // Use the current culture
                         dates.Add(DateTime.Parse((string)row[0]));
                 return dates.ToArray();
             }
@@ -268,7 +272,6 @@ namespace UserInterface.Views
                 belowGroundGraph.Model.Axes.Clear();
                 belowGroundGraph.Model.Series.Clear();
                 aboveGroundGraph.Model.Title = "Above Ground";
-                aboveGroundGraph.Model.PlotAreaBorderColor = OxyColors.White;
                 aboveGroundGraph.Model.LegendBorder = OxyColors.Transparent;
                 LinearAxis agxAxis = new LinearAxis();
                 agxAxis.Title = "Multiple of Tree Height";
@@ -304,6 +307,10 @@ namespace UserInterface.Views
                 seriesShade.Title = "Shade";
                 seriesShade.ItemsSource = pointsShade;
                 aboveGroundGraph.Model.Series.Add(seriesShade);
+                Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                SetForegroundColour(aboveGroundGraph, foregroundColour);
+                SetBackgroundColour(aboveGroundGraph, backgroundColour);
             }
             //don't draw the series if the format is wrong
             catch (FormatException)
@@ -315,7 +322,6 @@ namespace UserInterface.Views
             try
             {
                 belowGroundGraph.Model.Title = "Below Ground";
-                belowGroundGraph.Model.PlotAreaBorderColor = OxyColors.White;
                 belowGroundGraph.Model.LegendBorder = OxyColors.Transparent;
                 LinearAxis bgxAxis = new LinearAxis();
                 LinearAxis bgyAxis = new LinearAxis();
@@ -357,6 +363,10 @@ namespace UserInterface.Views
                     series.ItemsSource = points;
                     belowGroundGraph.Model.Series.Add(series);
                 }
+                Color foregroundColour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                Color backgroundColour = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                SetForegroundColour(belowGroundGraph, foregroundColour);
+                SetBackgroundColour(belowGroundGraph, backgroundColour);
             }
             // Don't draw the series if the format is wrong.
             catch (FormatException)
@@ -368,6 +378,33 @@ namespace UserInterface.Views
                 aboveGroundGraph.InvalidatePlot(true);
                 belowGroundGraph.InvalidatePlot(true);
             }
+        }
+
+        private void SetBackgroundColour(PlotView graph, Color colour)
+        {
+            OxyColor backgroundColour = Utility.Colour.ToOxy(colour);
+        }
+
+        private void SetForegroundColour(PlotView graph, Color colour)
+        {
+            OxyColor foregroundColour = Utility.Colour.ToOxy(colour);
+            foreach (Axis oxyAxis in graph.Model.Axes)
+            {
+                oxyAxis.AxislineColor = foregroundColour;
+                oxyAxis.ExtraGridlineColor = foregroundColour;
+                oxyAxis.MajorGridlineColor = foregroundColour;
+                oxyAxis.MinorGridlineColor = foregroundColour;
+                oxyAxis.TicklineColor = foregroundColour;
+                oxyAxis.MinorTicklineColor = foregroundColour;
+                oxyAxis.TitleColor = foregroundColour;
+                oxyAxis.TextColor = foregroundColour;
+
+            }
+            graph.Model.TextColor = foregroundColour;
+            graph.Model.LegendTextColor = foregroundColour;
+            graph.Model.LegendTitleColor = foregroundColour;
+            graph.Model.SubtitleColor = foregroundColour;
+            graph.Model.PlotAreaBorderColor = foregroundColour;
         }
 
         /// <summary>

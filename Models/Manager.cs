@@ -125,7 +125,7 @@
             if (Children.Count == 1)
                 GetParametersFromScriptModel(Children[0]);
 
-            if (isCreated && Code != null && (Code != CompiledCode || Children.Count == 0))
+            if (Enabled && isCreated && Code != null && (Code != CompiledCode || Children.Count == 0))
             {
                 try
                 {
@@ -222,7 +222,7 @@
                         if (property != null)
                         {
                             object value;
-                            if (parameter.Value.StartsWith("."))
+                            if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
                                 value = Apsim.Get(this, parameter.Value);
                             else if (property.PropertyType == typeof(IPlant))
                                 value = Apsim.Find(this, parameter.Value);
@@ -263,7 +263,7 @@
                     if (value == null)
                         value = "";
                     else if (value is IModel)
-                        value = Apsim.FullPath(value as IModel);
+                        value = "[" + (value as IModel).Name + "]";
                     Parameters.Add(new KeyValuePair<string, string>
                                         (property.Name, 
                                          ReflectionUtilities.ObjectToString(value)));

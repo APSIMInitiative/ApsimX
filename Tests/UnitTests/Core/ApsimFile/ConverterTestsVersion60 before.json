@@ -1,0 +1,117 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 59,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "Simulation",
+      "Children": [
+        {
+          "$type": "Models.Soils.Soil, Models",
+          "Weirdo": null,
+          "RecordNumber": 0,
+          "ASCOrder": "Vertosol",
+          "ASCSubOrder": "Black",
+          "SoilType": "Clay",
+          "LocalName": null,
+          "Site": "Norwin",
+          "NearestTown": "Norwin",
+          "Region": "Darling Downs and Granite Belt",
+          "State": "Queensland",
+          "Country": "Australia",
+          "NaturalVegetation": "Qld. Bluegrass, possible Qld. Blue gum",
+          "ApsoilNumber": "900",
+          "Latitude": -27.581836,
+          "Longitude": 151.320206,
+          "LocationAccuracy": " +/- 20m",
+          "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
+          "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
+          "Name": "Soil",
+          "Children": [
+            {
+              "$type": "Models.Soils.Water, Models",
+              "Thickness": [
+                150.0,
+                150.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0
+              ],
+              "BD": [
+                1.01056473311131,
+                1.07145631083388,
+                1.09393858528057,
+                1.15861335018721,
+                1.17301160318016,
+                1.16287303586874,
+                1.18749547755906
+              ]
+            },
+            {
+              "$type": "Models.Soils.Analysis, Models",
+              "Thickness": [
+                100.0,
+                100.0,
+                300.0
+              ]
+            },
+            {
+              "$type": "Models.Soils.Sample, Models",
+              "Thickness": [
+                200.0,
+                200.0
+              ],
+              "SW": [
+                0.5,
+                0.3
+              ],
+              "NO3Units": 1,
+              "NH4Units": 2,
+              "SWUnits": 0,
+              "NO3N": {
+                "$type": "Models.Soils.NitrogenValue, Models",
+                "Values": [
+                  16.0,
+                  10.0
+                ],
+                "StoredAsPPM": false
+              },
+              "NH4N": {
+                "$type": "Models.Soils.NitrogenValue, Models",
+                "Values": [
+                  5.1,
+                  2.1
+                ],
+                "StoredAsPPM": false
+              }
+            },
+            {
+              "$type": "Models.Soils.Sample, Models",
+              "Thickness": [
+                200.0,
+                200.0
+              ],
+              "NO3Units": 1,
+              "NH4Units": 2,
+              "SWUnits": 0,
+              "NO3N": {
+                "$type": "Models.Soils.NitrogenValue, Models",
+                "Values": [
+                  "NaN",
+                  "NaN"
+                ],
+                "StoredAsPPM": false
+              }
+            }
+
+          ]
+        }
+      ]
+    }
+  ]
+}

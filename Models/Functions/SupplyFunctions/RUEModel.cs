@@ -92,7 +92,7 @@ namespace Models.Functions.SupplyFunctions
             double radiationInterception = RadnInt.Value(arrayIndex);
             if (Double.IsNaN(radiationInterception))
                 throw new Exception("NaN Radiation interception value supplied to RUE model");
-            if (radiationInterception < 0)
+            if (radiationInterception < -0.000000000001)
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
             return radiationInterception * RueAct;
         }

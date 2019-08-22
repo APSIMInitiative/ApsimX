@@ -62,10 +62,7 @@ namespace Models.PMF
 
         [Link]
         private SorghumLeaf leaf = null;
-
-        [ScopedLinkByName]
-        private GenericOrgan stem = null;
-
+        
         #endregion
 
         #region Main outputs
@@ -78,6 +75,10 @@ namespace Models.PMF
         [XmlIgnore]
         public double[] Diffusion { get; private set; }
 
+        /// <summary>
+        /// Today's dltTT.
+        /// </summary>
+        public double DltTT { get; set; }
 
         /// <summary>Gets the water Supply.</summary>
         /// <value>The water supply.</value>
@@ -164,19 +165,20 @@ namespace Models.PMF
                 myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
                 myZone.Supply = new double[myZone.soil.Thickness.Length];
 
-                double[] kl = myZone.soil.KL(Plant.Name);
+                var soilCrop = Soil.Crop(Plant.Name);
+                double[] kl = soilCrop.KL;
 
                 if (root.Depth != myZone.Depth)
                 {
                     myZone.Depth += 0;
                 }
-                var currentLayer = Soils.Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
-                var currentLayerProportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
+                var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
+                var currentLayerProportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
 
-                    myZone.AvailableSW[layer] = myZone.soil.Water[layer] - myZone.soil.LL15mm[layer];
+                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - myZone.soil.LL15mm[layer], 0);
                     myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
 
                     if (layer == currentLayer)
@@ -213,7 +215,7 @@ namespace Models.PMF
         public double PhotoStress { get; set; }
 
         /// <summary>
-        /// Calculate the potential N uptake for today. Should return null if crop is not in the ground.
+        /// Calculate the potential N uptake for today. Should return null if crop is not in the ground (this is not true for old sorghum).
         /// </summary>
         public override List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
@@ -229,12 +231,8 @@ namespace Models.PMF
                 var leafIndex = 2;
                 var stemIndex = 4;
 
-                var nGreen = stem.Live.N;
-                var dmGreen = stem.Live.Wt;
-                var dltDM = stem.potentialDMAllocation.Structural;
-
                 var rootDemand = N.StructuralDemand[rootIndex] + N.MetabolicDemand[rootIndex];
-                var stemDemand = N.StructuralDemand[stemIndex] + N.MetabolicDemand[stemIndex];
+                var stemDemand = /*N.StructuralDemand[stemIndex] + */N.MetabolicDemand[stemIndex];
                 var leafDemand = N.MetabolicDemand[leafIndex];
                 var grainDemand = N.StructuralDemand[grainIndex] + N.MetabolicDemand[grainIndex];
                 //have to correct the leaf demand calculation
@@ -244,11 +242,16 @@ namespace Models.PMF
                 //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 //old sorghum uses g/m^2 - need to convert after it is used to calculate actual diffusion
                 // leaf adjustment is not needed here because it is an adjustment for structural demand - we only look at metabolic here.
-                var nDemand = Math.Max(0, N.TotalMetabolicDemand - grainDemand); // to replicate calcNDemand in old sorghum 
+
+                // dh - In old sorghum, root only has one type of NDemand - it doesn't have a structural/metabolic division.
+                // In new apsim, root only uses structural, metabolic is always 0. Therefore, we have to include root's structural
+                // NDemand in this calculation.
+                var nDemand = Math.Max(0, N.TotalMetabolicDemand + N.StructuralDemand[rootIndex] - grainDemand); // to replicate calcNDemand in old sorghum 
                                 
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
+
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
                     ZoneWaterAndN UptakeDemands = new ZoneWaterAndN(zone.Zone);
@@ -266,7 +269,7 @@ namespace Models.PMF
                     
                     //at present these 2arrays arenot being used within the CalculateNitrogenSupply function
                     //sorghum uses Diffusion & Massflow variables currently
-                    double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha
+                    double[] organNO3Supply = new double[zone.NO3N.Length]; //kg/ha - dltNo3 in old apsim
                     double[] organNH4Supply = new double[zone.NH4N.Length];
 
                     ZoneState myZone = root.Zones.Find(z => z.Name == zone.Zone.Name);
@@ -289,7 +292,11 @@ namespace Models.PMF
                         var actualMassFlow = dltt > 0 ? totalMassFlow : 0.0;
                         var maxDiffusionConst = root.MaxDiffusion.Value();
 
-                        if (totalMassFlow < nDemand && dltt > 0.0)
+                        double ttElapsed = (Apsim.Find(this, "TTFMFromFlowering") as Functions.IFunction).Value();
+                        if (ttElapsed > 570)
+                            totalMassFlow = 0;
+
+                        if (totalMassFlow < nDemand && ttElapsed < 570) // fixme && ttElapsed < nUptakeCease
                         {
                             actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);
                             actualDiffusion = MathUtilities.Divide(actualDiffusion, maxDiffusionConst, 0.0);
@@ -301,6 +308,11 @@ namespace Models.PMF
                             var maxUptake = Math.Max(0, maxUptakeRateFrac * dltt - actualMassFlow);
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
+
+                        // Update reporting variables. Yes this will be called four times each day
+                        // and so we only record the last value each time. It doesn't make a huge difference.
+                        NDiffusionSupply = actualDiffusion;
+                        NMassFlowSupply = actualMassFlow;
 
                         //adjust diffusion values proportionally
                         //make sure organNO3Supply is in kg/ha
@@ -347,7 +359,7 @@ namespace Models.PMF
             myZone.MassFlow = new double[myZone.soil.Thickness.Length];
             myZone.Diffusion = new double[myZone.soil.Thickness.Length];
 
-            int currentLayer = Soils.Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
+            int currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
             for (int layer = 0; layer <= currentLayer; layer++)
             {
                 var swdep = myZone.StartWater[layer]; //mm
@@ -359,17 +371,17 @@ namespace Models.PMF
                 myZone.MassFlow[layer] = no3massFlow;
 
                 //diffusion
-                var swAvailFrac = myZone.AvailableSW[layer] / myZone.PotentialAvailableSW[layer];
+                var swAvailFrac = MathUtilities.Divide(myZone.AvailableSW[layer], myZone.PotentialAvailableSW[layer], 0);
                 //old sorghum stores N03 in g/ms not kg/ha
                 var no3Diffusion = MathUtilities.Bound(swAvailFrac, 0.0, 1.0) * (zone.NO3N[layer] * kgha2gsm);
 
+                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
+
                 if (layer == currentLayer)
                 {
-                    var proportion = Soils.Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
-                    no3Diffusion *= proportion;
+                    var proportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
+                    myZone.Diffusion[layer] *= proportion;
                 }
-
-                myZone.Diffusion[layer] = Math.Min(no3Diffusion, zone.NO3N[layer] * kgha2gsm);
 
                 //NH4Supply[layer] = no3massFlow;
                 //onyl 2 fields passed in for returning data. 
@@ -388,8 +400,8 @@ namespace Models.PMF
                 // Calculate the total no3 and nh4 across all zones.
                 var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
-                NMassFlowSupply = 0.0; //rewporting variables
-                NDiffusionSupply = 0.0;
+                //NMassFlowSupply = 0.0; //rewporting variables
+                //NDiffusionSupply = 0.0;
                 var supply = 0.0;
                 foreach (ZoneWaterAndN Z in zones)
                 {
@@ -419,6 +431,12 @@ namespace Models.PMF
 
         #endregion
 
+        [EventSubscribe("DoPhenology")]
+        private void OnDoPhenology(object sender, EventArgs e)
+        {
+            DltTT = (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()");
+        }
+
         #region Plant interface methods
 
         /// <summary>Does the retranslocation.</summary>
@@ -432,7 +450,7 @@ namespace Models.PMF
                 var nArbitrator = arbitrator as SorghumArbitratorN;
                 if (nArbitrator != null)
                 {
-                    nArbitrator.DoRetranslocation(Organs, BAT);
+                    nArbitrator.DoRetranslocation(Organs, BAT, DM);
                 }
                 else
                 {
@@ -440,13 +458,22 @@ namespace Models.PMF
                     if (MathUtilities.IsPositive(BAT.TotalRetranslocationSupply))
                     {
                         arbitrator.DoAllocation(Organs, BAT.TotalRetranslocationSupply, ref BiomassRetranslocated, BAT);
-                        // Then calculate how much DM (and associated biomass) is retranslocated from each supplying organ based on relative retranslocation supply
-                        for (int i = 0; i < Organs.Length; i++)
-                            if (MathUtilities.IsPositive(BAT.RetranslocationSupply[i]))
-                            {
-                                double RelativeSupply = BAT.RetranslocationSupply[i] / BAT.TotalRetranslocationSupply;
-                                BAT.Retranslocation[i] += BiomassRetranslocated * RelativeSupply;
-                            }
+
+                        int leafIndex = 2;
+                        int stemIndex = 4;
+
+                        double grainDifferential = BiomassRetranslocated;
+
+                        // Retranslocate from stem.
+                        double stemWtAvail = BAT.RetranslocationSupply[stemIndex];
+                        double stemRetrans = Math.Min(grainDifferential, stemWtAvail);
+                        BAT.Retranslocation[stemIndex] += stemRetrans;
+                        grainDifferential -= stemRetrans;
+
+                        double leafWtAvail = BAT.RetranslocationSupply[leafIndex];
+                        double leafRetrans = Math.Min(grainDifferential, leafWtAvail);
+                        BAT.Retranslocation[leafIndex] += Math.Min(grainDifferential, leafWtAvail);
+                        grainDifferential -= leafRetrans;
                     }
                 }
             }
