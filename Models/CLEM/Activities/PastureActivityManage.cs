@@ -486,7 +486,12 @@ namespace Models.CLEM.Activities
         {
             if (Resources.RuminantHerd() != null)
             {
-                return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
+                string paddock = FeedTypeName;
+                if(paddock.Contains("."))
+                {
+                    paddock = paddock.Substring(paddock.IndexOf(".")+1);
+                }
+                return Resources.RuminantHerd().Herd.Where(a => a.Location == paddock).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
             }
             else
             {
@@ -513,7 +518,7 @@ namespace Models.CLEM.Activities
 
                 // Calculate average monthly stocking rate
                 // Check number of months to use
-                int monthdiff = ((ZoneCLEM.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + ZoneCLEM.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month;
+                int monthdiff = ((ZoneCLEM.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + ZoneCLEM.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month+1;
                 if (monthdiff >= ZoneCLEM.EcologicalIndicatorsCalculationInterval)
                 {
                     monthdiff = ZoneCLEM.EcologicalIndicatorsCalculationInterval;

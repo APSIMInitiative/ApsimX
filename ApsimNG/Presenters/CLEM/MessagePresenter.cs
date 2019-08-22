@@ -49,7 +49,7 @@ namespace UserInterface.Presenters
 
         private string CreateHTML()
         {
-            int maxErrors = 50;
+            int maxErrors = 100;
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
                 "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
