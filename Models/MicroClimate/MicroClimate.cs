@@ -313,6 +313,7 @@ namespace Models
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
+            zoneMicroClimates.Clear();
             foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
                 CreateZoneMicroClimate(newZone);
             if (zoneMicroClimates.Count == 0)
