@@ -987,8 +987,10 @@
             SurfOM[SOMindex].CanopyStanding.LAITotal = areaStanding;
             SurfOM[SOMindex].CanopyLying.CoverTotal = 1 - Math.Exp(-lyingExtinctionCoeff * areaLying);
             SurfOM[SOMindex].CanopyStanding.CoverTotal = 1 - Math.Exp(-standingExtinctCoeff * areaStanding);
-            SurfOM[SOMindex].CanopyLying.Height = amountLying * 0.003; //Assuming each tone of lying biomass gives 2cm of height
+            SurfOM[SOMindex].CanopyLying.Height = 50; //Assuming lying layers are 5 cm deep
             SurfOM[SOMindex].CanopyStanding.Height = 700; //Fixme this should come from the crops height
+            SurfOM[SOMindex].CanopyLying.Depth = SurfOM[SOMindex].CanopyLying.Height;
+            SurfOM[SOMindex].CanopyStanding.Depth = SurfOM[SOMindex].CanopyStanding.Height;
 
             double F_Cover = AddCover(1.0 - (double)Math.Exp(-areaLying), 1.0 - (double)Math.Exp(-(standingExtinctCoeff) * areaStanding));
             return MathUtilities.Bound(F_Cover, 0.0, 1.0);

@@ -112,11 +112,11 @@
             Gsmax = 0;
             R50 = 0;
             LAI = 0;
-            LAITotal = 0;
+            //LAITotal = 0;
             CoverGreen = 0;
-            CoverTotal = 0;
-            Height = 0;
-            Depth = 0;
+            //CoverTotal = 0;
+            //Height = 0;
+            //Depth = 0;
             Width = 0;
             PotentialEP = 0;
             WaterDemand = 0;
