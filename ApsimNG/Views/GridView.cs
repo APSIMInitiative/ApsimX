@@ -1094,105 +1094,25 @@
         {
             try
             {
-                string keyName = Gdk.Keyval.Name(args.Event.KeyValue);
-                Gdk.Key key = args.Event.Key;
                 IGridCell cell = GetCurrentCell;
                 if (cell == null)
                     return;
-                int rowIdx = cell.RowIndex;
-                int colIdx = cell.ColumnIndex;
 
-                if (keyName == "ISO_Left_Tab")
-                    keyName = "Tab";
-                bool shifted = (args.Event.State & Gdk.ModifierType.ShiftMask) != 0;
-                if (keyName == "Return" || keyName == "Tab" || IsArrowKey(key))
+                string keyName = GetKeyName(args.Event);
+                if (keyName == "Return" || keyName == "Tab" || IsArrowKey(args.Event.Key))
                 {
-                    if (userEditingCell && (key == Gdk.Key.Left || key == Gdk.Key.Right))
-                        return;
-                    int nextRow = rowIdx;
-                    int numCols = DataSource != null ? DataSource.Columns.Count : 0;
-                    int nextCol = colIdx;
-                    if (shifted || key == Gdk.Key.Left || key == Gdk.Key.Up)
-                    {
-                        // Move backwards
-                        do
-                        {
-                            if (keyName == "Tab" || key == Gdk.Key.Left)
-                            {
-                                // Move horizontally
-                                if (--nextCol < 0)
-                                {
-                                    if (--nextRow < 0)
-                                        nextRow = RowCount - 1;
-                                    nextCol = numCols - 1;
-                                }
-                            }
-                            else if (keyName == "Return" || key == Gdk.Key.Up)
-                            {
-                                // Move vertically
-                                if (--nextRow < 0)
-                                {
-                                    if (--nextCol < 0)
-                                        nextCol = numCols - 1;
-                                    nextRow = RowCount - 1;
-                                }
-                            }
-                        }
-                        while (GetColumn(nextCol).ReadOnly || IsSeparator(nextRow));
-                    }
-                    else
-                    {
-                        do
-                        {
-                            if (keyName == "Tab" || key == Gdk.Key.Right)
-                            {
-                                // Move horizontally
-                                if (++nextCol >= numCols)
-                                {
-                                    if (++nextRow >= RowCount)
-                                        nextRow = 0;
-                                    nextCol = 0;
-                                }
-                            }
-                            else if (keyName == "Return" || key == Gdk.Key.Down)
-                            {
-                                // Move vertically
-                                if (++nextRow >= RowCount)
-                                {
-                                    if (++nextCol >= numCols)
-                                        nextCol = 0;
-                                    nextRow = 0;
-                                }
-                            }
-                        }
-                        while (GetColumn(nextCol).ReadOnly || IsSeparator(nextRow));
-                    }
-
-                    EndEdit();
-                    while (GLib.MainContext.Iteration())
-                    {
-                    }
-                    if (nextRow != rowIdx || nextCol != colIdx)
-                    {
-                        Grid.SetCursor(new TreePath(new int[1] { nextRow }), Grid.GetColumn(nextCol), userEditingCell);
-                        selectedCellRowIndex = nextRow;
-                        selectedCellColumnIndex = nextCol;
-                        selectionRowMax = -1;
-                        selectionColMax = -1;
-                    }
-                    else
-                        Grid.SetCursor(new TreePath(new int[1] { nextRow }), Grid.GetColumn(nextCol), false);
-
+                    HandleNavigation(args.Event);
                     while (GLib.MainContext.Iteration()) ;
+                    Grid.QueueDraw();
                     args.RetVal = true;
                 }
-                else if (!userEditingCell && !GetColumn(colIdx).ReadOnly && !ReadOnly && IsPrintableChar(args.Event.Key))
+                else if (!userEditingCell && !GetColumn(cell.ColumnIndex).ReadOnly && !ReadOnly && IsPrintableChar(args.Event.Key))
                 {
                     // Initiate cell editing when user starts typing.
-                    Grid.SetCursor(new TreePath(new int[1] { rowIdx }), Grid.GetColumn(colIdx), true);
-                    if (new GridCell(this, colIdx, rowIdx).EditorType == EditorTypeEnum.TextBox)
+                    SelectCell(cell.RowIndex, cell.ColumnIndex, true);
+                    if (cell.EditorType == EditorTypeEnum.TextBox)
                     {
-                        Gdk.EventHelper.Put(args.Event);
+                        Gdk.EventHelper.Put(args.Event); // ?
                         userEditingCell = true;
                     }
                     args.RetVal = true;
@@ -1202,7 +1122,7 @@
                     if (ContextItemsNeeded == null)
                         return;
 
-                    NeedContextItemsArgs e = new NeedContextItemsArgs
+                    NeedContextItemsArgs e = new NeedContextItemsArgs()
                     {
                         Coordinates = GetAbsoluteCellPosition(GetCurrentCell.ColumnIndex, GetCurrentCell.RowIndex + 1)
                     };
@@ -1239,34 +1159,6 @@
                     // Stop the Gtk signal from propagating any further.
                     args.RetVal = true;
                 }
-                else if (shifted)
-                {
-                    bool isArrowKey = args.Event.Key == Gdk.Key.Up || args.Event.Key == Gdk.Key.Down || args.Event.Key == Gdk.Key.Left || args.Event.Key == Gdk.Key.Right;
-                    if (isArrowKey)
-                    {
-                        selectionRowMax = selectionRowMax < 0 ? selectedCellRowIndex : selectionRowMax;
-                        selectionColMax = selectionColMax < 0 ? selectedCellColumnIndex : selectionColMax;
-                        args.RetVal = true;
-                    }
-                    if (args.Event.Key == Gdk.Key.Up)
-                    {
-                        selectionRowMax -= 1;
-                    }
-                    else if (args.Event.Key == Gdk.Key.Down)
-                    {
-                        selectionRowMax += 1;
-                    }
-                    else if (args.Event.Key == Gdk.Key.Left)
-                    {
-                        selectionColMax -= 1;
-                    }
-                    else if (args.Event.Key == Gdk.Key.Right)
-                    {
-                        selectionColMax += 1;
-                    }
-                    if (isArrowKey)
-                        Grid.QueueDraw();
-                }
                 else if (args.Event.Key == Gdk.Key.Delete)
                 {
                     if (DeleteCells == null)
@@ -1277,6 +1169,81 @@
             {
                 ShowError(err);
             }
+        }
+
+        private string GetKeyName(Gdk.EventKey eventKey)
+        {
+            string keyName = Gdk.Keyval.Name(eventKey.KeyValue);
+            if (keyName == "ISO_Left_Tab")
+                keyName = "Tab";
+
+            return keyName;
+        }
+
+        /// <summary>
+        /// Handles navigation in the grid.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="keyValue"></param>
+        private void HandleNavigation(Gdk.EventKey eventKey)
+        {
+            Gdk.Key key = eventKey.Key;
+
+            string keyName = GetKeyName(eventKey);
+            bool shifted = (eventKey.State & Gdk.ModifierType.ShiftMask) != 0;
+
+            // If user is editing the cell and they hit the left/right arrow keys,
+            // they are trying to navigate the cursor in the textbox so don't
+            // select another cell.
+            if (userEditingCell && (key == Gdk.Key.Left || key == Gdk.Key.Right))
+                return;
+
+            // If key is not return, tab or arrow key, then do nothing.
+            if (!(keyName == "Return" || keyName == "Tab" || IsArrowKey(key)))
+                return;
+
+            int nextRow = GetCurrentCell.RowIndex;
+            int nextCol = GetCurrentCell.ColumnIndex;
+
+            int numCols = DataSource != null ? DataSource.Columns.Count : 0;
+            int numRows = DataSource != null ? DataSource.Rows.Count : 0;
+
+            // Figure out which direction we're moving in.
+            bool moveLeft = key == Gdk.Key.Left || (keyName == "Tab" && shifted);
+            bool moveUp = key == Gdk.Key.Up || (keyName == "Return" && shifted);
+            bool moveRight = key == Gdk.Key.Right || (keyName == "Tab" && !shifted);
+            bool moveDown = key == Gdk.Key.Down || (keyName == "Return" && !shifted);
+
+            // If moving vertically, keep moving until we reach
+            // a row which is not a separator row.
+            if (moveLeft && nextCol > 0)
+                nextCol--; // Move left
+            else if (moveRight && nextCol < numCols - 1)
+                nextCol++; // Move right
+            else if (moveUp && nextRow > 0)
+                while (nextRow > 0 && IsSeparator(--nextRow)) ; // Move up
+            else if (moveDown && nextRow < numRows - 1)
+                while (nextRow < numRows - 1 && IsSeparator(++nextRow)) ; // Move down
+
+            // Cancel any ongoing editing operation before moving cells.
+            EndEdit();
+
+            // Wait for gtk to process all events. This will ensure
+            // we're no longer editing any cells.
+            while (GLib.MainContext.Iteration()) ;
+
+            // Select multiple cells if shift + arrow key.
+            if (shifted && IsArrowKey(key))
+            {
+                // If only one cell is currently selected, selectionRowMax will be -1,
+                // in which case it should be set to the current cell
+                // (before navigation)'s row index. Same goes for column.
+                int row = selectionRowMax >= 0 ? selectionRowMax : GetCurrentCell.RowIndex;
+                int column = selectionColMax >= 0 ? selectionColMax : GetCurrentCell.ColumnIndex;
+                SelectCellsBetween(nextRow, nextCol, row, column);
+            }
+            else
+                SelectCell(nextRow, nextCol, userEditingCell);
         }
 
         /// <summary>
@@ -1297,8 +1264,7 @@
         private bool IsPrintableChar(Gdk.Key chr)
         {
             string keyName = char.ConvertFromUtf32((int)Gdk.Keyval.ToUnicode((uint)chr));
-            char c;
-            return char.TryParse(keyName, out c) && !char.IsControl(c);
+            return char.TryParse(keyName, out char c) && !char.IsControl(c);
         }
         
         /// <summary>
@@ -2309,6 +2275,41 @@
             catch (Exception err)
             {
                 ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Selects a given cell if it exists.
+        /// </summary>
+        /// <param name="row">(0-based) Row index of the cell.</param>
+        /// <param name="column">(0-based) column index of the cell.</param>
+        private void SelectCell(int row, int column, bool startEdit)
+        {
+            Grid.SetCursor(new TreePath(new int[1] { row }), Grid.GetColumn(column), startEdit);
+
+            selectedCellRowIndex = row;
+            selectedCellColumnIndex = column;
+
+            selectionRowMax = -1;
+            selectionColMax = -1;
+        }
+
+        /// <summary>
+        /// Selects a rectangle of cells between a pair of row/column
+        /// indices.
+        /// </summary>
+        /// <param name="startRow">Row index of the top-left cell in the rectangle.</param>
+        /// <param name="startCol">Column index of the top-left cell in the rectangle.</param>
+        /// <param name="stopRow">Row index of the bottom-right cell in the rectangle.</param>
+        /// <param name="stopCol">Column index of the bottom-right cell in the rectangle.</param>
+        private void SelectCellsBetween(int startRow, int startCol, int stopRow, int stopCol)
+        {
+            SelectCell(startRow, startCol, false);
+
+            if (stopRow != startRow || stopCol != startCol)
+            {
+                selectionRowMax = stopRow;
+                selectionColMax = stopCol;
             }
         }
 
