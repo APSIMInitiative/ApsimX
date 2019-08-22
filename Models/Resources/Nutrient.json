@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 63,
+  "Version": 64,
   "Name": "Simulations",
   "Children": [
     {
@@ -639,7 +639,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[FOMLignin].C / [Soil].SoilOrganicMatter.RootCN",
+              "Expression": "[FOMLignin].C / [Soil].Organic.FOMCNRatio",
               "Name": "InitialNitrogen",
               "Children": [
                 {
@@ -770,7 +770,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[FOMCellulose].C / [Soil].SoilOrganicMatter.RootCN",
+              "Expression": "[FOMCellulose].C / [Soil].Organic.FOMCNRatio",
               "Name": "InitialNitrogen",
               "Children": [
                 {
@@ -901,7 +901,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[FOMCarbohydrate].C / [Soil].SoilOrganicMatter.RootCN",
+              "Expression": "[FOMCarbohydrate].C / [Soil].Organic.FOMCNRatio",
               "Name": "InitialNitrogen",
               "Children": [
                 {

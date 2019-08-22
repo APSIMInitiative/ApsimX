@@ -141,9 +141,9 @@
 
             Assert.IsTrue(s.Children[3] is SoilNitrogen);
 
-            SoilOrganicMatter som = s.Children[4] as SoilOrganicMatter;
+            Organic som = s.Children[4] as Organic;
             Assert.AreEqual(som.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(som.OC, new double[] { 1.04, 0.89, 0.89, 0.89 });
+            Assert.AreEqual(som.Carbon, new double[] { 1.04, 0.89, 0.89, 0.89 });
             Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01});
 
             Analysis a = s.Children[5] as Analysis;

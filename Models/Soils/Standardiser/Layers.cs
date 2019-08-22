@@ -106,7 +106,7 @@
         /// <summary>Sets the soil organic matter thickness.</summary>
         /// <param name="soilOrganicMatter">The soil organic matter.</param>
         /// <param name="thickness">Thickness to change soil water to.</param>
-        private static void SetSoilOrganicMatterThickness(SoilOrganicMatter soilOrganicMatter, double[] thickness)
+        private static void SetSoilOrganicMatterThickness(Organic soilOrganicMatter, double[] thickness)
         {
             if (soilOrganicMatter != null)
             {
@@ -114,20 +114,18 @@
                 {
                     soilOrganicMatter.FBiom = MapConcentration(soilOrganicMatter.FBiom, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.FBiom));
                     soilOrganicMatter.FInert = MapConcentration(soilOrganicMatter.FInert, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.FInert));
-                    soilOrganicMatter.OC = MapConcentration(soilOrganicMatter.OC, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.OC));
-                    soilOrganicMatter.SoilCN = MapConcentration(soilOrganicMatter.SoilCN, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.SoilCN));
-                    soilOrganicMatter.RootWt = MapMass(soilOrganicMatter.RootWt, soilOrganicMatter.Thickness, thickness, false);
+                    soilOrganicMatter.Carbon = MapConcentration(soilOrganicMatter.Carbon, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.Carbon));
+                    soilOrganicMatter.SoilCNRatio = MapConcentration(soilOrganicMatter.SoilCNRatio, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.SoilCNRatio));
+                    soilOrganicMatter.FOM = MapMass(soilOrganicMatter.FOM, soilOrganicMatter.Thickness, thickness, false);
                     soilOrganicMatter.Thickness = thickness;
-
-                    soilOrganicMatter.OCMetadata = StringUtilities.CreateStringArray("Mapped", thickness.Length); ;
                 }
 
                 if (soilOrganicMatter.FBiom != null)
                     MathUtilities.ReplaceMissingValues(soilOrganicMatter.FBiom, MathUtilities.LastValue(soilOrganicMatter.FBiom));
                 if (soilOrganicMatter.FInert != null)
                     MathUtilities.ReplaceMissingValues(soilOrganicMatter.FInert, MathUtilities.LastValue(soilOrganicMatter.FInert));
-                if (soilOrganicMatter.OC != null)
-                    MathUtilities.ReplaceMissingValues(soilOrganicMatter.OC, MathUtilities.LastValue(soilOrganicMatter.OC));
+                if (soilOrganicMatter.Carbon != null)
+                    MathUtilities.ReplaceMissingValues(soilOrganicMatter.Carbon, MathUtilities.LastValue(soilOrganicMatter.Carbon));
             }
         }
 
