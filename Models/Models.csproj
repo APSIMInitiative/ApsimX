@@ -576,7 +576,7 @@
     <Compile Include="Soils\SoilTemp\CERESSoilTemperature.cs" />
     <Compile Include="Soils\Soil.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
-    <Compile Include="Soils\SoilOrganicMatter.cs" />
+    <Compile Include="Soils\Organic.cs" />
     <Compile Include="Soils\SWIM\Swim.cs" />
     <Compile Include="Soils\SWIM\SwimSoluteParameters.cs" />
     <Compile Include="Soils\SWIM\SwimSubsurfaceDrain.cs" />

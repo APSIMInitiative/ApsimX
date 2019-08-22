@@ -782,7 +782,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureWeightedFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureDepthFunction.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SoilOrganicMatter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Organic.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogen.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilCropOilPalm.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilCrop.png" />
@@ -1124,6 +1124,6 @@
   -->
   <Target Name="BeforeBuild">
 	<Exec Condition="'$(OS)' == 'Windows_NT'" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* >nul" />
-	<Exec Condition="'$(OS)' == 'Windows_NT'" command="xcopy /s /e /y ..\DeploymentSupport\Windows\lib ..\lib\ >nul" />
+	<Exec Condition="'$(OS)' == 'Windows_NT'" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ >nul" />
   </Target>
 </Project>
