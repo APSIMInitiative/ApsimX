@@ -154,9 +154,7 @@ namespace Models.Soils
             FBiom = Soil.FBiom;
             FInert = Soil.FInert;
             HumusCNr = Soil.InitialSoilCNR;
-            InitialFOMCNr = Soil.SoilOrganicMatter.RootCN;
-            enr_a_coeff = Soil.SoilOrganicMatter.EnrACoeff;
-            enr_b_coeff = Soil.SoilOrganicMatter.EnrBCoeff;
+            InitialFOMCNr = Soil.SoilOrganicMatter.FOMCNRatio;
             ph = Soil.Initial.PH;
             NO3ppm = Soil.kgha2ppm(Soil.Initial.NO3N);
             NH4ppm = Soil.kgha2ppm(Soil.Initial.NH4N);
@@ -879,72 +877,6 @@ namespace Models.Soils
                     CheckNegativeValues(ref Patch[k].no3[layer], layer, "no3", "Patch[" + Patch[k].PatchName + "].IncorporateFOM");
                 }
             }
-        }
-
-        /// <summary>
-        /// Passes the information about setting/changes in the soil profile
-        /// </summary>
-        /// <remarks>
-        /// We get the basic soil physics data in here;
-        /// The event is also used to account for getting changes due to soil erosion
-        /// It is assumed that if there are any changes in the soil profile the module doing it will let us know.
-        ///  this will be done by setting both 'soil_loss' and 'n_reduction' (ProfileReductionAllowed) to a non-default value
-        /// </remarks>
-        /// <param name="NewProfile">Data about the new soil profile</param>
-        [EventSubscribe("NewProfile")]
-        private void OnNew_profile(NewProfileType NewProfile)
-        {
-            // get the basic soil data info
-            int nLayers = NewProfile.dlayer.Length;
-
-            // check the layer structure
-            if (dlayer == null)
-            {
-                // we are at initialisation, set the layer structure
-                Array.Resize(ref dlayer, nLayers);
-                Array.Resize(ref reset_dlayer, nLayers);
-                for (int layer = 0; layer < nLayers; layer++)
-                {
-                    dlayer[layer] = (double)NewProfile.dlayer[layer];
-                    reset_dlayer[layer] = dlayer[layer];
-                }
-            }
-            else if (soil_loss > epsilon && profileReductionAllowed)
-            {
-                // check for variations in the soil profile. and update the C and N amounts appropriately
-                // Are these changes mainly (only) due to by erosion? what else??
-                double[] new_dlayer = new double[NewProfile.dlayer.Length];
-
-                for (int layer = 0; layer < new_dlayer.Length; layer++)
-                    new_dlayer[layer] = (double)NewProfile.dlayer[layer];
-
-                // RCichota: this routine will need carefull review, what happens if soil profile is changed and then we have a reset?
-                //  I have set up a 'reset_dlayer' which holds the original dlayer and may be used check the changes in the soil
-                //   profile. But what about the other variables??
-
-                // There have been some soil loss, launch the UpdateProfile
-                UpdateProfile(new_dlayer);
-
-                // don't we need to update the other variables (at least their size)???
-            }
-        }
-
-        /// <summary>
-        /// Check whether profile has changed and move values between layers
-        /// </summary>
-        /// <param name="new_dlayer">New values for dlayer</param>
-        private void UpdateProfile(double[] new_dlayer)
-        {
-            // move the values of variables
-            for (int k = 0; k < Patch.Count; k++)
-                Patch[k].UpdateProfile(new_dlayer);
-
-            // now update the layer structure
-            for (int layer = 0; layer < new_dlayer.Length; layer++)
-                dlayer[layer] = new_dlayer[layer];
-
-            // and the layer count
-            nLayers = dlayer.Length;
         }
 
         /// <summary>Gets the changes in mineral N made by other modules</summary>

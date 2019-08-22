@@ -127,7 +127,7 @@
         [XmlIgnore] public ISoilWater SoilWater { get; private set; }
 
         /// <summary>Gets the soil organic matter.</summary>
-        [XmlIgnore] public SoilOrganicMatter SoilOrganicMatter { get; private set; }
+        [XmlIgnore] public Organic SoilOrganicMatter { get; private set; }
 
         /// <summary>Gets the soil nitrogen.</summary>
         private ISoilTemperature temperatureModel;
@@ -158,7 +158,7 @@
             Weirdo = Apsim.Child(this, typeof(WEIRDO)) as WEIRDO;
             structure = Apsim.Child(this, typeof(LayerStructure)) as LayerStructure; 
             SoilWater = Apsim.Child(this, typeof(ISoilWater)) as ISoilWater;
-            SoilOrganicMatter = Apsim.Child(this, typeof(SoilOrganicMatter)) as SoilOrganicMatter;
+            SoilOrganicMatter = Apsim.Child(this, typeof(Organic)) as Organic;
             temperatureModel = Apsim.Child(this, typeof(ISoilTemperature)) as ISoilTemperature;
             Initial = Children.Find(child => child is Sample) as Sample;
             }
@@ -671,11 +671,11 @@
 
         /// <summary>Initial Root Wt</summary>
         [Units("kg/ha")]
-        public double[] InitialRootWt { get { return SoilOrganicMatter.RootWt; } }
+        public double[] InitialRootWt { get { return SoilOrganicMatter.FOM; } }
 
         /// <summary>Initial soil CN ratio</summary>
         [Units("kg/ha")]
-        public double[] SoilCN { get { return SoilOrganicMatter.SoilCN; } }
+        public double[] SoilCN { get { return SoilOrganicMatter.SoilCNRatio; } }
 
         /// <summary>Initial Root Wt</summary>
         [Units("kg/ha")]
