@@ -67,12 +67,11 @@
                 soil.SAT = MapConcentration(soil.SAT, soil.Thickness, toThickness, MathUtilities.LastValue(soil.SAT));
                 soil.KS = MapConcentration(soil.KS, soil.Thickness, toThickness, MathUtilities.LastValue(soil.KS));
                 soil.Thickness = toThickness;
-                if (water.ParticleSizeClay != null && water.ParticleSizeClay.Length == water.Thickness.Length)
-                {
-                    water.ParticleSizeClay = MapConcentration(water.ParticleSizeClay, water.Thickness, toThickness, MathUtilities.LastValue(water.ParticleSizeClay));
-                }
-                else
-                    water.ParticleSizeClay = null;
+                if (water != null)
+                    if (water.ParticleSizeClay != null && water.ParticleSizeClay.Length == water.Thickness.Length)
+                        water.ParticleSizeClay = MapConcentration(water.ParticleSizeClay, water.Thickness, toThickness, MathUtilities.LastValue(water.ParticleSizeClay));
+                    else
+                        water.ParticleSizeClay = null;
                 
                 if (needToConstrainCropLL)
                 {
