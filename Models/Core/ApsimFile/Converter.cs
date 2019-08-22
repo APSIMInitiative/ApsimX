@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 64; } }
+        public static int LatestVersion { get { return 65; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1110,6 +1110,80 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Upgrades to version 65. Rename the 'Analysis' node under soil to 'Chemical'
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion65(JObject root, string fileName)
+        {
+            foreach (var organic in JsonUtilities.ChildrenRecursively(root, "Analysis"))
+            {
+                organic["$type"] = "Models.Soils.Chemical, Models";
+                organic["Name"] = "Chemical";
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Analysis.", ".Chemical.");
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
+            {
+                var specification = factor["Specification"];
+                if (specification != null)
+                {
+                    var specificationString = specification.ToString();
+                    specificationString = specificationString.Replace(".Analysis.", ".Chemical.");
+                    specificationString = specificationString.Replace("[Analysis]", "[Chemical]");
+                    factor["Specification"] = specificationString;
+                }
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+            {
+                var specifications = factor["Specifications"];
+                if (specifications != null)
+                {
+                    for (int i = 0; i < specifications.Count(); i++)
+                    {
+                        var specificationString = specifications[i].ToString();
+                        specificationString = specificationString.Replace(".Analysis.", ".Chemical.");
+                        specificationString = specificationString.Replace("[Analysis]", "[Chemical]");
+                        specifications[i] = specificationString;
+                    }
+                }
+            }
+
+            foreach (var series in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                if (series["XFieldName"] != null)
+                {
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace("Analysis", "Chemical");
+                }
+                if (series["YFieldName"] != null)
+                {
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace("Analysis", "Chemical");
+                }
+            }
+
+            foreach (var child in JsonUtilities.ChildrenRecursively(root))
+            {
+                if (JsonUtilities.Type(child) == "Morris" || JsonUtilities.Type(child) == "Sobol")
+                {
+                    var parameters = child["Parameters"];
+                    for (int i = 0; i < parameters.Count(); i++)
+                    {
+                        var parameterString = parameters[i]["Path"].ToString();
+                        parameterString = parameterString.Replace(".Analysis.", ".Chemical.");
+                        parameterString = parameterString.Replace("[Analysis]", "[Chemical]");
+                        parameters[i]["Path"] = parameterString;
+                    }
+                }
+            }
+        }
+
 
         /// <summary>
         /// Changes initial Root Wt to an array.

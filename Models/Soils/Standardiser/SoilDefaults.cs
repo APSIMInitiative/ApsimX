@@ -120,7 +120,7 @@
         /// <param name="soil">The soil.</param>
         private static void CheckAnalysisForMissingValues(Soil soil)
         {
-            var analysis = Apsim.Child(soil, typeof(Analysis)) as Analysis;
+            var analysis = Apsim.Child(soil, typeof(Chemical)) as Chemical;
 
             analysis.CL = FillMissingValues(analysis.CL, analysis.Thickness.Length, 0);
             analysis.EC = FillMissingValues(analysis.EC, analysis.Thickness.Length, 0);

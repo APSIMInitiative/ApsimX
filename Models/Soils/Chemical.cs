@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-
-namespace Models.Soils
+﻿namespace Models.Soils
 {
-    /// <summary>
-    /// This class captures data from a soil analysis
-    /// </summary>
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using System;
+
+    /// <summary>This class captures chemical soil data</summary>
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType=typeof(Soil))]
-    public class Analysis : Model
+    public class Chemical : Model
     {
-        /// <summary>Gets or sets the thickness.</summary>
+        /// <summary>Thickness of each layer.</summary>
         [Description("Depth (mm)")]
         [Summary]
         public double[] Thickness { get; set; }
@@ -34,6 +28,47 @@ namespace Models.Soils
         [Units("ppm")]
         public double[] NH4N { get; set; }
 
+        /// <summary>pH</summary>
+        [Summary]
+        [Description("PH")]
+        [Display(Format = "N1")]
+        public double[] PH { get; set; }
+
+        /// <summary>Gets or sets the cl.</summary>
+        [Summary]
+        [Description("CL")]
+        [Units("mg/kg")]
+        public double[] CL { get; set; }
+
+        /// <summary>Gets or sets the ec.</summary>
+        [Summary]
+        [Description("EC")]
+        [Units("1:5 dS/m")]
+        public double[] EC { get; set; }
+
+        /// <summary>Gets or sets the esp.</summary>
+        [Summary]
+        [Description("ESP")]
+        [Units("%")]
+        public double[] ESP { get; set; }
+
+        /// <summary>Particle size sand.</summary>
+        [Summary]
+        [Description("Particle size sand")]
+        [Units("%")]
+        public double[] ParticleSizeSand { get; set; }
+
+        /// <summary>Particle size silt.</summary>
+        [Summary]
+        [Description("Particle size silt")]
+        [Units("%")]
+        public double[] ParticleSizeSilt { get; set; }
+
+        /// <summary>Particle size clay.</summary>
+        [Summary]
+        [Description("Particle size clay")]
+        [Units("%")]
+        public double[] ParticleSizeClay { get; set; }
 
         /// <summary>Gets or sets the rocks.</summary>
         /// <value>The rocks.</value>
@@ -58,32 +93,18 @@ namespace Models.Soils
         /// <value>The munsell metadata.</value>
         public string[] MunsellMetadata { get; set; }
 
-        /// <summary>Gets or sets the ec.</summary>
-        /// <value>The ec.</value>
-        [Summary]
-        [Description("EC")]
-        [Units("1:5 dS/m")]
-        public double[] EC { get; set; }
+
         /// <summary>Gets or sets the ec metadata.</summary>
         /// <value>The ec metadata.</value>
         public string[] ECMetadata { get; set; }
 
-        /// <summary>Gets or sets the ph.</summary>
-        /// <value>The ph.</value>
-        [Summary]
-        [Description("PH")]
-        [Display(Format="N1")]
-        public double[] PH { get; set; }
+
+
         /// <summary>Gets or sets the ph metadata.</summary>
         /// <value>The ph metadata.</value>
         public string[] PHMetadata { get; set; }
 
-        /// <summary>Gets or sets the cl.</summary>
-        /// <value>The cl.</value>
-        [Summary]
-        [Description("CL")]
-        [Units("mg/kg")]
-        public double[] CL { get; set; }
+
         /// <summary>Gets or sets the cl metadata.</summary>
         /// <value>The cl metadata.</value>
         public string[] CLMetadata { get; set; }
@@ -135,12 +156,7 @@ namespace Models.Soils
         /// <value>The k metadata.</value>
         public string[] KMetadata { get; set; }
 
-        /// <summary>Gets or sets the esp.</summary>
-        /// <value>The esp.</value>
-        [Summary]
-        [Description("ESP")]
-        [Units("%")]
-        public double[] ESP { get; set; }
+
         /// <summary>Gets or sets the esp metadata.</summary>
         /// <value>The esp metadata.</value>
         public string[] ESPMetadata { get; set; }
@@ -161,30 +177,14 @@ namespace Models.Soils
         /// <value>The al metadata.</value>
         public string[] AlMetadata { get; set; }
 
-        /// <summary>Gets or sets the particle size sand.</summary>
-        /// <value>The particle size sand.</value>
-        [Summary]
-        [Description("Particle size sand")]
-        [Units("%")]
-        public double[] ParticleSizeSand { get; set; }
         /// <summary>Gets or sets the particle size sand metadata.</summary>
         /// <value>The particle size sand metadata.</value>
         public string[] ParticleSizeSandMetadata { get; set; }
-        /// <summary>Gets or sets the particle size silt.</summary>
-        /// <value>The particle size silt.</value>
-        [Summary]
-        [Description("Particle size silt")]
-        [Units("%")]
-        public double[] ParticleSizeSilt { get; set; }
+        
         /// <summary>Gets or sets the particle size silt metadata.</summary>
         /// <value>The particle size silt metadata.</value>
         public string[] ParticleSizeSiltMetadata { get; set; }
-        /// <summary>Gets or sets the particle size clay.</summary>
-        /// <value>The particle size clay.</value>
-        [Summary]
-        [Description("Particle size clay")]
-        [Units("%")]
-        public double[] ParticleSizeClay { get; set; }
+
         /// <summary>Gets or sets the particle size clay metadata.</summary>
         /// <value>The particle size clay metadata.</value>
         public string[] ParticleSizeClayMetadata { get; set; }

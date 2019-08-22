@@ -804,7 +804,7 @@
                     }
 
                     newSoil = new Soil(); 
-                    Analysis analysis = new Analysis();
+                    Chemical analysis = new Chemical();
                     Physical waterNode = new Physical(); 
                     Organic organicMatter = new Organic();
                     SoilWater soilWater = new SoilWater();

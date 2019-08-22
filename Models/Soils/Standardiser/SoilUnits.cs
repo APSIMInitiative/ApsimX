@@ -13,7 +13,7 @@
         public static void Convert(Soil soil)
         {
             // Convert analysis.
-            var analysis = Apsim.Child(soil, typeof(Analysis)) as Analysis;
+            var analysis = Apsim.Child(soil, typeof(Chemical)) as Chemical;
             if (analysis != null)
             {
                 analysis.PH = PHWater(analysis.PH, analysis.PHUnits);

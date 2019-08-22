@@ -42,7 +42,7 @@
         private MicroClimate microClimate = null;
 
         [Link]
-        private Analysis analysis = null;
+        private Chemical analysis = null;
 
         // ------------------------------------------------------------------------------------------------------------
         // -----------------------------------------------IMPORTANT NOTE-----------------------------------------------

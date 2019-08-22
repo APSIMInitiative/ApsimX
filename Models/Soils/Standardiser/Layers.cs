@@ -16,7 +16,7 @@
         public static void Standardise(Soil soil)
         {
             var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
-            var analysisNode = Apsim.Child(soil, typeof(Analysis)) as Analysis;
+            var analysisNode = Apsim.Child(soil, typeof(Chemical)) as Chemical;
             var layerStructure = Apsim.Child(soil, typeof(LayerStructure)) as LayerStructure;
 
             // Determine the target layer structure.
@@ -132,7 +132,7 @@
         /// <summary>Sets the analysis thickness.</summary>
         /// <param name="analysis">The analysis.</param>
         /// <param name="thickness">The thickness to change the analysis to.</param>
-        private static void SetAnalysisThickness(Analysis analysis, double[] thickness)
+        private static void SetAnalysisThickness(Chemical analysis, double[] thickness)
         {
             if (analysis != null && !MathUtilities.AreEqual(thickness, analysis.Thickness))
             {

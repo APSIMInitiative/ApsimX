@@ -867,7 +867,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\BellCurveFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Axis.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ArrayBiomass.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Analysis.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Chemical.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Alias.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AirTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AgroforestrySystem.png" />
@@ -1123,7 +1123,7 @@
   </Target>
   -->
   <Target Name="BeforeBuild">
-	<Exec Condition="'$(OS)' == 'Windows_NT'" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* >nul" />
-	<Exec Condition="'$(OS)' == 'Windows_NT'" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ >nul" />
-  </Target>
+    <Exec Condition="'$(OS)' == 'Windows_NT'" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
+    <!--<Exec Condition="'$(OS)' == 'Windows_NT'" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ &gt;nul" />
+  --> </Target>
 </Project>
