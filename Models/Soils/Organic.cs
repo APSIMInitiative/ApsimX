@@ -1,6 +1,5 @@
 ﻿namespace Models.Soils
 {
-    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
 
@@ -13,13 +12,13 @@
     {
         /// <summary>Root C:N Ratio</summary>
         [Summary]
-        [Description("Root C:N ratio (0-500)")]
+        [Description("FOM C:N ratio (0-500)")]
         [Bounds(Lower = 0.0, Upper = 500.0)]
-        public double RootCNRatio { get; set; }
+        public double FOMCNRatio { get; set; }
 
         /// <summary>Soil layer thickness for each layer (mm)</summary>
-        [Description("Depth (mm)")]
         [Summary]
+        [Description("Depth (mm)")]
         public double[] Thickness { get; set; }
 
         /// <summary>Carbon concentration (Total% 0.1 - 10%)</summary>
@@ -30,12 +29,12 @@
         [Units("Total%")]
         public double[] Carbon { get; set; }
 
-        /// <summary>Carbon:nirogen ratio.</summary>
+        /// <summary>Carbon:nitrogen ratio.</summary>
         [Summary]
-        [Description("Soil C:N")]
+        [Description("Soil C:N ratio")]
         [Units("g/g")]
         [Bounds(Lower = 5.0, Upper = 30.0)]
-        public double[] SoilCN { get; set; }
+        public double[] SoilCNRatio { get; set; }
 
         /// <summary>F biom.</summary>
         [Summary]
@@ -51,11 +50,11 @@
         [Bounds(Lower = 0.0, Upper = 1.0)]
         public double[] FInert { get; set; }
 
-        /// <summary>Root Weight</summary>
+        /// <summary>Fresh organic matter</summary>
         [Summary]
-        [Description("RootWt")]
+        [Description("Fresh organic matter")]
         [Units("kg/ha")]
         [Display(Format = "N1")]
-        public double[] RootWt { get; set; }
+        public double[] FOM { get; set; }
     }
 }

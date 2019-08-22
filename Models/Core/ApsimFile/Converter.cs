@@ -1019,21 +1019,29 @@
             {
                 organic["$type"] = "Models.Soils.Organic, Models";
                 organic["Name"] = "Organic";
-                organic["RootCNRatio"] = organic["RootCN"];
+                organic["FOMCNRatio"] = organic["RootCN"];
+                organic["FOM"] = organic["RootWt"];
+                organic["SoilCNRatio"] = organic["SoilCN"];
                 organic["Carbon"] = organic["OC"];
-                string ocUnits = organic["OCUnits"].ToString();
-                if (ocUnits == "1" || ocUnits == "WalkleyBlack")
+                var ocUnits = organic["OCUnits"];
+                if (ocUnits != null)
                 {
-                    var oc = organic["Carbon"].Values<double>().ToArray();
-                    oc = MathUtilities.Multiply_Value(oc, 1.3);
-                    organic["Carbon"] = new JArray(oc);
+                    string ocUnitsString = ocUnits.ToString();
+                    if (ocUnitsString == "1" || ocUnitsString == "WalkleyBlack")
+                    {
+                        var oc = organic["Carbon"].Values<double>().ToArray();
+                        oc = MathUtilities.Multiply_Value(oc, 1.3);
+                        organic["Carbon"] = new JArray(oc);
+                    }
                 }
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
             {
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilOrganicMatter.", ".Organic.");
-                JsonUtilities.SearchReplaceReportVariableNames(report, ".RootCN", ".RootCNRatio");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".RootCN", ".FOMCNRatio");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".RootWt", ".FOM");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilCN", ".SoilCNRatio");
                 JsonUtilities.SearchReplaceReportVariableNames(report, ".Organic.OC", ".Organic.Carbon");
             }
 
@@ -1046,6 +1054,9 @@
                     specificationString = specificationString.Replace(".SoilOrganicMatter.", ".Organic.");
                     specificationString = specificationString.Replace("[SoilOrganicMatter]", "[Organic]");
                     specificationString = specificationString.Replace(".Organic.OC", ".Organic.Carbon");
+                    specificationString = specificationString.Replace(".RootCN", ".FOMCNRatio");
+                    specificationString = specificationString.Replace(".RootWt", ".FOM");
+                    specificationString = specificationString.Replace(".SoilCN", ".SoilCNRatio");
                     factor["Specification"] = specificationString;
                 }
             }
@@ -1061,6 +1072,9 @@
                         specificationString = specificationString.Replace(".SoilOrganicMatter.", ".Organic.");
                         specificationString = specificationString.Replace("[SoilOrganicMatter]", "[Organic]");
                         specificationString = specificationString.Replace(".OC", ".Carbon");
+                        specificationString = specificationString.Replace(".RootCN", ".FOMCNRatio");
+                        specificationString = specificationString.Replace(".RootWt", ".FOM");
+                        specificationString = specificationString.Replace(".SoilCN", ".SoilCNRatio");
                         specifications[i] = specificationString;
                     }
                 }

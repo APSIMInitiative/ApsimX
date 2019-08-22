@@ -639,7 +639,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[FOMLignin].C / [Soil].Organic.RootCNRatio",
+              "Expression": "[FOMLignin].C / [Soil].Organic.FOMCNRatio",
               "Name": "InitialNitrogen",
               "Children": [
                 {
@@ -770,7 +770,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[FOMCellulose].C / [Soil].Organic.RootCNRatio",
+              "Expression": "[FOMCellulose].C / [Soil].Organic.FOMCNRatio",
               "Name": "InitialNitrogen",
               "Children": [
                 {
@@ -901,7 +901,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[FOMCarbohydrate].C / [Soil].Organic.RootCNRatio",
+              "Expression": "[FOMCarbohydrate].C / [Soil].Organic.FOMCNRatio",
               "Name": "InitialNitrogen",
               "Children": [
                 {

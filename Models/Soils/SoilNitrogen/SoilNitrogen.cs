@@ -154,7 +154,7 @@ namespace Models.Soils
             FBiom = Soil.FBiom;
             FInert = Soil.FInert;
             HumusCNr = Soil.InitialSoilCNR;
-            InitialFOMCNr = Soil.SoilOrganicMatter.RootCNRatio;
+            InitialFOMCNr = Soil.SoilOrganicMatter.FOMCNRatio;
             ph = Soil.Initial.PH;
             NO3ppm = Soil.kgha2ppm(Soil.Initial.NO3N);
             NH4ppm = Soil.kgha2ppm(Soil.Initial.NH4N);

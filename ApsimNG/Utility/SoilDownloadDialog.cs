@@ -975,7 +975,7 @@
                     double totFOMfraction = MathUtilities.Sum(rootWtFraction);
                     for (int layer = 0; layer < thickness.Length; layer++)
                         rootWtFraction[layer] /= totFOMfraction;
-                    organicMatter.RootWt = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
+                    organicMatter.FOM = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
 
                     double[] fBiom = { 0.04, 0.04 - 0.03 * (225.0 - 150.0) / (400.0 - 150.0),
                         (400.0 - 300.0) / (450.0 - 300.0) * (0.04 - 0.03 * (350.0 - 150.0) / (400.0 - 150.0)) + (450.0 - 400.0) / (450.0 - 300.0) * 0.01,
@@ -987,8 +987,8 @@
                         fInert[layer] = Math.Min(0.99, inert_c / ocdrc[layer] );
                     organicMatter.FInert = ConvertLayers(fInert, layerCount); // Not perfect, but should be good enough
                     organicMatter.FBiom = fBiom;
-                    organicMatter.RootCNRatio = 40.0;
-                    organicMatter.SoilCN = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
+                    organicMatter.FOMCNRatio = 40.0;
+                    organicMatter.SoilCNRatio = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
 
                     return newSoil;
                 }

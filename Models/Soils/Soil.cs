@@ -671,11 +671,11 @@
 
         /// <summary>Initial Root Wt</summary>
         [Units("kg/ha")]
-        public double[] InitialRootWt { get { return SoilOrganicMatter.RootWt; } }
+        public double[] InitialRootWt { get { return SoilOrganicMatter.FOM; } }
 
         /// <summary>Initial soil CN ratio</summary>
         [Units("kg/ha")]
-        public double[] SoilCN { get { return SoilOrganicMatter.SoilCN; } }
+        public double[] SoilCN { get { return SoilOrganicMatter.SoilCNRatio; } }
 
         /// <summary>Initial Root Wt</summary>
         [Units("kg/ha")]

@@ -115,8 +115,8 @@
                     soilOrganicMatter.FBiom = MapConcentration(soilOrganicMatter.FBiom, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.FBiom));
                     soilOrganicMatter.FInert = MapConcentration(soilOrganicMatter.FInert, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.FInert));
                     soilOrganicMatter.Carbon = MapConcentration(soilOrganicMatter.Carbon, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.Carbon));
-                    soilOrganicMatter.SoilCN = MapConcentration(soilOrganicMatter.SoilCN, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.SoilCN));
-                    soilOrganicMatter.RootWt = MapMass(soilOrganicMatter.RootWt, soilOrganicMatter.Thickness, thickness, false);
+                    soilOrganicMatter.SoilCNRatio = MapConcentration(soilOrganicMatter.SoilCNRatio, soilOrganicMatter.Thickness, thickness, MathUtilities.LastValue(soilOrganicMatter.SoilCNRatio));
+                    soilOrganicMatter.FOM = MapMass(soilOrganicMatter.FOM, soilOrganicMatter.Thickness, thickness, false);
                     soilOrganicMatter.Thickness = thickness;
                 }
 
