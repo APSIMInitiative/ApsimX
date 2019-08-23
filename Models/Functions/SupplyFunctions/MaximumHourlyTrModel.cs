@@ -107,7 +107,7 @@ namespace Models.Functions.SupplyFunctions
         public string SWType { get; set; } = "numeric";
 
         /// <summary>Threshold of hourly VPD at which hourly transpiration rate cease to linearly increase by VPD/TEC</summary>
-        [Description("Threshold of hourly VPD at which hourly transpiration rate cease to linearly increase by VPD/TEC (kPa)")]
+        [Description("Threshold of hourly VPD at which hourly transpiration rate cease to linearly increase by VPD/TEC")]
         [Units("kPa")]
         [Bounds(Lower = 0.1, Upper = 1000)]
         public double VPDThresh { get; set; } = 999;
@@ -119,7 +119,7 @@ namespace Models.Functions.SupplyFunctions
         public double HighVPDReduction { get; set; } = 1;
 
         /// <summary>The maximum hourly transpiration rate</summary>
-        [Description("Maximum hourly transpiration rate (mm/hr)")]
+        [Description("Maximum hourly transpiration rate")]
         [Units("mm/hr")]
         [Bounds(Lower = 0.01, Upper = 1000.0)]
         public double MaxTr { get; set; } = 999;
@@ -133,11 +133,13 @@ namespace Models.Functions.SupplyFunctions
         public double KDIF { get; set; } = 0.7;
 
         /// <summary>LUE at low light at 340ppm and 20C</summary>
-        [Description("LUE at low light at 340ppm and 20C (kgCO2/ha/h / J/m2/s)")]
+        [Description("LUE at low light at 340ppm and 20C")]
+        [Units("(kgCO2/ha/h / J/m2/s)")]
         public double LUEref { get; set; } = 0.6;
 
         /// <summary>Leaf gross photosynthesis rate at 340ppm CO2</summary>
-        [Description("Maximum gross photosynthesis rate Pmax (kgCO2/ha/h)")]
+        [Description("Maximum gross photosynthesis rate Pmax")]
+        [Units("(kgCO2/ha/h)")]
         public double PgMax { get; set; } = 45;
 
         /// <summary>Photosynthesis Pathway</summary>
