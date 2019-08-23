@@ -96,7 +96,7 @@ namespace Models
         private IWeather weather = null;
         
         /// <summary>The surface organic matter model</summary>
-        [Link]
+        [Link(IsOptional = true)]
         private ISurfaceOrganicMatter residues = null;
 
         /// <summary>List of uptakes</summary>
@@ -331,10 +331,11 @@ namespace Models
             myZoneMC.Reset();
             foreach (ICanopy canopy in Apsim.ChildrenRecursively(newZone, typeof(ICanopy)))
                 myZoneMC.Canopies.Add(new CanopyType(canopy));
-            foreach (ICanopy residue in residues.ResidueLayers)
-            {
-                myZoneMC.Canopies.Add(new CanopyType(residue));
-            }
+            if (residues != null)
+                foreach (ICanopy residue in residues.ResidueLayers)
+                {
+                    myZoneMC.Canopies.Add(new CanopyType(residue));
+                }
             zoneMicroClimates.Add(myZoneMC);
 
         }
