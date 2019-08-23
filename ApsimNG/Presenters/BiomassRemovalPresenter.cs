@@ -87,7 +87,7 @@
             }
         }
 
-        protected override IVariable GetProperty(int row)
+        protected override IVariable GetProperty(int row, int column)
         {
             if (row >= grid.DataSource.Rows.Count)
                 throw new Exception($"Attempted to get the property in row '{row}', but the grid only contains '{grid.DataSource.Rows.Count}' rows.");

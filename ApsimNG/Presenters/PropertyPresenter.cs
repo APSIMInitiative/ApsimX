@@ -73,6 +73,11 @@ namespace UserInterface.Presenters
         private IntellisensePresenter intellisense;
 
         /// <summary>
+        /// If set to true, will only show scalar properties.
+        /// </summary>
+        protected bool scalarsOnly;
+
+        /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The model to connect to</param>
@@ -124,6 +129,29 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// If set to true, will only show scalar (non-array) properties.
+        /// </summary>
+        public bool ScalarsOnly
+        {
+            get
+            {
+                return scalarsOnly;
+            }
+            set
+            {
+                scalarsOnly = value;
+                if (properties != null)
+                {
+                    if (value)
+                        properties = properties.Where(p => !p.DataType.IsArray).ToList();
+                    else
+                        FindAllProperties(model);
+                    PopulateGrid(model);
+                }
+            }
+        }
+
+        /// <summary>
         /// Detach the model from the view.
         /// </summary>
         public override void Detach()
@@ -144,22 +172,41 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Populate the grid
+        /// Populate (refresh) the grid.
         /// </summary>
-        /// <param name="model">The model to examine for properties</param>
+        /// <param name="model">The model to examine for properties.</param>
+        public void PopulateGrid()
+        {
+            PopulateGrid(model);
+        }
+
+        /// <summary>
+        /// Populate the grid.
+        /// </summary>
+        /// <param name="model">The model to examine for properties.</param>
         private void PopulateGrid(IModel model)
         {
             IGridCell selectedCell = grid.GetCurrentCell;
             this.model = model;
-            DataTable table = new DataTable();
-            bool hasData = properties.Count > 0;
-            table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
-            table.Columns.Add(hasData ? "Value" : " ", typeof(object));
+
+            DataTable table = CreateGrid();
             FillTable(table);
             grid.DataSource = table;
             FormatGrid();
+
             if (selectedCell != null)
                 grid.GetCurrentCell = selectedCell;
+        }
+
+        protected virtual DataTable CreateGrid()
+        {
+            bool hasData = properties.Count > 0;
+
+            DataTable table = new DataTable();
+            table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
+            table.Columns.Add(hasData ? "Value" : " ", typeof(object));
+
+            return table;
         }
 
         /// <summary>
@@ -187,7 +234,7 @@ namespace UserInterface.Presenters
         /// sorted by the line number of the member's declaration.
         /// </summary>
         /// <param name="o">Object whose members will be retrieved.</param>
-        public static List<MemberInfo> GetMembers(object o)
+        private List<MemberInfo> GetMembers(object o)
         {
             var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
             members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
@@ -362,7 +409,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="table"></param>
         /// <param name="property"></param>
-        protected void AddPropertyToTable(DataTable table, IVariable property)
+        protected virtual void AddPropertyToTable(DataTable table, IVariable property)
         {
             if (property is VariableObject)
                 table.Rows.Add(new object[] { property.Value, null });
@@ -393,7 +440,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Format the grid.
         /// </summary>
-        private void FormatGrid()
+        protected virtual void FormatGrid()
         {
             for (int i = 0; i < properties.Count; i++)
             {
@@ -559,11 +606,6 @@ namespace UserInterface.Presenters
 
             IGridColumn valueColumn = grid.GetColumn(1);
             valueColumn.Width = -1;
-        }
-
-        public void SetCellReadOnly(IGridCell cell)
-        {
-
         }
 
         /// <summary>Get a list of cultivars for crop.</summary>
@@ -742,30 +784,44 @@ namespace UserInterface.Presenters
 
                 // If there are multiple changed cells, each change will be
                 // individually undoable.
-                IVariable property = GetProperty(cell.RowIndex);
+                IVariable property = GetProperty(cell.RowIndex, cell.ColIndex);
                 if (property == null)
-                    return;
+                    continue;
 
                 // Parse the input string to the appropriate type.
-                object newValue = GetNewCellValue(property, cell.NewValue);
+                object newValue = GetNewPropertyValue(property, cell);
 
                 // Update the value of the model's property.
                 SetPropertyValue(property, newValue);
 
                 // Update the value shown in the grid.
-                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = property.ValueWithArrayHandling;
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(property, cell.RowIndex, cell.ColIndex);
             }
+
+            UpdateReadOnlyProperties();
+        }
+
+        protected virtual void UpdateReadOnlyProperties()
+        {
         }
 
         /// <summary>
-        /// Gets the property in a given row.
+        /// Fetches from the model the value which should be displayed in a given cell.
+        /// </summary>
+        /// <param name="row">Row index of the cell.</param>
+        /// <param name="column">Column index of the cell.</param>
+        protected virtual object GetCellValue(IVariable property, int row, int column)
+        {
+            return property.ValueWithArrayHandling;
+        }
+
+        /// <summary>
+        /// Gets the property in a given displayed by a given cell.
         /// </summary>
         /// <remarks>
-        /// This is needed because some presenters override this
-        /// presenter and add separator rows between properties.
-        /// </remarks>
         /// <param name="row">Row inex.</param>
-        protected virtual IVariable GetProperty(int row)
+        /// <param name="column">Column index.</param>
+        protected virtual IVariable GetProperty(int row, int column)
         {
             return properties[row];
         }
@@ -775,21 +831,21 @@ namespace UserInterface.Presenters
         /// cell's new contents.
         /// </summary>
         /// <param name="cell">Cell which has been changed.</param>
-        public static object GetNewCellValue(IVariable property, string newValue)
+        protected virtual object GetNewPropertyValue(IVariable property, GridCellChangedArgs cell)
         {
             if (typeof(IPlant).IsAssignableFrom(property.DataType))
-                return Apsim.Find(property.Object as IModel, newValue);
+                return Apsim.Find(property.Object as IModel, cell.NewValue);
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
-                return Apsim.Get(property.Object as IModel, newValue);
+                return Apsim.Get(property.Object as IModel, cell.NewValue);
 
             try
             {
-                return ReflectionUtilities.StringToObject(property.DataType, newValue, CultureInfo.CurrentCulture);
+                return ReflectionUtilities.StringToObject(property.DataType, cell.NewValue, CultureInfo.CurrentCulture);
             }
             catch (FormatException err)
             {
-                throw new Exception($"Value '{newValue}' is invalid for property '{property.Name}' - {err.Message}.");
+                throw new Exception($"Value '{cell.NewValue}' is invalid for property '{property.Name}' - {err.Message}.");
             }
         }
 

@@ -662,7 +662,7 @@ namespace UserInterface.Presenters
                     Model childmodel = this.childrenWithSameType[cell.ColIndex - 1] as Model;
                     VariableProperty property = properties[cell.ColIndex - 1][cell.RowIndex];
 
-                    object newValue = PropertyPresenter.GetNewCellValue(property, cell.NewValue);
+                    object newValue = GetNewCellValue(property, cell.NewValue);
                     this.SetPropertyValue(childmodel, property, newValue);
                 }
                 catch (Exception ex)
@@ -672,6 +672,29 @@ namespace UserInterface.Presenters
             }
             
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+        }
+
+        /// <summary>
+        /// Gets the new value of the cell from a string containing the
+        /// cell's new contents.
+        /// </summary>
+        /// <param name="cell">Cell which has been changed.</param>
+        private object GetNewCellValue(IVariable property, string newValue)
+        {
+            if (typeof(IPlant).IsAssignableFrom(property.DataType))
+                return Apsim.Find(property.Object as IModel, newValue);
+
+            if (property.Display != null && property.Display.Type == DisplayType.Model)
+                return Apsim.Get(property.Object as IModel, newValue);
+
+            try
+            {
+                return ReflectionUtilities.StringToObject(property.DataType, newValue, CultureInfo.CurrentCulture);
+            }
+            catch (FormatException err)
+            {
+                throw new Exception($"Value '{newValue}' is invalid for property '{property.Name}' - {err.Message}.");
+            }
         }
 
         /// <summary>

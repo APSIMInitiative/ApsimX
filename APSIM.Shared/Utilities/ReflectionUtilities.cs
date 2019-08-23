@@ -344,9 +344,17 @@ namespace APSIM.Shared.Utilities
             {
                 // Empty string. Get the default value for this property type.
                 if (dataType.IsValueType)
+                {
+                    if (dataType == typeof(double))
+                        return double.NaN;
+
+                    if (dataType == typeof(float))
+                        return float.NaN;
+
                     // Property is not nullable (could be int, bool, struct, etc).
                     // Return default value for this type.
                     return Activator.CreateInstance(dataType);
+                }
                 else
                     // Property is nullable so return null.
                     return null;

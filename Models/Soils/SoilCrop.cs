@@ -38,5 +38,20 @@
 
         /// <summary>The meta data for the exploration factor</summary>
         public string[] XFMetadata { get; set; }
+
+        /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
+        [Description("PAWC")]
+        [Display(Format = "N2")]
+        [Units("mm/mm")]
+        public double[] PAWC
+        {
+            get
+            {
+                Soil soil = Apsim.Parent(this, typeof(Soil)) as Soil;
+                if (soil == null)
+                    return null;
+                return Soil.CalcPAWC(soil.Thickness, LL, soil.DUL, XF);
+            }
+        }
     }
 }
