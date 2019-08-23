@@ -673,7 +673,7 @@ namespace Models.CLEM.Resources
             if (DetachRate > 0)
             {
                 html += "\n<div class=\"activityentry\">";
-                html += "Pasture is lost through detachement at a rate of <span class=\"setvalue\">" + this.DetachRate.ToString("0.###") + "</span> per month";
+                html += "Pasture is lost through detachment at a rate of <span class=\"setvalue\">" + this.DetachRate.ToString("0.###") + "</span> per month";
                 if (CarryoverDetachRate > 0)
                 {
                     html += " and <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months";

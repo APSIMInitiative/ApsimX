@@ -328,7 +328,7 @@ namespace Models.CLEM
 
                     if(this.reader.Headings == null)
                     {
-                        throw new Exception("@error:Invalid format of datafile [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "].\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )");
+                        throw new Exception("@error:Invalid format of datafile [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )");
                     }
 
                     this.soilNumIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "SoilNum");

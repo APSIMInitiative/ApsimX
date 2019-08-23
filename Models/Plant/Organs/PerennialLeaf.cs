@@ -750,7 +750,7 @@ namespace Models.PMF.Organs
                 foreach (PerrenialLeafCohort L in Leaves)
                     L.Age+=LDR;
 
-                StartLive = Live;
+                StartLive = ReflectionUtilities.Clone(Live) as Biomass;
                 StartNReallocationSupply = NSupply.Reallocation;
                 StartNRetranslocationSupply = NSupply.Retranslocation;
             }

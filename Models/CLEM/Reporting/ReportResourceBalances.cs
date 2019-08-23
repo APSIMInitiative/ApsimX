@@ -123,8 +123,14 @@ namespace Models.CLEM.Reporting
                                                 break;
                                         }
                                         variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + "." + amountStr + " as " + item.Name);
+                                        if(item.GetType().Name == "RuminantType")
+                                        {
+                                            variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + ".AmountAE as TotalAE");
+                                        }
                                     }
                                 }
+
+
                             }
                         }
                     }
