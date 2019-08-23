@@ -1,15 +1,15 @@
 ﻿namespace Models.PostSimulationTools
 {
-    using System;
-    using System.Data;
-    using System.IO;
+    using APSIM.Shared.Utilities;
     using ExcelDataReader;
     using Models.Core;
-    using APSIM.Shared.Utilities;
-    using Storage;
-    using System.Collections.Generic;
     using Models.Core.Run;
-    using System.Threading;
+    using Storage;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Globalization;
+    using System.IO;
 
     /// <summary>
     /// # [Name]
@@ -19,7 +19,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class ExcelInput : Model, IRunnable, IReferenceExternalFiles
+    public class ExcelInput : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         private string _filename;
 
@@ -96,41 +96,20 @@
             return new string[] { FileName };
         }
 
-        /// <summary>
-        /// Gets the parent simulation or null if not found
-        /// </summary>
-        private IStorageWriter StorageWriter
-        {
-            get
-            {
-                // The JobRunnerAsync will not resolve links, so we need to
-                // go looking for the data store ourselves. This is an ugly
-                // hack, no doubt about it, but this infrastructure is about to
-                // be changed/refactored anyway, so hopefully this won't stay
-                // here for too long.
-                if (storage == null)
-                    storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
-                if (storage == null)
-                    throw new Exception("Cannot find a datastore");
-                return storage.Writer;
-            }
-        }
-
         /// <summary>Gets the absolute file name.</summary>
         private string AbsoluteFileName
         {
             get
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
+                //var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                return PathUtilities.GetAbsolutePath(this.FileName, storage.FileName);
             }
         }
 
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        /// <param name="cancelToken">The cancel token.</param>
-        public void Run(CancellationTokenSource cancelToken)
+        public void Run()
         {
             string fullFileName = AbsoluteFileName;
             if (fullFileName != null && File.Exists(fullFileName))
@@ -165,7 +144,7 @@
                     if (keep)
                     {
                         TruncateDates(table);
-                        StorageWriter.WriteTable(table);
+                        storage.Writer.WriteTable(table);
                     }
                 }
 
@@ -195,7 +174,7 @@
                 {
                     foreach (DataRow row in table.Rows)
                         if (!DBNull.Value.Equals(row[icol]))
-                            row[icol] = Convert.ToDateTime(row[icol]).Date;
+                            row[icol] = Convert.ToDateTime(row[icol], CultureInfo.InvariantCulture).Date;
                 }
         }
 

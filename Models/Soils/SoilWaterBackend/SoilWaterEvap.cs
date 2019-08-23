@@ -12,7 +12,6 @@ namespace Models.Soils.SoilWaterBackend
 
         //Outputs
 
-        public double Eo;
         public double Eos;
         public double Es;
 
@@ -58,7 +57,6 @@ namespace Models.Soils.SoilWaterBackend
         //Zero Ouputs
         public void ZeroOutputs()
             {
-            Eo = 0.0;
             Eos = 0.0;
             Es = 0.0;
 
@@ -218,72 +216,7 @@ namespace Models.Soils.SoilWaterBackend
 
         #region Functions
 
-
-        public void CalcEo_AtmosphericPotential(MetData Met, CanopyData Canopy)
-            {
-            //Get Eo and assign it to the public Eo field for this object.
-
-            //private void soilwat2_priestly_taylor()
-            //   {
-            double albedo;           //! albedo taking into account plant material
-
-            double eeq;              //! equilibrium evaporation rate (mm)
-            double wt_ave_temp;      //! weighted mean temperature for the day (oC)
-
-            //*  ******* calculate potential evaporation from soil surface (eos) ******
-
-            //                ! find equilibrium evap rate as a
-            //                ! function of radiation, albedo, and temp.
-
-
-            albedo = cons.max_albedo - (cons.max_albedo - salb) * (1.0 - Canopy.cover_green_sum);
-
-            // ! wt_ave_temp is mean temp, weighted towards max.
-            wt_ave_temp = (0.60 * Met.maxt) + (0.40 * Met.mint);
-
-            eeq = Met.radn * 23.8846 * (0.000204 - 0.000183 * albedo) * (wt_ave_temp + 29.0);
-
-            //! find potential evapotranspiration (eo) from equilibrium evap rate
-            Eo = eeq * soilwat2_eeq_fac(Met);
-            //    }
-            }
-
-
-        private double soilwat2_eeq_fac(MetData Met)
-            {
-            //*+  Mission Statement
-            //*     Calculate the Equilibrium Evaporation Rate
-
-            if (Met.maxt > cons.max_crit_temp)
-                {
-                //! at very high max temps eo/eeq increases
-                //! beyond its normal value of 1.1
-                return ((Met.maxt - cons.max_crit_temp) * 0.05 + 1.1);
-                }
-            else
-                {
-                if (Met.maxt < cons.min_crit_temp)
-                    {
-                    //! at very low max temperatures eo/eeq
-                    //! decreases below its normal value of 1.1
-                    //! note that there is a discontinuity at tmax = 5
-                    //! it would be better at tmax = 6.1, or change the
-                    //! .18 to .188 or change the 20 to 21.1
-                    return (0.01 * Math.Exp(0.18 * (Met.maxt + 20.0)));
-                    }
-                }
-
-            return 1.1;  //sv- normal value of eeq fac (eo/eeq)
-            }
-
-
-
-
-
-
-
-
-        public void CalcEos_EoReducedDueToShading(CanopyData Canopy, SurfaceCoverData SurfaceCover)
+        public void CalcEos_EoReducedDueToShading(double Eo, CanopyData Canopy, SurfaceCoverData SurfaceCover)
             {
 
             //private void soilwat2_pot_soil_evaporation()
@@ -356,7 +289,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
 
-        public void CalcEs_RitchieEq_LimitedBySW(SoilWaterSoil SoilObject, IClock Clock, double Infiltration)
+        public void CalcEs_RitchieEq_LimitedBySW(double Eo, SoilWaterSoil SoilObject, IClock Clock, double Infiltration)
             {
 
             //private void soilwat2_ritchie_evaporation()

@@ -288,7 +288,7 @@ namespace UserInterface.Views
                 pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
                 pixbufRender.Xalign = 0.5f;
 
-                if (i == 0)
+                if (i == 0 || i == nCols-1)
                 {
                     colLookup.Add(textRender, i);
                 }
@@ -298,6 +298,7 @@ namespace UserInterface.Views
                 }
 
                 textRender.FixedHeightFromFont = 1; // 1 line high
+
                 pixbufRender.Height = 19; //TODO change based on zoom rate of UI //previously 23 before smaller UI font
                 textRender.Editable = !isReadOnly;
                 textRender.Xalign = ((i == 0) || (i == 1) && isPropertyMode) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
@@ -305,7 +306,7 @@ namespace UserInterface.Views
                 TreeViewColumn column = new TreeViewColumn();
                 column.Title = this.DataSource.Columns[i].Caption;
 
-                if (i==0)
+                if (i==0 || i == nCols - 1)
                 {
                     column.PackStart(textRender, true);     // 0
                 }
@@ -313,10 +314,8 @@ namespace UserInterface.Views
                 {
                     column.PackStart(pixbufRender, false);  // 3
                 }
-//                column.Sizing = TreeViewColumnSizing.Autosize;
-//                column.Resizable = true;
 
-                if (i == 0)
+                if (i == 0 || i == nCols - 1)
                 {
                     column.SetCellDataFunc(textRender, OnSetCellData);
                 }
@@ -415,7 +414,7 @@ namespace UserInterface.Views
                         iconName = "Partial";
                         break;
                     case "2":
-                        iconName = "NotNeeded";
+                        iconName = "NoTask";
                         break;
                     case "3":
                         iconName = "Critical";

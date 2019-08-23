@@ -23,6 +23,7 @@ namespace UserInterface.Presenters
     using System.Drawing;
     using Models.CLEM.Resources;
     using Models.Storage;
+    using System.Globalization;
 
     /// <summary>
     /// <para>
@@ -167,12 +168,12 @@ namespace UserInterface.Presenters
         /// Remove the specified properties from the grid.
         /// </summary>
         /// <param name="propertysToRemove">The names of all properties to remove</param>
-        public void RemoveProperties(IEnumerable<VariableProperty> propertysToRemove)
+        public void RemoveProperties(IEnumerable<string> propertysToRemove)
         {
-            foreach (VariableProperty property in propertysToRemove)
+            foreach (var property in propertysToRemove)
             {
                 // Try and find the description in our list of properties.
-                int i = properties.FindIndex(p => p.Description == property.Description);
+                int i = properties.FindIndex(p => p.Name == property);
 
                 // If found then remove the property.
                 if (i != -1)
@@ -762,7 +763,7 @@ namespace UserInterface.Presenters
                 }
                 else if (property.DataType == typeof(DateTime[]))
                 {
-                    value = stringValues.Select(d => DateTime.Parse(d)).ToArray();
+                    value = stringValues.Select(d => DateTime.Parse(d, CultureInfo.InvariantCulture)).ToArray();
                 }
                 else
                 {
@@ -775,7 +776,7 @@ namespace UserInterface.Presenters
             }
             else if (property.DataType == typeof(DateTime))
             {
-                value = Convert.ToDateTime(value);
+                value = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
             }
             else if (property.DataType.IsEnum)
             {

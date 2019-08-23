@@ -62,19 +62,24 @@ namespace UserInterface.Presenters
                 {
                     // get unique rows
                     List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                    string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
+
                     // get unique columns
                     List<DateTime> dates = data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct().ToList<DateTime>();
-                    // create table
 
+                    // create table
                     DataTable tbl = new DataTable();
                     tbl.Columns.Add("Activity");
                     foreach (var item in dates)
                     {
                         tbl.Columns.Add(item.Month.ToString("00") + "\n" + item.ToString("yy"));
                     }
+                    // add blank column for resize row height of pixelbuf with font size change
+                    tbl.Columns.Add(" ");
+
                     foreach (var item in activities)
                     {
-                        if (item != "TimeStep")
+                        if (item != timeStepUID)
                         {
                             DataRow dr = tbl.NewRow();
                             string name = data.AsEnumerable().Where(a => a.Field<string>("UniqueID") == item).FirstOrDefault()["Name"].ToString();
@@ -86,6 +91,7 @@ namespace UserInterface.Presenters
                                 string status = activityTick["Status"].ToString();
                                 dr[dte.Month.ToString("00") + "\n" + dte.ToString("yy")] = status;
                             }
+                            dr[" "] = " ";
                             tbl.Rows.Add(dr);
                         }
                     }

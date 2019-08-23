@@ -1,13 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IArbitration.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.PMF.Interfaces
+﻿namespace Models.PMF.Interfaces
 {
     using System;
-    using Models.Soils.Arbitrator;
-    using System.Collections.Generic;
 
     /// <summary>
     /// An interface that defines what needs to be implemented by an organ

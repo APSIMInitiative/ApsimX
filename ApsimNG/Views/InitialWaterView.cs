@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using Interfaces;
     using Gtk;
+    using System.Globalization;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -181,7 +182,7 @@ namespace UserInterface.Views
                     int result = 0;
                     try
                     {
-                        result = Convert.ToInt32(this.entry1.Text);
+                        result = Convert.ToInt32(this.entry1.Text, CultureInfo.InvariantCulture);
                     }
                     catch (Exception)
                     {  // If there are any errors, return 0
@@ -209,7 +210,7 @@ namespace UserInterface.Views
                 int result = 0;
                 try
                 {
-                    result = Convert.ToInt32(this.entry2.Text);
+                    result = Convert.ToInt32(this.entry2.Text, CultureInfo.InvariantCulture);
                 }
                 catch (Exception)
                 {  // If there are any errors, return 0

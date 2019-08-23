@@ -134,7 +134,7 @@ namespace UserInterface.Presenters
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 
-                foreach (string s in soil.Depth)
+                foreach (string s in APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(soil.Thickness))
                 {
                     rowNames.Add(s);
                 }

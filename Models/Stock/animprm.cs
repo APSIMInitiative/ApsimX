@@ -1,20 +1,21 @@
 using StdUnits;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Models.GrazPlan
 {
     /// <summary>
     /// The animal parameters object
     /// </summary>
-    static public class GlobalAnimalParams
+    public class GlobalAnimalParams
     {
-        static private ParameterSet _GAnimalParams = null;
+        private ParameterSet _GAnimalParams = null;
         /// <summary>
         /// The object that contains the animal parameters
         /// </summary>
         /// <returns></returns>
-        static public AnimalParamSet AnimalParamsGlb()
+        public AnimalParamSet AnimalParamsGlb()
         {
             if (_GAnimalParams == null)
             {
@@ -279,7 +280,7 @@ namespace Models.GrazPlan
 
         private int getGestation()
         {
-            return Convert.ToInt32(Math.Round(PregC[1]));
+            return Convert.ToInt32(Math.Round(PregC[1]), CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -438,7 +439,7 @@ namespace Models.GrazPlan
                     result = SelfWeanPropn;
                 else
                 {
-                    Idx = Convert.ToInt32(sTagList[2]);
+                    Idx = Convert.ToInt32(sTagList[2], CultureInfo.InvariantCulture);
 
                     if (sTagList[1] == "n")
                         result = GrowthC[Idx];
@@ -617,7 +618,7 @@ namespace Models.GrazPlan
                     SelfWeanPropn = fValue;
                 else
                 {
-                    Idx = Convert.ToInt32(sTagList[2]);
+                    Idx = Convert.ToInt32(sTagList[2], CultureInfo.InvariantCulture);
 
                     if (sTagList[1] == "n")
                         GrowthC[Idx] = fValue;
@@ -1015,8 +1016,8 @@ namespace Models.GrazPlan
             AnimalParamSet newObj = null;
 
             AnimalParamSet baseParams;
-
-            baseParams = (AnimalParamSet)GlobalAnimalParams.AnimalParamsGlb().GetNode(sBreedName);
+            GlobalAnimalParams animalParams = new GlobalAnimalParams();
+            baseParams = (AnimalParamSet)animalParams.AnimalParamsGlb().GetNode(sBreedName);
             if (baseParams != null)
                 newObj = new AnimalParamSet(null, baseParams);
             else

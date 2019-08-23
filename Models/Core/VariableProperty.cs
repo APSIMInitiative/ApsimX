@@ -60,13 +60,13 @@ namespace Models.Core
                 int posColon = arraySpecifier.IndexOf(':');
                 if (posColon == -1)
                 {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier);
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier, CultureInfo.InvariantCulture);
                     this.upperArraySpecifier = this.lowerArraySpecifier;
                 }
                 else
                 {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon));
-                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon), CultureInfo.InvariantCulture);
+                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1), CultureInfo.InvariantCulture);
                 }
             }
             else
@@ -116,9 +116,9 @@ namespace Models.Core
                     return null;
                 }
 
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    string cropName = (this.Object as ISoilCrop).Name;
+                    string cropName = (this.Object as SoilCrop).Name;
                     if (cropName.EndsWith("Soil"))
                         cropName = cropName.Replace("Soil", "");
                     return cropName + " " + descriptionAttribute.ToString();
@@ -597,9 +597,9 @@ namespace Models.Core
         {
             get
             {
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    ISoilCrop soilCrop = this.Object as ISoilCrop;
+                    SoilCrop soilCrop = this.Object as SoilCrop;
                     if (soilCrop.Name.EndsWith("Soil"))
                         return soilCrop.Name.Substring(0, soilCrop.Name.Length - 4);
                     return soilCrop.Name;
@@ -695,7 +695,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(bool))
                 {
-                    this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
+                    this.property.SetValue(this.Object, Convert.ToBoolean(value, CultureInfo.InvariantCulture), null);
                 }
                 else if (this.DataType == typeof(DateTime))
                 {

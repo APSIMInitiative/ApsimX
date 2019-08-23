@@ -248,6 +248,25 @@ namespace Models.CLEM.Activities
                 }
             }
 
+            // report all timers that were due this time step
+            foreach (IActivityTimer timer in Apsim.ChildrenRecursively(this, typeof(IActivityTimer)))
+            {
+                if (timer.ActivityDue)
+                {
+                    // report activity performed.
+                    ActivityPerformedEventArgs timerActivity = new ActivityPerformedEventArgs
+                    {
+                        Activity = new BlankActivity()
+                        {
+                            Status = ActivityStatus.Timer,
+                            Name = (timer as IModel).Name
+                        }
+                    };
+                    timerActivity.Activity.SetGuID((timer as CLEMModel).UniqueID);
+                    timer.OnActivityPerformed(timerActivity);
+                }
+            }
+
             // add timestep activity for reporting
             ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()
             {

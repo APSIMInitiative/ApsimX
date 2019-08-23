@@ -261,9 +261,12 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
                 double growth = 0;
 
-                // method is performed on last day of month but needs to work with next month's details
-                int year = Clock.Today.AddDays(1).Year;
-                int month = Clock.Today.AddDays(1).Month;
+                //// method is performed on last day of month but needs to work with next month's details
+                //int year = Clock.Today.AddDays(1).Year;
+                //int month = Clock.Today.AddDays(1).Month;
+
+                int year = Clock.Today.Year;
+                int month = Clock.Today.Month;
 
                 //Get this months pasture data from the pasture data list
                 PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
@@ -293,7 +296,7 @@ namespace Models.CLEM.Activities
             else
             {
                 this.Status = ActivityStatus.Critical;
-                throw new Exception("No pasture data");
+                throw new Exception("No pasture data is available for [a="+this.Name+"]\nCheck that data is available for specified soil id etc. ");
             }
 
             // report activity performed.
@@ -452,15 +455,18 @@ namespace Models.CLEM.Activities
             // But as updates happen at the end of the month, the fist months biomass is never added so stay with 0 or delete following section
             // Get this months growth
             // Get this months pasture data from the pasture data list
-            PastureDataType pasturedata = PastureDataList.Where(a => a.Year == Clock.StartDate.Year && a.Month == Clock.StartDate.Month).FirstOrDefault();
-
-            double thisMonthsGrowth = pasturedata.Growth;
-            if (thisMonthsGrowth > 0)
+            if (PastureDataList != null)
             {
-                GrazeFoodStorePool thisMonth = newPools.Where(a => a.Age == 0).FirstOrDefault() as GrazeFoodStorePool;
-                if (thisMonth != null)
+                PastureDataType pasturedata = PastureDataList.Where(a => a.Year == Clock.StartDate.Year && a.Month == Clock.StartDate.Month).FirstOrDefault();
+
+                double thisMonthsGrowth = pasturedata.Growth * Area;
+                if (thisMonthsGrowth > 0)
                 {
-                    thisMonth.Set(Math.Max(0, thisMonth.Amount - thisMonthsGrowth));
+                    GrazeFoodStorePool thisMonth = newPools.Where(a => a.Age == 0).FirstOrDefault() as GrazeFoodStorePool;
+                    if (thisMonth != null)
+                    {
+                        thisMonth.Set(Math.Max(0, thisMonth.Amount - thisMonthsGrowth));
+                    }
                 }
             }
 
@@ -480,7 +486,12 @@ namespace Models.CLEM.Activities
         {
             if (Resources.RuminantHerd() != null)
             {
-                return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
+                string paddock = FeedTypeName;
+                if(paddock.Contains("."))
+                {
+                    paddock = paddock.Substring(paddock.IndexOf(".")+1);
+                }
+                return Resources.RuminantHerd().Herd.Where(a => a.Location == paddock).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
             }
             else
             {
@@ -507,7 +518,7 @@ namespace Models.CLEM.Activities
 
                 // Calculate average monthly stocking rate
                 // Check number of months to use
-                int monthdiff = ((ZoneCLEM.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + ZoneCLEM.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month;
+                int monthdiff = ((ZoneCLEM.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + ZoneCLEM.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month+1;
                 if (monthdiff >= ZoneCLEM.EcologicalIndicatorsCalculationInterval)
                 {
                     monthdiff = ZoneCLEM.EcologicalIndicatorsCalculationInterval;

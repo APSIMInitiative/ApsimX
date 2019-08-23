@@ -199,25 +199,17 @@
         /// <returns>The clone of the model</returns>
         public static IModel Clone(IModel model)
         {
-            lock (model)
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
             {
-                // Get rid of our parent temporarily as we don't want to serialise that.
-                IModel parent = model.Parent;
-                model.Parent = null;
+                formatter.Serialize(stream, model);
 
-                IFormatter formatter = new BinaryFormatter();
-                Stream stream = new MemoryStream();
-                using (stream)
-                {
-                    formatter.Serialize(stream, model);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    IModel returnObject = (IModel)formatter.Deserialize(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                IModel newModel =  (IModel)formatter.Deserialize(stream);
 
-                    // Reinstate parent
-                    model.Parent = parent;
-
-                    return returnObject;
-                }
+                ParentAllChildren(newModel);
+                return newModel;
             }
         }
 
@@ -385,6 +377,18 @@
         }
 
         /// <summary>
+        /// Parent all children of 'model' and call 'OnCreated' in each child.
+        /// </summary>
+        /// <param name="model">The model to parent</param>
+        public static void InitialiseModel(IModel model)
+        {
+            ParentAllChildren(model);
+            model.OnCreated();
+            foreach (var child in Apsim.ChildrenRecursively(model))
+                child.OnCreated();
+        }
+
+        /// <summary>
         /// Parent all children of 'model'.
         /// </summary>
         /// <param name="model">The model to parent</param>
@@ -484,6 +488,7 @@
 
             if (parent.GetType() == typeof(Folder) ||
                 parent.GetType() == typeof(Factor) ||
+                parent.GetType() == typeof(CompositeFactor) ||
                 parent.GetType() == typeof(Replacements))
                 return true;
 

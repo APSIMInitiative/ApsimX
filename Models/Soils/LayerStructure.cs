@@ -17,24 +17,8 @@ namespace Models.Soils
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class LayerStructure : Model
     {
-        /// <summary>The depth boundaries of each layer</summary>
-        /// <value>The thickness.</value>
-        [XmlIgnore]
-        [Units("cm")]
-        [Caption("Depth")]
-        [Description("Soil layer depth positions")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(Thickness);
-            }
-        }
         /// <summary>Gets or sets the thickness.</summary>
-        /// <value>The thickness.</value>
-        [Units("mm")]
-        [Caption("Thickness")]
-        [Description("Soil layer thickness for each layer")]
+        [Description("Depth (mm)")]
         public double[] Thickness { get; set; }       
     }
 }

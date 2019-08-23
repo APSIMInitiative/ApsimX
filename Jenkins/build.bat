@@ -1,6 +1,7 @@
 @echo off
 setlocal
 setlocal enabledelayedexpansion
+
 rem Display help syntax if necessary.
 if "%1"=="/?" (
 	echo Compiles Apsim
@@ -8,20 +9,6 @@ if "%1"=="/?" (
 	echo     /r: build in release mode
 	echo.    /?: show help information
 	exit /b 0
-)
-
-rem Check if msbuild is on path.
-where msbuild>nul
-if errorlevel 1 (
-	echo error: msbuild is not on path.
-	exit 1
-)
-
-rem Check if nuget is on path.
-where nuget>nul
-if errorlevel 1 (
-	echo error: nuget is not on path.
-	exit 1
 )
 
 rem Ensure apsimx environment variable is defined.
@@ -48,9 +35,6 @@ rem Restore NuGet packages.
 echo Restoring NuGet packages...
 pushd "%apsimx%">nul
 nuget restore -verbosity quiet
-pushd "%apsimx%\..\APSIM.Shared">nul
-nuget restore -verbosity quiet
-popd>nul
 popd>nul
 
 rem Set verbosity to minimal, don't display the logo, 

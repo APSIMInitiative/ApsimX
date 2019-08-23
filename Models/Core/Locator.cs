@@ -12,6 +12,7 @@ namespace Models.Core
     using APSIM.Shared.Utilities;
     using System.Collections;
     using Functions;
+    using System.Globalization;
 
     /// <summary>
     /// This class is responsible for the location and retrieval of variables or models 
@@ -180,7 +181,7 @@ namespace Models.Core
                 int i;
                 for (i = 0; i < namePathBits.Length; i++)
                 {
-                    IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType));
+                    IModel localModel = relativeTo.Children.FirstOrDefault(m => m.Name.Equals(namePathBits[i], compareType) && m.Enabled);
                     if (localModel == null)
                     {
                         break;
@@ -257,10 +258,10 @@ namespace Models.Core
                                     switch (Type.GetTypeCode(pars[argid].ParameterType))
                                     {
                                         case TypeCode.Double:
-                                            argumentsList.Add(Convert.ToDouble(cleanArg));
+                                            argumentsList.Add(Convert.ToDouble(cleanArg, CultureInfo.InvariantCulture));
                                             break;
                                         case TypeCode.Int32:
-                                            argumentsList.Add(Convert.ToInt32(cleanArg));
+                                            argumentsList.Add(Convert.ToInt32(cleanArg, CultureInfo.InvariantCulture));
                                             break;
                                         case TypeCode.String:
                                             argumentsList.Add(cleanArg);
@@ -502,7 +503,7 @@ namespace Models.Core
         //                                switch (Type.GetTypeCode(pars[argid].ParameterType))
         //                                {
         //                                    case TypeCode.Double:
-        //                                        argumentsList.Add(Convert.ToDouble(cleanArg));
+        //                                        argumentsList.Add(Convert.ToDouble(cleanArg, CultureInfo.InvariantCulture));
         //                                        break;
         //                                    case TypeCode.Int32:
         //                                        argumentsList.Add(Convert.ToInt32(cleanArg));

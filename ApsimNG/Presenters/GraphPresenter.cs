@@ -209,6 +209,8 @@ namespace UserInterface.Presenters
                                                     definition.Title,
                                                     definition.X,
                                                     definition.Y,
+                                                    definition.XFieldName,
+                                                    definition.YFieldName,
                                                     definition.Error,
                                                     definition.XAxis,
                                                     definition.YAxis,
@@ -236,7 +238,18 @@ namespace UserInterface.Presenters
                     {
                         graphView.DrawArea(
                             definition.Title,
-                            definition.X.Cast<double>().ToArray(),
+                            definition.X,
+                            definition.Y,
+                            definition.XAxis,
+                            definition.YAxis,
+                            colour,
+                            definition.ShowInLegend);
+                    }
+                    else if (definition.Type == SeriesType.StackedArea)
+                    {
+                        graphView.DrawStackedArea(
+                            definition.Title,
+                            definition.X.Cast<object>().ToArray(),
                             definition.Y.Cast<double>().ToArray(),
                             definition.XAxis,
                             definition.YAxis,
