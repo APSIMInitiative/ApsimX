@@ -219,7 +219,7 @@
                                 Thickness = new double[] { 100, 300 },
                                 Carbon = new double[] { 2, 1 }
                             },
-                            new Analysis
+                            new Chemical
                             {
                                 Thickness = new double[] { 100, 200 },
                                 CL = new double[] { 38, double.NaN }
