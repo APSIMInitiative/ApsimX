@@ -109,8 +109,6 @@ namespace Models.CLEM
             }
             return html;
         }
-
-
     }
 
     ///<summary>
