@@ -568,7 +568,7 @@
     <Compile Include="Plant\Plant.cs" />
     <Compile Include="Plant\Structure\Structure.cs" />
     <Compile Include="Irrigation\IrrigationApplicationType.cs" />
-    <Compile Include="Soils\Analysis.cs" />
+    <Compile Include="Soils\Chemical.cs" />
     <Compile Include="Soils\InitialWater.cs" />
     <Compile Include="Soils\LayerStructure.cs" />
     <Compile Include="Soils\Phosphorus.cs" />
@@ -576,7 +576,7 @@
     <Compile Include="Soils\SoilTemp\CERESSoilTemperature.cs" />
     <Compile Include="Soils\Soil.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
-    <Compile Include="Soils\SoilOrganicMatter.cs" />
+    <Compile Include="Soils\Organic.cs" />
     <Compile Include="Soils\SWIM\Swim.cs" />
     <Compile Include="Soils\SWIM\SwimSoluteParameters.cs" />
     <Compile Include="Soils\SWIM\SwimSubsurfaceDrain.cs" />
@@ -728,10 +728,7 @@
     <None Include="ClassDiagram.cd" />
     <None Include="Resources\FodderBeet.json" />
     <EmbeddedResource Include="Resources\Nutrient.json" />
-    <None Include="Resources\Oats1.json" />
     <None Include="Resources\Potato.json" />
-    <None Include="Resources\Potato1.json" />
-    <None Include="Resources\StandardToolbox.apsimx" />
     <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>

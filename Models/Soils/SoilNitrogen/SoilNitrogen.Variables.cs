@@ -1331,24 +1331,6 @@ namespace Models.Soils
 
         #endregion params for denitrification
 
-        #region Parameters for handling soil loss process
-
-        /// <summary>
-        /// coefficient A for erosion enrichment function.
-        /// </summary>
-        [Units("")]
-        [XmlIgnore]
-        public double enr_a_coeff = 7.4;
-
-        /// <summary>
-        /// coefficient A for erosion enrichment function.
-        /// </summary>
-        [Units("")]
-        [XmlIgnore]
-        public double enr_b_coeff = 0.2;
-
-        #endregion params for soil loss
-
         #endregion params for initialisation
 
         #region Parameters that do or may change during simulation
@@ -6118,11 +6100,6 @@ namespace Models.Soils
         #endregion components
 
         #region Soil physics data
-
-        /// <summary>
-        /// The soil layer thickness at the start of the simulation.
-        /// </summary>
-        private double[] reset_dlayer;
 
         /// <summary>
         /// Soil layers' thichness (mm).

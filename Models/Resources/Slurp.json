@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 56,
+  "Version": 65,
   "Name": "Simulations",
   "Children": [
     {
@@ -735,7 +735,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "/d",
-              "Name": "DetachmentRateFunction",
+              "Name": "DetachmentRate",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -753,7 +753,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "InitialWtFunction",
+              "Name": "InitialWt",
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -783,7 +783,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "m^2/m^2",
-              "Name": "LaiDeadFunction",
+              "Name": "LaiDead",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -801,7 +801,7 @@
             },
             {
               "$type": "Models.Functions.AirTemperatureFunction, Models",
-              "Name": "FRGRFunction",
+              "Name": "FRGR",
               "Children": [
                 {
                   "$type": "Models.Functions.XYPairs, Models",
@@ -852,7 +852,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 5.0,
               "Units": "m2/m2",
-              "Name": "LAIFunction",
+              "Name": "Area",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -862,7 +862,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.7,
               "Units": null,
-              "Name": "ExtinctionCoefficientFunction",
+              "Name": "ExtinctionCoefficient",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -872,7 +872,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 400.0,
               "Units": "mm",
-              "Name": "HeightFunction",
+              "Name": "Tallness",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -959,7 +959,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "0-1",
-              "Name": "MaintenanceRespirationFunction",
+              "Name": "MaintenanceRespiration",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -1264,8 +1264,8 @@
           "$type": "Models.PMF.Cultivar, Models",
           "Command": [
             "[Root].MaximumRootDepth.FixedValue = 2600",
-            "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.65",
-            "[Leaf].HeightFunction.FixedValue = 5000",
+            "[Leaf].ExtinctionCoefficient.FixedValue = 0.65",
+            "[Leaf].Tallness.FixedValue = 5000",
             "[Root].KLModifier.XYPairs.X = 0, 400, 500, 1000, 1500, 2000",
             "[Root].KLModifier.XYPairs.Y = 1, 1, 0.9, 0.6, 0.3, 0.1"
           ],
@@ -1290,7 +1290,7 @@
           "Command": [
             "[Root].MaximumRootDepth.FixedValue = 800",
             "[Root].RootFrontVelocity.Potential.FixedValue = 10",
-            "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.65",
+            "[Leaf].ExtinctionCoefficient.FixedValue = 0.65",
             "[Root].KLModifier.XYPairs.X = 0, 200, 300, 500, 1000",
             "[Root].KLModifier.XYPairs.Y = 1, 1, 0.2, 0.03, 0.0",
             "[Leaf].Gsmax350 = 0.004",
@@ -1317,7 +1317,7 @@
           "Command": [
             "[Root].MaximumRootDepth.FixedValue = 2500",
             "[Root].RootFrontVelocity.Potential.FixedValue = 11",
-            "[Leaf].ExtinctionCoefficientFunction.FixedValue = 0.8",
+            "[Leaf].ExtinctionCoefficient.FixedValue = 0.8",
             "[Root].KLModifier.XYPairs.X = 0, 200, 500, 1000, 1500, 2000",
             "[Root].KLModifier.XYPairs.Y = 1, 1, 0.5, 0.2, 0.08, 0.03",
             "[Leaf].Gsmax350 = 0.006",

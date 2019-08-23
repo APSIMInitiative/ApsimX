@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 64; } }
+        public static int LatestVersion { get { return 66; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -962,7 +962,7 @@
         }
 
         /// <summary>
-        /// Upgrades to version 61. Rename the 'Water' node under soil to 'Physical'
+        /// Upgrades to version 63. Rename the 'Water' node under soil to 'Physical'
         /// </summary>
         /// <param name="root">The root JSON token.</param>
         /// <param name="fileName">The name of the apsimx file.</param>
@@ -1007,13 +1007,224 @@
             }
         }
 
+
+        /// <summary>
+        /// Upgrades to version 64. Rename the 'SoilOrganicMatter' node under soil to 'Organic'
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion64(JObject root, string fileName)
+        {
+            foreach (var organic in JsonUtilities.ChildrenRecursively(root, "SoilOrganicMatter"))
+            {
+                organic["$type"] = "Models.Soils.Organic, Models";
+                organic["Name"] = "Organic";
+                organic["FOMCNRatio"] = organic["RootCN"];
+                organic["FOM"] = organic["RootWt"];
+                organic["SoilCNRatio"] = organic["SoilCN"];
+                organic["Carbon"] = organic["OC"];
+                var ocUnits = organic["OCUnits"];
+                if (ocUnits != null)
+                {
+                    string ocUnitsString = ocUnits.ToString();
+                    if (ocUnitsString == "1" || ocUnitsString == "WalkleyBlack")
+                    {
+                        var oc = organic["Carbon"].Values<double>().ToArray();
+                        oc = MathUtilities.Multiply_Value(oc, 1.3);
+                        organic["Carbon"] = new JArray(oc);
+                    }
+                }
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilOrganicMatter.", ".Organic.");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".RootCN", ".FOMCNRatio");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".RootWt", ".FOM");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".SoilCN", ".SoilCNRatio");
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Organic.OC", ".Organic.Carbon");
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
+            {
+                var specification = factor["Specification"];
+                if (specification != null)
+                {
+                    var specificationString = specification.ToString();
+                    specificationString = specificationString.Replace(".SoilOrganicMatter.", ".Organic.");
+                    specificationString = specificationString.Replace("[SoilOrganicMatter]", "[Organic]");
+                    specificationString = specificationString.Replace(".Organic.OC", ".Organic.Carbon");
+                    specificationString = specificationString.Replace(".RootCN", ".FOMCNRatio");
+                    specificationString = specificationString.Replace(".RootWt", ".FOM");
+                    specificationString = specificationString.Replace(".SoilCN", ".SoilCNRatio");
+                    factor["Specification"] = specificationString;
+                }
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+            {
+                var specifications = factor["Specifications"];
+                if (specifications != null)
+                {
+                    for (int i = 0; i < specifications.Count(); i++)
+                    {
+                        var specificationString = specifications[i].ToString();
+                        specificationString = specificationString.Replace(".SoilOrganicMatter.", ".Organic.");
+                        specificationString = specificationString.Replace("[SoilOrganicMatter]", "[Organic]");
+                        specificationString = specificationString.Replace(".OC", ".Carbon");
+                        specificationString = specificationString.Replace(".RootCN", ".FOMCNRatio");
+                        specificationString = specificationString.Replace(".RootWt", ".FOM");
+                        specificationString = specificationString.Replace(".SoilCN", ".SoilCNRatio");
+                        specifications[i] = specificationString;
+                    }
+                }
+            }
+
+            foreach (var series in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                if (series["XFieldName"] != null)
+                {
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace("SoilOrganicMatter", "Organic");
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace(".Organic.OC", ".Organic.Carbon");
+                }
+                if (series["YFieldName"] != null)
+                {
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace("SoilOrganicMatter", "Organic");
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace(".Organic.OC", ".Organic.Carbon");
+                }
+            }
+
+            foreach (var child in JsonUtilities.ChildrenRecursively(root))
+            {
+                if (JsonUtilities.Type(child) == "Morris" || JsonUtilities.Type(child) == "Sobol")
+                {
+                    var parameters = child["Parameters"];
+                    for (int i = 0; i < parameters.Count(); i++)
+                    {
+                        var parameterString = parameters[i]["Path"].ToString();
+                        parameterString = parameterString.Replace(".SoilOrganicMatter.", ".Organic.");
+                        parameterString = parameterString.Replace("[SoilOrganicMatter]", "[Organic]");
+                        parameterString = parameterString.Replace(".OC", ".Carbon");
+                        parameters[i]["Path"] = parameterString;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 65. Rename the 'Analysis' node under soil to 'Chemical'
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion65(JObject root, string fileName)
+        {
+            foreach (var chemical in JsonUtilities.ChildrenRecursively(root, "Analysis"))
+            {
+                var soil = JsonUtilities.Parent(chemical);
+                var physical = JsonUtilities.ChildWithName(soil as JObject, "Physical");
+
+                chemical["$type"] = "Models.Soils.Chemical, Models";
+                chemical["Name"] = "Chemical";
+
+                if (physical != null)
+                {
+                    // Move particle size numbers from chemical to physical and make sure layers are mapped.
+                    var physicalThickness = physical["Thickness"].Values<double>().ToArray();
+                    var chemicalThickness = chemical["Thickness"].Values<double>().ToArray();
+
+                    if (chemical["ParticleSizeClay"] != null && chemical["ParticleSizeClay"].HasValues)
+                    {
+                        var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
+                        if (values.Length < physicalThickness.Length)
+                            Array.Resize(ref values, chemicalThickness.Length);
+                        var mappedValues = Soils.Standardiser.Layers.MapConcentration(values, chemicalThickness, physicalThickness, values.Last());
+                        physical["ParticleSizeClay"] = new JArray(mappedValues);
+                    }
+
+                    // convert ph units
+                    var phUnits = physical["PHUnits"];
+                    if (phUnits != null)
+                    {
+                        string phUnitsString = phUnits.ToString();
+                        if (phUnitsString == "1")
+                        {
+                            // pH in water = (pH in CaCl X 1.1045) - 0.1375
+                            var ph = physical["PH"].Values<double>().ToArray();
+                            ph = MathUtilities.Subtract_Value(MathUtilities.Multiply_Value(ph, 1.1045), 0.1375);
+                            chemical["PH"] = new JArray(ph);
+                        }
+                    }
+                }
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Analysis.", ".Chemical.");
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "Factor"))
+            {
+                var specification = factor["Specification"];
+                if (specification != null)
+                {
+                    var specificationString = specification.ToString();
+                    specificationString = specificationString.Replace(".Analysis.", ".Chemical.");
+                    specificationString = specificationString.Replace("[Analysis]", "[Chemical]");
+                    factor["Specification"] = specificationString;
+                }
+            }
+
+            foreach (var factor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+            {
+                var specifications = factor["Specifications"];
+                if (specifications != null)
+                {
+                    for (int i = 0; i < specifications.Count(); i++)
+                    {
+                        var specificationString = specifications[i].ToString();
+                        specificationString = specificationString.Replace(".Analysis.", ".Chemical.");
+                        specificationString = specificationString.Replace("[Analysis]", "[Chemical]");
+                        specifications[i] = specificationString;
+                    }
+                }
+            }
+
+            foreach (var series in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                if (series["XFieldName"] != null)
+                {
+                    series["XFieldName"] = series["XFieldName"].ToString().Replace("Analysis", "Chemical");
+                }
+                if (series["YFieldName"] != null)
+                {
+                    series["YFieldName"] = series["YFieldName"].ToString().Replace("Analysis", "Chemical");
+                }
+            }
+
+            foreach (var child in JsonUtilities.ChildrenRecursively(root))
+            {
+                if (JsonUtilities.Type(child) == "Morris" || JsonUtilities.Type(child) == "Sobol")
+                {
+                    var parameters = child["Parameters"];
+                    for (int i = 0; i < parameters.Count(); i++)
+                    {
+                        var parameterString = parameters[i]["Path"].ToString();
+                        parameterString = parameterString.Replace(".Analysis.", ".Chemical.");
+                        parameterString = parameterString.Replace("[Analysis]", "[Chemical]");
+                        parameters[i]["Path"] = parameterString;
+                    }
+                }
+            }
+        }
+
+
         /// <summary>
         /// Upgrades to version 64. Sets the StartDate and EndDate properties
         /// in clock to the values previously stored in Start and End.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion64(JObject root, string fileName)
+        private static void UpgradeToVersion66(JObject root, string fileName)
         {
             foreach (JObject clock in JsonUtilities.ChildrenRecursively(root, "Clock"))
             {

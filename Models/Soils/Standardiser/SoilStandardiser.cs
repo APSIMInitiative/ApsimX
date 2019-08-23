@@ -61,8 +61,8 @@
         /// <param name="soil">The soil.</param>
         private static void CreateInitialSample(Soil soil)
         {
-            var soilOrganicMatter = soil.Children.Find(child => child is SoilOrganicMatter) as SoilOrganicMatter;
-            var analysis = soil.Children.Find(child => child is Analysis) as Analysis;
+            var soilOrganicMatter = soil.Children.Find(child => child is Organic) as Organic;
+            var analysis = soil.Children.Find(child => child is Chemical) as Chemical;
             var initial = soil.Children.Find(child => child is Sample) as Sample;
             if (initial == null)
             {
@@ -76,13 +76,13 @@
             if (analysis.NH4N != null)
                 initial.NH4N = soil.ppm2kgha(analysis.NH4N);
 
-            initial.OC = MergeArrays(initial.OC, soilOrganicMatter.OC);
+            initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
             initial.PH = MergeArrays(initial.PH, analysis.PH);
             initial.ESP = MergeArrays(initial.ESP, analysis.ESP);
             initial.EC = MergeArrays(initial.EC, analysis.EC);
             initial.CL = MergeArrays(initial.CL, analysis.CL);
 
-            soilOrganicMatter.OC = null;
+            soilOrganicMatter.Carbon = null;
             //soil.Children.Remove(analysis);
         }
 

@@ -12,21 +12,6 @@
         /// <param name="soil">The soil.</param>
         public static void Convert(Soil soil)
         {
-            // Convert soil organic matter OC to total %
-            if (soil.SoilOrganicMatter != null)
-            {
-                soil.SoilOrganicMatter.OC = OCTotalPercent(soil.SoilOrganicMatter.OC, soil.SoilOrganicMatter.OCUnits);
-                soil.SoilOrganicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
-            }
-
-            // Convert analysis.
-            var analysis = Apsim.Child(soil, typeof(Analysis)) as Analysis;
-            if (analysis != null)
-            {
-                analysis.PH = PHWater(analysis.PH, analysis.PHUnits);
-                analysis.PHUnits = Sample.PHSampleUnitsEnum.Water;
-            }
-
             // Convert all samples.
             var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
             foreach (Sample sample in samples)

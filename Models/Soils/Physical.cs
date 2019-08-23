@@ -11,9 +11,16 @@
     public class Physical : Model
     {
         /// <summary>Gets or sets the thickness.</summary>
-        [Description("Depth (mm)")]
+        [Description("Depth")]
         [Summary]
+        [Units("mm")]
         public double[] Thickness { get; set; }
+
+        /// <summary>Particle size clay.</summary>
+        [Summary]
+        [Description("Clay")]
+        [Units("%")]
+        public double[] ParticleSizeClay { get; set; }
 
         /// <summary>Gets or sets the bd.</summary>
         [Summary]

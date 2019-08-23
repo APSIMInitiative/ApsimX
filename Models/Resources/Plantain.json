@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 56,
+  "Version": 65,
   "Name": "Simulations",
   "Children": [
     {
@@ -372,7 +372,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "InitialWtFunction",
+              "Name": "InitialWt",
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -588,7 +588,7 @@
             },
             {
               "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "FRGRFunction",
+              "Name": "FRGR",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -673,7 +673,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "0-1",
-              "Name": "MaintenanceRespirationFunction",
+              "Name": "MaintenanceRespiration",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -681,7 +681,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "LAIFunction",
+              "Name": "Area",
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -709,11 +709,11 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "LaiDeadFunction",
+              "Name": "LaiDead",
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].LAIFunction.SpecificLeafArea.Value()",
+                  "VariableName": "[Leaf].Area.SpecificLeafArea.Value()",
                   "Name": "SpecificLeafArea",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -738,7 +738,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.6,
               "Units": "0-1",
-              "Name": "ExtinctionCoefficientFunction",
+              "Name": "ExtinctionCoefficient",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -747,7 +747,7 @@
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
               "XProperty": "[Plantain].AboveGround.Wt",
-              "Name": "HeightFunction",
+              "Name": "Tallness",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -935,7 +935,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "DetachmentRateFunction",
+              "Name": "DetachmentRate",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -2401,6 +2401,14 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -3222,6 +3230,14 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -3900,6 +3916,14 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -5587,8 +5611,8 @@
               "Command": [
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 5, 10, 15, 21, 27, 35",
                 "[Leaf].Photosynthesis.FT.XYPairs.Y = 0.0, 0.04, 0.3, 1.0, 1.0, 0.0",
-                "[Leaf].HeightFunction.XYPairs.X = 10, 100, 500",
-                "[Leaf].HeightFunction.XYPairs.Y = 100, 300, 400"
+                "[Leaf].Tallness.XYPairs.X = 10, 100, 500",
+                "[Leaf].Tallness.XYPairs.Y = 100, 300, 400"
               ],
               "Name": "Lancelot",
               "Children": [
