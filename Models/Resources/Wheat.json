@@ -2980,7 +2980,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.5,
+              "FixedValue": 1.7,
               "Units": null,
               "Name": "RUE",
               "Children": [],
