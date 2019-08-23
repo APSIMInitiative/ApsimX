@@ -132,6 +132,13 @@
                         // crop colours
                         if (columnName.Contains("LL"))
                         {
+                            if (profileGrid.Properties[i].Object is SoilCrop)
+                            {
+                                string soilCropName = (profileGrid.Properties[i].Object as SoilCrop).Name;
+                                string cropName = soilCropName.Replace("Soil", "");
+                                columnName = cropName + " " + columnName;
+                            }
+
                             Series cropLLSeries = new Series();
                             cropLLSeries.Name = columnName;
                             cropLLSeries.Colour = ColourUtilities.ChooseColour(this.graph.Children.Count);
