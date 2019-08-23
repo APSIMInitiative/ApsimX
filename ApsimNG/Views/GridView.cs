@@ -347,23 +347,38 @@
             {
                 TreePath path;
                 TreeViewColumn col;
-                Grid.GetCursor(out path, out col);
-                if (path != null && col != null && col.Cells.Length > 0)
+                if (Grid.HasFocus)
                 {
-                    int colNo, rowNo;
-                    rowNo = path.Indices[0];
-                    if (colLookup.TryGetValue(col.Cells[0], out colNo))
-                        return GetCell(colNo, rowNo);
+                    Grid.GetCursor(out path, out col);
+                    if (path != null && col != null && col.Cells.Length > 0)
+                    {
+                        int colNo, rowNo;
+                        rowNo = path.Indices[0];
+                        if (colLookup.TryGetValue(col.Cells[0], out colNo))
+                            return GetCell(colNo, rowNo);
+                    }
                 }
+
+                if (fixedColView.HasFocus)
+                {
+                    fixedColView.GetCursor(out path, out col);
+                    if (path != null && col != null && col.Cells.Length > 0)
+                    {
+                        int colNo, rowNo;
+                        rowNo = path.Indices[0];
+                        if (colLookup.TryGetValue(col.Cells[0], out colNo))
+                            return GetCell(colNo, rowNo);
+                    }
+                }
+
+                if (selectedCellRowIndex >= 0 && selectedCellColumnIndex >= 0)
+                    return GetCell(selectedCellColumnIndex, selectedCellRowIndex);
                 return null;
             }
             set
             {
                 if (value != null)
-                {
-                    TreePath row = new TreePath(new int[1] { value.RowIndex });
-                    Grid.SetCursor(row, Grid.GetColumn(value.ColumnIndex), false);
-                }
+                    SelectCell(value.RowIndex, value.ColumnIndex, false);
             }
         }
 
@@ -496,6 +511,13 @@
             // We have a "text" cell. Set the text, and other properties for the cell
             cell.Visible = true;
             textRenderer.Text = text;
+        }
+
+        private Gtk.TreeView GetTreeView(int columnIndex)
+        {
+            if (columnIndex >= numberLockedCols)
+                return Grid;
+            return fixedColView;
         }
 
         /// <summary>
@@ -802,7 +824,7 @@
         {
             int i = 0;
             if (view == null)
-                view = Grid;
+                view = GetTreeView(colNo);
             foreach (Widget widget in view.AllChildren)
             {
                 if (widget.GetType() != typeof(Gtk.Button))
@@ -827,7 +849,7 @@
         {
             int i = 0;
             if (view == null)
-                view = Grid;
+                view = GetTreeView(colNo);
             foreach (Widget widget in view.AllChildren)
             {
                 if (widget.GetType() != typeof(Gtk.Button))
@@ -983,27 +1005,23 @@
         /// </summary>
         private void UpdateSelectedCell()
         {
-            TreePath path;
-            TreeViewColumn column;
-            Grid.GetCursor(out path, out column);
-            if (path == null || column == null)
-                return;
+            IGridCell cell = GetCurrentCell;
 
-            int rowIndex = path.Indices[0];
-            int colIndex = Array.IndexOf(Grid.Columns, column);
+            if (cell != null)
+            {
+                // If we've clicked on the bottom row of populated data, all cells 
+                // below the current cell will also be selected. To overcome this,
+                // we add a new row to the datasource. Not a great solution, but 
+                // it works.
+                if (cell.RowIndex >= DataSource.Rows.Count - 1)
+                    DataSource.Rows.Add(DataSource.NewRow());
 
-            // If we've clicked on the bottom row of populated data, all cells 
-            // below the current cell will also be selected. To overcome this,
-            // we add a new row to the datasource. Not a great solution, but 
-            // it works.
-            if (rowIndex >= DataSource.Rows.Count - 1)
-                DataSource.Rows.Add(DataSource.NewRow());
-            
-            selectedCellRowIndex = rowIndex;
-            selectedCellColumnIndex = colIndex;
-            selectionColMax = -1;
-            selectionRowMax = -1;
-            Grid.QueueDraw();
+                selectedCellRowIndex = cell.RowIndex;
+                selectedCellColumnIndex = cell.ColumnIndex;
+                selectionColMax = -1;
+                selectionRowMax = -1;
+                GetTreeView(cell.ColumnIndex).QueueDraw();
+            }
         }
 
         /// <summary>
@@ -1290,7 +1308,7 @@
         {
             int cellHeight, offsetX, offsetY, cellWidth;
             Gdk.Rectangle rectangle = new Gdk.Rectangle();
-            TreeViewColumn column = Grid.GetColumn(col);
+            TreeViewColumn column = GetTreeView(col).GetColumn(col);
 
             // Getting dimensions from TreeViewColumn
             column.CellGetSize(rectangle, out offsetX, out offsetY, out cellWidth, out cellHeight);
@@ -1578,7 +1596,7 @@
                         selectionRowMax = RowCount;
                         selectionColMax = columnNumber;
                     }
-                    Grid.QueueDraw();
+                    GetTreeView(selectedCellColumnIndex)?.QueueDraw();
                 }
                 else if (e.Event.Button == 3)
                 {
@@ -1646,7 +1664,7 @@
                     (newLabel.Parent as Alignment).LeftPadding = 2;
                 */
                 newLabel.UseMarkup = true;
-                newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(Grid.Columns[i].Title) + "</b>";
+                newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(view.Columns[i].Title) + "</b>";
                 if (DataSource.Columns[i].Caption != DataSource.Columns[i].ColumnName)
                     newLabel.Parent.Parent.Parent.TooltipText = DataSource.Columns[i].ColumnName;
                 newLabel.Show();
@@ -1737,15 +1755,15 @@
                         return;
                 }
 
-                string beforeCaret = GetCurrentCell.Value.ToString().Substring(0, caretLocation);
-                string afterCaret = GetCurrentCell.Value.ToString().Substring(caretLocation);
+                IGridCell cell = GetCurrentCell;
 
-                GetCurrentCell.Value = beforeCaret + text + afterCaret;
-                Grid.SetCursor(new TreePath(new int[1] { GetCurrentCell.RowIndex }), Grid.GetColumn(GetCurrentCell.ColumnIndex), true);
-                (editControl as Entry).Position = (GetCurrentCell.Value as string).Length;
-                while (GLib.MainContext.Iteration())
-                {
-                }
+                string beforeCaret = cell.Value.ToString().Substring(0, caretLocation);
+                string afterCaret = cell.Value.ToString().Substring(caretLocation);
+
+                cell.Value = beforeCaret + text + afterCaret;
+                EditSelectedCell();
+                (editControl as Entry).Position = (cell.Value as string).Length;
+                while (GLib.MainContext.Iteration()) ;
                 valueBeforeEdit = string.Empty;
             }
             catch (Exception err)
@@ -1870,7 +1888,11 @@
         {
             try
             {
+                CellRenderer renderer = sender as CellRenderer;
                 int colNo = Grid.Columns.ToList().IndexOf(Grid.Columns.FirstOrDefault(c => c.Cells.Contains(sender as CellRenderer)));
+                if (colNo < 0)
+                    colNo = fixedColView.Columns.ToList().IndexOf(Grid.Columns.FirstOrDefault(c => c.Cells.Contains(sender as CellRenderer)));
+
                 int rowNo = Int32.Parse(r.Path);
 
                 IGridCell where = colNo >= 0 && rowNo >= 0 ? new GridCell(this, colNo, rowNo) : GetCurrentCell;
@@ -2208,13 +2230,30 @@
         /// <param name="column">(0-based) column index of the cell.</param>
         private void SelectCell(int row, int column, bool startEdit)
         {
-            Grid.SetCursor(new TreePath(new int[1] { row }), Grid.GetColumn(column), startEdit);
+            if (ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || IsSeparator(selectedCellRowIndex))
+                startEdit = false;
+
+            Gtk.TreeView view = GetTreeView(column);
+            view.GrabFocus();
+            view.SetCursor(new TreePath(new int[1] { row }), view.GetColumn(column), startEdit);
 
             selectedCellRowIndex = row;
             selectedCellColumnIndex = column;
 
             selectionRowMax = -1;
             selectionColMax = -1;
+
+            Grid.QueueDraw();
+            fixedColView.QueueDraw();
+        }
+
+        /// <summary>
+        /// Initiates an edit operation on the selected cell.
+        /// </summary>
+        private void EditSelectedCell()
+        {
+            //SelectCell(selectedCellRowIndex, selectedCellColumnIndex, true);
+            SelectCell(GetCurrentCell.RowIndex, GetCurrentCell.ColumnIndex, true);
         }
 
         /// <summary>
@@ -2301,12 +2340,14 @@
                 view.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path, out column);
                 if (e.Event.Button == 1)
                 {
+                    // Left click
                     if (path != null && column != null)
                     {
                         try
                         {
                             if ((e.Event.State & Gdk.ModifierType.ShiftMask) != 0)
                             {
+                                // Shift + left click
                                 selectionColMax = Array.IndexOf(view.Columns, column);
                                 selectionRowMax = path.Indices[0];
                                 e.RetVal = true;
@@ -2326,9 +2367,7 @@
                                 }
                                 else
                                 {
-                                    selectedCellColumnIndex = newlySelectedColumnIndex;
-                                    selectedCellRowIndex = newlySelectedRowIndex;
-                                    userEditingCell = false; 
+                                    SelectCell(newlySelectedRowIndex, newlySelectedColumnIndex, false);
                                 }
                             }
                         }
@@ -2371,18 +2410,6 @@
             catch (Exception err)
             {
                 ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Initiates an edit operation on the selected cell.
-        /// </summary>
-        private void EditSelectedCell()
-        {
-            if ( !(ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || IsSeparator(selectedCellRowIndex)) )
-            {
-                userEditingCell = true;
-                Grid.SetCursor(new TreePath(new int[1] { selectedCellRowIndex }), Grid.Columns[selectedCellColumnIndex], true);
             }
         }
 
