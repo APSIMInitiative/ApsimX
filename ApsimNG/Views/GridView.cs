@@ -189,6 +189,7 @@
             Grid.FocusInEvent += FocusInEvent;
             Grid.FocusOutEvent += FocusOutEvent;
             Grid.KeyPressEvent += GridviewKeyPressEvent;
+            fixedColView.KeyPressEvent += GridviewKeyPressEvent;
             Grid.EnableSearch = false;
             Grid.ExposeEvent += GridviewExposed;
             fixedColView.FocusInEvent += FocusInEvent;
@@ -896,6 +897,7 @@
             Grid.FocusInEvent -= FocusInEvent;
             Grid.FocusOutEvent -= FocusOutEvent;
             Grid.KeyPressEvent -= GridviewKeyPressEvent;
+            fixedColView.KeyPressEvent -= GridviewKeyPressEvent;
             fixedColView.FocusInEvent -= FocusInEvent;
             fixedColView.FocusOutEvent -= FocusOutEvent;
             Grid.ExposeEvent -= GridviewExposed;
