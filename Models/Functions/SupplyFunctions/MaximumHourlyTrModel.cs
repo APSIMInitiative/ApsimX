@@ -416,7 +416,7 @@ namespace Models.Functions.SupplyFunctions
                 else
                     tempResponse = tempResponseFunc.ValueIndexed(hourlyTemp[i]);
 
-                rueFactor = Math.Min(tempResponse, FN.Value()) * FCO2.Value();
+                rueFactor = tempResponse * FN.Value() * FCO2.Value();
                 hourlyRUE.Add(RUE.Value() * rueFactor);
             }
         }
