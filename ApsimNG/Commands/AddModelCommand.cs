@@ -54,12 +54,13 @@
                 if (parent == null)
                     throw new Exception("Cannot find model " + parentPath);
 
-                IModel modelToAdd = FileFormat.ReadFromString<IModel>(childString, out List<Exception> exceptions);
+                IModel newModel = FileFormat.ReadFromString<IModel>(childString, out List<Exception> exceptions);
                 if (exceptions != null && exceptions.Count > 0)
                 {
                     presenter.MainPresenter.ShowError(exceptions);
                     return;
                 }
+                modelToAdd = newModel;
 
                 if (modelToAdd is Simulations && modelToAdd.Children.Count == 1)
                     modelToAdd = modelToAdd.Children[0];
