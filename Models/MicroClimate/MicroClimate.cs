@@ -363,7 +363,7 @@ namespace Models
                 foreach (ZoneMicroClimate ZoneMC in zoneMicroClimates)
                 {
                     ZoneMC.DoCanopyCompartments();
-                    CalculateLayeredShortWaveRadiation(ZoneMC);
+                    CalculateLayeredShortWaveRadiation(ZoneMC, weather.Radn);
                 }
 
             // Light distribution is now complete so calculate remaining micromet equations
@@ -420,12 +420,6 @@ namespace Models
                 shortest = zoneMicroClimates[0];
             }
 
-            if (tallest.Canopies.Count>1)
-                throw (new Exception("Strip crop light interception model must only have one canopy in zone called "+tallest.zone.Name));
-            if (shortest.Canopies.Count > 1)
-                throw (new Exception("Strip crop light interception model must only have one canopy in zone called " + shortest.zone.Name));
-            if (shortest.DeltaZ.Length > 1)
-                throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + shortest.zone.Name));
             if (tallest.DeltaZ.Length > 1)
                 doTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
             else
@@ -442,14 +436,26 @@ namespace Models
             if (MathUtilities.Sum(tree.DeltaZ) > 0)  // Don't perform calculations if layers are empty
             {
                 double Ht = MathUtilities.Sum(tree.DeltaZ);                // Height of tree canopy
-                double CDt = tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
+                double CDt = 0;//tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
+                double CWt = 0;//Math.Min(tree.Canopies[0].Canopy.Width / 1000, (Wt + Wa));// Width of the tree canopy
+                foreach (CanopyType c in tree.Canopies)
+                    if (c.Canopy.Depth < c.Canopy.Height)
+                    {
+                        if (CDt > 0.0)
+                            throw new Exception("Can't have two tree canopies");
+                        else
+                        {
+                            CDt = c.Canopy.Depth;
+                            CWt = c.Canopy.Width;
+                        }
+                    }
                 double CBHt = Ht - CDt;                                    // Base hight of the tree canopy
                 double Ha = MathUtilities.Sum(alley.DeltaZ);               // Height of alley canopy
                 if ((Ha > CBHt) & (tree.DeltaZ.Length > 1))
                     throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
                 double Wt = (tree.zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alley.zone as Zones.RectangularZone).Width;   // Width of alley zone
-                double CWt = Math.Min(tree.Canopies[0].Canopy.Width / 1000,(Wt + Wa));// Width of the tree canopy
+                //double CWt = Math.Min(tree.Canopies[0].Canopy.Width / 1000,(Wt + Wa));// Width of the tree canopy
                 double WaOl = Math.Min(CWt - Wt, Wa);                         // Width of tree canopy that overlap the alley zone
                 double WaOp = Wa - WaOl;                                      // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                                  // Fraction of space in tree canopy
@@ -483,13 +489,15 @@ namespace Models
                 Ft = (Wt) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
                 Fs = (Wa) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
 
-                tree.Canopies[0].Rs[1] = weather.Radn * It / Ft;
-                tree.SurfaceRs = weather.Radn * St / Ft;
-
-                if (alley.Canopies[0].Rs != null)
-                    if (alley.Canopies[0].Rs.Length > 0)
-                        alley.Canopies[0].Rs[0] = weather.Radn * Ia / Fs;
-                alley.SurfaceRs = weather.Radn * Sa / Fs;
+                //tree.Canopies[0].Rs[1] = weather.Radn * It / Ft;
+                //tree.SurfaceRs = weather.Radn * St / Ft;
+                CalculateLayeredShortWaveRadiation(tree, weather.Radn * It / Ft);
+                
+                //if (alley.Canopies[0].Rs != null)
+                //    if (alley.Canopies[0].Rs.Length > 0)
+                //        alley.Canopies[0].Rs[0] = weather.Radn * Ia / Fs;
+                //alley.SurfaceRs = weather.Radn * Sa / Fs;
+                CalculateLayeredShortWaveRadiation(tree, weather.Radn * Ia / Fs);
             }
             else
             {

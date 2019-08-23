@@ -188,11 +188,10 @@ namespace Models
         /// <summary>
         /// Calculates interception of short wave by canopy compartments
         /// </summary>
-        private void CalculateLayeredShortWaveRadiation(ZoneMicroClimate ZoneMC)
+        private void CalculateLayeredShortWaveRadiation(ZoneMicroClimate ZoneMC, double Rin)
         {
                 // Perform Top-Down Light Balance
                 // ==============================
-                double Rin = weather.Radn;
                 double Rint = 0;
                 for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
                 {
