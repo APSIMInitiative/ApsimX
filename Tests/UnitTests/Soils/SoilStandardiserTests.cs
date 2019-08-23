@@ -41,7 +41,7 @@
                         Thickness = new double[] { 100, 300 },
                         Carbon = new double[] { 2, 1 }
                     },
-                    new Analysis
+                    new Chemical
                     {
                         Thickness = new double[] { 100, 200 },
                         NO3N = new double[] { 27, 10 },
@@ -112,7 +112,7 @@
                         Thickness = new double[] { 100, 300 },
                         Carbon = new double[] { 2, 1 }
                     },
-                    new Analysis
+                    new Chemical
                     {
                         Thickness = new double[] { 100, 200 },
                         NO3N = new double[] { 27, 6 },
@@ -178,7 +178,7 @@
                         Carbon = new double[] { 2, 1 },
                         FBiom = new double[] { 1, 2 }
                     },
-                    new Analysis
+                    new Chemical
                     {
                         Thickness = new double[] { 50, 50 },
                         NO3N = new double[] { 27, 16 },
@@ -205,7 +205,7 @@
             SoilStandardiser.Standardise(soil);
 
             var initial = soil.Children[3] as Sample;
-            var analysis = soil.Children[2] as Analysis;
+            var analysis = soil.Children[2] as Chemical;
 
             Assert.AreEqual(Apsim.Children(soil, typeof(Sample)).Count, 1);
             Assert.AreEqual(initial.Name, "Initial");

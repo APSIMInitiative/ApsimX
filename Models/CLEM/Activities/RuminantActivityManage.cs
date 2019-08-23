@@ -321,7 +321,7 @@ namespace Models.CLEM.Activities
                     // ensure females are not pregnant and add warning if pregnant old females found.
                     if (ind.Gender == Sex.Female && (ind as RuminantFemale).IsPregnant)
                     {
-                        string warning = "Some females sold at maximum age in [a=" + this.Name + "] were pregant.\nConsider changing the MaximumBreederAge in [RuminantActivityManage] or ensure [RuminantType.MaxAgeMating] is less than or equal to the MaximumBreederAge to avoid selling pregnant individuals.";
+                        string warning = "Some females sold at maximum age in [a=" + this.Name + "] were pregant.\nConsider changing the MaximumBreederAge in [a=RuminantActivityManage] or ensure [r=RuminantType.MaxAgeMating] is less than or equal to the MaximumBreederAge to avoid selling pregnant individuals.";
                         if(!Warnings.Exists(warning))
                         {
                             Warnings.Add(warning);
