@@ -63,38 +63,38 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>The daily radiation intercepted by crop canopy</summary>
         [Link]
-        private IFunction RadIntTot = null;
+        private readonly IFunction RadIntTot = null;
 
         /// <summary>The transpiration efficiency coefficient for net biomass assimilate</summary>
         [Link]
         [Description("Transpiration efficiency coefficient for net biomass assimilate")]
         [Units("kPa/gC/m^2/mm water")]
-        private IFunction TEC = null;
+        private readonly IFunction TEC = null;
 
         /// <summary>The CO2 impact on RUE</summary>
         [Link]
-        private IFunction FCO2 = null;
+        private readonly IFunction FCO2 = null;
 
         /// <summary>The stress impact on PgMax</summary>
         [Link]
-        private IFunction LUEStress = null;
+        private readonly IFunction LUEStress = null;
 
         /// <summary>The mean temperature impact on RUE</summary>
         [Link(IsOptional = true)]
-        private IFunction FT = null;
+        private readonly IFunction FT = null;
 
         /// <summary>The N deficiency impact on RUE</summary>
         [Link(IsOptional = true)]
-        private IFunction FN = null;
+        private readonly IFunction FN = null;
 
         /// <summary>The radiation use efficiency</summary>
         [Link(IsOptional = true)]
         [Description("Radiation use efficiency")]
-        private IFunction RUE = null;
+        private readonly IFunction RUE = null;
 
         /// <summary>The daily gross assimilate calculated by a another photosynthesis model</summary>
         [Link(IsOptional = true)]
-        private IFunction GrossAssimilateModel = null;
+        private readonly IFunction GrossAssimilateModel = null;
 
         //------------------------------------------------------------------------------------------------
 
@@ -399,8 +399,8 @@ namespace Models.Functions.SupplyFunctions
             // Calculates hourlyRUE as the product of reference RUE, temperature, N and CO2.
             // Hourly total plant "actual" radiation use efficiency corrected by reducing factors
             // (g biomass / MJ global solar radiation)
-            double rueFactor = 1;
-            double tempResponse = 1;
+            double rueFactor;
+            double tempResponse;
             hourlyRUE = new List<double>();
 
             XYPairs tempResponseFunc = new XYPairs
