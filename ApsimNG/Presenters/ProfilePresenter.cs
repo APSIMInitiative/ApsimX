@@ -98,7 +98,7 @@
 
             // Populate the graph.
             this.graph = Utility.Graph.CreateGraphFromResource("WaterGraph");
-
+            graph.Name = "";
             if (this.graph == null)
                 this.view.ShowGraph(false);
             else
@@ -152,6 +152,7 @@
 
                     explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
+                    graphPresenter.LegendInsideGraph = false;
                 }
             }
 

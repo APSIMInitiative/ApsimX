@@ -53,6 +53,11 @@ namespace UserInterface.Interfaces
         int LeftRightPadding { get; set; }
 
         /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        bool LegendInsideGraph { get; set; }
+
+        /// <summary>
         /// Show the specified editor.
         /// </summary>
         /// <param name="editor">Show the specified series editor</param>
