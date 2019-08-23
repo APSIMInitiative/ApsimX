@@ -171,7 +171,7 @@ namespace UserInterface.Presenters
                     return APSIM.Shared.APSoil.SoilUtilities.ToThickness(depths);
                 }
                 object value = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), cell.NewValue, CultureInfo.CurrentCulture);
-                Array array = property.Value as Array;
+                Array array = ReflectionUtilities.Clone(property.Value) as Array;
                 array.SetValue(value, cell.RowIndex);
 
                 return array;
