@@ -131,6 +131,7 @@ namespace UserInterface.Presenters
                 // Make the soil crop columns wider to fit the crop name in column title.
                 grid.GetColumn(i).Width = 90;
             }
+            grid.LockLeftMostColumns(1);
         }
 
         protected override IVariable GetProperty(int row, int column)
