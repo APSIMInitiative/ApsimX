@@ -34,8 +34,6 @@
 
     public class ProfilePresenter : IPresenter
     {
-        private static Color[] cropColors = { Color.FromArgb(173, 221, 142), Color.FromArgb(247, 252, 185) };
-
         /// <summary>
         /// The underlying model that this presenter is to work with.
         /// </summary>
@@ -137,6 +135,9 @@
                     {
                         string columnName = propertiesInGrid[col].ColumnName;
 
+                        if (columnName.Contains("\r\n"))
+                            StringUtilities.SplitOffAfterDelimiter(ref columnName, "\r\n");
+
                         // crop colours
                         if (columnName.Contains("LL"))
                         {
@@ -150,6 +151,7 @@
                             cropLLSeries.XAxis = Axis.AxisType.Top;
                             cropLLSeries.YAxis = Axis.AxisType.Left;
                             cropLLSeries.YFieldName = (parentForGraph is Soil ? Apsim.FullPath(parentForGraph) : "[Soil]") + ".DepthMidPoints";
+                            cropLLSeries.XFieldName = Apsim.FullPath((propertiesInGrid[col].ObjectWithProperty as Model)) + "." + propertiesInGrid[col].PropertyName;
                             //cropLLSeries.XFieldName = Apsim.FullPath(property.Object as Model) + "." + property.Name;
                             cropLLSeries.Parent = this.graph;
 
@@ -223,15 +225,12 @@
             foreach (PropertyInfo property in model.GetType().GetProperties())
             {
                 var description = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false);
-                if ((property.PropertyType.IsArray || property.PropertyType == typeof(NitrogenValue)) 
-                    && description != null)
+                if (property.PropertyType.IsArray && description != null)
                 {
                     PropertyColumn column;
 
                     if (property.Name == "Thickness")
                         column = new ThicknessColumn(property, model);
-                    else if (property.PropertyType == typeof(NitrogenValue))
-                        column = new NitrogenValueColumn(property, model);
                     else
                         column = new PropertyColumn(property, model);
 
@@ -260,8 +259,8 @@
             // Colour the crop column.
             var crops = soilCrop.Parent.Children.Where(child => child is SoilCrop).ToList();
             int cropIndex = crops.IndexOf(soilCrop);
-            int colourIndex = cropIndex % cropColors.Length;
-            column.ForegroundColour = cropColors[colourIndex];
+            int colourIndex = cropIndex % ColourUtilities.Colours.Length;
+            column.ForegroundColour = ColourUtilities.Colours[colourIndex];
 
             // Make the soil crop columns wider to fit the crop name in column title.
             column.Width = 90;
@@ -410,44 +409,6 @@
             }
         }
 
-        /// <summary>Encapsulates a NitrogenValue column.</summary>
-        private class NitrogenValueColumn : PropertyColumn
-        {
-            /// <summary>Constructor.</summary>
-            /// <param name="property">The property.</param>
-            /// <param name="obj">The instance containing the property.</param>
-            public NitrogenValueColumn(PropertyInfo property, object obj)
-                : base(property, obj)
-            {
-                ObjectWithProperty = property.GetValue(obj);
-                PropertyName = property.Name;
-                ColumnDataType = typeof(double);
-                HeaderContextMenuItems = new string[] { "ppm", "kg/ha" };
-
-                var nitrogenValue = ObjectWithProperty as NitrogenValue;
-
-                if (nitrogenValue.StoredAsPPM)
-                {
-                    ColumnName += "\r\n(ppm)";
-                    Values = nitrogenValue.PPM;
-                }
-                else
-                {
-                    ColumnName += "\r\n(kg/ha)";
-                    Values = nitrogenValue.KgHa;
-                }
-            }
-
-            /// <summary>Returns a Property set command.</summary>
-            public override ChangeProperty.Property GetChangeProperty()
-            {
-                if (ColumnName.Contains("(ppm)"))
-                    return new ChangeProperty.Property(ObjectWithProperty, "PPM", Values);
-                else
-                    return new ChangeProperty.Property(ObjectWithProperty, "KgHa", Values);
-            }
-        }
-
         /// <summary>Encapsulates a PAWC column.</summary>
         private class PAWCColumn : PropertyColumn
         {
@@ -475,7 +436,7 @@
                 // this situation get dul from the parent model.
                 double[] dul;
                 if (dulColumn == null)
-                    dul = (soilCrop.Parent as Water).DUL;
+                    dul = (soilCrop.Parent as Physical).DUL;
                 else
                     dul = dulColumn.Values as double[];
 

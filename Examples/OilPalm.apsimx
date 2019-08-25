@@ -1,12 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 296,
-  "Version": 57,
+  "Version": 60,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Core.Simulation, Models",
-      "Descriptors": null,
       "Name": "Simulation",
       "Children": [
         {
@@ -24,6 +23,22 @@
           "StartDate": "1996-03-01T00:00:00",
           "EndDate": "2010-09-29T00:00:00",
           "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 1.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "soil_albedo": 0.23,
+          "SoilHeatFluxFraction": 0.4,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -71,7 +86,6 @@
             },
             {
               "$type": "Models.Soils.Soil, Models",
-              "Weirdo": null,
               "RecordNumber": 0,
               "ASCOrder": null,
               "ASCSubOrder": null,
@@ -187,7 +201,8 @@
                   "Name": "Water",
                   "Children": [
                     {
-                      "$type": "Models.Soils.SoilCropOilPalm, Models",
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": null,
                       "KL": [
                         0.06,
                         0.04,
@@ -216,6 +231,7 @@
                         0.0,
                         0.0
                       ],
+                      "LLMetadata": null,
                       "KLMetadata": null,
                       "XFMetadata": null,
                       "Name": "OilPalmSoil",
@@ -315,20 +331,6 @@
                     500.0,
                     1000.0
                   ],
-                  "Depth": [
-                    "0-10",
-                    "10-20",
-                    "20-30",
-                    "30-60",
-                    "60-90",
-                    "90-150",
-                    "150-200",
-                    "200-250",
-                    "250-300",
-                    "300-350",
-                    "350-400",
-                    "400-500"
-                  ],
                   "OC": [
                     2.1,
                     1.06,
@@ -423,6 +425,34 @@
                     500.0,
                     1000.0
                   ],
+                  "NO3N": [
+                    5.0,
+                    5.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "NH4N": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
                   "Rocks": null,
                   "RocksMetadata": null,
                   "Texture": null,
@@ -508,42 +538,14 @@
                     500.0,
                     1000.0
                   ],
-                  "NO3": [
-                    5.0,
-                    5.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "NH4": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
+                  "NO3N": null,
+                  "NH4N": null,
                   "SW": null,
                   "OC": null,
                   "EC": null,
                   "CL": null,
                   "ESP": null,
                   "PH": null,
-                  "NO3Units": 0,
-                  "NH4Units": 0,
                   "SWUnits": 0,
                   "OCUnits": 0,
                   "PHUnits": 0,
@@ -569,7 +571,7 @@
                       {
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Inert",
-                        "Location": "65, 426",
+                        "Location": "656, 254",
                         "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
@@ -577,7 +579,7 @@
                       {
                         "$type": "Models.Graph.Node, Models",
                         "Name": "SurfaceResidue",
-                        "Location": "345, 45",
+                        "Location": "566, 69",
                         "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
@@ -585,7 +587,7 @@
                       {
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMLignin",
-                        "Location": "265, 151",
+                        "Location": "261, 69",
                         "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
@@ -593,7 +595,7 @@
                       {
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCellulose",
-                        "Location": "444, 154",
+                        "Location": "397, 70",
                         "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
@@ -601,7 +603,7 @@
                       {
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCarbohydrate",
-                        "Location": "50, 200",
+                        "Location": "123, 70",
                         "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
@@ -649,7 +651,7 @@
                       {
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Atmosphere",
-                        "Location": "63, 290",
+                        "Location": "48, 338",
                         "Colour": "White",
                         "OutlineColour": "White",
                         "Transparent": true
@@ -657,7 +659,7 @@
                       {
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNO3",
-                        "Location": "702, 339",
+                        "Location": "688, 415",
                         "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
@@ -665,7 +667,7 @@
                       {
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNH4",
-                        "Location": "675, 205",
+                        "Location": "691, 421",
                         "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
@@ -676,7 +678,7 @@
                         "$type": "Models.Graph.Arc, Models",
                         "SourceName": "SurfaceResidue",
                         "DestinationName": "Microbial",
-                        "Location": "0, 0",
+                        "Location": "415, 173",
                         "Colour": "Black",
                         "Text": null
                       },
@@ -684,7 +686,7 @@
                         "$type": "Models.Graph.Arc, Models",
                         "SourceName": "SurfaceResidue",
                         "DestinationName": "Humic",
-                        "Location": "349, 151",
+                        "Location": "499, 172",
                         "Colour": "Black",
                         "Text": null
                       },
@@ -700,7 +702,7 @@
                         "$type": "Models.Graph.Arc, Models",
                         "SourceName": "FOMLignin",
                         "DestinationName": "Humic",
-                        "Location": "0, 0",
+                        "Location": "255, 105",
                         "Colour": "Black",
                         "Text": null
                       },
@@ -724,7 +726,7 @@
                         "$type": "Models.Graph.Arc, Models",
                         "SourceName": "FOMCarbohydrate",
                         "DestinationName": "Microbial",
-                        "Location": "0, 0",
+                        "Location": "141, 131",
                         "Colour": "Black",
                         "Text": null
                       },
@@ -740,7 +742,7 @@
                         "$type": "Models.Graph.Arc, Models",
                         "SourceName": "Microbial",
                         "DestinationName": "Microbial",
-                        "Location": "0, 0",
+                        "Location": "335, 301",
                         "Colour": "Black",
                         "Text": null
                       },
@@ -748,7 +750,7 @@
                         "$type": "Models.Graph.Arc, Models",
                         "SourceName": "Microbial",
                         "DestinationName": "Humic",
-                        "Location": "321, 241",
+                        "Location": "319, 278",
                         "Colour": "Black",
                         "Text": null
                       },
@@ -756,7 +758,7 @@
                         "$type": "Models.Graph.Arc, Models",
                         "SourceName": "Humic",
                         "DestinationName": "Microbial",
-                        "Location": "319, 267",
+                        "Location": "334, 340",
                         "Colour": "Black",
                         "Text": null
                       },
@@ -772,7 +774,7 @@
                         "$type": "Models.Graph.Arc, Models",
                         "SourceName": "NO3",
                         "DestinationName": "Atmosphere",
-                        "Location": "0, 0",
+                        "Location": "1, 319",
                         "Colour": "Black",
                         "Text": null
                       },
@@ -780,7 +782,7 @@
                         "$type": "Models.Graph.Arc, Models",
                         "SourceName": "NH4",
                         "DestinationName": "NO3",
-                        "Location": "0, 0",
+                        "Location": "243, 409",
                         "Colour": "Black",
                         "Text": null
                       }

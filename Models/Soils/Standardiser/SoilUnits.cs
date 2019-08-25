@@ -12,21 +12,6 @@
         /// <param name="soil">The soil.</param>
         public static void Convert(Soil soil)
         {
-            // Convert soil organic matter OC to total %
-            if (soil.SoilOrganicMatter != null)
-            {
-                soil.SoilOrganicMatter.OC = OCTotalPercent(soil.SoilOrganicMatter.OC, soil.SoilOrganicMatter.OCUnits);
-                soil.SoilOrganicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
-            }
-
-            // Convert analysis.
-            var analysis = Apsim.Child(soil, typeof(Analysis)) as Analysis;
-            if (analysis != null)
-            {
-                analysis.PH = PHWater(analysis.PH, analysis.PHUnits);
-                analysis.PHUnits = Sample.PHSampleUnitsEnum.Water;
-            }
-
             // Convert all samples.
             var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
             foreach (Sample sample in samples)
@@ -35,20 +20,6 @@
                 if (MathUtilities.ValuesInArray(sample.SW))
                     sample.SW = SWVolumetric(sample, soil);
                 sample.SWUnits = Sample.SWUnitsEnum.Volumetric;
-
-                // Convert no3 units to ppm.
-                if (sample.NO3N != null && !sample.NO3N.StoredAsPPM)
-                {
-                    var ppm = sample.NO3N.PPM;
-                    sample.NO3N.PPM = ppm;
-                }
-
-                // Convert nh4 units to ppm.
-                if (sample.NH4N != null && !sample.NH4N.StoredAsPPM)
-                {
-                    var ppm = sample.NH4N.PPM;
-                    sample.NH4N.PPM = ppm;
-                }
 
                 // Convert OC to total (%)
                 if (MathUtilities.ValuesInArray(sample.OC))

@@ -472,6 +472,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostUsePricing.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFeedGroup.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeed.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityShear.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceUnitsConverter.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\DecumulateFunction.png" />
@@ -761,7 +764,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\Wheat.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\WeightedTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Weather.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Water.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Physical.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\VariableReference.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TreeProxy.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\TimeSeriesStats.png" />
@@ -779,7 +782,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureWeightedFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilTemperatureDepthFunction.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\SoilOrganicMatter.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Organic.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilNitrogen.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilCropOilPalm.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SoilCrop.png" />
@@ -864,7 +867,7 @@
     <EmbeddedResource Include="Resources\TreeViewImages\BellCurveFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Axis.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ArrayBiomass.png" />
-    <EmbeddedResource Include="Resources\TreeViewImages\Analysis.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Chemical.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Alias.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AirTemperatureFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AgroforestrySystem.png" />
@@ -878,7 +881,7 @@
     <EmbeddedResource Include="Resources\Toolboxes\Import.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj">
       <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
     </ProjectReference>
@@ -1062,7 +1065,7 @@
     </Reference>
     <Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DeploymentSupport\Windows\Bin\pango-sharp.dll</HintPath>
+      <HintPath>..\DeploymentSupport\Windows\Bin64\pango-sharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PdfSharp, Version=1.50.4000.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
@@ -1119,4 +1122,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+    <Exec Condition="'$(OS)' == 'Windows_NT'" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
+    <!--<Exec Condition="'$(OS)' == 'Windows_NT'" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ &gt;nul" />
+  --> </Target>
 </Project>

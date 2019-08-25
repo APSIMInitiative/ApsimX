@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 56,
+  "Version": 65,
   "Name": "Simulations",
   "Children": [
     {
@@ -518,7 +518,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "InitialWtFunction",
+              "Name": "InitialWt",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -775,7 +775,7 @@
             },
             {
               "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "FRGRFunction",
+              "Name": "FRGR",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -870,7 +870,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": "/day",
-              "Name": "MaintenanceRespirationFunction",
+              "Name": "MaintenanceRespiration",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -888,7 +888,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "LAIFunction",
+              "Name": "Area",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -925,7 +925,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "LaiDeadFunction",
+              "Name": "LaiDead",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -938,7 +938,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].LAIFunction.SpecificLeafArea.Value()",
+                  "VariableName": "[Leaf].Area.SpecificLeafArea.Value()",
                   "Name": "SpecificLeafArea",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -963,7 +963,7 @@
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.6,
               "Units": " -",
-              "Name": "ExtinctionCoefficientFunction",
+              "Name": "ExtinctionCoefficient",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -982,7 +982,7 @@
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
               "XProperty": "[Chicory].AboveGround.Wt",
-              "Name": "HeightFunction",
+              "Name": "Tallness",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -1172,7 +1172,7 @@
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "DetachmentRateFunction",
+              "Name": "DetachmentRate",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -2986,6 +2986,14 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -3962,6 +3970,14 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -4886,6 +4902,14 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RetranslocateNonStructural, Models",
+              "Name": "RetranslocateNitrogen",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false

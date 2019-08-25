@@ -326,6 +326,11 @@ namespace Models.CLEM
                     this.reader = new ApsimTextFile();
                     this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
 
+                    if(this.reader.Headings == null)
+                    {
+                        throw new Exception("@error:Invalid format of datafile [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )");
+                    }
+
                     this.soilNumIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "SoilNum");
                     this.cropNameIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "CropName");
                     this.yearIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Year");
