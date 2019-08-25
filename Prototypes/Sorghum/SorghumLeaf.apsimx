@@ -4005,6 +4005,7 @@
               "NitrogenPhenoStress": 0.0,
               "PhosphorusStress": 1.0,
               "FinalLeafNo": 0.0,
+              "SowingDensity": 0.0,
               "senRadnCrit": 0.0,
               "senLightTimeConst": 10.0,
               "frostKill": 1.0,
@@ -47174,7 +47175,7 @@
             {
               "$type": "Models.Clock, Models",
               "StartDate": "1997-01-08T00:00:00",
-              "EndDate": "1997-06-04T00:00:00",
+              "EndDate": "1997-06-30T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
