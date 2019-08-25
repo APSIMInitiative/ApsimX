@@ -146,7 +146,7 @@ namespace UserInterface.Presenters
                 string[] depths = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings((double[])property.Value);
                 return depths[row];
             }
-            return (property.Value as Array).GetValue(row);
+            return (property.Value as Array)?.GetValue(row);
         }
 
         /// <summary>
@@ -172,8 +172,31 @@ namespace UserInterface.Presenters
                     return APSIM.Shared.APSoil.SoilUtilities.ToThickness(depths);
                 }
                 object value = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), cell.NewValue, CultureInfo.CurrentCulture);
-                Array array = ReflectionUtilities.Clone(property.Value) as Array;
+
+                Array array;
+                if (property.Value == null)
+                {
+                    // Can't clone null - setup array and fill with NaN.
+                    array = new double[cell.RowIndex + 1]; // fixme
+                    for (int i = 0; i < array.Length; i++)
+                        array.SetValue(double.NaN, i);
+                }
+                else
+                {
+                    // Get a deep copy of the model's array property.
+                    double[] arr = ReflectionUtilities.Clone(property.Value) as double[];
+                    int n = arr.Length;
+                    if (n <= cell.RowIndex)
+                        Array.Resize(ref arr, cell.RowIndex + 1);
+                    for (int i = n; i < arr.Length; i++)
+                        arr[i] = double.NaN;
+                    array = arr;
+                }
+
                 array.SetValue(value, cell.RowIndex);
+
+                if (!MathUtilities.ValuesInArray(array))
+                    array = null;
 
                 return array;
             }
