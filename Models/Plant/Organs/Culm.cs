@@ -59,9 +59,6 @@ namespace Models.PMF.Organs
     {
         private const double smm2sm = 0.000001;
         private CulmParameters culmParameters { get; set; }
-        /// <summary> The numeric rank of the cohort appearing </summary>
-        public int CulmNumber { get; set; }
-
         /// <summary> The proportion of a whole tiller</summary>
         public double Proportion { get; set; }
 
