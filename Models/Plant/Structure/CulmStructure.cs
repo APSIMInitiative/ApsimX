@@ -328,6 +328,7 @@ namespace Models.PMF.Struct
                     AMaxSlope = leaf.AMaxSlope.Value(),
                     AX0 = leaf.AX0.Value()
                 });
+                newCulm.FinalLeafNumber = FinalLeafNo;
                 newCulm.calcLeafAppearance(dltTTDayBefore);
                 //bell curve distribution is adjusted horizontally by moving the curve to the left.
                 //This will cause the first leaf to have the same value as the nth leaf on the main culm.
