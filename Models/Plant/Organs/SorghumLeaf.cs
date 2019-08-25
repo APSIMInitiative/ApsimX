@@ -620,6 +620,7 @@ namespace Models.PMF.Organs
             {
                 //this will recalculate LAI given avaiable DM
                 //areaActual in old model
+                var dltDmGreen = DMPotentialAllocation.Structural + DMPotentialAllocation.Metabolic;
                 DltLAI = dltLAIFunction.Value();
                 senesceArea();
             }
