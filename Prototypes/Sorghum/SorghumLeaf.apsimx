@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 59,
+  "Version": 65,
   "Name": "Simulations",
   "Children": [
     {
@@ -9414,6 +9414,22 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.13,
+              "SoilHeatFluxFraction": 0.4,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
@@ -9441,7 +9457,7 @@
                   "Name": "HRS",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -9454,6 +9470,7 @@
                         200.0,
                         200.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.34,
                         1.34,
@@ -9521,7 +9538,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -9618,7 +9635,6 @@
                         0.3
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -9707,10 +9723,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 50.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
+                      "$type": "Models.Soils.Organic, Models",
+                      "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
                         100.0,
@@ -9723,7 +9737,7 @@
                         200.0,
                         200.0
                       ],
-                      "OC": [
+                      "Carbon": [
                         1.19,
                         0.59,
                         0.45,
@@ -9735,8 +9749,7 @@
                         0.17,
                         0.17
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -9772,7 +9785,7 @@
                         0.9,
                         0.9
                       ],
-                      "RootWt": [
+                      "FOM": [
                         260.58740315916066,
                         220.5824745109322,
                         158.05424955092769,
@@ -9784,15 +9797,14 @@
                         21.390316629725067,
                         15.32683160828522
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -9805,14 +9817,30 @@
                         200.0,
                         200.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        10.4,
+                        1.6329999999999996,
+                        1.2330000000000008,
+                        0.9,
+                        1.1,
+                        1.4670000000000005,
+                        3.6329999999999996,
+                        5.6670000000000007,
+                        5.8,
+                        7.267000000000003
+                      ],
+                      "NH4N": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1
+                      ],
                       "PH": [
                         6.3,
                         6.4,
@@ -9825,36 +9853,10 @@
                         6.5,
                         6.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -9916,38 +9918,8 @@
                         200.0,
                         200.0
                       ],
-                      "NO3N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          13.936000000000002,
-                          2.1882200000000003,
-                          3.27978,
-                          2.4840000000000004,
-                          3.0800000000000005,
-                          4.5477,
-                          11.55294,
-                          18.47442,
-                          19.256,
-                          24.41712
-                        ],
-                        "StoredAsPPM": false
-                      },
-                      "NH4N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1
-                        ],
-                        "StoredAsPPM": true
-                      },
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
@@ -17129,7 +17101,7 @@
                   "Name": "HRS",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -17142,6 +17114,7 @@
                         200.0,
                         200.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.34,
                         1.34,
@@ -17209,7 +17182,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -17306,7 +17279,6 @@
                         0.3
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -17395,10 +17367,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 50.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
+                      "$type": "Models.Soils.Organic, Models",
+                      "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
                         100.0,
@@ -17411,7 +17381,7 @@
                         200.0,
                         200.0
                       ],
-                      "OC": [
+                      "Carbon": [
                         1.19,
                         0.59,
                         0.45,
@@ -17423,8 +17393,7 @@
                         0.17,
                         0.17
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -17460,7 +17429,7 @@
                         0.9,
                         0.9
                       ],
-                      "RootWt": [
+                      "FOM": [
                         260.58740315916066,
                         220.5824745109322,
                         158.05424955092769,
@@ -17472,15 +17441,14 @@
                         21.390316629725067,
                         15.32683160828522
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -17493,14 +17461,30 @@
                         200.0,
                         200.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        10.4,
+                        1.6329999999999996,
+                        1.2330000000000008,
+                        0.9,
+                        1.1,
+                        1.4670000000000005,
+                        3.6329999999999996,
+                        5.6670000000000007,
+                        5.8,
+                        7.267000000000003
+                      ],
+                      "NH4N": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1
+                      ],
                       "PH": [
                         6.3,
                         6.4,
@@ -17513,36 +17497,10 @@
                         6.5,
                         6.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -17604,38 +17562,8 @@
                         200.0,
                         200.0
                       ],
-                      "NO3N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          13.936000000000002,
-                          2.1882200000000003,
-                          3.27978,
-                          2.4840000000000004,
-                          3.080000000000001,
-                          4.5477,
-                          11.552939999999998,
-                          18.47442,
-                          19.256,
-                          24.41712
-                        ],
-                        "StoredAsPPM": false
-                      },
-                      "NH4N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1
-                        ],
-                        "StoredAsPPM": true
-                      },
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
@@ -17897,6 +17825,22 @@
             {
               "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
               "Name": "SoilArbitrator",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.13,
+              "SoilHeatFluxFraction": 0.4,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -25649,7 +25593,7 @@
                   "Name": "HRS",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -25662,6 +25606,7 @@
                         200.0,
                         200.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.34,
                         1.34,
@@ -25729,7 +25674,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -25826,7 +25771,6 @@
                         0.3
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -25915,10 +25859,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 50.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
+                      "$type": "Models.Soils.Organic, Models",
+                      "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
                         100.0,
@@ -25931,7 +25873,7 @@
                         200.0,
                         200.0
                       ],
-                      "OC": [
+                      "Carbon": [
                         1.19,
                         0.59,
                         0.45,
@@ -25943,8 +25885,7 @@
                         0.17,
                         0.17
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -25980,7 +25921,7 @@
                         0.9,
                         0.9
                       ],
-                      "RootWt": [
+                      "FOM": [
                         260.58740315916066,
                         220.5824745109322,
                         158.05424955092769,
@@ -25992,15 +25933,14 @@
                         21.390316629725067,
                         15.32683160828522
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -26013,14 +25953,30 @@
                         200.0,
                         200.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        10.399999999999999,
+                        1.6328358208955229,
+                        1.2329999999999997,
+                        0.9,
+                        1.1,
+                        1.4670000000000005,
+                        3.6329999999999996,
+                        5.666999999999998,
+                        5.8,
+                        7.267000000000003
+                      ],
+                      "NH4N": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1
+                      ],
                       "PH": [
                         6.3,
                         6.4,
@@ -26033,36 +25989,10 @@
                         6.5,
                         6.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -26124,38 +26054,8 @@
                         200.0,
                         200.0
                       ],
-                      "NO3N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          13.936,
-                          2.188,
-                          3.27978,
-                          2.4840000000000004,
-                          3.080000000000001,
-                          4.5477,
-                          11.552939999999998,
-                          18.47442,
-                          19.256,
-                          24.41712
-                        ],
-                        "StoredAsPPM": false
-                      },
-                      "NH4N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1
-                        ],
-                        "StoredAsPPM": true
-                      },
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
@@ -26417,6 +26317,22 @@
             {
               "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
               "Name": "SoilArbitrator",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.13,
+              "SoilHeatFluxFraction": 0.4,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -35478,7 +35394,7 @@
                   "Name": "HRS",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -35491,6 +35407,7 @@
                         200.0,
                         200.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.34,
                         1.34,
@@ -35558,7 +35475,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -35655,7 +35572,6 @@
                         0.3
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -35744,10 +35660,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 50.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
+                      "$type": "Models.Soils.Organic, Models",
+                      "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
                         100.0,
@@ -35760,7 +35674,7 @@
                         200.0,
                         200.0
                       ],
-                      "OC": [
+                      "Carbon": [
                         1.19,
                         0.59,
                         0.45,
@@ -35772,8 +35686,7 @@
                         0.17,
                         0.17
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -35809,7 +35722,7 @@
                         0.9,
                         0.9
                       ],
-                      "RootWt": [
+                      "FOM": [
                         260.58740315916066,
                         220.5824745109322,
                         158.05424955092769,
@@ -35821,15 +35734,14 @@
                         21.390316629725067,
                         15.32683160828522
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -35842,14 +35754,30 @@
                         200.0,
                         200.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        10.4,
+                        1.6329999999999996,
+                        1.2330000000000008,
+                        0.9,
+                        1.1,
+                        1.4670000000000005,
+                        3.6329999999999996,
+                        5.6670000000000007,
+                        5.8,
+                        7.267000000000003
+                      ],
+                      "NH4N": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1
+                      ],
                       "PH": [
                         6.3,
                         6.4,
@@ -35862,36 +35790,10 @@
                         6.5,
                         6.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -35953,38 +35855,8 @@
                         200.0,
                         200.0
                       ],
-                      "NO3N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          13.936000000000002,
-                          2.1882200000000003,
-                          3.27978,
-                          2.4840000000000004,
-                          3.0800000000000005,
-                          4.5477,
-                          11.55294,
-                          18.47442,
-                          19.256,
-                          24.41712
-                        ],
-                        "StoredAsPPM": false
-                      },
-                      "NH4N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1
-                        ],
-                        "StoredAsPPM": true
-                      },
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
@@ -36246,6 +36118,22 @@
             {
               "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
               "Name": "SoilArbitrator",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.13,
+              "SoilHeatFluxFraction": 0.4,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -38847,17 +38735,6 @@
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
-                  "Type": 2,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -38876,7 +38753,7 @@
                   "$type": "Models.Graph.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
-                  "YAxis": 2,
+                  "YAxis": 0,
                   "ColourArgb": -16736653,
                   "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
@@ -38906,7 +38783,7 @@
                   "$type": "Models.Graph.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
-                  "YAxis": 2,
+                  "YAxis": 0,
                   "ColourArgb": -16747854,
                   "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
@@ -38927,66 +38804,6 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Live710",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -990142,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "Report",
-                  "XFieldName": "day_of_year",
-                  "YFieldName": "Stem.Dead.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "LivePMF1",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -990142,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "Report",
-                  "XFieldName": "day_of_year",
-                  "YFieldName": "Stem.Senesced.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "LivePMF11",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -47231,7 +47048,7 @@
                   "Name": "HRS",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -47244,6 +47061,7 @@
                         200.0,
                         200.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.34,
                         1.34,
@@ -47311,7 +47129,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -47408,7 +47226,6 @@
                         0.3
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -47497,10 +47314,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 50.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
+                      "$type": "Models.Soils.Organic, Models",
+                      "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
                         100.0,
@@ -47513,7 +47328,7 @@
                         200.0,
                         200.0
                       ],
-                      "OC": [
+                      "Carbon": [
                         1.19,
                         0.59,
                         0.45,
@@ -47525,8 +47340,7 @@
                         0.17,
                         0.17
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.5,
                         12.5,
                         12.5,
@@ -47562,7 +47376,7 @@
                         0.9,
                         0.9
                       ],
-                      "RootWt": [
+                      "FOM": [
                         260.58740315916066,
                         220.5824745109322,
                         158.05424955092769,
@@ -47574,15 +47388,14 @@
                         21.390316629725067,
                         15.32683160828522
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
                       "Thickness": [
                         100.0,
                         100.0,
@@ -47595,14 +47408,30 @@
                         200.0,
                         200.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        10.4,
+                        1.6329999999999996,
+                        1.2330000000000008,
+                        0.9,
+                        1.1,
+                        1.4670000000000005,
+                        3.6329999999999996,
+                        5.6670000000000007,
+                        5.8,
+                        7.267000000000003
+                      ],
+                      "NH4N": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1
+                      ],
                       "PH": [
                         6.3,
                         6.4,
@@ -47615,36 +47444,10 @@
                         6.5,
                         6.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -47706,38 +47509,8 @@
                         200.0,
                         200.0
                       ],
-                      "NO3N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          13.936000000000002,
-                          2.1882200000000003,
-                          3.27978,
-                          2.4840000000000004,
-                          3.080000000000001,
-                          4.5477,
-                          11.552939999999998,
-                          18.47442,
-                          19.256,
-                          24.41712
-                        ],
-                        "StoredAsPPM": false
-                      },
-                      "NH4N": {
-                        "$type": "Models.Soils.NitrogenValue, Models",
-                        "Values": [
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1,
-                          0.1
-                        ],
-                        "StoredAsPPM": true
-                      },
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
@@ -47999,6 +47772,22 @@
             {
               "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
               "Name": "SoilArbitrator",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 1.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.13,
+              "SoilHeatFluxFraction": 0.4,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
