@@ -199,7 +199,17 @@
             if (TotalNumberOfSimulations == 0)
                 return 0;
             else
-                return 100.0 * NumberOfSimulationsCompleted / TotalNumberOfSimulations;
+            {
+                // return 100.0 * NumberOfSimulationsCompleted / TotalNumberOfSimulations;
+                double nComplete = NumberOfSimulationsCompleted;
+                // Should this have a lock? If so, on what?
+                foreach (IRunnable runningSim in jobRunner.SimsRunning)
+                {
+                    Simulation sim = (runningSim as SimulationDescription)?.SimulationToRun;
+                    nComplete += sim?.FractionComplete ?? 0;
+                }
+                return 100.0 * Math.Min(1.0, nComplete / TotalNumberOfSimulations);
+            }
         }
 
         /// <summary>
