@@ -42,7 +42,7 @@ namespace Models
         Soils.Soil Soil = null;
 
         [Link]
-        Soils.Analysis Analysis = null;
+        Soils.Physical Analysis = null;
 
         [Link(IsOptional = true)]
         Soils.SoilCrop SoilCrop = null;

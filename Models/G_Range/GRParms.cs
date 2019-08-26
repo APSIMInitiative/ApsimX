@@ -699,8 +699,9 @@ namespace Models
                             sand[0] += Analysis.ParticleSizeSand[i] * weight;
                             silt[0] += Analysis.ParticleSizeSilt[i] * weight;
                             clay[0] += Analysis.ParticleSizeClay[i] * weight;
-                            if (Analysis.Rocks != null)
-                                gravel[0] += Analysis.Rocks[i] * weight;
+                            gravel[0] += Math.Max(0.0, 100.0 - (sand[0] + silt[0] + clay[0])); 
+                            //if (Analysis.Rocks != null)
+                            //    gravel[0] += Analysis.Rocks[i] * weight;
                             bulkDensity[0] += Soil.BD[i] * weight;
                             organicCarbon[0] += Soil.Initial.OC[i] * weight; 
                             if (useApsimHydraulics)
@@ -715,8 +716,9 @@ namespace Models
                             sand[3] += Analysis.ParticleSizeSand[i] * weight;
                             silt[3] += Analysis.ParticleSizeSilt[i] * weight;
                             clay[3] += Analysis.ParticleSizeClay[i] * weight;
-                            if (Analysis.Rocks != null)
-                                gravel[3] += Analysis.Rocks[i] * weight;
+                            gravel[3] += Math.Max(0.0, 100.0 - (sand[3] + silt[3] + clay[3]));
+                            //if (Analysis.Rocks != null)
+                            //    gravel[3] += Analysis.Rocks[i] * weight;
                             bulkDensity[3] += Soil.BD[i] * weight;
                             organicCarbon[3] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -751,8 +753,9 @@ namespace Models
                             sand[0] += Analysis.ParticleSizeSand[i] * weight;
                             silt[0] += Analysis.ParticleSizeSilt[i] * weight;
                             clay[0] += Analysis.ParticleSizeClay[i] * weight;
-                            if (Analysis.Rocks != null)
-                                gravel[0] += Analysis.Rocks[i] * weight;
+                            gravel[0] += Math.Max(0.0, 100.0 - (sand[0] + silt[0] + clay[0]));
+                            //if (Analysis.Rocks != null)
+                            //    gravel[0] += Analysis.Rocks[i] * weight;
                             bulkDensity[0] += Soil.BD[i] * weight;
                             organicCarbon[0] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -767,8 +770,9 @@ namespace Models
                             sand[1] += Analysis.ParticleSizeSand[i] * weight;
                             silt[1] += Analysis.ParticleSizeSilt[i] * weight;
                             clay[1] += Analysis.ParticleSizeClay[i] * weight;
-                            if (Analysis.Rocks != null)
-                                gravel[1] += Analysis.Rocks[i] * weight;
+                            gravel[1] += Math.Max(0.0, 100.0 - (sand[1] + silt[1] + clay[1]));
+                            //if (Analysis.Rocks != null)
+                            //    gravel[1] += Analysis.Rocks[i] * weight;
                             bulkDensity[1] += Soil.BD[i] * weight;
                             organicCarbon[1] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -783,8 +787,9 @@ namespace Models
                             sand[2] += Analysis.ParticleSizeSand[i] * weight;
                             silt[2] += Analysis.ParticleSizeSilt[i] * weight;
                             clay[2] += Analysis.ParticleSizeClay[i] * weight;
-                            if (Analysis.Rocks != null)
-                                gravel[2] += Analysis.Rocks[i] * weight;
+                            gravel[2] += Math.Max(0.0, 100.0 - (sand[2] + silt[2] + clay[2]));
+                            //if (Analysis.Rocks != null)
+                            //    gravel[2] += Analysis.Rocks[i] * weight;
                             bulkDensity[2] += Soil.BD[i] * weight;
                             organicCarbon[2] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -799,8 +804,9 @@ namespace Models
                             sand[3] += Analysis.ParticleSizeSand[i] * weight;
                             silt[3] += Analysis.ParticleSizeSilt[i] * weight;
                             clay[3] += Analysis.ParticleSizeClay[i] * weight;
-                            if (Analysis.Rocks != null)
-                                gravel[3] += Analysis.Rocks[i] * weight;
+                            gravel[3] += Math.Max(0.0, 100.0 - (sand[3] + silt[3] + clay[3]));
+                            //if (Analysis.Rocks != null)
+                            //    gravel[3] += Analysis.Rocks[i] * weight;
                             bulkDensity[3] += Soil.BD[i] * weight;
                             organicCarbon[3] += Soil.Initial.OC[i] * weight;
                             if (useApsimHydraulics)
@@ -819,8 +825,10 @@ namespace Models
                     Array.Copy(Analysis.ParticleSizeSand, sand, nSoilLayers);
                     Array.Copy(Analysis.ParticleSizeSilt, silt, nSoilLayers);
                     Array.Copy(Analysis.ParticleSizeClay, clay, nSoilLayers);
-                    if (Analysis.Rocks != null)
-                        Array.Copy(Analysis.Rocks, gravel, nSoilLayers);
+                    for (int iLayer = 0; iLayer < nSoilLayers; iLayer++)
+                        gravel[iLayer] += Math.Max(0.0, 100.0 - (sand[iLayer] + silt[iLayer] + clay[iLayer]));
+                    //if (Analysis.Rocks != null)
+                    //    Array.Copy(Analysis.Rocks, gravel, nSoilLayers);
                     Array.Copy(Soil.BD, bulkDensity, nSoilLayers);
                     Array.Copy(Soil.Initial.OC, organicCarbon, nSoilLayers);
                     if (useApsimHydraulics)
