@@ -127,15 +127,7 @@ namespace Models.PMF.Struct
         public double FertileTillerNumber { get; set; }
 
         /// <summary>Used to match NLeaves in old sorghum which is updated with dltLeafNo at the end of the day</summary>
-        public double NLeaves
-        {
-            get
-            {
-                if(leaf?.Culms.Count > 0)
-                    return leaf.Culms[0].CurrentLeafNumber - leaf.Culms[0].DltNewLeafAppeared;
-                return 0;
-            }
-        } 
+        public double NLeaves { get; private set; }
 
         /// <summary>CurrentLeafNo</summary>
         public double CurrentLeafNo { get; set; }
@@ -145,6 +137,14 @@ namespace Models.PMF.Struct
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
         public string LeafInitialisationStage { get; set; } = "Emergence";
+
+        [EventSubscribe("EndOfDay")]
+        private void UpdateVars(object sender, EventArgs args)
+        {
+            // In old apsim, NLeaves is only updated at end of day.
+            if (leaf?.Culms.Count > 0)
+                NLeaves = leaf.Culms[0].CurrentLeafNumber - leaf.Culms[0].DltNewLeafAppeared;
+        }
 
         /// <summary>Called when crop is ending</summary>
         [EventSubscribe("PlantSowing")]
@@ -189,6 +189,7 @@ namespace Models.PMF.Struct
                 if (dayofEmergence)
                 {
                     CurrentLeafNo = LeafNumAtEmergence.Value();
+                    NLeaves = LeafNumAtEmergence.Value();
                     leaf.Culms[0].CurrentLeafNumber = CurrentLeafNo;
                     dayofEmergence = false;
                 }
