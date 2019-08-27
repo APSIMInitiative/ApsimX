@@ -659,8 +659,15 @@ namespace Models.PMF.Organs
             NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);
         }
 
-        /// <summary>sen_radn_crit.</summary>
-        public double senRadnCrit { get; set; } = 2;
+        /// <summary>Radiation level for onset of light senescence.</summary>
+        public double SenRadnCrit
+        {
+            get
+            {
+                return senRadnCrit.Value();
+            }
+        }
+
         /// <summary>sen_light_time_const.</summary>
         public double senLightTimeConst { get; set; } = 10;
         /// <summary>temperature threshold for leaf death.</summary>
@@ -821,7 +828,7 @@ namespace Models.PMF.Organs
 
         private double calcLaiSenescenceLight()
         {
-            double critTransmission = MathUtilities.Divide(senRadnCrit, MetData.Radn, 1);
+            double critTransmission = MathUtilities.Divide(SenRadnCrit, MetData.Radn, 1);
             /* TODO : Direct translation - needs cleanup */
             //            ! needs rework for row spacing
             double laiEqlbLightToday;
@@ -836,9 +843,12 @@ namespace Models.PMF.Organs
             // average of the last 10 days of laiEquilibLight
             avgLaiEquilibLight = updateAvLaiEquilibLight(laiEqlbLightToday, 10);//senLightTimeConst?
 
-            double radnTransmitted = MetData.Radn;// - Plant->getRadnInt();
+            // dh - In old apsim, we had another variable frIntcRadn which is always set to 0.
+            // Set Plant::radnInt(void) in Plant.cpp.
+            double radnInt = MetData.Radn * CoverGreen;
+            double radnTransmitted = MetData.Radn - radnInt;
             double dltSlaiLight = 0.0;
-            if (radnTransmitted < senRadnCrit)
+            if (radnTransmitted < SenRadnCrit)
                 dltSlaiLight = Math.Max(0.0, MathUtilities.Divide(LAI - avgLaiEquilibLight, senLightTimeConst, 0.0));
             dltSlaiLight = Math.Min(dltSlaiLight, LAI);
             return dltSlaiLight;
@@ -925,6 +935,11 @@ namespace Models.PMF.Organs
         [ChildLinkByName]
         [Units("/d")]
         protected IFunction SenescenceRate = null;
+
+        /// <summary>Radiation level for onset of light senescence.</summary>
+        [ChildLinkByName]
+        [Units("Mj/m^2")]
+        private IFunction senRadnCrit = null;
 
         ///// <summary>The N retranslocation factor</summary>
         //[ChildLinkByName]
