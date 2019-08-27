@@ -3996,7 +3996,6 @@
               "PhosphorusStress": 1.0,
               "FinalLeafNo": 0.0,
               "SowingDensity": 0.0,
-              "senRadnCrit": 0.0,
               "senLightTimeConst": 10.0,
               "frostKill": 1.0,
               "senThreshold": 0.25,
@@ -5779,6 +5778,16 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 2.0,
+                  "Units": "Mj/m^2",
+                  "Name": "senRadnCrit",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
