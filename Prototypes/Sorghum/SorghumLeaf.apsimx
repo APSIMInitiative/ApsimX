@@ -5500,7 +5500,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "$type": "Models.Functions.LiveOnEventFunction, Models",
                   "SetEvent": "FlagLeaf",
                   "ReSetEvent": null,
                   "Name": "TargetSLN",
