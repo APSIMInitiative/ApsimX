@@ -28,6 +28,11 @@
         private bool doClone;
 
         /// <summary>
+        /// The actual simulation object to run
+        /// </summary>
+        public Simulation SimulationToRun { get; private set; } = null;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="sim">The simulation to run.</param>
@@ -91,8 +96,8 @@
         /// <param name="cancelToken"></param>
         public void Run(CancellationTokenSource cancelToken)
         {
-            var simulationToRun = ToSimulation();
-            simulationToRun.Run(cancelToken);
+            SimulationToRun = ToSimulation();
+            SimulationToRun.Run(cancelToken);
         }
 
         /// <summary>
