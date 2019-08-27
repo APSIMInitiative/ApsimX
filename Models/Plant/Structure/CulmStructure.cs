@@ -58,6 +58,9 @@ namespace Models.PMF.Struct
         [Link]
         private SorghumLeaf leaf = null;
 
+        [Link]
+        private Phenology phenology = null;
+
         //[Link]
         //private Phenology phenology = null;
 
@@ -111,6 +114,13 @@ namespace Models.PMF.Struct
         private double tillersAdded;
         private bool dayofEmergence;
         private double dltTTDayBefore;
+
+        /// <summary>
+        /// Target TT from Emergence to Floral Init.
+        /// This is variable and is updated daily.
+        /// </summary>
+        public double TTTargetFI { get; set; }
+
         //private double dltLeafNo;
 
         /// <summary>FertileTillerNumber</summary>
@@ -168,9 +178,12 @@ namespace Models.PMF.Struct
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        [EventSubscribe("DoPotentialPlantGrowth")]
+        [EventSubscribe("PrePhenology")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            if (MathUtilities.FloatsAreEqual(TTTargetFI, 0))
+                TTTargetFI = GetTTFi();
+
             if (leavesInitialised)
             {
                 if (dayofEmergence)
@@ -179,31 +192,23 @@ namespace Models.PMF.Struct
                     leaf.Culms[0].CurrentLeafNumber = CurrentLeafNo;
                     dayofEmergence = false;
                 }
-                else
-                {
-                    //finalLeafNo is calculated upon reference to it as a function
-                    calcLeafAppearance();
-                }
+
+                // Previously, we didn't call calcLeafAppearance() on day of emergence,
+                // however that would not be inline with how old apsim does it.
+                //finalLeafNo is calculated upon reference to it as a function
+                calcLeafAppearance();
             }
 
             //old version uses the thermaltime from yesterday to calculate leafAppearance.
             //plant->process() calls leaf->CalcNo before phenology->development()
             //remaining functions use todays... potentially a bug
             dltTTDayBefore = thermalTime.Value();
+            TTTargetFI = GetTTFi();
         }
 
-        /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantGrowth")]
-        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        private double GetTTFi()
         {
-            //hack to get finalleafnumber to be finalised a day later
-            FinalLeafNo = finalLeafNumber.Value();
-            foreach (var culm in leaf.Culms)
-            {
-                culm.FinalLeafNumber = FinalLeafNo;
-            }
+            return (double)Apsim.Get(this, "[Phenology].TTEmergToFloralInit.Value()");
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -225,6 +230,8 @@ namespace Models.PMF.Struct
         {
             if (leaf?.Culms.Count > 0)
             {
+                if (!phenology.Beyond("FloralInitiation"))
+                    FinalLeafNo = finalLeafNumber.Value();
                 leaf.Culms[0].FinalLeafNumber = FinalLeafNo;
                 leaf.Culms[0].calcLeafAppearance(dltTTDayBefore); 
 

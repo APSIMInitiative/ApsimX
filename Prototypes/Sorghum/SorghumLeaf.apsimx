@@ -1341,6 +1341,7 @@
             {
               "$type": "Models.PMF.Struct.CulmStructure, Models",
               "FinalLeafNo": 0.0,
+              "TTTargetFI": 0.0,
               "FertileTillerNumber": 0.0,
               "CurrentLeafNo": 0.0,
               "LeafInitialisationStage": "Emergence",
@@ -1431,61 +1432,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.HoldFunction, Models",
-                  "WhenToHold": "FloralInitiation",
-                  "Name": "FinalLeafNumber",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.AddFunction, Models",
-                      "Name": "ValueToHold",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].LeafNumSeed.Value()",
-                          "Name": "LeafNumSeed",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "DivideFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].TTEmergToFloralInit.Value()",
-                              "Name": "TTEmergToFI",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].LeafInitiationRate.Value()",
-                              "Name": "LeafInitRate",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.PMF.Struct.HeightFunction, Models",
                   "Name": "HeightModel",
                   "Children": [
@@ -1535,9 +1481,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 21.6,
-                  "Units": null,
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].leafInitRate",
                   "Name": "LeafInitiationRate",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1609,6 +1554,51 @@
                   "VariableName": "[Leaf].TTEmergToFI",
                   "Name": "ttFi",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "FinalLeafNumber",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Structure].LeafNumSeed.Value()",
+                      "Name": "LeafNumSeed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "DivideFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].TTTargetFI",
+                          "Name": "TTEmergToFI",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].LeafInitiationRate.Value()",
+                          "Name": "LeafInitRate",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
