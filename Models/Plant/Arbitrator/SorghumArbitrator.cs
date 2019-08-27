@@ -348,6 +348,7 @@ namespace Models.PMF
                         double NUptakeCease = (Apsim.Find(this, "NUptakeCease") as Functions.IFunction).Value();
                         if (TTFMFromFlowering > NUptakeCease)
                             totalMassFlow = 0;
+                        actualMassFlow = totalMassFlow;
 
                         if (totalMassFlow < nDemand && TTFMFromFlowering < NUptakeCease) // fixme && ttElapsed < nUptakeCease
                         {
