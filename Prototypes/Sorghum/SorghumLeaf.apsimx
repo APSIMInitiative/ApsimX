@@ -5529,59 +5529,48 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
-                  "Start": "StartGrainFill",
-                  "End": "EndGrainFill",
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "Flowering",
+                  "ReSetEvent": null,
                   "Name": "MinPlantWt",
                   "Children": [
                     {
-                      "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Flowering",
-                      "ReSetEvent": null,
-                      "Name": "OnFlowering",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "PostEventValue",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "PreEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "PostEventValue",
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "DivideFunction",
                           "Children": [
                             {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "DivideFunction",
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Live.Wt",
+                              "Name": "LiveWt",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Sorghum].SowingData.Population",
+                              "Name": "Density",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Live.Wt",
-                                  "Name": "LiveWt",
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "This assumes paddock area is 1ha...",
+                                  "Name": "Memo",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Sorghum].SowingData.Population",
-                                  "Name": "Density",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Memo, Models",
-                                      "Text": "This assumes paddock area is 1ha...",
-                                      "Name": "Memo",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -5590,32 +5579,32 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "SubtractFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 1.0,
+                              "Units": null,
+                              "Name": "base",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "SubtractFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "base",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.15,
-                                  "Units": null,
-                                  "Name": "RetranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.15,
+                              "Units": null,
+                              "Name": "RetranslocationFactor",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
