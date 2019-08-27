@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
+  "ExplorerWidth": 300,
   "Version": 65,
   "Name": "Simulations",
   "Children": [
@@ -1343,6 +1343,7 @@
               "FinalLeafNo": 0.0,
               "TTTargetFI": 0.0,
               "FertileTillerNumber": 0.0,
+              "NLeaves": 0.0,
               "CurrentLeafNo": 0.0,
               "LeafInitialisationStage": "Emergence",
               "Name": "Structure",

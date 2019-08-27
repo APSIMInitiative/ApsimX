@@ -7,6 +7,7 @@ using Models.Interfaces;
 using Models.PMF.Organs;
 using APSIM.Shared.Utilities;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Struct
 {
@@ -127,10 +128,13 @@ namespace Models.PMF.Struct
         public double FertileTillerNumber { get; set; }
 
         /// <summary>Used to match NLeaves in old sorghum which is updated with dltLeafNo at the end of the day</summary>
+        //[JsonIgnore]
         public double NLeaves { get; private set; }
 
         /// <summary>CurrentLeafNo</summary>
+        [JsonIgnore]
         public double CurrentLeafNo { get; set; }
+
         /// <summary>Remaining Leaves</summary>
         public double remainingLeaves { get { return FinalLeafNo - CurrentLeafNo; } }
 
