@@ -1344,7 +1344,6 @@
               "TTTargetFI": 0.0,
               "FertileTillerNumber": 0.0,
               "NLeaves": 0.0,
-              "CurrentLeafNo": 0.0,
               "LeafInitialisationStage": "Emergence",
               "Name": "Structure",
               "Children": [
@@ -5518,7 +5517,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SLN",
+                      "VariableName": "[Leaf].SlnAtFlag",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5742,6 +5741,44 @@
                   "Units": null,
                   "Name": "aMaxIntercept",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "FlagLeaf",
+                  "ReSetEvent": "Germination",
+                  "Name": "SlnAtFlag",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This seems like a terrible idea...",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SLN",
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SLN",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
