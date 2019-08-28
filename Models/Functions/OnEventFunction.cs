@@ -15,7 +15,8 @@ namespace Models.Functions
     public class OnEventFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The _ value</summary>
-        private double _Value = 0;
+        private bool _preEvent = true;
+
 
         /// <summary>The set event</summary>
         [Description("The event that triggers change from pre to post event value")]
@@ -33,15 +34,6 @@ namespace Models.Functions
         [Link]
         IFunction PostEventValue = null;
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            _Value = PreEventValue.Value();
-        }
-
         /// <summary>Called when [phase changed].</summary>
         /// <param name="phaseChange">The phase change.</param>
         /// <param name="sender">Sender plant.</param>
@@ -49,22 +41,23 @@ namespace Models.Functions
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
             if (phaseChange.StageName == SetEvent)
-                _Value = PostEventValue.Value();
+                _preEvent = false;
 
             if (phaseChange.StageName == ReSetEvent)
-                _Value = PreEventValue.Value();
+                _preEvent = true;
+
         }
 
         /// <summary>Called when crop is being harvested.</summary>
         [EventSubscribe("Cutting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
-            _Value = PreEventValue.Value();
+            _preEvent = true;
         }
             /// <summary>Gets the value.</summary>
             public double Value(int arrayIndex = -1)
         {
-            return _Value;
+            return _preEvent ? PreEventValue.Value() : PostEventValue.Value();
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
