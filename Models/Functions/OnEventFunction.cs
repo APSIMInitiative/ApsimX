@@ -54,10 +54,24 @@ namespace Models.Functions
         {
             _preEvent = true;
         }
-            /// <summary>Gets the value.</summary>
-            public double Value(int arrayIndex = -1)
+        /// <summary>Gets the value.</summary>
+        public double Value(int arrayIndex = -1)
         {
-            return _preEvent ? PreEventValue.Value() : PostEventValue.Value();
+            if (_preEvent)
+            {
+                if(PreEventValue != null)
+                {
+                    return PreEventValue.Value();
+                }
+            }
+            else
+            {
+                if (PostEventValue != null)
+                {
+                    return PostEventValue.Value();
+                }
+            }
+            return 0.0;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
