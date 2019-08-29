@@ -1799,7 +1799,10 @@ namespace Models
                     if (month == Math.Round(parms.monthToRemoveAnnuals) && iFacet == Facet.herb)
                         death_rate = death_rate + propAnnualDecid[Facet.herb];  
                     // EJZ - The C# compiler points out that the assignment above is futile; the value is never used.
-
+#if !G_RANGE_BUG
+                    // temp_rate = death_rate;
+                    // leafCarbon[iFacet] = leafCarbon[iFacet] - (leafCarbon[iFacet] * death_rate);  // EJZ
+#endif
                     // Plants die regardless of their placement, whether in the understory of another plant, or defining a facet.   The rate is the same, except for LAI effects.  
                     // Kill the plants...
                     // Shading effect on death rate is at the facet level, but the leaf area index is at the layer level, so store
