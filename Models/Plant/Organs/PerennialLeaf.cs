@@ -333,7 +333,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                 double TotalRadn = 0;
+                if (LightProfile == null)
+                    return 0;
+                double TotalRadn = 0;
                  for (int i = 0; i < LightProfile.Length; i++)
                      TotalRadn += LightProfile[i].amount;
                  return TotalRadn;
