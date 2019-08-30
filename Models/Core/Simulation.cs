@@ -21,6 +21,8 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
+    [ViewName("UserInterface.Views.FolderView")]
+    [PresenterName("UserInterface.Presenters.FolderPresenter")]
     public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator
     {
         [Link]
