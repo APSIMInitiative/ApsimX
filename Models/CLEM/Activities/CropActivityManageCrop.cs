@@ -286,9 +286,13 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">This crop uses ";
 
             Land parentLand = null;
+            IModel clemParent = Apsim.Parent(this, typeof(ZoneCLEM));
             if(LandItemNameToUse != null && LandItemNameToUse != "")
             {
-                parentLand = Apsim.Find(this, LandItemNameToUse.Split('.')[0]) as Land;
+                if (clemParent != null && clemParent.Enabled)
+                {
+                    parentLand = Apsim.Find(clemParent, LandItemNameToUse.Split('.')[0]) as Land;
+                }
             }
 
             if(UseAreaAvailable)
