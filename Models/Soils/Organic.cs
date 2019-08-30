@@ -17,8 +17,9 @@
         public double FOMCNRatio { get; set; }
 
         /// <summary>Soil layer thickness for each layer (mm)</summary>
+        [Description("Depth")]
         [Summary]
-        [Description("Depth (mm)")]
+        [Units("mm")]
         public double[] Thickness { get; set; }
 
         /// <summary>Carbon concentration (Total% 0.1 - 10%)</summary>
