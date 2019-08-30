@@ -442,8 +442,10 @@
             ResidueLayers = new List<ICanopy>();
             foreach (SurfOrganicMatterType pool in SurfOM)
             {
-                ResidueLayers.Add(pool.CanopyLying);
-                ResidueLayers.Add(pool.CanopyStanding);
+                if (pool.CanopyLying.CoverTotal > 0)
+                    ResidueLayers.Add(pool.CanopyLying);
+                if (pool.CanopyStanding.CoverTotal > 0)
+                    ResidueLayers.Add(pool.CanopyStanding);
             }
         }
 
