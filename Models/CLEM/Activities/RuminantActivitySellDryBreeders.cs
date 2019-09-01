@@ -222,7 +222,6 @@ namespace Models.CLEM.Activities
                 html += "<span class=\"setvalue\">" + MinimumConceptionBeforeSell.ToString("0.###") + "</span> and at least ";
                 html += "<span class=\"setvalue\">" + MonthsSinceBirth.ToString() + "</span> months since last birth will be sold";
             }
-            html += "</div>";
             return html;
         }
     }
