@@ -285,6 +285,7 @@ namespace UserInterface.Presenters
                 {
                     double[] thickness = (double[])property.Value;
                     string[] depths = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(thickness);
+
                     depths[cell.RowIndex] = cell.NewValue;
                     return APSIM.Shared.APSoil.SoilUtilities.ToThickness(depths);
                 }
@@ -371,6 +372,81 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Checks the lengths of all array properties. Resizes any
+        /// array which is too short and fills new elements with NaN.
+        /// This is needed when the user enters a new row of data.
+        /// </summary>
+        /// <param name="cell"></param>
+        private void CheckArrayLengths(GridCellChangedArgs cell)
+        {
+            foreach (VariableProperty property in properties)
+            {
+                if (!(property.DataType.IsArray))
+                    continue;
+
+                // If the property value is null, and it's not the
+                // property which has just been changed, ignore it.
+                Array arr = property.Value as Array;
+                if (arr == null && property != properties[cell.ColIndex])
+                    continue;
+
+                int n = arr?.Length ?? 0;
+                if (n > cell.RowIndex)
+                    continue;
+
+                // Array is too short - need to resize it. However,
+                // this array is a reference to the value of the
+                // property stored in the model, so we need to clone it
+                // before making any changes, otherwise the changes
+                // won't be undoable.
+                Type elementType = property.DataType.GetElementType();
+                arr = Clone(arr, elementType);
+                Resize(ref arr, cell.RowIndex + 1);
+
+                // Now fill the new values (if any) with NaN as per
+                // conversation with Dean (blame him!).
+                if (elementType == typeof(double) || elementType == typeof(float))
+                {
+                    object nan = null;
+                    if (elementType == typeof(double))
+                        nan = double.NaN;
+                    else if (elementType == typeof(float))
+                        nan = float.NaN;
+
+                    for (int i = n; i < arr.Length; i++)
+                        arr.SetValue(nan, i);
+                }
+
+                SetPropertyValue(property, arr);
+            }
+        }
+
+        /// <summary>
+        /// Clones an array. Never returns null.
+        /// </summary>
+        /// <param name="array"></param>
+        private Array Clone(Array array, Type elementType)
+        {
+            if (array == null)
+                return Array.CreateInstance(elementType, 0);
+
+            return ReflectionUtilities.Clone(array) as Array;
+        }
+
+        /// <summary>
+        /// Resizes a generic array.
+        /// </summary>
+        /// <param name="array">Array to be resized.</param>
+        /// <param name="newSize">New size.</param>
+        private void Resize(ref Array array, int newSize)
+        {
+            Type elementType = array.GetType().GetElementType();
+            Array newArray = Array.CreateInstance(elementType, newSize);
+            Array.Copy(array, newArray, Math.Min(array.Length, newArray.Length));
+            array = newArray;
+        }
+
+        /// <summary>
         /// User has changed the value of a cell. Validate the change
         /// apply the change.
         /// </summary>
@@ -390,6 +466,10 @@ namespace UserInterface.Presenters
                 if (property == null)
                     continue;
 
+                // If the user has entered data into a new row, we will need to
+                // resize all of the array properties.
+                CheckArrayLengths(cell);
+
                 // Parse the input string to 
                 object newValue = GetNewPropertyValue(cell);
 
@@ -398,6 +478,10 @@ namespace UserInterface.Presenters
 
                 // Update the value shown in the grid.
                 grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(cell.RowIndex, cell.ColIndex);
+
+                // Add new rows to the view's grid if necessary.
+                while (grid.RowCount <= cell.RowIndex + 1)
+                    grid.RowCount++;
             }
 
             UpdateReadOnlyProperties();
