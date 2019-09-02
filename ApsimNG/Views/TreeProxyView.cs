@@ -249,11 +249,11 @@ namespace UserInterface.Views
 
             for (int i = 0; i < dates.Length; i++)
             {
-                string date = dates.Length > i ? dates[i].ToShortDateString() : null;
-                string height = heights.Length > i ? (heights[i] / 1000).ToString() : null;
-                string nDemand = nDemands.Length > i ? nDemands[i].ToString() : null;
-                string canopyWidth = canopyWidths.Length > i ? canopyWidths[i].ToString() : null;
-                string treeLeafArea = treeLeafAreas.Length > i ? treeLeafAreas[i].ToString() : null;
+                string date = dates?.Length > i ? dates[i].ToShortDateString() : null;
+                string height = heights?.Length > i ? (heights[i] / 1000).ToString() : null;
+                string nDemand = nDemands?.Length > i ? nDemands[i].ToString() : null;
+                string canopyWidth = canopyWidths?.Length > i ? canopyWidths[i].ToString() : null;
+                string treeLeafArea = treeLeafAreas?.Length > i ? treeLeafAreas[i].ToString() : null;
                 table.Rows.Add(date, height, nDemand, canopyWidth, treeLeafArea);
             }
 
