@@ -123,7 +123,8 @@ namespace UserInterface.Presenters
                 SoilCrop crop = property.Object as SoilCrop;
                 int index = Apsim.Children(crop.Parent, typeof(SoilCrop)).IndexOf(crop);
                 Color foreground = ColourUtilities.ChooseColour(index);
-
+                if (property.IsReadOnly)
+                    foreground = Color.Red;
 
                 grid.GetColumn(i).ForegroundColour = foreground;
                 grid.GetColumn(i).MinimumWidth = 70;
