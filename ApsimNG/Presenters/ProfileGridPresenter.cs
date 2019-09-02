@@ -8,16 +8,73 @@ using System.Reflection;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Soils;
+using UserInterface.Commands;
 using UserInterface.EventArguments;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Presenters
 {
-    public class ProfileGridPresenter : PropertyPresenter
+    public class ProfileGridPresenter : GridPresenter
     {
+        /// <summary>
+        /// List of properties shown in the grid.
+        /// </summary>
+        private List<VariableProperty> properties;
+
+        /// <summary>
+        /// Model whose properties are being shown.
+        /// </summary>
+        private IModel model;
+
+        /// <summary>
+        /// Attach the model to the view.
+        /// </summary>
+        /// <param name="model">The model to connect to</param>
+        /// <param name="view">The view to connect to</param>
+        /// <param name="explorerPresenter">The parent explorer presenter</param>
+        public override void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        {
+            base.Attach(model, view, explorerPresenter);
+            this.model = model as IModel;
+
+            // No intellisense in this grid.
+
+            // if the model is Testable, run the test method.
+            if (model is ITestable test)
+            {
+                test.Test(false, true);
+                grid.ReadOnly = true;
+            }
+
+            grid.NumericFormat = "N3";
+
+            PopulateGrid(this.model);
+
+            grid.CellsChanged += OnCellsChanged;
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public override void Detach()
+        {
+            try
+            {
+                base.Detach();
+                grid.CellsChanged -= OnCellsChanged;
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            }
+            catch (NullReferenceException)
+            {
+                // to keep Neil happy
+            }
+        }
+
         /// <summary>
         /// Properties displayed by this presenter.
         /// </summary>
-        public IVariable[] Properties
+        public VariableProperty[] Properties
         {
             get
             {
@@ -25,11 +82,35 @@ namespace UserInterface.Presenters
             }
         }
 
-        protected override void FindAllProperties(IModel model)
+        /// <summary>
+        /// Populates the grid view with data, or refreshes the grid if
+        /// it already contains data.
+        /// </summary>
+        /// <param name="model">The model to examine for properties.</param>
+        private void PopulateGrid(IModel model)
         {
+            // After refreshing the grid, we want the selected cell
+            // to still be selected.
+            IGridCell selectedCell = grid.GetCurrentCell;
+            this.model = model;
+
+            properties = FindAllProperties(this.model);
+            DataTable table = CreateGrid();
+            FillTable(table);
+            grid.DataSource = table;
+            FormatGrid();
+
+            if (selectedCell != null)
+                grid.GetCurrentCell = selectedCell;
+        }
+        
+        private List<VariableProperty> FindAllProperties(IModel model)
+        {
+            List<VariableProperty> properties = new List<VariableProperty>();
+
             // When user clicks on a SoilCrop, there is no thickness column. In this
             // situation get thickness column from parent model.
-            if (model is SoilCrop && model.Parent is Physical water && properties.Count == 0)
+            if (this.model is SoilCrop && model.Parent is Physical water)
             {
                 PropertyInfo thickness = water.GetType().GetProperty("Thickness");
                 properties.Add(new VariableProperty(water, thickness));
@@ -43,10 +124,15 @@ namespace UserInterface.Presenters
             }
 
             foreach (SoilCrop crop in Apsim.Children(model, typeof(SoilCrop)))
-                FindAllProperties(crop);
+                properties.AddRange(FindAllProperties(crop));
+
+            return properties;
         }
 
-        protected override DataTable CreateGrid()
+        /// <summary>
+        /// Creates the skeleton data table with columns but no data.
+        /// </summary>
+        private DataTable CreateGrid()
         {
             DataTable table = new DataTable();
             for (int i = 0; i < properties.Count; i++)
@@ -66,7 +152,7 @@ namespace UserInterface.Presenters
         /// Fill the specified table with columns and rows based on this.Properties
         /// </summary>
         /// <param name="table">The table that needs to be filled</param>
-        protected override void FillTable(DataTable table)
+        private void FillTable(DataTable table)
         {
             for (int i = 0; i < properties.Count; i++)
             {
@@ -90,10 +176,15 @@ namespace UserInterface.Presenters
                 // list of properties, because i will be greater than the number
                 // of columns.
                 for (int j = 0; j < array.Length; j++)
-                    table.Rows[j][i] = GetCellValue(property, j, i);
+                    table.Rows[j][i] = GetCellValue(j, i);
             }
         }
 
+        /// <summary>
+        /// Figures out the appropriate name for a column. This is only
+        /// necessary because the columns for soil crop properties need
+        /// to contain the soil crop's name (e.g. Wheat LL).
+        /// </summary>
         private string GetColumnName(VariableProperty property)
         {
             string columnName = property.Name;
@@ -112,7 +203,11 @@ namespace UserInterface.Presenters
             return columnName;
         }
 
-        protected override void FormatGrid()
+        /// <summary>
+        /// Formats the GridView. Sets colours, spacing, locks the
+        /// depth column, etc.
+        /// </summary>
+        private void FormatGrid()
         {
             for (int i = 0; i < properties.Count; i++)
             {
@@ -135,13 +230,18 @@ namespace UserInterface.Presenters
             grid.LockLeftMostColumns(1);
         }
 
-        protected override IVariable GetProperty(int row, int column)
+        /// <summary>
+        /// Gets a formatted value for a cell in the grid. This is
+        /// necessary because the grid uses the string data type for
+        /// everything, so we need to convert thicknesses to depths
+        /// and format the numbers correctly, (# of decimal places, and
+        /// show nothing instead of NaN).
+        /// </summary>
+        /// <param name="row">Row index of the cell.</param>
+        /// <param name="column">Column index of the cell.</param>
+        private object GetCellValue(int row, int column)
         {
-            return properties[column];
-        }
-
-        protected override object GetCellValue(IVariable property, int row, int column)
-        {
+            VariableProperty property = properties[column];
             if (property.Name == "Thickness")
             {
                 string[] depths = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings((double[])property.Value);
@@ -166,12 +266,13 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Gets the new value of the cell from a string containing the
-        /// cell's new contents.
+        /// Gets the new value of the property which will be passed
+        /// into the model.
         /// </summary>
         /// <param name="cell">Cell which has been changed.</param>
-        protected override object GetNewPropertyValue(IVariable property, GridCellChangedArgs cell)
+        private object GetNewPropertyValue(GridCellChangedArgs cell)
         {
+            VariableProperty property = properties[cell.ColIndex];
             if (typeof(IPlant).IsAssignableFrom(property.DataType))
                 return Apsim.Find(property.Object as IModel, cell.NewValue);
 
@@ -189,6 +290,9 @@ namespace UserInterface.Presenters
                 }
                 object value = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), cell.NewValue, CultureInfo.CurrentCulture);
 
+                // We now have the value of a single element of the
+                // array. We need to copy the actual array stored in
+                // the model and change the appropriate element.
                 Array array;
                 if (property.Value == null)
                 {
@@ -222,7 +326,10 @@ namespace UserInterface.Presenters
             }
         }
 
-        protected override void UpdateReadOnlyProperties()
+        /// <summary>
+        /// Update read-only (calculated) properties in the grid.
+        /// </summary>
+        private void UpdateReadOnlyProperties()
         {
             for (int i = 0; i < properties.Count; i++)
             {
@@ -236,6 +343,69 @@ namespace UserInterface.Presenters
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Set the value of the specified property
+        /// </summary>
+        /// <param name="property">The property to set the value of</param>
+        /// <param name="value">The value to set the property to</param>
+        private void SetPropertyValue(IVariable property, object value)
+        {
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            try
+            {
+                ChangeProperty cmd = new ChangeProperty(property.Object, property.Name, value);
+                presenter.CommandHistory.Add(cmd);
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>
+        /// User has changed the value of a cell. Validate the change
+        /// apply the change.
+        /// </summary>
+        /// <param name="sender">Sender object</param>
+        /// <param name="args">Event parameters</param>
+        private void OnCellsChanged(object sender, GridCellsChangedArgs args)
+        {
+            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+            foreach (GridCellChangedArgs cell in args.ChangedCells)
+            {
+                if (cell.NewValue == cell.OldValue)
+                    continue; // silently fail
+
+                // If there are multiple changed cells, each change will be
+                // individually undoable.
+                IVariable property = properties[cell.ColIndex];
+                if (property == null)
+                    continue;
+
+                // Parse the input string to 
+                object newValue = GetNewPropertyValue(cell);
+
+                // Update the value of the model's property.
+                SetPropertyValue(property, newValue);
+
+                // Update the value shown in the grid.
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(cell.RowIndex, cell.ColIndex);
+            }
+
+            UpdateReadOnlyProperties();
+        }
+
+        /// <summary>
+        /// The model has changed, update the grid.
+        /// </summary>
+        /// <param name="changedModel">The model that has changed</param>
+        private void OnModelChanged(object changedModel)
+        {
+            if (changedModel == model)
+                PopulateGrid(model);
         }
     }
 }
