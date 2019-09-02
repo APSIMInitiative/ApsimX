@@ -338,9 +338,7 @@ namespace UserInterface.Presenters
                 {
                     Array value = property.Value as Array;
                     for (int j = 0; j < value.Length; j++)
-                    {
-                        grid.DataSource.Rows[j][i] = value.GetValue(j).ToString();
-                    }
+                        grid.DataSource.Rows[j][i] = GetCellValue(j, i);
                 }
             }
         }
