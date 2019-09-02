@@ -146,7 +146,16 @@ namespace UserInterface.Presenters
                 string[] depths = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings((double[])property.Value);
                 return depths[row];
             }
-            return (property.Value as Array)?.GetValue(row);
+            object value = (property.Value as Array)?.GetValue(row);
+            if (value == null)
+                return null;
+
+            Type dataType = property.DataType.GetElementType();
+            if (dataType == typeof(double) && double.IsNaN((double)value))
+                return "";
+            if (dataType == typeof(float) && double.IsNaN((float)value))
+                return "";
+            return value;
         }
 
         /// <summary>
