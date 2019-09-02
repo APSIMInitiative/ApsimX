@@ -156,6 +156,12 @@ namespace UserInterface.Presenters
                 return "";
             if (dataType == typeof(float) && double.IsNaN((float)value))
                 return "";
+
+            if (dataType == typeof(double))
+                return ((double)value).ToString(grid.NumericFormat);
+            if (dataType == typeof(float))
+                return ((float)value).ToString(grid.NumericFormat);
+
             return value;
         }
 
