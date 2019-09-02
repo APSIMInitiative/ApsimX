@@ -211,6 +211,8 @@ namespace UserInterface.Presenters
         {
             for (int i = 0; i < properties.Count; i++)
             {
+                grid.GetColumn(i).LeftJustification = false;
+                grid.GetColumn(i).HeaderLeftJustification = false;
                 VariableProperty property = properties[i] as VariableProperty;
                 if (!(property.Object is SoilCrop))
                     continue;
@@ -224,8 +226,6 @@ namespace UserInterface.Presenters
                 grid.GetColumn(i).ForegroundColour = foreground;
                 grid.GetColumn(i).MinimumWidth = 70;
                 grid.GetColumn(i).ReadOnly = property.IsReadOnly;
-                // Make the soil crop columns wider to fit the crop name in column title.
-                grid.GetColumn(i).Width = 90;
             }
             grid.LockLeftMostColumns(1);
         }
@@ -305,11 +305,18 @@ namespace UserInterface.Presenters
                 {
                     // Get a deep copy of the model's array property.
                     double[] arr = ReflectionUtilities.Clone(property.Value) as double[];
+
+                    // If array is shorter than the row index of the
+                    // changed cell, we will need to resize it.
                     int n = arr.Length;
                     if (n <= cell.RowIndex)
+                    {
                         Array.Resize(ref arr, cell.RowIndex + 1);
-                    for (int i = n; i < arr.Length; i++)
-                        arr[i] = double.NaN;
+                        // Store NaNs in the new elements.
+                        for (int i = n; i < arr.Length; i++)
+                            arr[i] = double.NaN;
+                    }
+
                     array = arr;
                 }
 
