@@ -185,6 +185,7 @@
             Grid.ButtonReleaseEvent += OnButtonUp;
             Grid.Selection.Mode = SelectionMode.None;
             Grid.CursorChanged += OnMoveCursor;
+            fixedColView.CursorChanged += OnMoveCursor;
             fixedColView.ButtonPressEvent += OnButtonDown;
             Grid.FocusInEvent += FocusInEvent;
             Grid.FocusOutEvent += FocusOutEvent;
@@ -894,6 +895,8 @@
             Grid.ButtonPressEvent -= OnButtonDown;
             Grid.ButtonReleaseEvent -= OnButtonUp;
             fixedColView.ButtonPressEvent -= OnButtonDown;
+            Grid.CursorChanged -= OnMoveCursor;
+            fixedColView.CursorChanged -= OnMoveCursor;
             Grid.FocusInEvent -= FocusInEvent;
             Grid.FocusOutEvent -= FocusOutEvent;
             Grid.KeyPressEvent -= GridviewKeyPressEvent;
