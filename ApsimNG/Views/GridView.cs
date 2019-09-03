@@ -1229,7 +1229,6 @@
             int nextCol = GetCurrentCell.ColumnIndex;
 
             int numCols = DataSource != null ? DataSource.Columns.Count : 0;
-            int numRows = DataSource != null ? DataSource.Rows.Count : 0;
 
             // Figure out which direction we're moving in.
             bool moveLeft = key == Gdk.Key.Left || (keyName == "Tab" && shifted);
@@ -1245,8 +1244,8 @@
                 nextCol++; // Move right
             else if (moveUp && nextRow > 0)
                 while (nextRow > 0 && IsSeparator(--nextRow)) ; // Move up
-            else if (moveDown && nextRow < numRows - 1)
-                while (nextRow < numRows - 1 && IsSeparator(++nextRow)) ; // Move down
+            else if (moveDown && nextRow < RowCount - 1)
+                while (nextRow < RowCount - 1 && IsSeparator(++nextRow)) ; // Move down
 
             // Cancel any ongoing editing operation before moving cells.
             EndEdit();
