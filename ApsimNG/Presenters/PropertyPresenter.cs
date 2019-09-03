@@ -856,6 +856,7 @@ namespace UserInterface.Presenters
         /// <param name="value">The value to set the property to</param>
         private void SetPropertyValue(IVariable property, object value)
         {
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
             try
             {
                 ChangeProperty cmd = new ChangeProperty(property.Object, property.Name, value);
@@ -865,6 +866,7 @@ namespace UserInterface.Presenters
             {
                 presenter.MainPresenter.ShowError(err);
             }
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>
