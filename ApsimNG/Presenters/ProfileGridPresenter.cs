@@ -273,58 +273,28 @@ namespace UserInterface.Presenters
         private object GetNewPropertyValue(GridCellChangedArgs cell)
         {
             VariableProperty property = properties[cell.ColIndex];
-            if (typeof(IPlant).IsAssignableFrom(property.DataType))
-                return Apsim.Find(property.Object as IModel, cell.NewValue);
-
-            if (property.Display != null && property.Display.Type == DisplayType.Model)
-                return Apsim.Get(property.Object as IModel, cell.NewValue);
 
             try
             {
                 if (property.Name == "Thickness")
                 {
                     double[] thickness = (double[])property.Value;
-                    string[] depths = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(thickness);
-
-                    depths[cell.RowIndex] = cell.NewValue;
-                    return APSIM.Shared.APSoil.SoilUtilities.ToThickness(depths);
+                    Array depths = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(thickness);
+                    // Can't cast when passing by reference.
+                    Resize(ref depths, cell.RowIndex + 1);
+                    depths.SetValue(cell.NewValue, cell.RowIndex);
+                    return APSIM.Shared.APSoil.SoilUtilities.ToThickness((string[])depths);
                 }
+
                 object value = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), cell.NewValue, CultureInfo.CurrentCulture);
 
-                // We now have the value of a single element of the
-                // array. We need to copy the actual array stored in
-                // the model and change the appropriate element.
-                Array array;
-                if (property.Value == null)
-                {
-                    // Can't clone null - setup array and fill with NaN.
-                    array = new double[cell.RowIndex + 1]; // fixme
-                    for (int i = 0; i < array.Length; i++)
-                        array.SetValue(double.NaN, i);
-                }
-                else
-                {
-                    // Get a deep copy of the model's array property.
-                    double[] arr = ReflectionUtilities.Clone(property.Value) as double[];
-
-                    // If array is shorter than the row index of the
-                    // changed cell, we will need to resize it.
-                    int n = arr.Length;
-                    if (n <= cell.RowIndex)
-                    {
-                        Array.Resize(ref arr, cell.RowIndex + 1);
-                        // Store NaNs in the new elements.
-                        for (int i = n; i < arr.Length; i++)
-                            arr[i] = double.NaN;
-                    }
-
-                    array = arr;
-                }
-
+                // Clone the array stored in the model, resize if necessary, and change the appropriate element.
+                Array array = Clone(property.Value as Array, property.DataType.GetElementType());
+                Resize(ref array, cell.RowIndex + 1);
                 array.SetValue(value, cell.RowIndex);
 
                 if (!MathUtilities.ValuesInArray(array))
-                    array = null;
+                    return null;
 
                 return array;
             }
@@ -356,12 +326,12 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="property">The property to set the value of</param>
         /// <param name="value">The value to set the property to</param>
-        private void SetPropertyValue(IVariable property, object value)
+        private void SetPropertyValue(ChangeProperty changedProperty)
         {
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             try
             {
-                ChangeProperty cmd = new ChangeProperty(property.Object, property.Name, value);
+                ChangeProperty cmd = changedProperty;
                 presenter.CommandHistory.Add(cmd);
             }
             catch (Exception err)
@@ -377,19 +347,28 @@ namespace UserInterface.Presenters
         /// This is needed when the user enters a new row of data.
         /// </summary>
         /// <param name="cell"></param>
-        private void CheckArrayLengths(GridCellChangedArgs cell)
+        private List<ChangeProperty.Property> CheckArrayLengths(GridCellChangedArgs cell)
         {
+            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
             foreach (VariableProperty property in properties)
             {
-                if (!(property.DataType.IsArray))
+                // If the property is not an array or if it's readonly,
+                // ignore it.
+                if (!property.DataType.IsArray || property.IsReadOnly)
                     continue;
 
-                // If the property value is null, and it's not the
-                // property which has just been changed, ignore it.
+                // If the property is the property which has just been
+                // changed by the user, ignore it - we don't want to
+                // modify it twice.
+                if (property == properties[cell.ColIndex])
+                    continue;
+
+                // If the property value is null, ignore it.
                 Array arr = property.Value as Array;
-                if (arr == null && property != properties[cell.ColIndex])
+                if (arr == null)
                     continue;
 
+                // If array is already long enough, ignore it.
                 int n = arr?.Length ?? 0;
                 if (n > cell.RowIndex)
                     continue;
@@ -417,8 +396,9 @@ namespace UserInterface.Presenters
                         arr.SetValue(nan, i);
                 }
 
-                SetPropertyValue(property, arr);
+                changes.Add(new ChangeProperty.Property(property.Object, property.Name, arr));
             }
+            return changes;
         }
 
         /// <summary>
@@ -454,7 +434,6 @@ namespace UserInterface.Presenters
         /// <param name="args">Event parameters</param>
         private void OnCellsChanged(object sender, GridCellsChangedArgs args)
         {
-            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
             foreach (GridCellChangedArgs cell in args.ChangedCells)
             {
                 if (cell.NewValue == cell.OldValue)
@@ -468,13 +447,15 @@ namespace UserInterface.Presenters
 
                 // If the user has entered data into a new row, we will need to
                 // resize all of the array properties.
-                CheckArrayLengths(cell);
+                List<ChangeProperty.Property> changes = CheckArrayLengths(cell);
 
-                // Parse the input string to 
+                // Get a new array for the property containing the input string
+                // at the index of the changed row.
                 object newValue = GetNewPropertyValue(cell);
+                changes.Add(new ChangeProperty.Property(property.Object, property.Name, newValue));
 
                 // Update the value of the model's property.
-                SetPropertyValue(property, newValue);
+                SetPropertyValue(new ChangeProperty(changes));
 
                 // Update the value shown in the grid.
                 grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(cell.RowIndex, cell.ColIndex);
