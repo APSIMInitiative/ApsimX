@@ -122,7 +122,7 @@
             double[] Thickness = new double[DepthStrings.Length];
             for (int i = 0; i != DepthStrings.Length; i++)
             {
-                if (DepthStrings[i] == "")
+                if (string.IsNullOrEmpty(DepthStrings[i]))
                     Thickness[i] = MathUtilities.MissingValue;
                 else
                 {

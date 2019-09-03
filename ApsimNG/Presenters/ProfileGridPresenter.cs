@@ -89,8 +89,8 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to examine for properties.</param>
         private void PopulateGrid(IModel model)
         {
-            // After refreshing the grid, we want the selected cell
-            // to still be selected.
+            // After refreshing the grid, we want the selected cell to
+            // still be selected.
             IGridCell selectedCell = grid.GetCurrentCell;
             this.model = model;
 
@@ -104,6 +104,11 @@ namespace UserInterface.Presenters
                 grid.GetCurrentCell = selectedCell;
         }
         
+        /// <summary>
+        /// Finds all array properties with a description attribute of
+        /// a given model and all child models of type SoilCrop.
+        /// </summary>
+        /// <param name="model">Model to examine.</param>
         private List<VariableProperty> FindAllProperties(IModel model)
         {
             List<VariableProperty> properties = new List<VariableProperty>();
@@ -112,10 +117,11 @@ namespace UserInterface.Presenters
             // situation get thickness column from parent model.
             if (this.model is SoilCrop && model.Parent is Physical water)
             {
-                PropertyInfo thickness = water.GetType().GetProperty("Thickness");
-                properties.Add(new VariableProperty(water, thickness));
+                PropertyInfo depth = water.GetType().GetProperty("Depth");
+                properties.Add(new VariableProperty(water, depth));
             }
 
+            // Get all properties of the model which have a description attribute.
             foreach (PropertyInfo property in model.GetType().GetProperties())
             {
                 Attribute description = ReflectionUtilities.GetAttribute(property, typeof(DescriptionAttribute), false);
@@ -123,6 +129,7 @@ namespace UserInterface.Presenters
                     properties.Add(new VariableProperty(model, property));
             }
 
+            // Get properties of all child models of type SoilCrop.
             foreach (SoilCrop crop in Apsim.Children(model, typeof(SoilCrop)))
                 properties.AddRange(FindAllProperties(crop));
 
@@ -188,15 +195,14 @@ namespace UserInterface.Presenters
         private string GetColumnName(VariableProperty property)
         {
             string columnName = property.Name;
-            if (property.Name == "Thickness")
-                columnName = "Depth";
-            else if (property.Object is SoilCrop crop)
+            if (property.Object is SoilCrop crop)
             {
                 // This column represents an array property of a SoilCrop.
                 // Column name by default would be something like XF but we
                 // want the column to be called 'Wheat XF'.
                 columnName = crop.Name.Replace("Soil", "") + " " + property.Name;
             }
+
             if (property.Units != null)
                 columnName += $" \n({property.Units})";
 
@@ -242,16 +248,12 @@ namespace UserInterface.Presenters
         private object GetCellValue(int row, int column)
         {
             VariableProperty property = properties[column];
-            if (property.Name == "Thickness")
-            {
-                string[] depths = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings((double[])property.Value);
-                return depths[row];
-            }
             object value = (property.Value as Array)?.GetValue(row);
             if (value == null)
                 return null;
 
             Type dataType = property.DataType.GetElementType();
+            // Fixme!
             if (dataType == typeof(double) && double.IsNaN((double)value))
                 return "";
             if (dataType == typeof(float) && double.IsNaN((float)value))
@@ -276,21 +278,18 @@ namespace UserInterface.Presenters
 
             try
             {
-                if (property.Name == "Thickness")
-                {
-                    double[] thickness = (double[])property.Value;
-                    Array depths = APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(thickness);
-                    // Can't cast when passing by reference.
-                    Resize(ref depths, cell.RowIndex + 1);
-                    depths.SetValue(cell.NewValue, cell.RowIndex);
-                    return APSIM.Shared.APSoil.SoilUtilities.ToThickness((string[])depths);
-                }
-
+                // Parse the new string to an object of the appropriate type.
                 object value = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), cell.NewValue, CultureInfo.CurrentCulture);
 
-                // Clone the array stored in the model, resize if necessary, and change the appropriate element.
+                // Clone the array stored in the model. This is necessary
+                // because we need to modify an element of property.Value,
+                // which is a shallow copy of the actual property value.
                 Array array = Clone(property.Value as Array, property.DataType.GetElementType());
+
+                // Resize the array if necessary.
                 Resize(ref array, cell.RowIndex + 1);
+
+                // Change the appropriate element in the array.
                 array.SetValue(value, cell.RowIndex);
 
                 if (!MathUtilities.ValuesInArray(array))
@@ -331,8 +330,7 @@ namespace UserInterface.Presenters
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             try
             {
-                ChangeProperty cmd = changedProperty;
-                presenter.CommandHistory.Add(cmd);
+                presenter.CommandHistory.Add(changedProperty);
             }
             catch (Exception err)
             {
@@ -382,9 +380,11 @@ namespace UserInterface.Presenters
                 arr = Clone(arr, elementType);
                 Resize(ref arr, cell.RowIndex + 1);
 
-                // Now fill the new values (if any) with NaN as per
-                // conversation with Dean (blame him!).
-                if (elementType == typeof(double) || elementType == typeof(float))
+                // Unless this property is thickness, fill the new
+                // values (if any) with NaN as per conversation with
+                // Dean (blame him!).
+                if ((elementType == typeof(double) || elementType == typeof(float))
+                    && property.Name != "Thickness")
                 {
                     object nan = null;
                     if (elementType == typeof(double))
@@ -434,38 +434,131 @@ namespace UserInterface.Presenters
         /// <param name="args">Event parameters</param>
         private void OnCellsChanged(object sender, GridCellsChangedArgs args)
         {
+            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+
+            // If all cells are being set to null, and the number of changed
+            // cells is a multiple of the number of properties, we could be
+            // deleting an entire row (or rows). In this case, we need
+            // different logic, to resize all of the arrays.
+            bool deletedRow = false;
+            if (args.ChangedCells.All(c => c.NewValue == null) &&
+                args.ChangedCells.Count % properties.Where(p => !p.IsReadOnly).Count() == 0)
+            {
+                // Get list of distinct rows which have been changed.
+                int[] changedRows = args.ChangedCells.Select(c => c.RowIndex).Distinct().ToArray();
+                List<int> rowsToDelete = new List<int>();
+                foreach (int row in changedRows)
+                {
+                    // Get columns which have been changed in this row.
+                    var changesInRow = args.ChangedCells.Where(c => c.RowIndex == row);
+                    int[] columns = changesInRow.Select(c => c.ColIndex).ToArray();
+
+                    // If all non-readonly properties have been set to null in this row,
+                    // delete the row.
+                    bool deleteRow = true;
+                    for (int i = 0; i < properties.Count; i++)
+                        if (!properties[i].IsReadOnly && !columns.Contains(i))
+                            deleteRow = false;
+
+                    if (deleteRow)
+                    {
+                        // We can't delete the row now - what if the user has deleted
+                        // multiple rows at once (this is possible via shift-clicking).
+                        // We need one change property command per property. Otherwise,
+                        // only the last command will have an effect.
+                        deletedRow = true;
+                        rowsToDelete.Add(row);
+                    }
+                }
+
+                if (rowsToDelete.Count > 0)
+                {
+                    // This assumes that only consecutive rows can be deleted together.
+                    // ie the user can shift click multiple rows and hit delete to delete
+                    // more than 1 row. They cannot ctrl click to select non-adjacent rows.
+                    int from = rowsToDelete.Min();
+                    int to = rowsToDelete.Max();
+                    changes.AddRange(DeleteRows(from, to));
+
+                    // Remove cells in deleted rows from list of changed cells,
+                    // as we've already dealt with them.
+                    args.ChangedCells = args.ChangedCells.Where(c => !rowsToDelete.Contains(c.RowIndex)).ToList();
+                }
+            }
+
             foreach (GridCellChangedArgs cell in args.ChangedCells)
             {
                 if (cell.NewValue == cell.OldValue)
                     continue; // silently fail
 
-                // If there are multiple changed cells, each change will be
-                // individually undoable.
                 IVariable property = properties[cell.ColIndex];
                 if (property == null)
                     continue;
 
                 // If the user has entered data into a new row, we will need to
                 // resize all of the array properties.
-                List<ChangeProperty.Property> changes = CheckArrayLengths(cell);
+                 changes.AddRange(CheckArrayLengths(cell));
 
                 // Get a new array for the property containing the input string
                 // at the index of the changed row.
                 object newValue = GetNewPropertyValue(cell);
                 changes.Add(new ChangeProperty.Property(property.Object, property.Name, newValue));
 
-                // Update the value of the model's property.
-                SetPropertyValue(new ChangeProperty(changes));
-
-                // Update the value shown in the grid.
-                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(cell.RowIndex, cell.ColIndex);
-
                 // Add new rows to the view's grid if necessary.
                 while (grid.RowCount <= cell.RowIndex + 1)
                     grid.RowCount++;
             }
 
-            UpdateReadOnlyProperties();
+            // Apply all changes to the model in a single undoable command.
+            SetPropertyValue(new ChangeProperty(changes));
+
+            // Update the value shown in the grid. This needs to happen after
+            // we have applied changes to the model for obvious reasons.
+            foreach (GridCellChangedArgs cell in args.ChangedCells)
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(cell.RowIndex, cell.ColIndex);
+
+            // If the user deleted an entire row, do a full refresh of the
+            // grid. Otherwise, only refresh read-only columns (PAWC).
+            if (deletedRow)
+                PopulateGrid(model);
+            else
+                UpdateReadOnlyProperties();
+        }
+
+        /// <summary>
+        /// Deletes a row of data from all properties.
+        /// Returns a list of change property objects.
+        /// </summary>
+        /// <param name="row">Index of the row to be deleted.</param>
+        private List<ChangeProperty.Property> DeleteRows(int from, int to)
+        {
+            if (from > to)
+            {
+                int tmp = to;
+                to = from;
+                from = tmp;
+            }
+
+            // if deleting from 4 to 8, num rows to delete = 5.
+            int numRowsToDelete = to - from + 1;
+
+            List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+            foreach (VariableProperty property in properties)
+            {
+                Array array = Clone(property.Value as Array, property.DataType.GetElementType());
+                if (array == null || array.Length < from + 1 || property.IsReadOnly)
+                    continue;
+
+                // Move each element after the start row to be deleted back one index.
+                // e.g. array[0] = array[1], etc. Then resize the array and remove
+                // the last element.
+                for (int i = from; i < array.Length - numRowsToDelete; i++)
+                    array.SetValue(array.GetValue(i + numRowsToDelete), i);
+
+                Resize(ref array, array.Length - numRowsToDelete);
+                changes.Add(new ChangeProperty.Property(property.Object, property.Name, array));
+            }
+            return changes;
         }
 
         /// <summary>

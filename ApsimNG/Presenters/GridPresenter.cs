@@ -147,12 +147,12 @@ namespace UserInterface.Presenters
                         cellsChanged.Add(grid.GetCell(column, row));
                     }
                 }
-                if (args.Grid.CanGrow && args.StartCell.ColumnIndex == 0 && args.EndCell.ColumnIndex == args.Grid.DataSource.Columns.Count - 1)
-                {
-                    // User has selected the entire row. In this case, we delete the entire row,
-                    // but only if the grid can change size.
-                    args.Grid.DataSource.Rows.Remove(args.Grid.DataSource.Rows[row]);
-                }
+                //if (args.Grid.CanGrow && args.StartCell.ColumnIndex == 0 && args.EndCell.ColumnIndex == args.Grid.DataSource.Columns.Count - 1)
+                //{
+                //    // User has selected the entire row. In this case, we delete the entire row,
+                //    // but only if the grid can change size.
+                //    args.Grid.DataSource.Rows.Remove(args.Grid.DataSource.Rows[row]);
+                //}
             }
             // If some cells were changed then we will need to update the model.
             if (cellsChanged.Count > 0)

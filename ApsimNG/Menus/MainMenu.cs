@@ -58,7 +58,14 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Undo")]
         public void OnUndoClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Undo();
+            try
+            {
+                this.explorerPresenter.CommandHistory.Undo();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
