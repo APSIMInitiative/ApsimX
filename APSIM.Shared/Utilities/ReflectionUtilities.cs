@@ -368,8 +368,8 @@ namespace APSIM.Shared.Utilities
                 object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s, format)).ToArray();
 
                 // An object array is not good enough. We need an array with correct element type.
-                object result = Array.CreateInstance(dataType.GetElementType(), arr.Length);
-                Array.Copy(arr, (Array)result, arr.Length);
+                Array result = Array.CreateInstance(dataType.GetElementType(), arr.Length);
+                Array.Copy(arr, result, arr.Length);
                 return result;
             }
 

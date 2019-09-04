@@ -290,7 +290,8 @@ namespace UserInterface.Presenters
                 Array array = Clone(property.Value as Array, property.DataType.GetElementType());
 
                 // Resize the array if necessary.
-                Resize(ref array, cell.RowIndex + 1);
+                if (cell.RowIndex >= array.Length)
+                    Resize(ref array, cell.RowIndex + 1);
 
                 // Change the appropriate element in the array.
                 array.SetValue(value, cell.RowIndex);
@@ -487,6 +488,42 @@ namespace UserInterface.Presenters
                     // as we've already dealt with them.
                     args.ChangedCells = args.ChangedCells.Where(c => !rowsToDelete.Contains(c.RowIndex)).ToList();
                 }
+            }
+
+            foreach (var column in args.ChangedCells.GroupBy(c => c.ColIndex))
+            {
+                VariableProperty property = properties[column.Key];
+                if (property == null || property.IsReadOnly)
+                    continue;
+
+                // Get a deep copy of the property value.
+                Array newArray = property.Value as Array;
+                if (newArray == null)
+                    continue;
+                newArray = Clone(newArray, property.DataType.GetElementType());
+
+                // It's possible to change multiple values in the same column
+                // simultaneously via multi-selection. If we just add a change
+                // property command for each individual change, later changes
+                // would overwrite the earlier changes. We need to merge all
+                // changes to a single column into a single command then move
+                // onto the next column.
+                foreach (GridCellChangedArgs change in column)
+                {
+                    if (change.NewValue == change.OldValue)
+                        continue; // silently fail
+
+                    // If the user has entered data into a new row, we will need to
+                    // resize all of the array properties.
+                    changes.AddRange(CheckArrayLengths(change));
+
+                    object element = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), change.NewValue);
+                    if (newArray.Length <= change.RowIndex)
+                        Resize(ref newArray, change.RowIndex + 1);
+
+                    newArray.SetValue(element, change.RowIndex);
+                }
+                changes.Add(new ChangeProperty.Property(property.Object, property.Name, newArray));
             }
 
             foreach (GridCellChangedArgs cell in args.ChangedCells)
