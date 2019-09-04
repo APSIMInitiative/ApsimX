@@ -4387,11 +4387,36 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10.0,
-                  "Units": null,
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Stem].Live.Wt",
                   "Name": "HeightFunction",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        800.0
+                      ],
+                      "Y": [
+                        0.0,
+                        2000.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "[Stem].Live.Wt is in the wrong units - it's out by a factor of 10 vs old apsim.\n\nTo overcome this, we re-scale the x-values.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
