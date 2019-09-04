@@ -1370,6 +1370,7 @@ namespace Models
 
                 death_rate = Math.Min(1.0, death_rate);
                 death_rate = Math.Max(0.0, death_rate);
+                partBasedDeathRate[Facet.herb] = death_rate;
                 death_carbon = death_rate * leafCarbon[Facet.herb];
                 // Moving away from CENTURY here, which goes into labeled materials, etc.
                 death_nitrogen = death_rate * leafNitrogen[Facet.herb];
@@ -1732,6 +1733,7 @@ namespace Models
                     death_carbon = coarseBranchCarbon[iFacet] * parms.coarseBranchDeathRate[iFacet];
                 else
                     death_carbon = 0.0;
+                partBasedDeathRate[iFacet] = parms.coarseBranchDeathRate[iFacet];
                 coarseBranchCarbon[iFacet] = coarseBranchCarbon[iFacet] - death_carbon;
                 deadCoarseBranchCarbon[iFacet] = deadCoarseBranchCarbon[iFacet] + death_carbon;
                 if (coarseBranchNitrogen[iFacet] > 0.00001)
@@ -1799,9 +1801,8 @@ namespace Models
                     if (month == Math.Round(parms.monthToRemoveAnnuals) && iFacet == Facet.herb)
                         death_rate = death_rate + propAnnualDecid[Facet.herb];  
                     // EJZ - The C# compiler points out that the assignment above is futile; the value is never used.
-#if !G_RANGE_BUG
-                    // temp_rate = death_rate;
-                    // leafCarbon[iFacet] = leafCarbon[iFacet] - (leafCarbon[iFacet] * death_rate);  // EJZ
+#if CONSTRAIN_MODEL
+                    temp_rate = Math.Min(death_rate, partBasedDeathRate[iFacet]);
 #endif
                     // Plants die regardless of their placement, whether in the understory of another plant, or defining a facet.   The rate is the same, except for LAI effects.  
                     // Kill the plants...

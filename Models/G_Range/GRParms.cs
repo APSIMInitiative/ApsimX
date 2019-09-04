@@ -15,7 +15,7 @@ namespace Models
         /// These data are extracted from Land_Units.grg of the original Fortran version, and were read in by the unit Initialize_Model.f95
         /// Some values don't vary across vegetation type. These come from Initialize_Model.f95
         /// 
-        /// This is being approached a bit differently than is was in the Fortan version. There most of these parameters 
+        /// This is being approached a bit differently than is was in the Fortran version. There most of these parameters 
         /// were stored in an external file - Land_Units.grg. Here I'm embedding them into the source. 
         /// 
         /// Also, the original maintained an array of Parms, one for each vegetation type. That makes sense in the context

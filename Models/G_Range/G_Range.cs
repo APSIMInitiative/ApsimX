@@ -271,6 +271,7 @@ namespace Models
             public const int shrub = 1;
             /// <summary>
             /// Herbs under tree layer index (T_FACET)
+            /// (Should be "Tree fact index (T_FACET)")
             /// </summary>
             public const int tree = 2;
         };
@@ -755,7 +756,6 @@ namespace Models
         /// <summary>
         /// Coefficient on total potential production reflecting limits due to nitrogen in place(EPRODL)
         /// </summary>
-        [Units("g/m^2")]
         [XmlIgnore]
         public double[] totalPotProdLimitedByN { get; private set; } = new double[nLayers];
 
@@ -1222,6 +1222,19 @@ namespace Models
 
         // private int largeErrorCount;  // The count of cells being reset because their values were very very large
         // private int negErrorCount;    // The count of cell being reset because values were below zero
+       
+        // Additional output variables added for convenience in the Apsim context - EJZ
+        /// <summary>
+        /// Herbaceous facet aboveground net primary production
+        /// </summary>
+        [Units("kg/ha")]
+        [XmlIgnore]
+        public double aboveGroundHerbNPP { get; private set; }
+
+        /// <summary>
+        /// Indicate what we are. Dummied for use with CLEM for DARPA project
+        /// </summary>
+        public string CropType { get; private set; } = "NativePasture";
 
 #if !G_RANGE_BUG
         private double proportionCellBurned; // Here to correct inconsistent burining in original
@@ -1399,6 +1412,8 @@ namespace Models
         [Summary]
         [Description("Spinup years")]
         public double spinupYears { get; set; } = 250;
+
+        private double[] partBasedDeathRate = new double[nFacets];
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
@@ -1733,6 +1748,12 @@ namespace Models
                 (totalPotProdLimitedByN[Layer.shrub] * facetCover[Facet.shrub]) +
                 (totalPotProdLimitedByN[Layer.shrubUnderTree] * facetCover[Facet.tree]) +
                 (totalPotProdLimitedByN[Layer.tree] * facetCover[Facet.tree]);
+
+            // APSIM: Calculate above ground NPP for the herbaceous facet
+            aboveGroundHerbNPP = (totalPotProdLimitedByN[Layer.herb] * abovegroundPotProduction[Layer.herb] / totalPotProduction[Layer.herb] * facetCover[Facet.herb]
+                                 + totalPotProdLimitedByN[Layer.herbUnderShrub] * abovegroundPotProduction[Layer.herbUnderShrub] / totalPotProduction[Layer.herbUnderShrub] * facetCover[Facet.shrub]
+                                 + totalPotProdLimitedByN[Layer.herbUnderTree] * abovegroundPotProduction[Layer.herbUnderTree] / totalPotProduction[Layer.herbUnderTree] * facetCover[Facet.tree]) 
+                                  * 10.0;
         }
 
         /// <summary>
