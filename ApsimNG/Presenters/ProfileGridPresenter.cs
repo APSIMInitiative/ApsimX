@@ -217,7 +217,10 @@ namespace UserInterface.Presenters
         {
             for (int i = 0; i < properties.Count; i++)
             {
-                grid.GetColumn(i).LeftJustification = false;
+                // fixme - ugly hack to work around last column being very wide
+                if (i != properties.Count - 1)
+                    grid.GetColumn(i).LeftJustification = false;
+
                 grid.GetColumn(i).HeaderLeftJustification = false;
                 VariableProperty property = properties[i] as VariableProperty;
                 if (!(property.Object is SoilCrop))
