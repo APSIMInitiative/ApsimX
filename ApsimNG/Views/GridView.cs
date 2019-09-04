@@ -775,7 +775,11 @@
             for (int i = 0; i < gridModel.NColumns; i++)
             {
                 if (fixedColView.Columns.Length > i)
+                {
                     fixedColView.Columns[i].Visible = i < number;
+                    if (Grid.Columns.Length > i)
+                        fixedColView.Columns[i].Alignment = Grid.Columns[i].Alignment;
+                }
                 if (Grid.Columns.Length > i)
                     Grid.Columns[i].Visible = i >= number;
             }
