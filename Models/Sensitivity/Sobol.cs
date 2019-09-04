@@ -192,8 +192,8 @@
                 {
                     // Write a script to get random numbers from R.
                     string script = string.Format
-                        ("library('boot')" + Environment.NewLine +
-                         "library('sensitivity')" + Environment.NewLine +
+                        ($"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                         $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                          "n <- {0}" + Environment.NewLine +
                          "nparams <- {1}" + Environment.NewLine +
                          "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
@@ -322,8 +322,8 @@
                         DataTableUtilities.DataTableToText(X2, 0, ",", true, writer, excelFriendly: false, decimalFormatString: "F6");
 
                     string script = string.Format(
-                         "library('boot')" + Environment.NewLine +
-                         "library('sensitivity')" + Environment.NewLine +
+                         $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                         $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                          "params <- c({0})" + Environment.NewLine +
                          "n <- {1}" + Environment.NewLine +
                          "nparams <- {2}" + Environment.NewLine +
@@ -441,8 +441,8 @@
         private string GetSobolRScript()
         {
             string script = string.Format
-                ("library('boot')" + Environment.NewLine + 
-                 "library('sensitivity')" + Environment.NewLine +
+                ($"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                 $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                  "n <- {0}" + Environment.NewLine +
                  "nparams <- {1}" + Environment.NewLine +
                  "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +

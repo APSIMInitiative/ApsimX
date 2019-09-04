@@ -46,7 +46,7 @@ namespace ApsimNG.Views.CLEM
                 textview1.Buffer.Text = value;
             }
         }
-        
+
         // Name of the file containing raw SQL
         public string Filename
         {
@@ -97,7 +97,7 @@ namespace ApsimNG.Views.CLEM
             // Add the custom gridview (external to glade)
             Grid = new GridView(owner);
             Grid.ReadOnly = true;
-            
+
             vbox4.Add(Grid.MainWidget);
             //notebook1.AppendPage(gridview1.MainWidget, data);
 
@@ -115,28 +115,21 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// New query execution event
         /// </summary>
-        public event EventHandler OnRunQuery;
-       
+        public event EventHandler RunQuery;
+
         /// <summary>
         /// New file load event
         /// </summary>
-        public event EventHandler OnLoadFile;
-
-        public event EventHandler<WriteTableEventArgs> OnWriteTable;
+        public event EventHandler LoadFile;
 
         /// <summary>
-        /// Arguments for the WriteTableEvent
+        /// New table write event
         /// </summary>
-        public class WriteTableEventArgs :  EventArgs
-        {
-            public string Tablename { get; set; }
-        }
+        public event EventHandler WriteTable;
 
         /// <summary>
-        /// Select an SQL query file
+        /// Read in an SQL query file
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void OnLoadClicked(object sender, EventArgs e)
         {
             try
@@ -159,7 +152,7 @@ namespace ApsimNG.Views.CLEM
                 // Write file contents to the textview buffer
                 string sql = File.ReadAllText(filename);
                 textview1.Buffer.Text = sql;
-                
+
             }
             catch (Exception error)
             {
@@ -167,17 +160,15 @@ namespace ApsimNG.Views.CLEM
             }
 
             // Invoke the loadfile event if it has subscribers
-            if (OnLoadFile != null)
+            if (LoadFile != null)
             {
-                OnLoadFile.Invoke(this, EventArgs.Empty);
+                LoadFile.Invoke(this, EventArgs.Empty);
             }
         }
 
         /// <summary>
-        /// Open an SQL query file
+        /// Save the SQL query as specified
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The argument parameters</param>
         private void OnSaveAsClicked(object sender, EventArgs e)
         {
             try
@@ -192,7 +183,7 @@ namespace ApsimNG.Views.CLEM
                 string filename = fileDialog.GetFile();
                 fileentry.Text = filename;
 
-                File.WriteAllText(filename, Sql);                
+                File.WriteAllText(filename, Sql);
             }
             catch (Exception error)
             {
@@ -203,16 +194,14 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// Overwrites the file stored in the entry box with the displayed SQL
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The argument parameters</param>
         private void OnSaveClicked(object sender, EventArgs e)
         {
             try
-            {    
+            {
                 if (fileentry.Text != null)
                 {
                     File.WriteAllText(fileentry.Text, textview1.Buffer.Text);
-                }              
+                }
             }
             catch (Exception error)
             {
@@ -223,14 +212,9 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// Invokes the RunQuery event if it has subscribers
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The argument parameters</param>
         private void OnRunClicked(object sender, EventArgs e)
         {
-            if (OnRunQuery != null)
-            {
-                OnRunQuery.Invoke(this, EventArgs.Empty);
-            }
+            RunQuery?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -239,15 +223,9 @@ namespace ApsimNG.Views.CLEM
         /// <param name="sender">The sending object</param>
         /// <param name="e">The argument parameters</param>
         private void OnStoreClicked(object sender, EventArgs e)
-        {            
-            if (OnWriteTable != null)
-            {
-                Tablename = tableentry.Text;
-                WriteTableEventArgs args = new WriteTableEventArgs();
-                args.Tablename = tableentry.Text;
-
-                OnWriteTable.Invoke(this, args);
-            }
+        {
+            Tablename = tableentry.Text;
+            WriteTable?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

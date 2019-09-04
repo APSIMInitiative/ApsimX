@@ -376,24 +376,28 @@ namespace Models.CLEM.Resources
         /// <param name="reason">Name of individual adding resource</param>
         public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
-            // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
-            if (!(resourceAmount.GetType() == typeof(GrazeFoodStorePool) || resourceAmount.GetType() == typeof(FoodResourcePacket)))
-            {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
-            }
-
             GrazeFoodStorePool pool;
-            if (resourceAmount.GetType() == typeof(GrazeFoodStorePool))
+            switch (resourceAmount.GetType().Name)
             {
-                pool = resourceAmount as GrazeFoodStorePool;
-            }
-            else
-            {
-                pool = new GrazeFoodStorePool();
-                FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
-                pool.Set(packet.Amount);
-                pool.Nitrogen = packet.PercentN;
-                pool.DMD = packet.DMD;
+                case "GrazeFoodStorePool":
+                    pool = resourceAmount as GrazeFoodStorePool;
+                    break;
+                case "FoodResourcePacket":
+                    pool = new GrazeFoodStorePool();
+                    FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
+                    pool.Set(packet.Amount);
+                    pool.Nitrogen = packet.PercentN;
+                    pool.DMD = packet.DMD;
+                    break;
+                case "Double":
+                    pool = new GrazeFoodStorePool();
+                    pool.Set((double)resourceAmount);
+                    pool.Nitrogen = this.Nitrogen;
+                    pool.DMD = this.EstimateDMD(this.Nitrogen);
+                    break;
+                default:
+                    // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage) or Double from G-Range
+                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
 
             if (pool.Amount > 0)
