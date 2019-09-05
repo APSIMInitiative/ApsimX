@@ -715,7 +715,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhotoperiodFunction, Models",
-                  "Twilight": -6.0,
+                  "Twilight": -2.2,
                   "DayLength": 0.0,
                   "Name": "Photoperiod",
                   "Children": [],
