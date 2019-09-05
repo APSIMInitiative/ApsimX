@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 57,
+  "Version": 66,
   "Name": "Simulations",
   "Children": [
     {
@@ -403,25 +403,17 @@
             },
             {
               "$type": "Models.PMF.Organs.SimpleLeaf, Models",
-              "ApicalCohortNo": 0,
-              "InitialisedCohortNo": 0,
-              "CohortsInitialised": false,
-              "TipsAtEmergence": 0,
-              "CohortsAtInitialisation": 0,
-              "AppearedCohortNo": 0,
-              "PlantAppearedLeafNo": 0.0,
               "Albedo": 0.18,
               "Gsmax350": 0.015,
               "R50": 150.0,
+              "LeafInitialisationStage": "Emergence",
               "Height": 0.0,
               "BaseHeight": 0.0,
               "Width": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
-              "MicroClimatePresent": true,
               "LightProfile": null,
-              "LeafInitialisationStage": "Emergence",
               "KDead": 0.0,
               "LAIDead": 0.0,
               "DMSupply": null,
@@ -442,7 +434,7 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "InitialWtFunction",
+                  "Name": "InitialWt",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -743,7 +735,7 @@
                 },
                 {
                   "$type": "Models.Functions.DivideFunction, Models",
-                  "Name": "FRGRFunction",
+                  "Name": "FRGR",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -1302,7 +1294,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": "0-1",
-                  "Name": "MaintenanceRespirationFunction",
+                  "Name": "MaintenanceRespiration",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -1320,7 +1312,7 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "LAIFunction",
+                  "Name": "Area",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -1357,7 +1349,7 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "LaiDeadFunction",
+                  "Name": "LaiDead",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -1370,7 +1362,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].LAIFunction.SpecificLeafArea",
+                      "VariableName": "[Leaf].Area.SpecificLeafArea",
                       "Name": "SpecificLeafArea",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1395,7 +1387,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.9,
                   "Units": "0-1",
-                  "Name": "ExtinctionCoefficientFunction",
+                  "Name": "ExtinctionCoefficient",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -1424,7 +1416,7 @@
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "XProperty": "[Leaf].Live.Wt",
-                  "Name": "HeightFunction",
+                  "Name": "Tallness",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -1618,7 +1610,7 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "DetachmentRateFunction",
+                  "Name": "DetachmentRate",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -10436,7 +10428,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "FRNLLincoln",
                   "Children": [
                     {
@@ -11739,7 +11730,6 @@
                         },
                         {
                           "$type": "Models.Soils.Soil, Models",
-                          "Weirdo": null,
                           "RecordNumber": 0,
                           "ASCOrder": null,
                           "ASCSubOrder": null,
@@ -11760,7 +11750,7 @@
                           "Name": "Soil",
                           "Children": [
                             {
-                              "$type": "Models.Soils.Analysis, Models",
+                              "$type": "Models.Soils.Chemical, Models",
                               "Thickness": [
                                 100.0,
                                 120.0,
@@ -11771,23 +11761,26 @@
                                 220.0,
                                 300.0
                               ],
-                              "Rocks": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
+                              "NO3N": [
+                                11.10185956147655,
+                                8.8747914734271873,
+                                4.0559509831354781,
+                                0.36671947427096357,
+                                0.3667194742709608,
+                                0.15159344482840426,
+                                0.072921934919511183,
+                                0.066925445054209068
                               ],
-                              "RocksMetadata": null,
-                              "Texture": null,
-                              "TextureMetadata": null,
-                              "MunsellColour": null,
-                              "MunsellMetadata": null,
-                              "EC": null,
-                              "ECMetadata": null,
+                              "NH4N": [
+                                1.3877324451845687,
+                                1.0031235177747662,
+                                0.42270867377952642,
+                                0.07334389485419221,
+                                0.073343894854192432,
+                                0.054769866343026476,
+                                0.017000511230675516,
+                                0.013385089010841966
+                              ],
                               "PH": [
                                 6.0,
                                 6.0,
@@ -11798,79 +11791,17 @@
                                 6.0,
                                 6.0
                               ],
-                              "PHMetadata": null,
                               "CL": null,
-                              "CLMetadata": null,
-                              "Boron": null,
-                              "BoronMetadata": null,
-                              "CEC": [
-                                13.5,
-                                11.4,
-                                9.2,
-                                6.2,
-                                5.4,
-                                5.8,
-                                5.4,
-                                5.6
-                              ],
-                              "CECMetadata": null,
-                              "Ca": null,
-                              "CaMetadata": null,
-                              "Mg": null,
-                              "MgMetadata": null,
-                              "Na": null,
-                              "NaMetadata": null,
-                              "K": null,
-                              "KMetadata": null,
+                              "EC": null,
                               "ESP": null,
-                              "ESPMetadata": null,
-                              "Mn": null,
-                              "MnMetadata": null,
-                              "Al": null,
-                              "AlMetadata": null,
-                              "ParticleSizeSand": [
-                                44.1,
-                                43.3,
-                                47.2,
-                                45.9,
-                                68.5,
-                                60.1,
-                                75.4,
-                                70.2
-                              ],
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSilt": [
-                                38.1,
-                                38.8,
-                                36.9,
-                                40.0,
-                                24.3,
-                                30.2,
-                                17.7,
-                                20.3
-                              ],
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClay": [
-                                17.8,
-                                17.8,
-                                15.9,
-                                14.1,
-                                7.3,
-                                9.6,
-                                7.0,
-                                9.5
-                              ],
-                              "ParticleSizeClayMetadata": null,
-                              "PHUnits": 0,
-                              "BoronUnits": 0,
-                              "Name": "Analysis",
+                              "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
                               "Thickness": [
                                 100.0,
                                 120.0,
@@ -11880,6 +11811,16 @@
                                 250.0,
                                 220.0,
                                 300.0
+                              ],
+                              "ParticleSizeClay": [
+                                17.8,
+                                17.8,
+                                15.9,
+                                14.1,
+                                7.3,
+                                9.6,
+                                7.0,
+                                9.5
                               ],
                               "BD": [
                                 1.154,
@@ -11947,7 +11888,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -12034,7 +11975,6 @@
                                 0.45
                               ],
                               "KLAT": null,
-                              "ResidueInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -12123,10 +12063,8 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilOrganicMatter, Models",
-                              "RootCN": 35.0,
-                              "EnrACoeff": 7.4,
-                              "EnrBCoeff": 0.2,
+                              "$type": "Models.Soils.Organic, Models",
+                              "FOMCNRatio": 35.0,
                               "Thickness": [
                                 100.0,
                                 120.0,
@@ -12137,17 +12075,7 @@
                                 220.0,
                                 300.0
                               ],
-                              "Depth": [
-                                "0-10",
-                                "10-22",
-                                "22-37",
-                                "37-60",
-                                "60-73",
-                                "73-98",
-                                "98-120",
-                                "120-150"
-                              ],
-                              "OC": [
+                              "Carbon": [
                                 2.94,
                                 2.17,
                                 0.99,
@@ -12157,8 +12085,7 @@
                                 0.15,
                                 0.1
                               ],
-                              "OCMetadata": null,
-                              "SoilCN": [
+                              "SoilCNRatio": [
                                 11.3,
                                 11.3,
                                 11.5,
@@ -12188,7 +12115,7 @@
                                 0.995,
                                 0.995
                               ],
-                              "RootWt": [
+                              "FOM": [
                                 450.0,
                                 412.5,
                                 322.5,
@@ -12198,8 +12125,7 @@
                                 30.0,
                                 15.0
                               ],
-                              "OCUnits": 0,
-                              "Name": "SoilOrganicMatter",
+                              "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -12234,28 +12160,14 @@
                                 250.0,
                                 500.0
                               ],
-                              "NO3": [
-                                20.0,
-                                15.0,
-                                2.5,
-                                0.5,
-                                0.5
-                              ],
-                              "NH4": [
-                                2.5,
-                                1.5,
-                                0.5,
-                                0.2,
-                                0.1
-                              ],
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
                               "CL": null,
                               "ESP": null,
                               "PH": null,
-                              "NO3Units": 1,
-                              "NH4Units": 1,
                               "SWUnits": 0,
                               "OCUnits": 0,
                               "PHUnits": 0,
@@ -27953,7 +27865,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Iversen",
                   "Children": [
                     {
@@ -28662,7 +28573,6 @@
                         },
                         {
                           "$type": "Models.Soils.Soil, Models",
-                          "Weirdo": null,
                           "RecordNumber": 0,
                           "ASCOrder": null,
                           "ASCSubOrder": null,
@@ -28683,7 +28593,7 @@
                           "Name": "Wakanui-Iverseen",
                           "Children": [
                             {
-                              "$type": "Models.Soils.Analysis, Models",
+                              "$type": "Models.Soils.Chemical, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -28695,24 +28605,28 @@
                                 350.0,
                                 300.0
                               ],
-                              "Rocks": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
+                              "NO3N": [
+                                7.5187969924812021,
+                                7.2992700729927007,
+                                3.4482758620689653,
+                                2.4213075060532696,
+                                1.7772839342377271,
+                                0.48923679060665465,
+                                0.48923679060665259,
+                                0.48923679060665431,
+                                0.48923679060665259
                               ],
-                              "RocksMetadata": null,
-                              "Texture": null,
-                              "TextureMetadata": null,
-                              "MunsellColour": null,
-                              "MunsellMetadata": null,
-                              "EC": null,
-                              "ECMetadata": null,
+                              "NH4N": [
+                                0.50125313283208017,
+                                0.48661800486617984,
+                                0.17241379310344826,
+                                0.24213075060532702,
+                                0.17772839342377286,
+                                0.048923679060665359,
+                                0.048923679060665484,
+                                0.048923679060665436,
+                                0.0489236790606653
+                              ],
                               "PH": [
                                 6.0,
                                 6.0,
@@ -28724,83 +28638,17 @@
                                 6.0,
                                 6.0
                               ],
-                              "PHMetadata": null,
                               "CL": null,
-                              "CLMetadata": null,
-                              "Boron": null,
-                              "BoronMetadata": null,
-                              "CEC": [
-                                20.0,
-                                15.0,
-                                12.0,
-                                10.0,
-                                10.0,
-                                10.0,
-                                10.0,
-                                8.0,
-                                8.0
-                              ],
-                              "CECMetadata": null,
-                              "Ca": null,
-                              "CaMetadata": null,
-                              "Mg": null,
-                              "MgMetadata": null,
-                              "Na": null,
-                              "NaMetadata": null,
-                              "K": null,
-                              "KMetadata": null,
+                              "EC": null,
                               "ESP": null,
-                              "ESPMetadata": null,
-                              "Mn": null,
-                              "MnMetadata": null,
-                              "Al": null,
-                              "AlMetadata": null,
-                              "ParticleSizeSand": [
-                                10.0,
-                                10.0,
-                                10.0,
-                                15.0,
-                                40.0,
-                                35.0,
-                                30.0,
-                                30.0,
-                                30.0
-                              ],
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSilt": [
-                                60.0,
-                                60.0,
-                                60.0,
-                                55.0,
-                                45.0,
-                                45.0,
-                                50.0,
-                                50.0,
-                                50.0
-                              ],
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClay": [
-                                30.0,
-                                30.0,
-                                30.0,
-                                30.0,
-                                15.0,
-                                20.0,
-                                20.0,
-                                20.0,
-                                20.0
-                              ],
-                              "ParticleSizeClayMetadata": null,
-                              "PHUnits": 0,
-                              "BoronUnits": 0,
-                              "Name": "Analysis",
+                              "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -28811,6 +28659,17 @@
                                 150.0,
                                 350.0,
                                 300.0
+                              ],
+                              "ParticleSizeClay": [
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                15.0,
+                                20.0,
+                                20.0,
+                                20.0,
+                                20.0
                               ],
                               "BD": [
                                 1.33,
@@ -28884,7 +28743,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -28976,7 +28835,6 @@
                                 0.1
                               ],
                               "KLAT": null,
-                              "ResidueInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -29065,10 +28923,8 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilOrganicMatter, Models",
-                              "RootCN": 40.0,
-                              "EnrACoeff": 7.4,
-                              "EnrBCoeff": 0.2,
+                              "$type": "Models.Soils.Organic, Models",
+                              "FOMCNRatio": 40.0,
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -29078,16 +28934,7 @@
                                 450.0,
                                 800.0
                               ],
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-70",
-                                "70-90",
-                                "90-105",
-                                "105-150",
-                                "150-230"
-                              ],
-                              "OC": [
+                              "Carbon": [
                                 4.25,
                                 3.13,
                                 0.88,
@@ -29096,8 +28943,7 @@
                                 0.17,
                                 0.1
                               ],
-                              "OCMetadata": null,
-                              "SoilCN": [
+                              "SoilCNRatio": [
                                 11.3,
                                 11.3,
                                 11.3,
@@ -29124,7 +28970,7 @@
                                 0.99,
                                 0.99
                               ],
-                              "RootWt": [
+                              "FOM": [
                                 309.80060181585691,
                                 254.748477761148,
                                 151.19003662362084,
@@ -29133,8 +28979,7 @@
                                 53.253275016641133,
                                 18.757263132741066
                               ],
-                              "OCUnits": 0,
-                              "Name": "SoilOrganicMatter",
+                              "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -29161,28 +29006,14 @@
                                 300.0,
                                 1300.0
                               ],
-                              "NO3": [
-                                15.0,
-                                15.0,
-                                20.0,
-                                10.0,
-                                10.0
-                              ],
-                              "NH4": [
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0
-                              ],
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
                               "CL": null,
                               "ESP": null,
                               "PH": null,
-                              "NO3Units": 1,
-                              "NH4Units": 1,
                               "SWUnits": 0,
                               "OCUnits": 0,
                               "PHUnits": 0,
@@ -43973,7 +43804,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Foulum",
                   "Children": [
                     {
@@ -44254,7 +44084,6 @@
                         },
                         {
                           "$type": "Models.Soils.Soil, Models",
-                          "Weirdo": null,
                           "RecordNumber": 0,
                           "ASCOrder": null,
                           "ASCSubOrder": null,
@@ -44275,7 +44104,7 @@
                           "Name": "Soil",
                           "Children": [
                             {
-                              "$type": "Models.Soils.Analysis, Models",
+                              "$type": "Models.Soils.Chemical, Models",
                               "Thickness": [
                                 200.0,
                                 250.0,
@@ -44284,21 +44113,22 @@
                                 250.0,
                                 250.0
                               ],
-                              "Rocks": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
+                              "NO3N": [
+                                5.1020408163265305,
+                                1.9444444444444449,
+                                0.53676865271068164,
+                                0.53676865271068208,
+                                0.33149171270718214,
+                                0.33149171270718214
                               ],
-                              "RocksMetadata": null,
-                              "Texture": [],
-                              "TextureMetadata": null,
-                              "MunsellColour": [],
-                              "MunsellMetadata": null,
-                              "EC": null,
-                              "ECMetadata": null,
+                              "NH4N": [
+                                0.3401360544217687,
+                                0.13888888888888892,
+                                0.053676865271068207,
+                                0.053676865271068172,
+                                0.027624309392265217,
+                                0.027624309392265217
+                              ],
                               "PH": [
                                 6.0,
                                 6.0,
@@ -44307,71 +44137,17 @@
                                 6.0,
                                 6.0
                               ],
-                              "PHMetadata": null,
                               "CL": null,
-                              "CLMetadata": null,
-                              "Boron": null,
-                              "BoronMetadata": null,
-                              "CEC": [
-                                12.9,
-                                11.2,
-                                8.1,
-                                4.3,
-                                4.5,
-                                4.4
-                              ],
-                              "CECMetadata": null,
-                              "Ca": null,
-                              "CaMetadata": null,
-                              "Mg": null,
-                              "MgMetadata": null,
-                              "Na": null,
-                              "NaMetadata": null,
-                              "K": null,
-                              "KMetadata": null,
+                              "EC": null,
                               "ESP": null,
-                              "ESPMetadata": null,
-                              "Mn": null,
-                              "MnMetadata": null,
-                              "Al": null,
-                              "AlMetadata": null,
-                              "ParticleSizeSand": [
-                                76.4,
-                                77.7,
-                                76.4,
-                                83.8,
-                                80.2,
-                                80.2
-                              ],
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSilt": [
-                                16.9,
-                                16.1,
-                                16.5,
-                                11.6,
-                                12.1,
-                                12.1
-                              ],
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClay": [
-                                6.7,
-                                6.2,
-                                7.1,
-                                4.6,
-                                7.7,
-                                7.7
-                              ],
-                              "ParticleSizeClayMetadata": null,
-                              "PHUnits": 0,
-                              "BoronUnits": 0,
-                              "Name": "Analysis",
+                              "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
                               "Thickness": [
                                 200.0,
                                 250.0,
@@ -44379,6 +44155,14 @@
                                 300.0,
                                 250.0,
                                 250.0
+                              ],
+                              "ParticleSizeClay": [
+                                6.7,
+                                6.2,
+                                7.1,
+                                4.6,
+                                7.7,
+                                7.7
                               ],
                               "BD": [
                                 1.47,
@@ -44434,7 +44218,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -44518,7 +44302,6 @@
                                 0.0,
                                 0.0
                               ],
-                              "ResidueInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -44607,10 +44390,8 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilOrganicMatter, Models",
-                              "RootCN": 40.0,
-                              "EnrACoeff": 7.4,
-                              "EnrBCoeff": 0.2,
+                              "$type": "Models.Soils.Organic, Models",
+                              "FOMCNRatio": 40.0,
                               "Thickness": [
                                 200.0,
                                 250.0,
@@ -44619,15 +44400,7 @@
                                 250.0,
                                 250.0
                               ],
-                              "Depth": [
-                                "0-20",
-                                "20-45",
-                                "45-70",
-                                "70-100",
-                                "100-125",
-                                "125-150"
-                              ],
-                              "OC": [
+                              "Carbon": [
                                 1.89,
                                 0.99,
                                 0.45,
@@ -44635,8 +44408,7 @@
                                 0.06,
                                 0.06
                               ],
-                              "OCMetadata": null,
-                              "SoilCN": [
+                              "SoilCNRatio": [
                                 11.9,
                                 11.9,
                                 11.9,
@@ -44660,7 +44432,7 @@
                                 0.95,
                                 0.99
                               ],
-                              "RootWt": [
+                              "FOM": [
                                 1000.0,
                                 750.0,
                                 310.0,
@@ -44668,8 +44440,7 @@
                                 25.0,
                                 5.0
                               ],
-                              "OCUnits": 0,
-                              "Name": "SoilOrganicMatter",
+                              "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -44703,26 +44474,14 @@
                                 550.0,
                                 500.0
                               ],
-                              "NO3": [
-                                15.0,
-                                7.0,
-                                5.0,
-                                3.0
-                              ],
-                              "NH4": [
-                                1.0,
-                                0.5,
-                                0.5,
-                                0.25
-                              ],
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
                               "CL": null,
                               "ESP": null,
                               "PH": null,
-                              "NO3Units": 1,
-                              "NH4Units": 1,
                               "SWUnits": 0,
                               "OCUnits": 0,
                               "PHUnits": 0,
