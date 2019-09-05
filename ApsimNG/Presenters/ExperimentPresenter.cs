@@ -86,11 +86,13 @@
             {
                 // Using the first simulation description, create a column in the table
                 // for each descriptor.
-                foreach (var descriptor in simulationDescriptions[0].Descriptors)
-                {
-                    if (!hiddenColumns.Contains(descriptor.Name))
-                        table.Columns.Add(descriptor.Name, typeof(string));
-                }
+                foreach (var simulationDescription in simulationDescriptions)
+                    foreach (var descriptor in simulationDescription.Descriptors)
+                    {
+                        if (!hiddenColumns.Contains(descriptor.Name) &&
+                            !table.Columns.Contains(descriptor.Name))
+                            table.Columns.Add(descriptor.Name, typeof(string));
+                    }
             }
 
             // Add all simulations to table up to the maximum number of sims to display.

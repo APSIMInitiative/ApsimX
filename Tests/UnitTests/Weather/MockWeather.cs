@@ -7,6 +7,8 @@
     [Serializable]
     class MockWeather : Model, IWeather
     {
+        public string FileName { get; set; }
+
         public double Amp { get; set; }
 
         public double CO2 { get; set; }

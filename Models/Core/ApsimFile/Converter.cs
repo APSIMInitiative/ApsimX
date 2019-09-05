@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 65; } }
+        public static int LatestVersion { get { return 66; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1217,6 +1217,26 @@
             }
         }
 
+        /// <summary>
+        /// When a factor is under a factors model, insert a permutation model.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion66(JToken root, string fileName)
+        {
+            foreach (var factors in JsonUtilities.ChildrenRecursively(root as JObject, "Factors"))
+            {
+                if (JsonUtilities.Children(factors).Count > 1)
+                {
+                    var permutationsNode = new JObject();
+                    permutationsNode["$type"] = "Models.Factorial.Permutation, Models";
+                    permutationsNode["Name"] = "Permutation";
+                    permutationsNode["Children"] = factors["Children"];
+                    var children = new JArray(permutationsNode);
+                    factors["Children"] = children;
+                }
+            }
+        }
 
         /// <summary>
         /// Changes initial Root Wt to an array.
