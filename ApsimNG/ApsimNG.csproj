@@ -472,6 +472,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\Permutation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostUsePricing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFeedGroup.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeed.png" />
@@ -1124,5 +1125,6 @@
   -->
   <Target Name="BeforeBuild">
     <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ &gt;nul" /></Target>
+    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ &gt;nul" />
+  </Target>
 </Project>
