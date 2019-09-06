@@ -244,6 +244,7 @@
     <Compile Include="G_Range\GRWeather.cs" />
     <Compile Include="G_Range\G_Range.cs" />
     <Compile Include="G_Range\GRParms.cs" />
+    <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
