@@ -1,12 +1,5 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IUptake.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Interfaces
+﻿namespace Models.Interfaces
 {
-    using System.Collections.Generic;
-    using Models.Soils.Arbitrator;
     using Soils;
 
     /// <summary>
