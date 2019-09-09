@@ -402,6 +402,11 @@
             this.dayLengthIndex = 0;
             this.CO2 = 350;
             this.AirPressure = 1010;
+            if (reader != null)
+            {
+                reader.Close();
+                reader = null;
+            }
         }
 
         /// <summary>
