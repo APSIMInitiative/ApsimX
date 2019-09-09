@@ -526,36 +526,18 @@ namespace UserInterface.Presenters
                 changes.Add(new ChangeProperty.Property(property.Object, property.Name, newArray));
             }
 
-            foreach (GridCellChangedArgs cell in args.ChangedCells)
-            {
-                if (cell.NewValue == cell.OldValue)
-                    continue; // silently fail
-
-                IVariable property = properties[cell.ColIndex];
-                if (property == null)
-                    continue;
-
-                // If the user has entered data into a new row, we will need to
-                // resize all of the array properties.
-                 changes.AddRange(CheckArrayLengths(cell));
-
-                // Get a new array for the property containing the input string
-                // at the index of the changed row.
-                object newValue = GetNewPropertyValue(cell);
-                changes.Add(new ChangeProperty.Property(property.Object, property.Name, newValue));
-
-                // Add new rows to the view's grid if necessary.
-                while (grid.RowCount <= cell.RowIndex + 1)
-                    grid.RowCount++;
-            }
-
             // Apply all changes to the model in a single undoable command.
             SetPropertyValue(new ChangeProperty(changes));
 
             // Update the value shown in the grid. This needs to happen after
             // we have applied changes to the model for obvious reasons.
             foreach (GridCellChangedArgs cell in args.ChangedCells)
+            {
+                // Add new rows to the view's grid if necessary.
+                while (grid.RowCount <= cell.RowIndex + 1)
+                    grid.RowCount++;
                 grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(cell.RowIndex, cell.ColIndex);
+            }
 
             // If the user deleted an entire row, do a full refresh of the
             // grid. Otherwise, only refresh read-only columns (PAWC).
