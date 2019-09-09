@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Soil.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.WaterModel
+﻿namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Interfaces;

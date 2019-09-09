@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="IFunction.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-
 namespace Models.PMF.Phen
 {
     using System.IO;

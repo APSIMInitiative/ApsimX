@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
         /// Gross energy content of forage (MJ/kg DM)
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(18.4)]
-        [Description("Gross energy content of forage (MJ/kg DM)")]
+        [Description("Gross energy content of forage (MJ/kg digestible DM)")]
         [Required]
         [Units("MJ/kg DM")]
         public double EnergyGross { get; set; }

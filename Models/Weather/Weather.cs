@@ -536,6 +536,10 @@
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
+            if (!System.IO.File.Exists(this.FullFileName) &&
+                System.IO.Path.GetExtension(FullFileName) == string.Empty)
+                FileName += ".met";
+
             if (System.IO.File.Exists(this.FullFileName))
             {
                 if (this.reader == null)

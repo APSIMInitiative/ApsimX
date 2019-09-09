@@ -1217,6 +1217,26 @@
             }
         }
 
+        /// <summary>
+        /// When a factor is under a factors model, insert a permutation model.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion66(JToken root, string fileName)
+        {
+            foreach (var factors in JsonUtilities.ChildrenRecursively(root as JObject, "Factors"))
+            {
+                if (JsonUtilities.Children(factors).Count > 1)
+                {
+                    var permutationsNode = new JObject();
+                    permutationsNode["$type"] = "Models.Factorial.Permutation, Models";
+                    permutationsNode["Name"] = "Permutation";
+                    permutationsNode["Children"] = factors["Children"];
+                    var children = new JArray(permutationsNode);
+                    factors["Children"] = children;
+                }
+            }
+        }
 
         /// <summary>
         /// Upgrades to version 64. Sets the StartDate and EndDate properties

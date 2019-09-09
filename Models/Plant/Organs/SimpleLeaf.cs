@@ -751,7 +751,7 @@ namespace Models.PMF.Organs
         {
             // save current state
             if (plant.IsEmerged)
-                startLive = Live;
+                startLive = ReflectionUtilities.Clone(Live) as Biomass;
             if (leafInitialised)
             {
                 FRGR = frgr.Value();
