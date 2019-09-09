@@ -114,6 +114,9 @@ namespace Models.PMF.Organs
         public Plant Plant = null; //todo change back to private
 
         [Link]
+        ISummary Summary = null;
+
+        [Link]
         private SorghumArbitrator Arbitrator = null;
 
         [Link]
@@ -648,6 +651,19 @@ namespace Models.PMF.Organs
             SenescedLai += DltSenescedLai;
 
             LAI += DltLAI - DltSenescedLai;
+
+            int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
+            if (phenology.Stage >= flag)
+            {
+                if (LAI - DltSenescedLai < 0.1)
+                {
+                    string message = "Crop failed due to loss of leaf area \r\n";
+                    Summary.WriteMessage(this, message);
+                //scienceAPI.write(" ********** Crop failed due to loss of leaf area ********");
+                Plant.EndCrop();
+                    return;
+                }
+            }
             LAIDead = SenescedLai; // drew todo
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
