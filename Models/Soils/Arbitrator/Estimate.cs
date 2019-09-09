@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Estimate.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Soils.Arbitrator
+﻿namespace Models.Soils.Arbitrator
 {
     using System;
     using System.Collections.Generic;
