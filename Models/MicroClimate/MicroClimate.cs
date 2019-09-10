@@ -553,13 +553,15 @@ namespace Models
                 if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
                     throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
 
-                tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
-                tallest.SurfaceRs = weather.Radn * Soilt / Ft;
+                //tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
+                //tallest.SurfaceRs = weather.Radn * Soilt / Ft;
+                CalculateLayeredShortWaveRadiation(tallest, weather.Radn * (Intttop + Inttbot) / Ft);
 
-                if (shortest.Canopies[0].Rs != null)
-                    if (shortest.Canopies[0].Rs.Length > 0)
-                        shortest.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
-                shortest.SurfaceRs = weather.Radn * Soils / Fs;
+               // if (shortest.Canopies[0].Rs != null)
+               //     if (shortest.Canopies[0].Rs.Length > 0)
+               //         shortest.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
+                //shortest.SurfaceRs = weather.Radn * Soils / Fs;
+                CalculateLayeredShortWaveRadiation(shortest, weather.Radn * Ints / Fs);
             }
             else
             {
