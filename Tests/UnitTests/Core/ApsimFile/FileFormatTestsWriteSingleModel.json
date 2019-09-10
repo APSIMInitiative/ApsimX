@@ -1,7 +1,7 @@
 ﻿{
   "$type": "Models.Clock, Models",
-  "StartDate": "2015-01-01T00:00:00",
-  "EndDate": "2015-12-31T00:00:00",
+  "Start": "2015-01-01T00:00:00",
+  "End": "2015-12-31T00:00:00",
   "Name": "Clock",
   "Children": [],
   "IncludeInDocumentation": true,
