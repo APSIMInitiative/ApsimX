@@ -1125,6 +1125,6 @@
   -->
   <Target Name="BeforeBuild">
     <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ &gt;nul" />
+    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\Bin64\lib ..\lib\ &gt;nul" />
   </Target>
 </Project>
