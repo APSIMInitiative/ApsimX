@@ -172,6 +172,10 @@
                     if (runSimulations)
                         FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
 
+                    
+                    if (numJobsToRun == 0)
+                       Add(new EmptyJob());
+
                     // Find a storage model.
                     storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
                 }
