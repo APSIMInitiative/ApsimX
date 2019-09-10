@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils
 {
+    using APSIM.Shared.APSoil;
     using Models.Core;
     using System;
 
@@ -10,6 +11,21 @@
     [ValidParent(ParentType=typeof(Soil))]
     public class Organic : Model
     {
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("mm")]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
+
         /// <summary>Root C:N Ratio</summary>
         [Summary]
         [Description("FOM C:N ratio (0-500)")]
@@ -17,7 +33,6 @@
         public double FOMCNRatio { get; set; }
 
         /// <summary>Soil layer thickness for each layer (mm)</summary>
-        [Description("Depth")]
         [Summary]
         [Units("mm")]
         public double[] Thickness { get; set; }

@@ -274,8 +274,15 @@ namespace UserInterface.Views
 
         private void OnSelectionChanged(object sender, EventArgs e)
         {
-            if (Changed != null)
-                Changed.Invoke(this, e);
+            try
+            {
+                if (Changed != null)
+                    Changed.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>User has double clicked the list box.</summary>
@@ -284,18 +291,25 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void OnDoubleClick(object sender, ButtonPressEventArgs e)
         {
-            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && DoubleClicked != null)
-                DoubleClicked.Invoke(sender, e);
-            if (e.Event.Button == 3)
+            try
             {
-                TreePath path = Listview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y);
-                if (path != null)
+                if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && DoubleClicked != null)
+                    DoubleClicked.Invoke(sender, e);
+                if (e.Event.Button == 3)
                 {
-                    Listview.SelectPath(path);
-                    if (popup.Children.Count() > 0)
-                        popup.Popup();
+                    TreePath path = Listview.GetPathAtPos((int)e.Event.X, (int)e.Event.Y);
+                    if (path != null)
+                    {
+                        Listview.SelectPath(path);
+                        if (popup.Children.Count() > 0)
+                            popup.Popup();
+                    }
+                    e.RetVal = true;
                 }
-                e.RetVal = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -304,15 +318,22 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragBegin(object sender, DragBeginArgs e)
         {
-            DragStartArgs args = new DragStartArgs();
-            args.NodePath = SelectedValue;
-            if (DragStarted != null)
+            try
             {
-                DragStarted(this, args);
-                if (args.DragObject != null)
+                DragStartArgs args = new DragStartArgs();
+                args.NodePath = SelectedValue;
+                if (DragStarted != null)
                 {
-                    dragSourceHandle = GCHandle.Alloc(args.DragObject);
+                    DragStarted(this, args);
+                    if (args.DragObject != null)
+                    {
+                        dragSourceHandle = GCHandle.Alloc(args.DragObject);
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -321,17 +342,31 @@ namespace UserInterface.Views
         /// <param name="e">Event data.</param>
         private void OnDragDataGet(object sender, DragDataGetArgs e)
         {
-            IntPtr data = (IntPtr)dragSourceHandle;
-            Int64 ptrInt = data.ToInt64();
-            Gdk.Atom target = Drag.DestFindTarget(sender as Widget, e.Context, null);
-            e.SelectionData.Set(target, 8, BitConverter.GetBytes(ptrInt));
+            try
+            {
+                IntPtr data = (IntPtr)dragSourceHandle;
+                Int64 ptrInt = data.ToInt64();
+                Gdk.Atom target = Drag.DestFindTarget(sender as Widget, e.Context, null);
+                e.SelectionData.Set(target, 8, BitConverter.GetBytes(ptrInt));
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void OnDragEnd(object sender, DragEndArgs e)
         {
-            if (dragSourceHandle.IsAllocated)
+            try
             {
-                dragSourceHandle.Free();
+                if (dragSourceHandle.IsAllocated)
+                {
+                    dragSourceHandle.Free();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
