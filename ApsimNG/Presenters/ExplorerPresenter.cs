@@ -636,8 +636,8 @@
 
                         if (viewName == null && presenterName == null)
                         {
-                            viewName = new ViewNameAttribute("UserInterface.Views.HTMLView");
-                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
+                            viewName = new ViewNameAttribute("UserInterface.Views.TernaryGraphView");
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.TernaryGraphPresenter");
                         }
 
                         if (viewName != null && presenterName != null)
