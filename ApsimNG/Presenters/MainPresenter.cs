@@ -894,35 +894,37 @@
         /// <param name="e">Event arguments.</param>
         private void OnTabClosing(object sender, TabClosingEventArgs e)
         {
-            if (e.LeftTabControl)
-            {
-                IPresenter presenter = Presenters1[e.Index - 1];
-                e.AllowClose = true;
+            e.AllowClose = true;
 
-                if (presenter is ExplorerPresenter)
-                    e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
+            IPresenter presenter = e.LeftTabControl ? Presenters1[e.Index - 1] : presenters2[e.Index - 1];
+            if (presenter is ExplorerPresenter explorerPresenter)
+                e.AllowClose = explorerPresenter.SaveIfChanged();
 
-                if (e.AllowClose)
-                {
-                    presenter.Detach();
-                    this.Presenters1.RemoveAt(e.Index - 1);
-                }
-            }
-            else
-            {
-                IPresenter presenter = presenters2[e.Index - 1];
-                e.AllowClose = true;
-                if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();                
-                if (e.AllowClose)
-                {
-                    presenter.Detach();
-                    this.presenters2.RemoveAt(e.Index - 1);
-                }
-            }
+            if (e.AllowClose)
+                CloseTab(e.Index - 1, e.LeftTabControl);
 
             // We've just closed Simulations
             // This is a good time to force garbage collection 
             GC.Collect(2, GCCollectionMode.Forced, true);
+        }
+
+        /// <summary>
+        /// Close a tab (does not prompt user to save).
+        /// </summary>
+        /// <param name="index">0-based index of the tab.</param>
+        /// <param name="onLeft">Is the tab in the left tab control?</param>
+        public void CloseTab(int index, bool onLeft)
+        {
+            if (onLeft)
+            {
+                Presenters1[index].Detach();
+                Presenters1.RemoveAt(index);
+            }
+            else
+            {
+                presenters2[index].Detach();
+                presenters2.RemoveAt(index);
+            }
         }
 
         /// <summary>
