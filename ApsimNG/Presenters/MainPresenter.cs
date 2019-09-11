@@ -153,7 +153,17 @@
         /// <returns>Any exception message or null</returns>
         public void ProcessStartupScript(string code)
         {
-            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName());
+            // Allow UI scripts to reference gtk/gdk/etc
+            List<string> assemblies = new List<string>()
+            {
+                typeof(Gtk.Widget).Assembly.Location,
+                typeof(Gdk.Color).Assembly.Location,
+                typeof(Cairo.Context).Assembly.Location,
+                typeof(Pango.Context).Assembly.Location,
+                typeof(GLib.Log).Assembly.Location,
+            };
+
+            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName(), assemblies.ToArray());
 
             // Get the script 'Type' from the compiled assembly.
             Type scriptType = compiledAssembly.GetType("Script");
@@ -902,10 +912,6 @@
 
             if (e.AllowClose)
                 CloseTab(e.Index - 1, e.LeftTabControl);
-
-            // We've just closed Simulations
-            // This is a good time to force garbage collection 
-            GC.Collect(2, GCCollectionMode.Forced, true);
         }
 
         /// <summary>
@@ -925,6 +931,10 @@
                 presenters2[index].Detach();
                 presenters2.RemoveAt(index);
             }
+
+            // We've just closed Simulations
+            // This is a good time to force garbage collection 
+            GC.Collect(2, GCCollectionMode.Forced, true);
         }
 
         /// <summary>
