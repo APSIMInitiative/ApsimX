@@ -398,7 +398,21 @@
         /// <param name="parentPath">Path to the parent</param>
         public void Add(string st, string parentPath)
         {
-            AddModelCommand command = new AddModelCommand(parentPath, st, view, this);
+            IModel model = FileFormat.ReadFromString<IModel>(st, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+            AddModelCommand command = new AddModelCommand(parentPath, model, view, this);
+            CommandHistory.Add(command, true);
+        }
+
+        /// <summary>
+        /// Adds a model to a parent model.
+        /// </summary>
+        /// <param name="child">The string representation (JSON or XML) of a model.</param>
+        /// <param name="parentPath">Path to the parent</param>
+        public void Add(IModel child, string parentPath)
+        {
+            AddModelCommand command = new AddModelCommand(parentPath, child, view, this);
             CommandHistory.Add(command, true);
         }
 
