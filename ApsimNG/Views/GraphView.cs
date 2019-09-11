@@ -103,12 +103,14 @@ namespace UserInterface.Views
             ForegroundColour = Utility.Colour.ToOxy(foreground);
             if (!Utility.Configuration.Settings.DarkTheme)
                 BackColor = Utility.Colour.ToOxy(Color.White);
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             plot1.Model.MouseDown -= OnChartClick;
             plot1.Model.MouseUp -= OnChartMouseUp;
+            plot1.Model.MouseMove -= OnChartMouseMove;
             captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
