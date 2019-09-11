@@ -90,6 +90,7 @@ namespace UserInterface.Presenters
                 // Run all child model post processors.
                 var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
                 runner.Run();
+                (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
