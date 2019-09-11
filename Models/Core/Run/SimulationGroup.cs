@@ -100,7 +100,10 @@
         protected override void PostRun(JobCompleteArguments args)
         {
             lock (this)
-                NumberOfSimulationsCompleted++;
+            {
+                if(!(args.Job is EmptyJob))
+                    NumberOfSimulationsCompleted++;
+            }
         }
 
         /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
