@@ -233,6 +233,21 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get
+            {
+                return plot1.Model.LegendPlacement == LegendPlacement.Inside;
+            }
+            set
+            {
+                plot1.Model.LegendPlacement = value ? LegendPlacement.Inside : LegendPlacement.Outside;
+            }
+        }
+
+        /// <summary>
         /// Clear the graph of everything.
         /// </summary>
         public void Clear()
@@ -294,6 +309,8 @@ namespace UserInterface.Views
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
+        /// <param name="xFieldName">The name of the x variable.</param>
+        /// <param name="yFieldName">The name of the y variable.</param>
         /// <param name="error">The error values for the series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
@@ -308,6 +325,8 @@ namespace UserInterface.Views
              string title,
              IEnumerable x,
              IEnumerable y,
+             string xFieldName,
+             string yFieldName,
              IEnumerable error,
              Models.Graph.Axis.AxisType xAxisType,
              Models.Graph.Axis.AxisType yAxisType,
@@ -327,12 +346,19 @@ namespace UserInterface.Views
                     series.Title = title;
                 else
                     series.ToolTip = title;
+
                 if (colour == Color.Empty)
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
+
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
+
+                series.XFieldName = xFieldName;
+                series.YFieldName = yFieldName;
+
                 series.CanTrackerInterpolatePoints = false;
 
                 bool filled = false;
@@ -459,6 +485,7 @@ namespace UserInterface.Views
             series.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
             List<DataPoint> points = this.PopulateDataPointSeries(x1, y1, xAxisType, yAxisType);
             List<DataPoint> points2 = this.PopulateDataPointSeries(x2, y2, xAxisType, yAxisType);
+
             if (showOnLegend)
                 series.Title = title;
             if (points != null && points2 != null)
@@ -479,7 +506,23 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Draw an  area series with the specified arguments. Similar to a
+        /// Checks that the given data is equidistant. Shows a warning
+        /// message if this is not true.
+        /// </summary>
+        /// <param name="x">Data to be tested.</param>
+        private void EnsureMonotonic(double[] x)
+        {
+            double diff = x[1] - x[0];
+            for (int i = 1; i < x.Length; i++)
+            {
+                double newDiff = x[i] - x[i - 1];
+                if (!MathUtilities.FloatsAreEqual(diff, newDiff))
+                    MasterView.ShowMessage($"WARNING: x data is not monotonic at index {i}; x = [..., {x[i - 2]}, {x[i - 1]}, {x[i]}, ...]", Models.Core.Simulation.ErrorLevel.Warning, withButton: false);
+            }
+        }
+
+        /// <summary>
+        /// Draw an area series with the specified arguments. Similar to a
         /// line series, but the area under the curve will be filled with colour.
         /// </summary>
         /// <param name="title">The series title</param>
@@ -502,7 +545,103 @@ namespace UserInterface.Views
             List<double> y2 = new List<double>();
             y2.AddRange(Enumerable.Repeat(0d, ((ICollection)y).Count));
 
-            DrawRegion(title, x, y, x, y2, xAxisType, yAxisType, colour, showOnLegend);
+            DrawRegion(title, x, y2, x, y, xAxisType, yAxisType, colour, showOnLegend);
+        }
+
+        /// <summary>
+        /// Draw a stacked area series with the specified arguments.Similar to
+        /// an area series except that the area between this curve and the
+        /// previous curve (or y = 0 if this is first) will be filled with
+        /// colour. Currently this only works if y-data is numeric.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        public void DrawStackedArea(
+            string title,
+            object[] x,
+            double[] y,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend)
+        {
+            if (this.plot1.Model.Series.Count < 1 || plot1.Model.Series.OfType<LineSeries>().Count() < 1)
+            {
+                // This is the first series to be added to the chart. Just use
+                // a region series (colours area between two curves), and use
+                // y = 0 for the second curve.
+                List<double> y0 = new List<double>();
+                y0.AddRange(Enumerable.Repeat(0d, y.Length));
+                DrawRegion(title, x, y, x, y0, xAxisType, yAxisType, colour, showOnLegend);
+                return;
+            }
+
+            // Get x/y data from previous series
+            LineSeries previous = plot1.Model.Series.OfType<LineSeries>().Last();
+
+            // This will work if the previous series was an area series.
+            double[] x1 = previous.Points.Select(p => p.X).ToArray();
+            double[] y1 = previous.Points.Select(p => p.Y).ToArray();
+
+            // This will work if the previous series was a line/scatter series.
+            if (x1 == null || x1.Length < 1)
+                x1 = previous.ItemsSource.Cast<DataPoint>().Select(p => p.X).ToArray();
+
+            if (y1 == null || y1.Length < 1)
+                y1 = previous.ItemsSource.Cast<DataPoint>().Select(p => p.Y).ToArray();
+
+            if (x1 == null || x1.Length < 1 || y1 == null || y1.Length < 1)
+                return;
+
+            // Now, for each datapoint in the previous series, we need
+            // to add its y-value onto the corresponding data point in
+            // the new series so that this area series appears to sit
+            // on top of the previous series.
+            List<double> y2 = new List<double>();
+
+            Type xType = x[0].GetType();
+            bool xIsFloatingPoint = xType == typeof(double) || xType == typeof(float);
+
+            for (int i = 0; i < x1.Length; i++)
+            {
+                double xVal = x1[i]; // x-value in the previous series
+
+                // The previous series might not have exactly the same set of x
+                // values as the new series. First we check if the new series
+                // contains this x value. If it does not, we do a linear interp
+                // to find an appropriate y-value.
+                int index = -1;
+                if (xIsFloatingPoint)
+                    index = MathUtilities.SafeIndexOf(x.Cast<double>().ToList(), xVal);
+                else if (xType == typeof(DateTime))
+                    index = Array.IndexOf(x, DateTimeAxis.ToDateTime(xVal));
+                else
+                    index = i; // Array.IndexOf(x, xVal); // this is unlikely to work
+
+                double yVal = y1[i];
+                if (index >= 0)
+                    yVal += y[i];
+                else if (xIsFloatingPoint)
+                    yVal += MathUtilities.LinearInterpReal(xVal, x.Cast<double>().ToArray(), y, out bool didInterp);
+                y2.Add(yVal);
+            }
+
+            DrawRegion(title, x1, y2, x1, y1, xAxisType, yAxisType, colour, showOnLegend);
+
+            // If the X data is not monotonic, the area will not be
+            // filled with colour. In this case, show a warning to the
+            // user so they know why their area series is not working.
+            AreaSeries series = plot1.Model.Series.OfType<AreaSeries>().LastOrDefault();
+            if (series != null)
+            {
+                EnsureMonotonic(series.Points.Select(p => p.X).ToArray());
+                EnsureMonotonic(series.Points2.Select(p => p.X).ToArray());
+            }
         }
 
         /// <summary>
@@ -706,7 +845,6 @@ namespace UserInterface.Views
             {
                 this.plot1.Model.LegendFont = Font;
                 this.plot1.Model.LegendFontSize = FontSize;
-                this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
             this.plot1.Model.LegendSymbolLength = 30;
@@ -759,10 +897,15 @@ namespace UserInterface.Views
         /// <param name="text">Text of the title</param>
         public void FormatTitle(string text)
         {
-            this.plot1.Model.Title = text;
-            this.plot1.Model.TitleFont = Font;
-            this.plot1.Model.TitleFontSize = 30;
-            this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
+            if (string.IsNullOrWhiteSpace(text))
+                plot1.Model.Title = null;
+            else
+            {
+                this.plot1.Model.Title = text;
+                this.plot1.Model.TitleFont = Font;
+                this.plot1.Model.TitleFontSize = 30;
+                this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
+            }
         }
 
         /// <summary>
@@ -999,7 +1142,7 @@ namespace UserInterface.Views
             Models.Graph.Axis.AxisType yAxisType)
         {
             List<DataPoint> points = new List<DataPoint>();
-            if (x != null && y != null && x != null && y != null)
+            if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
             {
                 // Create a new data point for each x.
                 double[] xValues = GetDataPointValues(x.GetEnumerator(), xAxisType);
@@ -1063,8 +1206,8 @@ namespace UserInterface.Views
             List<double> dataPointValues = new List<double>();
             double x; // Used only as an out parameter, to maintain backward
                       // compatibility with older versions VS/C#.
-            enumerator.MoveNext();
-
+            if (!enumerator.MoveNext())
+                return null;
             if (enumerator.Current.GetType() == typeof(DateTime))
             {
                 this.EnsureAxisExists(axisType, typeof(DateTime));

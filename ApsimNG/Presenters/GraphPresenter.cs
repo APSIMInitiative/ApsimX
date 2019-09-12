@@ -177,6 +177,21 @@ namespace UserInterface.Presenters
             return seriesDefinitions.Select(s => s.Title).ToArray();
         }
 
+        /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get
+            {
+                return graphView.LegendInsideGraph;
+            }
+            set
+            {
+                graphView.LegendInsideGraph = value;
+            }
+        }
+
         /// <summary>Draws the specified series definition on the view.</summary>
         /// <param name="definition">The definition.</param>
         private void DrawOnView(SeriesDefinition definition)
@@ -209,6 +224,8 @@ namespace UserInterface.Presenters
                                                     definition.Title,
                                                     definition.X,
                                                     definition.Y,
+                                                    definition.XFieldName,
+                                                    definition.YFieldName,
                                                     definition.Error,
                                                     definition.XAxis,
                                                     definition.YAxis,
@@ -238,6 +255,17 @@ namespace UserInterface.Presenters
                             definition.Title,
                             definition.X,
                             definition.Y,
+                            definition.XAxis,
+                            definition.YAxis,
+                            colour,
+                            definition.ShowInLegend);
+                    }
+                    else if (definition.Type == SeriesType.StackedArea)
+                    {
+                        graphView.DrawStackedArea(
+                            definition.Title,
+                            definition.X.Cast<object>().ToArray(),
+                            definition.Y.Cast<double>().ToArray(),
                             definition.XAxis,
                             definition.YAxis,
                             colour,

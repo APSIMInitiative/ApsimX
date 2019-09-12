@@ -20,6 +20,137 @@ namespace Models.Core.ApsimFile
         private static string[] arrayVariableNames = new string[] { "AcceptedStats", "Operation", "Parameters", "cultivars", "Nodes", "Stores", "PaddockList" };
         private static string[] arrayVariables = new[] { "Command", "Alias", "Leaves", "ZoneNamesToGrowRootsIn", "ZoneRootDepths", "ZoneInitialDM" };
         private static string[] propertiesToIgnore = new[] { "ParameterValues", "Nodes", "Arcs", "Weirdo" };
+        private static string[] modelTypes = new string[]
+        {
+            "Models.Sobol","Models.Morris",
+            "Models.Map","Models.MicroClimate",
+            "Models.Memo","Models.Sugarcane",
+            "Models.Fertiliser","Models.Irrigation",
+            "Models.Log","Models.Manager",
+            "Models.Operations","Models.Summary",
+            "Models.Tests","Models.Clock",
+            "Models.ControlledEnvironment","Models.Weather",
+            "Models.WaterModel.CNReductionForCover","Models.WaterModel.CNReductionForTillage",
+            "Models.WaterModel.EvaporationModel","Models.WaterModel.LateralFlowModel",
+            "Models.WaterModel.RunoffModel","Models.WaterModel.SaturatedFlowModel",
+            "Models.WaterModel.WaterBalance","Models.WaterModel.UnsaturatedFlowModel",
+            "Models.WaterModel.WaterTableModel","Models.Surface.SurfaceOrganicMatterCollectionFromResource",
+            "Models.Surface.ResidueTypes","Models.Report.Report",
+            "Models.PostSimulationTools.Probability","Models.PostSimulationTools.ExcelInput",
+            "Models.PostSimulationTools.TimeSeriesStats","Models.PostSimulationTools.PredictedObserved",
+            "Models.PostSimulationTools.Input","Models.GrazPlan.Supplement",
+            "Models.GrazPlan.Stock","Models.LifeCycle.LifeStageImmigrationProcess",
+            "Models.LifeCycle.LifeCycle","Models.LifeCycle.LifeStage",
+            "Models.LifeCycle.LifeStageProcess","Models.LifeCycle.LifeStageReproductionProcess",
+            "Models.Storage.DataStore","Models.Soils.SoilNitrogenPlantAvailableNH4",
+            "Models.Soils.SoilNitrogenPlantAvailableNO3","Models.Soils.SoilNitrogenUrea",
+            "Models.Soils.SoilNitrogenNH4","Models.Soils.SoilNitrogenNO3",
+            "Models.Soils.HydraulicProperties","Models.Soils.OutputLayers",
+            "Models.Soils.Evapotranspiration","Models.Soils.MRSpline",
+            "Models.Soils.HourlyData","Models.Soils.WEIRDO",
+            "Models.Soils.Pore","Models.Soils.SoilNitrogen",
+            "Models.Soils.Analysis","Models.Soils.InitialWater",
+            "Models.Soils.LayerStructure","Models.Soils.Phosphorus",
+            "Models.Soils.Sample","Models.Soils.CERESSoilTemperature",
+            "Models.Soils.Soil","Models.Soils.SoilCrop",
+            "Models.Soils.SoilOrganicMatter","Models.Soils.Swim3",
+            "Models.Soils.SwimSoluteParameters","Models.Soils.SwimSubsurfaceDrain",
+            "Models.Soils.SwimWaterTable","Models.Soils.TillageType",
+            "Models.Soils.Water","Models.Soils.SoilWater",
+            "Models.Soils.Arbitrator.SoilArbitrator","Models.Soils.SoilTemp.SoilTemperature",
+            "Models.Soils.Nutrients.Chloride","Models.Soils.Nutrients.NFlow",
+            "Models.Soils.Nutrients.CarbonFlow","Models.Soils.Nutrients.NutrientPool",
+            "Models.Soils.Nutrients.NutrientCollectionFromResource","Models.Soils.Nutrients.Solute",
+            "Models.Factorial.CompositeFactor","Models.Factorial.Factor",
+            "Models.Factorial.Experiment","Models.Factorial.Factors",
+            "Models.PMF.RetranslocateAvailableN","Models.PMF.BaseArbitrator",
+            "Models.PMF.RetranslocateNonStructural","Models.PMF.SorghumArbitratorN",
+            "Models.PMF.BiomassDemand","Models.PMF.PrioritythenRelativeAllocation",
+            "Models.PMF.PriorityAllocation","Models.PMF.RelativeAllocationSinglePass",
+            "Models.PMF.RelativeAllocation","Models.PMF.CultivarFolder",
+            "Models.PMF.OrganBiomassRemovalType","Models.PMF.Cultivar",
+            "Models.PMF.SimpleTree","Models.PMF.ArrayBiomass",
+            "Models.PMF.Biomass","Models.PMF.PlantCollectionFromResource",
+            "Models.PMF.OilPalm.OilPalmCollectionFromResource","Models.PMF.Library.BiomassRemoval",
+            "Models.PMF.Struct.CulmStructure","Models.PMF.Struct.BudNumberFunction",
+            "Models.PMF.Struct.ApexBase","Models.PMF.Struct.HeightFunction",
+            "Models.PMF.Struct.Structure","Models.PMF.Organs.Culm",
+            "Models.PMF.Organs.EnergyBalance","Models.PMF.Organs.SorghumLeaf",
+            "Models.PMF.Organs.PerennialLeaf","Models.PMF.Organs.GenericOrgan",
+            "Models.PMF.Organs.HIReproductiveOrgan","Models.PMF.Organs.Leaf",
+            "Models.PMF.Organs.LeafCohort","Models.PMF.Organs.Nodule",
+            "Models.PMF.Organs.ReproductiveOrgan","Models.PMF.Organs.Root",
+            "Models.PMF.Organs.SimpleLeaf","Models.PMF.Phen.DAWSPhase",
+            "Models.PMF.Phen.Age","Models.PMF.Phen.PhotoperiodPhase",
+            "Models.PMF.Phen.Vernalisation","Models.PMF.Phen.BBCH",
+            "Models.PMF.Phen.NodeNumberPhase","Models.PMF.Phen.ZadokPMF",
+            "Models.PMF.Phen.EmergingPhase","Models.PMF.Phen.EndPhase",
+            "Models.PMF.Phen.GenericPhase","Models.PMF.Phen.GerminatingPhase",
+            "Models.PMF.Phen.GotoPhase","Models.PMF.Phen.LeafAppearancePhase",
+            "Models.PMF.Phen.LeafDeathPhase","Models.PMF.Phen.Phenology",
+            "Models.Graph.EventNamesOnGraph","Models.Graph.Regression",
+            "Models.Surface.SurfaceOrganicMatter",
+    		"Models.Soils.Nutrients.Nutrient,",
+    		"Models.PMF.Plant",
+    		"Models.PMF.OilPalm.OilPalm,",
+            "Models.Graph.Series","Models.Graph.Graph",
+            "Models.Functions.DecumulateFunction","Models.Functions.EndOfDayFunction",
+            "Models.Functions.AccumulateAtEvent","Models.Functions.DailyMeanVPD",
+            "Models.Functions.CERESDenitrificationWaterFactor","Models.Functions.CERESDenitrificationTemperatureFactor",
+            "Models.Functions.CERESMineralisationFOMCNRFactor","Models.Functions.DayCentN2OFractionModel",
+            "Models.Functions.CERESNitrificationpHFactor","Models.Functions.CERESNitrificationWaterFactor",
+            "Models.Functions.CERESUreaHydrolysisModel","Models.Functions.CERESMineralisationWaterFactor",
+            "Models.Functions.CERESMineralisationTemperatureFactor","Models.Functions.CERESNitrificationModel",
+            "Models.Functions.StringComparisonFunction","Models.Functions.AccumulateByDate",
+            "Models.Functions.AccumulateByNumericPhase","Models.Functions.TrackerFunction",
+            "Models.Functions.ArrayFunction","Models.Functions.WangEngelTempFunction",
+            "Models.Functions.BoundFunction","Models.Functions.LinearAfterThresholdFunction",
+            "Models.Functions.SoilWaterScale","Models.Functions.MovingAverageFunction",
+            "Models.Functions.HoldFunction","Models.Functions.DeltaFunction",
+            "Models.Functions.MovingSumFunction","Models.Functions.QualitativePPEffect",
+            "Models.Functions.AccumulateFunction","Models.Functions.AddFunction",
+            "Models.Functions.AgeCalculatorFunction","Models.Functions.AirTemperatureFunction",
+            "Models.Functions.BellCurveFunction","Models.Functions.Constant",
+            "Models.Functions.DivideFunction","Models.Functions.ExponentialFunction",
+            "Models.Functions.ExpressionFunction","Models.Functions.ExternalVariable",
+            "Models.Functions.LessThanFunction","Models.Functions.LinearInterpolationFunction",
+            "Models.Functions.MaximumFunction","Models.Functions.MinimumFunction",
+            "Models.Functions.MultiplyFunction","Models.Functions.OnEventFunction",
+            "Models.Functions.PhaseBasedSwitch","Models.Functions.PhaseLookup",
+            "Models.Functions.PhaseLookupValue","Models.Functions.PhotoperiodDeltaFunction",
+            "Models.Functions.PhotoperiodFunction","Models.Functions.PowerFunction",
+            "Models.Functions.SigmoidFunction","Models.Functions.SoilTemperatureDepthFunction",
+            "Models.Functions.SoilTemperatureFunction","Models.Functions.SoilTemperatureWeightedFunction",
+            "Models.Functions.SplineInterpolationFunction","Models.Functions.StageBasedInterpolation",
+            "Models.Functions.SubtractFunction","Models.Functions.VariableReference",
+            "Models.Functions.WeightedTemperatureFunction","Models.Functions.XYPairs",
+            "Models.Functions.SupplyFunctions.LeafLightUseEfficiency","Models.Functions.SupplyFunctions.LeafMaxGrossPhotosynthesis",
+            "Models.Functions.SupplyFunctions.CanopyGrossPhotosynthesisHourly","Models.Functions.SupplyFunctions.CanopyPhotosynthesis",
+            "Models.Functions.SupplyFunctions.RUECO2Function","Models.Functions.SupplyFunctions.RUEModel",
+            "Models.Functions.DemandFunctions.StorageDMDemandFunction","Models.Functions.DemandFunctions.StorageNDemandFunction",
+            "Models.Functions.DemandFunctions.InternodeCohortDemandFunction","Models.Functions.DemandFunctions.BerryFillingRateFunction",
+            "Models.Functions.DemandFunctions.TEWaterDemandFunction","Models.Functions.DemandFunctions.FillingRateFunction",
+            "Models.Functions.DemandFunctions.AllometricDemandFunction","Models.Functions.DemandFunctions.InternodeDemandFunction",
+            "Models.Functions.DemandFunctions.PartitionFractionDemandFunction","Models.Functions.DemandFunctions.PopulationBasedDemandFunction",
+            "Models.Functions.DemandFunctions.PotentialSizeDemandFunction","Models.Functions.DemandFunctions.RelativeGrowthRateDemandFunction",
+            "Models.Core.Alias","Models.Core.Replacements",
+            "Models.Core.ModelCollectionFromResource","Models.Core.Folder",
+            "Models.Core.Zone","Models.Core.Simulations",
+            "Models.Core.Simulation","Models.CLEM.CLEMModel",
+            "Models.CLEM.Reporting.CustomQuery","Models.CLEM.Reporting.PivotTable",
+            "Models.CLEM.Reporting.ReportLabourRequirements","Models.CLEM.Activities.Relationship",
+            "Models.Aqua.FoodInPond","Models.Aqua.PondWater",
+            "Models.Aqua.Prawns","Models.Agroforestry.LocalMicroClimate",
+            "Models.Agroforestry.TreeProxy","Models.AgPasture.PastureSpecies",
+            "Models.AgPasture.PastureAboveGroundOrgan","Models.AgPasture.GenericTissue",
+            "Models.AgPasture.Sward","Models.Soils.SoilWater+TillageTypesList",
+            "Models.PMF.Organs.Leaf+LeafCohortParameters",
+            "Models.Zones.CircularZone",
+            "Models.Zones.RectangularZone",
+            "Models.CLEM.ZoneCLEM",
+            "Models.Agroforestry.AgroforestrySystem",
+            "Models.PMF.OrganArbitrator"
+        };
 
         /// <summary>
         /// Convert APSIM Next Generation xml to json.
@@ -92,9 +223,8 @@ namespace Models.Core.ApsimFile
                             // with one element.
                             return CreateArray(property.Name, property.Value, newRoot);
                         }
-                        else if (GetModelTypeName(property.Name) != null && 
-                                 property.Name != "Parameter" &&
-                                 GetModelTypeName(property.Name).GetInterface("IModel") != null)  // CLEM.LabourFilter has a Parameter property.
+                        else if (GetModelFullName(property.Name) != null && 
+                            property.Name != "Parameter")  // CLEM.LabourFilter has a Parameter property.
                         {
                             // a model without any child nodes.
                             AddNewChild(property, newRoot);
@@ -126,9 +256,14 @@ namespace Models.Core.ApsimFile
             else
                 modelType = root.Parent.Path;
 
-            Type t = GetModelTypeName(modelType);
-            if (t != null)
-                newRoot["$type"] = t.FullName + ", Models";
+            Type fullNameType = GetTypeFromName(modelType);
+            string fullName;
+            if (fullNameType == null)
+                fullName = GetModelFullName(modelType);
+            else
+                fullName = fullNameType.FullName;
+            if (fullName != null)
+                newRoot["$type"] = fullName + ", Models";
         }
 
         private static void ProcessObject(string name, JToken obj, JObject newRoot)
@@ -170,10 +305,9 @@ namespace Models.Core.ApsimFile
             }
             else
             {
-                Type modelType = GetModelTypeName(name);
-                if (modelType == null || modelType.GetInterface("IModel") == null)
+                if (GetModelFullName(name) == null)
                 {
-                    modelType = GetModelTypeName(JsonUtilities.Type(newRoot));
+                    var modelType = GetTypeFromName(JsonUtilities.Type(newRoot));
                     var property = modelType?.GetProperty(name);
                     var newObject = CreateObject(obj);
                     // If the new obejct is NOT a JArray, and this object is supposed to be an array...
@@ -193,7 +327,10 @@ namespace Models.Core.ApsimFile
                         }
                     }
 
-                    if (newObject.Children().Count() == 1 && newObject.First.Path == "#text")
+                    if (!(newObject is JArray) && newObject["$type"] != null && 
+                        GetModelFullName(newObject["$type"].ToString()) != null)
+                        AddNewChild(newObject, newRoot);
+                    else if (newObject.Children().Count() == 1 && newObject.First.Path == "#text")
                         newRoot[name] = newObject.First.First;
                     else
                         newRoot[name] = newObject;
@@ -211,7 +348,7 @@ namespace Models.Core.ApsimFile
                 // Array of non models. e.g. array of Axis.
                 foreach (var element in array.Children())
                 {
-                    Type modelType = GetModelTypeName(name);
+                    var modelType = GetModelFullName(name);
                     if (name == "string" || name == "Command")
                         newArray.Add(new JValue(element.ToString()));
                     else if (name == "double")
@@ -227,7 +364,9 @@ namespace Models.Core.ApsimFile
                             newArray.Add(value);
                         //newArray.Add(nestedArray);
                     }
-                    else if (modelType == null || modelType.GetInterface("IModel") == null)
+                    else if (element is JValue)
+                        newArray.Add(element);
+                    else if (modelType == null)
                         newArray.Add(CreateObject(element));
                     else
                         AddNewChild(element, newRoot);
@@ -252,9 +391,9 @@ namespace Models.Core.ApsimFile
             if (element is JProperty)
             {
                 newChild = new JObject();
-                Type t = GetModelTypeName((element as JProperty).Name);
-                if (t != null)
-                    newChild["$type"] = t.FullName + ", Models";
+                var fullName = GetModelFullName((element as JProperty).Name);
+                if (fullName != null)
+                    newChild["$type"] = fullName + ", Models";
 
                 if (newChild["Name"] == null)
                     newChild["Name"] = (element as JProperty).Name;
@@ -352,7 +491,18 @@ namespace Models.Core.ApsimFile
             }
         }
 
-        private static Type GetModelTypeName(string modelNameToFind)
+        private static string GetModelFullName(string modelNameToFind)
+        {
+            if (modelNameToFind == null)
+                return null;
+
+            string[] modelWords = modelNameToFind.Replace(", Models", "").Split(".".ToCharArray());
+            string m = modelWords[modelWords.Length - 1];
+
+            return modelTypes.FirstOrDefault(t => t.EndsWith("." + m));
+         }
+
+        private static Type GetTypeFromName(string modelNameToFind)
         {
             if (modelNameToFind == null)
                 return null;
@@ -399,10 +549,10 @@ namespace Models.Core.ApsimFile
                             string nameAttribute = XmlUtilities.NameAttr(childXmlNode);
                             if (nameAttribute != null)
                                 childXmlName = nameAttribute;
-                            else if (GetModelTypeName(childXmlNode.Name) != null)
+                            else if (GetModelFullName(childXmlNode.Name) != null)
                                 childXmlName = childXmlNode.Name;
                         }
-                        if (childXmlName != string.Empty || GetModelTypeName(childXmlNode.Name) != null)
+                        if (childXmlName != string.Empty || GetTypeFromName(childXmlNode.Name) != null)
                         {
                             int i = 1;
                             foreach (var childJsonNode in children.Where(c => !(c is JArray) && c["Name"].ToString() == childXmlName || (c["$type"].ToString().Contains("SoilCrop") && c["Name"].ToString() == GetSoilCropName(childXmlName))))

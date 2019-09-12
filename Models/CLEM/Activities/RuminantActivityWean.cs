@@ -87,7 +87,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalManage")]
         private void OnCLEMAnimalManage(object sender, EventArgs e)
         {
-            // if management month
+            // Weaning is performed in the Management event to ensure weaned individuals are treated as unweaned for their intake calculations
+            // and the mother is considered lactating for lactation energy demands otherwise IsLactating stops as soon as ind.wean() is performed.
+
+            // if wean month
             if (this.TimingOK)
             {
                 double labourlimit = this.LabourLimitProportion;

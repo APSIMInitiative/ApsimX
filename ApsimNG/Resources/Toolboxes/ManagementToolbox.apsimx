@@ -204,7 +204,7 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
       "Parameters": [
         {
           "Key": "FASW",
@@ -232,54 +232,54 @@
       "Enabled": true,
       "ReadOnly": false
     },
-    {
-      "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] SoilNitrogen SoilN = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            if (ResetWater == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Water\");\r\n                SoilWater.Reset();\r\n            }\r\n            if (ResetN == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                SoilN.Reset();\r\n            }\r\n            if (ResetSOM == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                SOM.Reset();\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-      "Parameters": [
-        {
-          "Key": "ResetWater",
-          "Value": "Yes"
-        },
-        {
-          "Key": "ResetN",
-          "Value": "Yes"
-        },
-        {
-          "Key": "ResetSOM",
-          "Value": "Yes"
-        }
-      ],
-      "Name": "Reset on sowing",
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] SoilNitrogen SoilN = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    SoilN.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-      "Parameters": [
-        {
-          "Key": "ResetDate",
-          "Value": "1-Jan"
-        },
-        {
-          "Key": "ResetWater",
-          "Value": "Yes"
-        },
-        {
-          "Key": "ResetN",
-          "Value": "Yes"
-        },
-        {
-          "Key": "ResetSOM",
-          "Value": "Yes"
-        }
-      ],
-      "Name": "Reset on date",
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
+	{
+	  "$type": "Models.Manager, Models",
+	  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] Nutrient nutrient = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            if (ResetWater == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Water\");\r\n                SoilWater.Reset();\r\n            }\r\n            if (ResetNutrients == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Nutrients\");\r\n                nutrient.Reset();\r\n            }\r\n            if (ResetSOM == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                SOM.Reset();\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+	  "Parameters": [
+		{
+		  "Key": "ResetWater",
+		  "Value": "Yes"
+		},
+		{
+		  "Key": "ResetSOM",
+		  "Value": "Yes"
+		},
+		{
+		  "Key": "ResetNutrients",
+		  "Value": "Yes"
+		}
+	  ],
+	  "Name": "Reset on sowing",
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Manager, Models",
+	  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] Nutrient nutrient = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+	  "Parameters": [
+		{
+		  "Key": "ResetDate",
+		  "Value": "1-Jan"
+		},
+		{
+		  "Key": "ResetWater",
+		  "Value": "Yes"
+		},
+		{
+		  "Key": "ResetNutrients",
+		  "Value": "Yes"
+		},
+		{
+		  "Key": "ResetSOM",
+		  "Value": "Yes"
+		}
+	  ],
+	  "Name": "Reset on date",
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
     {
       "$type": "Models.Manager, Models",
       "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        \r\n        [Description(\"Tillage Date\")]\r\n        public string TillageDate { get; set; }\r\n        \r\n        [Description(\"Fraction of Residues To Remove (0-1)\")]\r\n        public double Fraction { get; set; }\r\n\r\n        [Description(\"Depth of Tillage (mm)\")]\r\n        public double Depth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(TillageDate, Clock.Today, TillageDate))\r\n                SOM.Incorporate(Fraction, Depth);\r\n        }\r\n    }\r\n}\r\n",

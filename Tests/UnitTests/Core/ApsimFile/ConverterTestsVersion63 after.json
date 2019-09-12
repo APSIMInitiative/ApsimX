@@ -1,0 +1,59 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 63,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Descriptors": null,
+      "Name": "Simulation",
+      "Children": [
+        {
+          "$type": "Models.Soils.Soil, Models",
+          "Name": "Soil",
+          "Children": [
+            {
+              "$type": "Models.Soils.Physical, Models",
+              "Name": "Physical",
+              "Thickness": [
+                150.0,
+                150.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0,
+                300.0
+              ]
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Soil].SoilWater.Eo",
+                "[Soil].Physical.LL15",
+                "[Soybean].Root.WaterSupply"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "DailyReport",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.Factor, Models",
+              "Specification": "[Soil].Physical.DUL[1] = 0.2, 0.25, 0.3, 0.35, 0.4",
+              "Name": "DUL",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

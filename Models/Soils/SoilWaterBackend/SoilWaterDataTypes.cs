@@ -135,27 +135,6 @@ namespace Models.Soils.SoilWaterBackend
 
 
         /// <summary>
-        /// The min_crit_temp
-        /// </summary>
-        public double min_crit_temp;             //! temperature below which eeq decreases (oC)
-
-
-
-        /// <summary>
-        /// The max_crit_temp
-        /// </summary>
-        public double max_crit_temp;             //! temperature above which eeq increases (oC)
-
-
-
-        /// <summary>
-        /// The max_albedo
-        /// </summary>
-        public double max_albedo;                //! maximum bare ground soil albedo (0-1)
-
-
-
-        /// <summary>
         /// The a_to_evap_fact
         /// </summary>
         public double A_to_evap_fact;            //! factor to convert "A" to coefficient in Adam's type residue effect on Eos
@@ -270,6 +249,10 @@ namespace Models.Soils.SoilWaterBackend
     public class CanopyData
         {
 
+        /// <summary>
+        /// This passes the potential infiltration into the SoilWaterSurface.  Not the best place for it but will get thinks moving
+        /// </summary>
+        public double PotentialInfiltration { get; set; }
 
         //GET CROP VARIABLES
             /// <summary>

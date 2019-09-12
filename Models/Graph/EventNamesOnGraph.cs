@@ -115,8 +115,18 @@ namespace Models.Graph
                 if (phenologyColumnName != null && data.Columns.Contains(xFieldName))
                 {
                     string[] names = DataTableUtilities.GetColumnAsStrings(data, phenologyColumnName);
-                    DateTime[] dates = DataTableUtilities.GetColumnAsDates(data, xFieldName);
-                    if (names.Length == dates.Length)
+                    List<object> x;
+                    Type columnType = data.Columns[xFieldName].DataType;
+                    if (columnType == typeof(DateTime))
+                        x = DataTableUtilities.GetColumnAsDates(data, xFieldName).Cast<object>().ToList();
+                    else if (columnType == typeof(int))
+                        x = DataTableUtilities.GetColumnAsIntegers(data, xFieldName).Cast<object>().ToList();
+                    else if (columnType == typeof(double))
+                        x = DataTableUtilities.GetColumnAsDoubles(data, xFieldName).Cast<object>().ToList();
+                    else
+                        throw new Exception($"Error in EventNamesOnGraph {Name}: unknown column type '{columnType.FullName}' in column '{xFieldName}'");
+
+                    if (names.Length == x.Count)
                     {
                         for (int i = 0; i < names.Length; i++)
                         {
@@ -126,9 +136,9 @@ namespace Models.Graph
                                 LineAnnotation line = new LineAnnotation();
                                 line.colour = Color.Black;
                                 line.type = LineType.Dot;
-                                line.x1 = dates[i];
+                                line.x1 = x[i];
                                 line.y1 = double.MinValue;
-                                line.x2 = dates[i];
+                                line.x2 = x[i];
                                 line.y2 = double.MaxValue;
                                 annotations.Add(line);
 
@@ -138,7 +148,7 @@ namespace Models.Graph
                                 text.text = names[i];
                                 text.colour = Color.Black;
                                 text.leftAlign = true;
-                                text.x = dates[i];
+                                text.x = x[i];
 
                                 text.y = double.MinValue;
                                 text.textRotation = 270;

@@ -25,7 +25,6 @@ namespace UserInterface.Views
     public class ExplorerView : ViewBase, IExplorerView
     {
         private Viewport rightHandView;
-        private MenuView popup;
         private Gtk.TreeView treeviewWidget;
 
         /// <summary>Default constructor for ExplorerView</summary>
@@ -38,7 +37,6 @@ namespace UserInterface.Views
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
             treeviewWidget.Realized += OnLoaded;
             Tree = new TreeView(owner, treeviewWidget);
-            popup = new MenuView();
             rightHandView = (Viewport)builder.GetObject("RightHandView");
             rightHandView.ShadowType = ShadowType.EtchedOut;
             mainWidget.Destroyed += OnDestroyed;
@@ -119,7 +117,6 @@ namespace UserInterface.Views
                 }
             }
             ToolStrip.Destroy();
-            popup.Destroy();
             mainWidget.Destroyed -= OnDestroyed;
             owner = null;
         }

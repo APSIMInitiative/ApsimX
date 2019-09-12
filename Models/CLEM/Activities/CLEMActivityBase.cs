@@ -330,7 +330,7 @@ namespace Models.CLEM.Activities
             ResourceRequestList = GetResourcesNeededForinitialisation();
 
             CheckResources(ResourceRequestList, Guid.NewGuid());
-            bool tookRequestedResources = TakeResources(ResourceRequestList, false);
+            TakeResources(ResourceRequestList, false);
 
             ResourceRequestList = null;
         }

@@ -593,7 +593,8 @@ namespace Models.GrazPlan
         public static AnimalParamSet MakeParamSet(string constFileName)
         {
             AnimalParamSet result = new AnimalParamSet((AnimalParamSet)null);
-            result.CopyAll(GlobalAnimalParams.AnimalParamsGlb());
+            GlobalAnimalParams animalParams = new GlobalAnimalParams();
+            result.CopyAll(animalParams.AnimalParamsGlb());
             if (constFileName != string.Empty)
                 GlobalParameterFactory.ParamXMLFactory().readFromFile(constFileName, result, true);
             result.sCurrLocale = GrazLocale.sDefaultLocale();

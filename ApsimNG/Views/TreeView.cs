@@ -418,6 +418,7 @@ namespace UserInterface.Views
         {
             if (SelectedNodeChanged != null)
             {
+                treeview1.CursorChanged -= OnAfterSelect;
                 NodeSelectedArgs selectionChangedData = new NodeSelectedArgs();
                 selectionChangedData.OldNodePath = previouslySelectedNodePath;
                 TreePath selPath;
@@ -427,6 +428,7 @@ namespace UserInterface.Views
                 if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
                     SelectedNodeChanged.Invoke(this, selectionChangedData);
                 previouslySelectedNodePath = selectionChangedData.NewNodePath;
+                treeview1.CursorChanged += OnAfterSelect;
             }
         }
 

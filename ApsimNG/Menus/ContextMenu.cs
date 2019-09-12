@@ -25,6 +25,7 @@ namespace UserInterface.Presenters
     using System.Linq;
     using System.Text;
     using Models.Functions;
+    using Models.Soils.Standardiser;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -329,7 +330,8 @@ namespace UserInterface.Presenters
             Soil currentSoil = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Soil;
             if (currentSoil != null)
             {
-                string errorMessages = currentSoil.Check(false);
+
+                string errorMessages = SoilChecker.Check(currentSoil);
                 if (!string.IsNullOrEmpty(errorMessages))
                     explorerPresenter.MainPresenter.ShowError(errorMessages);
                 else
@@ -342,10 +344,21 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Soil) })]
+        [ContextMenu(MenuName = "Download Soil...", AppliesTo = new Type[] { typeof(Soil), typeof(Zone) })]
         public void DownloadSoil(object sender, EventArgs e)
         {
             this.explorerPresenter.DownloadSoil();
+        }
+
+        /// <summary>
+        /// Event handler for a User interface "Download Weather" action
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Download Weather...", AppliesTo = new Type[] { typeof(Weather), typeof(Simulation) })]
+        public void DownloadWeather(object sender, EventArgs e)
+        {
+            this.explorerPresenter.DownloadWeather();
         }
 
         /// <summary>

@@ -184,13 +184,23 @@ namespace Models.CLEM.Activities
                     // get list of all Ruminants of specified breed in this paddock
                     foreach (Ruminant ind in herd)
                     {
-                        // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
-                        // calculate intake from potential modified by pasture availability and hours grazed
-                        indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
-                        // assumes animals will stop eating at potential intake if they have been feed before grazing.
-                        // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential intake
-                        indAmount = Math.Min(ind.PotentialIntake - ind.Intake, indAmount);
-                        amount += indAmount;
+                        if (!ind.Weaned)
+                        {
+                            // treat sucklings separate
+                            // they eat what was previously assigned in RuminantGrow minus what's been fed
+                            amount += ind.PotentialIntake - ind.Intake;
+                        }
+                        else
+                        {
+                            // Reduce potential intake (monthly) based on pasture quality for the proportion consumed calculated in GrazePasture.
+                            // calculate intake from potential modified by pasture availability and hours grazed
+                            indAmount = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-ind.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8);
+
+                            // assumes animals will stop eating at potential intake if they have been feed before grazing.
+                            // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential intake
+                            indAmount = Math.Min(ind.PotentialIntake - ind.Intake, indAmount);
+                            amount += indAmount;
+                        }
                     }
                     if (amount > 0)
                     {
@@ -257,8 +267,6 @@ namespace Models.CLEM.Activities
                 greenlimit = 100;
             }
 
-            //Console.WriteLine(Clock.Today.ToShortDateString() + "\t" + green.ToString() + "\t" + GrazeFoodStoreModel.Amount.ToString() + "\t" + propgreen.ToString() + "\t" + greenlimit.ToString());
-
             foreach (var pool in this.PoolFeedLimits.Where(a => a.Pool.Age <= greenage))
             {
                 pool.Limit = greenlimit / 100.0;
@@ -279,8 +287,14 @@ namespace Models.CLEM.Activities
                     //Get total amount
                     // assumes animals will stop eating at potential intake if they have been feed before grazing.
                     // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential
-                    double totalDesired = herd.Sum(a => Math.Min(a.PotentialIntake - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8)));
-                    double totalEaten = herd.Sum(a => Math.Min(a.PotentialIntake - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8)));
+                    double totalDesired = 0;
+                    double totalEaten = 0;
+                    // sucklings
+                    totalDesired = herd.Where(a => !a.Weaned).Sum(a => a.PotentialIntake - a.Intake);
+                    totalEaten = herd.Where(a => !a.Weaned).Sum(a => a.PotentialIntake - a.Intake);
+                    // weaned
+                    totalDesired += herd.Where(a => a.Weaned).Sum(a => Math.Min(a.PotentialIntake - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8)));
+                    totalEaten += herd.Where(a => a.Weaned).Sum(a => Math.Min(a.PotentialIntake - a.Intake, a.PotentialIntake * PotentialIntakePastureQualityLimiter * (1 - Math.Exp(-a.BreedParams.IntakeCoefficientBiomass * this.GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000)) * (HoursGrazed / 8)));
 
                     totalEaten *= GrazingCompetitionLimiter;
 
@@ -303,14 +317,20 @@ namespace Models.CLEM.Activities
                             PercentN = ((RuminantActivityGrazePastureHerd)request.AdditionalDetails).N
                         };
 
-                        //Console.WriteLine(Clock.Today.ToShortDateString() + "\t" + food.DMD.ToString() + "\t" + food.PercentN.ToString());
-
                         double shortfall = request.Provided / request.Required;
 
                         // allocate to individuals
                         foreach (Ruminant ind in herd)
                         {
-                            double eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8);
+                            double eaten;
+                            if (ind.Weaned)
+                            {
+                                eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8);
+                            }
+                            else
+                            {
+                                eaten = ind.PotentialIntake - ind.Intake;
+                            }
                             food.Amount = eaten * GrazingCompetitionLimiter * shortfall;
                             ind.AddIntake(food);
                         }

@@ -1,21 +1,16 @@
 namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Interfaces;
     using Models.Functions;
+    using Models.Interfaces;
     using Models.PMF.Interfaces;
-    using Models.PMF.Library;
     using System;
-    using System.Collections.Generic;
     using System.Xml.Serialization;
-    using Models.PMF.Phen;
-    using Models.PMF.Struct;
 
     /// <summary>
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation
     /// </summary>
-   [Serializable]
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GenericOrgan))]
@@ -162,7 +157,6 @@ namespace Models.PMF.Organs
             set
             {
                 _PotentialEP = value;
-                MicroClimatePresent = true;
             }
         }
 
@@ -174,11 +168,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
         public double WaterAllocation { get; set; }
-        /// <summary>
-        /// Flag to test if Microclimate is present
-        /// </summary>
-        [XmlIgnore]
-        public bool MicroClimatePresent { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         [XmlIgnore]
@@ -217,16 +206,11 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (MicroClimatePresent)
-                {
-                    double TotalRadn = 0;
-                    if (LightProfile != null)
-                        for (int i = 0; i < LightProfile.Length; i++)
-                        TotalRadn += LightProfile[i].amount;
-                    return TotalRadn;
-                }
-                else
-                    return CoverGreen * MetData.Radn;
+                 double TotalRadn = 0;
+                 if (LightProfile != null)
+                     for (int i = 0; i < LightProfile.Length; i++)
+                     TotalRadn += LightProfile[i].amount;
+                 return TotalRadn;
             }
         }
 
@@ -255,8 +239,6 @@ namespace Models.PMF.Organs
             // save current state
             if (parentPlant.IsEmerged)
              {
-                if (MicroClimatePresent == false)
-                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
                 FRGR = FRGRFunction.Value();
                 if (CoverFunction == null && ExtinctionCoefficientFunction == null)
@@ -298,10 +280,7 @@ namespace Models.PMF.Organs
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == parentPlant)
-            {
                 Clear();
-                MicroClimatePresent = false;
-            }
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -310,7 +289,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         protected void OnPlantEnding(object sender, EventArgs e)
         {
-  
             Clear();
         }
 

@@ -192,6 +192,7 @@
             {
                 job.DataStore = (job.RunnableJob as SimulationDescription).Storage;
                 job.JobSentToClient = (job.RunnableJob as SimulationDescription).ToSimulation();
+                (job.JobSentToClient as Simulation).Services = null;
             }
             else
                 job.JobSentToClient = job.RunnableJob;

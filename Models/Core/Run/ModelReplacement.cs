@@ -64,8 +64,12 @@
             match.Parent.Children.Insert(index, newModel as Model);
             newModel.Parent = match.Parent;
             newModel.Name = match.Name;
+            newModel.Enabled = match.Enabled;
             match.Parent.Children.Remove(match as Model);
-            newModel.OnCreated();
+
+            newModel.Parent.OnCreated();
+            foreach (var model in Apsim.ChildrenRecursively(newModel.Parent))
+                model.OnCreated();
         }
     }
 

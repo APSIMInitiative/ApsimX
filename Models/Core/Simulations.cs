@@ -179,9 +179,11 @@ namespace Models.Core
         {
             links = null;
         }
-
-        /// <summary>Create a links object</summary>
-        private void CreateLinks()
+        
+        /// <summary>
+        /// Gets the services objects.
+        /// </summary>
+        public List<object> GetServices()
         {
             List<object> services = new List<object>();
             var storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
@@ -189,7 +191,13 @@ namespace Models.Core
                 services.Add(storage);
             services.Add(this);
             services.Add(checkpoints);
-            links = new Links(services);
+            return services;
+        }
+
+        /// <summary>Create a links object</summary>
+        private void CreateLinks()
+        {
+            links = new Links(GetServices());
         }
 
         /// <summary>
@@ -260,7 +268,7 @@ namespace Models.Core
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
                     // resolve all links in cloned simulation.
-                    //Links.Resolve(clonedSimulation, true);
+                    Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
                     foreach (IModel child in Apsim.ChildrenRecursively(modelToDocument))

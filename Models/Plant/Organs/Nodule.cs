@@ -511,7 +511,7 @@ namespace Models.PMF.Organs
         {
             // save current state
             if (parentPlant.IsEmerged)
-                startLive = Live;
+                startLive = ReflectionUtilities.Clone(Live) as Biomass;
         }
 
         /// <summary>Does the nutrient allocations.</summary>

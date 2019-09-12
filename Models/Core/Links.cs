@@ -24,7 +24,7 @@ namespace Models.Core
         /// <param name="linkableServices">A collection of services that can be linked to</param>
         public Links(IEnumerable<object> linkableServices = null)
         {
-            if (linkableServices != null)
+            if (linkableServices != null && linkableServices.Count() > 0)
                 services = linkableServices.ToList();
             else
                 services = new List<object>();

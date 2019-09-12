@@ -575,6 +575,28 @@ namespace UserInterface.EventArguments
             /// The property is a child model.
             /// </summary>
             public bool IsChildModel;
+
+            /// <summary>
+            /// Returns a new instance of a context item representing
+            /// an event.
+            /// </summary>
+            /// <param name="name">Name of the event.</param>
+            /// <param name="description">Description of the event.</param>
+            /// <param name="eventType">Event handler type.</param>
+            public static ContextItem NewEvent(string name, string description, Type eventType)
+            {
+                return new ContextItem()
+                {
+                    IsChildModel = false,
+                    IsEvent = true,
+                    IsMethod = false,
+                    IsProperty = false,
+                    IsWriteable = false,
+                    Name = name,
+                    Descr = description,
+                    TypeName = eventType.Name,
+                };
+            }
         }
     } 
 }

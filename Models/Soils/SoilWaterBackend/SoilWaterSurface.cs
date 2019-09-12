@@ -70,7 +70,7 @@ namespace Models.Soils.SoilWaterBackend
         /// <summary>
         /// Calculates the evaporation.
         /// </summary>
-        public virtual void CalcEvaporation() {}
+        public virtual void CalcEvaporation(double Eo) {}
 
 
         //nb. Use the methods below rather then just using a SoilObject method to add infiltration or remove water,
@@ -149,7 +149,7 @@ namespace Models.Soils.SoilWaterBackend
 
                 //! NIH Need to consider if interception losses were already considered in runoff model calibration
 
-                double waterForRunoff = Met.rain + Runon - (Canopy.interception + SurfaceCover.residueinterception);
+                double waterForRunoff = Canopy.PotentialInfiltration + Runon;
 
                 foreach (IrrigData irrData in Irrig)
                 {
@@ -314,16 +314,13 @@ namespace Models.Soils.SoilWaterBackend
         /// <summary>
         /// Calculates the evaporation.
         /// </summary>
-        public override void CalcEvaporation()
+        public override void CalcEvaporation(double Eo)
             {
 
-            evap.CalcEo_AtmosphericPotential(base.Met, base.Canopy);
-            Eo = evap.Eo;
-
-            evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover);
+            evap.CalcEos_EoReducedDueToShading(Eo, base.Canopy, base.SurfaceCover);
             Eos = evap.Eos;
 
-            evap.CalcEs_RitchieEq_LimitedBySW(base.SoilObject, base.Clock, Infiltration);
+            evap.CalcEs_RitchieEq_LimitedBySW(Eo, base.SoilObject, base.Clock, Infiltration);
             Es = evap.Es;
             t = evap.t;
             }
@@ -476,13 +473,10 @@ namespace Models.Soils.SoilWaterBackend
         /// <summary>
         /// Calculates the evaporation.
         /// </summary>
-        public override void CalcEvaporation()
+        public override void CalcEvaporation(double Eo)
             {
 
-            evap.CalcEo_AtmosphericPotential(base.Met, base.Canopy);
-            Eo = evap.Eo;
-
-            evap.CalcEos_EoReducedDueToShading(base.Canopy, base.SurfaceCover);
+            evap.CalcEos_EoReducedDueToShading(Eo, base.Canopy, base.SurfaceCover);
             Eos = evap.Eos;
 
 
@@ -522,7 +516,7 @@ namespace Models.Soils.SoilWaterBackend
                     //calculate Es using altered Eos.
                     evap.Eos = Eos;
                     evap.InitialiseAccumulatingVars(base.SoilObject, base.Clock); //Reinitialise the Accumulating variables for the normal surface evaporation;
-                    evap.CalcEs_RitchieEq_LimitedBySW(base.SoilObject, base.Clock, Infiltration);
+                    evap.CalcEs_RitchieEq_LimitedBySW(Eo, base.SoilObject, base.Clock, Infiltration);
                     Es = evap.Es;
                     t = evap.t;
                     }
@@ -534,7 +528,7 @@ namespace Models.Soils.SoilWaterBackend
                 pond = 0.0;
 
                 //work out Es as you would for a NormalSurface
-                evap.CalcEs_RitchieEq_LimitedBySW(base.SoilObject, base.Clock, Infiltration);
+                evap.CalcEs_RitchieEq_LimitedBySW(Eo, base.SoilObject, base.Clock, Infiltration);
                 Es = evap.Es;
                 t = evap.t;
                 }

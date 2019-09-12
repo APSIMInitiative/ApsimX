@@ -43,7 +43,7 @@ namespace UserInterface.Views
         /// /// <param name="fileType">File types the user is allowed to choose.</param>
         /// <param name="initialDirectory">Initial directory. Defaults to the previously used directory.</param>
         /// <returns>Path to the chosen file or directory.</returns>
-        protected static string AskUserForFileName(string prompt, FileDialog.FileActionType actionType, string fileType, string initialDirectory = "")
+        public static string AskUserForFileName(string prompt, FileDialog.FileActionType actionType, string fileType, string initialDirectory = "")
         {
             IFileDialog dialog = new FileDialog()
             {

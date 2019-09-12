@@ -448,12 +448,12 @@ namespace Models.CLEM
         {
             PastureDataType pasturedata = new PastureDataType
             {
-                Year = int.Parse(dr["Year"].ToString()),
-                CutNum = int.Parse(dr["CutNum"].ToString()),
-                Month = int.Parse(dr["Month"].ToString()),
-                Growth = double.Parse(dr["Growth"].ToString()),
-                BP1 = double.Parse(dr["BP1"].ToString()),
-                BP2 = double.Parse(dr["BP2"].ToString())
+                Year = int.Parse(dr["Year"].ToString(), CultureInfo.InvariantCulture),
+                CutNum = int.Parse(dr["CutNum"].ToString(), CultureInfo.InvariantCulture),
+                Month = int.Parse(dr["Month"].ToString(), CultureInfo.InvariantCulture),
+                Growth = double.Parse(dr["Growth"].ToString(), CultureInfo.InvariantCulture),
+                BP1 = double.Parse(dr["BP1"].ToString(), CultureInfo.InvariantCulture),
+                BP2 = double.Parse(dr["BP2"].ToString(), CultureInfo.InvariantCulture)
             };
             return pasturedata;
         }

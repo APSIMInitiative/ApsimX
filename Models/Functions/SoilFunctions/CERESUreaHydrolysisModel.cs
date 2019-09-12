@@ -31,7 +31,7 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Urea Hydrolysis Model");
 
-            double potentialRate = -1.12 + 1.31 * soil.OC[arrayIndex] + 0.203 * soil.PH[arrayIndex] - 0.155 * soil.OC[arrayIndex] * soil.PH[arrayIndex];
+            double potentialRate = -1.12 + 1.31 * soil.Initial.OC[arrayIndex] + 0.203 * soil.Initial.PH[arrayIndex] - 0.155 * soil.Initial.OC[arrayIndex] * soil.Initial.PH[arrayIndex];
             potentialRate = MathUtilities.Bound(potentialRate, 0, 1);
 
             double WF = MathUtilities.Bound(CERESWF.Value(arrayIndex) + 0.2,0,1);

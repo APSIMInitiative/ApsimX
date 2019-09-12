@@ -44,9 +44,9 @@ namespace ApsimNG.Presenters.CLEM
             this.view = view as CustomQueryView;
             this.explorer = explorerPresenter;
 
-            this.view.OnRunQuery += RunQuery;
-            this.view.OnLoadFile += LoadFile;
-            this.view.OnWriteTable += WriteTable;
+            this.view.RunQuery += OnRunQuery;
+            this.view.LoadFile += OnLoadFile;
+            this.view.WriteTable += OnWriteTable;
 
             // If the model contains sql, update the view to display it
             if (!string.IsNullOrEmpty(query.Sql))
@@ -54,27 +54,27 @@ namespace ApsimNG.Presenters.CLEM
                 this.view.Sql = query.Sql;
                 this.view.Filename = query.Filename;
                 this.view.Tablename = query.Tablename;
-                RunQuery(this, EventArgs.Empty);
+                OnRunQuery(this, EventArgs.Empty);
             }
-        }        
+        }
 
         /// <summary>
         /// Detach the model from the view
         /// </summary>
         public void Detach()
         {
-            view.OnRunQuery -= RunQuery;
-            view.OnLoadFile -= LoadFile;
-            view.OnWriteTable -= WriteTable;
+            view.RunQuery -= OnRunQuery;
+            view.LoadFile -= OnLoadFile;
+            view.WriteTable -= OnWriteTable;
             view.Grid.Dispose();
             view.Detach();
-            SaveData();
+            TrackChanges();
         }
 
         /// <summary>
         /// Track changes made to the view
         /// </summary>
-        private void SaveData()
+        private void TrackChanges()
         {
             ChangeProperty sqlcom = new ChangeProperty(this.query, "Sql", view.Sql);
             explorer.CommandHistory.Add(sqlcom);
@@ -90,13 +90,13 @@ namespace ApsimNG.Presenters.CLEM
         /// Applies the SQL to the DataSource
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RunQuery(object sender, EventArgs e)
+        /// <param name="e"></param>        
+        private void OnRunQuery(object sender, EventArgs e)
         {
             var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
             view.Grid.DataSource = store.Reader.GetDataUsingSql(view.Sql);
 
-            SaveData();
+            TrackChanges();
         }
 
         /// <summary>
@@ -104,25 +104,24 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void WriteTable(object sender, CustomQueryView.WriteTableEventArgs args)
+        private void OnWriteTable(object sender, EventArgs e)
         {
             DataTable data = view.Grid.DataSource;
-            data.TableName = args.Tablename;
+            data.TableName = view.Tablename;
 
             var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
             store.Writer.WriteTable(data);
 
-            SaveData();
+            TrackChanges();
         }
 
         /// <summary>
         /// Tracks changes when a new file is loaded
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LoadFile(object sender, EventArgs e)
+        private void OnLoadFile(object sender, EventArgs e)
         {
-            SaveData();
+            TrackChanges();
         }
+
     }
 }

@@ -34,12 +34,6 @@ namespace Models.CLEM.Activities
         private List<LabourRequirement> labour;
         [Link]
         Clock Clock = null;
-        /// <summary>
-        /// Maximum conception rate for uncontrolled matings
-        /// </summary>
-        [Description("Maximum conception rate for uncontrolled matings")]
-        [Required]
-        public double MaximumConceptionRateUncontrolled { get; set; }
 
         /// <summary>
         /// Use artificial insemination (no bulls required)
@@ -136,7 +130,6 @@ namespace Models.CLEM.Activities
                                     {
                                         // calculate conception
                                         double conceptionRate = ConceptionRate(female) * maleLimiter;
-                                        conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
                                         if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                         {
                                             female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
@@ -245,14 +238,16 @@ namespace Models.CLEM.Activities
             // for each location where parts of this herd are located
             foreach (var location in breeders)
             {
-                // determine all foetus and newborn mortality.
-                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                // determine all foetus and newborn mortality of all pregnant females.
+                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsPregnant).ToList())
                 {
-                    if (female.IsPregnant)
+                    // calculate foetus and newborn mortality 
+                    // total mortality / (gestation months + 1) to get monthly mortality
+                    // done here before births to account for post birth motality as well..
+                    // IsPregnant status does not change until births occur in next section so will include mortality in month of birth
+                    // needs to be caclulated for each offspring carried.
+                    for (int i = 0; i < female.CarryingCount; i++)
                     {
-                        // calculate foetus and newborn mortality 
-                        // total mortality / (gestation months + 1) to get monthly mortality
-                        // done here before births to account for post birth motality as well..
                         if (ZoneCLEM.RandomGenerator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                         {
                             female.OneOffspringDies();
@@ -261,8 +256,10 @@ namespace Models.CLEM.Activities
                 }
 
                 // check for births of all pregnant females.
+                int month = Clock.Today.Month;
                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                 {
+
                     if (female.BirthDue)
                     {
                         female.WeightLossDueToCalf = 0;
@@ -302,6 +299,7 @@ namespace Models.CLEM.Activities
                         female.UpdateBirthDetails();
                     }
                 }
+
                 // uncontrolled conception
                 if (!UseAI)
                 {
@@ -318,8 +316,6 @@ namespace Models.CLEM.Activities
                         {
                             // calculate conception
                             double conceptionRate = ConceptionRate(female) * maleLimiter;
-                            // Temporarally removed max uncontrolled mating conception rate
-                            //conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
                             if (conceptionRate > 0 && ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                             {
                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
@@ -579,12 +575,6 @@ namespace Models.CLEM.Activities
             {
                 html += "\n<div class=\"activityentry\">";
                 html += "Using Artificial insemination";
-                html += "</div>";
-            }
-            else
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "Maximum conception rate is <span class=\"setvalue\">" + MaximumConceptionRateUncontrolled.ToString("0.###") + "</span> using uncontrolled breeding";
                 html += "</div>";
             }
             if (InferStartupPregnancy)

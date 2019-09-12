@@ -95,7 +95,7 @@ namespace Models.PMF.Phen
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowPlant2Type data)
         {
-            SowLayer = Soil.LayerIndexOfDepth(plant.SowingData.Depth, soil.Thickness);
+            SowLayer = soil.LayerIndexOfDepth(plant.SowingData.Depth);
         }
 
         /// <summary>Writes documentation for this class by adding to the list of documentation tags.</summary>

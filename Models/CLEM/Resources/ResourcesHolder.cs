@@ -92,6 +92,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public object GetResourceGroupByName(string name)
         {
+            ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
             return ResourceGroupList.Find(x => x.Name == name & x.Enabled);
         }
 
@@ -411,11 +412,28 @@ namespace Models.CLEM.Resources
                         // check if transmutations provided
                         foreach (Transmutation trans in Apsim.Children(model, typeof(Transmutation)))
                         {
+                            double unitsNeeded = 0;
                             // check if resources available for activity and transmutation
-                            double unitsNeeded = Math.Ceiling((request.Required - request.Available) / trans.AmountPerUnitPurchase);
                             foreach (ITransmutationCost transcost in Apsim.Children(trans, typeof(IModel)).Where(a => a is ITransmutationCost).Cast<ITransmutationCost>())
                             {
-                                double transmutationCost = unitsNeeded * transcost.CostPerUnit;
+                                double unitsize = trans.AmountPerUnitPurchase;
+                                if (transcost is TransmutationCostUsePricing)
+                                {
+                                    // use pricing details if needed
+                                    unitsize = (transcost as TransmutationCostUsePricing).Pricing.PacketSize;
+                                }
+                                unitsNeeded = Math.Ceiling((request.Required - request.Available) / unitsize);
+
+                                double transmutationCost;
+                                if (transcost is TransmutationCostUsePricing)
+                                {
+                                    // use pricing details if needed
+                                    transmutationCost = unitsNeeded * (transcost as TransmutationCostUsePricing).Pricing.PricePerPacket;
+                                }
+                                else
+                                {
+                                    transmutationCost = unitsNeeded * transcost.CostPerUnit;
+                                }
 
                                 // get transcost resource
                                 IResourceType transResource = null;

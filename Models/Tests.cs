@@ -30,7 +30,7 @@ namespace Models
         /// <summary>
         /// A collection of validated stats.
         /// </summary>
-        [APSIM.Shared.Soils.Description("An array of validated regression stats.")]
+        [Models.Core.Description("An array of validated regression stats.")]
         public MathUtilities.RegrStats[] AcceptedStats { get; set; }
 
         /// <summary>

@@ -15,6 +15,7 @@ using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Functions;
+using Models.Soils.Standardiser;
 
 namespace Models.Soils
 {
@@ -29,6 +30,9 @@ namespace Models.Soils
     public class WEIRDO : Model, ISoilWater
     {
         #region IsoilInterface
+        ///<summary> This doesn't do anything currently</summary>
+        [XmlIgnore]
+        public double PotentialInfiltration { get; set; }
         ///<summary> Model name</summary>
         [XmlIgnore]
         public string WaterModelName { get { return this.Name; } }
@@ -44,6 +48,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double CNCov { get; set; }
+
         ///<summary> Who knows</summary>
         [XmlIgnore]
         public double CNRed { get; set; }
@@ -204,10 +209,7 @@ namespace Models.Soils
         #endregion
 
         #region Class Dependancy Links
-        ///[Link]
-        ///private Water Water = null;
-        [Link]
-        private LayerStructure Layering = null;
+
         [Link]
         private Soil Soil = null;
         [Link]
@@ -245,45 +247,6 @@ namespace Models.Soils
         #endregion
 
         #region Parameters
-        private double[] _Thickness;
-        /// <summary>
-        /// The thickness of each soil layer for parameter values
-        /// </summary>
-        public double[] ParamThickness
-        {
-            get
-            {
-                return _Thickness;
-            }
-            set
-            {
-                _Thickness = value;
-            }
-        }
-        /// <summary>
-        /// Soil layer thickness for each layer in cm (only used in the GUI) (cm)
-        /// </summary>
-        /// <remarks>
-        /// This "Depth" variable is only needed for the "Depth" column in the "SoilWater" node of the GUI.
-        /// Just converts back and forth between "Depth" (in cm as string) AND "Thickness" (in mm as double).
-        /// </remarks>
-        /// <value>
-        /// The depth.
-        /// </value>
-        [XmlIgnore]
-        [Units("cm")]
-        [Description("Layer Depth")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(ParamThickness);
-            }
-            set
-            {
-                ParamThickness = Soil.ToThickness(value);
-            }
-        }
         /// <summary>Gets or sets the l L15.</summary>
         /// <value>The l L15.</value>
         [Summary]
@@ -427,31 +390,6 @@ namespace Models.Soils
         public double[] MappedLowerRepellentWC { get; set; }
         /// <summary>Mapped from parameter set onto Layer structure</summary>
         public double[] MappedMinRepellancyFactor { get; set; }
-        /// <summary>Calculate and return SW relative to the Water node thicknesses.</summary>
-        public double[] InitialSoilWater
-        {
-            get
-            {
-                InitialWater initialWater = Apsim.Child(this, typeof(InitialWater)) as InitialWater;
-
-                if (initialWater != null)
-                    throw new Exception("WEIRDO doesn't integrate with InitialWater Node yet");
-                //return initialWater.SW(waterNode.Thickness, waterNode.LL15, waterNode.DUL, null);
-                else
-                {
-                    foreach (Sample Sample in Apsim.Children(this.Parent, typeof(Sample)))
-                    {
-                        if (MathUtilities.ValuesInArray(Sample.SW))
-                        {
-                            return Soil.Map(Sample.SWVolumetric, Sample.Thickness, Thickness);
-                        }
-                    }
-                }
-                return null;
-            }
-        }
-        /// <summary>The factor for root penetration into soil layer</summary>
-        public double[] MappedXF { get; set; }
         #endregion
 
         #region Outputs
@@ -587,7 +525,7 @@ namespace Models.Soils
         /// <summary>
         /// The amount of water that may enter the surface of the soil each hour
         /// </summary>
-        private double PotentialInfiltration { get; set; }
+        private double potentialInfiltration { get; set; }
         /// <summary>
         /// The distance down to the nearest zero potential body of water, for calculating gravitational potential
         /// </summary>
@@ -621,7 +559,6 @@ namespace Models.Soils
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Thickness = Layering.Thickness;
             ProfileLayers = Thickness.Length;
             PoreCompartments = PoreBounds.Length - 1;
             AdsorptionCapacity = new double[ProfileLayers];
@@ -638,18 +575,6 @@ namespace Models.Soils
             SaturatedWaterDepth = new double[ProfileLayers];
             HourlyWaterExtraction = new double[ProfileLayers];
             RootLengthDensity = new double[ProfileLayers];
-            double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
-
-            MappedSAT = Soil.Map(SAT, ParamThickness, Thickness, Soil.MapType.Concentration,SAT[SAT.Length-1]);
-            MappedDUL = Soil.Map(DUL, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedLL15 = Soil.Map(LL15, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedCFlow = Soil.Map(CflowScaled, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedXFlow = Soil.Map(XFlow, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedPsiBub = Soil.Map(PsiBub, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedUpperRepellentWC = Soil.Map(UpperRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedLowerRepellentWC = Soil.Map(LowerRepellentWC, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedMinRepellancyFactor = Soil.Map(MinRepellancyFactor, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
-            MappedXF = Soil.Map(XF, ParamThickness, Thickness, Soil.MapType.Concentration, SAT[SAT.Length - 1]);
 
             Pores = new Pore[ProfileLayers][];
             PoreWater = new double[ProfileLayers][];
@@ -690,10 +615,10 @@ namespace Models.Soils
             //Check the soil water content initialisation is legit
             for (int l = 0; l < ProfileLayers; l++)
             {
-                if (InitialSoilWater[l] - MappedSAT[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is greater than the layers saturated water content of " + MappedSAT[l]);
-                if (MappedLL15[l] - InitialSoilWater[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + InitialSoilWater[l] + " is less than the layers lower limit water content of " + MappedLL15[l]);
+                if (Soil.InitialWaterVolumetric[l] - MappedSAT[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + Soil.InitialWaterVolumetric[l] + " is greater than the layers saturated water content of " + MappedSAT[l]);
+                if (MappedLL15[l] - Soil.InitialWaterVolumetric[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + Soil.InitialWaterVolumetric[l] + " is less than the layers lower limit water content of " + MappedLL15[l]);
             }
         }
 
@@ -771,7 +696,7 @@ namespace Models.Soils
                     //Then we work out how much of this may percolate into the profile this TimeStep
                     doPercolationCapacity(TimeStepSplits);
                     //Now we know how much water can infiltrate into the soil, lets put it there if we have some
-                    double TimeStepInfiltration = Math.Min(pond, PotentialInfiltration);
+                    double TimeStepInfiltration = Math.Min(pond, potentialInfiltration);
                     if ((TimeStepInfiltration > 0) && (CalculateInfiltration))
                         doInfiltration(TimeStepInfiltration, h, TimeStepSplits, Subh);
                     //Next we redistribute water down the profile for draiange processes
@@ -824,6 +749,21 @@ namespace Models.Soils
         #endregion
 
         #region Water Balance Methods
+        internal void MapVariables(double[] targetThickness)
+        {
+            double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
+
+            MappedSAT = Layers.MapConcentration(SAT, Thickness, targetThickness, SAT[SAT.Length-1]);
+            MappedDUL = Layers.MapConcentration(DUL, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedLL15 = Layers.MapConcentration(LL15, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedCFlow = Layers.MapConcentration(CflowScaled, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedXFlow = Layers.MapConcentration(XFlow, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedPsiBub = Layers.MapConcentration(PsiBub, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedUpperRepellentWC = Layers.MapConcentration(UpperRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedLowerRepellentWC = Layers.MapConcentration(LowerRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
+            MappedMinRepellancyFactor = Layers.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, SAT[SAT.Length - 1]);
+        }
+
         private void doPrecipitation()
         {
             if (Irrigation > 0)
@@ -933,7 +873,7 @@ namespace Models.Soils
                 }
             }
             //The amount of water that may percolate below the surface layer plus what ever the surface layer may absorb
-            PotentialInfiltration = AdsorptionCapacity[0] + Math.Min(PercolationCapacityBelow[0], TransmissionCapacity[0]);
+            potentialInfiltration = AdsorptionCapacity[0] + Math.Min(PercolationCapacityBelow[0], TransmissionCapacity[0]);
         }
         /// <summary>
         /// Calculates the gravitational potential in each layer from its height to the nearest zero potential layer
@@ -1204,12 +1144,12 @@ namespace Models.Soils
                     Pores[l][c].ThetaLower = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiLower);
                     Pores[l][c].CFlow = MappedCFlow[l];
                     Pores[l][c].XFlow = MappedXFlow[l];
-                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, InitialSoilWater[l] - AccumWaterVolume);
+                    double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, Soil.InitialWaterVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Thickness[l];
                     Pores[l][c].IncludeSorption = IncludeSorption;
                 }
-                if (Math.Abs(AccumWaterVolume - InitialSoilWater[l]) > FloatingPointTolerance)
+                if (Math.Abs(AccumWaterVolume - Soil.InitialWaterVolumetric[l]) > FloatingPointTolerance)
                     throw new Exception(this + " Initial water content has not been correctly partitioned between pore compartments in layer" + l);
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];

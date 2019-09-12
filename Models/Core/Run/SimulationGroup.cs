@@ -249,7 +249,25 @@
             storage?.Writer.WaitForIdle();
             storage?.Reader.Refresh();
 
-            var links = new Links();
+            List<object> services;
+            if (relativeTo is Simulations)
+                services = (relativeTo as Simulations).GetServices();
+            else
+            {
+                Simulations sims = Apsim.Find(relativeTo, typeof(Simulations)) as Simulations;
+                if (sims != null)
+                    services = sims.GetServices();
+                else if (relativeTo is Simulation)
+                    services = (relativeTo as Simulation).Services;
+                else
+                {
+                    services = new List<object>();
+                    if (storage != null)
+                        services.Add(storage);
+                }
+            }
+
+            var links = new Links(services);
             foreach (ITest test in Apsim.ChildrenRecursively(rootModel, typeof(ITest)))
             {
                 DateTime startTime = DateTime.Now;

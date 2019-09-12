@@ -209,27 +209,27 @@
             {
                 string thisRelativeModelPath = Apsim.FullPath(model).Replace(simulationPath + ".", string.Empty);
 
-                List<VariableProperty> properties = new List<VariableProperty>();
+                var properties = new List<Tuple<string, VariableProperty>>();
                 FindAllProperties(model, properties);
-                foreach (VariableProperty property in properties)
+                foreach (var tuple in properties)
                 {
-                    string propertyValue = property.ValueAsString();
+                    string propertyValue = tuple.Item2.ValueAsString();
                     if (propertyValue != string.Empty)
                     {
-                        if (propertyValue != null && property.DataType == typeof(DateTime))
-                            propertyValue = ((DateTime)property.Value).ToString("yyyy-MM-dd HH:mm:ss");
+                        if (propertyValue != null && tuple.Item2.DataType == typeof(DateTime))
+                            propertyValue = ((DateTime)tuple.Item2.Value).ToString("yyyy-MM-dd HH:mm:ss");
 
                         int total;
-                        if (double.IsNaN(property.Total))
+                        if (double.IsNaN(tuple.Item2.Total))
                             total = 0;
                         else
                             total = 1;
 
-                        if (property.Units == null)
-                            property.Units = string.Empty;
+                        if (tuple.Item2.Units == null)
+                            tuple.Item2.Units = string.Empty;
 
                         row = initConditions.NewRow();
-                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, property.Name, property.Description, property.DataType.Name, property.Units, property.Format, total, propertyValue };
+                        row.ItemArray = new object[] { simulation.Name, thisRelativeModelPath, tuple.Item1, tuple.Item2.Description, tuple.Item2.DataType.Name, tuple.Item2.Units, tuple.Item2.Format, total, propertyValue };
                         initConditions.Rows.Add(row);
                     }
                 }
@@ -568,6 +568,7 @@
                             writer.Write(" class='col1'");
                         writer.Write(">" + table.Columns[i].ColumnName + "</th>");
                     }
+                    writer.WriteLine();
                 }
                 else
                     writer.WriteLine("<table>");
@@ -733,7 +734,7 @@
         /// </summary>
         /// <param name="model">The model to search for properties</param>
         /// <param name="properties">The list of properties to fill</param>
-        private static void FindAllProperties(Model model, List<VariableProperty> properties)
+        private static void FindAllProperties(Model model, List<Tuple<string, VariableProperty>> properties)
         {
             if (model != null)
             {
@@ -744,7 +745,12 @@
 
                     if (includeProperty)
                     {
-                        properties.Add(new VariableProperty(model, property));
+                        string name = property.Name;
+                        VariableProperty prop = null;
+                        prop = new VariableProperty(model, property);
+
+                        if (prop != null)
+                            properties.Add(new Tuple<string, VariableProperty>(name, prop));
                     }
                 }
             }

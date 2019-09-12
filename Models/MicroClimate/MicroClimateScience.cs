@@ -283,5 +283,53 @@ namespace Models
         {
             return Math.Max(-radn * 0.1, Math.Min(0.0, -soilHeatFluxFraction * (radn - radnint)));
         }
+
+        private double AtmosphericPotentialEvaporationRate(double Radn, double MaxT, double MinT, double Salb, double residue_cover, double _cover_green_sum)
+        {
+            // ******* calculate potential evaporation from soil surface (eos) ******
+
+            // find equilibrium evap rate as a
+            // function of radiation, albedo, and temp.
+            double surface_albedo = Salb + (residue_albedo - Salb) * residue_cover;
+            // set surface_albedo to soil albedo for backward compatibility with soilwat
+            surface_albedo = Salb;
+
+            double albedo = max_albedo - (max_albedo - surface_albedo) * (1.0 - _cover_green_sum);
+            // wt_ave_temp is mean temp, weighted towards max.
+            double wt_ave_temp = 0.6 * MaxT + 0.4 * MinT;
+
+            double eeq = Radn * 23.8846 * (0.000204 - 0.000183 * albedo) * (wt_ave_temp + 29.0);
+            // find potential evapotranspiration (pot_eo)
+            // from equilibrium evap rate
+            return eeq * EeqFac(MaxT,MinT);
+        }
+
+        private double EeqFac(double MaxT, double MinT)
+        {
+            //+  Purpose
+            //                 calculate coefficient for equilibrium evaporation rate
+            if (MaxT > max_crit_temp)
+            {
+                // at very high max temps eo/eeq increases
+                // beyond its normal value of 1.1
+                return (MaxT - max_crit_temp) * 0.05 + 1.1;
+            }
+            else if (MaxT < min_crit_temp)
+            {
+                // at very low max temperatures eo/eeq
+                // decreases below its normal value of 1.1
+                // note that there is a discontinuity at tmax = 5
+                // it would be better at tmax = 6.1, or change the
+                // .18 to .188 or change the 20 to 21.1
+                return 0.01 * Math.Exp(0.18 * (MaxT + 20.0));
+            }
+            else
+            {
+                // temperature is in the normal range, eo/eeq = 1.1
+                return 1.1;
+            }
+        }
+
+
     }
 }

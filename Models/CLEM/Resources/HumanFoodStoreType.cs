@@ -66,11 +66,18 @@ namespace Models.CLEM.Resources
         public double StartingAge { get; set; }
 
         /// <summary>
-        /// Starting Amount (kg)
+        /// Starting Amount
         /// </summary>
-        [Description("Starting Amount (kg)")]
+        [Description("Starting Amount")]
         [Required, GreaterThanEqualValue(0)]
         public double StartingAmount { get; set; }
+
+        /// <summary>
+        /// The maximum amount of this food that can be eaten by an adult equivalent in a day
+        /// </summary>
+        [Description("Maximum daily intake per AE")]
+        [Required, GreaterThanEqualValue(0)]
+        public double MaximumDailyIntakePerAE { get; set; }
 
         /// <summary>
         /// Age of this Human Food (Months)

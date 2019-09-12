@@ -446,7 +446,7 @@
             string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
             string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
             string script = string.Format
-            ("library('sensitivity')" + Environment.NewLine +
+            ($"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
             "params <- c({0})" + Environment.NewLine +
             "apsimMorris<-morris(model=NULL" + Environment.NewLine +
             " ,params #string vector of parameter names" + Environment.NewLine +

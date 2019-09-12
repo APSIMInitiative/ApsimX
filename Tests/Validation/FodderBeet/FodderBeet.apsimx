@@ -1725,6 +1725,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "ABlockNit0",
                       "Children": [
                         {
@@ -4913,6 +4914,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "ABlockRainfed",
                       "Children": [
                         {
@@ -8109,6 +8111,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "ABlockRivOct",
                       "Children": [
                         {
@@ -12129,6 +12132,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Rainshelter",
                       "Children": [
                         {
@@ -17104,6 +17108,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "AshleyFullOpt",
                       "Children": [
                         {
@@ -21565,6 +21570,7 @@
                         {
                           "$type": "Models.Core.Simulation, Models",
                           "Descriptors": null,
+                          "Services": [],
                           "Name": "Orari",
                           "Children": [
                             {
@@ -23444,6 +23450,7 @@
                         {
                           "$type": "Models.Core.Simulation, Models",
                           "Descriptors": null,
+                          "Services": [],
                           "Name": "Rak",
                           "Children": [
                             {
@@ -25849,6 +25856,7 @@
                         {
                           "$type": "Models.Core.Simulation, Models",
                           "Descriptors": null,
+                          "Services": [],
                           "Name": "Gore",
                           "Children": [
                             {
@@ -26751,6 +26759,7 @@
                         {
                           "$type": "Models.Core.Simulation, Models",
                           "Descriptors": null,
+                          "Services": [],
                           "Name": "Riverton",
                           "Children": [
                             {
@@ -28322,6 +28331,7 @@
                         {
                           "$type": "Models.Core.Simulation, Models",
                           "Descriptors": null,
+                          "Services": [],
                           "Name": "Taranaki",
                           "Children": [
                             {
@@ -29224,6 +29234,7 @@
                         {
                           "$type": "Models.Core.Simulation, Models",
                           "Descriptors": null,
+                          "Services": [],
                           "Name": "Waikato",
                           "Children": [
                             {
@@ -30126,6 +30137,7 @@
                         {
                           "$type": "Models.Core.Simulation, Models",
                           "Descriptors": null,
+                          "Services": [],
                           "Name": "Whanganui",
                           "Children": [
                             {
@@ -32346,6 +32358,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Bankside_P21ext",
                       "Children": [
                         {
@@ -33063,6 +33076,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "RakaiaIsland_P21ext",
                       "Children": [
                         {
@@ -33878,6 +33892,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Oxford_P21ext",
                       "Children": [
                         {
@@ -34707,6 +34722,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Springston_P21ext",
                       "Children": [
                         {
@@ -36060,6 +36076,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Ngapara_P21ext",
                       "Children": [
                         {
@@ -36892,6 +36909,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Oamaru_P21ext",
                       "Children": [
                         {
@@ -38199,6 +38217,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Balfour_P21ext",
                       "Children": [
                         {
@@ -39516,6 +39535,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Gore_P21ext",
                       "Children": [
                         {
@@ -41435,6 +41455,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Manawatu_P21ext",
                       "Children": [
                         {
@@ -42686,6 +42707,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "Waikato_P21ext",
                       "Children": [
                         {
@@ -45018,6 +45040,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "2014",
                       "Children": [
                         {
@@ -46109,6 +46132,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "2015",
                       "Children": [
                         {
@@ -47175,6 +47199,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "Descriptors": null,
+                  "Services": [],
                   "Name": "Irishtown",
                   "Children": [
                     {
@@ -48295,6 +48320,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "RSblock",
                       "Children": [
                         {
@@ -49731,6 +49757,7 @@
                     {
                       "$type": "Models.Core.Simulation, Models",
                       "Descriptors": null,
+                      "Services": [],
                       "Name": "RSblockE",
                       "Children": [
                         {
@@ -50983,6 +51010,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "Descriptors": null,
+              "Services": [],
               "Name": "AshleyDene2013",
               "Children": [
                 {
@@ -52405,6 +52433,7 @@
             {
               "$type": "Models.Core.Simulation, Models",
               "Descriptors": null,
+              "Services": [],
               "Name": "AshleyDene2012",
               "Children": [
                 {

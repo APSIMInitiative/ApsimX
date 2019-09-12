@@ -51,6 +51,12 @@
                                 // Add in a socket datastore to satisfy links.
                                 sim.Children.Add(storage);
 
+                                if (sim.Services != null)
+                                {
+                                    sim.Services.RemoveAll(s => s is Models.Storage.IDataStore);
+                                    sim.Services.Add(storage);
+                                }
+
                                 // Run the simulation.
                                 sim.Run(new CancellationTokenSource());
                             }

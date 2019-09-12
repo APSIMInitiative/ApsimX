@@ -71,6 +71,19 @@ The use of #region is not recommended.
 
 Try and avoid inheritance. For a software engineering view on this see: https://codingdelight.com/2014/01/16/favor-composition-over-inheritance-part-1/. There is general consensus that inheriting from an interface is GOOD but inheriting from a base class is BAD. There are always exceptions of course. In our case, I've been migrating away from having a BaseOrgan and instead put code that is common across organs in a 'library' or 'model' somewhere and simply call methods in that library. An example of this is in the way GenericOrgan relies on a [Link] BiomassRemovalModel  to remove biomass from the organ. A simpler way would be to create a class called say PMFLibrary and put in static methods e.g. 'RemoveBiomass' ...
 
+# Code Formatting
+
+Use [Allman-style](https://en.wikipedia.org/wiki/Indentation_style#Allman_style) braces, where curly braces start on a new line. A single line statement block should go without braces but must still be indented on its own line. e.g.
+
+```c#
+if (x)
+{
+	foo();
+	bar();
+}
+else
+	baz();
+```
 
 # Order of declarations in a C# class
 

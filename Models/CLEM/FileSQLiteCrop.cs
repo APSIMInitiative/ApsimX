@@ -12,6 +12,7 @@ using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
+using System.Globalization;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileCrop.cs" company="APSIM Initiative">
@@ -311,7 +312,7 @@ namespace Models.CLEM
             };
             if(nitrogenColumnExists)
             {
-                cropdata.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString());
+                cropdata.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
             }
             else
             {

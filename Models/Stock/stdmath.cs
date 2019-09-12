@@ -176,6 +176,7 @@ namespace StdUnits
     [Serializable]
     public class MyRandom
     {
+        [NonSerialized]
         private Random SysRandom;
         private int FNextRandom;
         private double[] FRandomBuffer;

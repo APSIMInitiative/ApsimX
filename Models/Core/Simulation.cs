@@ -1,6 +1,8 @@
 ﻿using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
+using Models.Storage;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +46,7 @@ namespace Models.Core
                 return Apsim.Children(this, typeof(Zone)).Sum(z => (z as Zone).Area);
             }
         }
+
 
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
@@ -105,6 +108,7 @@ namespace Models.Core
         }
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
+        [JsonIgnore]
         public List<SimulationDescription.Descriptor> Descriptors { get; set; }
 
         /// <summary>Gets the value of a variable or model.</summary>
@@ -137,6 +141,7 @@ namespace Models.Core
         public string FileName { get; set; }
 
         /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>
+        [JsonIgnore]
         public List<object> Services { get; set; } = new List<object>();
 
         /// <summary>
@@ -191,6 +196,9 @@ namespace Models.Core
             if (cancelToken == null)
                 cancelToken = new CancellationTokenSource();
 
+            // Remove disabled models.
+            RemoveDisabledModels(this);
+
             // If this simulation was not created from deserialisation then we need
             // to parent all child models correctly and call OnCreated for each model.
             bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
@@ -203,10 +211,15 @@ namespace Models.Core
                 Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
             }
 
-            // Remove disabled models.
-            RemoveDisabledModels(this);
+            if (Services == null || Services.Count < 1)
+            {
+                Services = new List<object>();
+                IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                if (storage != null)
+                    Services.Add(Apsim.Find(this, typeof(IDataStore)));
+            }
 
-            var links = new Links();
+            var links = new Links(Services);
             var events = new Events(this);
 
             try

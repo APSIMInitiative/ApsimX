@@ -176,6 +176,26 @@
         }
 
         /// <summary>
+        /// Gets a list of all events which are published by models in
+        /// the current simulations tree.
+        /// </summary>
+        /// <param name="model"></param>
+        public List<NeedContextItemsArgs.ContextItem> GetEvents(IModel model)
+        {
+            var events = new List<NeedContextItemsArgs.ContextItem>();
+
+            List<IModel> allModels = Apsim.ChildrenRecursively(Apsim.Parent(model, typeof(Simulations)));
+            foreach (var publisher in Events.Publisher.FindAll(allModels))
+            {
+                string description = NeedContextItemsArgs.GetDescription(publisher.EventInfo);
+                Type eventType = publisher.EventInfo.EventHandlerType;
+                events.Add(NeedContextItemsArgs.ContextItem.NewEvent(publisher.Name, description, eventType));
+            }
+
+            return events;
+        }
+
+        /// <summary>
         /// Generates completion options for a report. This should also work for the property presenter.
         /// </summary>
         /// <param name="code">Source code.</param>
@@ -208,6 +228,7 @@
             }
 
             List<NeedContextItemsArgs.ContextItem> results = NeedContextItemsArgs.ExamineModelForContextItemsV2(model as Model, objectName, properties, methods, events);
+
             view.Populate(results);
             return results.Any();
         }

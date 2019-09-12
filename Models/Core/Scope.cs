@@ -37,14 +37,14 @@
             // Return all models in zone and all direct children of zones parent.
             modelsInScope = new List<IModel>();
             modelsInScope.Add(scopedParent);
-            modelsInScope.AddRange(Apsim.ChildrenRecursively(scopedParent).Where(m => m.Enabled));
-            while (scopedParent.Parent != null && scopedParent.Enabled)
+            modelsInScope.AddRange(Apsim.ChildrenRecursively(scopedParent));
+            while (scopedParent.Parent != null)
             {
                 scopedParent = scopedParent.Parent;
                 modelsInScope.Add(scopedParent);
                 foreach (IModel child in scopedParent.Children)
                 {
-                    if (!modelsInScope.Contains(child) && child.Enabled)
+                    if (!modelsInScope.Contains(child))
                     {
                         modelsInScope.Add(child);
 
@@ -52,7 +52,7 @@
                         // This ensures that a soil's water node will be in scope of
                         // a manager inside a folder inside a zone.
                         if (!IsScopedModel(child))
-                            modelsInScope.AddRange(Apsim.ChildrenRecursively(child).Where(m=>m.Enabled));
+                            modelsInScope.AddRange(Apsim.ChildrenRecursively(child));
                     }
                 }
             }
@@ -74,8 +74,6 @@
         {
             do
             {
-                if (!relativeTo.Enabled)
-                    return null;
                 if (IsScopedModel(relativeTo))
                     return relativeTo;
                 if (relativeTo.Parent == null)
@@ -85,6 +83,16 @@
             while (relativeTo != null);
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns true iff model x is in scope of model y.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public bool InScopeOf(IModel x, IModel y)
+        {
+            return FindAll(y).Contains(x);
         }
 
         /// <summary>

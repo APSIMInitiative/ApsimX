@@ -4,17 +4,11 @@
 #' @param pkgpath Path where package is to be installed.
 #' @return Nothing.
 getPackage <- function(pkg, pkgpath) {
-    if (!pkg %in% rownames(installed.packages())) {
-		i = which(!grepl("Program Files", .libPaths()))[1]
-		location = ""
-        if (is.na(i) || i > length(.libPaths()) || identical(i, integer(0))) {
-		    # No lib paths outside of program files exist....
-			location = pkgpath
-		} else {
-			location = .libPaths()[i]
-		}
-		print(paste('Installing package', pkg, 'to location', location))
-		install.packages(pkg,repos = "https://cran.csiro.au/", lib = location)
+    if (!pkg %in% rownames(installed.packages(lib.loc = pkgpath))) {
+        if (!dir.exists(pkgpath)) {
+            dir.create(pkgpath)
+        }
+        install.packages(pkg, repos = "https://cran.csiro.au/", lib = pkgpath)
 	} else {
 		print(paste('Package', pkg, 'is already installed.'))
 	}

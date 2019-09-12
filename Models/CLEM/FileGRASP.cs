@@ -590,25 +590,25 @@ namespace Models.CLEM
         {
             PastureDataType pasturedata = new PastureDataType
             {
-                Region = int.Parse(dr["Region"].ToString()),
-                Soil = int.Parse(dr["Soil"].ToString()),
-                ForageNo = int.Parse(dr["ForageNo"].ToString()),
-                GrassBA = int.Parse(dr["GrassBA"].ToString()),
-                LandCon = int.Parse(dr["LandCon"].ToString()),
-                StkRate = int.Parse(dr["StkRate"].ToString()),
-                YearNum = int.Parse(dr["YearNum"].ToString()),
-                Year = int.Parse(dr["Year"].ToString()),
-                CutNum = int.Parse(dr["CutNum"].ToString()),
-                Month = int.Parse(dr["Month"].ToString()),
-                Growth = double.Parse(dr["Growth"].ToString()),
-                BP1 = double.Parse(dr["BP1"].ToString()),
-                BP2 = double.Parse(dr["BP2"].ToString()),
-                Utilisn = double.Parse(dr["Utilisn"].ToString()),
-                SoilLoss = double.Parse(dr["SoilLoss"].ToString()),
-                Cover = double.Parse(dr["Cover"].ToString()),
-                TreeBA = double.Parse(dr["TreeBA"].ToString()),
-                Rainfall = double.Parse(dr["Rainfall"].ToString()),
-                Runoff = double.Parse(dr["Runoff"].ToString())
+                Region = int.Parse(dr["Region"].ToString(), CultureInfo.InvariantCulture),
+                Soil = int.Parse(dr["Soil"].ToString(), CultureInfo.InvariantCulture),
+                ForageNo = int.Parse(dr["ForageNo"].ToString(), CultureInfo.InvariantCulture),
+                GrassBA = int.Parse(dr["GrassBA"].ToString(), CultureInfo.InvariantCulture),
+                LandCon = int.Parse(dr["LandCon"].ToString(), CultureInfo.InvariantCulture),
+                StkRate = int.Parse(dr["StkRate"].ToString(), CultureInfo.InvariantCulture),
+                YearNum = int.Parse(dr["YearNum"].ToString(), CultureInfo.InvariantCulture),
+                Year = int.Parse(dr["Year"].ToString(), CultureInfo.InvariantCulture),
+                CutNum = int.Parse(dr["CutNum"].ToString(), CultureInfo.InvariantCulture),
+                Month = int.Parse(dr["Month"].ToString(), CultureInfo.InvariantCulture),
+                Growth = double.Parse(dr["Growth"].ToString(), CultureInfo.InvariantCulture),
+                BP1 = double.Parse(dr["BP1"].ToString(), CultureInfo.InvariantCulture),
+                BP2 = double.Parse(dr["BP2"].ToString(), CultureInfo.InvariantCulture),
+                Utilisn = double.Parse(dr["Utilisn"].ToString(), CultureInfo.InvariantCulture),
+                SoilLoss = double.Parse(dr["SoilLoss"].ToString(), CultureInfo.InvariantCulture),
+                Cover = double.Parse(dr["Cover"].ToString(), CultureInfo.InvariantCulture),
+                TreeBA = double.Parse(dr["TreeBA"].ToString(), CultureInfo.InvariantCulture),
+                Rainfall = double.Parse(dr["Rainfall"].ToString(), CultureInfo.InvariantCulture),
+                Runoff = double.Parse(dr["Runoff"].ToString(), CultureInfo.InvariantCulture)
             };
             pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
             return pasturedata;

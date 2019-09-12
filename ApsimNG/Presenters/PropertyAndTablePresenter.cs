@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
     using Interfaces;
@@ -66,13 +67,15 @@
         /// <param name="e">Event arguments.</param>
         private void OnCellValueChanged2(object sender, GridCellsChangedArgs e)
         {
-            foreach (IGridCell cell in e.ChangedCells)
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
             {
                 try
                 {
-                    if (e.InvalidValue)
-                        throw new Exception("The value you entered was not valid for its datatype.");
                     table = view.Grid2.DataSource;
+                    Type dataType = table.Columns[cell.ColIndex].DataType;
+                    object newValue = ReflectionUtilities.StringToObject(dataType, cell.NewValue);
+                    table.Rows[cell.RowIndex][cell.ColIndex] = newValue;
+
                     ChangeProperty cmd = new ChangeProperty(tableModel, "Tables", new List<DataTable>() { table });
                     explorerPresenter.CommandHistory.Add(cmd);
                 }

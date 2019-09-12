@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IUptake.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.PMF.Interfaces
+﻿namespace Models.PMF.Interfaces
 {
     using Soils.Arbitrator;
     using System.Collections.Generic;
