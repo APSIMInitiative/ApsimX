@@ -46,6 +46,8 @@
         {
             get
             {
+                if (storage == null)
+                    return PathUtilities.GetAbsolutePath(this.FileName, (Apsim.Parent(this, typeof(Simulations)) as Simulations).FileName);
                 return PathUtilities.GetAbsolutePath(this.FileName, storage.FileName);
             }
 

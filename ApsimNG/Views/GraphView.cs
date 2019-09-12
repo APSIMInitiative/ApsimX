@@ -233,6 +233,21 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get
+            {
+                return plot1.Model.LegendPlacement == LegendPlacement.Inside;
+            }
+            set
+            {
+                plot1.Model.LegendPlacement = value ? LegendPlacement.Inside : LegendPlacement.Outside;
+            }
+        }
+
+        /// <summary>
         /// Clear the graph of everything.
         /// </summary>
         public void Clear()
@@ -830,7 +845,6 @@ namespace UserInterface.Views
             {
                 this.plot1.Model.LegendFont = Font;
                 this.plot1.Model.LegendFontSize = FontSize;
-                this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
             this.plot1.Model.LegendSymbolLength = 30;
@@ -883,10 +897,15 @@ namespace UserInterface.Views
         /// <param name="text">Text of the title</param>
         public void FormatTitle(string text)
         {
-            this.plot1.Model.Title = text;
-            this.plot1.Model.TitleFont = Font;
-            this.plot1.Model.TitleFontSize = 30;
-            this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
+            if (string.IsNullOrWhiteSpace(text))
+                plot1.Model.Title = null;
+            else
+            {
+                this.plot1.Model.Title = text;
+                this.plot1.Model.TitleFont = Font;
+                this.plot1.Model.TitleFontSize = 30;
+                this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
+            }
         }
 
         /// <summary>
