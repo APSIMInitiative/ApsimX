@@ -1,6 +1,7 @@
 [weather.met.weather]
 Site = ETComeHome.ETData.NIWAStation
-Latitude = -43.70
+Latitude=-43.63 
+Longitude=172.466 
 tav = 14.0
 amp = 17
 year    day     rain    maxt    mint    mean    radn    wind    vp
