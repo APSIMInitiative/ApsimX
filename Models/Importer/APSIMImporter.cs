@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
     using System.Xml;
@@ -53,6 +54,13 @@
     /// </summary>
     public class APSIMImporter
     {
+        private class IrrigationParams
+        {
+            public string Path;
+            public double Depth;
+            public double Threshold;
+        }
+
         private string[] cropNames = {"AgPasture", "Bambatsi", "Banana2", "Barley", "BarleySWIM",
                                       "Broccoli","ButterflyPea","Canola","CanolaSWIM","Centro",
                                       "Chickpea","Chickpea2","Chicory","cloverseed","Cotton2",
@@ -81,6 +89,8 @@
         /// Used as flags during importation
         /// </summary>
         private bool microClimateExists = false;
+
+        private List<IrrigationParams> paddocksWithAutoIrrigation = new List<IrrigationParams>();
 
         /// <summary>
         /// Used as flags during importation
@@ -211,8 +221,48 @@
 
             List<Exception> creationExceptions;
             newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, out creationExceptions);
+
+            AddAutoIrrigation(newSimulations);
             File.Delete(xfile);
             return newSimulations;
+        }
+
+        private void AddAutoIrrigation(Simulations newSimulations)
+        {
+            Simulations toolbox = GetStandardToolBox();
+            Models.Manager template = Apsim.Child(toolbox, "Automatic irrigation based on water deficit") as Models.Manager;
+
+            int depthIndex = template.Parameters.FindIndex(p => p.Key == "FASWDepth");
+            int thresholdIndex = template.Parameters.FindIndex(p => p.Key == "FASWThreshold");
+
+            foreach (var param in paddocksWithAutoIrrigation)
+            {
+                IModel zone = Find(newSimulations, param.Path);
+                if (zone == null)
+                    continue;
+
+                Models.Manager manager = (Models.Manager)ReflectionUtilities.Clone(template);
+                manager.Children.Clear();
+
+                string depth = param.Depth.ToString(CultureInfo.InvariantCulture);
+                string threshold = param.Threshold.ToString(CultureInfo.InvariantCulture);
+
+                manager.Parameters[depthIndex] = new KeyValuePair<string, string>("FASWDepth", depth);
+                manager.Parameters[thresholdIndex] = new KeyValuePair<string, string>("FASWThreshold", threshold);
+
+                Structure.Add(manager, zone);
+            }
+        }
+
+        private IModel Find(Simulations newSimulations, string path)
+        {
+            IModel node = newSimulations;
+
+            string[] elems = path.Split('/').Where(e => !string.IsNullOrEmpty(e)).ToArray();
+            for (int i = 1; i < elems.Length; i++)
+                node = Apsim.Child(node, elems[i]);
+
+            return node;
         }
 
         /// <summary>
@@ -434,9 +484,26 @@
                 {
                     this.ImportPlant(compNode, destParent, newNode);
                 }
-                else
+                else if (compNode.Name == "irrigation")
                 {
-                    // Do nothing.
+                    XmlNode autoIrrigate = XmlUtilities.ChildByNameAndType(compNode, "automatic_irrigation", "automatic_irrigation");
+                    if (autoIrrigate.InnerText == "on")
+                    {
+                        IrrigationParams param = new IrrigationParams();
+
+                        // Need to import auto irrigation script but this is much easier after deserialisation.
+                        param.Path = XmlUtilities.FullPath(compNode).TrimEnd("/Irrigation".ToCharArray());
+
+                        XmlNode depth = XmlUtilities.ChildByNameAndType(compNode, "asw_depth", "asw_depth");
+                        if (depth != null)
+                            param.Depth = double.Parse(depth.InnerText);
+
+                        XmlNode threshold = XmlUtilities.ChildByNameAndType(compNode, "crit_fr_asw", "crit_fr_asw");
+                        if (threshold != null)
+                            param.Threshold = double.Parse(threshold.InnerText);
+
+                        paddocksWithAutoIrrigation.Add(param);
+                    }
                 }
             }
             catch (Exception exp)
@@ -444,6 +511,21 @@
                 throw new Exception("Cannot import " + compNode.Name + " :Error - " + exp.ToString() + "\n");
             }
             return newNode;
+        }
+
+        private Simulations GetStandardToolBox()
+        {
+            string toolbox;
+            Assembly apsimNG = Assembly.GetEntryAssembly();
+            using (Stream stream = apsimNG.GetManifestResourceStream("ApsimNG.Resources.Toolboxes.ManagementToolbox.apsimx"))
+                using (StreamReader reader = new StreamReader(stream))
+                    toolbox = reader.ReadToEnd();
+
+            Simulations result = FileFormat.ReadFromString<Simulations>(toolbox, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            return result;
         }
 
         /// <summary>
