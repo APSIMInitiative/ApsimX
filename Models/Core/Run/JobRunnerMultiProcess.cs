@@ -45,6 +45,14 @@
             }
         }
 
+        /// <summary>
+        /// Stop the APSIMRunners.
+        /// </summary>
+        public override void Stop()
+        {
+            DeleteRunners();
+        }
+
         /// <summary>Main worker thread.</summary>
         protected override void WorkerThread()
         {
