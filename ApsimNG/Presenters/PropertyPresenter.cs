@@ -161,6 +161,7 @@ namespace UserInterface.Presenters
                 base.Detach();
                 grid.CellsChanged -= OnCellsChanged;
                 grid.ButtonClick -= OnFileBrowseClick;
+                grid.ContextItemsNeeded -= GetContextItems;
                 presenter.CommandHistory.ModelChanged -= OnModelChanged;
                 intellisense.ItemSelected -= OnIntellisenseItemSelected;
                 intellisense.Cleanup();
