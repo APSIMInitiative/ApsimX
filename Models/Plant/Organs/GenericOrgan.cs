@@ -292,9 +292,9 @@ namespace Models.PMF.Organs
         {
             if (DMConversionEfficiency.Value() > 0.0)
             {
-                DMDemand.Structural = (dmDemands.Structural.Value() / DMConversionEfficiency.Value() + remobilisationCost.Value()) * parentPlant.populationFactor;
-                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / DMConversionEfficiency.Value()) * parentPlant.populationFactor;
-                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / DMConversionEfficiency.Value()) * parentPlant.populationFactor;
+                DMDemand.Structural = (dmDemands.Structural.Value() / DMConversionEfficiency.Value() + remobilisationCost.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / DMConversionEfficiency.Value()) ;
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / DMConversionEfficiency.Value()) ;
             }
             else
             { // Conversion efficiency is zero!!!!
