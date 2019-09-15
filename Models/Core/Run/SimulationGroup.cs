@@ -100,7 +100,10 @@
         protected override void PostRun(JobCompleteArguments args)
         {
             lock (this)
-                NumberOfSimulationsCompleted++;
+            {
+                if(!(args.Job is EmptyJob))
+                    NumberOfSimulationsCompleted++;
+            }
         }
 
         /// <summary>Called once when all jobs have completed running. Should throw on error.</summary>
@@ -171,6 +174,10 @@
                     // Find simulations to run.
                     if (runSimulations)
                         FindListOfSimulationsToRun(relativeTo, simulationNamesToRun);
+
+                    
+                    if (numJobsToRun == 0)
+                       Add(new EmptyJob());
 
                     // Find a storage model.
                     storage = Apsim.Child(rootModel, typeof(IDataStore)) as IDataStore;
