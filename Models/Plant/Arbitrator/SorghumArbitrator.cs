@@ -349,7 +349,7 @@ namespace Models.PMF
                         if (TTFMFromFlowering > NUptakeCease)
                             totalMassFlow = 0;
                         actualMassFlow = totalMassFlow;
-
+                        
                         if (totalMassFlow < nDemand && TTFMFromFlowering < NUptakeCease) // fixme && ttElapsed < nUptakeCease
                         {
                             actualDiffusion = MathUtilities.Bound(nDemand - totalMassFlow, 0.0, totalDiffusion);

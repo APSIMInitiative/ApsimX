@@ -232,8 +232,8 @@
                 {
                     if (rootModel is Simulations)
                         (rootModel as Simulations).Links.Resolve(tool as IModel);
-                    if ((tool as IModel).Enabled)
-                        tool.Run();
+                    //if ((tool as IModel).Enabled)
+                    //    tool.Run();
                 }
                 catch (Exception err)
                 {
