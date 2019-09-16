@@ -210,10 +210,12 @@ namespace UserInterface.Views
                 {
                     TreeIter iter;
                     listmodel.GetIter(out iter, selPath[0]);
+                    string result;
                     if (listmodel.GetValue(iter, 1) != null)
-                        return (string)listmodel.GetValue(iter, 2);
+                        result = (string)listmodel.GetValue(iter, 2);
                     else
-                        return (string)listmodel.GetValue(iter, 0);
+                        result = (string)listmodel.GetValue(iter, 0);
+                    return isModels ? result : result.Replace("&amp;", "&");
                 }
             }
             set
