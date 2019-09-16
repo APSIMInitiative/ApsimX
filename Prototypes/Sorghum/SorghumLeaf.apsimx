@@ -4388,14 +4388,14 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Stem].Live.Wt",
+                  "XProperty": "[Stem].dmGreenStem",
                   "Name": "HeightFunction",
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        800.0
+                        80.0
                       ],
                       "Y": [
                         0.0,
@@ -8449,6 +8449,33 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DivideFunction, Models",
+                  "Name": "dmGreenStem",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].Live.Wt",
+                      "Name": "StemWt",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SowingDensity",
+                      "Name": "Destiny",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -8657,7 +8684,10 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
-                        "[Phenology].TTEndJuvToInit.FixedValue = 114"
+                        "[Phenology].TTEndJuvToInit.FixedValue = 114",
+                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].aX0.FixedValue = 0.786"
                       ],
                       "Name": "early",
                       "Children": [],
@@ -8668,7 +8698,10 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
-                        "[Phenology].TTEndJuvToInit.FixedValue = 157"
+                        "[Phenology].TTEndJuvToInit.FixedValue = 157",
+                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].aX0.FixedValue = 0.786"
                       ],
                       "Name": "medium",
                       "Children": [],
@@ -8679,7 +8712,10 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
-                        "[Phenology].TTEndJuvToInit.FixedValue = 201"
+                        "[Phenology].TTEndJuvToInit.FixedValue = 201",
+                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].aX0.FixedValue = 0.786"
                       ],
                       "Name": "late",
                       "Children": [],
@@ -8737,7 +8773,10 @@
                         "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
                         "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
-                        "[Phenology].TTEndJuvToInit.FixedValue = 114.4"
+                        "[Phenology].TTEndJuvToInit.FixedValue = 114.4",
+                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].aX0.FixedValue = 0.786"
                       ],
                       "Name": "QL39xQL36",
                       "Children": [],
@@ -8790,7 +8829,10 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 205",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
                         "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
-                        "[Phenology].TTFlowerToMaturity.FixedValue = 695"
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695",
+                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].aX0.FixedValue = 0.786"
                       ],
                       "Name": "dekalb_DK55",
                       "Children": [],
@@ -8807,7 +8849,10 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 120",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
                         "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
-                        "[Phenology].TTFlowerToMaturity.FixedValue = 695"
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695",
+                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].aX0.FixedValue = 0.786"
                       ],
                       "Name": "texas_RS610",
                       "Children": [],
@@ -8824,7 +8869,10 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 115",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
                         "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
-                        "[Phenology].TTFlowerToMaturity.FixedValue = 695"
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695",
+                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].aX0.FixedValue = 0.786"
                       ],
                       "Name": "pioneer_s34",
                       "Children": [],
@@ -8841,7 +8889,10 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 159",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
                         "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
-                        "[Phenology].TTFlowerToMaturity.FixedValue = 695"
+                        "[Phenology].TTFlowerToMaturity.FixedValue = 695",
+                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].aX0.FixedValue = 0.786"
                       ],
                       "Name": "texas_671",
                       "Children": [],
