@@ -517,7 +517,7 @@
                         },
                         new MockSummary(),
                         new DataStore(database),
-                        new MockPostSimulationTool(doThrow: false) { Name = "PostSim" }
+                        new MockPostSimulationTool(doThrow: true) { Name = "PostSim" }
                     }
                 };
 
@@ -541,6 +541,10 @@
                 Assert.AreEqual(runner.TotalNumberOfSimulations, 0);
                 Assert.AreEqual(runner.NumberOfSimulationsCompleted, 0);
                 Assert.AreEqual(runner.PercentComplete(), 0);
+
+                // Make sure the expected exception was sent through the all completed jobs event.
+                Assert.AreEqual(argsOfAllCompletedJobs.AllExceptionsThrown.Count, 1);
+                Assert.IsTrue(argsOfAllCompletedJobs.AllExceptionsThrown[0].ToString().Contains("Intentional exception"));
 
                 database.CloseDatabase();
             }

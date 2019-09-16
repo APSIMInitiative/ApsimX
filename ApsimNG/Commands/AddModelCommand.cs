@@ -17,7 +17,7 @@
         private string parentPath;
 
         /// <summary>A string representation of the child model to add.</summary>
-        private string childString;
+        private IModel child;
 
         /// <summary>The explorer view.</summary>
         IExplorerView view;
@@ -33,13 +33,13 @@
 
         /// <summary>Constructor.</summary>
         /// <param name="pathOfParent">The path of the parent model to add the child to.</param>
-        /// <param name="childStringToAdd">The string representation of the model to add.</param>
+        /// <param name="child">The string representation of the model to add.</param>
         /// <param name="explorerView">The explorer view to work with.</param>
         /// <param name="explorerPresenter">The explorer presenter to work with.</param>
-        public AddModelCommand(string pathOfParent, string childStringToAdd, IExplorerView explorerView, ExplorerPresenter explorerPresenter)
+        public AddModelCommand(string pathOfParent, IModel child, IExplorerView explorerView, ExplorerPresenter explorerPresenter)
         {
             parentPath = pathOfParent;
-            childString = childStringToAdd;
+            this.child = child;
             view = explorerView;
             presenter = explorerPresenter;
         }
@@ -53,14 +53,8 @@
                 parent = Apsim.Get(presenter.ApsimXFile, parentPath) as IModel;
                 if (parent == null)
                     throw new Exception("Cannot find model " + parentPath);
-
-                IModel newModel = FileFormat.ReadFromString<IModel>(childString, out List<Exception> exceptions);
-                if (exceptions != null && exceptions.Count > 0)
-                {
-                    presenter.MainPresenter.ShowError(exceptions);
-                    return;
-                }
-                modelToAdd = newModel;
+                
+                modelToAdd = child;
 
                 if (modelToAdd is Simulations && modelToAdd.Children.Count == 1)
                     modelToAdd = modelToAdd.Children[0];
