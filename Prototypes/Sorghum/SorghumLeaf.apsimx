@@ -1953,18 +1953,8 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].DaysFIToStartGrainFill.Value()",
+                                  "VariableName": "[Arbitrator].NDaysFIToSgf",
                                   "Name": "DaysFIToStartGF",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "1DayOffset",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -7757,67 +7747,56 @@
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.3,
-                                          "Units": null,
+                                          "$type": "Models.Functions.MultiplyFunction, Models",
                                           "Name": "PostEventValue",
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.MultiplyFunction, Models",
-                                              "Name": "PlantMinDM",
+                                              "$type": "Models.Functions.DivideFunction, Models",
+                                              "Name": "dmPlantStem",
                                               "Children": [
                                                 {
-                                                  "$type": "Models.Functions.DivideFunction, Models",
-                                                  "Name": "dmPlantStem",
-                                                  "Children": [
-                                                    {
-                                                      "$type": "Models.Functions.VariableReference, Models",
-                                                      "VariableName": "[Stem].Live.Wt",
-                                                      "Name": "dmGreen",
-                                                      "Children": [],
-                                                      "IncludeInDocumentation": true,
-                                                      "Enabled": true,
-                                                      "ReadOnly": false
-                                                    },
-                                                    {
-                                                      "$type": "Models.Functions.VariableReference, Models",
-                                                      "VariableName": "[Plant].SowingData.Density",
-                                                      "Name": "density",
-                                                      "Children": [],
-                                                      "IncludeInDocumentation": true,
-                                                      "Enabled": true,
-                                                      "ReadOnly": false
-                                                    }
-                                                  ],
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Stem].Live.Wt",
+                                                  "Name": "dmGreen",
+                                                  "Children": [],
                                                   "IncludeInDocumentation": true,
                                                   "Enabled": true,
                                                   "ReadOnly": false
                                                 },
                                                 {
-                                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                                  "Name": "SubtractFunction",
-                                                  "Children": [
-                                                    {
-                                                      "$type": "Models.Functions.Constant, Models",
-                                                      "FixedValue": 1.0,
-                                                      "Units": null,
-                                                      "Name": "One",
-                                                      "Children": [],
-                                                      "IncludeInDocumentation": true,
-                                                      "Enabled": true,
-                                                      "ReadOnly": false
-                                                    },
-                                                    {
-                                                      "$type": "Models.Functions.Constant, Models",
-                                                      "FixedValue": 0.2,
-                                                      "Units": null,
-                                                      "Name": "translocFrac",
-                                                      "Children": [],
-                                                      "IncludeInDocumentation": true,
-                                                      "Enabled": true,
-                                                      "ReadOnly": false
-                                                    }
-                                                  ],
+                                                  "$type": "Models.Functions.VariableReference, Models",
+                                                  "VariableName": "[Plant].SowingData.Density",
+                                                  "Name": "density",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.SubtractFunction, Models",
+                                              "Name": "SubtractFunction",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 1.0,
+                                                  "Units": null,
+                                                  "Name": "One",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 0.2,
+                                                  "Units": null,
+                                                  "Name": "translocFrac",
+                                                  "Children": [],
                                                   "IncludeInDocumentation": true,
                                                   "Enabled": true,
                                                   "ReadOnly": false

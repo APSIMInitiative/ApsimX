@@ -99,7 +99,31 @@ namespace Models.PMF
         #endregion
         private List<IModel> uptakeModels = null;
         private List<IModel> zones = null;
+
         private bool firstEstimate;
+        private bool doIncrement;
+        private double stage;
+        private IPhase previousPhase;
+
+        /// <summary>
+        /// (Fractional) number of days from floral init to start grain fill.
+        /// FIXME - This doesn't belong in the arbitrator.
+        /// </summary>
+        public double NDaysFIToSgf
+        {
+            get
+            {
+                int fi = 1 + phenology.StartStagePhaseIndex("FloralInitiation");
+                int sgf = phenology.StartStagePhaseIndex("StartGrainFill");
+                return MathUtilities.Sum(DaysTotal.ToArray(), fi, sgf);
+            }
+        }
+
+        /// <summary>
+        /// DaysTotal - equivalent of phenology->daysTotal in old apsim.
+        /// </summary>
+        [JsonIgnore]
+        public List<double> DaysTotal { get; private set; } = new List<double>();
 
         /// <summary>
         /// Total TTFM accumulated from flowering.
@@ -115,20 +139,106 @@ namespace Models.PMF
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            stage = phenology.Stage;
             uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
             zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
+            DaysTotal = new List<double>();
+            previousPhase = phenology.CurrentPhase;
         }
 
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
             firstEstimate = true;
+            doIncrement = true;
         }
 
         [EventSubscribe("DoPhenology")]
         private void OnEndOfDay(object sender, EventArgs e)
         {
             DltTT = (double)Apsim.Get(this, "[Phenology].DltTT.Value()");
+        }
+
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, EventArgs e)
+        {
+            IncrementDaysTotal(true);
+        }
+
+        [EventSubscribe("PostPhenology")]
+        private void PostPhenology(object sender, EventArgs e)
+        {
+            IncrementDaysTotal(false);
+        }
+
+        /// <summary>
+        /// This is basically one giant hack to calculate the equivalent
+        /// of phenology's daysTotal variable in the old sorghum model.
+        /// 
+        /// This should be refactored out at some point.
+        /// </summary>
+        /// <param name="calcNewStage"></param>
+        private void IncrementDaysTotal(bool calcNewStage)
+        {
+            if (doIncrement)
+            {
+                double newStage = phenology.Stage;
+                if (calcNewStage)
+                    newStage = Math.Floor(newStage) + 1; // 😭
+
+                int phaseIndex = Convert.ToInt32(Math.Floor(newStage));
+                while (DaysTotal.Count <= phaseIndex)
+                    DaysTotal.Add(0);
+
+                if (phaseIndex == Convert.ToInt32(Math.Floor(stage)))
+                    DaysTotal[phaseIndex]++;
+                else if (previousPhase is GenericPhase phase)
+                {
+                    double dltTT = phase.ProgressionForTimeStep;
+                    double potDltTT = DltTT;
+
+                    // TT proportions should be based on dlt in prev phase / total daily dlTT.
+                    // If after flowering, use dltTTFM instead. If on day of flowering, we want
+                    // to mimic a bug in old apsim where the proportion is still based on dltTT.
+                    if (phenology.Between("Flowering", "Maturity") && phaseIndex != 7)
+                        potDltTT = (double)Apsim.Get(this, "[Phenology].DltTTFM.Value()");
+
+                    // Amount of TT which goes to next phase = total TT - amount allocated to previous phase.
+                    double portionInNew = Math.Max(0, potDltTT - dltTT);
+
+                    double propInNew = MathUtilities.Divide(portionInNew, potDltTT, 0);
+                    double propInOld = 1 - propInNew;
+
+                    DaysTotal[phaseIndex] += propInNew;
+                    if (phaseIndex > 0)
+                        DaysTotal[phaseIndex - 1] += propInOld;
+                }
+                else if (previousPhase is EmergingPhase emerg)
+                {
+                    double dltTT = emerg.TTForTimeStep;
+                    double potDltTT = DltTT;
+
+                    // Amount of TT which goes to next phase = total TT - amount allocated to previous phase.
+                    double portionInNew = Math.Max(0, potDltTT - dltTT);
+                    double propInNew = MathUtilities.Divide(portionInNew, potDltTT, 0);
+                    double propInOld = 1 - propInNew;
+
+                    DaysTotal[phaseIndex] += propInNew;
+                    if (phaseIndex > 0)
+                        DaysTotal[phaseIndex - 1] += propInOld;
+                }
+                else
+                {
+                    double propInOld = phaseIndex - stage;
+                    double propInNew = 1 - propInOld;
+                    DaysTotal[phaseIndex] += propInNew;
+                    DaysTotal[phaseIndex - 1] += propInOld;
+                }
+
+                stage = newStage;
+                previousPhase = phenology.CurrentPhase;
+                doIncrement = false;
+            }
         }
 
         #region IUptake interface
@@ -194,9 +304,8 @@ namespace Models.PMF
                 double[] kl = soilCrop.KL;
 
                 if (root.Depth != myZone.Depth)
-                {
                     myZone.Depth += 0;
-                }
+
                 var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
                 var currentLayerProportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
@@ -536,16 +645,19 @@ namespace Models.PMF
 
                         double grainDifferential = BiomassRetranslocated;
 
-                        // Retranslocate from stem.
-                        double stemWtAvail = BAT.RetranslocationSupply[stemIndex];
-                        double stemRetrans = Math.Min(grainDifferential, stemWtAvail);
-                        BAT.Retranslocation[stemIndex] += stemRetrans;
-                        grainDifferential -= stemRetrans;
+                        if (grainDifferential > 0)
+                        {
+                            // Retranslocate from stem.
+                            double stemWtAvail = BAT.RetranslocationSupply[stemIndex];
+                            double stemRetrans = Math.Min(grainDifferential, stemWtAvail);
+                            BAT.Retranslocation[stemIndex] += stemRetrans;
+                            grainDifferential -= stemRetrans;
 
-                        double leafWtAvail = BAT.RetranslocationSupply[leafIndex];
-                        double leafRetrans = Math.Min(grainDifferential, leafWtAvail);
-                        BAT.Retranslocation[leafIndex] += Math.Min(grainDifferential, leafWtAvail);
-                        grainDifferential -= leafRetrans;
+                            double leafWtAvail = BAT.RetranslocationSupply[leafIndex];
+                            double leafRetrans = Math.Min(grainDifferential, leafWtAvail);
+                            BAT.Retranslocation[leafIndex] += Math.Min(grainDifferential, leafWtAvail);
+                            grainDifferential -= leafRetrans;
+                        }
                     }
                 }
             }
