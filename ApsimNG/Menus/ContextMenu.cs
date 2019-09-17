@@ -699,22 +699,23 @@ namespace UserInterface.Presenters
             explorerPresenter.ShowIncludeInDocumentation = !explorerPresenter.ShowIncludeInDocumentation;
         }
 
-        /// <summary>
-        /// Event handler for 'Include in documentation'
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Show page of graphs in documentation", IsToggle = true,
+        [ContextMenu(MenuName = "Folder options",
                      AppliesTo = new Type[] { typeof(Folder) })]
-        public void ShowPageOfGraphs(object sender, EventArgs e)
+        public void ShowFolderOptions(object sender, EventArgs e)
         {
-            Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
-            folder.ShowPageOfGraphs = !folder.ShowPageOfGraphs;
-            foreach (Folder child in Apsim.ChildrenRecursively(folder, typeof(Folder)))
-                child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
-            explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+            try
+            {
+                Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
+                if (folder != null)
+                {
+                    FolderOptionsDialog dialog = new FolderOptionsDialog(folder, explorerPresenter);
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
-
 
         [ContextMenu(MenuName = "Find All References",
                      ShortcutKey = "Shift + F12")]

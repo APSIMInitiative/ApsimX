@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 namespace UserInterface.Presenters
 {
+    using System;
     using System.Collections.Generic;
     using Models.Core;
     using Models.Graph;
@@ -22,6 +23,21 @@ namespace UserInterface.Presenters
         private List<GraphPresenter> presenters = new List<GraphPresenter>();
 
         /// <summary>
+        /// The folder model.
+        /// </summary>
+        private IModel folder;
+
+        /// <summary>
+        /// The explorer presenter.
+        /// </summary>
+        private ExplorerPresenter presenter;
+
+        /// <summary>
+        /// The view.
+        /// </summary>
+        private IFolderView view;
+
+        /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
         /// <param name="model">The axis model</param>
@@ -29,8 +45,34 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            IModel folder = model as IModel;
+            this.folder = model as IModel;
+            this.view = view as IFolderView;
+            this.presenter = explorerPresenter;
 
+            if (folder == null || view == null || presenter == null)
+                throw new ArgumentException();
+            DrawGraphs();
+
+            this.presenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>
+        /// Detach the model from the view.
+        /// </summary>
+        public void Detach()
+        {
+            presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            ClearGraphs();
+        }
+
+        public void Refresh()
+        {
+            ClearGraphs();
+            DrawGraphs();
+        }
+
+        private void DrawGraphs()
+        {
             List<GraphView> views = new List<GraphView>();
 
             foreach (Graph graph in Apsim.Children(folder, typeof(Graph)))
@@ -39,8 +81,9 @@ namespace UserInterface.Presenters
                 {
                     GraphView graphView = new GraphView();
                     GraphPresenter presenter = new GraphPresenter();
-                    explorerPresenter.ApsimXFile.Links.Resolve(presenter);
-                    presenter.Attach(graph, graphView, explorerPresenter);
+
+                    this.presenter.ApsimXFile.Links.Resolve(presenter);
+                    presenter.Attach(graph, graphView, this.presenter);
                     presenters.Add(presenter);
                     views.Add(graphView);
                 }
@@ -48,21 +91,23 @@ namespace UserInterface.Presenters
 
             if (views.Count > 0)
             {
-                (view as IFolderView).SetContols(views);
+                view.NumCols = (folder as Folder)?.NumCols ?? 2;
+                view.SetControls(views);
             }
         }
 
-        /// <summary>
-        /// Detach the model from the view.
-        /// </summary>
-        public void Detach()
+        private void ClearGraphs()
         {
             foreach (GraphPresenter presenter in presenters)
-            {
                 presenter.Detach();
-            }
 
             presenters.Clear();
+        }
+
+        private void OnModelChanged(object changedModel)
+        {
+            if (changedModel == folder)
+                Refresh();
         }
     }
 }

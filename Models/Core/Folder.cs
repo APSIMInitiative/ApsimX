@@ -27,8 +27,15 @@
     public class Folder : Model, ICustomDocumentation
     {
         /// <summary>Show page of graphs?</summary>
+        [Description("Show page of graphs in documentation")]
         public bool ShowPageOfGraphs { get; set; }
 
+        /// <summary>
+        /// Number of columns in page of graphs.
+        /// </summary>
+        [Description("Number of columns in page of graphs")]
+        public int NumCols { get; set; }
+        
         /// <summary>Constructor</summary>
         public Folder()
         {
