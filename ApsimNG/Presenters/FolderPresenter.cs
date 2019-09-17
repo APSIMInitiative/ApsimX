@@ -6,7 +6,6 @@
 namespace UserInterface.Presenters
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Models.Core;
     using Models.Graph;
     using Views;
@@ -33,11 +32,8 @@ namespace UserInterface.Presenters
             IModel folder = model as IModel;
 
             List<GraphView> views = new List<GraphView>();
-            List<Graph> graphs = Apsim.Children(folder, typeof(Graph)).Cast<Graph>().ToList();
-            foreach (Folder child in Apsim.Children(folder, typeof(Folder)))
-                graphs.AddRange(Apsim.Children(child, typeof(Graph)).Cast<Graph>());
 
-            foreach (Graph graph in graphs)
+            foreach (Graph graph in Apsim.Children(folder, typeof(Graph)))
             {
                 if (graph.Enabled)
                 {
