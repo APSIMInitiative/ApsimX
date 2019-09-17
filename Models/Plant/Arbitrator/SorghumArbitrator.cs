@@ -678,6 +678,11 @@ namespace Models.PMF
                 DM.Clear();
                 N.Clear();
 
+                if ((Apsim.Find(this, typeof(Clock)) as Clock).Today.DayOfYear == 52)
+                {
+
+                }
+
                 DMSupplies();
                 DMDemands();
                 PotentialDMAllocation();

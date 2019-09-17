@@ -27,6 +27,10 @@ namespace Models.Functions
         [EventSubscribe("EndOfDay")]
         private void OnEndOfDay(object sender, EventArgs args)
         {
+            if (Name == "NumberFunction" && (Apsim.Find(this, typeof(Clock)) as Clock).Today.DayOfYear == 51)
+            {
+
+            }
             value = child.Value();
         }
 

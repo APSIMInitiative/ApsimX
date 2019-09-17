@@ -303,6 +303,10 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
+            if ((Apsim.Find(this, typeof(Clock)) as Clock).Today.DayOfYear == 52)
+            {
+
+            }
             DMDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
         }
 
