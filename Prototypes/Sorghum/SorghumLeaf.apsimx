@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 65,
+  "Version": 67,
   "Name": "Simulations",
   "Children": [
     {
@@ -1181,6 +1181,31 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].CurrentPhase.ProgressionForTimeStep",
+                      "Name": "ThermalTime",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "Flowering",
+                  "EndStageName": "Maturity",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 0.0,
+                  "FractionRemovedOnHarvest": 0.0,
+                  "FractionRemovedOnGraze": 0.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "TTFromFlowering",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].DltTT",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2618,7 +2643,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].TTFMFromFlowering.Value()",
+                                      "VariableName": "[Phenology].TTFromFlowering.Value()",
                                       "Name": "eTTPostAnthesis",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -2691,7 +2716,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].TTFMFromFlowering.Value()",
+                                              "VariableName": "[Phenology].TTFromFlowering.Value()",
                                               "Name": "is less than eTTPostAnthesis",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -2735,7 +2760,7 @@
                                                     },
                                                     {
                                                       "$type": "Models.Functions.VariableReference, Models",
-                                                      "VariableName": "[Phenology].TTFMFromFlowering.Value()",
+                                                      "VariableName": "[Phenology].TTFromFlowering.Value()",
                                                       "Name": "eTTPostAnthesis",
                                                       "Children": [],
                                                       "IncludeInDocumentation": true,
@@ -9465,8 +9490,8 @@
           "Children": [
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1997-01-08T00:00:00",
-              "EndDate": "1997-06-04T00:00:00",
+              "Start": "1997-01-08T00:00:00",
+              "End": "1997-06-04T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -9539,6 +9564,18 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -9703,6 +9740,18 @@
                         200.0,
                         200.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -9805,6 +9854,18 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
@@ -9886,6 +9947,18 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -9945,6 +10018,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -9987,6 +10072,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -17125,8 +17222,8 @@
           "Children": [
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1997-01-08T00:00:00",
-              "EndDate": "1997-06-04T00:00:00",
+              "Start": "1997-01-08T00:00:00",
+              "End": "1997-06-04T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -17183,6 +17280,18 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -17347,6 +17456,18 @@
                         200.0,
                         200.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -17449,6 +17570,18 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
@@ -17530,6 +17663,18 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -17589,6 +17734,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -17631,6 +17788,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -25617,8 +25786,8 @@
           "Children": [
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1997-01-08T00:00:00",
-              "EndDate": "1997-06-30T00:00:00",
+              "Start": "1997-01-08T00:00:00",
+              "End": "1997-06-30T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -25675,6 +25844,18 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -25839,6 +26020,18 @@
                         200.0,
                         200.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -25941,6 +26134,18 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
@@ -26022,6 +26227,18 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -26081,6 +26298,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -26123,6 +26352,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -35418,8 +35659,8 @@
           "Children": [
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1997-01-08T00:00:00",
-              "EndDate": "1997-06-30T00:00:00",
+              "Start": "1997-01-08T00:00:00",
+              "End": "1997-06-30T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -35476,6 +35717,18 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -35640,6 +35893,18 @@
                         200.0,
                         200.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -35742,6 +36007,18 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
@@ -35823,6 +36100,18 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -35882,6 +36171,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -35924,6 +36225,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -47072,8 +47385,8 @@
           "Children": [
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1997-01-08T00:00:00",
-              "EndDate": "1997-06-30T00:00:00",
+              "Start": "1997-01-08T00:00:00",
+              "End": "1997-06-30T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -47130,6 +47443,18 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -47294,6 +47619,18 @@
                         200.0,
                         200.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "SWCON": [
                         0.3,
                         0.3,
@@ -47396,6 +47733,18 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "FOMCNRatio": 50.0,
                       "Thickness": [
                         100.0,
@@ -47477,6 +47826,18 @@
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -47536,6 +47897,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -47578,6 +47951,18 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-20",
+                        "20-40",
+                        "40-60",
+                        "60-80",
+                        "80-100",
+                        "100-120",
+                        "120-140",
+                        "140-160",
+                        "160-180"
+                      ],
                       "Thickness": [
                         100.0,
                         100.0,
