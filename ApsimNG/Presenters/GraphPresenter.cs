@@ -177,6 +177,21 @@ namespace UserInterface.Presenters
             return seriesDefinitions.Select(s => s.Title).ToArray();
         }
 
+        /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get
+            {
+                return graphView.LegendInsideGraph;
+            }
+            set
+            {
+                graphView.LegendInsideGraph = value;
+            }
+        }
+
         /// <summary>Draws the specified series definition on the view.</summary>
         /// <param name="definition">The definition.</param>
         private void DrawOnView(SeriesDefinition definition)

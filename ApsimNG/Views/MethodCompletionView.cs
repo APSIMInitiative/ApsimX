@@ -213,6 +213,7 @@
                     masterWindow.FocusOutEvent -= OnFocusOut;
                     masterWindow.ButtonPressEvent -= OnFocusOut;
                 }
+                mainWindow.Destroyed -= OnDestroyed;
             }
             catch
             {

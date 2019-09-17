@@ -90,6 +90,7 @@ namespace UserInterface.Presenters
                 // Run all child model post processors.
                 var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
                 runner.Run();
+                (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
             }
             catch (Exception err)
@@ -220,10 +221,9 @@ namespace UserInterface.Presenters
             string internalCBText = this.explorerPresenter.GetClipboardText("_APSIM_MODEL");
             string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
 
-            if (externalCBText == null || externalCBText == "")
-                this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
-            else
-                this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
+            string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
+
+            this.explorerPresenter.Add(text, this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace UserInterface.Presenters
         {
             Model factors = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
             if (factors != null)
-                this.explorerPresenter.Add("<Factor/>", this.explorerPresenter.CurrentNodePath);
+                this.explorerPresenter.Add(new Factor(), this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>

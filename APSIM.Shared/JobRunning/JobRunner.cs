@@ -26,6 +26,12 @@
         /// <summary>Have all jobs completed running?</summary>
         protected bool completed;
 
+        /// <summary>
+        /// A list of jobs current running. 
+        /// We keep track of this to allow us to query how much of each job has been completed
+        /// </summary>
+        public List<IRunnable> SimsRunning { get; private set; } = new List<IRunnable>();
+
         /// <summary>The number of jobs that are currently running.</summary>
         protected int numberJobsRunning;
 
@@ -92,7 +98,7 @@
             if (numberJobsRunning > 0)
             {
                 cancelToken.Cancel();
-                SpinWait.SpinUntil(() => completed);
+                SpinWait.SpinUntil(() => numberJobsRunning == 0);
             }
         }
 
@@ -140,6 +146,9 @@
         /// <param name="jobManager">The job manager owning the job.</param>
         private void RunActualJob(IRunnable job, IJobManager jobManager)
         {
+            if (!(job is JobRunnerSleepJob))
+                SimsRunning.Add(job);
+
             var startTime = DateTime.Now;
 
             Exception error = null;
@@ -156,6 +165,8 @@
             // Signal to JobManager the job has finished.
             InvokeJobCompleted(job, jobManager, startTime, error);
 
+            if (!(job is JobRunnerSleepJob))
+                SimsRunning.Remove(job);
             Interlocked.Decrement(ref numberJobsRunning);
         }
 

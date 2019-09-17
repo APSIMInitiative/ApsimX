@@ -81,7 +81,8 @@ namespace UserInterface.Presenters
         private void PasteCells(object sender, GridCellPasteArgs args)
         {
             List<IGridCell> cellsChanged = new List<IGridCell>();
-            bool invalid = false;
+            List<GridCellChangedArgs> changedArgs = new List<GridCellChangedArgs>();
+
             string[] lines = args.Text.Split(Environment.NewLine.ToCharArray()).Where(line => !string.IsNullOrEmpty(line)).ToArray();
             for (int i = 0; i < lines.Length; i++)
             {
@@ -92,30 +93,35 @@ namespace UserInterface.Presenters
                 int numReadOnlyColumns = 0;
                 for (int j = 0; j < words.Length; j++)
                 {
-                    try
+                    // Skip over any read-only columns.
+                    IGridColumn column = args.Grid.GetColumn(args.StartCell.ColumnIndex + j + numReadOnlyColumns);
+                    while (column != null && column.ReadOnly)
                     {
-                        // Skip over any read-only columns.
-                        IGridColumn column = args.Grid.GetColumn(args.StartCell.ColumnIndex + j + numReadOnlyColumns);
-                        while (column != null && column.ReadOnly)
-                        {
-                            numReadOnlyColumns++;
-                            column = args.Grid.GetColumn(args.StartCell.ColumnIndex + j + numReadOnlyColumns);
-                        }
-                        if (column == null)
-                            throw new Exception("Error pasting into grid - not enough columns.");
-                        IGridCell cell = args.Grid.GetCell(args.StartCell.ColumnIndex + j + numReadOnlyColumns, args.StartCell.RowIndex + i);
-                        cell.Value = Convert.ChangeType(words[j], args.Grid.DataSource.Columns[args.StartCell.ColumnIndex + j + numReadOnlyColumns].DataType);
-                        cellsChanged.Add(cell);
+                        numReadOnlyColumns++;
+                        column = args.Grid.GetColumn(args.StartCell.ColumnIndex + j + numReadOnlyColumns);
                     }
-                    catch
-                    {
-                        invalid = true;
-                    }
+                    if (column == null)
+                        throw new Exception("Error pasting into grid - not enough columns.");
+
+                    int row = args.StartCell.RowIndex + i;
+                    int col = args.StartCell.ColumnIndex + j + numReadOnlyColumns;
+
+                    IGridCell cell = args.Grid.GetCell(col, row);
+
+                    string oldValue = args.Grid.DataSource.Rows[row][col]?.ToString();
+                    string newValue = words[j];
+
+                    changedArgs.Add(new GridCellChangedArgs(row, col, oldValue, newValue));
+
+                    // fixme - this should not be set here. What if the item is an array?
+                    //cell.Value = Convert.ChangeType(words[j], args.Grid.DataSource.Columns[args.StartCell.ColumnIndex + j + numReadOnlyColumns].DataType);
+
+                    cellsChanged.Add(cell);
                 }
             }
             // If some cells were changed then send out an event.
             args.Grid.SelectCells(cellsChanged);
-            args.Grid.Refresh(new GridCellsChangedArgs { ChangedCells = cellsChanged, InvalidValue = invalid });
+            args.Grid.Refresh(new GridCellsChangedArgs(changedArgs.ToArray()));
         }
 
         /// <summary>
@@ -127,27 +133,30 @@ namespace UserInterface.Presenters
             if (args.Grid.ReadOnly)
                 throw new Exception("Unable to delete cells - grid is read-only.");
             List<IGridCell> cellsChanged = new List<IGridCell>();
-
+            List<GridCellChangedArgs> changedArgs = new List<GridCellChangedArgs>();
             for (int row = args.StartCell.RowIndex; row <= args.EndCell.RowIndex; row++)
             {
                 for (int column = args.StartCell.ColumnIndex; column <= args.EndCell.ColumnIndex; column++)
                 {
                     if (!args.Grid.GetColumn(column).ReadOnly)
                     {
+                        string oldValue = args.Grid.DataSource.Rows[row][column]?.ToString();
+                        string newValue = null;
+                        changedArgs.Add(new GridCellChangedArgs(row, column, oldValue, newValue));
                         args.Grid.DataSource.Rows[row][column] = DBNull.Value;
                         cellsChanged.Add(grid.GetCell(column, row));
                     }
                 }
-                if (args.Grid.CanGrow && args.StartCell.ColumnIndex == 0 && args.EndCell.ColumnIndex == args.Grid.DataSource.Columns.Count - 1)
-                {
-                    // User has selected the entire row. In this case, we delete the entire row,
-                    // but only if the grid can change size.
-                    args.Grid.DataSource.Rows.Remove(args.Grid.DataSource.Rows[row]);
-                }
+                //if (args.Grid.CanGrow && args.StartCell.ColumnIndex == 0 && args.EndCell.ColumnIndex == args.Grid.DataSource.Columns.Count - 1)
+                //{
+                //    // User has selected the entire row. In this case, we delete the entire row,
+                //    // but only if the grid can change size.
+                //    args.Grid.DataSource.Rows.Remove(args.Grid.DataSource.Rows[row]);
+                //}
             }
             // If some cells were changed then we will need to update the model.
             if (cellsChanged.Count > 0)
-                args.Grid.Refresh(new GridCellsChangedArgs() { ChangedCells = cellsChanged });
+                args.Grid.Refresh(new GridCellsChangedArgs(changedArgs.ToArray()));
         }
     }
 }

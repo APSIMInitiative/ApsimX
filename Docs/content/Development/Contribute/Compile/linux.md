@@ -42,6 +42,8 @@ This document provides example commands which work under Ubuntu/Debian. If you a
 
 5. Copy ApsimX/ApsimNG/Assemblies/Mono.TextEditor.dll.config to ApsimX/Bin/
 
-6. Set ApsimNG as startup project
+6. Copy ApsimX/ApsimNG/Assemblies/webkit-sharp.dll to ApsimX/Bin/
+
+7. Set ApsimNG as startup project
 
     In MonoDevelop, right click on ApsimNG, and select "Set as Startup Project".

@@ -132,8 +132,8 @@ namespace UserInterface.Presenters
                 BuildScript();
             if (scriptModel != null)
             {
-                propertyPresenter.FindAllProperties(scriptModel);
-                propertyPresenter.PopulateGrid(scriptModel);
+                propertyPresenter.UpdateModel(scriptModel);
+                propertyPresenter.Refresh();
             }
         }
 
@@ -190,7 +190,7 @@ namespace UserInterface.Presenters
                 // User could have added more inputs to manager script - therefore we update the property presenter.
                 scriptModel = Apsim.Child(manager, "Script") as Model;
                 if (scriptModel != null)
-                    propertyPresenter.Attach(scriptModel, managerView.GridView, explorerPresenter);
+                    propertyPresenter.Refresh();
             }
             catch (Exception err)
             {

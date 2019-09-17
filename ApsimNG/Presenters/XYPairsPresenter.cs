@@ -285,6 +285,10 @@ namespace UserInterface.Presenters
         /// <param name="e">The event arguments</param>
         private void OnVariablesGridCellValueChanged(object sender, GridCellsChangedArgs e)
         {
+            // Apply the changes to the grid.
+            ApplyChangesToGrid(e);
+
+            // Save the changed data back to the model.
             this.SaveGrid();
 
             // Refresh all calculated columns.
@@ -294,6 +298,21 @@ namespace UserInterface.Presenters
             if (this.graph != null)
             {
                 this.graphPresenter.DrawGraph();
+            }
+        }
+
+        /// <summary>
+        /// Updates the contents of the grid to reflect changes made by
+        /// the user.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        private void ApplyChangesToGrid(GridCellsChangedArgs e)
+        {
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
+            {
+                // Each cell in the grid is a number (of type double).
+                object newValue = ReflectionUtilities.StringToObject(typeof(double), cell.NewValue);
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = newValue;
             }
         }
 
