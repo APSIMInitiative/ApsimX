@@ -16,10 +16,7 @@ namespace UserInterface.Views
     interface IFolderView
     {
         /// <summary>Sets the user controls to show.</summary>
-        void SetControls(List<GraphView> controls);
-
-        /// <summary>Number of columns in graph panel.</summary>
-        int NumCols { get; set; }
+        void SetContols(List<GraphView> controls);
     }
 
     /// <summary>
@@ -29,8 +26,6 @@ namespace UserInterface.Views
     {
         private Table table;
         private ScrolledWindow scroller;
-        private int numCols = 2;
-        private List<GraphView> graphs;
 
         public FolderView(ViewBase owner) : base(owner)
         {
@@ -51,29 +46,13 @@ namespace UserInterface.Views
             owner = null;
         }
 
-        public int NumCols
-        {
-            get
-            {
-                return (int)table.NColumns;
-            }
-            set
-            {
-                numCols = value;
-                if (graphs != null && graphs.Count > 0)
-                    SetControls(graphs);
-            }
-        }
-
         /// <summary>Sets the controls to show.</summary>
-        public void SetControls(List<GraphView> controls)
+        public void SetContols(List<GraphView> controls)
         {
-            RemoveOldGraphs();
-
-            graphs = controls;
             int numControls = controls.Count;
             if (numControls > 0)
             {
+                uint numCols = 2;
                 uint numRows;
                 if (numControls == 1)
                 {
@@ -81,8 +60,11 @@ namespace UserInterface.Views
                     numRows = 1;
                 }
                 else
+                {
+                    numCols = 2;
                     numRows = (uint)Math.Ceiling((double)numControls / numCols);
-                table.Resize(numRows, (uint)numCols);
+                }
+                table.Resize(numRows, numCols);
                 uint col = 0;
                 uint row = 0;
                 foreach (GraphView gview in controls)
@@ -107,15 +89,6 @@ namespace UserInterface.Views
                     }
                 }
             }
-        }
-
-        private void RemoveOldGraphs()
-        {
-            if (table == null || table.Children == null)
-                return;
-
-            while (table.Children.Length > 0)
-                table.Remove(table.Children[0]);
         }
 
         /// <summary>User has double clicked a graph.</summary>
