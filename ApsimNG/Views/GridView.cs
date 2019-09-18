@@ -1940,6 +1940,7 @@
         {
             try
             {
+                (sender as CellRenderer).EditingCanceled += (src, _) => { EndEdit(); };
                 (e.Editable as ComboBox).Changed += (o, _) =>
                 {
                     IGridCell currentCell = GetCurrentCell;

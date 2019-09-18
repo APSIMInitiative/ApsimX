@@ -891,5 +891,16 @@ namespace APSIM.Shared.Utilities
 
         }
 
+        /// <summary>
+        /// Prepares a string for display in a Gtk control which makes use of Pango markup
+        /// by quoting the ampersand character
+        /// </summary>
+        /// <param name="s">Input string</param>
+        /// <returns>The string with any ampersand characters quoted</returns>
+        public static string PangoString(string s)
+        {
+            return s.Replace("&", "&amp;");
+        }
+
     }
 }

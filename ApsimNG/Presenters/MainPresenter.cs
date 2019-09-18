@@ -746,7 +746,7 @@
             string fileName = this.view.GetMenuItemFileName(obj);
             if (!string.IsNullOrEmpty(fileName))
             {
-                if (this.AskQuestion("Are you sure you want to completely delete the file " + fileName + "?") == QuestionResponseEnum.Yes)
+                if (this.AskQuestion("Are you sure you want to completely delete the file " + StringUtilities.PangoString(fileName) + "?") == QuestionResponseEnum.Yes)
                 {
                     try
                     {

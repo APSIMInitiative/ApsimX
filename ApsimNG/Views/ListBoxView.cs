@@ -147,7 +147,7 @@ namespace UserInterface.Views
                     int posLastSlash = text.LastIndexOfAny("\\/".ToCharArray());
                     if (posLastSlash != -1)
                     {
-                        text = AddFileNameListItem(val, ref image);
+                        text = AddFileNameListItem(StringUtilities.PangoString(val), ref image);
                     }
                     else if (isModels)
                     {
@@ -162,7 +162,8 @@ namespace UserInterface.Views
                         else
                             image = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
                     }
-                    listmodel.AppendValues(text, image, val);
+                    string tooltip = isModels ? val : StringUtilities.PangoString(val);
+                    listmodel.AppendValues(text, image, tooltip);
                 }
             }
         }
@@ -209,10 +210,12 @@ namespace UserInterface.Views
                 {
                     TreeIter iter;
                     listmodel.GetIter(out iter, selPath[0]);
+                    string result;
                     if (listmodel.GetValue(iter, 1) != null)
-                        return (string)listmodel.GetValue(iter, 2);
+                        result = (string)listmodel.GetValue(iter, 2);
                     else
-                        return (string)listmodel.GetValue(iter, 0);
+                        result = (string)listmodel.GetValue(iter, 0);
+                    return isModels ? result : result.Replace("&amp;", "&");
                 }
             }
             set
