@@ -281,7 +281,7 @@
         /// Compile the specified 'code' into an executable assembly. If 'assemblyFileName'
         /// is null then compile to an in-memory assembly.
         /// </summary>
-        public static Assembly CompileTextToAssembly(string code, string assemblyFileName)
+        public static Assembly CompileTextToAssembly(string code, string assemblyFileName, params string[] referencedAssemblies)
         {
             // See if we've already compiled this code. If so then return the assembly.
             if (AssemblyCache.ContainsKey(code))
@@ -334,6 +334,7 @@
                         Params.ReferencedAssemblies.Add(typeof(MathNet.Numerics.Fit).Assembly.Location); // MathNet.Numerics
                         Params.ReferencedAssemblies.Add(typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location); // APSIM.Shared.dll
                         Params.ReferencedAssemblies.Add(typeof(IModel).Assembly.Location); // Models.exe
+                        Params.ReferencedAssemblies.AddRange(referencedAssemblies);
 
                         if (!Params.ReferencedAssemblies.Contains(Assembly.GetCallingAssembly().Location))
                             Params.ReferencedAssemblies.Add(Assembly.GetCallingAssembly().Location);

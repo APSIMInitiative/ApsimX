@@ -53,16 +53,7 @@ namespace Models.PMF
         [Link(IsOptional = true)]
         public Biomass AboveGround { get; set; }
 
-        /// <summary>The factor to reduce DM and N demands at low plant populations</summary>
-        [Units("0-1")]
-        [Link(IsOptional = true)]
-        IFunction PopulationFactor = null;
-        
-		/// <summary> Factor to multiply plant variables by that are sensitive to plant population  </summary>
-        [XmlIgnore]
-        public double populationFactor { get; set; }
-        
-		/// <summary> Clock </summary>
+       /// <summary> Clock </summary>
         [Link]
         public Clock Clock = null;
 
@@ -270,10 +261,6 @@ namespace Models.PMF
             //Reduce plant population in case of mortality
             if (Population > 0.0 && MortalityRate != null)
                 Population -= Population * MortalityRate.Value();
-            if (PopulationFactor != null)
-                populationFactor = PopulationFactor.Value();
-            else
-                populationFactor = 1.0;
         }
 
         /// <summary>Called at the end of the day.</summary>
