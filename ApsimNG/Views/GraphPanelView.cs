@@ -10,7 +10,6 @@ namespace UserInterface.Views
     {
         private GridView propertiesGrid;
         private Notebook notebook;
-        private ManagerView scriptEditor;
 
         public GraphPanelView(ViewBase owner) : base(owner)
         {
@@ -20,9 +19,6 @@ namespace UserInterface.Views
             propertiesGrid = new GridView(this);
             notebook.AppendPage(propertiesGrid.MainWidget, new Label("Properties"));
 
-            scriptEditor = new ManagerView(this);
-            notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
-
             mainWidget = notebook;
         }
 
@@ -30,12 +26,7 @@ namespace UserInterface.Views
         /// Grid which displays the model's properties.
         /// </summary>
         public IGridView PropertiesGrid { get { return propertiesGrid; } }
-
-        /// <summary>
-        /// View which displays the manager script and its properties tab.
-        /// </summary>
-        public IManagerView ScriptEditor { get { return scriptEditor; } }
-
+        
         /// <summary>
         /// Index of the currently selected tab.
         /// </summary>
@@ -84,7 +75,7 @@ namespace UserInterface.Views
         /// </summary>
         public void RemoveGraphTabs()
         {
-            while (notebook.NPages > 2)
+            while (notebook.NPages > 1)
                 notebook.RemovePage(notebook.NPages - 1);
         }
     }

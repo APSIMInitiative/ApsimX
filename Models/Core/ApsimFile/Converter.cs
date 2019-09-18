@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 68; } }
+        public static int LatestVersion { get { return 67; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1252,18 +1252,7 @@
                 clock["End"] = clock["EndDate"];
             }
         }
-
-        /// <summary>
-        /// Upgrades to version 68. Sets the NumCols property of folder to 2.
-        /// </summary>
-        /// <param name="root"></param>
-        /// <param name="fileName"></param>
-        private static void UpgradeToVersion68(JObject root, string fileName)
-        {
-            foreach (JObject folder in JsonUtilities.ChildrenRecursively(root, "Folder"))
-                folder["NumCols"] = 2;
-        }
-
+        
         /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>

@@ -24,21 +24,19 @@ namespace Models.Graph
     public class GraphPanel : Model
     {
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        public GraphPanel()
-        {
-            Script = new Manager();
-            Script.Code = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.GraphPanelScriptTemplate.cs");
-        }
-
-        /// <summary>
         /// Called when the model is deserialised.
         /// </summary>
         public override void OnCreated()
         {
+            if (Apsim.Child(this, typeof(Manager)) == null)
+            {
+                Manager script = new Manager();
+                script.Name = "Config";
+                script.Code = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.GraphPanelScriptTemplate.cs");
+                Children.Insert(0, script);
+            }
+
             base.OnCreated();
-            Script.OnCreated();
         }
 
         /// <summary>
@@ -56,7 +54,14 @@ namespace Models.Graph
         /// <summary>
         /// Script which controls tab generation.
         /// </summary>
-        public Manager Script { get; set; }
+        public IGraphPanelScript Script
+        {
+            get
+            {
+                Manager manager = Apsim.Child(this, typeof(Manager)) as Manager;
+                return manager?.Children?.FirstOrDefault() as IGraphPanelScript;
+            }
+        }
 
         /// <summary>
         /// Index of the current tab.

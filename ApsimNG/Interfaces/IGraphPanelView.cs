@@ -9,12 +9,7 @@ namespace UserInterface.Interfaces
         /// Grid which displays the model's properties.
         /// </summary>
         IGridView PropertiesGrid { get; }
-
-        /// <summary>
-        /// View which displays the manager script and its properties tab.
-        /// </summary>
-        IManagerView ScriptEditor { get; }
-
+        
         /// <summary>
         /// Index of the currently selected tab.
         /// </summary>

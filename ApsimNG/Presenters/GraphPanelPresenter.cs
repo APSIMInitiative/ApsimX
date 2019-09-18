@@ -34,11 +34,6 @@ namespace UserInterface.Presenters
         private PropertyPresenter properties;
 
         /// <summary>
-        /// Presenter for the manager script.
-        /// </summary>
-        private ManagerPresenter manager;
-
-        /// <summary>
         /// Graph presenters.
         /// </summary>
         private List<GraphPresenter> graphPresenters;
@@ -76,7 +71,6 @@ namespace UserInterface.Presenters
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             ClearGraphs();
             properties.Detach();
-            manager.Detach();
         }
 
         private void OnModelChanged(object changedModel)
@@ -93,9 +87,6 @@ namespace UserInterface.Presenters
             properties = new PropertyPresenter();
             properties.Attach(panel, view.PropertiesGrid, presenter);
 
-            manager = new ManagerPresenter();
-            manager.Attach(panel.Script, view.ScriptEditor, presenter);
-
             Refresh();
             view.CurrentTab = panel.CurrentTab;
         }
@@ -105,7 +96,7 @@ namespace UserInterface.Presenters
             ClearGraphs();
             Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
 
-            IGraphPanelScript script = panel.Script.Children?.FirstOrDefault() as IGraphPanelScript;
+            IGraphPanelScript script = panel.Script;
             if (script != null)
             {
                 IStorageReader reader = GetStorage();
