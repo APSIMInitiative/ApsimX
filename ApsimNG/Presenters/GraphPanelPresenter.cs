@@ -112,7 +112,7 @@ namespace UserInterface.Presenters
                 string[] simNames = script.GetSimulationNames(reader, panel);
                 if (simNames != null)
                     foreach (string sim in simNames)
-                        CreatePageOfGraphs(sim, graphs);
+                        CreatePageOfGraphs(sim, graphs, script);
             }
         }
 
@@ -128,7 +128,7 @@ namespace UserInterface.Presenters
             graphViews = new List<GraphView>();
         }
 
-        private void CreatePageOfGraphs(string sim, Graph[] graphs)
+        private void CreatePageOfGraphs(string sim, Graph[] graphs, IGraphPanelScript script)
         {
             List<GraphView> views = new List<GraphView>();
             foreach (Graph graph in graphs)
@@ -138,6 +138,8 @@ namespace UserInterface.Presenters
                     GraphView graphView = new GraphView();
                     GraphPresenter presenter = new GraphPresenter();
                     presenter.SimulationFilter = new List<string>() { sim };
+
+                    script.TransformGraph(graph, sim);
 
                     this.presenter.ApsimXFile.Links.Resolve(presenter);
                     presenter.Attach(graph, graphView, this.presenter);

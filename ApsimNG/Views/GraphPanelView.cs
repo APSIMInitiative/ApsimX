@@ -15,6 +15,7 @@ namespace UserInterface.Views
         public GraphPanelView(ViewBase owner) : base(owner)
         {
             notebook = new Notebook();
+            notebook.Scrollable = true;
 
             propertiesGrid = new GridView(this);
             notebook.AppendPage(propertiesGrid.MainWidget, new Label("Properties"));

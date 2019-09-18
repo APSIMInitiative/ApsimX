@@ -19,5 +19,12 @@ namespace Models.Graph
         /// <param name="storage">Provides access to the datastore.</param>
         /// <param name="panel">Provides access to the graph panel and the simulations tree.</param>
         string[] GetSimulationNames(IStorageReader storage, GraphPanel panel);
+
+        /// <summary>
+        /// Called on each graph before it is drawn in a tab.
+        /// </summary>
+        /// <param name="graph">The graph.</param>
+        /// <param name="simulationName">Simulation name for this tab.</param>
+        void TransformGraph(Graph graph, string simulationName);
     }
 }
