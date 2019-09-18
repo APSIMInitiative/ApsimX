@@ -73,12 +73,6 @@ namespace UserInterface.Presenters
             properties.Detach();
         }
 
-        private void OnModelChanged(object changedModel)
-        {
-            if (changedModel == panel || changedModel == panel.Script || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
-                Refresh();
-        }
-
         /// <summary>
         /// Populates the view.
         /// </summary>
@@ -93,17 +87,25 @@ namespace UserInterface.Presenters
 
         private void Refresh()
         {
-            ClearGraphs();
-            Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
-
-            IGraphPanelScript script = panel.Script;
-            if (script != null)
+            try
             {
-                IStorageReader reader = GetStorage();
-                string[] simNames = script.GetSimulationNames(reader, panel);
-                if (simNames != null)
-                    foreach (string sim in simNames)
-                        CreatePageOfGraphs(sim, graphs, script);
+                presenter.MainPresenter.ShowWaitCursor(true);
+                ClearGraphs();
+                Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
+
+                IGraphPanelScript script = panel.Script;
+                if (script != null)
+                {
+                    IStorageReader reader = GetStorage();
+                    string[] simNames = script.GetSimulationNames(reader, panel);
+                    if (simNames != null)
+                        foreach (string sim in simNames)
+                            CreatePageOfGraphs(sim, graphs);
+                }
+            }
+            finally
+            {
+                presenter.MainPresenter.ShowWaitCursor(false);
             }
         }
 
@@ -119,7 +121,7 @@ namespace UserInterface.Presenters
             graphViews = new List<GraphView>();
         }
 
-        private void CreatePageOfGraphs(string sim, Graph[] graphs, IGraphPanelScript script)
+        private void CreatePageOfGraphs(string sim, Graph[] graphs)
         {
             List<GraphView> views = new List<GraphView>();
             foreach (Graph graph in graphs)
@@ -130,10 +132,16 @@ namespace UserInterface.Presenters
                     GraphPresenter presenter = new GraphPresenter();
                     presenter.SimulationFilter = new List<string>() { sim };
 
-                    script.TransformGraph(graph, sim);
+                    panel.Script.TransformGraph(graph, sim);
 
                     this.presenter.ApsimXFile.Links.Resolve(presenter);
-                    presenter.Attach(graph, graphView, this.presenter);
+                    if (panel.Cache.ContainsKey(sim))
+                        presenter.Attach(graph, graphView, this.presenter, panel.Cache[sim]);
+                    else
+                    {
+                        presenter.Attach(graph, graphView, this.presenter);
+                        panel.Cache[sim] = presenter.SeriesDefinitions;
+                    }
 
                     graphPresenters.Add(presenter);
                     graphViews.Add(graphView);
@@ -175,6 +183,12 @@ namespace UserInterface.Presenters
         private IStorageReader GetStorage()
         {
             return (Apsim.Find(panel, typeof(IDataStore)) as IDataStore).Reader;
+        }
+
+        private void OnModelChanged(object changedModel)
+        {
+            if (changedModel == panel || changedModel == panel.Script || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
+                Refresh();
         }
     }
 }

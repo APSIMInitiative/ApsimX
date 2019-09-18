@@ -2,6 +2,7 @@
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,5 +68,11 @@ namespace Models.Graph
         /// Index of the current tab.
         /// </summary>
         public int CurrentTab { get; set; }
+
+        /// <summary>
+        /// Cached graph data.
+        /// </summary>
+        [JsonIgnore]
+        public Dictionary<string, List<SeriesDefinition>> Cache { get; set; } = new Dictionary<string, List<SeriesDefinition>>();
     }
 }
