@@ -7,8 +7,10 @@ namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Models.Core;
     using Models.Graph;
+    using Models.Storage;
     using Views;
 
     /// <summary>
@@ -25,7 +27,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The folder model.
         /// </summary>
-        private IModel folder;
+        private Folder folder;
 
         /// <summary>
         /// The explorer presenter.
@@ -45,7 +47,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.folder = model as IModel;
+            this.folder = model as Folder;
             this.view = view as IFolderView;
             this.presenter = explorerPresenter;
 
@@ -74,8 +76,10 @@ namespace UserInterface.Presenters
         private void DrawGraphs()
         {
             List<GraphView> views = new List<GraphView>();
+            Graph[] graphs = Apsim.Children(folder, typeof(Graph)).Cast<Graph>().ToArray();
+            Axis[] axes = GetStandardisedAxes(graphs);
 
-            foreach (Graph graph in Apsim.Children(folder, typeof(Graph)))
+            foreach (Graph graph in graphs)
             {
                 if (graph.Enabled)
                 {
@@ -84,6 +88,10 @@ namespace UserInterface.Presenters
 
                     this.presenter.ApsimXFile.Links.Resolve(presenter);
                     presenter.Attach(graph, graphView, this.presenter);
+
+                    if (folder.SameAxes)
+                        FormatAxes(graphView, axes);
+
                     presenters.Add(presenter);
                     views.Add(graphView);
                 }
@@ -91,9 +99,43 @@ namespace UserInterface.Presenters
 
             if (views.Count > 0)
             {
-                view.NumCols = (folder as Folder)?.NumCols ?? 2;
+                view.NumCols = folder.NumCols;
                 view.SetControls(views);
             }
+        }
+
+        private void FormatAxes(GraphView graphView, Axis[] axes)
+        {
+            foreach (Axis axis in axes)
+            {
+                graphView.FormatAxis(axis.Type,
+                                     graphView.AxisTitle(axis.Type),
+                                     axis.Inverted,
+                                     axis.Minimum,
+                                     axis.Maximum,
+                                     axis.Interval,
+                                     axis.CrossesAtZero);
+            }
+        }
+
+        private Axis[] GetStandardisedAxes(Graph[] graphs)
+        {
+            IStorageReader reader = GetStorage();
+            List<SeriesDefinition> seriesDefinitions = graphs.SelectMany(g => g.GetDefinitionsToGraph(reader)).ToList();
+            GraphPresenter graphPresenter = new GraphPresenter();
+            GraphView graphView = new GraphView(view as ViewBase);
+
+            presenter.ApsimXFile.Links.Resolve(graphPresenter);
+            graphPresenter.Attach(graphs[0], graphView, presenter);
+            graphPresenter.DrawGraph(seriesDefinitions);
+
+            return graphView.Axes;
+        }
+
+        private IStorageReader GetStorage()
+        {
+            IDataStore storage = Apsim.Find(folder, typeof(DataStore)) as IDataStore;
+            return storage.Reader;
         }
 
         private void ClearGraphs()

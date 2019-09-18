@@ -30,6 +30,10 @@
         [Description("Show page of graphs in documentation")]
         public bool ShowPageOfGraphs { get; set; }
 
+        /// <summary>Use same axes scales for all graphs?</summary>
+        [Description("Use same axes scales for all graphs?")]
+        public bool SameAxes { get; set; }
+
         /// <summary>
         /// Number of columns in page of graphs.
         /// </summary>
@@ -40,7 +44,9 @@
         public Folder()
         {
             ShowPageOfGraphs = true;
+            NumCols = 2;
         }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>

@@ -83,29 +83,39 @@ namespace UserInterface.Presenters
             graphView.OnHoverOverPoint -= OnHoverOverPoint;
         }
 
-        /// <summary>Draw the graph on the screen.</summary>
         public void DrawGraph()
+        {
+            graphView.Clear();
+            if (storage == null)
+                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
+
+            // Get a list of series definitions.
+            try
+            {
+                seriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader);
+            }
+            catch (SQLiteException e)
+            {
+                explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
+            }
+            catch (FirebirdException e)
+            {
+                explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
+            }
+
+            DrawGraph(seriesDefinitions);
+        }
+
+        /// <summary>Draw the graph on the screen.</summary>
+        public void DrawGraph(List<SeriesDefinition> definitions)
         {
             graphView.Clear();
             if (storage == null)
                 storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
             if (graph != null && graph.Series != null)
             {
-                // Get a list of series definitions.
-                try
-                {
-                    seriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader);
-                }
-                catch (SQLiteException e)
-                {
-                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
-                }
-                catch (FirebirdException e)
-                {
-                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
-                }
 
-                foreach (SeriesDefinition definition in seriesDefinitions)
+                foreach (SeriesDefinition definition in definitions)
                 {
                     DrawOnView(definition);
                 }
@@ -142,7 +152,7 @@ namespace UserInterface.Presenters
                 // they are no longer valid i.e. not on the graph.
                 if (graph.DisabledSeries == null)
                     graph.DisabledSeries = new List<string>();
-                IEnumerable<string> validSeriesTitles = this.seriesDefinitions.Select(s => s.Title);
+                IEnumerable<string> validSeriesTitles = definitions.Select(s => s.Title);
                 List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
                 this.graph.DisabledSeries.Clear();
                 this.graph.DisabledSeries.AddRange(seriesTitlesToKeep);
