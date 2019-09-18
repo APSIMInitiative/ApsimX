@@ -92,7 +92,7 @@ namespace UserInterface.Presenters
             // Get a list of series definitions.
             try
             {
-                seriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader);
+                seriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader, SimulationFilter);
             }
             catch (SQLiteException e)
             {
@@ -186,6 +186,8 @@ namespace UserInterface.Presenters
         {
             return seriesDefinitions.Select(s => s.Title).ToArray();
         }
+
+        public List<string> SimulationFilter { get; set; }
 
         /// <summary>
         /// Iff set to true, the legend will appear inside the graph boundaries.
