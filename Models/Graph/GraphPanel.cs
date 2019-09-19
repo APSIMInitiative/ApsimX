@@ -22,7 +22,7 @@ namespace Models.Graph
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class GraphPanel : Model
+    public class GraphPanel : Model, IPostSimulationTool
     {
         /// <summary>
         /// Called when the model is deserialised.
@@ -38,6 +38,14 @@ namespace Models.Graph
             }
 
             base.OnCreated();
+        }
+
+        /// <summary>
+        /// Clears the cache after simulations are run.
+        /// </summary>
+        public void Run()
+        {
+            Cache.Clear();
         }
 
         /// <summary>
