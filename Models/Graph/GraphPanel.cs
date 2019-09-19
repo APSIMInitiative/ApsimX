@@ -57,7 +57,7 @@ namespace Models.Graph
         /// <summary>
         /// Number of columns in page of graphs.
         /// </summary>
-        [Description("Number of columns in page of graphs")]
+        [Description("Number of columns of graphs per tab")]
         public int NumCols { get; set; } = 2;
 
         /// <summary>

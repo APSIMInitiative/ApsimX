@@ -418,7 +418,8 @@ namespace UserInterface.Presenters
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            DrawGraph();
+            if (model == graph || Apsim.ChildrenRecursively(graph).Contains(model))
+                DrawGraph();
         }
 
         /// <summary>User has clicked an axis.</summary>

@@ -34,14 +34,9 @@ namespace UserInterface.Presenters
         private PropertyPresenter properties;
 
         /// <summary>
-        /// Graph presenters.
+        /// List of graph tabs. Each graph tab consists of a graph, view, and presenter.
         /// </summary>
-        private List<GraphPresenter> graphPresenters;
-
-        /// <summary>
-        /// Graph views.
-        /// </summary>
-        private List<GraphView> graphViews;
+        private List<GraphTab> graphs;
 
         /// <summary>
         /// Attaches the model to the view.
@@ -54,6 +49,7 @@ namespace UserInterface.Presenters
             this.view = view as IGraphPanelView;
             this.panel = model as GraphPanel;
             this.presenter = explorerPresenter;
+            graphs = new List<GraphTab>();
 
             if (this.view == null || this.panel == null || this.presenter == null)
                 throw new ArgumentException();
@@ -102,6 +98,9 @@ namespace UserInterface.Presenters
                         foreach (string sim in simNames)
                             CreatePageOfGraphs(sim, graphs);
                 }
+
+                if (panel.SameAxes)
+                    StandardiseAxes();
             }
             finally
             {
@@ -111,19 +110,18 @@ namespace UserInterface.Presenters
 
         private void ClearGraphs()
         {
-            if (graphPresenters != null)
-            {
-                foreach (GraphPresenter graph in graphPresenters)
-                    graph.Detach();
-            }
+            if (graphs != null)
+                foreach (GraphTab tab in graphs)
+                    foreach (GraphPresenter graphPresenter in tab.Presenters)
+                        graphPresenter.Detach();
+
+            graphs.Clear();
             view.RemoveGraphTabs();
-            graphPresenters = new List<GraphPresenter>();
-            graphViews = new List<GraphView>();
         }
 
         private void CreatePageOfGraphs(string sim, Graph[] graphs)
         {
-            List<GraphView> views = new List<GraphView>();
+            GraphTab tab = new GraphTab(sim);
             for (int i = 0; i < graphs.Length; i++)
             {
                 if (graphs[i].Enabled)
@@ -146,15 +144,49 @@ namespace UserInterface.Presenters
                         panel.Cache[sim][i] = presenter.SeriesDefinitions;
                     }
 
-                    graphPresenters.Add(presenter);
-                    graphViews.Add(graphView);
-                    views.Add(graphView);
+                    tab.AddGraph(graphView, presenter, graphs[i]);
                 }
             }
 
-            view.AddTab(views, panel.NumCols, sim);
+            this.graphs.Add(tab);
+            view.AddTab(tab.Views, panel.NumCols, sim);
         }
 
+        /// <summary>
+        /// Forces the equivalent graphs in each tab to use the same axes.
+        /// ie. The LAI graphs in each simulation will have the same axes.
+        /// </summary>
+        private void StandardiseAxes()
+        {
+            IStorageReader reader = GetStorage();
+
+            // Loop over each graph. ie if each tab contains five
+            // graphs, then loop over these five graphs.
+            int graphsPerPage = panel.Cache.First().Value.Count;
+            for (int i = 0; i < graphsPerPage; i++)
+            {
+                // Get all graph series for this graph from each simulation.
+                // ie. get the data behind each lai graph in each simulation.
+                List<SeriesDefinition> series = panel.Cache.Values.SelectMany(v => v[i]).ToList();
+
+                // Now draw all these series onto a single graph.
+                GraphPresenter graphPresenter = new GraphPresenter();
+                GraphView graphView = new GraphView(view as ViewBase);
+                presenter.ApsimXFile.Links.Resolve(graphPresenter);
+                graphPresenter.Attach(graphs[0].Graphs[i], graphView, presenter);
+                graphPresenter.DrawGraph(series);
+
+                Axis[] axes = graphView.Axes.ToArray(); // This should always be length 2
+                foreach (GraphTab tab in graphs)
+                    FormatAxes(tab.Views[i], axes);
+            }
+        }
+
+        /// <summary>
+        /// Force a graph to use a given set of axes.
+        /// </summary>
+        /// <param name="graphView">Graph view to be modified.</param>
+        /// <param name="axes">Axes to use.</param>
         private void FormatAxes(GraphView graphView, Axis[] axes)
         {
             foreach (Axis axis in axes)
@@ -169,29 +201,49 @@ namespace UserInterface.Presenters
             }
         }
 
-        private Axis[] GetStandardisedAxes(Graph[] graphs)
-        {
-            IStorageReader reader = GetStorage();
-            List<SeriesDefinition> seriesDefinitions = graphs.SelectMany(g => g.GetDefinitionsToGraph(reader)).ToList();
-            GraphPresenter graphPresenter = new GraphPresenter();
-            GraphView graphView = new GraphView(view as ViewBase);
-
-            presenter.ApsimXFile.Links.Resolve(graphPresenter);
-            graphPresenter.Attach(graphs[0], graphView, presenter);
-            graphPresenter.DrawGraph(seriesDefinitions);
-
-            return graphView.Axes;
-        }
-
+        /// <summary>
+        /// Gets a reference to the data store.
+        /// </summary>
         private IStorageReader GetStorage()
         {
             return (Apsim.Find(panel, typeof(IDataStore)) as IDataStore).Reader;
         }
 
+        /// <summary>
+        /// Invoked when the graph panel's properties are modified. Refreshes each tab.
+        /// </summary>
+        /// <param name="changedModel"></param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == panel || changedModel == panel.Script || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
+            if (changedModel == panel || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
                 Refresh();
+        }
+
+        private class GraphTab
+        {
+            public List<GraphView> Views { get; set; }
+
+            public List<GraphPresenter> Presenters { get; set; }
+
+            public List<Graph> Graphs { get; set; }
+
+            public string SimulationName { get; set; }
+
+            public GraphTab(string simulationName)
+            {
+                Views = new List<GraphView>();
+                Presenters = new List<GraphPresenter>();
+                Graphs = new List<Graph>();
+
+                SimulationName = simulationName;
+            }
+
+            public void AddGraph(GraphView view, GraphPresenter presenter, Graph chart)
+            {
+                Views.Add(view);
+                Presenters.Add(presenter);
+                Graphs.Add(chart);
+            }
         }
     }
 }
