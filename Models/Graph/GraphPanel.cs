@@ -75,6 +75,7 @@ namespace Models.Graph
         /// <summary>
         /// Index of the current tab.
         /// </summary>
+        [JsonIgnore]
         public int CurrentTab { get; set; }
 
         /// <summary>
