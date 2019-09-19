@@ -124,23 +124,26 @@ namespace UserInterface.Presenters
         private void CreatePageOfGraphs(string sim, Graph[] graphs)
         {
             List<GraphView> views = new List<GraphView>();
-            foreach (Graph graph in graphs)
+            for (int i = 0; i < graphs.Length; i++)
             {
-                if (graph.Enabled)
+                if (graphs[i].Enabled)
                 {
                     GraphView graphView = new GraphView();
                     GraphPresenter presenter = new GraphPresenter();
                     presenter.SimulationFilter = new List<string>() { sim };
 
-                    panel.Script.TransformGraph(graph, sim);
+                    panel.Script.TransformGraph(graphs[i], sim);
 
                     this.presenter.ApsimXFile.Links.Resolve(presenter);
-                    if (panel.Cache.ContainsKey(sim))
-                        presenter.Attach(graph, graphView, this.presenter, panel.Cache[sim]);
+                    if (panel.Cache.ContainsKey(sim) && panel.Cache[sim].Count > i)
+                        presenter.Attach(graphs[i], graphView, this.presenter, panel.Cache[sim][i]);
                     else
                     {
-                        presenter.Attach(graph, graphView, this.presenter);
-                        panel.Cache[sim] = presenter.SeriesDefinitions;
+                        presenter.Attach(graphs[i], graphView, this.presenter);
+                        if (!panel.Cache.ContainsKey(sim))
+                            panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
+
+                        panel.Cache[sim][i] = presenter.SeriesDefinitions;
                     }
 
                     graphPresenters.Add(presenter);

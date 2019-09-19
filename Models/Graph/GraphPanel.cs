@@ -81,6 +81,6 @@ namespace Models.Graph
         /// Cached graph data.
         /// </summary>
         [JsonIgnore]
-        public Dictionary<string, List<SeriesDefinition>> Cache { get; set; } = new Dictionary<string, List<SeriesDefinition>>();
+        public Dictionary<string, Dictionary<int, List<SeriesDefinition>>> Cache { get; set; } = new Dictionary<string, Dictionary<int, List<SeriesDefinition>>>();
     }
 }
