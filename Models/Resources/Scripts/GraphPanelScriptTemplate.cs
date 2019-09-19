@@ -37,7 +37,7 @@ namespace Models
         /// </summary>
         /// <param name="graph">The graph.</param>
         /// <param name="simulationName">Simulation name for this tab.</param>
-        void TransformGraph(Graph graph, string simulationName)
+        public void TransformGraph(Models.Graph.Graph graph, string simulationName)
         {
         }
     }
