@@ -1232,8 +1232,23 @@ namespace Models
         public double aboveGroundHerbNPP { get; private set; }
 
         /// <summary>
+        /// Herbaceous facet aboveground net primary production
+        /// </summary>
+        [Units("kg/ha")]
+        [XmlIgnore]
+        public double aboveGroundShrubNPP { get; private set; }
+
+        /// <summary>
+        /// Herbaceous facet aboveground net primary production
+        /// </summary>
+        [Units("kg/ha")]
+        [XmlIgnore]
+
+        public double aboveGroundTreeNPP { get; private set; }
+        /// <summary>
         /// Indicate what we are. Dummied for use with CLEM for DARPA project
         /// </summary>
+
         public string CropType { get; private set; } = "NativePasture";
 
 #if !G_RANGE_BUG
@@ -1750,10 +1765,32 @@ namespace Models
                 (totalPotProdLimitedByN[Layer.tree] * facetCover[Facet.tree]);
 
             // APSIM: Calculate above ground NPP for the herbaceous facet
-            aboveGroundHerbNPP = (totalPotProdLimitedByN[Layer.herb] * abovegroundPotProduction[Layer.herb] / totalPotProduction[Layer.herb] * facetCover[Facet.herb]
-                                 + totalPotProdLimitedByN[Layer.herbUnderShrub] * abovegroundPotProduction[Layer.herbUnderShrub] / totalPotProduction[Layer.herbUnderShrub] * facetCover[Facet.shrub]
-                                 + totalPotProdLimitedByN[Layer.herbUnderTree] * abovegroundPotProduction[Layer.herbUnderTree] / totalPotProduction[Layer.herbUnderTree] * facetCover[Facet.tree]) 
-                                  * 10.0;
+            if (totalPotProduction[Layer.herb] > 0.0)
+                aboveGroundHerbNPP = totalPotProdLimitedByN[Layer.herb] * abovegroundPotProduction[Layer.herb] / totalPotProduction[Layer.herb] * facetCover[Facet.herb];
+            else
+                aboveGroundHerbNPP = 0.0;
+            if (totalPotProduction[Layer.herbUnderShrub] > 0.0)
+                aboveGroundHerbNPP += totalPotProdLimitedByN[Layer.herbUnderShrub] * abovegroundPotProduction[Layer.herbUnderShrub] / totalPotProduction[Layer.herbUnderShrub] * facetCover[Facet.shrub];
+            if (totalPotProduction[Layer.herbUnderTree] > 0.0)
+                aboveGroundHerbNPP += totalPotProdLimitedByN[Layer.herbUnderTree] * abovegroundPotProduction[Layer.herbUnderTree] / totalPotProduction[Layer.herbUnderTree] * facetCover[Facet.tree];
+            aboveGroundHerbNPP *= 10.0; // Convert units
+
+            // APSIM: Calculate above ground NPP for the shrub facet
+            if (totalPotProduction[Layer.shrub] > 0.0)
+                aboveGroundShrubNPP = totalPotProdLimitedByN[Layer.shrub] * abovegroundPotProduction[Layer.shrub] / totalPotProduction[Layer.shrub] * facetCover[Facet.shrub];
+            else
+                aboveGroundShrubNPP = 0.0;
+            if (totalPotProduction[Layer.shrubUnderTree] > 0.0)
+                aboveGroundShrubNPP += totalPotProdLimitedByN[Layer.shrubUnderTree] * abovegroundPotProduction[Layer.shrubUnderTree] / totalPotProduction[Layer.shrubUnderTree] * facetCover[Facet.tree];
+            aboveGroundShrubNPP *= 10.0; // Convert units
+
+            // APSIM: Calculate above ground NPP for the tree facet
+            if (totalPotProduction[Layer.tree] > 0.0)
+                aboveGroundTreeNPP = totalPotProdLimitedByN[Layer.tree] * abovegroundPotProduction[Layer.tree] / totalPotProduction[Layer.tree] * facetCover[Facet.tree];
+            else
+                aboveGroundTreeNPP = 0.0;
+            aboveGroundTreeNPP *= 10.0; // Convert units
+
         }
 
         /// <summary>
