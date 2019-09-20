@@ -13,11 +13,6 @@ namespace UserInterface.Interfaces
         IGridView PropertiesGrid { get; }
         
         /// <summary>
-        /// Index of the currently selected tab.
-        /// </summary>
-        int CurrentTab { get; set; }
-
-        /// <summary>
         /// Adds a new tab containing a page of graphs.
         /// </summary>
         /// <param name="tab">List of graphs and cached data.</param>

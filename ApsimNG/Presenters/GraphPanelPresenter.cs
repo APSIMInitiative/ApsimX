@@ -44,6 +44,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private BackgroundWorker processingThread;
 
+        private WorkerStatus status = new WorkerStatus();
+
         /// <summary>
         /// Attaches the model to the view.
         /// </summary>
@@ -67,6 +69,7 @@ namespace UserInterface.Presenters
 
             processingThread = new BackgroundWorker();
             processingThread.DoWork += WorkerThread;
+            processingThread.RunWorkerCompleted += OnProcessingFinished;
             processingThread.WorkerSupportsCancellation = true;
 
             processingThread.RunWorkerAsync();
@@ -80,50 +83,97 @@ namespace UserInterface.Presenters
             processingThread.CancelAsync();
             processingThread.DoWork -= WorkerThread;
 
-            panel.CurrentTab = view.CurrentTab;
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             ClearGraphs();
             properties.Detach();
         }
 
-        private void WorkerThread(object sender, DoWorkEventArgs e)
-        {
-            Refresh();
-            view.CurrentTab = panel.CurrentTab;
-
-            if (processingThread.CancellationPending)
-                e.Cancel = true;
-        }
-
         private void Refresh()
         {
-            ClearGraphs();
-            Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
-
-            IGraphPanelScript script = panel.Script;
-            if (script != null)
+            lock (status)
             {
-                IStorageReader reader = GetStorage();
-                string[] simNames = script.GetSimulationNames(reader, panel);
-                if (simNames != null)
-                    foreach (string sim in simNames)
-                    {
-                        CreatePageOfGraphs(sim, graphs);
-
-                        if (processingThread.CancellationPending)
-                            return;
-                    }
+                if (status.IsWorking)
+                {
+                    status.Restart = true;
+                    processingThread.CancelAsync();
+                }
+                else
+                    processingThread.RunWorkerAsync();
             }
+        }
 
-            if (panel.SameAxes)
-                StandardiseAxes();
+        private void WorkerThread(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                lock (status)
+                    status.IsWorking = true;
+
+                ClearGraphs();
+                Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
+
+                IGraphPanelScript script = panel.Script;
+                if (script != null)
+                {
+                    IStorageReader reader = GetStorage();
+                    string[] simNames = script.GetSimulationNames(reader, panel);
+                    if (simNames != null)
+                        foreach (string sim in simNames)
+                        {
+                            CreatePageOfGraphs(sim, graphs);
+
+                            if (processingThread.CancellationPending)
+                                return;
+                        }
+                }
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        private void OnProcessingFinished(object sender, RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                bool restart = false;
+                lock (status)
+                {
+                    status.IsWorking = false;
+
+                    if (status.Restart)
+                    {
+                        restart = true;
+                        status.Restart = false;
+                    }
+                }
+
+                if (restart)
+                    processingThread.RunWorkerAsync();
+                else
+                {
+                    // The worker thread has finished. Now standardise the axes (if necessary).
+                    // This will freeze the UI thread while working, but it's easier than the
+                    // alternative which is to have certain parts of this running on the main
+                    // thread, and certain parts running on the worker thread. In such an
+                    // implementation, large chunks of functionality would need to be moved
+                    // into the view and the synchronisation would be a nightmare.
+                    if (panel.SameAxes)
+                        StandardiseAxes();
+                }
+            }
+            catch (Exception err)
+            {
+                presenter.MainPresenter.ShowError(err);
+            }
         }
 
         private void ClearGraphs()
         {
             if (graphs != null)
                 foreach (GraphTab tab in graphs)
-                    foreach (GraphPresenter graphPresenter in tab.Presenters)
+                    foreach (GraphPresenter graphPresenter in tab.Graphs.Select(g => g.Presenter))
                         graphPresenter.Detach();
 
             graphs.Clear();
@@ -138,28 +188,10 @@ namespace UserInterface.Presenters
             {
                 if (graphs[i].Enabled)
                 {
-                    /*
-                    GraphView graphView = new GraphView();
-                    GraphPresenter presenter = new GraphPresenter();
-                    presenter.SimulationFilter = new List<string>() { sim };
-
+                    // Apply transformation to graph.
                     panel.Script.TransformGraph(graphs[i], sim);
-
-                    this.presenter.ApsimXFile.Links.Resolve(presenter);
-                    if (panel.Cache.ContainsKey(sim) && panel.Cache[sim].Count > i)
-                        presenter.Attach(graphs[i], graphView, this.presenter, panel.Cache[sim][i]);
-                    else
-                    {
-                        presenter.Attach(graphs[i], graphView, this.presenter);
-                        if (!panel.Cache.ContainsKey(sim))
-                            panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
-
-                        panel.Cache[sim][i] = presenter.SeriesDefinitions;
-                    }
-                    */
 
                     // Create and fill cache entry if it doesn't exist.
-                    panel.Script.TransformGraph(graphs[i], sim);
                     if (!panel.Cache.ContainsKey(sim) || panel.Cache[sim].Count <= i)
                     {
                         List<SeriesDefinition> definitions = graphs[i].GetDefinitionsToGraph(storage, new List<string>() { sim });
@@ -185,8 +217,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private void StandardiseAxes()
         {
-            IStorageReader reader = GetStorage();
-
             // Loop over each graph. ie if each tab contains five
             // graphs, then loop over these five graphs.
             int graphsPerPage = panel.Cache.First().Value.Count;
@@ -200,12 +230,13 @@ namespace UserInterface.Presenters
                 GraphPresenter graphPresenter = new GraphPresenter();
                 GraphView graphView = new GraphView(view as ViewBase);
                 presenter.ApsimXFile.Links.Resolve(graphPresenter);
-                graphPresenter.Attach(graphs[0].Graphs[i], graphView, presenter);
+                graphPresenter.Attach(graphs[0].Graphs[i].Graph, graphView, presenter);
                 graphPresenter.DrawGraph(series);
 
                 Axis[] axes = graphView.Axes.ToArray(); // This should always be length 2
                 foreach (GraphTab tab in graphs)
-                    FormatAxes(tab.Views[i], axes);
+                    if (tab.Graphs[i].View != null)
+                        FormatAxes(tab.Graphs[i].View, axes);
             }
         }
 
@@ -243,38 +274,47 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             if (changedModel == panel || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
+            {
                 Refresh();
+            }
+        }
+
+        private class WorkerStatus
+        {
+            public bool IsWorking { get; set; }
+            public bool Restart { get; set; }
+        }
+
+        public class PanelGraph
+        {
+            public GraphView View { get; set; }
+            public GraphPresenter Presenter { get; set; }
+            public Graph Graph { get; set; }
+            public List<SeriesDefinition> Cache { get; set; }
+
+            public PanelGraph(Graph chart, List<SeriesDefinition> cache)
+            {
+                Graph = chart;
+                Cache = cache;
+            }
         }
 
         public class GraphTab
         {
-            public List<GraphView> Views { get; set; }
-
-            public List<GraphPresenter> Presenters { get; set; }
-
-            public List<Graph> Graphs { get; set; }
-
-            public List<List<SeriesDefinition>> Cache { get; set; }
-
+            public List<PanelGraph> Graphs { get; set; }
             public string SimulationName { get; set; }
-
             public ExplorerPresenter Presenter { get; set; }
 
             public GraphTab(string simulationName, ExplorerPresenter presenter)
             {
-                Views = new List<GraphView>();
-                Presenters = new List<GraphPresenter>();
-                Graphs = new List<Graph>();
-                Cache = new List<List<SeriesDefinition>>();
-
+                Graphs = new List<PanelGraph>();
                 SimulationName = simulationName;
                 Presenter = presenter;
             }
 
             public void AddGraph(Graph chart, List<SeriesDefinition> cache)
             {
-                Graphs.Add(chart);
-                Cache.Add(cache);
+                Graphs.Add(new PanelGraph(chart, cache));
             }
         }
     }

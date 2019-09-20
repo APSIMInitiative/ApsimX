@@ -30,25 +30,6 @@ namespace UserInterface.Views
         public IGridView PropertiesGrid { get { return propertiesGrid; } }
         
         /// <summary>
-        /// Index of the currently selected tab.
-        /// </summary>
-        public int CurrentTab
-        {
-            get
-            {
-                // todo - is this safe to run on background thread?
-                return notebook.CurrentPage;
-            }
-            set
-            {
-                Application.Invoke(delegate
-                {
-                    notebook.CurrentPage = value;
-                });
-            }
-        }
-
-        /// <summary>
         /// Adds a new tab containing a page of graphs.
         /// </summary>
         /// <param name="tab">List of graphs and cached data.</param>
@@ -72,10 +53,10 @@ namespace UserInterface.Views
                     tab.Presenter.ApsimXFile.Links.Resolve(presenter);
 
                     GraphView view = new GraphView();
-                    presenter.Attach(tab.Graphs[n], view, tab.Presenter, tab.Cache[n]);
+                    presenter.Attach(tab.Graphs[n].Graph, view, tab.Presenter, tab.Graphs[n].Cache);
 
-                    tab.Presenters.Add(presenter);
-                    tab.Views.Add(view);
+                    tab.Graphs[n].Presenter = presenter;
+                    tab.Graphs[n].View = view;
 
                     uint i = (uint)(n / numCols);
                     uint j = (uint)(n % numCols);
@@ -89,8 +70,9 @@ namespace UserInterface.Views
                 notebook.AppendPage(panel, tabLabel);
                 notebook.ShowAll();
 
-                while (GLib.MainContext.Iteration()) ;
+                //while (GLib.MainContext.Iteration()) ;
             });
+            while (GLib.MainContext.Iteration()) ;
         }
 
         /// <summary>
@@ -105,6 +87,7 @@ namespace UserInterface.Views
                 while (notebook.NPages > 1)
                     notebook.RemovePage(notebook.NPages - 1);
             });
+            while (GLib.MainContext.Iteration()) ;
         }
     }
 }
