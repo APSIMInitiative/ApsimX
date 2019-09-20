@@ -104,32 +104,27 @@ namespace UserInterface.Presenters
 
         private void WorkerThread(object sender, DoWorkEventArgs e)
         {
-            try
+            lock (status)
+                status.IsWorking = true;
+
+            ClearGraphs();
+            Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
+
+            IGraphPanelScript script = panel.Script;
+            if (script != null)
             {
-                lock (status)
-                    status.IsWorking = true;
-
-                ClearGraphs();
-                Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
-
-                IGraphPanelScript script = panel.Script;
-                if (script != null)
+                IStorageReader reader = GetStorage();
+                string[] simNames = script.GetSimulationNames(reader, panel);
+                if (simNames != null)
                 {
-                    IStorageReader reader = GetStorage();
-                    string[] simNames = script.GetSimulationNames(reader, panel);
-                    if (simNames != null)
-                        foreach (string sim in simNames)
-                        {
-                            CreatePageOfGraphs(sim, graphs);
+                    foreach (string sim in simNames)
+                    {
+                        CreatePageOfGraphs(sim, graphs);
 
-                            if (processingThread.CancellationPending)
-                                return;
-                        }
+                        if (processingThread.CancellationPending)
+                            return;
+                    }
                 }
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -151,6 +146,8 @@ namespace UserInterface.Presenters
 
                 if (restart)
                     processingThread.RunWorkerAsync();
+                else if (e.Error != null)
+                    presenter.MainPresenter.ShowError(e.Error);
                 else
                 {
                     // The worker thread has finished. Now standardise the axes (if necessary).
@@ -165,7 +162,8 @@ namespace UserInterface.Presenters
                         StandardiseAxes();
                         presenter.MainPresenter.ShowWaitCursor(false);
                     }
-                    presenter.MainPresenter.ShowMessage($"'{panel.Name}': finished loading graphs.", Simulation.MessageType.Information);
+                    int numGraphs = graphs.SelectMany(g => g.Graphs).Count();
+                    presenter.MainPresenter.ShowMessage($"{panel.Name}: finished loading {numGraphs} graphs.", Simulation.MessageType.Information);
                 }
             }
             catch (Exception err)
