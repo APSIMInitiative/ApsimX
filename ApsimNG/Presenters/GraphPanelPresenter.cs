@@ -160,7 +160,12 @@ namespace UserInterface.Presenters
                     // implementation, large chunks of functionality would need to be moved
                     // into the view and the synchronisation would be a nightmare.
                     if (panel.SameAxes)
+                    {
+                        presenter.MainPresenter.ShowWaitCursor(true);
                         StandardiseAxes();
+                        presenter.MainPresenter.ShowWaitCursor(false);
+                    }
+                    presenter.MainPresenter.ShowMessage($"'{panel.Name}': finished loading graphs.", Simulation.MessageType.Information);
                 }
             }
             catch (Exception err)
