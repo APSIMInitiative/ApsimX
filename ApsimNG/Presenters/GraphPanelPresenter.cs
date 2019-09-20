@@ -201,7 +201,7 @@ namespace UserInterface.Presenters
                         {
                             int x = storage.GetSimulationID(sim);
                         }
-                        catch (Exception err)
+                        catch (KeyNotFoundException)
                         {
                             throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
                         }
