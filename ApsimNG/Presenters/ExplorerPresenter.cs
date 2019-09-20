@@ -180,7 +180,7 @@
 
                     if (!File.Exists(this.ApsimXFile.FileName))
                     {
-                        choice = MainPresenter.AskQuestion("The original file '" + this.ApsimXFile.FileName + 
+                        choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) + 
                             "' no longer exists.\n \nClick \"Yes\" to save to this location or \"No\" to discard your work.");
                     }
                     else
@@ -199,7 +199,7 @@
 
                         if (string.Compare(newSim, origSim) != 0)
                         {
-                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + this.ApsimXFile.FileName + " ?");
+                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
                         }
                     }
 
@@ -244,7 +244,7 @@
                 if (this.ApsimXFile.FileName != null)
                 {
                     this.ApsimXFile.Write(this.ApsimXFile.FileName);
-                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", ApsimXFile.FileName), Simulation.MessageType.Information);
+                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
                     return true;
                 }
             }
