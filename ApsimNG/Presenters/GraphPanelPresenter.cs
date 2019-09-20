@@ -122,7 +122,10 @@ namespace UserInterface.Presenters
                         CreatePageOfGraphs(sim, graphs);
 
                         if (processingThread.CancellationPending)
+                        {
+                            e.Cancel = true;
                             return;
+                        }
                     }
                 }
             }
@@ -148,7 +151,7 @@ namespace UserInterface.Presenters
                     processingThread.RunWorkerAsync();
                 else if (e.Error != null)
                     presenter.MainPresenter.ShowError(e.Error);
-                else
+                else if (!e.Cancelled)
                 {
                     // The worker thread has finished. Now standardise the axes (if necessary).
                     // This will freeze the UI thread while working, but it's easier than the
