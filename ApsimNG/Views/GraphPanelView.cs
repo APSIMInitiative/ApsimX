@@ -1,8 +1,10 @@
 ﻿using Gtk;
+using Models.Graph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UserInterface.Interfaces;
+using UserInterface.Presenters;
 
 namespace UserInterface.Views
 {
@@ -34,40 +36,61 @@ namespace UserInterface.Views
         {
             get
             {
+                // todo - is this safe to run on background thread?
                 return notebook.CurrentPage;
             }
             set
             {
-                notebook.CurrentPage = value;
+                Application.Invoke(delegate
+                {
+                    notebook.CurrentPage = value;
+                });
             }
         }
 
         /// <summary>
         /// Adds a new tab containing a page of graphs.
         /// </summary>
-        /// <param name="graphs">Graphs to add to the new tab.</param>
+        /// <param name="tab">List of graphs and cached data.</param>
         /// <param name="numCols">Number of columns into which graphs will be divided.</param>
-        /// <param name="tabName">Tab label text.</param>
-        public void AddTab(List<GraphView> graphs, int numCols, string tabName)
+        public void AddTab(GraphPanelPresenter.GraphTab tab, int numCols)
         {
-            int numRows = graphs.Count / numCols;
-            if (graphs.Count % numCols > 0)
-                numRows++;
-
-            Table panel = new Table((uint)numRows, (uint)numCols, true);
-            for (int n = 0; n < graphs.Count; n++)
+            // This code may be called from a background thread but
+            // must be run on the main UI thread.
+            Application.Invoke(delegate
             {
-                uint i = (uint)(n / numCols);
-                uint j = (uint)(n % numCols);
+                int numGraphs = tab.Graphs.Count;
+                int numRows = numGraphs / numCols;
+                if (numGraphs % numCols > 0)
+                    numRows++;
 
-                panel.Attach(graphs[n].MainWidget, j, j + 1, i, i + 1);
-            }
+                Table panel = new Table((uint)numRows, (uint)numCols, true);
+                for (int n = 0; n < numGraphs; n++)
+                {
+                    GraphPresenter presenter = new GraphPresenter();
+                    presenter.SimulationFilter = new List<string>() { tab.SimulationName };
+                    tab.Presenter.ApsimXFile.Links.Resolve(presenter);
 
-            Label tabLabel = new Label(tabName);
-            tabLabel.UseUnderline = false;
+                    GraphView view = new GraphView();
+                    presenter.Attach(tab.Graphs[n], view, tab.Presenter, tab.Cache[n]);
 
-            notebook.AppendPage(panel, tabLabel);
-            notebook.ShowAll();
+                    tab.Presenters.Add(presenter);
+                    tab.Views.Add(view);
+
+                    uint i = (uint)(n / numCols);
+                    uint j = (uint)(n % numCols);
+
+                    panel.Attach(view.MainWidget, j, j + 1, i, i + 1);
+                }
+
+                Label tabLabel = new Label(tab.SimulationName);
+                tabLabel.UseUnderline = false;
+
+                notebook.AppendPage(panel, tabLabel);
+                notebook.ShowAll();
+
+                while (GLib.MainContext.Iteration()) ;
+            });
         }
 
         /// <summary>
@@ -75,8 +98,13 @@ namespace UserInterface.Views
         /// </summary>
         public void RemoveGraphTabs()
         {
-            while (notebook.NPages > 1)
-                notebook.RemovePage(notebook.NPages - 1);
+            // This code may be called from a background thread but
+            // must be run on the main UI thread.
+            Application.Invoke(delegate
+            {
+                while (notebook.NPages > 1)
+                    notebook.RemovePage(notebook.NPages - 1);
+            });
         }
     }
 }

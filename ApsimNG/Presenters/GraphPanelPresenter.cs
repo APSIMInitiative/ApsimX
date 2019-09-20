@@ -3,6 +3,7 @@ using Models.Graph;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,11 @@ namespace UserInterface.Presenters
         private List<GraphTab> graphs;
 
         /// <summary>
+        /// Background thread responsible for refreshing the view.
+        /// </summary>
+        private BackgroundWorker processingThread;
+
+        /// <summary>
         /// Attaches the model to the view.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -55,7 +61,15 @@ namespace UserInterface.Presenters
                 throw new ArgumentException();
 
             presenter.CommandHistory.ModelChanged += OnModelChanged;
-            PopulateView();
+
+            properties = new PropertyPresenter();
+            properties.Attach(panel, this.view.PropertiesGrid, presenter);
+
+            processingThread = new BackgroundWorker();
+            processingThread.DoWork += WorkerThread;
+            processingThread.WorkerSupportsCancellation = true;
+
+            processingThread.RunWorkerAsync();
         }
 
         /// <summary>
@@ -63,49 +77,46 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            processingThread.CancelAsync();
+            processingThread.DoWork -= WorkerThread;
+
             panel.CurrentTab = view.CurrentTab;
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             ClearGraphs();
             properties.Detach();
         }
 
-        /// <summary>
-        /// Populates the view.
-        /// </summary>
-        private void PopulateView()
+        private void WorkerThread(object sender, DoWorkEventArgs e)
         {
-            properties = new PropertyPresenter();
-            properties.Attach(panel, view.PropertiesGrid, presenter);
-
             Refresh();
             view.CurrentTab = panel.CurrentTab;
+
+            if (processingThread.CancellationPending)
+                e.Cancel = true;
         }
 
         private void Refresh()
         {
-            try
-            {
-                presenter.MainPresenter.ShowWaitCursor(true);
-                ClearGraphs();
-                Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
+            ClearGraphs();
+            Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
 
-                IGraphPanelScript script = panel.Script;
-                if (script != null)
-                {
-                    IStorageReader reader = GetStorage();
-                    string[] simNames = script.GetSimulationNames(reader, panel);
-                    if (simNames != null)
-                        foreach (string sim in simNames)
-                            CreatePageOfGraphs(sim, graphs);
-                }
-
-                if (panel.SameAxes)
-                    StandardiseAxes();
-            }
-            finally
+            IGraphPanelScript script = panel.Script;
+            if (script != null)
             {
-                presenter.MainPresenter.ShowWaitCursor(false);
+                IStorageReader reader = GetStorage();
+                string[] simNames = script.GetSimulationNames(reader, panel);
+                if (simNames != null)
+                    foreach (string sim in simNames)
+                    {
+                        CreatePageOfGraphs(sim, graphs);
+
+                        if (processingThread.CancellationPending)
+                            return;
+                    }
             }
+
+            if (panel.SameAxes)
+                StandardiseAxes();
         }
 
         private void ClearGraphs()
@@ -121,11 +132,13 @@ namespace UserInterface.Presenters
 
         private void CreatePageOfGraphs(string sim, Graph[] graphs)
         {
-            GraphTab tab = new GraphTab(sim);
+            IStorageReader storage = GetStorage();
+            GraphTab tab = new GraphTab(sim, this.presenter);
             for (int i = 0; i < graphs.Length; i++)
             {
                 if (graphs[i].Enabled)
                 {
+                    /*
                     GraphView graphView = new GraphView();
                     GraphPresenter presenter = new GraphPresenter();
                     presenter.SimulationFilter = new List<string>() { sim };
@@ -143,13 +156,27 @@ namespace UserInterface.Presenters
 
                         panel.Cache[sim][i] = presenter.SeriesDefinitions;
                     }
+                    */
 
-                    tab.AddGraph(graphView, presenter, graphs[i]);
+                    // Create and fill cache entry if it doesn't exist.
+                    panel.Script.TransformGraph(graphs[i], sim);
+                    if (!panel.Cache.ContainsKey(sim) || panel.Cache[sim].Count <= i)
+                    {
+                        List<SeriesDefinition> definitions = graphs[i].GetDefinitionsToGraph(storage, new List<string>() { sim });
+                        if (!panel.Cache.ContainsKey(sim))
+                            panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
+
+                        panel.Cache[sim][i] = definitions;
+                    }
+                    tab.AddGraph(graphs[i], panel.Cache[sim][i]);
                 }
+
+                if (processingThread.CancellationPending)
+                    return;
             }
 
             this.graphs.Add(tab);
-            view.AddTab(tab.Views, panel.NumCols, sim);
+            view.AddTab(tab, panel.NumCols);
         }
 
         /// <summary>
@@ -219,7 +246,7 @@ namespace UserInterface.Presenters
                 Refresh();
         }
 
-        private class GraphTab
+        public class GraphTab
         {
             public List<GraphView> Views { get; set; }
 
@@ -227,22 +254,27 @@ namespace UserInterface.Presenters
 
             public List<Graph> Graphs { get; set; }
 
+            public List<List<SeriesDefinition>> Cache { get; set; }
+
             public string SimulationName { get; set; }
 
-            public GraphTab(string simulationName)
+            public ExplorerPresenter Presenter { get; set; }
+
+            public GraphTab(string simulationName, ExplorerPresenter presenter)
             {
                 Views = new List<GraphView>();
                 Presenters = new List<GraphPresenter>();
                 Graphs = new List<Graph>();
+                Cache = new List<List<SeriesDefinition>>();
 
                 SimulationName = simulationName;
+                Presenter = presenter;
             }
 
-            public void AddGraph(GraphView view, GraphPresenter presenter, Graph chart)
+            public void AddGraph(Graph chart, List<SeriesDefinition> cache)
             {
-                Views.Add(view);
-                Presenters.Add(presenter);
                 Graphs.Add(chart);
+                Cache.Add(cache);
             }
         }
     }
