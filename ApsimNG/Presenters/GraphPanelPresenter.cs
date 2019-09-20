@@ -197,6 +197,14 @@ namespace UserInterface.Presenters
                     // Create and fill cache entry if it doesn't exist.
                     if (!panel.Cache.ContainsKey(sim) || panel.Cache[sim].Count <= i)
                     {
+                        try
+                        {
+                            int x = storage.GetSimulationID(sim);
+                        }
+                        catch (Exception err)
+                        {
+                            throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
+                        }
                         List<SeriesDefinition> definitions = graphs[i].GetDefinitionsToGraph(storage, new List<string>() { sim });
                         if (!panel.Cache.ContainsKey(sim))
                             panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
