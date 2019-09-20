@@ -111,14 +111,20 @@
         /// <returns></returns>
         private string GetName(List<CompositeFactor> factors)
         {
-            string newName = Name;
+            string newName = null;
+            string permutationName = null;
             foreach (var factor in factors)
             {
                 if (!(factor.Parent is Factors) && !(factor.Parent is Permutation) )
                     newName += factor.Parent.Name;
+                if (factor.Parent.Parent is Permutation)
+                    permutationName = factor.Parent.Parent.Name;
                 newName += factor.Name;
             }
-            return newName;
+            if (permutationName == null)
+                return Name + newName;
+            else
+                return Name + permutationName + newName;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

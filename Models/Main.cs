@@ -75,7 +75,7 @@
                 else
                 {
                     // Run simulations
-                    var runner = new Runner(fileName, ignorePaths, recurse, runTests, runType);
+                    var runner = new Runner(fileName, ignorePaths, recurse, runTests, runType, numberOfProcessors:numberOfProcessors);
                     runner.SimulationCompleted += OnJobCompleted;
                     runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
                     runner.AllSimulationsCompleted += OnAllJobsCompleted;
@@ -107,15 +107,16 @@
             detailedHelpInfo += Environment.NewLine + Environment.NewLine;
             detailedHelpInfo += "ApsimXFileSpec:          The path to an .apsimx file. May include wildcard.";
             detailedHelpInfo += Environment.NewLine + Environment.NewLine + "Options:" + Environment.NewLine;
-            detailedHelpInfo += "    /Recurse             Recursively search subdirectories for files matching ApsimXFileSpec" + Environment.NewLine;
-            detailedHelpInfo += "    /SingleThreaded      Run all simulations in a single thread." + Environment.NewLine;
-            detailedHelpInfo += "    /RunTests            Run all tests." + Environment.NewLine;
-            detailedHelpInfo += "    /Csv                 Export all reports to .csv files." + Environment.NewLine;
-            detailedHelpInfo += "    /Version             Display the version number." + Environment.NewLine;
-            detailedHelpInfo += "    /Verbose             Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
-            detailedHelpInfo += "    /Upgrade             Upgrades a file to the latest version of the .apsimx file format. Does not run the file." + Environment.NewLine;
-            detailedHelpInfo += "    /MultiProcess        Use the multi-process job runner." + Environment.NewLine;
-            detailedHelpInfo += "    /?                   Show detailed help information.";
+            detailedHelpInfo += "    /Recurse               Recursively search subdirectories for files matching ApsimXFileSpec" + Environment.NewLine;
+            detailedHelpInfo += "    /SingleThreaded        Run all simulations in a single thread." + Environment.NewLine;
+            detailedHelpInfo += "    /RunTests              Run all tests." + Environment.NewLine;
+            detailedHelpInfo += "    /Csv                   Export all reports to .csv files." + Environment.NewLine;
+            detailedHelpInfo += "    /Version               Display the version number." + Environment.NewLine;
+            detailedHelpInfo += "    /Verbose               Write messages to StdOut when a simulation starts/finishes. Only has an effect when running a directory of .apsimx files (*.apsimx)." + Environment.NewLine;
+            detailedHelpInfo += "    /Upgrade               Upgrades a file to the latest version of the .apsimx file format. Does not run the file." + Environment.NewLine;
+            detailedHelpInfo += "    /MultiProcess          Use the multi-process job runner." + Environment.NewLine;
+            detailedHelpInfo += "    /NumberOfProcessors:xx Set the number of processors to use.";
+            detailedHelpInfo += "    /?                     Show detailed help information.";
             Console.WriteLine(detailedHelpInfo);
         }
 
