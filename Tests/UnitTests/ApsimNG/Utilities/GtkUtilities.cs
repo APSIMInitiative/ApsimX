@@ -12,8 +12,15 @@ namespace UnitTests.ApsimNG.Utilities
 {
     public static class GtkUtilities
     {
+        public enum ButtonPressType : uint
+        {
+            LeftClick = 1,
+            MiddleClick = 2,
+            RightClick = 3,
+        };
+
         /// <summary>
-        /// Clicks on a widget.
+        /// Sends a left-click event to a widget.
         /// </summary>
         public static void Click(Widget target)
         {
@@ -34,6 +41,49 @@ namespace UnitTests.ApsimNG.Utilities
         }
 
         /// <summary>
+        /// Sends a custom button press (click) event to a widget.
+        /// </summary>
+        /// <param name="target">Widget which should receive the button press event.</param>
+        /// <param name="eventType">Type of event to be sent.</param>
+        /// <param name="state">Modifiers for the click - ie control click, shift click, etc.</param>
+        /// <param name="button">Type of click - ie left click, middle click or right click.</param>
+        /// <param name="x">x-coordinate of the click, relative to the top-left corner of the widget.</param>
+        /// <param name="y">y-coordinate of the click, relative to the top-left corner of the widget.</param>
+        public static void Click(Widget target, EventType eventType, ModifierType state, ButtonPressType button, double x = 0, double y = 0)
+        {
+            Gdk.Window win = target.GdkWindow;
+
+            int rx, ry;
+            win.GetRootOrigin(out rx, out ry);
+
+            var nativeEvent = new NativeEventButtonStruct
+            {
+                type = eventType,
+                send_event = 1,
+                window = win.Handle,
+                state = (uint)state,
+                button = (uint)button,
+                x = x,
+                y = y,
+                axes = IntPtr.Zero,
+                device = IntPtr.Zero,
+                time = Gtk.Global.CurrentEventTime,
+                x_root = x + rx,
+                y_root = y + ry
+            };
+
+            IntPtr ptr = GLib.Marshaller.StructureToPtrAlloc(nativeEvent);
+            try
+            {
+                EventHelper.Put(new EventButton(ptr));
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+        }
+
+        /// <summary>
         /// Sends a keypress event to a widget.
         /// </summary>
         /// <param name="target">Widget which is the target of the keypress event.</param>
@@ -44,6 +94,15 @@ namespace UnitTests.ApsimNG.Utilities
             ModifierType modifier = ParseModifier(state);
             Gdk.Key realKey = ParseKey(key);
             TypeKey(target, realKey, modifier);
+        }
+
+        public static void GetTreeViewCoordinates(Gtk.TreeView tree, int rowIndex, int colIndex, out int x, out int y)
+        {
+            TreePath path = new TreePath(new int[1] { rowIndex });
+            TreeViewColumn column = tree.Columns[colIndex];
+            Rectangle rect = tree.GetCellArea(path, column);
+            x = rect.X;
+            y = rect.Y;
         }
 
         private static void TypeKey(Widget target, Gdk.Key key, ModifierType modifier)
@@ -175,6 +234,23 @@ namespace UnitTests.ApsimNG.Utilities
 
         // Analysis disable InconsistentNaming
         [StructLayout(LayoutKind.Sequential)]
+        struct NativeEventButtonStruct
+        {
+            public Gdk.EventType type;
+            public IntPtr window;
+            public sbyte send_event;
+            public uint time;
+            public double x;
+            public double y;
+            public IntPtr axes;
+            public uint state;
+            public uint button;
+            public IntPtr device;
+            public double x_root;
+            public double y_root;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
         struct NativeEventKeyStruct
         {
             public Gdk.EventType type;
@@ -189,5 +265,6 @@ namespace UnitTests.ApsimNG.Utilities
             public byte group;
             public uint is_modifier;
         }
+        // Analysis restore InconsistentNaming
     }
 }

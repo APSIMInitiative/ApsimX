@@ -349,7 +349,7 @@
             {
                 TreePath path;
                 TreeViewColumn col;
-                if (Grid.HasFocus)
+                if (Grid.HasFocus || !fixedColView.Visible)
                 {
                     Grid.GetCursor(out path, out col);
                     if (path != null && col != null && col.Cells.Length > 0)
@@ -2367,7 +2367,7 @@
                                 int newlySelectedColumnIndex = Array.IndexOf(view.Columns, column);
                                 int newlySelectedRowIndex = path.Indices[0];
                                 // If the user has clicked on a selected cell, or if they have double clicked on any cell, we start editing the cell.
-                                if (!UserEditingCell && ((newlySelectedRowIndex == selectedCellRowIndex && newlySelectedColumnIndex == selectedCellColumnIndex) || e.Event.Type == Gdk.EventType.TwoButtonPress))
+                                if (!UserEditingCell && newlySelectedRowIndex == selectedCellRowIndex && newlySelectedColumnIndex == selectedCellColumnIndex)
                                 {
                                     comboEditHack = GetCurrentCell.EditorType == EditorTypeEnum.DropDown;
                                     if (!comboEditHack)
@@ -2376,7 +2376,8 @@
                                 }
                                 else
                                 {
-                                    SelectCell(newlySelectedRowIndex, newlySelectedColumnIndex, false);
+                                    SelectCell(newlySelectedRowIndex, newlySelectedColumnIndex, e.Event.Type == Gdk.EventType.TwoButtonPress);
+                                    e.RetVal = true;
                                 }
                             }
                         }

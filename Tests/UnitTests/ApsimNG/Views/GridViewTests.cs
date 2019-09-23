@@ -37,7 +37,7 @@ namespace UnitTests.ApsimNG.Views
         /// <summary>
         /// Selects the toplevel simulations node before each test is run.
         /// </summary>
-        [SetUp]
+        [TearDown]
         public void SelectSimulationsNode()
         {
             explorerPresenter.SelectNode(".Simulations");
@@ -58,14 +58,44 @@ namespace UnitTests.ApsimNG.Views
             if (grid == null)
                 throw new Exception("Clock view is not a GridView");
 
-            // Select top-right cell - this will be in the value column, and so will be editable.
-            grid.GetCurrentCell = new GridCell(grid, 1, 0);
+            // Click on top-right cell - this will be in the value column, and so will be editable.
+            GtkUtilities.GetTreeViewCoordinates(grid.Grid, 0, 1, out int x, out int y);
+            GtkUtilities.Click(grid.Grid, Gdk.EventType.ButtonPress, Gdk.ModifierType.None, GtkUtilities.ButtonPressType.LeftClick, x, y);
 
             // Grid should not be in edit mode at this point.
             Assert.That(grid.UserEditingCell, Is.EqualTo(false));
 
             // Type the letter 'a' now that the cell is selected.
             GtkUtilities.SendKeyPress(grid.Grid, 'a');
+            while (GLib.MainContext.Iteration()) ;
+
+            // Grid should now be in edit mode.
+            Assert.That(grid.UserEditingCell, Is.EqualTo(true));
+        }
+
+        /// <summary>
+        /// This test ensures that a keypress while a cell is selected
+        /// will cause the cell to enter edit mode.
+        /// </summary>
+        [Test]
+        public void EnsureDoubleClickInitiatesEditing()
+        {
+            // Click on clock node.
+            explorerPresenter.SelectNode(".Simulations.Simulation.Clock");
+            while (GLib.MainContext.Iteration()) ;
+
+            GridView grid = UITestUtilities.GetRightHandView(explorerPresenter) as GridView;
+            if (grid == null)
+                throw new Exception("Clock view is not a GridView");
+
+            // We want to click on a cell, but this requires coordinates.
+            GtkUtilities.GetTreeViewCoordinates(grid.Grid, 0, 1, out int x, out int y);
+
+            // Grid should not be in edit mode at this point.
+            Assert.That(grid.UserEditingCell, Is.EqualTo(false));
+
+            // Double-click on the top-right cell using the coordinates.
+            GtkUtilities.Click(grid.Grid, Gdk.EventType.TwoButtonPress, Gdk.ModifierType.None, GtkUtilities.ButtonPressType.LeftClick, x, y);
             while (GLib.MainContext.Iteration()) ;
 
             // Grid should now be in edit mode.
