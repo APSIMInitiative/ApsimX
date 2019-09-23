@@ -55,6 +55,7 @@
         /// <param name="runType">How should the simulations be run?</param>
         /// <param name="wait">Wait until all simulations are complete?</param>
         /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
+        /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public Runner(IModel relativeTo,
                       bool runSimulations = true,
                       bool runPostSimulationTools = true,
@@ -62,13 +63,14 @@
                       IEnumerable<string> simulationNamesToRun = null,
                       RunTypeEnum runType = RunTypeEnum.MultiThreaded,
                       bool wait = true,
-                      int numberOfProcessors = -1)
+                      int numberOfProcessors = -1,
+                      string simulationNamePatternMatch = null)
         {
             this.runType = runType;
             this.wait = wait;
             this.numberOfProcessors = numberOfProcessors;
 
-            var simulationGroup = new SimulationGroup(relativeTo, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun);
+            var simulationGroup = new SimulationGroup(relativeTo, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun, simulationNamePatternMatch);
             simulationGroup.Completed += OnSimulationGroupCompleted;
             jobs.Add(simulationGroup);
         }
@@ -81,13 +83,15 @@
         /// <param name="runType">How should the simulations be run?</param>
         /// <param name="wait">Wait until all simulations are complete?</param>
         /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
+        /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public Runner(string pathAndFileSpec,
                       List<string> ignorePaths = null,
                       bool recurse = true,
                       bool runTests = true,
                       RunTypeEnum runType = RunTypeEnum.MultiThreaded,
                       bool wait = true,
-                      int numberOfProcessors = -1)
+                      int numberOfProcessors = -1,
+                      string simulationNamePatternMatch = null)
         {
             this.runType = runType;
             this.wait = wait;
@@ -101,7 +105,7 @@
             {
                 if (!DoIgnoreFile(fileName, ignorePaths))
                 {
-                    var simulationGroup = new SimulationGroup(fileName, runTests);
+                    var simulationGroup = new SimulationGroup(fileName, runTests, simulationNamePatternMatch);
                     jobs.Add(simulationGroup);
                 }
             }

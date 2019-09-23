@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -37,6 +38,9 @@
         /// <summary>Specific simulation names to run.</summary>
         private IEnumerable<string> simulationNamesToRun;
 
+        /// <summary>A pattern used to determine simulations to run.</summary>
+        private Regex patternMatch;
+
         /// <summary>The related storage model.</summary>
         private IDataStore storage;
 
@@ -49,11 +53,13 @@
         /// <param name="runPostSimulationTools">Run post simulation tools?</param>
         /// <param name="runTests">Run tests?</param>
         /// <param name="simulationNamesToRun">Only run these simulations.</param>
+        /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public SimulationGroup(IModel relativeTo,
                              bool runSimulations = true,
                              bool runPostSimulationTools = true,
                              bool runTests = true,
-                             IEnumerable<string> simulationNamesToRun = null)
+                             IEnumerable<string> simulationNamesToRun = null,
+                             string simulationNamePatternMatch = null)
         {
             this.relativeTo = relativeTo;
             this.runSimulations = runSimulations;
@@ -61,19 +67,28 @@
             this.runTests = runTests;
             this.simulationNamesToRun = simulationNamesToRun;
 
+            if (simulationNamePatternMatch != null)
+                patternMatch = new Regex(simulationNamePatternMatch);
+
             Initialise();
         }
 
         /// <summary>Contstructor</summary>
         /// <param name="fileName">The name of the file to run.</param>
         /// <param name="runTests">Run tests?</param>
+        /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public SimulationGroup(string fileName,
-                             bool runTests = true)
+                             bool runTests = true,
+                             string simulationNamePatternMatch = null)
         {
             this.FileName = fileName;
             this.runSimulations = true;
             this.runPostSimulationTools = true;
             this.runTests = runTests;
+
+            if (simulationNamePatternMatch != null)
+                patternMatch = new Regex(simulationNamePatternMatch);
+
             Task.Run(() => { Initialise(); });
         }
 
@@ -200,7 +215,7 @@
         {
             if (relativeTo is Simulation)
             {
-                if (simulationNamesToRun == null || simulationNamesToRun.Contains(relativeTo.Name))
+                if (SimulationNameIsMatched(relativeTo.Name))
                 {
                     Add(new SimulationDescription(relativeTo as Simulation));
                     TotalNumberOfSimulations++;
@@ -209,7 +224,7 @@
             else if (relativeTo is ISimulationDescriptionGenerator)
             {
                 foreach (var description in (relativeTo as ISimulationDescriptionGenerator).GenerateSimulationDescriptions())
-                    if (simulationNamesToRun == null || simulationNamesToRun.Contains(description.Name))
+                    if (SimulationNameIsMatched(description.Name))
                     {
                         Add(description);
                         TotalNumberOfSimulations++;
@@ -221,6 +236,17 @@
                 foreach (var child in relativeTo.Children)
                     FindListOfSimulationsToRun(child, simulationNamesToRun);
             }
+        }
+
+        /// <summary>Return true if simulation name is a match.</summary>
+        /// <param name="simulationName">Simulation name to look for.</param>
+        /// <returns>True if matched.</returns>
+        private bool SimulationNameIsMatched(string simulationName)
+        {
+            if (patternMatch != null)
+                return patternMatch.Match(simulationName).Success;
+            else
+                return simulationNamesToRun == null || simulationNamesToRun.Contains(relativeTo.Name);
         }
 
         /// <summary>Run all post simulation tools.</summary>

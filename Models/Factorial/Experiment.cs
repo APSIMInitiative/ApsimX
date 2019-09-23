@@ -121,7 +121,7 @@
                     permutationName = factor.Parent.Parent.Name;
                 newName += factor.Name;
             }
-            if (permutationName == null)
+            if (permutationName == null || permutationName == "Permutation")
                 return Name + newName;
             else
                 return Name + permutationName + newName;
