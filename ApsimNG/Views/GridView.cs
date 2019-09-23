@@ -21,11 +21,6 @@
     public class GridView : ViewBase, IGridView
     {
         /// <summary>
-        /// Is the user currently editing a cell?
-        /// </summary>
-        private bool userEditingCell = false;
-
-        /// <summary>
         /// Iff true, the user can add new rows to the grid.
         /// </summary>
         private bool canGrow = true;
@@ -240,6 +235,11 @@
         /// Gets or sets the treeview object which displays the data.
         /// </summary>
         public Gtk.TreeView Grid { get; set; } = null;
+
+        /// <summary>
+        /// Is the user currently editing a cell?
+        /// </summary>
+        public bool UserEditingCell { get; set; }
 
         /// <summary>
         /// List of buttons in the grid.
@@ -727,9 +727,9 @@
         /// </summary>
         public void EndEdit()
         {
-            if (userEditingCell)
+            if (UserEditingCell)
             {
-                userEditingCell = false;
+                UserEditingCell = false;
                 string text = string.Empty;
                 string path = string.Empty;
                 if (editControl is Entry)
@@ -1133,14 +1133,14 @@
                     Grid.QueueDraw();
                     args.RetVal = true;
                 }
-                else if (!userEditingCell && !GetColumn(cell.ColumnIndex).ReadOnly && !ReadOnly && IsPrintableChar(args.Event.Key))
+                else if (!UserEditingCell && !GetColumn(cell.ColumnIndex).ReadOnly && !ReadOnly && IsPrintableChar(args.Event.Key))
                 {
                     // Initiate cell editing when user starts typing.
                     SelectCell(cell.RowIndex, cell.ColumnIndex, true);
                     if (cell.EditorType == EditorTypeEnum.TextBox)
                     {
                         Gdk.EventHelper.Put(args.Event); // ?
-                        userEditingCell = true;
+                        UserEditingCell = true;
                     }
                     args.RetVal = true;
                 }
@@ -1222,7 +1222,7 @@
             // If user is editing the cell and they hit the left/right arrow keys,
             // they are trying to navigate the cursor in the textbox so don't
             // select another cell.
-            if (userEditingCell && (key == Gdk.Key.Left || key == Gdk.Key.Right))
+            if (UserEditingCell && (key == Gdk.Key.Left || key == Gdk.Key.Right))
                 return;
 
             // If key is not return, tab or arrow key, then do nothing.
@@ -1269,7 +1269,7 @@
                 SelectCellsBetween(nextRow, nextCol, row, column);
             }
             else
-                SelectCell(nextRow, nextCol, userEditingCell);
+                SelectCell(nextRow, nextCol, UserEditingCell);
         }
 
         /// <summary>
@@ -1492,7 +1492,7 @@
                 toggleRender.Xalign = 0f;
                 toggleRender.EditingCanceled += (sender, e) =>
                 {
-                    userEditingCell = false;
+                    UserEditingCell = false;
                 };
                 CellRendererCombo comboRender = new CellRendererDropDown();
                 comboRender.EditingStarted += OnCellBeginEdit;
@@ -1702,7 +1702,7 @@
         {
             try
             {
-                userEditingCell = false;
+                UserEditingCell = false;
                 (editControl as Widget).KeyPressEvent -= GridviewKeyPressEvent;
                 (editControl as Widget).FocusOutEvent -= GridViewCellFocusOutEvent;
                 editControl = null;
@@ -1864,7 +1864,7 @@
         {
             try
             {
-                userEditingCell = true;
+                UserEditingCell = true;
                 editPath = e.Path;
                 editControl = e.Editable;
                 (editControl as Widget).KeyPressEvent += GridviewKeyPressEvent;
@@ -1927,7 +1927,7 @@
             }
             finally
             {
-                userEditingCell = false;
+                UserEditingCell = false;
             }
         }
 
@@ -1965,7 +1965,7 @@
             try
             {
                 UpdateCellText(GetCurrentCell, e.NewText);
-                userEditingCell = false;
+                UserEditingCell = false;
             }
             catch (Exception err)
             {
@@ -2016,8 +2016,8 @@
         {
             try
             {
-                if (userEditingCell)
-                    userEditingCell = false;
+                if (UserEditingCell)
+                    UserEditingCell = false;
 
                 IGridCell where = GetCurrentCell;
                 if (where == null)
@@ -2082,7 +2082,7 @@
             try
             {
                 List<IGridCell> cellsChanged = new List<IGridCell>();
-                if (userEditingCell && editControl != null)
+                if (UserEditingCell && editControl != null)
                 {
                     (editControl as Entry).PasteClipboard();
                     cellsChanged.Add(popupCell);
@@ -2137,7 +2137,7 @@
         {
             try
             {
-                if (userEditingCell && editControl != null)
+                if (UserEditingCell && editControl != null)
                 {
                     (editControl as Entry).CopyClipboard();
                 }
@@ -2169,7 +2169,7 @@
             try
             {
                 List<IGridCell> cellsChanged = new List<IGridCell>();
-                if (userEditingCell && editControl != null)
+                if (UserEditingCell && editControl != null)
                 {
                     (editControl as Entry).DeleteSelection();
                     cellsChanged.Add(popupCell);
@@ -2367,7 +2367,7 @@
                                 int newlySelectedColumnIndex = Array.IndexOf(view.Columns, column);
                                 int newlySelectedRowIndex = path.Indices[0];
                                 // If the user has clicked on a selected cell, or if they have double clicked on any cell, we start editing the cell.
-                                if (!userEditingCell && ((newlySelectedRowIndex == selectedCellRowIndex && newlySelectedColumnIndex == selectedCellColumnIndex) || e.Event.Type == Gdk.EventType.TwoButtonPress))
+                                if (!UserEditingCell && ((newlySelectedRowIndex == selectedCellRowIndex && newlySelectedColumnIndex == selectedCellColumnIndex) || e.Event.Type == Gdk.EventType.TwoButtonPress))
                                 {
                                     comboEditHack = GetCurrentCell.EditorType == EditorTypeEnum.DropDown;
                                     if (!comboEditHack)
