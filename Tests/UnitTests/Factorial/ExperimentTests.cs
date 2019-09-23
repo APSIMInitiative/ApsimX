@@ -574,7 +574,7 @@
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 4);
 
-            Assert.AreEqual(sims[0].Name, "Exp1PermutationWeather1Mod3");
+            Assert.AreEqual(sims[0].Name, "Exp1Weather1Mod3");
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Weather").Value, "1");
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Mod").Value, "3");
@@ -584,7 +584,7 @@
             Assert.AreEqual(weather.FileName, "1");
             Assert.AreEqual(mod.A, 3);
 
-            Assert.AreEqual(sims[1].Name, "Exp1PermutationWeather2Mod3");
+            Assert.AreEqual(sims[1].Name, "Exp1Weather2Mod3");
             Assert.AreEqual(sims[1].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[1].Descriptors.Find(d => d.Name == "Weather").Value, "2");
             Assert.AreEqual(sims[1].Descriptors.Find(d => d.Name == "Mod").Value, "3");
@@ -594,7 +594,7 @@
             Assert.AreEqual(weather.FileName, "2");
             Assert.AreEqual(mod.A, 3);
 
-            Assert.AreEqual(sims[2].Name, "Exp1PermutationWeather1Mod4");
+            Assert.AreEqual(sims[2].Name, "Exp1Weather1Mod4");
             Assert.AreEqual(sims[2].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[2].Descriptors.Find(d => d.Name == "Weather").Value, "1");
             Assert.AreEqual(sims[2].Descriptors.Find(d => d.Name == "Mod").Value, "4");
@@ -604,7 +604,7 @@
             Assert.AreEqual(weather.FileName, "1");
             Assert.AreEqual(mod.A, 4);
 
-            Assert.AreEqual(sims[3].Name, "Exp1PermutationWeather2Mod4");
+            Assert.AreEqual(sims[3].Name, "Exp1Weather2Mod4");
             Assert.AreEqual(sims[3].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[3].Descriptors.Find(d => d.Name == "Weather").Value, "2");
             Assert.AreEqual(sims[3].Descriptors.Find(d => d.Name == "Mod").Value, "4");
@@ -685,7 +685,7 @@
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 8);
 
-            Assert.AreEqual(sims[0].Name, "Exp1PermutationIrr0Fert0");
+            Assert.AreEqual(sims[0].Name, "Exp1Irr0Fert0");
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Irr").Value, "0");
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Fert").Value, "0");
@@ -695,7 +695,7 @@
             Assert.AreEqual(irr.Amount, 0);
             Assert.AreEqual(fert.Amount, 0);
 
-            Assert.AreEqual(sims[1].Name, "Exp1PermutationIrr50Fert0");
+            Assert.AreEqual(sims[1].Name, "Exp1Irr50Fert0");
             Assert.AreEqual(sims[1].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[1].Descriptors.Find(d => d.Name == "Irr").Value, "50");
             Assert.AreEqual(sims[1].Descriptors.Find(d => d.Name == "Fert").Value, "0");
@@ -705,7 +705,7 @@
             Assert.AreEqual(irr.Amount, 50);
             Assert.AreEqual(fert.Amount, 0);
 
-            Assert.AreEqual(sims[2].Name, "Exp1PermutationIrr0Fert100");
+            Assert.AreEqual(sims[2].Name, "Exp1Irr0Fert100");
             Assert.AreEqual(sims[2].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[2].Descriptors.Find(d => d.Name == "Irr").Value, "0");
             Assert.AreEqual(sims[2].Descriptors.Find(d => d.Name == "Fert").Value, "100");
@@ -715,7 +715,7 @@
             Assert.AreEqual(irr.Amount, 0);
             Assert.AreEqual(fert.Amount, 100);
 
-            Assert.AreEqual(sims[3].Name, "Exp1PermutationIrr50Fert100");
+            Assert.AreEqual(sims[3].Name, "Exp1Irr50Fert100");
             Assert.AreEqual(sims[3].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[3].Descriptors.Find(d => d.Name == "Irr").Value, "50");
             Assert.AreEqual(sims[3].Descriptors.Find(d => d.Name == "Fert").Value, "100");
@@ -725,7 +725,7 @@
             Assert.AreEqual(irr.Amount, 50);
             Assert.AreEqual(fert.Amount, 100);
 
-            Assert.AreEqual(sims[4].Name, "Exp1PermutationIrr100Fert0");
+            Assert.AreEqual(sims[4].Name, "Exp1Irr100Fert0");
             Assert.AreEqual(sims[4].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[4].Descriptors.Find(d => d.Name == "Irr").Value, "100");
             Assert.AreEqual(sims[4].Descriptors.Find(d => d.Name == "Fert").Value, "0");
@@ -735,7 +735,7 @@
             Assert.AreEqual(irr.Amount, 100);
             Assert.AreEqual(fert.Amount, 0);
 
-            Assert.AreEqual(sims[5].Name, "Exp1PermutationIrr150Fert0");
+            Assert.AreEqual(sims[5].Name, "Exp1Irr150Fert0");
             Assert.AreEqual(sims[5].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[5].Descriptors.Find(d => d.Name == "Irr").Value, "150");
             Assert.AreEqual(sims[5].Descriptors.Find(d => d.Name == "Fert").Value, "0");
@@ -745,7 +745,7 @@
             Assert.AreEqual(irr.Amount, 150);
             Assert.AreEqual(fert.Amount, 0);
 
-            Assert.AreEqual(sims[6].Name, "Exp1PermutationIrr100Fert20");
+            Assert.AreEqual(sims[6].Name, "Exp1Irr100Fert20");
             Assert.AreEqual(sims[6].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[6].Descriptors.Find(d => d.Name == "Irr").Value, "100");
             Assert.AreEqual(sims[6].Descriptors.Find(d => d.Name == "Fert").Value, "20");
@@ -755,7 +755,7 @@
             Assert.AreEqual(irr.Amount, 100);
             Assert.AreEqual(fert.Amount, 20);
 
-            Assert.AreEqual(sims[7].Name, "Exp1PermutationIrr150Fert20");
+            Assert.AreEqual(sims[7].Name, "Exp1Irr150Fert20");
             Assert.AreEqual(sims[7].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[7].Descriptors.Find(d => d.Name == "Irr").Value, "150");
             Assert.AreEqual(sims[7].Descriptors.Find(d => d.Name == "Fert").Value, "20");
@@ -825,7 +825,7 @@
             var sims = experiment.GenerateSimulationDescriptions();
             Assert.AreEqual(sims.Count, 4);
 
-            Assert.AreEqual(sims[0].Name, "Exp1PermutationWeather1Mod1");
+            Assert.AreEqual(sims[0].Name, "Exp1Weather1Mod1");
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Weather").Value, "1");
             Assert.AreEqual(sims[0].Descriptors.Find(d => d.Name == "Permutation").Value, "Mod1");
@@ -835,7 +835,7 @@
             Assert.AreEqual(weather.FileName, "1");
             Assert.AreEqual(mod.A, 3);
 
-            Assert.AreEqual(sims[1].Name, "Exp1PermutationWeather2Mod1");
+            Assert.AreEqual(sims[1].Name, "Exp1Weather2Mod1");
             Assert.AreEqual(sims[1].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[1].Descriptors.Find(d => d.Name == "Weather").Value, "2");
             Assert.AreEqual(sims[1].Descriptors.Find(d => d.Name == "Permutation").Value, "Mod1");
@@ -845,7 +845,7 @@
             Assert.AreEqual(weather.FileName, "2");
             Assert.AreEqual(mod.A, 3);
 
-            Assert.AreEqual(sims[2].Name, "Exp1PermutationWeather1Mod2");
+            Assert.AreEqual(sims[2].Name, "Exp1Weather1Mod2");
             Assert.AreEqual(sims[2].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[2].Descriptors.Find(d => d.Name == "Weather").Value, "1");
             Assert.AreEqual(sims[2].Descriptors.Find(d => d.Name == "Permutation").Value, "Mod2");
@@ -855,7 +855,7 @@
             Assert.AreEqual(weather.FileName, "1");
             Assert.AreEqual(mod.A, 4);
 
-            Assert.AreEqual(sims[3].Name, "Exp1PermutationWeather2Mod2");
+            Assert.AreEqual(sims[3].Name, "Exp1Weather2Mod2");
             Assert.AreEqual(sims[3].Descriptors.Find(d => d.Name == "Experiment").Value, "Exp1");
             Assert.AreEqual(sims[3].Descriptors.Find(d => d.Name == "Weather").Value, "2");
             Assert.AreEqual(sims[3].Descriptors.Find(d => d.Name == "Permutation").Value, "Mod2");
