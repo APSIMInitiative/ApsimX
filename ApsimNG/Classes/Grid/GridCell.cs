@@ -127,7 +127,7 @@ namespace UserInterface.Classes
                             Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
                             if (!gridView.ComboLookup.ContainsKey(key))
                             {
-                                ListStore store = new ListStore(typeof(string));
+                                ListStore store = new ListStore(typeof(string), typeof(string));
                                 gridView.ComboLookup.Add(key, store);
                             }
                             break;
@@ -169,7 +169,11 @@ namespace UserInterface.Classes
                     store.Clear();
                     foreach (string st in value)
                     {
-                        store.AppendValues(st);
+                        // Warning: this is using the pipe character to delimit display text from tooltip text.
+                        // This could potentially be problematic if the display text is meant to include the character.
+                        // This also currently throws everything away after any second pipe character.
+                        string[] strings = st.Split('|');
+                        store.AppendValues(strings[0], strings.Length > 1 ? strings[1] : null);
                     }
                 }
             }
