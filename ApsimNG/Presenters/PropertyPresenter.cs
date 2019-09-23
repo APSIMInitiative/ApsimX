@@ -101,15 +101,15 @@ namespace UserInterface.Presenters
                 grid.ReadOnly = true;
             }
 
-            grid.NumericFormat = "G6"; 
-            FindAllProperties(this.model);
-            if (grid.DataSource == null)
+            grid.NumericFormat = "G6";
+
+            if (this.model != null)
             {
-                PopulateGrid(this.model);
-            }
-            else
-            {
-                FormatTestGrid();
+                FindAllProperties(this.model);
+                if (grid.DataSource == null)
+                    PopulateGrid(this.model);
+                else
+                    FormatTestGrid();
             }
 
             grid.CellsChanged += OnCellsChanged;
@@ -245,6 +245,8 @@ namespace UserInterface.Presenters
 
         public void Refresh()
         {
+            if (model == null)
+                return;
             properties.Clear();
             FindAllProperties(model);
             PopulateGrid(model);
