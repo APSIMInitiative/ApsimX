@@ -220,6 +220,7 @@
     <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
     <EmbeddedResource Include="Core\ApsimFile\ManagerConverterTestsReplaceManagerTextRegex.json" />
     <EmbeddedResource Include="Sensitivity\MorrisTestsBroken.apsimx" />
+    <EmbeddedResource Include="Report\ReportAggregation.apsimx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">

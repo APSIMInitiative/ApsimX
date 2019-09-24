@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Report;
     using Models.Storage;
@@ -73,6 +74,47 @@
                     }
                 }
             };
+        }
+
+        /// <summary>
+        /// This test ensures that aggregation to and from variable dates (ie [Clock].Today) works.
+        /// </summary>
+        [Test]
+        public void TestVariableAggregation()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportAggregation.apsimx");
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, out List<Exception> fileErrors);
+            if (fileErrors != null && fileErrors.Count > 0)
+                throw fileErrors[0];
+
+            var Runner = new Runner(file);
+            Runner.Run();
+
+            var storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+            List<string> fieldNames = new List<string>() { "sum", "avg", "min", "max", "first", "last", "diff" };
+            DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
+
+            List<int> sum = data.AsEnumerable().Select(x => Convert.ToInt32(x["sum"])).ToList();
+            List<double> avg = data.AsEnumerable().Select(x => (double)x["avg"]).ToList();
+            List<int> min = data.AsEnumerable().Select(x => Convert.ToInt32(x["min"])).ToList();
+            List<int> max = data.AsEnumerable().Select(x => Convert.ToInt32(x["max"])).ToList();
+            List<int> first = data.AsEnumerable().Select(x => Convert.ToInt32(x["first"])).ToList();
+            List<int> last = data.AsEnumerable().Select(x => Convert.ToInt32(x["last"])).ToList();
+            List<int> diff = data.AsEnumerable().Select(x => Convert.ToInt32(x["diff"])).ToList();
+
+            List<int> expectedSum = new List<int>() { 21, 70, 119, 168, 217, 266, 315, 364 };
+            List<double> expectedAvg = new List<double>() { 3.5, 10, 17, 24, 31, 38, 45, 52 };
+            List<int> expectedMin = new List<int>() { 1, 7, 14, 21, 28, 35, 42, 49 }; // == expectedFirst
+            List<int> expectedMax = new List<int>() { 6, 13, 20, 27, 34, 41, 48, 55 }; // == expectedLast
+            List<int> expectedDiff = new List<int>() { 5, 6, 6, 6, 6, 6, 6, 6 };
+
+            Assert.AreEqual(expectedSum, sum);
+            Assert.AreEqual(expectedAvg, avg);
+            Assert.AreEqual(expectedMin, min);
+            Assert.AreEqual(expectedMax, max);
+            Assert.AreEqual(expectedMin, first);
+            Assert.AreEqual(expectedMax, last);
+            Assert.AreEqual(expectedDiff, diff);
         }
 
         /// <summary>
