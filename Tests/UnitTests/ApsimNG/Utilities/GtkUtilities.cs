@@ -82,6 +82,10 @@ namespace UnitTests.ApsimNG.Utilities
             {
                 Marshal.FreeHGlobal(ptr);
             }
+
+            if (wait)
+                // Clear gtk event loop.
+                while (GLib.MainContext.Iteration()) ;
         }
 
         /// <summary>

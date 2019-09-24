@@ -84,7 +84,6 @@ namespace UnitTests.ApsimNG.Views
 
             // Double-click on the top-right cell using the coordinates.
             GtkUtilities.Click(grid.Grid, Gdk.EventType.TwoButtonPress, Gdk.ModifierType.None, GtkUtilities.ButtonPressType.LeftClick, x, y);
-            while (GLib.MainContext.Iteration()) ;
 
             // Grid should now be in edit mode.
             Assert.That(grid.IsUserEditingCell, Is.EqualTo(true));
