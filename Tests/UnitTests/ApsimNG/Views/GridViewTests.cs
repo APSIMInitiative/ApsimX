@@ -53,13 +53,13 @@ namespace UnitTests.ApsimNG.Views
             GtkUtilities.Click(grid.Grid, Gdk.EventType.ButtonPress, Gdk.ModifierType.None, GtkUtilities.ButtonPressType.LeftClick, x, y);
 
             // Grid should not be in edit mode at this point.
-            Assert.That(grid.IsUserEditingCell, Is.EqualTo(false));
+            Assert.IsFalse(grid.IsUserEditingCell);
 
             // Type the letter 'a' now that the cell is selected.
             GtkUtilities.SendKeyPress(grid.Grid, 'a');
 
             // Grid should now be in edit mode.
-            Assert.That(grid.IsUserEditingCell, Is.EqualTo(true));
+            Assert.IsTrue(grid.IsUserEditingCell);
         }
 
         /// <summary>
@@ -80,13 +80,13 @@ namespace UnitTests.ApsimNG.Views
             GtkUtilities.GetTreeViewCoordinates(grid.Grid, 0, 1, out int x, out int y);
 
             // Grid should not be in edit mode at this point.
-            Assert.That(grid.IsUserEditingCell, Is.EqualTo(false));
+            Assert.IsFalse(grid.IsUserEditingCell);
 
             // Double-click on the top-right cell using the coordinates.
             GtkUtilities.Click(grid.Grid, Gdk.EventType.TwoButtonPress, Gdk.ModifierType.None, GtkUtilities.ButtonPressType.LeftClick, x, y);
 
             // Grid should now be in edit mode.
-            Assert.That(grid.IsUserEditingCell, Is.EqualTo(true));
+            Assert.IsTrue(grid.IsUserEditingCell);
         }
     }
 }
