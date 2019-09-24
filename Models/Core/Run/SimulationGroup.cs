@@ -246,7 +246,7 @@
             if (patternMatch != null)
                 return patternMatch.Match(simulationName).Success;
             else
-                return simulationNamesToRun == null || simulationNamesToRun.Contains(relativeTo.Name);
+                return simulationNamesToRun == null || simulationNamesToRun.Contains(simulationName);
         }
 
         /// <summary>Run all post simulation tools.</summary>
