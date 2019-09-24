@@ -79,12 +79,19 @@ namespace Models.Report
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
+        /// <summary>
+        /// Date of the last report event.
+        /// </summary>
+        [JsonIgnore]
+        public DateTime LastReportDate { get; set; }
+
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            LastReportDate = clock.Today;
             dataToWriteToDb = null;
 
             // sanitise the variable names and remove duplicates
@@ -135,6 +142,7 @@ namespace Models.Report
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public void DoOutput()
         {
+            LastReportDate = clock.Today;
             if (dataToWriteToDb == null)
             {
                 string folderName = null;

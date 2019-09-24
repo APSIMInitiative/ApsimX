@@ -427,7 +427,7 @@ namespace Models.Report
             {
                 //if (!this.inCaptureWindow)
                     value = ApplyAggregation();
-                if (toHasNoYear && this.clock.Today.Day == this.toDate.Day && this.clock.Today.Month == this.toDate.Month)
+                if (this.clock.Today.Day == this.toDate.Day && this.clock.Today.Month == this.toDate.Month && (toHasNoYear || this.clock.Today.Year == this.toDate.Year))
                     this.valuesToAggregate.Clear();
             }
             else
