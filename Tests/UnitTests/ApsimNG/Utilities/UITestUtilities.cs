@@ -32,10 +32,5 @@ namespace UnitTests.ApsimNG
             File.WriteAllText(fileName, json);
             return UITestsMain.MasterPresenter.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
         }
-
-        public static ViewBase GetRightHandView(ExplorerPresenter explorerPresenter)
-        {
-            return (explorerPresenter.GetView() as ExplorerView)?.CurrentRightHandView;
-        }
     }
 }

@@ -49,7 +49,8 @@ namespace UnitTests.ApsimNG.Utilities
         /// <param name="button">Type of click - ie left click, middle click or right click.</param>
         /// <param name="x">x-coordinate of the click, relative to the top-left corner of the widget.</param>
         /// <param name="y">y-coordinate of the click, relative to the top-left corner of the widget.</param>
-        public static void Click(Widget target, EventType eventType, ModifierType state, ButtonPressType button, double x = 0, double y = 0)
+        /// <param name="wait">Iff true, will wait for gtk to process the event.</param>
+        public static void Click(Widget target, EventType eventType, ModifierType state, ButtonPressType button, double x = 0, double y = 0, bool wait = true)
         {
             Gdk.Window win = target.GdkWindow;
 
@@ -89,11 +90,16 @@ namespace UnitTests.ApsimNG.Utilities
         /// <param name="target">Widget which is the target of the keypress event.</param>
         /// <param name="key">Key to be sent.</param>
         /// <param name="state">Modifier keys separated by plus signs. e.g. "Control + Alt".</param>
-        public static void SendKeyPress(Widget target, char key, string state = null)
+        /// <param name="wait">Iff true, will wait for gtk to process the event.</param>
+        public static void SendKeyPress(Widget target, char key, string state = null, bool wait = true)
         {
             ModifierType modifier = ParseModifier(state);
             Gdk.Key realKey = ParseKey(key);
             TypeKey(target, realKey, modifier);
+
+            if (wait)
+                // Wait for gtk to process the event.
+                while (GLib.MainContext.Iteration()) ;
         }
 
         public static void GetTreeViewCoordinates(Gtk.TreeView tree, int rowIndex, int colIndex, out int x, out int y)

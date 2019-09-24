@@ -21,31 +21,21 @@ namespace UnitTests.ApsimNG.Views
         private ExplorerPresenter explorerPresenter;
 
         [OneTimeSetUp]
-        public void SetupGridForTests()
+        public void OpenTestFileInTab()
         {
             explorerPresenter = UITestUtilities.OpenResourceFileInTab(Assembly.GetExecutingAssembly(),
                                                     "UnitTests.ApsimNG.Resources.SampleFiles.BasicSimulation.apsimx");
         }
 
         [OneTimeTearDown]
-        public void CleanupAfterTest()
+        public void CloseTab()
         {
             // Close the tab we opened. This assumes that this is the only open tab.
             UITestsMain.MasterPresenter.CloseTab(0, onLeft: true);
         }
 
         /// <summary>
-        /// Selects the toplevel simulations node before each test is run.
-        /// </summary>
-        [TearDown]
-        public void SelectSimulationsNode()
-        {
-            explorerPresenter.SelectNode(".Simulations");
-        }
-
-        /// <summary>
-        /// This test ensures that a keypress while a cell is selected
-        /// will cause the cell to enter edit mode.
+        /// This test ensures that a keypress while a cell is selected will cause the cell to enter edit mode.
         /// </summary>
         [Test]
         public void EnsureKeyPressInitiatesEditing()
@@ -54,7 +44,7 @@ namespace UnitTests.ApsimNG.Views
             explorerPresenter.SelectNode(".Simulations.Simulation.Clock");
             while (GLib.MainContext.Iteration()) ;
 
-            GridView grid = UITestUtilities.GetRightHandView(explorerPresenter) as GridView;
+            GridView grid = explorerPresenter.CurrentRightHandView as GridView;
             if (grid == null)
                 throw new Exception("Clock view is not a GridView");
 
@@ -63,19 +53,17 @@ namespace UnitTests.ApsimNG.Views
             GtkUtilities.Click(grid.Grid, Gdk.EventType.ButtonPress, Gdk.ModifierType.None, GtkUtilities.ButtonPressType.LeftClick, x, y);
 
             // Grid should not be in edit mode at this point.
-            Assert.That(grid.UserEditingCell, Is.EqualTo(false));
+            Assert.That(grid.IsUserEditingCell, Is.EqualTo(false));
 
             // Type the letter 'a' now that the cell is selected.
             GtkUtilities.SendKeyPress(grid.Grid, 'a');
-            while (GLib.MainContext.Iteration()) ;
 
             // Grid should now be in edit mode.
-            Assert.That(grid.UserEditingCell, Is.EqualTo(true));
+            Assert.That(grid.IsUserEditingCell, Is.EqualTo(true));
         }
 
         /// <summary>
-        /// This test ensures that a keypress while a cell is selected
-        /// will cause the cell to enter edit mode.
+        /// This test ensures that double clicking a cell will cause the cell to enter edit mode.
         /// </summary>
         [Test]
         public void EnsureDoubleClickInitiatesEditing()
@@ -84,7 +72,7 @@ namespace UnitTests.ApsimNG.Views
             explorerPresenter.SelectNode(".Simulations.Simulation.Clock");
             while (GLib.MainContext.Iteration()) ;
 
-            GridView grid = UITestUtilities.GetRightHandView(explorerPresenter) as GridView;
+            GridView grid = explorerPresenter.CurrentRightHandView as GridView;
             if (grid == null)
                 throw new Exception("Clock view is not a GridView");
 
@@ -92,14 +80,14 @@ namespace UnitTests.ApsimNG.Views
             GtkUtilities.GetTreeViewCoordinates(grid.Grid, 0, 1, out int x, out int y);
 
             // Grid should not be in edit mode at this point.
-            Assert.That(grid.UserEditingCell, Is.EqualTo(false));
+            Assert.That(grid.IsUserEditingCell, Is.EqualTo(false));
 
             // Double-click on the top-right cell using the coordinates.
             GtkUtilities.Click(grid.Grid, Gdk.EventType.TwoButtonPress, Gdk.ModifierType.None, GtkUtilities.ButtonPressType.LeftClick, x, y);
             while (GLib.MainContext.Iteration()) ;
 
             // Grid should now be in edit mode.
-            Assert.That(grid.UserEditingCell, Is.EqualTo(true));
+            Assert.That(grid.IsUserEditingCell, Is.EqualTo(true));
         }
     }
 }
