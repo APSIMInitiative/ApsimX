@@ -128,6 +128,48 @@
       "Enabled": true,
       "ReadOnly": false
     },
+	{
+	  "$type": "Models.Manager, Models",
+	  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] ISummary summary;\r\n        [Link] Soil soil;\r\n\r\n        private Nutrient nutrient;\r\n        private SoilNitrogen soilN;\r\n\r\n        [Separator(\"Fertiliser will be applied on the date(s) below\")]\r\n        [Description(\"Apply fertiliser on the same day(s) each year? If no, then must include the year of appliaction below\")]\r\n        public bool EachYear { get; set; }\r\n\r\n        [Description(\"Dates for one or more fertiliser applications (dd-mmm or dd-mmm-yyyy) as a list with a comma between dates\")]\r\n        public string[] Dates { get; set; }\r\n\r\n        [Separator(\"Test for the mineral N in the soil and don't apply the fertiliser if greater than X kgN/ha is stored in the soil above a depth of Y mm\")]\r\n        [Description(\"Use a critical soil mineral N to prevent application above a threshold?\")]\r\n        public bool UseCritNThreshold { get; set; }\r\n\r\n        [Description(\"Don't add fertiliser if N in the soil to the depth below exceeds (kg/ha)\")]\r\n        public double CritNThreshold { get; set; }\r\n\r\n        [Description(\"Depth to which the amount of N in the soil should be calculated (mm)\")]\r\n        public double CritNDepth { get; set; }\r\n\r\n        [Separator(\"Fertiliser application details\")]\r\n        [Description(\"Depth at which to apply the fertiliser (mm)\")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Amount of fertiliser to apply (kg N /ha) per application\")]\r\n        public double Amount { get; set; }\r\n\r\n        [Description(\"Fertiliser type - select from the list\")]\r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void FindSoilNOrNutrient(object sender, EventArgs e)\r\n        {\r\n        \tnutrient = Apsim.Find(this, typeof(Nutrient)) as Nutrient;\r\n        \tsoilN = Apsim.Find(this, typeof(SoilNitrogen)) as SoilNitrogen;\r\n\r\n        \tif (nutrient == null && soilN == null)\r\n        \t\tthrow new Exception(string.Format(\"Error in script {0}: Unable to find nutrient or soilN.\", Name));\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tif (OnApplicationDate())\r\n        \t{\r\n        \t\tif (NContentBelowThreshold())\r\n        \t\t\tfertiliser.Apply(Amount, FertiliserType, Depth);\r\n        \t\telse\r\n        \t\t\tsummary.WriteMessage(this, \"Skipping fertiliser application due to soil mineral N content being above critical threshold.\");\r\n    \t\t}\r\n        }\r\n\r\n        /// <summary>Checks if today's date is one of the specified fertiliser application dates.</summary>\r\n        private bool OnApplicationDate()\r\n        {\r\n        \tif (EachYear)\r\n        \t\treturn Dates.Any(d => DateUtilities.DatesEqual(d, clock.Today));\r\n        \t\r\n        \tDateTime[] dates = Dates.Select(d => DateTime.ParseExact(d, \"d-MMM-yyyy\", null)).ToArray();\r\n        \treturn dates.Any(d => SameDate(d, clock.Today));\r\n        }\r\n\r\n        /// <summary>Checks if N content in soil is below critical threshold.</summary>\r\n        private bool NContentBelowThreshold()\r\n        {\r\n        \tif (!UseCritNThreshold)\r\n        \t\treturn true;\r\n        \t\r\n        \tdouble[] weights = GetLayerWeights();\r\n        \tdouble cumSoilN = 0;\r\n\r\n        \tfor (int i = 0; i < soil.Thickness.Length; i++)\r\n        \t{\r\n        \t\tif (nutrient != null)\r\n        \t\t\tcumSoilN += weights[i] * nutrient.MineralN[i];\r\n        \t\telse if (soilN != null)\r\n        \t\t\tcumSoilN += weights[i] * soilN.mineral_n[i];\r\n    \t\t}\r\n\r\n        \treturn cumSoilN <= CritNThreshold;\r\n        }\r\n\r\n        private double[] GetLayerWeights()\r\n\t\t{\r\n\t\t\tdouble[] weights = new double[soil.Thickness.Length];\r\n\t\t\tdouble cumDepth = 0;\r\n\r\n\t\t\tfor (int i = 0; i < soil.Thickness.Length; i++)\r\n\t\t\t{\r\n\t\t\t\tcumDepth += soil.Thickness[i];\r\n\t\t\t\tif (cumDepth < CritNDepth)\r\n\t\t\t\t\tweights[i] = 1;\r\n\t\t\t\telse if (cumDepth - soil.Thickness[i] <= CritNDepth)\r\n\t\t\t\t\tweights[i] = (CritNDepth - (cumDepth - soil.Thickness[i])) / soil.Thickness[i];\r\n\t\t\t\telse\r\n\t\t\t\t\tweights[i] = 0;\r\n\t\t\t}\r\n\r\n\t\t\treturn weights;\r\n\t\t}\r\n\r\n\t\tprivate bool SameDate(DateTime d1, DateTime d2)\r\n\t\t{\r\n\t\t\treturn d1.Year == d2.Year && d1.DayOfYear == d2.DayOfYear;\r\n\t\t}\r\n    }\r\n}\r\n",
+	  "Parameters": [
+		{
+		  "Key": "EachYear",
+		  "Value": "True"
+		},
+		{
+		  "Key": "Dates",
+		  "Value": "30-nov,15-apr"
+		},
+		{
+		  "Key": "UseCritNThreshold",
+		  "Value": "False"
+		},
+		{
+		  "Key": "CritNThreshold",
+		  "Value": "50"
+		},
+		{
+		  "Key": "CritNDepth",
+		  "Value": "75"
+		},
+		{
+		  "Key": "Depth",
+		  "Value": "50"
+		},
+		{
+		  "Key": "Amount",
+		  "Value": "25"
+		},
+		{
+		  "Key": "FertiliserType",
+		  "Value": "UreaN"
+		}
+	  ],
+	  "Name": "Fertilise on fixed dates (advanced version)",
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
     {
       "$type": "Models.Manager, Models",
       "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n        \r\n    }\r\n}\r\n",
@@ -232,54 +274,54 @@
       "Enabled": true,
       "ReadOnly": false
     },
-    {
-      "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] SoilNitrogen SoilN = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            if (ResetWater == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Water\");\r\n                SoilWater.Reset();\r\n            }\r\n            if (ResetN == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                SoilN.Reset();\r\n            }\r\n            if (ResetSOM == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                SOM.Reset();\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-      "Parameters": [
-        {
-          "Key": "ResetWater",
-          "Value": "Yes"
-        },
-        {
-          "Key": "ResetN",
-          "Value": "Yes"
-        },
-        {
-          "Key": "ResetSOM",
-          "Value": "Yes"
-        }
-      ],
-      "Name": "Reset on sowing",
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] SoilNitrogen SoilN = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water?\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Nitrogen?\")]\r\n        public string ResetN {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter?\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetN == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    SoilN.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-      "Parameters": [
-        {
-          "Key": "ResetDate",
-          "Value": "1-Jan"
-        },
-        {
-          "Key": "ResetWater",
-          "Value": "Yes"
-        },
-        {
-          "Key": "ResetN",
-          "Value": "Yes"
-        },
-        {
-          "Key": "ResetSOM",
-          "Value": "Yes"
-        }
-      ],
-      "Name": "Reset on date",
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
+	{
+	  "$type": "Models.Manager, Models",
+	  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] Nutrient nutrient = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            if (ResetWater == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Water\");\r\n                SoilWater.Reset();\r\n            }\r\n            if (ResetNutrients == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Nutrients\");\r\n                nutrient.Reset();\r\n            }\r\n            if (ResetSOM == \"Yes\")\r\n            {\r\n                Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                SOM.Reset();\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+	  "Parameters": [
+		{
+		  "Key": "ResetWater",
+		  "Value": "Yes"
+		},
+		{
+		  "Key": "ResetSOM",
+		  "Value": "Yes"
+		},
+		{
+		  "Key": "ResetNutrients",
+		  "Value": "Yes"
+		}
+	  ],
+	  "Name": "Reset on sowing",
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
+	{
+	  "$type": "Models.Manager, Models",
+	  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing Models.Surface;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Wheat = null;\r\n        [Link] SoilWater SoilWater = null;\r\n        [Link] Nutrient nutrient = null;\r\n        [Link] SurfaceOrganicMatter SOM = null;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Date to reset on:\")]\r\n        public string ResetDate {get;set;}\r\n\r\n        [Description(\"Reset Water? (Yes or No)\")]\r\n        public string ResetWater {get;set;}\r\n\r\n        [Description(\"Reset Soil Nutrients ? (Yes or No)\")]\r\n        public string ResetNutrients {get;set;}\r\n\r\n        [Description(\"Reset Surface Organic Matter? (Yes or No)\")]\r\n        public string ResetSOM {get;set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(ResetDate, Clock.Today, ResetDate))\r\n            {\r\n                if (ResetWater == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Water\");\r\n                    SoilWater.Reset();\r\n                }\r\n                if (ResetNutrients == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Nitrogen\");\r\n                    nutrient.Reset();\r\n                }\r\n                if (ResetSOM == \"Yes\")\r\n                {\r\n                    Summary.WriteMessage(this, \"Reset Surface OM\");\r\n                    SOM.Reset();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+	  "Parameters": [
+		{
+		  "Key": "ResetDate",
+		  "Value": "1-Jan"
+		},
+		{
+		  "Key": "ResetWater",
+		  "Value": "Yes"
+		},
+		{
+		  "Key": "ResetNutrients",
+		  "Value": "Yes"
+		},
+		{
+		  "Key": "ResetSOM",
+		  "Value": "Yes"
+		}
+	  ],
+	  "Name": "Reset on date",
+	  "IncludeInDocumentation": true,
+	  "Enabled": true,
+	  "ReadOnly": false
+	},
     {
       "$type": "Models.Manager, Models",
       "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] SurfaceOrganicMatter SOM;\r\n        \r\n        [Description(\"Tillage Date\")]\r\n        public string TillageDate { get; set; }\r\n        \r\n        [Description(\"Fraction of Residues To Remove (0-1)\")]\r\n        public double Fraction { get; set; }\r\n\r\n        [Description(\"Depth of Tillage (mm)\")]\r\n        public double Depth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(TillageDate, Clock.Today, TillageDate))\r\n                SOM.Incorporate(Fraction, Depth);\r\n        }\r\n    }\r\n}\r\n",

@@ -70,7 +70,7 @@
         /// Returns null if non found.
         /// </summary>
         /// <param name="relativeTo">The model to use as a base.</param>
-        private static IModel FindScopedParentModel(IModel relativeTo)
+        public static IModel FindScopedParentModel(IModel relativeTo)
         {
             do
             {

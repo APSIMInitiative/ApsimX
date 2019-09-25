@@ -231,6 +231,7 @@
     <Compile Include="Core\ITest.cs" />
     <Compile Include="Core\Reference.cs" />
     <Compile Include="Core\Run\CommenceArgs.cs" />
+    <Compile Include="Core\Run\EmptyJob.cs" />
     <Compile Include="Core\Run\GenerateApsimXFiles.cs" />
     <Compile Include="Core\Run\IReplacement.cs" />
     <Compile Include="Core\Run\ISimulationDescriptionGenerator.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Core\Run\PropertyReplacement.cs" />
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
+    <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />

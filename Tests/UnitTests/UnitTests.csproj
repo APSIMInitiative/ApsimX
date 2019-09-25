@@ -118,6 +118,7 @@
     <Compile Include="Core\Run\SimulationDescriptionTests.cs" />
     <Compile Include="Factorial\ExperimentTests.cs" />
     <Compile Include="IrrigationTests.cs" />
+    <Compile Include="MockModel.cs" />
     <Compile Include="Resources\ResourceTests.cs" />
     <Compile Include="Soils\MockNutrientPool.cs" />
     <Compile Include="MockPostSimulationTool.cs" />

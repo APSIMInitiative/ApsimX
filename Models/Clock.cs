@@ -2,6 +2,8 @@
 {
     using Models.Core;
     using Models.Core.Run;
+    using Models.Interfaces;
+    using Newtonsoft.Json;
     using System;
     using System.Xml.Serialization;
 
@@ -24,15 +26,77 @@
 
         /// <summary>Gets or sets the start date.</summary>
         /// <value>The start date.</value>
+        /// <remarks>Settable from the GUI.</remarks>
         [Summary]
         [Description("The start date of the simulation")]
-        public DateTime StartDate { get; set; }
+        public DateTime? Start { get; set; }
 
         /// <summary>Gets or sets the end date.</summary>
         /// <value>The end date.</value>
+        /// <remarks>Settable from the GUI.</remarks>
         [Summary]
         [Description("The end date of the simulation")]
-        public DateTime EndDate { get; set; }
+        public DateTime? End { get; set; }
+
+        /// <summary>
+        /// Gets the start date for the simulation.
+        /// </summary>
+        /// <remarks>
+        /// If the user did not
+        /// not provide a start date, attempt to locate a weather file
+        /// and use its start date. If no weather file can be found,
+        /// throw an exception.
+        /// </remarks>
+        [JsonIgnore]
+        public DateTime StartDate
+        {
+            get
+            {
+                if (Start != null)
+                    return (DateTime)Start;
+
+                // If no start date provided, try and find a weather component and use its start date.
+                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                if (weather != null)
+                    return weather.StartDate;
+
+                throw new Exception($"No start date provided in clock {Apsim.FullPath(this)} and no weather file could be found.");
+            }
+            set
+            {
+                Start = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the end date for the simulation.
+        /// </summary>
+        /// <remarks>
+        /// If the user did not
+        /// not provide a end date, attempt to locate a weather file
+        /// and use its end date. If no weather file can be found,
+        /// throw an exception.
+        /// </remarks>
+        [JsonIgnore]
+        public DateTime EndDate
+        {
+            get
+            {
+                if (End != null)
+                    return (DateTime)End;
+
+                // If no start date provided, try and find a weather component and use its start date.
+                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                if (weather != null)
+                    return weather.EndDate;
+
+                throw new Exception($"No end date provided in {Apsim.FullPath(this)}: and no weather file could be found.");
+            }
+            set
+            {
+                End = value;
+            }
+        }
 
         // Public events that we're going to publish.
         /// <summary>Occurs when [start of simulation].</summary>
@@ -202,173 +266,172 @@
         [EventSubscribe("DoCommence")]
         private void OnDoCommence(object sender, CommenceArgs e)
         {
-                if (DoInitialSummary != null)
-                    DoInitialSummary.Invoke(this, args);
+            if (DoInitialSummary != null)
+                DoInitialSummary.Invoke(this, args);
 
-                if (StartOfSimulation != null)
-                    StartOfSimulation.Invoke(this, args);
+            if (StartOfSimulation != null)
+                StartOfSimulation.Invoke(this, args);
 
-                if (CLEMInitialiseResource != null)
-                    CLEMInitialiseResource.Invoke(this, args);
+            if (CLEMInitialiseResource != null)
+                CLEMInitialiseResource.Invoke(this, args);
 
-                if (CLEMInitialiseActivity != null)
-                    CLEMInitialiseActivity.Invoke(this, args);
+            if (CLEMInitialiseActivity != null)
+                CLEMInitialiseActivity.Invoke(this, args);
 
-                if (CLEMValidate != null)
-                    CLEMValidate.Invoke(this, args);
+            if (CLEMValidate != null)
+                CLEMValidate.Invoke(this, args);
 
             while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
+            {
+                if (DoWeather != null)
+                    DoWeather.Invoke(this, args);
+
+                if (DoDailyInitialisation != null)
+                    DoDailyInitialisation.Invoke(this, args);
+
+                if (StartOfDay != null)
+                    StartOfDay.Invoke(this, args);
+
+                if (Today.Day == 1 && StartOfMonth != null)
+                    StartOfMonth.Invoke(this, args);
+
+                if (Today.DayOfYear == 1 && StartOfYear != null)
+                    StartOfYear.Invoke(this, args);
+
+                if (Today.DayOfWeek == DayOfWeek.Sunday && StartOfWeek != null)
+                    StartOfWeek.Invoke(this, args);
+
+                if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
+                    EndOfWeek.Invoke(this, args);
+
+                if (DoManagement != null)
+                    DoManagement.Invoke(this, args);
+
+                if (DoEnergyArbitration != null)
+                    DoEnergyArbitration.Invoke(this, args);
+
+                if (DoSoilWaterMovement != null)
+                    DoSoilWaterMovement.Invoke(this, args);
+
+                if (DoSoilTemperature != null)
+                    DoSoilTemperature.Invoke(this, args);
+
+                if (DoSoilOrganicMatter != null)
+                    DoSoilOrganicMatter.Invoke(this, args);
+
+                if (DoSurfaceOrganicMatterDecomposition != null)
+                    DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
+
+                if (DoUpdateWaterDemand != null)
+                    DoUpdateWaterDemand.Invoke(this, args);
+
+                if (DoWaterArbitration != null)
+                    DoWaterArbitration.Invoke(this, args);
+
+                if (PrePhenology != null)
+                    PrePhenology.Invoke(this, args);
+
+                if (DoPhenology != null)
+                    DoPhenology.Invoke(this, args);
+
+                if (DoPotentialPlantGrowth != null)
+                    DoPotentialPlantGrowth.Invoke(this, args);
+
+                if (DoPotentialPlantPartioning != null)
+                    DoPotentialPlantPartioning.Invoke(this, args);
+
+                if (DoNutrientArbitration != null)
+                    DoNutrientArbitration.Invoke(this, args);
+
+                if (DoActualPlantPartioning != null)
+                    DoActualPlantPartioning.Invoke(this, args);
+
+                if (DoActualPlantGrowth != null)
+                    DoActualPlantGrowth.Invoke(this, args);
+
+                if (DoUpdate != null)
+                    DoUpdate.Invoke(this, args);
+
+                if (DoManagementCalculations != null)
+                    DoManagementCalculations.Invoke(this, args);
+
+                if (DoStock != null)
+                    DoStock.Invoke(this, args);
+
+                if (DoLifecycle != null)
+                    DoLifecycle.Invoke(this, args);
+
+                if (DoReportCalculations != null)
+                    DoReportCalculations.Invoke(this, args);
+
+                if (Today == EndDate && EndOfSimulation != null)
+                    EndOfSimulation.Invoke(this, args);
+
+                if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
+                    EndOfYear.Invoke(this, args);
+
+                if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
                 {
-                    if (DoWeather != null)
-                        DoWeather.Invoke(this, args);
-
-                    if (DoDailyInitialisation != null)
-                        DoDailyInitialisation.Invoke(this, args);
-
-                    if (StartOfDay != null)
-                        StartOfDay.Invoke(this, args);
-
-                    if (Today.Day == 1 && StartOfMonth != null)
-                        StartOfMonth.Invoke(this, args);
-
-                    if (Today.DayOfYear == 1 && StartOfYear != null)
-                        StartOfYear.Invoke(this, args);
-
-                    if (Today.DayOfWeek == DayOfWeek.Sunday && StartOfWeek != null)
-                        StartOfWeek.Invoke(this, args);
-
-                    if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
-                        EndOfWeek.Invoke(this, args);
-
-                    if (DoManagement != null)
-                        DoManagement.Invoke(this, args);
-
-                    if (DoEnergyArbitration != null)
-                        DoEnergyArbitration.Invoke(this, args);
-
-                    if (DoSoilWaterMovement != null)
-                        DoSoilWaterMovement.Invoke(this, args);
-
-                    if (DoSoilTemperature != null)
-                        DoSoilTemperature.Invoke(this, args);
-
-                    if (DoSoilOrganicMatter != null)
-                        DoSoilOrganicMatter.Invoke(this, args);
-
-                    if (DoSurfaceOrganicMatterDecomposition != null)
-                        DoSurfaceOrganicMatterDecomposition.Invoke(this, args);
-
-                    if (DoUpdateWaterDemand != null)
-                        DoUpdateWaterDemand.Invoke(this, args);
-
-                    if (DoWaterArbitration != null)
-                        DoWaterArbitration.Invoke(this, args);
-
-                    if (PrePhenology != null)
-                        PrePhenology.Invoke(this, args);
-
-                    if (DoPhenology != null)
-                        DoPhenology.Invoke(this, args);
-
-                    if (DoPotentialPlantGrowth != null)
-                        DoPotentialPlantGrowth.Invoke(this, args);
-
-                    if (DoPotentialPlantPartioning != null)
-                        DoPotentialPlantPartioning.Invoke(this, args);
-
-                    if (DoNutrientArbitration != null)
-                        DoNutrientArbitration.Invoke(this, args);
-
-                    if (DoActualPlantPartioning != null)
-                        DoActualPlantPartioning.Invoke(this, args);
-
-                    if (DoActualPlantGrowth != null)
-                        DoActualPlantGrowth.Invoke(this, args);
-
-                    if (DoUpdate != null)
-                        DoUpdate.Invoke(this, args);
-
-                    if (DoManagementCalculations != null)
-                        DoManagementCalculations.Invoke(this, args);
-
-                    if (DoStock != null)
-                        DoStock.Invoke(this, args);
-
-                    if (DoLifecycle != null)
-                        DoLifecycle.Invoke(this, args);
-
-                    if (DoReportCalculations != null)
-                        DoReportCalculations.Invoke(this, args);
-
-                    if (Today == EndDate && EndOfSimulation != null)
-                        EndOfSimulation.Invoke(this, args);
-
-                    if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
-                        EndOfYear.Invoke(this, args);
-
-                    if (Today.AddDays(1).Day == 1 && EndOfMonth != null) // is tomorrow the start of a new month?
-                    {
-                        // CLEM events performed before APSIM EndOfMonth
-                        if (CLEMStartOfTimeStep != null)
-                            CLEMStartOfTimeStep.Invoke(this, args);
-                        if (CLEMUpdateLabourAvailability != null)
-                            CLEMUpdateLabourAvailability.Invoke(this, args);
-                        if (CLEMUpdatePasture != null)
-                            CLEMUpdatePasture.Invoke(this, args);
-                        if (CLEMPastureReady != null)
-                            CLEMPastureReady.Invoke(this, args);
-                        if (CLEMDoCutAndCarry != null)
-                            CLEMDoCutAndCarry.Invoke(this, args);
-                        if (CLEMAnimalBreeding != null)
-                            CLEMAnimalBreeding.Invoke(this, args);
-                        if (CLEMAnimalMilkProduction != null)
-                            CLEMAnimalMilkProduction.Invoke(this, args);
-                        if (CLEMPotentialIntake != null)
-                            CLEMPotentialIntake.Invoke(this, args);
-                        if (CLEMGetResourcesRequired != null)
-                            CLEMGetResourcesRequired.Invoke(this, args);
-                        if (CLEMAnimalWeightGain != null)
-                            CLEMAnimalWeightGain.Invoke(this, args);
-                        if (CLEMCalculateManure != null)
-                            CLEMCalculateManure.Invoke(this, args);
-                        if (CLEMCollectManure != null)
-                            CLEMCollectManure.Invoke(this, args);
-                        if (CLEMAnimalDeath != null)
-                            CLEMAnimalDeath.Invoke(this, args);
-                        if (CLEMAnimalMilking != null)
-                            CLEMAnimalMilking.Invoke(this, args);
-                        if (CLEMCalculateEcologicalState != null)
-                            CLEMCalculateEcologicalState.Invoke(this, args);
-                        if (CLEMAnimalManage != null)
-                            CLEMAnimalManage.Invoke(this, args);
-                        if (CLEMAnimalStock != null)
-                            CLEMAnimalStock.Invoke(this, args);
-                        if (CLEMAnimalSell != null)
-                            CLEMAnimalSell.Invoke(this, args);
-                        if (CLEMDetachPasture != null)
-                            CLEMDetachPasture.Invoke(this, args);
-                        if (CLEMHerdSummary != null)
-                            CLEMHerdSummary.Invoke(this, args);
-                        if (CLEMAgeResources != null)
-                            CLEMAgeResources.Invoke(this, args);
-                        if (CLEMAnimalBuy != null)
-                            CLEMAnimalBuy.Invoke(this, args);
-                        if (CLEMEndOfTimeStep != null)
-                            CLEMEndOfTimeStep.Invoke(this, args);
-                        EndOfMonth.Invoke(this, args);
-                    }
-
-                    if (EndOfDay != null)
-                        EndOfDay.Invoke(this, args);
-
-                    if (DoReport != null)
-                        DoReport.Invoke(this, args);
-
-                    Today = Today.AddDays(1);
+                    // CLEM events performed before APSIM EndOfMonth
+                    if (CLEMStartOfTimeStep != null)
+                        CLEMStartOfTimeStep.Invoke(this, args);
+                    if (CLEMUpdateLabourAvailability != null)
+                        CLEMUpdateLabourAvailability.Invoke(this, args);
+                    if (CLEMUpdatePasture != null)
+                        CLEMUpdatePasture.Invoke(this, args);
+                    if (CLEMPastureReady != null)
+                        CLEMPastureReady.Invoke(this, args);
+                    if (CLEMDoCutAndCarry != null)
+                        CLEMDoCutAndCarry.Invoke(this, args);
+                    if (CLEMAnimalBreeding != null)
+                        CLEMAnimalBreeding.Invoke(this, args);
+                    if (CLEMAnimalMilkProduction != null)
+                        CLEMAnimalMilkProduction.Invoke(this, args);
+                    if (CLEMPotentialIntake != null)
+                        CLEMPotentialIntake.Invoke(this, args);
+                    if (CLEMGetResourcesRequired != null)
+                        CLEMGetResourcesRequired.Invoke(this, args);
+                    if (CLEMAnimalWeightGain != null)
+                        CLEMAnimalWeightGain.Invoke(this, args);
+                    if (CLEMCalculateManure != null)
+                        CLEMCalculateManure.Invoke(this, args);
+                    if (CLEMCollectManure != null)
+                        CLEMCollectManure.Invoke(this, args);
+                    if (CLEMAnimalDeath != null)
+                        CLEMAnimalDeath.Invoke(this, args);
+                    if (CLEMAnimalMilking != null)
+                        CLEMAnimalMilking.Invoke(this, args);
+                    if (CLEMCalculateEcologicalState != null)
+                        CLEMCalculateEcologicalState.Invoke(this, args);
+                    if (CLEMAnimalManage != null)
+                        CLEMAnimalManage.Invoke(this, args);
+                    if (CLEMAnimalStock != null)
+                        CLEMAnimalStock.Invoke(this, args);
+                    if (CLEMAnimalSell != null)
+                        CLEMAnimalSell.Invoke(this, args);
+                    if (CLEMDetachPasture != null)
+                        CLEMDetachPasture.Invoke(this, args);
+                    if (CLEMHerdSummary != null)
+                        CLEMHerdSummary.Invoke(this, args);
+                    if (CLEMAgeResources != null)
+                        CLEMAgeResources.Invoke(this, args);
+                    if (CLEMAnimalBuy != null)
+                        CLEMAnimalBuy.Invoke(this, args);
+                    if (CLEMEndOfTimeStep != null)
+                        CLEMEndOfTimeStep.Invoke(this, args);
+                    EndOfMonth.Invoke(this, args);
                 }
-                Today = EndDate;
-                Summary.WriteMessage(this, "Simulation terminated normally");
-            }
 
+                if (EndOfDay != null)
+                    EndOfDay.Invoke(this, args);
+
+                if (DoReport != null)
+                    DoReport.Invoke(this, args);
+
+                Today = Today.AddDays(1);
+            }
+            Today = EndDate;
+            Summary.WriteMessage(this, "Simulation terminated normally");
+        }
     }
 }

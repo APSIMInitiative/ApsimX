@@ -153,7 +153,17 @@
         /// <returns>Any exception message or null</returns>
         public void ProcessStartupScript(string code)
         {
-            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName());
+            // Allow UI scripts to reference gtk/gdk/etc
+            List<string> assemblies = new List<string>()
+            {
+                typeof(Gtk.Widget).Assembly.Location,
+                typeof(Gdk.Color).Assembly.Location,
+                typeof(Cairo.Context).Assembly.Location,
+                typeof(Pango.Context).Assembly.Location,
+                typeof(GLib.Log).Assembly.Location,
+            };
+
+            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName(), assemblies.ToArray());
 
             // Get the script 'Type' from the compiled assembly.
             Type scriptType = compiledAssembly.GetType("Script");
@@ -736,7 +746,7 @@
             string fileName = this.view.GetMenuItemFileName(obj);
             if (!string.IsNullOrEmpty(fileName))
             {
-                if (this.AskQuestion("Are you sure you want to completely delete the file " + fileName + "?") == QuestionResponseEnum.Yes)
+                if (this.AskQuestion("Are you sure you want to completely delete the file " + StringUtilities.PangoString(fileName) + "?") == QuestionResponseEnum.Yes)
                 {
                     try
                     {
@@ -894,30 +904,32 @@
         /// <param name="e">Event arguments.</param>
         private void OnTabClosing(object sender, TabClosingEventArgs e)
         {
-            if (e.LeftTabControl)
+            e.AllowClose = true;
+
+            IPresenter presenter = e.LeftTabControl ? Presenters1[e.Index - 1] : presenters2[e.Index - 1];
+            if (presenter is ExplorerPresenter explorerPresenter)
+                e.AllowClose = explorerPresenter.SaveIfChanged();
+
+            if (e.AllowClose)
+                CloseTab(e.Index - 1, e.LeftTabControl);
+        }
+
+        /// <summary>
+        /// Close a tab (does not prompt user to save).
+        /// </summary>
+        /// <param name="index">0-based index of the tab.</param>
+        /// <param name="onLeft">Is the tab in the left tab control?</param>
+        public void CloseTab(int index, bool onLeft)
+        {
+            if (onLeft)
             {
-                IPresenter presenter = Presenters1[e.Index - 1];
-                e.AllowClose = true;
-
-                if (presenter is ExplorerPresenter)
-                    e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
-
-                if (e.AllowClose)
-                {
-                    presenter.Detach();
-                    this.Presenters1.RemoveAt(e.Index - 1);
-                }
+                Presenters1[index].Detach();
+                Presenters1.RemoveAt(index);
             }
             else
             {
-                IPresenter presenter = presenters2[e.Index - 1];
-                e.AllowClose = true;
-                if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();                
-                if (e.AllowClose)
-                {
-                    presenter.Detach();
-                    this.presenters2.RemoveAt(e.Index - 1);
-                }
+                presenters2[index].Detach();
+                presenters2.RemoveAt(index);
             }
 
             // We've just closed Simulations
