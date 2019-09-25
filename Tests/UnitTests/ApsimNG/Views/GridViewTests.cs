@@ -42,7 +42,7 @@ namespace UnitTests.ApsimNG.Views
         {
             // Click on clock node.
             explorerPresenter.SelectNode(".Simulations.Simulation.Clock");
-            while (GLib.MainContext.Iteration()) ;
+            GtkUtilities.WaitForGtkEvents();
 
             GridView grid = explorerPresenter.CurrentRightHandView as GridView;
             if (grid == null)
@@ -70,7 +70,7 @@ namespace UnitTests.ApsimNG.Views
         {
             // Click on clock node.
             explorerPresenter.SelectNode(".Simulations.Simulation.Clock");
-            while (GLib.MainContext.Iteration()) ;
+            GtkUtilities.WaitForGtkEvents();
 
             GridView grid = explorerPresenter.CurrentRightHandView as GridView;
             if (grid == null)

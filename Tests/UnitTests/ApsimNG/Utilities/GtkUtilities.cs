@@ -41,6 +41,14 @@ namespace UnitTests.ApsimNG.Utilities
         }
 
         /// <summary>
+        /// Waits for the Gtk event loop to clear.
+        /// </summary>
+        public static void WaitForGtkEvents()
+        {
+            while (GLib.MainContext.Iteration()) ;
+        }
+
+        /// <summary>
         /// Sends a custom button press (click) event to a widget.
         /// </summary>
         /// <param name="target">Widget which should receive the button press event.</param>
