@@ -161,6 +161,13 @@
         private bool comboEditHack = false;
 
         /// <summary>
+        /// We do some trickery to enable tooltips to give additional information about
+        /// entries in the dropdown combo boxes. This is a flag to indicate whether or
+        /// not we've already enabled this, so we don't attempt to enable over and over again.
+        /// </summary>
+        private bool comboTooltipsSet = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
         /// <param name="owner">The owning view.</param>
@@ -739,7 +746,12 @@
                 }
                 else if (editControl is ComboBox)
                 {
+                    comboTooltipsSet = false;
                     text = (editControl as ComboBox).ActiveText;
+                    // text can be null if the user hasn't completed making a selection. 
+                    // If this is the case, we don't want to change the existing value.
+                    if (text == null) 
+                        return;
                     path = editPath;
                 }
                 else if (GetCurrentCell != null)
@@ -1941,10 +1953,12 @@
             try
             {
                 (sender as CellRenderer).EditingCanceled += (src, _) => { EndEdit(); };
+                comboTooltipsSet = false;
+                (e.Editable as ComboBox).SetCellDataFunc((e.Editable as ComboBox).Cells[0], OnSetComboData);
                 (e.Editable as ComboBox).Changed += (o, _) =>
                 {
                     IGridCell currentCell = GetCurrentCell;
-                    if (currentCell != null)
+                    if (currentCell != null && (o as ComboBox).ActiveText != null)
                         UpdateCellText(currentCell, (o as ComboBox).ActiveText);
                     EndEdit();
                 };
@@ -1952,6 +1966,17 @@
             catch (Exception err)
             {
                 ShowError(err);
+            }
+        }
+
+        private void OnSetComboData(CellLayout cell_layout, CellRenderer cell, TreeModel tree_model, TreeIter iter)
+        {
+            (cell as CellRendererText).Text = (string)tree_model.GetValue(iter, 0);
+            if (tree_model.NColumns > 1 && !comboTooltipsSet && cell_layout is TreeViewColumn)
+            {
+                ((cell_layout as TreeViewColumn).TreeView as Gtk.TreeView).TooltipColumn = 1;
+                (cell_layout as TreeViewColumn).TreeView.HasTooltip = true;
+                comboTooltipsSet = true;
             }
         }
 
