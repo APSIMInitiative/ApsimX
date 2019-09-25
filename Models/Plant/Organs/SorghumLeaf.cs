@@ -1196,7 +1196,8 @@ namespace Models.PMF.Organs
             double laiToday = calcLAI();
             //whether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
-            double nGreenToday = Live.N + BAT.StructuralAllocation[leafIndex] + DltRetranslocatedN; //dltRetranslocation is -ve
+            double dltNGreen = BAT.StructuralAllocation[leafIndex] + BAT.MetabolicAllocation[leafIndex];
+            double nGreenToday = Live.N + dltNGreen + DltRetranslocatedN; //dltRetranslocation is -ve
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
@@ -1257,7 +1258,7 @@ namespace Models.PMF.Organs
                 {
                     double nProvided = Math.Min(dilutionN, requiredN);
                     requiredN -= nProvided;
-                    nGreenToday += nProvided; //jkb
+                    nGreenToday -= nProvided; //jkb
                     DltRetranslocatedN -= nProvided;
 
                     if (requiredN <= 0.0001)
