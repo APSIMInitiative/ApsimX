@@ -60,6 +60,11 @@ namespace Models.Report
         private IEvent events = null;
 
         /// <summary>
+        /// Called immediately after reporting.
+        /// </summary>
+        public event EventHandler PostReport;
+
+        /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
@@ -142,7 +147,6 @@ namespace Models.Report
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public void DoOutput()
         {
-            LastReportDate = clock.Today;
             if (dataToWriteToDb == null)
             {
                 string folderName = null;
@@ -173,6 +177,10 @@ namespace Models.Report
                 storage.Writer.WriteTable(dataToWriteToDb);
                 dataToWriteToDb = null;
             }
+
+            LastReportDate = clock.Today;
+
+            PostReport?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>

@@ -290,8 +290,7 @@ namespace APSIM.Shared.Utilities
             int result = 0;
             if (values != null)
                 foreach (var value in values)
-                    if (!double.IsNaN(value))
-                        result += value;
+                    result += value;
             return result;
         }
 
