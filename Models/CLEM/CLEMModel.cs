@@ -305,7 +305,7 @@ namespace Models.CLEM
                 switch ((this as CLEMActivityBase).OnPartialResourcesAvailableAction)
                 {
                     case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                        html += " tooltip = \"Error and Stop on insifficient resources\">Stop";
+                        html += " tooltip = \"Error and Stop on insufficient resources\">Stop";
                         break;
                     case OnPartialResourcesAvailableActionTypes.SkipActivity:
                         html += ">Skip";
