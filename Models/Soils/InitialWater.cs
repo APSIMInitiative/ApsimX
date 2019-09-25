@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWater.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Soils
+﻿namespace Models.Soils
 {
     using System;
     using System.Collections.Generic;

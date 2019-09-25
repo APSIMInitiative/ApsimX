@@ -1,10 +1,17 @@
 {
+<<<<<<< HEAD
   "$type": "Models.PMF.Plant, Models",
   "CropType": "Wheat",
   "IsEnding": false,
   "DaysAfterEnding": 0,
   "ResourceName": null,
   "Name": "Wheat",
+=======
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 66,
+  "Name": "Simulations",
+>>>>>>> AAA_Master
   "Children": [
     {
       "$type": "Models.Memo, Models",

@@ -1,15 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="UnsaturatedFlowModel.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.WaterModel
+﻿namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Core;
-    using Functions;
     using System;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// For water contents below DUL, movement depends upon the water content gradient between adjacent layers and the diffusivity,
