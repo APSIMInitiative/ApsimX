@@ -490,17 +490,6 @@ namespace Models.PMF
                     zones.Add(UptakeDemands);
                 }
 
-                double nDemandInKg = nDemand / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
-                if (nSupply > nDemandInKg)
-                {
-                    //Reduce the PotentialUptakes that we pass to the soil arbitrator
-                    double ratio = Math.Min(1.0, nDemandInKg / nSupply);
-                    foreach (ZoneWaterAndN UptakeDemands in zones)
-                    {
-                        UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
-                        UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, ratio);
-                    }
-                }
                 return zones;
             }
             return null;
