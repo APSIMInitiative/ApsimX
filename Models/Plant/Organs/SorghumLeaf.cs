@@ -1241,6 +1241,10 @@ namespace Models.PMF.Organs
                 requiredN = Math.Min(requiredN, maxN);
 
                 double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
+
+                // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
+                senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN.Value() - DltSenescedN);
+
                 double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
                 DltRetranslocatedN -= newN;
                 nGreenToday += newN; // local variable
@@ -1272,6 +1276,10 @@ namespace Models.PMF.Organs
                     requiredN = Math.Min(requiredN, maxN);
 
                     double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
+
+                    // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
+                    senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN.Value() - DltSenescedN);
+
                     double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
                     DltRetranslocatedN -= newN;
                     nGreenToday += newN;
@@ -1297,6 +1305,10 @@ namespace Models.PMF.Organs
                     requiredN = Math.Min(requiredN, maxN);
 
                     double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
+
+                    // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
+                    senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN.Value() - DltSenescedN);
+
                     double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
                     DltRetranslocatedN -= newN;
                     nGreenToday += newN;
