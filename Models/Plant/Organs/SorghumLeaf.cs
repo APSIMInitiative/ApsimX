@@ -1224,7 +1224,7 @@ namespace Models.PMF.Organs
                         requiredN -= laiN;
                         nProvided += laiN;
 
-                        DltRetranslocatedN -= laiN;
+                        //DltRetranslocatedN -= laiN;
                     }
                 }
 
