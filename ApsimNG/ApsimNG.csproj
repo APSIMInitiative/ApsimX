@@ -246,7 +246,6 @@
     <Compile Include="Utility\Colour.cs" />
     <Compile Include="Presenters\CompositeFactorPresenter.cs" />
     <Compile Include="Utility\FindAllReferencesDialog.cs" />
-    <Compile Include="Utility\FolderOptionsDialog.cs" />
     <Compile Include="Utility\WeatherDownloadDialog.cs" />
     <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
     <Compile Include="Views\CLEM\CLEMFileCropView.cs" />
