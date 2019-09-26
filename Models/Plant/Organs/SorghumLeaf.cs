@@ -1223,8 +1223,6 @@ namespace Models.PMF.Organs
                         BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
                         requiredN -= laiN;
                         nProvided += laiN;
-
-                        //DltRetranslocatedN -= laiN;
                     }
                 }
 
