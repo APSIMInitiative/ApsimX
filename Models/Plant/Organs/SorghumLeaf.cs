@@ -279,11 +279,7 @@ namespace Models.PMF.Organs
         /// <summary>DM Fixation Demand Function</summary>
         [ChildLinkByName]
         IFunction PotentialBiomassTEFunction = null;
-
-        /// <summary>Input for SlaMin</summary>
-        [ChildLinkByName]
-        IFunction SlaMin = null;
-
+        
         /// <summary>Input for NewLeafSLN</summary>
         [ChildLinkByName]
         IFunction NewLeafSLN = null;
@@ -1325,18 +1321,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
         {
-            //NSupply.Reallocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * SenescenceRate.Value() * nReallocationFactor.Value());
-            //if (NSupply.Reallocation < -BiomassToleranceValue)
-            //    throw new Exception("Negative N reallocation value computed for " + Name);
-            var availableNss = DltLAI * TargetSLN.Value();
-            var availableNsss = DltLAI * SlaMin.Value();
-
             var availableLaiN = DltLAI * NewLeafSLN.Value();
 
             double laiToday = calcLAI();
             double nGreenToday = Live.N;
             double slnToday = MathUtilities.Divide(nGreenToday, laiToday, 0.0);
-            //var todaySln = MathUtilities.Divide(Live.Wt + potentialDMAllocation.Total,LAI,0.0);
+
             var dilutionN = Arbitrator.DltTT * ( NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
 
             NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.StorageN + StartLive.MetabolicN, availableLaiN + dilutionN));
