@@ -11,9 +11,19 @@
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Importer\**" />
+    <EmbeddedResource Remove="Importer\**" />
+    <None Remove="Importer\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="ControlledEnvironment.cs" />
@@ -35,6 +45,13 @@
     <Compile Remove="Storage\Table_BASE_13716.cs" />
     <Compile Remove="Storage\Table_LOCAL_13716.cs" />
     <Compile Remove="Storage\Table_REMOTE_13716.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Properties\Resources_BACKUP_22332.resx" />
+    <EmbeddedResource Remove="Properties\Resources_BASE_22332.resx" />
+    <EmbeddedResource Remove="Properties\Resources_LOCAL_22332.resx" />
+    <EmbeddedResource Remove="Properties\Resources_REMOTE_22332.resx" />
   </ItemGroup>
 
   <ItemGroup>
