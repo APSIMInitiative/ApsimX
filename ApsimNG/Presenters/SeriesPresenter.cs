@@ -91,10 +91,8 @@ namespace UserInterface.Presenters
         {
             seriesView.EndEdit();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
-            if (graphPresenter != null)
-            {
-                graphPresenter.Detach();
-            }
+            graphPresenter?.Detach();
+            intellisense.Cleanup();
 
             DisconnectViewEvents();
         }
@@ -132,8 +130,8 @@ namespace UserInterface.Presenters
             seriesView.SeriesType.Changed -= OnSeriesTypeChanged;
             seriesView.LineType.Changed -= OnLineTypeChanged;
             seriesView.MarkerType.Changed -= OnMarkerTypeChanged;
-            seriesView.LineThickness.Changed += OnLineThicknessChanged;
-            seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
+            seriesView.LineThickness.Changed -= OnLineThicknessChanged;
+            seriesView.MarkerSize.Changed -= OnMarkerSizeChanged;
             seriesView.Colour.Changed -= OnColourChanged;
             seriesView.XOnTop.Changed -= OnXOnTopChanged;
             seriesView.YOnRight.Changed -= OnYOnRightChanged;
@@ -146,7 +144,7 @@ namespace UserInterface.Presenters
             seriesView.YCumulative.Changed -= OnCumulativeYChanged;
             seriesView.XCumulative.Changed -= OnCumulativeXChanged;
             seriesView.Filter.Changed -= OnFilterChanged;
-            seriesView.Filter.IntellisenseItemsNeeded += OnIntellisenseItemsNeeded;
+            seriesView.Filter.IntellisenseItemsNeeded -= OnIntellisenseItemsNeeded;
         }
 
         /// <summary>Set the value of the graph models property</summary>

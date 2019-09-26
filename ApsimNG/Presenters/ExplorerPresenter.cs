@@ -91,6 +91,11 @@
             }
         }
 
+        /// <summary>
+        /// Gets the current right hand view.
+        /// </summary>
+        public ViewBase CurrentRightHandView { get; private set; }
+
         /// <summary>Gets the path of the current selected node in the tree.</summary>
         /// <value>The current node path.</value>
         public string CurrentNodePath
@@ -180,7 +185,7 @@
 
                     if (!File.Exists(this.ApsimXFile.FileName))
                     {
-                        choice = MainPresenter.AskQuestion("The original file '" + this.ApsimXFile.FileName + 
+                        choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) + 
                             "' no longer exists.\n \nClick \"Yes\" to save to this location or \"No\" to discard your work.");
                     }
                     else
@@ -199,7 +204,7 @@
 
                         if (string.Compare(newSim, origSim) != 0)
                         {
-                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + this.ApsimXFile.FileName + " ?");
+                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
                         }
                     }
 
@@ -244,7 +249,7 @@
                 if (this.ApsimXFile.FileName != null)
                 {
                     this.ApsimXFile.Write(this.ApsimXFile.FileName);
-                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", ApsimXFile.FileName), Simulation.MessageType.Information);
+                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
                     return true;
                 }
             }
@@ -398,7 +403,21 @@
         /// <param name="parentPath">Path to the parent</param>
         public void Add(string st, string parentPath)
         {
-            AddModelCommand command = new AddModelCommand(parentPath, st, view, this);
+            IModel model = FileFormat.ReadFromString<IModel>(st, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+            AddModelCommand command = new AddModelCommand(parentPath, model, view, this);
+            CommandHistory.Add(command, true);
+        }
+
+        /// <summary>
+        /// Adds a model to a parent model.
+        /// </summary>
+        /// <param name="child">The string representation (JSON or XML) of a model.</param>
+        /// <param name="parentPath">Path to the parent</param>
+        public void Add(IModel child, string parentPath)
+        {
+            AddModelCommand command = new AddModelCommand(parentPath, child, view, this);
             CommandHistory.Add(command, true);
         }
 
@@ -669,6 +688,7 @@
                     ApsimXFile.Links.Resolve(currentRightHandPresenter);
                     this.view.AddRightHandView(newView);
                     this.currentRightHandPresenter.Attach(model, newView, this);
+                    this.CurrentRightHandView = newView as ViewBase;
                 }
             }
             catch (Exception err)

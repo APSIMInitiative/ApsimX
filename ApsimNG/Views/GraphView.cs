@@ -103,12 +103,14 @@ namespace UserInterface.Views
             ForegroundColour = Utility.Colour.ToOxy(foreground);
             if (!Utility.Configuration.Settings.DarkTheme)
                 BackColor = Utility.Colour.ToOxy(Color.White);
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             plot1.Model.MouseDown -= OnChartClick;
             plot1.Model.MouseUp -= OnChartMouseUp;
+            plot1.Model.MouseMove -= OnChartMouseMove;
             captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -230,6 +232,21 @@ namespace UserInterface.Views
         {
             get { return this.plot1.Model.IsLegendVisible; }
             set { this.plot1.Model.IsLegendVisible = value; }
+        }
+
+        /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get
+            {
+                return plot1.Model.LegendPlacement == LegendPlacement.Inside;
+            }
+            set
+            {
+                plot1.Model.LegendPlacement = value ? LegendPlacement.Inside : LegendPlacement.Outside;
+            }
         }
 
         /// <summary>
@@ -830,7 +847,6 @@ namespace UserInterface.Views
             {
                 this.plot1.Model.LegendFont = Font;
                 this.plot1.Model.LegendFontSize = FontSize;
-                this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
             this.plot1.Model.LegendSymbolLength = 30;
@@ -883,10 +899,15 @@ namespace UserInterface.Views
         /// <param name="text">Text of the title</param>
         public void FormatTitle(string text)
         {
-            this.plot1.Model.Title = text;
-            this.plot1.Model.TitleFont = Font;
-            this.plot1.Model.TitleFontSize = 30;
-            this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
+            if (string.IsNullOrWhiteSpace(text))
+                plot1.Model.Title = null;
+            else
+            {
+                this.plot1.Model.Title = text;
+                this.plot1.Model.TitleFont = Font;
+                this.plot1.Model.TitleFontSize = 30;
+                this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
+            }
         }
 
         /// <summary>

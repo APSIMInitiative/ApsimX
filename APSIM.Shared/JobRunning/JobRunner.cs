@@ -98,7 +98,7 @@
             if (numberJobsRunning > 0)
             {
                 cancelToken.Cancel();
-                SpinWait.SpinUntil(() => completed);
+                SpinWait.SpinUntil(() => numberJobsRunning == 0);
             }
         }
 

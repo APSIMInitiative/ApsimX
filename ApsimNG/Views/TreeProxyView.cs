@@ -17,6 +17,7 @@ namespace UserInterface.Views
     using System.Globalization;
     using System.Drawing;
     using APSIM.Shared.Utilities;
+    using EventArguments;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -227,7 +228,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the user finishes editing a cell.
         /// </summary>
-        public event EventHandler OnCellEndEdit;
+        public event EventHandler<GridCellsChangedArgs> OnCellEndEdit;
 
         /// <summary>
         /// Setup the spatial data grid.
@@ -248,11 +249,11 @@ namespace UserInterface.Views
 
             for (int i = 0; i < dates.Length; i++)
             {
-                string date = dates.Length > i ? dates[i].ToShortDateString() : null;
-                string height = heights.Length > i ? (heights[i] / 1000).ToString() : null;
-                string nDemand = nDemands.Length > i ? nDemands[i].ToString() : null;
-                string canopyWidth = canopyWidths.Length > i ? canopyWidths[i].ToString() : null;
-                string treeLeafArea = treeLeafAreas.Length > i ? treeLeafAreas[i].ToString() : null;
+                string date = dates?.Length > i ? dates[i].ToShortDateString() : null;
+                string height = heights?.Length > i ? (heights[i] / 1000).ToString() : null;
+                string nDemand = nDemands?.Length > i ? nDemands[i].ToString() : null;
+                string canopyWidth = canopyWidths?.Length > i ? canopyWidths[i].ToString() : null;
+                string treeLeafArea = treeLeafAreas?.Length > i ? treeLeafAreas[i].ToString() : null;
                 table.Rows.Add(date, height, nDemand, canopyWidth, treeLeafArea);
             }
 
@@ -436,11 +437,11 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        private void GridCellEdited(object sender, EventArgs args)
+        private void GridCellEdited(object sender, GridCellsChangedArgs args)
         {
             try
             {
-                OnCellEndEdit?.Invoke(this, EventArgs.Empty);
+                OnCellEndEdit?.Invoke(sender, args);
             }
             catch (Exception err)
             {
