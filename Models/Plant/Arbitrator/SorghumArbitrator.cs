@@ -99,8 +99,6 @@ namespace Models.PMF
         #endregion
         private List<IModel> uptakeModels = null;
         private List<IModel> zones = null;
-
-        private bool firstEstimate;
         private bool doIncrement;
         private double stage;
         private IPhase previousPhase;
@@ -131,8 +129,6 @@ namespace Models.PMF
         [JsonIgnore]
         public double TTFMFromFlowering { get; private set; }
 
-        private List<ZoneWaterAndN> cachedZones;
-
         /// <summary>Called at the start of the simulation.</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">Dummy event data.</param>
@@ -149,7 +145,6 @@ namespace Models.PMF
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
-            firstEstimate = true;
             doIncrement = true;
         }
 
@@ -374,12 +369,6 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                // ----- fixme -----
-                if (!firstEstimate)
-                    return cachedZones;
-                firstEstimate = false;
-                // ----- fixme -----
-
                 var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 //this function is called 4 times as part of estimates
@@ -405,14 +394,14 @@ namespace Models.PMF
                 // dh - In old sorghum, root only has one type of NDemand - it doesn't have a structural/metabolic division.
                 // In new apsim, root only uses structural, metabolic is always 0. Therefore, we have to include root's structural
                 // NDemand in this calculation.
-                //
+
                 // dh - In old sorghum, totalDemand is metabolic demand for all organs. However in new apsim, grain has no metabolic
                 // demand, so we must include its structural demand in this calculation.
                 double totalDemand = N.TotalMetabolicDemand + N.StructuralDemand[rootIndex] + N.StructuralDemand[grainIndex];
                 double nDemand = Math.Max(0, totalDemand - grainDemand); // to replicate calcNDemand in old sorghum 
                 for (int i = 0; i < Organs.Count; i++)
                     N.UptakeSupply[i] = 0;
-                cachedZones = new List<ZoneWaterAndN>();
+                List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
 
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
                 {
@@ -498,24 +487,21 @@ namespace Models.PMF
                     if (MathUtilities.IsNegative(N.UptakeSupply[rootIndex]))
                         throw new Exception($"-ve uptake supply for organ {(Organs[rootIndex] as IModel).Name}");
                     nSupply += MathUtilities.Sum(organNO3Supply) * zone.Zone.Area;
-                    cachedZones.Add(UptakeDemands);
+                    zones.Add(UptakeDemands);
                 }
 
-                // dh - this code seems to prevent the plant from taking up more N than it needs.
-                // In old apsim however, the plant will take as much as it can get, and any extra
-                // leftover N will go into stem.
-                //var nDemandInKg = nDemand / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
-                //if (nSupply > nDemandInKg)
-                //{
-                //    //Reduce the PotentialUptakes that we pass to the soil arbitrator
-                //    double ratio = Math.Min(1.0, nDemandInKg / nSupply);
-                //    foreach (ZoneWaterAndN UptakeDemands in cachedZones)
-                //    {
-                //        UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
-                //        UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, ratio);
-                //    }
-                //}
-                return cachedZones;
+                double nDemandInKg = nDemand / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                if (nSupply > nDemandInKg)
+                {
+                    //Reduce the PotentialUptakes that we pass to the soil arbitrator
+                    double ratio = Math.Min(1.0, nDemandInKg / nSupply);
+                    foreach (ZoneWaterAndN UptakeDemands in zones)
+                    {
+                        UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
+                        UptakeDemands.NH4N = MathUtilities.Multiply_Value(UptakeDemands.NH4N, ratio);
+                    }
+                }
+                return zones;
             }
             return null;
         }
