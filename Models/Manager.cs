@@ -1,6 +1,8 @@
 ﻿namespace Models
 {
     using APSIM.Shared.Utilities;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
     using Models.Core;
     using Models.Core.Interfaces;
     using System;
@@ -291,6 +293,43 @@
             {
                 if (AssemblyCache.ContainsKey(code))
                     return AssemblyCache[code];
+
+                string runtimePath = Path.GetDirectoryName(typeof(object).Assembly.Location);
+
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
+
+                CSharpCompilation compilation = CSharpCompilation.Create(
+                    Path.GetFileNameWithoutExtension(assemblyFileName),
+                    new[] { syntaxTree },
+                    new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "mscorlib.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Core.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
+                            MetadataReference.CreateFromFile(typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location),
+                            MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location)
+                     },
+                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+
+                MemoryStream ms = new MemoryStream();
+                MemoryStream pdbStream = new MemoryStream();
+                {
+                    var emitResult = compilation.Emit(ms, pdbStream);
+                    if (!emitResult.Success)
+                    {
+                        throw new Exception("Cannot compile manager script to an assembly");
+                    }
+                    ms.Seek(0, SeekOrigin.Begin);
+                    return System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms);
+                }
+
+
+
+
                 bool VB = code.IndexOf("Imports System") != -1;
                 string Language;
                 if (VB)
@@ -327,6 +366,7 @@
                         Params.IncludeDebugInformation = true;
                         Params.WarningLevel = 2;
                         Params.ReferencedAssemblies.Add("System.dll");
+                        Params.ReferencedAssemblies.Add("System.Runtime.dll");
                         Params.ReferencedAssemblies.Add("System.Xml.dll");
                         Params.ReferencedAssemblies.Add("System.Windows.Forms.dll");
                         Params.ReferencedAssemblies.Add("System.Data.dll");

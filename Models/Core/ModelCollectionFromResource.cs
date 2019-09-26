@@ -25,7 +25,7 @@
         {
             // lookup the resource get the xml and then deserialise to a model.
             if (ResourceName != null && ResourceName != "")
-            {
+            {             
                 string contents = Properties.Resources.ResourceManager.GetString(ResourceName);
                 if (contents != null)
                 {

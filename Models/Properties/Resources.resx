@@ -118,58 +118,58 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="OilPalm" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\OilPalm.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="Barley" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Barley.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Wheat" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Wheat.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="Chicory" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Chicory.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Eucalyptus" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Eucalyptus.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="FodderBeet" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FodderBeet.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="GRangeLandUnits" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GRangeLandUnits.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="Maize" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Maize.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Nutrient" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Nutrient.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Oats" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Oats.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="OilPalm" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\OilPalm.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Plantain" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Plantain.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Potato" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Potato.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="RUMINANT_PARAM_GLB" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ruminant.prm;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="SCRUM" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SCRUM.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Slurp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Slurp.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="Supplement" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Supplement.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="Slurp" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Slurp.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Maize" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Maize.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="SCRUM" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SCRUM.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="RUMINANT_PARAM_GLB" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ruminant.prm;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Chicory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Chicory.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="FodderBeet" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\FodderBeet.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
-  </data>
-  <data name="Potato" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Potato.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
-  </data>
-  <data name="Plantain" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Plantain.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
   <data name="SurfaceOrganicMatter" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SurfaceOrganicMatter.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>..\Resources\SurfaceOrganicMatter.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="Oats" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Oats.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
-  </data>
-  <data name="Barley" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Barley.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Eucalyptus" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Eucalyptus.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  <data name="Wheat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Wheat.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="WhiteClover" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\WhiteClover.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="Nutrient" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Nutrient.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="GRangeLandUnits" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\GRangeLandUnits.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>..\Resources\WhiteClover.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
