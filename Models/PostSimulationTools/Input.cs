@@ -4,6 +4,7 @@
     using Models.Core;
     using Models.Core.Run;
     using Models.Storage;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -86,6 +87,8 @@
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// </summary>
+        [JsonIgnore]
+        [NonSerialized]
         public string ErrorMessage = string.Empty;
 
         /// <summary>

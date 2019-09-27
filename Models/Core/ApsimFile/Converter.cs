@@ -1252,7 +1252,7 @@
                 clock["End"] = clock["EndDate"];
             }
         }
-
+        
         /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>
