@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -11,6 +12,7 @@
     [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(Factor))]
     [ValidParent(ParentType = typeof(Permutation))]
+    [Serializable]
     public class Permutation : Model
     {
         /// <summary>

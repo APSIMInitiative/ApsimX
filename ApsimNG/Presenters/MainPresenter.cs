@@ -769,6 +769,9 @@
         private void ProcessCommandLineArguments(string[] commandLineArguments)
         {
             // Look for a script specified on the command line.
+            if (commandLineArguments == null)
+                return;
+
             foreach (string argument in commandLineArguments)
             {
                 if (Path.GetExtension(argument) == ".cs")
