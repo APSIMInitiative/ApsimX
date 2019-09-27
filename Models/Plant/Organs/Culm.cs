@@ -84,6 +84,15 @@ namespace Models.PMF.Organs
         public double FinalLeafNumber { get; set; }
 
         /// <summary>
+        /// Default constructor - this should not be used.
+        /// </summary>
+        public Culm()
+        {
+            // Default constructor is needed for instantiating via reflection,
+            // which is needed for unit tests.
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="parameters"></param>
