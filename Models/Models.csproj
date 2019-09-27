@@ -7,16 +7,8 @@
     <StartupObject />
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-  </PropertyGroup>
-
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   
   <ItemGroup>
@@ -96,6 +88,7 @@
     <EmbeddedResource Include="Resources\SurfaceOrganicMatter.json" />
     <EmbeddedResource Include="Resources\Wheat.json" />
     <EmbeddedResource Include="Resources\WhiteClover.json" />
+    <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
   </ItemGroup>
 
   <ItemGroup>
