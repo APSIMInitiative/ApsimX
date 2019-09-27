@@ -185,6 +185,10 @@
         /// <summary>All jobs have completed</summary>
         private static void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
+            if (sender is Runner)
+            {
+                (sender as Runner).DisposeStorage();
+            }
             if (e.AllExceptionsThrown != null)
             {
                 foreach (var exception in e.AllExceptionsThrown)

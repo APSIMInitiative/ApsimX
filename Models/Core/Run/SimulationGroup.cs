@@ -120,7 +120,6 @@
 
             storage?.Writer.Stop();
             storage?.Reader.Refresh();
-           
         }
 
         /// <summary>Initialise the instance.</summary>
@@ -311,6 +310,14 @@
                     PrePostExceptionsThrown = new List<Exception>();
                 PrePostExceptionsThrown.Add(err);
             }
+        }
+
+        /// <summary>
+        /// Tells us to Dispose (close) our datastore
+        /// </summary>
+        public void DisposeStorage()
+        {
+            storage?.Dispose();
         }
     }
 }
