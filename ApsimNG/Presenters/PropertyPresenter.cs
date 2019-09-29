@@ -159,12 +159,19 @@ namespace UserInterface.Presenters
             try
             {
                 base.Detach();
-                grid.CellsChanged -= OnCellsChanged;
-                grid.ButtonClick -= OnFileBrowseClick;
-                grid.ContextItemsNeeded -= GetContextItems;
-                presenter.CommandHistory.ModelChanged -= OnModelChanged;
-                intellisense.ItemSelected -= OnIntellisenseItemSelected;
-                intellisense.Cleanup();
+                if (grid != null)
+                {
+                    grid.CellsChanged -= OnCellsChanged;
+                    grid.ButtonClick -= OnFileBrowseClick;
+                    grid.ContextItemsNeeded -= GetContextItems;
+                }
+                if (presenter != null)
+                    presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                if (intellisense != null)
+                {
+                    intellisense.ItemSelected -= OnIntellisenseItemSelected;
+                    intellisense.Cleanup();
+                }
             }
             catch (NullReferenceException)
             {
@@ -187,6 +194,9 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to examine for properties.</param>
         private void PopulateGrid(IModel model)
         {
+            if (grid == null)
+                return;
+
             IGridCell selectedCell = grid.GetCurrentCell;
             this.model = model;
 
@@ -350,7 +360,7 @@ namespace UserInterface.Presenters
             this.model = model;
             if (this.model != null)
             {
-                IGridCell curCell = grid.GetCurrentCell;
+                IGridCell curCell = grid?.GetCurrentCell;
                 for (int i = 0; i < properties.Count; i++)
                 {
                     IGridCell cell = grid.GetCell(1, i);

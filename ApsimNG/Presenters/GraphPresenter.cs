@@ -45,13 +45,22 @@ namespace UserInterface.Presenters
         private IPresenter currentPresenter = null;
 
         /// <summary>The series definitions to show on graph.</summary>
-        private List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
+        public List<SeriesDefinition> SeriesDefinitions { get; set; } = new List<SeriesDefinition>();
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="explorerPresenter">The explorer presenter.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        {
+            Attach(model, view, explorerPresenter, null);
+        }
+
+        /// <summary>Attach the model to the view.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="explorerPresenter">The explorer presenter.</param>
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter, List<SeriesDefinition> cache)
         {
             this.graph = model as Graph;
             this.graphView = view as GraphView;
@@ -65,7 +74,13 @@ namespace UserInterface.Presenters
             this.graphView.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
             this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
 
-            DrawGraph();
+            if (cache == null)
+                DrawGraph();
+            else
+            {
+                SeriesDefinitions = cache;
+                DrawGraph(cache);
+            }
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -83,29 +98,39 @@ namespace UserInterface.Presenters
             graphView.OnHoverOverPoint -= OnHoverOverPoint;
         }
 
-        /// <summary>Draw the graph on the screen.</summary>
         public void DrawGraph()
+        {
+            graphView.Clear();
+            if (storage == null)
+                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
+
+            // Get a list of series definitions.
+            try
+            {
+                SeriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader, SimulationFilter);
+            }
+            catch (SQLiteException e)
+            {
+                explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
+            }
+            catch (FirebirdException e)
+            {
+                explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
+            }
+
+            DrawGraph(SeriesDefinitions);
+        }
+
+        /// <summary>Draw the graph on the screen.</summary>
+        public void DrawGraph(List<SeriesDefinition> definitions)
         {
             graphView.Clear();
             if (storage == null)
                 storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
             if (graph != null && graph.Series != null)
             {
-                // Get a list of series definitions.
-                try
-                {
-                    seriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader);
-                }
-                catch (SQLiteException e)
-                {
-                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
-                }
-                catch (FirebirdException e)
-                {
-                    explorerPresenter.MainPresenter.ShowError(new Exception("Error obtaining data from database: ", e));
-                }
 
-                foreach (SeriesDefinition definition in seriesDefinitions)
+                foreach (SeriesDefinition definition in definitions)
                 {
                     DrawOnView(definition);
                 }
@@ -142,7 +167,7 @@ namespace UserInterface.Presenters
                 // they are no longer valid i.e. not on the graph.
                 if (graph.DisabledSeries == null)
                     graph.DisabledSeries = new List<string>();
-                IEnumerable<string> validSeriesTitles = this.seriesDefinitions.Select(s => s.Title);
+                IEnumerable<string> validSeriesTitles = definitions.Select(s => s.Title);
                 List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
                 this.graph.DisabledSeries.Clear();
                 this.graph.DisabledSeries.AddRange(seriesTitlesToKeep);
@@ -174,8 +199,10 @@ namespace UserInterface.Presenters
         /// <returns>A list of series names.</returns>
         public string[] GetSeriesNames()
         {
-            return seriesDefinitions.Select(s => s.Title).ToArray();
+            return SeriesDefinitions.Select(s => s.Title).ToArray();
         }
+
+        public List<string> SimulationFilter { get; set; }
 
         /// <summary>
         /// Iff set to true, the legend will appear inside the graph boundaries.
@@ -349,7 +376,7 @@ namespace UserInterface.Presenters
                 // X or Y field name depending on whether 'axis' is an x axis or a y axis.
                 HashSet<string> names = new HashSet<string>();
 
-                foreach (SeriesDefinition definition in seriesDefinitions)
+                foreach (SeriesDefinition definition in SeriesDefinitions)
                 {
                     if (definition.X != null && definition.XAxis == axis.Type && definition.XFieldName != null)
                     {
@@ -391,7 +418,8 @@ namespace UserInterface.Presenters
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            DrawGraph();
+            if (model == graph || Apsim.ChildrenRecursively(graph).Contains(model))
+                DrawGraph();
         }
 
         /// <summary>User has clicked an axis.</summary>
@@ -478,7 +506,7 @@ namespace UserInterface.Presenters
         private void OnHoverOverPoint(object sender, EventArguments.HoverPointArgs e)
         {
             // Find the correct series.
-            foreach (SeriesDefinition definition in seriesDefinitions)
+            foreach (SeriesDefinition definition in SeriesDefinitions)
             {
                 if (definition.Title == e.SeriesName)
                 {
@@ -518,7 +546,7 @@ namespace UserInterface.Presenters
         /// <returns>The simulation name of the row</returns>
         private string GetSimulationNameForPoint(double x, double y)
         {
-            foreach (SeriesDefinition definition in seriesDefinitions)
+            foreach (SeriesDefinition definition in SeriesDefinitions)
             {
                 if (definition.SimulationNamesForEachPoint != null)
                 {

@@ -5,6 +5,7 @@ using Models.Functions;
 using Models.Interfaces;
 using System.Linq;
 using Models.Soils.Standardiser;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -220,7 +221,9 @@ namespace Models.PMF.Organs
                 var llDep = soil.LL15[RootLayer] * soil.Thickness[RootLayer];
                 var capacity = soil.DULmm[RootLayer] - llDep;
 
-                root.SWAvailabilityRatio = APSIM.Shared.Utilities.MathUtilities.Divide(extractable, capacity, 10);
+                root.SWAvailabilityRatio = MathUtilities.Divide(extractable, capacity, 10);
+                if (MathUtilities.FloatsAreEqual(extractable, 0))
+                    root.SWAvailabilityRatio = 0; // :(
                 rootDepthWaterStress = root.RootDepthStressFactor.Value();
             }
 
