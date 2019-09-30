@@ -26,6 +26,7 @@ namespace UserInterface.Presenters
     using System.Text;
     using Models.Functions;
     using Models.Soils.Standardiser;
+    using Models.Graph;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -90,7 +91,28 @@ namespace UserInterface.Presenters
                 // Run all child model post processors.
                 var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
                 runner.Run();
+                (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Clear graph panel cache.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Clear Cache",
+                     AppliesTo = new Type[] { typeof(GraphPanel) })]
+        public void ClearGraphPanelCache(object sender, EventArgs e)
+        {
+            try
+            {
+                GraphPanel panel = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as GraphPanel;
+                panel.Cache.Clear();
             }
             catch (Exception err)
             {
@@ -220,10 +242,9 @@ namespace UserInterface.Presenters
             string internalCBText = this.explorerPresenter.GetClipboardText("_APSIM_MODEL");
             string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
 
-            if (externalCBText == null || externalCBText == "")
-                this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
-            else
-                this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
+            string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
+
+            this.explorerPresenter.Add(text, this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
@@ -401,7 +422,7 @@ namespace UserInterface.Presenters
         {
             Model factors = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
             if (factors != null)
-                this.explorerPresenter.Add("<Factor/>", this.explorerPresenter.CurrentNodePath);
+                this.explorerPresenter.Add(new Factor(), this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>

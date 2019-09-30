@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils
 {
+    using APSIM.Shared.APSoil;
     using Models.Core;
     using System;
 
@@ -10,8 +11,22 @@
     [ValidParent(ParentType=typeof(Soil))]
     public class Chemical : Model
     {
-        /// <summary>Thickness of each layer.</summary>
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
+        [Units("mm")]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
+
+        /// <summary>Thickness of each layer.</summary>
         [Summary]
         [Units("mm")]
         public double[] Thickness { get; set; }

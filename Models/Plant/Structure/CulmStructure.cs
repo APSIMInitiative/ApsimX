@@ -7,6 +7,7 @@ using Models.Interfaces;
 using Models.PMF.Organs;
 using APSIM.Shared.Utilities;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Models.PMF.Struct
 {
@@ -58,6 +59,9 @@ namespace Models.PMF.Struct
         [Link]
         private SorghumLeaf leaf = null;
 
+        [Link]
+        private Phenology phenology = null;
+
         //[Link]
         //private Phenology phenology = null;
 
@@ -65,12 +69,21 @@ namespace Models.PMF.Struct
         [Link]
         public IFunction thermalTime = null;
 
-        [Link]
-        private IFunction phyllochron = null;
-
         /// <summary>The main stem final node number</summary>
         [Link]
         public IFunction finalLeafNumber = null;
+
+        /// <summary>Leaf initiation rate.</summary>
+        [Link]
+        public IFunction LeafInitiationRate = null;
+
+        /// <summary>Number of seeds in leaf?</summary>
+        [Link]
+        public IFunction LeafNumSeed = null;
+
+        /// <summary>Thermal time from floral init.</summary>
+        [Link]
+        public IFunction TTFi = null;
 
         /// <summary>FertileTillerNumber</summary>
         public double FinalLeafNo { get; set; }
@@ -85,33 +98,57 @@ namespace Models.PMF.Struct
         [Link]
         private IFunction verticalAdjustment = null;
 
+        [Link]
+        private IFunction aTillerVert = null;
+
+        /// <summary>The Initial Appearance rate for phyllocron</summary>
+        [Link]
+        private IFunction initialAppearanceRate = null;
+        /// <summary>The Final Appearance rate for phyllocron</summary>
+        [Link]
+        private IFunction finalAppearanceRate = null;
+        /// <summary>The Final Appearance rate for phyllocron</summary>
+        [Link]
+        private IFunction remainingLeavesForFinalAppearanceRate = null;
+
         private bool leavesInitialised;
         private double tillersAdded;
         private bool dayofEmergence;
         private double dltTTDayBefore;
 
+        /// <summary>
+        /// Target TT from Emergence to Floral Init.
+        /// This is variable and is updated daily.
+        /// </summary>
+        public double TTTargetFI { get; set; }
+
+        //private double dltLeafNo;
+
         /// <summary>FertileTillerNumber</summary>
         public double FertileTillerNumber { get; set; }
 
         /// <summary>Used to match NLeaves in old sorghum which is updated with dltLeafNo at the end of the day</summary>
-        public double NLeaves
-        {
-            get
-            {
-                if(leaf?.Culms.Count > 0)
-                    return leaf.Culms[0].CurrentLeafNumber - leaf.Culms[0].DltNewLeafAppeared;
-                return 0;
-            }
-        } 
+        //[JsonIgnore]
+        public double NLeaves { get; private set; }
 
         /// <summary>CurrentLeafNo</summary>
+        [JsonIgnore]
         public double CurrentLeafNo { get; set; }
+
         /// <summary>Remaining Leaves</summary>
         public double remainingLeaves { get { return FinalLeafNo - CurrentLeafNo; } }
 
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
         public string LeafInitialisationStage { get; set; } = "Emergence";
+
+        [EventSubscribe("EndOfDay")]
+        private void UpdateVars(object sender, EventArgs args)
+        {
+            // In old apsim, NLeaves is only updated at end of day.
+            if (leaf?.Culms.Count > 0)
+                NLeaves = leaf.Culms[0].CurrentLeafNumber - leaf.Culms[0].DltNewLeafAppeared;
+        }
 
         /// <summary>Called when crop is ending</summary>
         [EventSubscribe("PlantSowing")]
@@ -120,46 +157,63 @@ namespace Models.PMF.Struct
             if (Sow.Plant == plant)
             {
                 Clear();
+                //allow structure to clear leaf on sowing event, otherwise leaf will reset the culms after tthey have been initialised
+                leaf.Clear();
                 if (Sow.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 FertileTillerNumber = Sow.BudNumber;
                 //TotalStemPopn = MainStemPopn;
+                if (leaf.Culms.Count == 0)
+                {
+                    //first culm is the main culm
+                    leaf.AddCulm(new CulmParameters() {
+                        Density = Sow.Population,
+                        InitialProportion = 1,
+                        InitialAppearanceRate = initialAppearanceRate.Value(),
+                        FinalAppearanceRate = finalAppearanceRate.Value(),
+                        RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
+                        AMaxIntercept = leaf.AMaxIntercept.Value(),
+                        AMaxSlope = leaf.AMaxSlope.Value(),
+                        AX0 = leaf.AX0.Value()
+                    });
+                }
+
             }
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
-        [EventSubscribe("DoPotentialPlantGrowth")]
+        [EventSubscribe("PrePhenology")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            if (MathUtilities.FloatsAreEqual(TTTargetFI, 0))
+                TTTargetFI = GetTTFi();
+
             if (leavesInitialised)
             {
                 if (dayofEmergence)
                 {
                     CurrentLeafNo = LeafNumAtEmergence.Value();
+                    NLeaves = LeafNumAtEmergence.Value();
                     leaf.Culms[0].CurrentLeafNumber = CurrentLeafNo;
                     dayofEmergence = false;
                 }
-                else
-                {
-                    //finalLeafNo is calculated upon reference to it as a function
-                    calcLeafAppearance();
-                }
+
+                // Previously, we didn't call calcLeafAppearance() on day of emergence,
+                // however that would not be inline with how old apsim does it.
+                //finalLeafNo is calculated upon reference to it as a function
+                calcLeafAppearance();
             }
 
             //old version uses the thermaltime from yesterday to calculate leafAppearance.
             //plant->process() calls leaf->CalcNo before phenology->development()
             //remaining functions use todays... potentially a bug
             dltTTDayBefore = thermalTime.Value();
+            TTTargetFI = GetTTFi();
         }
 
-        /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantGrowth")]
-        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        private double GetTTFi()
         {
-            //hack to get finalleafnumber to be finalised a day later
-            FinalLeafNo = finalLeafNumber.Value();
+            return (double)Apsim.Get(this, "[Phenology].TTEmergToFloralInit.Value()");
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -179,18 +233,28 @@ namespace Models.PMF.Struct
             /// <summary>Calculate the number of new leaf that will appear today.</summary>
         void calcLeafAppearance()
         {
-            double dltNewLeafAppeared = MathUtilities.Bound(MathUtilities.Divide(dltTTDayBefore, phyllochron.Value(), 0), 0.0, remainingLeaves);
-            var newLeafNo = CurrentLeafNo + dltNewLeafAppeared;
-            var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
-            if (newLeafAppeared)
+            if (leaf?.Culms.Count > 0)
             {
-                calcCulmAppearance((int)Math.Floor(newLeafNo));
-            }
-            var updatedFinalLeaf = FinalLeafNo;
-            CurrentLeafNo = newLeafNo;
-            for (var i = 0; i < leaf.Culms.Count; ++i)
-            {
-                leaf.Culms[i].UpdateLeafNumber(dltNewLeafAppeared, updatedFinalLeaf);
+                if (!phenology.Beyond("FloralInitiation"))
+                    FinalLeafNo = finalLeafNumber.Value();
+                leaf.Culms[0].FinalLeafNumber = FinalLeafNo;
+                leaf.Culms[0].calcLeafAppearance(dltTTDayBefore); 
+
+                //MathUtilities.Bound(MathUtilities.Divide(dltTTDayBefore, phyllochron.Value(), 0), 0.0, remainingLeaves);
+                var newLeafNo = leaf.Culms[0].CurrentLeafNumber;
+                var newL = Math.Floor(newLeafNo);
+                var curL = Math.Floor(CurrentLeafNo);
+                var newLeafAppeared = (int)Math.Floor(newLeafNo) > (int)Math.Floor(CurrentLeafNo);
+                if (newLeafAppeared)
+                {
+                    calcCulmAppearance((int)Math.Floor(newLeafNo));
+                }
+                for (var i = 1; i < leaf.Culms.Count; ++i)
+                {
+                    leaf.Culms[i].FinalLeafNumber = FinalLeafNo;
+                    leaf.Culms[i].calcLeafAppearance(dltTTDayBefore);
+                }
+                CurrentLeafNo = newLeafNo;
             }
         }
         /// <summary>Clears this instance.</summary>
@@ -262,14 +326,22 @@ namespace Models.PMF.Struct
             //a new tiller is created with each new leaf, up the number of fertileTillers
             if (tillerFraction + fractionToAdd > 1)
             {
-                leaf.AddCulm(new CulmParameters()
+                var newCulm = leaf.AddCulm(new CulmParameters()
                 {
                     CulmNumber = nCulms,
-                    Proportion = fraction,
-                    VerticalAdjustment = tillersAdded * verticalAdjustment.Value(), //add aMaxVert in calc
-                    LeafAtAppearance = leafAtAppearance
+                    Density = leaf.SowingDensity,
+                    InitialProportion = fraction,
+                    VerticalAdjustment = tillersAdded * aTillerVert.Value() + verticalAdjustment.Value(), //add aMaxVert in calc
+                    LeafNoAtAppearance = leafAtAppearance,
+                    InitialAppearanceRate = initialAppearanceRate.Value(),
+                    FinalAppearanceRate = finalAppearanceRate.Value(),
+                    RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
+                    AMaxIntercept = leaf.AMaxIntercept.Value(),
+                    AMaxSlope = leaf.AMaxSlope.Value(),
+                    AX0 = leaf.AX0.Value()
                 });
-
+                newCulm.FinalLeafNumber = FinalLeafNo;
+                newCulm.calcLeafAppearance(dltTTDayBefore);
                 //bell curve distribution is adjusted horizontally by moving the curve to the left.
                 //This will cause the first leaf to have the same value as the nth leaf on the main culm.
                 //T3&&T4 were defined during dicussion at initial tillering meeting 27/06/12

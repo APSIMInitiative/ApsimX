@@ -190,13 +190,15 @@ namespace UserInterface.Presenters
                                                  simulationName: SimulationFilter.Name,
                                                  tableName: view.TableList.SelectedValue,
                                                  from: start, 
-                                                 count: count);
+                                                 count: count,
+                                                 filter: view.RowFilter.Value);
                     }
                     else
                     {
                         data = dataStore.Reader.GetData(
                                                 tableName: view.TableList.SelectedValue,
-                                                count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
+                                                count: Utility.Configuration.Settings.MaximumRowsOnReportGrid,
+                                                filter: view.RowFilter.Value);
                     }
                 }
                 catch (Exception e)

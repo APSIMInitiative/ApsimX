@@ -71,8 +71,7 @@ namespace UserInterface.Presenters
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             scriptModel = manager.Children.FirstOrDefault();
-            if (scriptModel != null)
-                propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
+            propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
             managerView.Editor.ScriptMode = true;
             managerView.Editor.Text = manager.Code;
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
@@ -132,8 +131,8 @@ namespace UserInterface.Presenters
                 BuildScript();
             if (scriptModel != null)
             {
-                propertyPresenter.FindAllProperties(scriptModel);
-                propertyPresenter.PopulateGrid(scriptModel);
+                propertyPresenter.UpdateModel(scriptModel);
+                propertyPresenter.Refresh();
             }
         }
 
@@ -190,7 +189,7 @@ namespace UserInterface.Presenters
                 // User could have added more inputs to manager script - therefore we update the property presenter.
                 scriptModel = Apsim.Child(manager, "Script") as Model;
                 if (scriptModel != null)
-                    propertyPresenter.Attach(scriptModel, managerView.GridView, explorerPresenter);
+                    propertyPresenter.Refresh();
             }
             catch (Exception err)
             {

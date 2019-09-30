@@ -4,6 +4,7 @@
     using Models.Core;
     using Models.Core.Run;
     using Models.Storage;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -46,6 +47,8 @@
         {
             get
             {
+                if (storage == null)
+                    return PathUtilities.GetAbsolutePath(this.FileName, (Apsim.Parent(this, typeof(Simulations)) as Simulations).FileName);
                 return PathUtilities.GetAbsolutePath(this.FileName, storage.FileName);
             }
 
@@ -84,6 +87,8 @@
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// </summary>
+        [JsonIgnore]
+        [NonSerialized]
         public string ErrorMessage = string.Empty;
 
         /// <summary>
