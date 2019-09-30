@@ -319,8 +319,6 @@ namespace Models.Report
                 events.Unsubscribe("[Clock].EndOfDay", this.OnEndOfDay);
         }
 
-        #region Capture methods
-
         /// <summary>
         /// The from property is an event name. This is the event handler for the from event.,
         /// </summary>
@@ -329,6 +327,7 @@ namespace Models.Report
         private void OnBeginCapture(object sender, EventArgs e)
         {
             valuesToAggregate.Clear();
+            lastStoreDate = DateTime.MinValue;
             this.StoreValueForAggregation();
             this.inCaptureWindow = true;
         }
@@ -519,7 +518,5 @@ namespace Models.Report
             }
             return result;
         }
-
-        #endregion
     }
 }

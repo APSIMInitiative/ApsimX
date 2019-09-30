@@ -79,6 +79,11 @@ namespace Models.Report
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
+        /// <summary>
+        /// Date of the last report event.
+        /// </summary>
+        public event EventHandler DoReport;
+
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -165,6 +170,7 @@ namespace Models.Report
                 storage.Writer.WriteTable(dataToWriteToDb);
                 dataToWriteToDb = null;
             }
+            DoReport?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>
