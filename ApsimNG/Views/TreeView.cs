@@ -197,6 +197,28 @@ namespace UserInterface.Views
             treeview1.SetCursor(selPath, treeview1.GetColumn(0), true);
         }
 
+        private TreePath CreatePath(Utility.TreeNode node)
+        {
+            return new TreePath(node.Indices);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expandedNodes"></param>
+        public void ExpandNodes(Utility.TreeNode[] expandedNodes)
+        {
+            foreach (var node in expandedNodes)
+                treeview1.ExpandRow(CreatePath(node), false);
+        }
+
+        public Utility.TreeNode[] GetExpandedNodes()
+        {
+            List<Utility.TreeNode> expandedRows = new List<Utility.TreeNode>();
+            treeview1.MapExpandedRows((view, path) => expandedRows.Add(new Utility.TreeNode(path.Indices)));
+            return expandedRows.ToArray();
+        }
+
         /// <summary>Deletes the specified node.</summary>
         /// <param name="nodePath">The node path.</param>
         public void Delete(string nodePath)

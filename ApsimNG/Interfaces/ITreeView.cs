@@ -69,6 +69,18 @@ namespace UserInterface.Interfaces
         /// <param name="nodeDescription">The node description.</param>
         /// <param name="position">The position.</param>
         void AddChild(string parentNodePath, TreeViewNode nodeDescription, int position = -1);
+
+        /// <summary>
+        /// Returns tree nodes which are expanded.
+        /// </summary>
+        /// <returns></returns>
+        Utility.TreeNode[] GetExpandedNodes();
+
+        /// <summary>
+        /// Expands nodes.
+        /// </summary>
+        /// <param name="expandedNodes"></param>
+        void ExpandNodes(Utility.TreeNode[] expandedNodes);
     }
 
     /// <summary>A structure for holding info about an item in the treeview.</summary>

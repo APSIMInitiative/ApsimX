@@ -130,8 +130,10 @@
             this.view.Tree.AllowDrop += this.OnAllowDrop;
             this.view.Tree.Droped += this.OnDrop;
             this.view.Tree.Renamed += this.OnRename;
-            
+
             Refresh();
+
+            this.view.Tree.ExpandNodes(Configuration.Settings.GetMruFile(ApsimXFile.FileName).ExpandedNodes);
             this.PopulateMainMenu();
         }
 
@@ -146,6 +148,7 @@
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
+            Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
             this.view.Tree.SelectedNodeChanged -= this.OnNodeSelected;
             this.view.Tree.DragStarted -= this.OnDragStart;
             this.view.Tree.AllowDrop -= this.OnAllowDrop;
@@ -274,7 +277,7 @@
 
                     this.ApsimXFile.Write(newFileName);
                     MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
-                    Utility.Configuration.Settings.AddMruFile(newFileName);
+                    Configuration.Settings.AddMruFile(new ApsimFileMetadata(newFileName, view.Tree.GetExpandedNodes()));
                     MainPresenter.UpdateMRUDisplay();
                     MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", newFileName), Simulation.MessageType.Information);
                     return true;
