@@ -81,6 +81,18 @@ namespace UserInterface.Interfaces
         /// </summary>
         /// <param name="expandedNodes"></param>
         void ExpandNodes(Utility.TreeNode[] expandedNodes);
+
+        /// <summary>
+        /// Expands all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        void ExpandChildren(string path);
+
+        /// <summary>
+        /// Collapses all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        void CollapseChildren(string path);
     }
 
     /// <summary>A structure for holding info about an item in the treeview.</summary>

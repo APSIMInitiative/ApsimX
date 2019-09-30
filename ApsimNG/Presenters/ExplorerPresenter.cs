@@ -307,6 +307,16 @@
             this.ShowRightHandPanel();
         }
 
+        internal void CollapseChildren(string path)
+        {
+            view.Tree.CollapseChildren(path);
+        }
+
+        internal void ExpandChildren(string path)
+        {
+            view.Tree.ExpandChildren(path);
+        }
+
         /// <summary>
         /// Select the next node in the view. The next node is defined as the next one
         /// down in the tree view. It will go through child nodes if they exist.

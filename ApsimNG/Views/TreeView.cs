@@ -850,5 +850,25 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
+
+        /// <summary>
+        /// Expands all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        public void ExpandChildren(string path)
+        {
+            TreePath nodePath = treemodel.GetPath(FindNode(path));
+            treeview1.ExpandRow(nodePath, true);
+        }
+
+        /// <summary>
+        /// Collapses all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        public void CollapseChildren(string path)
+        {
+            TreePath nodePath = treemodel.GetPath(FindNode(path));
+            treeview1.CollapseRow(nodePath);
+        }
     }
 }

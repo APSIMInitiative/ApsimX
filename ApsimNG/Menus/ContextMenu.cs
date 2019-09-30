@@ -265,9 +265,31 @@ namespace UserInterface.Presenters
                 this.explorerPresenter.MoveDown(model);
         }
 
+        /// <summary>
+        /// Move up
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Collapse Children", ShortcutKey = "Ctrl+Left", FollowsSeparator = true)]
+        public void OnCollapseChildren(object sender, EventArgs e)
+        {
+            explorerPresenter.CollapseChildren(explorerPresenter.CurrentNodePath);
+        }
+
+        /// <summary>
+        /// Move down
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Expand Children", ShortcutKey = "Ctrl+Right")]
+        public void OnExpandChildren(object sender, EventArgs e)
+        {
+            explorerPresenter.ExpandChildren(explorerPresenter.CurrentNodePath);
+        }
 
         [ContextMenu(MenuName = "Copy path to node",
-                     ShortcutKey = "Ctrl+Shift+C")]
+                     ShortcutKey = "Ctrl+Shift+C",
+                     FollowsSeparator = true)]
         public void CopyPathToNode(object sender, EventArgs e)
         {
             string nodePath = explorerPresenter.CurrentNodePath;
