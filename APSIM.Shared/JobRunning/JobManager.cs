@@ -10,7 +10,8 @@
     public class JobManager : IJobManager
     {
         private Queue<IRunnable> jobs = new Queue<IRunnable>();
-        private int numJobsToRun;
+        /// <summary> number of jobs </summary>
+        protected int numJobsToRun;
         private bool initialised;
 
         /// <summary>Invoked when this job manager has finished everything.</summary>

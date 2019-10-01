@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils
 {
+    using APSIM.Shared.APSoil;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Soils.Standardiser;
@@ -77,9 +78,24 @@
             CaCl2
         }
 
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("mm")]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
+
         /// <summary>Thickness</summary>
-        [Description("Depth (mm)")]
         [Summary]
+        [Units("mm")]
         public double[] Thickness { get; set; }
 
         /// <summary>Nitrate NO3.</summary>

@@ -61,12 +61,13 @@ namespace Models.PMF
             //var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
 
             // dh - Old apsim calls organ->calcNDemand() to get demands. This is equivalent to metabolic NDemand in new apsim.
-            //      Root had no separation of structural/metabolic N in old apsim. New apsim is similar, except it's all in
+            //      Root and grain had no separation of structural/metabolic N in old apsim. New apsim is similar, except it's all in
             //      structural demand, so we need to remember to take that into account as well.
-            var totalPlantNDemand = BAT.TotalMetabolicDemand + BAT.StructuralDemand[rootIndex] - grainDemand; // to replicate calcNDemand in old sorghum 
-            if (MathUtilities.IsPositive(totalPlantNDemand))
+            double totalDemand = BAT.TotalMetabolicDemand + BAT.StructuralDemand[rootIndex] + BAT.StructuralDemand[grainIndex];
+            double plantNDemand = Math.Max(0, totalDemand - grainDemand); // to replicate calcNDemand in old sorghum 
+            if (MathUtilities.IsPositive(plantNDemand))
             {
-                BAT.SupplyDemandRatioN = MathUtilities.Divide(BAT.TotalUptakeSupply, totalPlantNDemand, 0);
+                BAT.SupplyDemandRatioN = MathUtilities.Divide(BAT.TotalUptakeSupply, plantNDemand, 0);
                 BAT.SupplyDemandRatioN = Math.Min(BAT.SupplyDemandRatioN, 1);
                 // BAT.SupplyDemandRatioN = Math.Max(BAT.SupplyDemandRatioN, 0); // ?
             }
@@ -93,13 +94,17 @@ namespace Models.PMF
 
             double totalMetabolicDemand = leafDemand + rachisDemand + stemDemand;
 
-            double leafProportion = MathUtilities.Divide(leafDemand, totalMetabolicDemand, 0);
-            double rachisProportion = MathUtilities.Divide(rachisDemand, totalMetabolicDemand, 0);
-            double stemProportion = MathUtilities.Divide(stemDemand, totalMetabolicDemand, 0);
+            double leafProportion = MathUtilities.Bound(MathUtilities.Divide(leafDemand, totalMetabolicDemand, 0), 0, 1);
+            double rachisProportion = MathUtilities.Bound(MathUtilities.Divide(rachisDemand, totalMetabolicDemand, 0), 0, 1);
+            double stemProportion = MathUtilities.Bound(MathUtilities.Divide(stemDemand, totalMetabolicDemand, 0), 0, 1);
 
-            double leafAlloc = Math.Min(1, NotAllocated * leafProportion);
-            double rachisAlloc = Math.Min(1, NotAllocated * rachisProportion);
-            double stemAlloc = Math.Min(1, NotAllocated * stemProportion);
+            double leafAlloc = NotAllocated * leafProportion;
+            leafAlloc = Math.Min(leafAlloc, leafDemand);
+
+            double rachisAlloc = NotAllocated * rachisProportion;
+            rachisAlloc = Math.Min(rachisAlloc, rachisDemand);
+
+            double stemAlloc = NotAllocated - leafAlloc - rachisAlloc;
 
             AllocateMetabolic(leafIndex, leafAlloc, BAT);
             AllocateMetabolic(rachisIndex, rachisAlloc, BAT);
@@ -135,11 +140,14 @@ namespace Models.PMF
                 double MetabolicAllocation = Math.Min(MetabolicRequirement, allocation);
 
                 //to stop it from givig it too much metabolic - push the flowover from metabolic into storage
-                BAT.MetabolicAllocation[i] += MetabolicAllocation; 
+                BAT.MetabolicAllocation[i] += MetabolicAllocation;
 
                 //do storage if there is any leftover
                 double storageAllocation = allocation - MetabolicAllocation;
                 BAT.StorageAllocation[i] += storageAllocation;
+
+                if (storageAllocation > BAT.StorageDemand[i])
+                    BAT.StorageDemand[i] += storageAllocation;
             }
         }
 
@@ -178,6 +186,7 @@ namespace Models.PMF
             var forLeaffromStem = AllocateStructuralFromStem(stemIndex, leafIndex, N, dm, Organs[stemIndex] as GenericOrgan);
             var forLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, leafIndex, N);
 
+            // Retranslocate to grain
             double fromRachis = AllocateStructuralFromRachis(rachisIndex, grainIndex, N, dm, Organs[rachisIndex] as GenericOrgan);
             double fromStem = AllocateStructuralFromStem(stemIndex, grainIndex, N, dm, Organs[stemIndex] as GenericOrgan);
             double fromLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, grainIndex, N);
@@ -228,7 +237,7 @@ namespace Models.PMF
                 double nProvided = 0;
                 double dmGreen = source.Live.Wt;
                 double dltDmGreen = dm.StructuralAllocation[iSupply] + dm.MetabolicAllocation[iSupply];
-                double dltNGreen = n.StructuralAllocation[iSupply] + n.MetabolicAllocation[iSupply];
+                double dltNGreen = n.StructuralAllocation[iSupply] + n.MetabolicAllocation[iSupply] + n.StorageAllocation[iSupply];
 
                 if (dltNGreen > StructuralRequirement)
                 {
@@ -269,21 +278,16 @@ namespace Models.PMF
         /// <param name="BAT">The organs.</param>
         public double AllocateStructuralFromLeaf(SorghumLeaf leaf, int iSupply, int iSink, BiomassArbitrationType BAT)
         {
-            //leaf called
             double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink]);
             if (MathUtilities.IsPositive(StructuralRequirement))
             {
-                double currentRetranslocatedN = leaf.DltRetranslocatedN; //-ve number
-
                 bool forLeaf = iSupply == iSink;
                 double providedN = leaf.provideNRetranslocation(BAT, StructuralRequirement, forLeaf);
                 BAT.StructuralAllocation[iSink] += providedN;
 
-                double afterRetranslocatedN = leaf.DltRetranslocatedN;
-                //Leaf keeps track of retranslocation - the return value can include DltLAI which is not techncally retraslocated
-                //Let leaf handle the updating
+                // Leaf's dltRetranslocatedN is negative (as in old apsim).
+                BAT.Retranslocation[iSupply] = Math.Abs(leaf.DltRetranslocatedN);
 
-                BAT.Retranslocation[iSupply] += Math.Abs(afterRetranslocatedN - currentRetranslocatedN);
                 return providedN;
             }
             return 0.0;

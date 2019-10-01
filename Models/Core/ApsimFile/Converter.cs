@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 66; } }
+        public static int LatestVersion { get { return 67; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1238,6 +1238,21 @@
             }
         }
 
+        /// <summary>
+        /// Upgrades to version 67. Sets the Start and End properties
+        /// in clock to the values previously stored in StartDate and EndDate.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion67(JObject root, string fileName)
+        {
+            foreach (JObject clock in JsonUtilities.ChildrenRecursively(root, "Clock"))
+            {
+                clock["Start"] = clock["StartDate"];
+                clock["End"] = clock["EndDate"];
+            }
+        }
+        
         /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>

@@ -209,6 +209,7 @@
     <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
+    <Compile Include="EventArguments\GridCellChangedArgs.cs" />
     <Compile Include="EventArguments\GridCellPasteArgs.cs" />
     <Compile Include="EventArguments\CopyEventArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
@@ -219,6 +220,7 @@
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Interfaces\IGraphPanelView.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
     <Compile Include="Interfaces\IPropertyTreeView.cs" />
     <Compile Include="Interfaces\ITernaryGraphView.cs" />
@@ -239,6 +241,8 @@
     <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
+    <Compile Include="Presenters\GraphPanelPresenter.cs" />
+    <Compile Include="Presenters\ProfileGridPresenter.cs" />
     <Compile Include="Presenters\PropertyAndTablePresenter.cs" />
     <Compile Include="Presenters\TernaryGraphPresenter.cs" />
     <Compile Include="Utility\Colour.cs" />
@@ -257,6 +261,7 @@
     <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\FactorView.cs" />
+    <Compile Include="Views\GraphPanelView.cs" />
     <Compile Include="Views\HelpView.cs" />
     <Compile Include="Views\LabelView.cs" />
     <Compile Include="Views\ListView.cs" />
@@ -1128,6 +1133,6 @@
   -->
   <Target Name="BeforeBuild">
     <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ &gt;nul" />
+    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\Bin64\lib ..\lib\ &gt;nul" />
   </Target>
 </Project>
