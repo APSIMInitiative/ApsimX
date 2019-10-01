@@ -409,8 +409,8 @@ namespace Models.Report
             DateTime from = GetFromDate();
             DateTime to = GetToDate();
 
-            bool afterFrom = clock.Today.Year > from.Year || (clock.Today.DayOfYear >= from.DayOfYear && (fromHasNoYear || clock.Today.Year >= from.Year));
-            bool beforeTo = clock.Today.Year < to.Year || (clock.Today.DayOfYear <= to.DayOfYear && (toHasNoYear || clock.Today.Year <= to.Year));
+            bool afterFrom = (!fromHasNoYear && clock.Today.Year > from.Year) || (clock.Today.DayOfYear >= from.DayOfYear && (fromHasNoYear || clock.Today.Year >= from.Year));
+            bool beforeTo = (!toHasNoYear && clock.Today.Year < to.Year) || (clock.Today.DayOfYear <= to.DayOfYear && (toHasNoYear || clock.Today.Year <= to.Year));
 
             return afterFrom && beforeTo;
         }
