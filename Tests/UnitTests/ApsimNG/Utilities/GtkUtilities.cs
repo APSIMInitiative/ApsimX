@@ -7,6 +7,7 @@ using UserInterface.Presenters;
 using UserInterface.Views;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using APSIM.Shared.Utilities;
 
 namespace UnitTests.ApsimNG.Utilities
 {
@@ -20,9 +21,9 @@ namespace UnitTests.ApsimNG.Utilities
         };
 
         /// <summary>
-        /// Sends a left-click event to a widget.
+        /// Sends a left-click event to a widget and optionally waits for Gtk to processs the event..
         /// </summary>
-        public static void Click(Widget target)
+        public static void Click(Widget target, bool wait = true)
         {
             if (target is Button btn)
             {
@@ -38,6 +39,9 @@ namespace UnitTests.ApsimNG.Utilities
 
             GLib.Signal.Emit(target, "button-press-event", new object[0]);
             GLib.Signal.Emit(target, "button-release-event", new object[0]);
+
+            if (wait)
+                WaitForGtkEvents();
         }
 
         /// <summary>
@@ -94,6 +98,19 @@ namespace UnitTests.ApsimNG.Utilities
             if (wait)
                 // Clear gtk event loop.
                 while (GLib.MainContext.Iteration()) ;
+        }
+
+        /// <summary>
+        /// Sends a double click event to a widget at the given coordinates, and optionally waits for
+        /// Gtk to process the event.
+        /// </summary>
+        /// <param name="target">Widget which is the target of the double click.</param>
+        /// <param name="x">x-coordinate of the click relative to the widget.</param>
+        /// <param name="y">y-coordinate of the click relative to the widget.</param>
+        /// <param name="wait">Iff true, will wait for gtk to process the click event.</param>
+        public static void DoubleClick(Widget target, double x = 0, double y = 0, bool wait = true)
+        {
+            Click(target, EventType.TwoButtonPress, ModifierType.None, ButtonPressType.LeftClick, x, y, wait);
         }
 
         /// <summary>
@@ -248,6 +265,35 @@ namespace UnitTests.ApsimNG.Utilities
             }
 
             return modifier;
+        }
+
+        public static void SelectComboBoxItem(IDropDownView view, string item, bool wait = true)
+        {
+            ComboBox combo = ReflectionUtilities.GetValueOfFieldOrProperty("combobox1", view) as ComboBox;
+            if (combo == null)
+                throw new Exception("Unable to get combo box from drop down view - has its property name changed?");
+
+            SelectComboBoxItem(combo, item, wait);
+        }
+
+        public static void SelectComboBoxItem(ComboBox combo, string item, bool wait = true)
+        {
+            //// We want to click on a cell, but this requires coordinates.
+            ////GtkUtilities.GetTreeViewCoordinates(combo.Cell, 0, 1, out int x, out int y);
+            // fixme
+            if (combo.Model.GetIterFirst(out TreeIter iter))
+            {
+                string entry = (string)combo.Model.GetValue(iter, 0);
+                while (entry != null && !entry.Equals(item, StringComparison.InvariantCultureIgnoreCase) && combo.Model.IterNext(ref iter)) // Should the text matchin be case-insensitive?
+                    entry = (string)combo.Model.GetValue(iter, 0);
+                if (entry == item)
+                    combo.SetActiveIter(iter);
+                else // Could not find a matching entry
+                    combo.Active = -1;
+            }
+
+            if (wait)
+                WaitForGtkEvents();
         }
 
         // Analysis disable InconsistentNaming

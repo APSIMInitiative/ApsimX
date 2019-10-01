@@ -349,7 +349,7 @@ namespace UserInterface.Views
                 else
                     series.ToolTip = title;
 
-                if (colour == Color.Empty)
+                if (colour.ToArgb() == Color.Empty.ToArgb())
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
