@@ -267,7 +267,6 @@
     <Compile Include="Views\ListView.cs" />
     <Compile Include="Views\MenuItemView.cs" />
     <Compile Include="Views\MethodCompletionView.cs" />
-    <Compile Include="Views\FormattedGridView.cs" />
     <Compile Include="Views\TernaryGraphView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
     <Compile Include="Classes\Grid\GridColumn.cs" />
