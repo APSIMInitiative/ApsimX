@@ -62,6 +62,7 @@
                                             "sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test",
                                             "[Clock].Today.Year as Year",
                                             "sum of [Clock].Today.DayOfYear from 1-Jan to 31-Dec as SigmaDay",
+                                            "sum of [Clock].Today.DayOfYear from 1-Jan to 9-Jan as HardCoded"
                                         },
                                         EventNames = new string[]
                                         {
@@ -148,16 +149,24 @@
             // The simulation starts in 2017 January 1, which is a Sunday (start of week).
             List<int> weeklyNumbers = new List<int>() { 1, 3, 6, 10, 15, 21, 28, 8, 17, 27 };
 
+            // To test aggregation to/from hardcoded date in the format dd-mmm, we sum day of year
+            // from 1-Jan to 9-Jan. The simulation stops on 10-Jan, so the last two numbers should
+            // be the same.
+            List<int> hardCoded = new List<int>() { 1, 3, 6, 10, 15, 21, 28, 36, 45, 45 };
+
             var runner = new Runner(sims);
             runner.Run();
 
             var storage = sims.Children[0] as IDataStore;
-            DataTable data = storage.Reader.GetData("Report", fieldNames: new List<string>() { "n", "TriangularNumbers", "test" });
+            DataTable data = storage.Reader.GetData("Report", fieldNames: new List<string>() { "n", "TriangularNumbers", "test", "HardCoded" });
             List<int> predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["TriangularNumbers"], CultureInfo.InvariantCulture)).ToList();
             Assert.AreEqual(triangularNumbers, predicted, "Error in report aggregation involving [Clock].Today");
 
             predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["test"], CultureInfo.InvariantCulture)).ToList();
             Assert.AreEqual(weeklyNumbers, predicted);
+
+            predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["HardCoded"], CultureInfo.InvariantCulture)).ToList();
+            Assert.AreEqual(hardCoded, predicted);
         }
 
         /// <summary>
