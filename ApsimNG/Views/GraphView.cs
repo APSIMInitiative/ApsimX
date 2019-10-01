@@ -847,6 +847,7 @@ namespace UserInterface.Views
             {
                 this.plot1.Model.LegendFont = Font;
                 this.plot1.Model.LegendFontSize = FontSize;
+                this.plot1.Model.LegendPosition = oxyLegendPosition;
             }
 
             this.plot1.Model.LegendSymbolLength = 30;
