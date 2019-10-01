@@ -94,19 +94,23 @@
             List<string> fieldNames = new List<string>() { "sum", "avg", "min", "max", "first", "last", "diff" };
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
 
-            List<int> sum = data.AsEnumerable().Select(x => Convert.ToInt32(x["sum"])).ToList();
-            List<double> avg = data.AsEnumerable().Select(x => (double)x["avg"]).ToList();
-            List<int> min = data.AsEnumerable().Select(x => Convert.ToInt32(x["min"])).ToList();
-            List<int> max = data.AsEnumerable().Select(x => Convert.ToInt32(x["max"])).ToList();
-            List<int> first = data.AsEnumerable().Select(x => Convert.ToInt32(x["first"])).ToList();
-            List<int> last = data.AsEnumerable().Select(x => Convert.ToInt32(x["last"])).ToList();
-            List<int> diff = data.AsEnumerable().Select(x => Convert.ToInt32(x["diff"])).ToList();
+            // We are aggregating from last report date. Therefore on the first report date, the value
+            // will be null, hence the nasty nullable types here. Additionally, all numbers in DB are
+            // stored as doubles, so a simple cast to double? will work for avg (which is a double).
+            // For the other variables we will need an explicit conversion.
+            List<int?> sum = data.AsEnumerable().Select(x => ParseNullableInt(x["sum"])).ToList();
+            List<double?> avg = data.AsEnumerable().Select(x => x["avg"] as double?).ToList();
+            List<int?> min = data.AsEnumerable().Select(x => ParseNullableInt(x["min"])).ToList();
+            List<int?> max = data.AsEnumerable().Select(x => ParseNullableInt(x["max"])).ToList();
+            List<int?> first = data.AsEnumerable().Select(x => ParseNullableInt(x["first"])).ToList();
+            List<int?> last = data.AsEnumerable().Select(x => ParseNullableInt(x["last"])).ToList();
+            List<int?> diff = data.AsEnumerable().Select(x => ParseNullableInt(x["diff"])).ToList();
 
-            List<int> expectedSum = new List<int>() { 21, 70, 119, 168, 217, 266, 315, 364 };
-            List<double> expectedAvg = new List<double>() { 3.5, 10, 17, 24, 31, 38, 45, 52 };
-            List<int> expectedMin = new List<int>() { 1, 7, 14, 21, 28, 35, 42, 49 }; // == expectedFirst
-            List<int> expectedMax = new List<int>() { 6, 13, 20, 27, 34, 41, 48, 55 }; // == expectedLast
-            List<int> expectedDiff = new List<int>() { 5, 6, 6, 6, 6, 6, 6, 6 };
+            List<int?> expectedSum = new List<int?>()       { null, 63, 112, 161, 210, 259, 308, 357 };
+            List<double?> expectedAvg = new List<double?>() { null, 9,  16,  23,  30,  37,  44,  51 };
+            List<int?> expectedMin = new List<int?>()       { null, 6,  13,  20,  27,  34,  41,  48 }; // == expectedFirst
+            List<int?> expectedMax = new List<int?>()       { null, 12, 19,  26,  33,  40,  47,  54 }; // == expectedLast
+            List<int?> expectedDiff = new List<int?>()      { null, 6,  6,   6,   6,   6,   6,   6 };
 
             Assert.AreEqual(expectedSum, sum);
             Assert.AreEqual(expectedAvg, avg);
@@ -117,6 +121,14 @@
             Assert.AreEqual(expectedDiff, diff);
         }
 
+        private int? ParseNullableInt(object input)
+        {
+            if (int.TryParse(input?.ToString(), out int result))
+                return result;
+
+            return null;
+        }
+        
         /// <summary>
         /// This test reproduces a bug where aggregation to [Clock].Today doesn't work, due to
         /// [Clock].Today being evaluated before the simulation starts.
@@ -191,6 +203,7 @@
             Utilities.InjectLink(report, "simulation", sim);
             Utilities.InjectLink(report, "locator", new MockLocator());
             Utilities.InjectLink(report, "storage", new MockStorage());
+            Utilities.InjectLink(report, "clock", new MockClock());
 
             var events = new Events(report);
             events.Publish("StartOfSimulation", new object[] { report, new EventArgs() });

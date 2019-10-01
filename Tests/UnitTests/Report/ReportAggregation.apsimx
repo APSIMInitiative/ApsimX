@@ -39,13 +39,13 @@
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "sum of [Clock].Today.DayOfYear from [Report].LastReportDate to [Clock].Today as sum",
-                "avg of [Clock].Today.DayOfYear from [Report].LastReportDate to [Clock].Today as avg",
-                "min of [Clock].Today.DayOfYear from [Report].LastReportDate to [Clock].Today as min",
-                "max of [Clock].Today.DayOfYear from [Report].LastReportDate to [Clock].Today as max",
-                "first of [Clock].Today.DayOfYear from [Report].LastReportDate to [Clock].Today as first",
-                "last of [Clock].Today.DayOfYear from [Report].LastReportDate to [Clock].Today as last",
-                "diff of [Clock].Today.DayOfYear from [Report].LastReportDate to [Clock].Today as diff"
+                "sum of [Clock].Today.DayOfYear from [Report].DateOfLastOutput to [Clock].Today as sum",
+                "avg of [Clock].Today.DayOfYear from [Report].DateOfLastOutput to [Clock].Today as avg",
+                "min of [Clock].Today.DayOfYear from [Report].DateOfLastOutput to [Clock].Today as min",
+                "max of [Clock].Today.DayOfYear from [Report].DateOfLastOutput to [Clock].Today as max",
+                "first of [Clock].Today.DayOfYear from [Report].DateOfLastOutput to [Clock].Today as first",
+                "last of [Clock].Today.DayOfYear from [Report].DateOfLastOutput to [Clock].Today as last",
+                "diff of [Clock].Today.DayOfYear from [Report].DateOfLastOutput to [Clock].Today as diff"
               ],
               "EventNames": [
                 "[Clock].StartOfWeek"

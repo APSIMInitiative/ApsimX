@@ -60,11 +60,6 @@ namespace Models.Report
         private IEvent events = null;
 
         /// <summary>
-        /// Called immediately after reporting.
-        /// </summary>
-        public event EventHandler PostReport;
-
-        /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
@@ -88,7 +83,7 @@ namespace Models.Report
         /// Date of the last report event.
         /// </summary>
         [JsonIgnore]
-        public DateTime LastReportDate { get; set; }
+        public DateTime DateOfLastOutput { get; set; }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -96,7 +91,7 @@ namespace Models.Report
         [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            LastReportDate = clock.Today;
+            DateOfLastOutput = DateTime.MaxValue;
             dataToWriteToDb = null;
 
             // sanitise the variable names and remove duplicates
@@ -178,9 +173,7 @@ namespace Models.Report
                 dataToWriteToDb = null;
             }
 
-            LastReportDate = clock.Today;
-
-            PostReport?.Invoke(this, EventArgs.Empty);
+            DateOfLastOutput = clock.Today;
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>

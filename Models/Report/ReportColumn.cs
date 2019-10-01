@@ -197,11 +197,12 @@ namespace Models.Report
                         Units = Units.Substring(1, Units.Length - 2);
                 }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
 
             events.Subscribe("[Clock].DoReportCalculations", this.DoReportCalculations);
             events.Subscribe("[Clock].DoDailyInitialisation", this.StartOfDay);
-            events.Subscribe("[Report].PostReport", this.PostReport);
 
             if (DateTime.TryParse(from.ToString(), out DateTime date))
             {
@@ -372,6 +373,8 @@ namespace Models.Report
             if (fromIsEvent)
                 fromVariable = new VariableObject(ReflectionUtilities.Clone(clock.Today));
 
+            // The 'from' event has fired, so we want to start capturing values, but the 'to' 
+            // event may not have fired. Therefore, we set the 'to' variable to DateTime.MaxValue.
             if (toIsEvent)
                 toVariable = new VariableObject(DateTime.MaxValue);
 
@@ -381,7 +384,7 @@ namespace Models.Report
             StoreValueForAggregation();
         }
 
-        private DateTime FromDate()
+        private DateTime GetFromDate()
         {
             if (fromVariable == null)
                 // From date is an event.
@@ -390,7 +393,7 @@ namespace Models.Report
             return (DateTime)fromVariable.Value;
         }
 
-        private DateTime ToDate()
+        private DateTime GetToDate()
         {
             if (toVariable == null)
                 return DateTime.MaxValue;
@@ -403,11 +406,11 @@ namespace Models.Report
         /// </summary>
         private bool InCaptureWindow()
         {
-            DateTime from = FromDate();
-            DateTime to = ToDate();
+            DateTime from = GetFromDate();
+            DateTime to = GetToDate();
 
-            bool afterFrom = clock.Today.DayOfYear >= from.DayOfYear && (fromHasNoYear || clock.Today.Year == from.Year);
-            bool beforeTo = clock.Today.DayOfYear <= to.DayOfYear && (toHasNoYear || clock.Today.Year == to.Year);
+            bool afterFrom = clock.Today.Year > from.Year || (clock.Today.DayOfYear >= from.DayOfYear && (fromHasNoYear || clock.Today.Year >= from.Year));
+            bool beforeTo = clock.Today.Year < to.Year || (clock.Today.DayOfYear <= to.DayOfYear && (toHasNoYear || clock.Today.Year <= to.Year));
 
             return afterFrom && beforeTo;
         }
@@ -519,19 +522,22 @@ namespace Models.Report
         private void StartOfDay(object sender, EventArgs e)
         {
             haveAggregatedValuesToday = false;
-        }
 
-        /// <summary>
-        /// Called after reporting (not necessarily every day).
-        /// If today is the 'from' date, resets list of values to aggregate.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void PostReport(object sender, EventArgs e)
-        {
-            DateTime from = FromDate();
+            // If today is the from date we should initiate variable capturing for this aggregation window.
+            DateTime from = GetFromDate();
             if (clock.Today.DayOfYear == from.DayOfYear && (fromHasNoYear || clock.Today.Year == from.Year))
                 BeginCapture();
+
+            // This is an edge case for aggregation from Report.DateOfLastOutput, which is only updated at the end of the day.
+            // Check if yesterday was last report date.
+            if (fromVariable != null && fromVariable.Name == ".DateOfLastOutput" && (from.DayOfYear + 1) == clock.Today.DayOfYear && from.Year == clock.Today.Year)
+            {
+                if (valuesToAggregate != null && valuesToAggregate.Count > 0)
+                    valuesToAggregate.RemoveRange(0, valuesToAggregate.Count - 1);
+
+                if (toIsEvent)
+                    toVariable = new VariableObject(DateTime.MaxValue);
+            }
         }
     }
 }
