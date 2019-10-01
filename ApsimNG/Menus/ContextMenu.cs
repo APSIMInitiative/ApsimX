@@ -428,6 +428,7 @@ namespace UserInterface.Presenters
                 string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
                 explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
+                Process.Start(fileName);
             }
             catch (Exception err)
             {
