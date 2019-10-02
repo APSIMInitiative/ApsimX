@@ -142,6 +142,7 @@
     <Compile Include="APSIMShared\JobRunning\JobManagerTests.cs" />
     <Compile Include="APSIMShared\JobRunning\JobRunnerTests.cs" />
     <Compile Include="APSIMShared\MockJob.cs" />
+    <Compile Include="CommandLineArgsTests.cs" />
     <Compile Include="Core\Run\GenerateApsimXFilesTests.cs" />
     <Compile Include="Core\Run\RunnerTests.cs" />
     <Compile Include="Core\Run\SimulationTests.cs" />

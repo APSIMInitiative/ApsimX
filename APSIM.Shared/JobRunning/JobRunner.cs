@@ -110,7 +110,8 @@
             {
                 foreach (var jobManager in jobManagers)
                 {
-                    foreach (var job in jobManager.GetJobs())
+                    var jobs = jobManager.GetJobs();
+                    foreach (var job in jobs)
                     {
                         if (cancelToken.IsCancellationRequested)
                             return;
