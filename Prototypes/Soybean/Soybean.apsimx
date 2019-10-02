@@ -73,32 +73,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Photoperiod.Value()",
-                  "Name": "PhotoperiodModifier",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        14.43,
-                        21.19
-                      ],
-                      "Y": [
-                        1.0,
-                        0.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.AirTemperatureFunction, Models",
                   "Name": "VegetativeThermalTime",
                   "Children": [
@@ -128,6 +102,32 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Phenology].Photoperiod.Value()",
+                  "Name": "VegetativePhotoperiodModifier",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        14.43,
+                        21.19
+                      ],
+                      "Y": [
+                        1.0,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.AirTemperatureFunction, Models",
                   "Name": "ReproductiveThermalTime",
                   "Children": [
@@ -143,6 +143,32 @@
                         5.0,
                         5.0,
                         20.0,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Phenology].Photoperiod.Value()",
+                  "Name": "ReproductivePhotoperiodModifier",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        14.43,
+                        21.19
+                      ],
+                      "Y": [
+                        1.0,
                         0.0
                       ],
                       "Name": "XYPairs",
@@ -201,7 +227,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].PhotoperiodModifier",
+                              "VariableName": "[Phenology].VegetativePhotoperiodModifier",
                               "Name": "PPModifier",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -239,7 +265,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].PhotoperiodModifier",
+                              "VariableName": "[Phenology].ReproductivePhotoperiodModifier",
                               "Name": "PPModifier",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5555,7 +5581,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 106",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.59, 17.6"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
               ],
               "Name": "PioneerP932T16R_MG32",
               "Children": [],
@@ -5570,7 +5597,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 106",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.35",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.59, 17.6"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
               ],
               "Name": "PioneerP22T69R_MG22",
               "Children": [],
@@ -5585,7 +5613,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 76",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 432",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 14.43, 21.19"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.43, 21.19",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.43, 21.19"
               ],
               "Name": "Trial_MG00",
               "Children": [],
@@ -5600,7 +5629,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 81",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 442",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 14.29, 20.14"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.29, 20.14",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.29, 20.14"
               ],
               "Name": "Lambert_MG0",
               "Children": [],
@@ -5615,7 +5645,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 118",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 518",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 14.37, 19.30"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.37, 19.30",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.37, 19.30"
               ],
               "Name": "IA1006_MG10",
               "Children": [],
@@ -5630,7 +5661,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 150",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.92, 17.93"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.92, 17.93",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.92, 17.93"
               ],
               "Name": "IA2008_MG20",
               "Children": [],
@@ -5645,7 +5677,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 163",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.175",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 607",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 14.05, 17.56"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.05, 17.56",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.05, 17.56"
               ],
               "Name": "Macon_MG30",
               "Children": [],
@@ -5660,7 +5693,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 143",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 567",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.05, 16.46"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.05, 16.46",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.05, 16.46"
               ],
               "Name": "Pioneer94B01_MG40",
               "Children": [],
@@ -5675,7 +5709,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 112",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 12.58, 15.88"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.58, 15.88",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.58, 15.88"
               ],
               "Name": "Hutcheson_MG50",
               "Children": [],
@@ -5690,7 +5725,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 93",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 12.39, 15.61"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61"
               ],
               "Name": "NK622_MG60",
               "Children": [],
@@ -5705,7 +5741,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 112",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.26",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 506",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.27, 17.2"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.27, 17.2",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.27, 17.2"
               ],
               "Name": "Becks367NRR_MG37",
               "Children": [],
@@ -5720,7 +5757,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 123",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.09, 16.49"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.09, 16.49",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.09, 16.49"
               ],
               "Name": "AsgrowAG4403_MG40",
               "Children": [],
@@ -5735,7 +5773,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 123",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.09, 16.49"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.09, 16.49",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.09, 16.49"
               ],
               "Name": "HornbeckHBK4891_MG40",
               "Children": [],
@@ -5750,7 +5789,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 131",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 549",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 12.83, 16.13"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.83, 16.13",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.83, 16.13"
               ],
               "Name": "AsgrowAG5701_MG50",
               "Children": [],
@@ -5765,7 +5805,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 112",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 12.83, 16.13"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.83, 16.13",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.83, 16.13"
               ],
               "Name": "PioneerP9504_MG50",
               "Children": [],
@@ -5780,7 +5821,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 120",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.125",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 529",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.77, 17.57"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.77, 17.57",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.77, 17.57"
               ],
               "Name": "Pioneer92MGI_MG26",
               "Children": [],
@@ -5795,7 +5837,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 117",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.20",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 522",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.45, 18.0"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.45, 18.0",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.45, 18.0"
               ],
               "Name": "Becks321NRR_MG32",
               "Children": [],
@@ -5810,7 +5853,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 106",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.14",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.59, 17.6"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
               ],
               "Name": "PioneerP92Y75_MG27",
               "Children": [],
@@ -5825,7 +5869,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 106",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.3",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.59, 17.6"
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
               ],
               "Name": "PioneerP22T61_MG22",
               "Children": [],
@@ -5840,7 +5885,8 @@
                 "[Phenology].EarlyFlowering.Target.FixedValue = 110",
                 "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
                 "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 457",
-                "[Phenology].PhotoperiodModifier.XYPairs.X = 13.4, 16.0",
+                "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.4, 16.0",
+                "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.4, 16.0",
                 "[Grain].MaximumNConc.FixedValue = 0.065",
                 "[Shell].PotentialHarvestIndex.FixedValue = 0.5",
                 "[Leaf].AreaLargestLeaf.FixedValue=0.013"
@@ -5862,7 +5908,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 100",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
@@ -5880,8 +5927,9 @@
                     "[Phenology].Vegetative.Target.FixedValue = 380",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 100",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 500",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 13.75, 17",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 17",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.9, 15.5",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Djakal",
@@ -5897,7 +5945,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 100",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
@@ -5916,7 +5965,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Hooper_MG40",
@@ -5932,7 +5982,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Stephens_MG40",
@@ -5947,8 +5998,9 @@
                     "[Phenology].Vegetative.Target.FixedValue = 285",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 13.75, 18"
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 18",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.75, 18"
                   ],
                   "Name": "FiskebyV",
                   "Children": [
@@ -5972,8 +6024,9 @@
                     "[Phenology].Vegetative.Target.FixedValue = 314",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 13.75, 17",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 485",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 17",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12, 18",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "F148_7",
@@ -5998,8 +6051,9 @@
                     "[Phenology].Vegetative.Target.FixedValue = 377",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 13.75, 15.5"
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 15.5",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.9, 15.5"
                   ],
                   "Name": "Bowyer",
                   "Children": [
@@ -6023,8 +6077,9 @@
                     "[Phenology].Vegetative.Target.FixedValue = 550",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 13.75, 18",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 18",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 10.9, 15.5",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Bunya",
@@ -6050,7 +6105,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 12.75, 16",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 16",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 16",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Cowrie",
@@ -6076,7 +6132,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 12.75, 15.3",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 15.3",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 15.3",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Soya791",
@@ -6092,7 +6149,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 12.75, 15",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 15",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 15",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Manark",
@@ -6108,7 +6166,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 12.75, 15",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 15",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 15",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Warrigal",
@@ -6124,7 +6183,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 12.75, 14.7",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 14.7",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 14.7",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Leichhardt",
@@ -6140,7 +6200,8 @@
                     "[Phenology].EarlyFlowering.Target.FixedValue = 80",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                    "[Phenology].PhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Djakal1",
