@@ -146,28 +146,34 @@
         /// <param name="jobManager">The job manager owning the job.</param>
         private void RunActualJob(IRunnable job, IJobManager jobManager)
         {
-            if (!(job is JobRunnerSleepJob))
-                SimsRunning.Add(job);
-
-            var startTime = DateTime.Now;
-
-            Exception error = null;
             try
             {
-                // Run job.
-                job.Run(cancelToken);
+                if (!(job is JobRunnerSleepJob))
+                    SimsRunning.Add(job);
+
+                var startTime = DateTime.Now;
+
+                Exception error = null;
+                try
+                {
+                    // Run job.
+                    job.Run(cancelToken);
+                }
+                catch (Exception err)
+                {
+                    error = err;
+                }
+
+                // Signal to JobManager the job has finished.
+                InvokeJobCompleted(job, jobManager, startTime, error);
+
+                if (!(job is JobRunnerSleepJob))
+                    SimsRunning.Remove(job);
             }
-            catch (Exception err)
+            finally
             {
-                error = err;
+                Interlocked.Decrement(ref numberJobsRunning);
             }
-
-            // Signal to JobManager the job has finished.
-            InvokeJobCompleted(job, jobManager, startTime, error);
-
-            if (!(job is JobRunnerSleepJob))
-                SimsRunning.Remove(job);
-            Interlocked.Decrement(ref numberJobsRunning);
         }
 
         /// <summary>
@@ -186,8 +192,15 @@
                 ExceptionThrowByJob = error,
                 ElapsedTime = finishTime - startTime
             };
-            jobManager.JobHasCompleted(arguments);
-            JobCompleted?.Invoke(this, arguments);
+
+            try
+            {
+                jobManager.JobHasCompleted(arguments);
+            }
+            finally
+            {
+                JobCompleted?.Invoke(this, arguments);
+            }
         }
 
 

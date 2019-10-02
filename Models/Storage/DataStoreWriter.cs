@@ -165,22 +165,31 @@
         {
             if (commandRunner != null)
             {
-                WaitForIdle();
+                try
+                {
+                    WaitForIdle();
 
-                WriteSimulationIDs();
-                WriteCheckpointIDs();
-                WriteAllUnits();
+                    WriteSimulationIDs();
+                    WriteCheckpointIDs();
+                    WriteAllUnits();
+                }
+                catch
+                {
+                    // Swallow exceptions
+                }
+                finally
+                {
+                    WaitForIdle();
 
-                WaitForIdle();
-
-                stopping = true;
-                commandRunner.Stop();
-                commandRunner = null;
-                commands.Clear();
-                simulationIDs.Clear();
-                checkpointIDs.Clear();
-                simulationNamesThatHaveBeenCleanedUp.Clear();
-                units.Clear();
+                    stopping = true;
+                    commandRunner.Stop();
+                    commandRunner = null;
+                    commands.Clear();
+                    simulationIDs.Clear();
+                    checkpointIDs.Clear();
+                    simulationNamesThatHaveBeenCleanedUp.Clear();
+                    units.Clear();
+                }
             }
         }
 
