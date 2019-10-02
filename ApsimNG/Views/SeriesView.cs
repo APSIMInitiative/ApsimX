@@ -36,6 +36,7 @@ namespace UserInterface.Views
         private CheckBoxView checkBoxView6;
         private GraphView graphView1;
         private EditView editView1;
+        private EventBox helpBox;
 
         /// <summary>Initializes a new instance of the <see cref="SeriesView" /> class</summary>
         public SeriesView(ViewBase owner) : base(owner)
@@ -90,7 +91,7 @@ namespace UserInterface.Views
             table1.Attach(colourDropDown.MainWidget, 1, 2, 9, 10, AttachOptions.Fill, 0, 10, 2);
 
             Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
-            EventBox helpBox = new EventBox();
+            helpBox = new EventBox();
             helpBox.Add(helpImage);
             helpBox.ButtonPressEvent += Help_ButtonPressEvent;
             HBox filterBox = new HBox();
@@ -116,6 +117,7 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
             mainWidget.Destroyed -= _mainWidget_Destroyed;
+            helpBox.ButtonPressEvent -= Help_ButtonPressEvent;
             checkpointDropDown.MainWidget.Destroy();
             dataSourceDropDown.MainWidget.Destroy();
             xDropDown.MainWidget.Destroy();

@@ -45,6 +45,14 @@
             }
         }
 
+        /// <summary>
+        /// Stop the APSIMRunners.
+        /// </summary>
+        public override void Stop()
+        {
+            DeleteRunners();
+        }
+
         /// <summary>Main worker thread.</summary>
         protected override void WorkerThread()
         {
@@ -127,13 +135,13 @@
                         var endJob = PipeUtilities.GetObjectFromPipe(pipeRead) as JobOutput;
 
                         // Send the output data to storage.
-                        endJob.WriteOutput(job.DataStore);
+                        endJob?.WriteOutput(job.DataStore);
 
                         // Signal end of job.
                         InvokeJobCompleted(job.RunnableJob,
                                            job.JobManager,
                                            startTime,
-                                           endJob.ErrorMessage);
+                                           endJob?.ErrorMessage);
 
                         // Get the next job to run.
                         job = GetJobToRun();

@@ -53,8 +53,7 @@ namespace Models.PMF
         [Link(IsOptional = true)]
         public Biomass AboveGround { get; set; }
 
-        
-		/// <summary> Clock </summary>
+       /// <summary> Clock </summary>
         [Link]
         public Clock Clock = null;
 
@@ -88,11 +87,18 @@ namespace Models.PMF
                 SortedSet<string> cultivarNames = new SortedSet<string>();
                 foreach (Cultivar cultivar in this.Cultivars)
                 {
-                    cultivarNames.Add(cultivar.Name);
+                    string name = cultivar.Name;
+                    List<IModel> memos = Apsim.Children(cultivar, typeof(Memo));
+                    foreach (IModel memo in memos)
+                    {
+                        name += '|' + ((Memo)memo).Text;
+                    }
+
+                    cultivarNames.Add(name);
                     if (cultivar.Alias != null)
                     {
                         foreach (string alias in cultivar.Alias)
-                            cultivarNames.Add(alias);
+                            cultivarNames.Add(alias + "|Alias for " + cultivar.Name);
                     }
                 }
 
@@ -263,7 +269,6 @@ namespace Models.PMF
             if (Population > 0.0 && MortalityRate != null)
                 Population -= Population * MortalityRate.Value();
         }
-       
 
         /// <summary>Called at the end of the day.</summary>
         /// <param name="sender">The sender.</param>

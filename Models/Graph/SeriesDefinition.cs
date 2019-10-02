@@ -15,6 +15,7 @@
     /// <summary>
     /// A class for defining a graph series. A list of these is given to graph when graph is drawing itself.
     /// </summary>
+    [Serializable]
     public class SeriesDefinition
     {
         /// <summary>Base series where most properties come from.</summary>

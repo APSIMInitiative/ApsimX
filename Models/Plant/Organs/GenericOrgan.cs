@@ -294,7 +294,7 @@ namespace Models.PMF.Organs
             {
                 DMDemand.Structural = (dmDemands.Structural.Value() / DMConversionEfficiency.Value() + remobilisationCost.Value());
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / DMConversionEfficiency.Value()) ;
-                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / DMConversionEfficiency.Value());
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / DMConversionEfficiency.Value()) ;
             }
             else
             { // Conversion efficiency is zero!!!!
