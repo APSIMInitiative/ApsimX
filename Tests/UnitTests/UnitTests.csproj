@@ -166,6 +166,7 @@
     <Compile Include="Core\ApsimFile\StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="Storage\DataStoreTests.cs" />
+    <Compile Include="SummaryTests.cs" />
     <Compile Include="TextStorageReader.cs" />
     <Compile Include="Weather\WeatherTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
