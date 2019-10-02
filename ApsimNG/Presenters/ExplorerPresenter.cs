@@ -138,7 +138,10 @@
 
             Refresh();
 
-            this.view.Tree.ExpandNodes(Configuration.Settings.GetMruFile(ApsimXFile.FileName).ExpandedNodes);
+            ApsimFileMetadata file = Configuration.Settings.GetMruFile(ApsimXFile.FileName);
+            if (file != null && file.ExpandedNodes != null)
+                this.view.Tree.ExpandNodes(file.ExpandedNodes);
+
             this.PopulateMainMenu();
         }
 
@@ -153,7 +156,16 @@
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
+            try
+            {
+                if (File.Exists(ApsimXFile.FileName))
+                    Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
+            }
+            catch
+            {
+                // Don't rethrow - this is not a critical operation.
+            }
+
             this.view.Tree.SelectedNodeChanged -= this.OnNodeSelected;
             this.view.Tree.DragStarted -= this.OnDragStart;
             this.view.Tree.AllowDrop -= this.OnAllowDrop;
