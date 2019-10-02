@@ -91,6 +91,11 @@
             }
         }
 
+        /// <summary>
+        /// Gets the current right hand view.
+        /// </summary>
+        public ViewBase CurrentRightHandView { get; private set; }
+
         /// <summary>Gets the path of the current selected node in the tree.</summary>
         /// <value>The current node path.</value>
         public string CurrentNodePath
@@ -696,6 +701,7 @@
                     ApsimXFile.Links.Resolve(currentRightHandPresenter);
                     this.view.AddRightHandView(newView);
                     this.currentRightHandPresenter.Attach(model, newView, this);
+                    this.CurrentRightHandView = newView as ViewBase;
                 }
             }
             catch (Exception err)

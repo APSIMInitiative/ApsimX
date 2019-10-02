@@ -39,9 +39,6 @@ namespace UserInterface.Presenters
         /// <summary>The parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>The graph presenter</summary>
-        private GraphPresenter graphPresenter;
-
         /// <summary>
         /// The intellisense.
         /// </summary>
@@ -64,9 +61,9 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    graphPresenter = new GraphPresenter();
-                    explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
-                    graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
+                    GraphPresenter = new GraphPresenter();
+                    explorerPresenter.ApsimXFile.Links.Resolve(GraphPresenter);
+                    GraphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
                 }
                 catch (Exception err)
                 {
@@ -91,11 +88,14 @@ namespace UserInterface.Presenters
         {
             seriesView.EndEdit();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
-            graphPresenter?.Detach();
+            GraphPresenter?.Detach();
             intellisense.Cleanup();
 
             DisconnectViewEvents();
         }
+
+        /// <summary>The graph presenter</summary>
+        public GraphPresenter GraphPresenter;
 
         /// <summary>Connect all view events.</summary>
         private void ConnectViewEvents()
@@ -539,7 +539,7 @@ namespace UserInterface.Presenters
 
             // Populate data source drop down.
             List<string> dataSources = storage.Reader.TableNames.ToList();
-            if (!dataSources.Contains(series.TableName))
+            if (!dataSources.Contains(series.TableName) && !string.IsNullOrEmpty(series.TableName))
             {
                 dataSources.Add(series.TableName);
                 warnings.Add(string.Format("WARNING: {0}: Selected Data Source '{1}' does not exist in the datastore. Have the simulations been run?", Apsim.FullPath(series), series.TableName));

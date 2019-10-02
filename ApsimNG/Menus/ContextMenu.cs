@@ -26,6 +26,7 @@ namespace UserInterface.Presenters
     using System.Text;
     using Models.Functions;
     using Models.Soils.Standardiser;
+    using Models.Graph;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -92,6 +93,26 @@ namespace UserInterface.Presenters
                 runner.Run();
                 (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Clear graph panel cache.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Clear Cache",
+                     AppliesTo = new Type[] { typeof(GraphPanel) })]
+        public void ClearGraphPanelCache(object sender, EventArgs e)
+        {
+            try
+            {
+                GraphPanel panel = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as GraphPanel;
+                panel.Cache.Clear();
             }
             catch (Exception err)
             {
@@ -450,6 +471,16 @@ namespace UserInterface.Presenters
                 string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
                 explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
+
+                try
+                {
+                    if (ProcessUtilities.CurrentOS.IsWindows)
+                        Process.Start(fileName);
+                }
+                catch
+                {
+                    // Swallow exceptions - this was a non-critical operation.
+                }
             }
             catch (Exception err)
             {
