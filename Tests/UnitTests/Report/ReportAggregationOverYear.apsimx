@@ -1,0 +1,77 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 250,
+  "Version": 67,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Base",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2018-12-20T00:00:00",
+          "End": "2019-01-10T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "Summary",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "Name": "Field",
+          "Children": [
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "diff of [Clock].Today.DayOfYear from 25-Dec to 5-Jan as difference"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}
