@@ -53,6 +53,25 @@ namespace UnitTests.ApsimNG.Utilities
         }
 
         /// <summary>
+        /// Sends a custom button press (click) event to a particular cell in a GridView.
+        /// </summary>
+        /// <param name="grid">The GridView which should receive the button press event.</param>
+        /// <param name="row">Row index of the cell to be clicked.</param>
+        /// <param name="col">Column index of the cell to be clicked.</param>
+        /// <param name="eventType">Type of event to be sent.</param>
+        /// <param name="state">Modifiers for the click - ie control click, shift click, etc.</param>
+        /// <param name="buttonClickType">Type of click - ie left click, middle click or right click.</param>
+        /// <param name="wait">Iff true, will wait for gtk to process the event.</param>
+        public static void ClickOnGridCell(GridView grid, int row, int col, EventType eventType, ModifierType state, ButtonPressType buttonClickType, bool wait = true)
+        {
+            // We want to click on a cell, but this requires coordinates.
+            GetTreeViewCoordinates(grid.Grid, row, col, out int x, out int y);
+
+            // Double-click on the top-right cell using the coordinates.
+            Click(grid.Grid, eventType, state, buttonClickType, x, y, wait);
+        }
+
+        /// <summary>
         /// Sends a custom button press (click) event to a widget.
         /// </summary>
         /// <param name="target">Widget which should receive the button press event.</param>
@@ -140,10 +159,13 @@ namespace UnitTests.ApsimNG.Utilities
             y = rect.Y;
         }
 
-        private static void TypeKey(Widget target, Gdk.Key key, ModifierType modifier)
+        public static void TypeKey(Widget target, Gdk.Key key, ModifierType modifier, bool wait = true)
         {
             SendKeyEvent(target, (uint)key, modifier, EventType.KeyPress);
             SendKeyEvent(target, (uint)key, modifier, EventType.KeyRelease);
+
+            if (wait)
+                WaitForGtkEvents();
         }
 
         /// <summary>
