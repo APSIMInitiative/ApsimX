@@ -401,16 +401,51 @@ namespace Models.Report
             return (DateTime)toVariable.Value;
         }
 
+        private bool AfterFrom()
+        {
+            DateTime from = GetFromDate();
+
+            if (fromHasNoYear)
+            {
+                // From date is hardcoded without a year. e.g. 1-Jan.
+                // This is complicated by aggregation over the year boundary - e.g. from 20-Dec to 10-Jan.
+                // We can't just check that today's doy > from.doy, because in the above example, this would return
+                // false once we enter January in the next year.
+                DateTime to = GetToDate();
+                if (from.DayOfYear > to.DayOfYear)
+                    return clock.Today.DayOfYear >= from.DayOfYear || clock.Today.DayOfYear <= to.DayOfYear;
+                return clock.Today.DayOfYear >= from.DayOfYear;
+            }
+
+            return clock.Today >= from;
+        }
+
+        private bool BeforeTo()
+        {
+            DateTime to = GetToDate();
+
+            if (toHasNoYear)
+            {
+                // To date is hardcoded without a year. e.g. 1-Jan.
+                // This is complicated by aggregation over the year boundary - e.g. from 20-Dec to 10-Jan.
+                // We can't just check that today's doy < to.doy.
+                DateTime from = GetFromDate();
+                if (from.DayOfYear > to.DayOfYear)
+                    return clock.Today.DayOfYear >= from.DayOfYear || clock.Today.DayOfYear <= to.DayOfYear;
+
+                return clock.Today.DayOfYear <= to.DayOfYear;
+            }
+
+            return clock.Today <= to;
+        }
+
         /// <summary>
         /// Returns true iff today's date lies inside the aggregation window.
         /// </summary>
         private bool InCaptureWindow()
         {
-            DateTime from = GetFromDate();
-            DateTime to = GetToDate();
-
-            bool afterFrom = (!fromHasNoYear && clock.Today.Year > from.Year) || (clock.Today.DayOfYear >= from.DayOfYear && (fromHasNoYear || clock.Today.Year >= from.Year));
-            bool beforeTo = (!toHasNoYear && clock.Today.Year < to.Year) || (clock.Today.DayOfYear <= to.DayOfYear && (toHasNoYear || clock.Today.Year <= to.Year));
+            bool afterFrom = AfterFrom();
+            bool beforeTo = BeforeTo();
 
             return afterFrom && beforeTo;
         }

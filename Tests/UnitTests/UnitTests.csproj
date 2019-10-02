@@ -221,6 +221,7 @@
     <EmbeddedResource Include="Core\ApsimFile\ManagerConverterTestsReplaceManagerTextRegex.json" />
     <EmbeddedResource Include="Sensitivity\MorrisTestsBroken.apsimx" />
     <EmbeddedResource Include="Report\ReportAggregation.apsimx" />
+    <EmbeddedResource Include="Report\ReportAggregationOverYear.apsimx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">

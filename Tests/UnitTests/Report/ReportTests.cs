@@ -83,14 +83,8 @@
         [Test]
         public void TestVariableAggregation()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportAggregation.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, out List<Exception> fileErrors);
-            if (fileErrors != null && fileErrors.Count > 0)
-                throw fileErrors[0];
-
-            var Runner = new Runner(file);
-            Runner.Run();
-
+            Simulations file = RunResource("UnitTests.Report.ReportAggregation.apsimx");
+            
             var storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
             List<string> fieldNames = new List<string>() { "sum", "avg", "min", "max", "first", "last", "diff" };
             DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
@@ -122,14 +116,6 @@
             Assert.AreEqual(expectedDiff, diff);
         }
 
-        private int? ParseNullableInt(object input)
-        {
-            if (int.TryParse(input?.ToString(), out int result))
-                return result;
-
-            return null;
-        }
-        
         /// <summary>
         /// This test reproduces a bug where aggregation to [Clock].Today doesn't work, due to
         /// [Clock].Today being evaluated before the simulation starts.
@@ -167,6 +153,25 @@
 
             predicted = data.AsEnumerable().Select(x => Convert.ToInt32(x["HardCoded"], CultureInfo.InvariantCulture)).ToList();
             Assert.AreEqual(hardCoded, predicted);
+        }
+
+        /// <summary>
+        /// This test ensures that we can aggregate a variable from two hardcoded dates, over the year boundary.
+        /// ie from 25-Dec to 5-Jan.
+        /// </summary>
+        [Test]
+        public void TestAggregationOverYearBoundary()
+        {
+            Simulations file = RunResource("UnitTests.Report.ReportAggregationOverYear.apsimx");
+            IDataStore storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+
+            string[] fieldNames = new string[] { "difference" };
+            DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
+
+            double?[] values = GetColumnOfNullableDoubles(data, "difference");
+            double?[] expected = new double?[] { null, null, null, null, null, 0, 1, 2, 3, 4, 5, 6, -358, -357, -356, -355, -354, -354, -354, -354, -354, -354 };
+
+            Assert.AreEqual(expected, values);
         }
 
         /// <summary>
@@ -222,6 +227,68 @@
                "ExperimentName,SimulationName,FolderName,FactorName,FactorValue\r\n" +
                "          exp1,          sim1,         F,  Cultivar,      cult1\r\n" +
                "          exp1,          sim1,         F,         N,          0\r\n");
+        }
+
+        /// <summary>
+        /// Reads an .apsimx file from an embedded resource, runs it,
+        /// and returns the root simulations node.
+        /// </summary>
+        /// <param name="resourceName">Name of the .apsimx file resource.</param>
+        private static Simulations RunResource(string resourceName)
+        {
+            string json = ReflectionUtilities.GetResourceAsString(resourceName);
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, out List<Exception> fileErrors);
+            if (fileErrors != null && fileErrors.Count > 0)
+                throw fileErrors[0];
+
+            var Runner = new Runner(file);
+            Runner.Run();
+
+            return file;
+        }
+
+        /// <summary>
+        /// Gets a single column of data from a data table. Returns it as an array of nullable ints.
+        /// </summary>
+        /// <param name="table">Table containing the data.</param>
+        /// <param name="columnName">Column name of the data to be fetched.</param>
+        private static int?[] GetColumnOfNullableInts(DataTable table, string columnName)
+        {
+            return table.AsEnumerable().Select(r => ParseNullableInt(r[columnName])).ToArray();
+        }
+
+        /// <summary>
+        /// Gets a single column of data from a data table. Returns it as an array of nullable doubles.
+        /// </summary>
+        /// <param name="table">Table containing the data.</param>
+        /// <param name="columnName">Column name of the data to be fetched.</param>
+        private static double?[] GetColumnOfNullableDoubles(DataTable table, string columnName)
+        {
+            return table.AsEnumerable().Select(r => ParseNullableDouble(r[columnName])).ToArray();
+        }
+
+        /// <summary>
+        /// Parses an object to a nullable int.
+        /// </summary>
+        /// <param name="input">Input object.</param>
+        private static int? ParseNullableInt(object input)
+        {
+            if (int.TryParse(input?.ToString(), out int result))
+                return result;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Parses an object to a nullable double.
+        /// </summary>
+        /// <param name="input">Input object.</param>
+        private static double? ParseNullableDouble(object input)
+        {
+            if (double.TryParse(input?.ToString(), out double result))
+                return result;
+
+            return null;
         }
     }
 }
