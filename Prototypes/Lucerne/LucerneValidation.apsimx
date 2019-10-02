@@ -10860,11 +10860,11 @@
                               "Parameters": [
                                 {
                                   "Key": "StartDate",
-                                  "Value": "2001-08-11"
+                                  "Value": "08/11/2001 00:00:00"
                                 },
                                 {
                                   "Key": "EndDate",
-                                  "Value": "2002-07-01"
+                                  "Value": "07/01/2002 00:00:00"
                                 }
                               ],
                               "Name": "ClimateControl",
@@ -26190,10 +26190,10 @@
                       "DisabledSeries": [
                         "SSFD2",
                         "LLFD2",
-                        "HHFD2",
+                        "SSFD5",
+                        "LLFD5",
                         "SSFD10",
-                        "LLFD10",
-                        "HHFD10"
+                        "LLFD10"
                       ],
                       "Name": "RootWt",
                       "Children": [
@@ -26906,6 +26906,8 @@
                         "SSFD2",
                         "LLFD2",
                         "HHFD2",
+                        "SSFD5",
+                        "HHFD5",
                         "SSFD10",
                         "LLFD10",
                         "HHFD10"
