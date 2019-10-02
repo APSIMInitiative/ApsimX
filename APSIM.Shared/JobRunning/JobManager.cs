@@ -49,8 +49,10 @@
             PostRun(args);
             Interlocked.Decrement(ref numJobsToRun);
             if (numJobsToRun == 0)
+            {
                 PostAllRuns();
-            Completed?.Invoke(this, new EventArgs());
+                Completed?.Invoke(this, new EventArgs());
+            }
         }
 
         /// <summary>Called once to do initialisation before any jobs are run. Should throw on error.</summary>

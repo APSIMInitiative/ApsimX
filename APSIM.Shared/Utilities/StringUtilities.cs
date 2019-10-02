@@ -902,5 +902,40 @@ namespace APSIM.Shared.Utilities
             return s.Replace("&", "&amp;");
         }
 
+        /// <summary>Remove the end of a string following word and return it.</summary>
+        /// <param name="st">The string.</param>
+        /// <param name="word">Word to look for.</param>
+        /// <returns>The value after the word or null if not found.</returns>
+        public static string RemoveWordAfter(ref string st, string word)
+        {
+            string stringToFind = " " + word + " ";
+            int posWord = st.IndexOf(stringToFind);
+            if (posWord != -1)
+            {
+                string value = st.Substring(posWord + stringToFind.Length).Trim();
+                st = st.Remove(posWord);
+                return value;
+            }
+            else
+                return null;
+        }
+
+        /// <summary>Remove the start of a string before the word.</summary>
+        /// <param name="st">The string.</param>
+        /// <param name="word">Word to look for.</param>
+        /// <returns>The value before the word or null if not found.</returns>
+        public static string RemoveWordBefore(ref string st, string word)
+        {
+            string stringToFind = " " + word + " ";
+            int posWord = st.IndexOf(stringToFind);
+            if (posWord != -1)
+            {
+                string value = st.Substring(0, posWord).Trim();
+                st = st.Remove(0, posWord + stringToFind.Length);
+                return value;
+            }
+            else
+                return null;
+        }
     }
 }

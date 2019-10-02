@@ -102,6 +102,7 @@
                 if (!DoIgnoreFile(fileName, ignorePaths))
                 {
                     var simulationGroup = new SimulationGroup(fileName, runTests);
+                    simulationGroup.Completed += OnSimulationGroupCompleted;
                     jobs.Add(simulationGroup);
                 }
             }
