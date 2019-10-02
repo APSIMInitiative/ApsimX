@@ -125,6 +125,8 @@
         /// <param name="table">The data to write.</param>
         public void WriteTable(DataTable table)
         {
+            if (table == null)
+                return;
             // NOTE: This can be called from many threads. Don't actually
             // write to the database on these threads. We have a single worker
             // thread to do that.
