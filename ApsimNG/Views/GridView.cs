@@ -1138,7 +1138,7 @@
                     return;
 
                 string keyName = GetKeyName(args.Event);
-                if (keyName == "Return" || keyName == "Tab" || IsArrowKey(args.Event.Key))
+                if (!IsUserEditingCell && (keyName == "Return" || keyName == "Tab" || IsArrowKey(args.Event.Key)))
                 {
                     HandleNavigation(args.Event);
                     while (GLib.MainContext.Iteration()) ;

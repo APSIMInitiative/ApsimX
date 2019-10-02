@@ -104,11 +104,23 @@
       <HintPath>..\..\packages\MathNet.Numerics.4.0.0\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Mono.Cairo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Bin\Mono.Cairo.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Bin\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.GtkSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Bin\OxyPlot.GtkSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -125,10 +137,12 @@
     <Compile Include="ApsimNG\UITestsMain.cs" />
     <Compile Include="ApsimNG\Utilities\GtkUtilities.cs" />
     <Compile Include="ApsimNG\Utilities\UITestUtilities.cs" />
+    <Compile Include="ApsimNG\Views\GraphViewTests.cs" />
     <Compile Include="ApsimNG\Views\GridViewTests.cs" />
     <Compile Include="APSIMShared\JobRunning\JobManagerTests.cs" />
     <Compile Include="APSIMShared\JobRunning\JobRunnerTests.cs" />
     <Compile Include="APSIMShared\MockJob.cs" />
+    <Compile Include="CommandLineArgsTests.cs" />
     <Compile Include="Core\Run\GenerateApsimXFilesTests.cs" />
     <Compile Include="Core\Run\RunnerTests.cs" />
     <Compile Include="Core\Run\SimulationTests.cs" />
@@ -153,6 +167,7 @@
     <Compile Include="Core\ApsimFile\StructureTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="Storage\DataStoreTests.cs" />
+    <Compile Include="SummaryTests.cs" />
     <Compile Include="TextStorageReader.cs" />
     <Compile Include="Weather\WeatherTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
@@ -241,6 +256,8 @@
     <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
     <EmbeddedResource Include="Core\ApsimFile\ManagerConverterTestsReplaceManagerTextRegex.json" />
     <EmbeddedResource Include="Sensitivity\MorrisTestsBroken.apsimx" />
+    <EmbeddedResource Include="Report\ReportAggregation.apsimx" />
+    <EmbeddedResource Include="Report\ReportAggregationOverYear.apsimx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
