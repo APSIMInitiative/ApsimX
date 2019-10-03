@@ -91,6 +91,11 @@
             }
         }
 
+        /// <summary>
+        /// Gets the current right hand view.
+        /// </summary>
+        public ViewBase CurrentRightHandView { get; private set; }
+
         /// <summary>Gets the path of the current selected node in the tree.</summary>
         /// <value>The current node path.</value>
         public string CurrentNodePath
@@ -130,8 +135,13 @@
             this.view.Tree.AllowDrop += this.OnAllowDrop;
             this.view.Tree.Droped += this.OnDrop;
             this.view.Tree.Renamed += this.OnRename;
-            
+
             Refresh();
+
+            ApsimFileMetadata file = Configuration.Settings.GetMruFile(ApsimXFile.FileName);
+            if (file != null && file.ExpandedNodes != null)
+                this.view.Tree.ExpandNodes(file.ExpandedNodes);
+
             this.PopulateMainMenu();
         }
 
@@ -146,6 +156,16 @@
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
+            try
+            {
+                if (File.Exists(ApsimXFile.FileName))
+                    Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
+            }
+            catch
+            {
+                // Don't rethrow - this is not a critical operation.
+            }
+
             this.view.Tree.SelectedNodeChanged -= this.OnNodeSelected;
             this.view.Tree.DragStarted -= this.OnDragStart;
             this.view.Tree.AllowDrop -= this.OnAllowDrop;
@@ -274,7 +294,7 @@
 
                     this.ApsimXFile.Write(newFileName);
                     MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
-                    Utility.Configuration.Settings.AddMruFile(newFileName);
+                    Configuration.Settings.AddMruFile(new ApsimFileMetadata(newFileName, view.Tree.GetExpandedNodes()));
                     MainPresenter.UpdateMRUDisplay();
                     MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", newFileName), Simulation.MessageType.Information);
                     return true;
@@ -302,6 +322,16 @@
             this.view.Tree.SelectedNode = nodePath;
             this.HideRightHandPanel();
             this.ShowRightHandPanel();
+        }
+
+        internal void CollapseChildren(string path)
+        {
+            view.Tree.CollapseChildren(path);
+        }
+
+        internal void ExpandChildren(string path)
+        {
+            view.Tree.ExpandChildren(path);
         }
 
         /// <summary>
@@ -683,6 +713,7 @@
                     ApsimXFile.Links.Resolve(currentRightHandPresenter);
                     this.view.AddRightHandView(newView);
                     this.currentRightHandPresenter.Attach(model, newView, this);
+                    this.CurrentRightHandView = newView as ViewBase;
                 }
             }
             catch (Exception err)

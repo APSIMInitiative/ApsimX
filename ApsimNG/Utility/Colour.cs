@@ -59,5 +59,15 @@ namespace Utility
         {
             return OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
         }
+
+        internal static Cairo.Color ToCairo(Gdk.Color colour)
+        {
+            return ToCairo(FromGtk(colour));
+        }
+
+        internal static OxyColor ToOxy(Gdk.Color colour)
+        {
+            return ToOxy(FromGtk(colour));
+        }
     }
 }
