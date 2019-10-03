@@ -1,6 +1,7 @@
 ﻿namespace Models
 {
     using APSIM.Shared.JobRunning;
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
@@ -26,6 +27,7 @@
         private static bool runTests { get { return arguments.Contains("/RunTests"); } }
         private static bool verbose { get { return arguments.Contains("/Verbose"); } }
         private static bool csv { get { return arguments.Contains("/Csv"); } }
+        private static bool mergeDBFiles { get { return arguments.Contains("/MergeDBFiles"); } }
         private static Runner.RunTypeEnum runType
         {
             get
@@ -85,6 +87,10 @@
                     WriteVersion();
                 else if (upgrade)
                     UpgradeFile(fileName, recurse);
+                else if (mergeDBFiles)
+                {
+                    DBMerger.MergeFiles(fileName, Path.Combine(Path.GetDirectoryName(fileName), "merged.db"));
+                }
                 else
                 {
                     // Run simulations
@@ -132,8 +138,9 @@
             detailedHelpInfo += "    /MultiProcess                   Use the multi-process job runner." + Environment.NewLine;
             detailedHelpInfo += "    /NumberOfProcessors:xx          Set the number of processors to use.";
             detailedHelpInfo += "    /SimulationNameRegexPattern:xx  Use to filter simulation names to run.";
+            detailedHelpInfo += "    /MergeDBFiles                   Merges .db files into a single .db file.";
 
-            detailedHelpInfo += "    /?                     Show detailed help information.";
+            detailedHelpInfo += "    /?                              Show detailed help information.";
             Console.WriteLine(detailedHelpInfo);
         }
 

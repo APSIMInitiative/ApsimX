@@ -134,6 +134,7 @@
     <Compile Include="ImporterTests.cs" />
     <Compile Include="Storage\DataStoreTests.cs" />
     <Compile Include="TextStorageReader.cs" />
+    <Compile Include="APSIMShared\DBMergerTests.cs" />
     <Compile Include="Weather\WeatherTests.cs" />
     <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
     <Compile Include="Core\DocumentationTests.cs" />
