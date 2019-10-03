@@ -854,7 +854,10 @@ namespace UserInterface.Presenters
 
             try
             {
-                return ReflectionUtilities.StringToObject(property.DataType, cell.NewValue, CultureInfo.CurrentCulture);
+                if (property.DataType.IsEnum)
+                    return VariableProperty.ParseEnum(property.DataType, cell.NewValue);
+                else
+                    return ReflectionUtilities.StringToObject(property.DataType, cell.NewValue, CultureInfo.CurrentCulture);
             }
             catch (FormatException err)
             {
