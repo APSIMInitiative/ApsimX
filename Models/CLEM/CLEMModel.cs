@@ -100,7 +100,7 @@ namespace Models.CLEM
         public bool ValidParent()
         {
             var parents = ReflectionUtilities.GetAttributes(this.GetType(), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList();
-            return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() == 0);
+            return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() > 0);
         }
 
         /// <summary>
