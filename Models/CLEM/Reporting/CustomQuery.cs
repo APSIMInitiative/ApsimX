@@ -26,6 +26,8 @@ namespace Models.CLEM.Reporting
     {
         [Link]
         private IDataStore dataStore = null;
+        [Link]
+        private Summary Summary = null;
 
         /// <summary>
         /// Raw text of an SQL query
@@ -51,7 +53,8 @@ namespace Models.CLEM.Reporting
 
             if (data == null)
             {
-                throw new ApsimXException(this, "A custom SQL query was invalid");
+                Summary.WriteWarning(this, String.Format("@warning:No results were found in SQL query for [r={0}]", this.Name));
+                return;
             }
 
             data.TableName = Tablename;
