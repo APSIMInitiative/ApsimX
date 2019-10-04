@@ -287,6 +287,8 @@ namespace Models.CLEM.Resources
                         return 1;
                     case HerdChangeReason.InitialHerd:
                         return 1;
+                    case HerdChangeReason.MarkedSale:
+                        return -1;
                     default:
                         return 0;
                 }
