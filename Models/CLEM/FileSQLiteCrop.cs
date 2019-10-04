@@ -36,7 +36,6 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.GridView")] 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
-    [ValidParent(ParentType=typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file from a APSIM SQLite database for the CLEM simulation.")]
