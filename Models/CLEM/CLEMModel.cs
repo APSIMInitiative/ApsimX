@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
 using System;
@@ -90,6 +91,16 @@ namespace Models.CLEM
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines if this compoenent has a valid parent based on parent attributes
+        /// </summary>
+        /// <returns></returns>
+        public bool ValidParent()
+        {
+            var parents = ReflectionUtilities.GetAttributes(this.GetType(), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList();
+            return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() == 0);
         }
 
         /// <summary>
