@@ -53,7 +53,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Soil Type (1-5) 
         /// </summary>
-        [Description("Soil type index")]
+        [Description("Land type id")]
         [Required]
         public string SoilType { get; set; }
 
