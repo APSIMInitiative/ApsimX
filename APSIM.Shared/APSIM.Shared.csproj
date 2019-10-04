@@ -137,6 +137,7 @@
     <Compile Include="JobRunning\JobRunnerSleepJob.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\DatabaseUtilities.cs" />
+    <Compile Include="Utilities\DBMerger.cs" />
     <Compile Include="Utilities\ExcelUtilities.cs" />
     <Compile Include="Utilities\ApsimTextFile.cs" />
     <Compile Include="Utilities\Firebird.cs" />
