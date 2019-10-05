@@ -38,6 +38,7 @@
                         if (child != null)
                             modelFromResource = child;
                     }
+                    modelFromResource.Enabled = Enabled;
                     Children.Clear();
                     Children.AddRange(modelFromResource.Children);
                     CopyPropertiesFrom(modelFromResource);

@@ -14,7 +14,7 @@
         /// <summary>
         /// Allow direct access to the profile grid.
         /// </summary>
-        IFormattedGridView ProfileGrid { get; }
+        IGridView ProfileGrid { get; }
 
         /// <summary>
         /// Allow direct access to the graph.
@@ -39,7 +39,7 @@
 
     public class ProfileView : ViewBase, IProfileView
     {
-        private FormattedGridView profileGrid;
+        private GridView profileGrid;
         private GridView propertyGrid;
         private GraphView graph;
         private VPaned vpaned1 = null;
@@ -56,7 +56,7 @@
             propertyGrid = new GridView(this);
             vbox1.PackStart(propertyGrid.MainWidget, true, true, 0);
             //vpaned1.Pack1(PropertyGrid.MainWidget, true, true);
-            profileGrid = new FormattedGridView(this);
+            profileGrid = new GridView(this);
             profileGrid.NumericFormat = "N3";
             vpaned2.Pack1(profileGrid.MainWidget, true, true);
             graph = new GraphView(this);
@@ -92,7 +92,7 @@
         /// <summary>
         /// Allow direct access to the property grid.
         /// </summary>
-        IGridView IProfileView.PropertyGrid
+        public IGridView PropertyGrid
         {
             get { return propertyGrid; }
         }
@@ -100,7 +100,7 @@
         /// <summary>
         /// Allow direct access to the profile grid.
         /// </summary>
-        IFormattedGridView IProfileView.ProfileGrid
+        public IGridView ProfileGrid
         {
             get { return profileGrid; }
         }
@@ -108,7 +108,7 @@
         /// <summary>
         /// Allow direct access to the graph.
         /// </summary>
-        IGraphView IProfileView.Graph
+        public IGraphView Graph
         {
             get { return graph; }
         }

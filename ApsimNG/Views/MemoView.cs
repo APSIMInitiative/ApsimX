@@ -9,6 +9,7 @@ namespace UserInterface.Views
     {
         event EventHandler<EditorArgs> MemoLeave;
         event EventHandler<EditorArgs> MemoChange;
+        event EventHandler StartEdit;
 
         /// <summary>
         /// Add an action (on context menu) on the memo.
@@ -36,12 +37,14 @@ namespace UserInterface.Views
     {
         public event EventHandler<EditorArgs> MemoLeave;
         public event EventHandler<EditorArgs> MemoChange;
+        public event EventHandler StartEdit;
 
         private VBox vbox1 = null;
+        private HBox hbox1 = null;
         public TextView TextView { get; set; } = null;
-        private Label label1 = null;
+        private LinkButton editLabel = null;
         private Button helpBtn = null;
-
+        
         private class MenuInfo
         {
             public string MenuText { get; set; }
@@ -54,8 +57,10 @@ namespace UserInterface.Views
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
             TextView = (TextView)builder.GetObject("textView");
-            label1 = (Label)builder.GetObject("label1");
+            editLabel = (LinkButton)builder.GetObject("label1");
+
             helpBtn = (Button)builder.GetObject("buttonHelp");
             helpBtn.Image = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.help.png", 20, 20));
             helpBtn.ImagePosition = PositionType.Right;
@@ -67,6 +72,8 @@ namespace UserInterface.Views
             TextView.Buffer.Changed += RichTextBox1_TextChanged;
             TextView.PopulatePopup += TextView_PopulatePopup;
             TextView.ButtonPressEvent += TextView_ButtonPressEvent;
+            editLabel.Clicked += Memo_StartEdit;
+
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -91,6 +98,7 @@ namespace UserInterface.Views
             TextView.PopulatePopup -= TextView_PopulatePopup;
             menuItemList.Clear();
             mainWidget.Destroyed -= _mainWidget_Destroyed;
+            editLabel.Clicked -= Memo_StartEdit;
             owner = null;
         }
 
@@ -136,8 +144,8 @@ namespace UserInterface.Views
         /// </summary>
         public string LabelText 
         {
-            get { return label1.Text; }
-            set { label1.Text = value; }
+            get { return editLabel.Label; }
+            set { editLabel.Label = value; }
         }
 
         public bool WordWrap
@@ -158,6 +166,27 @@ namespace UserInterface.Views
                 EditorArgs args = new EditorArgs();
                 args.TextString = TextView.Buffer.Text;
                 MemoLeave(this, args);
+            }
+        }
+
+        /// <summary>
+        /// The Edit option has been clicked and noe start the editing of the markdown.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Memo_StartEdit(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.CompareOrdinal(editLabel.Label, "Hide editor") == 0)
+                    editLabel.Label = "Edit text";
+                else
+                    editLabel.Label = "Hide editor";
+                StartEdit?.Invoke(this, e);
+            }
+            catch(Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -220,6 +249,15 @@ namespace UserInterface.Views
                 int lineNumber = cursorIter.Line;
                 return new Point(cursorIter.Offset, cursorIter.Line);
             }
+        }
+
+        /// <summary>
+        /// Return the height of the header panel
+        /// </summary>
+        /// <returns></returns>
+        public int HeaderHeight()
+        {
+            return hbox1.Allocation.Height;
         }
 
         /// <summary>

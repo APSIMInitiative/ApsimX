@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="WaterTableModel.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.WaterModel
+﻿namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Core;

@@ -131,7 +131,8 @@ namespace Models.Graph
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="reader">A storage reader.</param>
-        public void GetSeriesToPutOnGraph(IStorageReader reader, List<SeriesDefinition> definitions)
+        /// <param name="simulationFilter"></param>
+        public void GetSeriesToPutOnGraph(IStorageReader reader, List<SeriesDefinition> definitions, List<string> simulationFilter = null)
         {
             List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
 
@@ -146,7 +147,10 @@ namespace Models.Graph
                 // TableName exists so get the vary by fields and the simulation descriptions.
                 var varyByFieldNames = GetVaryByFieldNames();
                 simulationDescriptions = FindSimulationDescriptions();
-                var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationDescriptions);
+                if (simulationFilter == null)
+                    simulationFilter = simulationDescriptions.Select(d => d.Name).Distinct().ToList();
+
+                var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationFilter);
 
                 if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
                 {
@@ -243,14 +247,14 @@ namespace Models.Graph
         /// Create an SQL WHERE clause for rows that are in scope.
         /// </summary>
         /// <param name="reader">The reader to read from.</param>
-        /// <param name="simulationDescriptions">The simulation descriptions that are in scope.</param>
-        private string CreateInScopeWhereClause(IStorageReader reader, IEnumerable<SimulationDescription> simulationDescriptions)
+        /// <param name="simulationFilter">The names of simulatiosn that are in scope.</param>
+        private string CreateInScopeWhereClause(IStorageReader reader, List<string> simulationFilter)
         {
             var fieldsThatExist = reader.ColumnNames(TableName);
             if (fieldsThatExist.Contains("SimulationID") || fieldsThatExist.Contains("SimulationName"))
             {
                 // Extract all the simulation names from all descriptions.
-                var simulationNames = simulationDescriptions.Select(d => d.Name).Distinct();
+                var simulationNames = simulationFilter.Distinct(); 
 
                 string whereClause =  "SimulationName IN (" +
                                       StringUtilities.Build(simulationNames, ",", "'", "'") +

@@ -118,7 +118,7 @@ namespace Models.Core
         /// <summary>
         /// Gets the data type of the method
         /// </summary>
-        public override Type DataType { get { return null; } }
+        public override Type DataType { get { return this.method.ReturnType; } }
 
         /// <summary>
         /// Gets the values of the method

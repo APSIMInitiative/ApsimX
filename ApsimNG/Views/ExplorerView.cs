@@ -42,6 +42,9 @@ namespace UserInterface.Views
             mainWidget.Destroyed += OnDestroyed;
         }
 
+        /// <summary>The current right hand view.</summary>
+        public ViewBase CurrentRightHandView { get; private set; }
+
         /// <summary>The tree on the left side of the explorer view</summary>
         public ITreeView Tree { get; private set; }
 
@@ -62,6 +65,7 @@ namespace UserInterface.Views
             ViewBase view = control as ViewBase;
             if (view != null)
             {
+                CurrentRightHandView = view;
                 rightHandView.Add(view.MainWidget);
                 rightHandView.ShowAll();
             }

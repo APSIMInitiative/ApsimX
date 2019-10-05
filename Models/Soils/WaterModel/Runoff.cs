@@ -1,18 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Runoff.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.WaterModel
+﻿namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Core;
-    using Interfaces;
     using Functions;
-    using Surface;
     using System;
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// Runoff from rainfall is calculated using the USDA-Soil Conservation Service procedure known as the curve number technique. 

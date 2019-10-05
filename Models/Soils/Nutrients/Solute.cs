@@ -4,12 +4,8 @@ namespace Models.Soils.Nutrients
 {
     using Core;
     using Interfaces;
-    using Functions;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// # [Name]
@@ -47,9 +43,11 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            kgha = Apsim.Get(soil.Initial, Name + "N") as double[];
-            if (kgha == null)
+            double[] initialkgha = Apsim.Get(soil.Initial, Name + "N") as double[];           
+            if (initialkgha == null)
                 kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
+            else
+                kgha = ReflectionUtilities.Clone(initialkgha) as double[];
         }
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>

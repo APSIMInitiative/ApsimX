@@ -47,8 +47,8 @@
 
             string expectedJson = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
             Assert.IsTrue(json.Contains("\"$type\": \"Models.Clock, Models\""));
-            Assert.IsTrue(json.Contains("\"StartDate\": \"2015-01-01T00:00:00\""));
-            Assert.IsTrue(json.Contains("\"EndDate\": \"2015-12-31T00:00:00\""));
+            Assert.IsTrue(json.Contains("\"Start\": \"2015-01-01T00:00:00\""));
+            Assert.IsTrue(json.Contains("\"End\": \"2015-12-31T00:00:00\""));
             Assert.IsTrue(json.Contains("\"$type\": \"Models.Summary, Models\""));
             Assert.IsTrue(json.Contains("\"$type\": \"Models.Manager, Models\""));
         }

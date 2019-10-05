@@ -146,7 +146,7 @@ namespace Models.CLEM.Activities
             if (herd != null && herd.Count > 0)
             {
                 double woolTotal = 0;
-                if(LabourLimitProportion == 1 | !labourRequirement.LabourShortfallAffectsActivity)
+                if(LabourLimitProportion == 1 | (labourRequirement != null && !labourRequirement.LabourShortfallAffectsActivity))
                 {
                     woolTotal = herd.Sum(a => a.Wool);
                     herd.ForEach(a => a.Wool = 0);
@@ -217,6 +217,7 @@ namespace Models.CLEM.Activities
                         default:
                             throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
                     }
+                    this.Status = ActivityStatus.Partial;
                 }
 
                 // place clip in selected store

@@ -26,6 +26,7 @@ namespace UserInterface.Presenters
     using System.Text;
     using Models.Functions;
     using Models.Soils.Standardiser;
+    using Models.Graph;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -90,7 +91,28 @@ namespace UserInterface.Presenters
                 // Run all child model post processors.
                 var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
                 runner.Run();
+                (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
                 this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Clear graph panel cache.
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Clear Cache",
+                     AppliesTo = new Type[] { typeof(GraphPanel) })]
+        public void ClearGraphPanelCache(object sender, EventArgs e)
+        {
+            try
+            {
+                GraphPanel panel = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as GraphPanel;
+                panel.Cache.Clear();
             }
             catch (Exception err)
             {
@@ -220,10 +242,9 @@ namespace UserInterface.Presenters
             string internalCBText = this.explorerPresenter.GetClipboardText("_APSIM_MODEL");
             string externalCBText = this.explorerPresenter.GetClipboardText("CLIPBOARD");
 
-            if (externalCBText == null || externalCBText == "")
-                this.explorerPresenter.Add(internalCBText, this.explorerPresenter.CurrentNodePath);
-            else
-                this.explorerPresenter.Add(externalCBText, this.explorerPresenter.CurrentNodePath);
+            string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
+
+            this.explorerPresenter.Add(text, this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
@@ -265,9 +286,31 @@ namespace UserInterface.Presenters
                 this.explorerPresenter.MoveDown(model);
         }
 
+        /// <summary>
+        /// Move up
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Collapse Children", ShortcutKey = "Ctrl+Left", FollowsSeparator = true)]
+        public void OnCollapseChildren(object sender, EventArgs e)
+        {
+            explorerPresenter.CollapseChildren(explorerPresenter.CurrentNodePath);
+        }
+
+        /// <summary>
+        /// Move down
+        /// </summary>
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
+        [ContextMenu(MenuName = "Expand Children", ShortcutKey = "Ctrl+Right")]
+        public void OnExpandChildren(object sender, EventArgs e)
+        {
+            explorerPresenter.ExpandChildren(explorerPresenter.CurrentNodePath);
+        }
 
         [ContextMenu(MenuName = "Copy path to node",
-                     ShortcutKey = "Ctrl+Shift+C")]
+                     ShortcutKey = "Ctrl+Shift+C",
+                     FollowsSeparator = true)]
         public void CopyPathToNode(object sender, EventArgs e)
         {
             string nodePath = explorerPresenter.CurrentNodePath;
@@ -401,7 +444,7 @@ namespace UserInterface.Presenters
         {
             Model factors = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
             if (factors != null)
-                this.explorerPresenter.Add("<Factor/>", this.explorerPresenter.CurrentNodePath);
+                this.explorerPresenter.Add(new Factor(), this.explorerPresenter.CurrentNodePath);
         }
 
         /// <summary>
@@ -428,6 +471,16 @@ namespace UserInterface.Presenters
                 string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
                 Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
                 explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
+
+                try
+                {
+                    if (ProcessUtilities.CurrentOS.IsWindows)
+                        Process.Start(fileName);
+                }
+                catch
+                {
+                    // Swallow exceptions - this was a non-critical operation.
+                }
             }
             catch (Exception err)
             {

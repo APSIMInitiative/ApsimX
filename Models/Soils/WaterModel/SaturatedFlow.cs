@@ -1,13 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SaturatedFlowModel.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
+﻿
 namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Core;
-    using Functions;
     using System;
     using System.Xml.Serialization;
 

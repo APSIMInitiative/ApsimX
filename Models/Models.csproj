@@ -231,6 +231,7 @@
     <Compile Include="Core\ITest.cs" />
     <Compile Include="Core\Reference.cs" />
     <Compile Include="Core\Run\CommenceArgs.cs" />
+    <Compile Include="Core\Run\EmptyJob.cs" />
     <Compile Include="Core\Run\GenerateApsimXFiles.cs" />
     <Compile Include="Core\Run\IReplacement.cs" />
     <Compile Include="Core\Run\ISimulationDescriptionGenerator.cs" />
@@ -239,9 +240,13 @@
     <Compile Include="Core\Run\PropertyReplacement.cs" />
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
+    <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
+    <Compile Include="Functions\LiveOnEventFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
+    <Compile Include="Graph\GraphPanel.cs" />
+    <Compile Include="Graph\IGraphPanelScript.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
@@ -250,6 +255,7 @@
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
+    <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
