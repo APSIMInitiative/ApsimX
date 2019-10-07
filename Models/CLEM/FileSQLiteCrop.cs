@@ -40,6 +40,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file from a APSIM SQLite database for the CLEM simulation.")]
     [Version(1, 0, 1, "")]
+    [Version(1, 0, 2, "Added ability to define table and columns to use")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReaderSQLite.htm")]
     public class FileSQLiteCrop : CLEMModel, IFileCrop
     {
@@ -62,6 +63,24 @@ namespace Models.CLEM
         public string TableName { get; set; }
 
         /// <summary>
+        /// Name of column holding crop name data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("CropName")]
+        [Description("Column name for crop name")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Crop name column name must be supplied")]
+        public string CropNameColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding soil type data
+        /// </summary>
+        [Summary]
+        [System.ComponentModel.DefaultValueAttribute("SoilNum")]
+        [Description("Column name for land id")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
+        public string SoilTypeColumnName { get; set; }
+
+        /// <summary>
         /// Name of column holding year data
         /// </summary>
         [Summary]
@@ -80,24 +99,6 @@ namespace Models.CLEM
         public string MonthColumnName { get; set; }
 
         /// <summary>
-        /// Name of column holding crop name data
-        /// </summary>
-        [Summary]
-        [System.ComponentModel.DefaultValueAttribute("CropName")]
-        [Description("Column name for crop name")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Crop name column name must be supplied")]
-        public string CropNameColumnName { get; set; }
-
-        /// <summary>
-        /// Name of column holding soil type data
-        /// </summary>
-        [Summary]
-        [System.ComponentModel.DefaultValueAttribute("SoilNum")]
-        [Description("Column name for soil type")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Soil type column name must be supplied")]
-        public string SoilTypeColumnName { get; set; }
-
-        /// <summary>
         /// Name of column holding amount data
         /// </summary>
         [Summary]
@@ -110,11 +111,8 @@ namespace Models.CLEM
         /// Name of column holding nitrogen data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("")]
         [Description("Column name for percent nitrogen")]
         public string PercentNitrogenColumnName { get; set; }
-
-        
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -257,14 +255,14 @@ namespace Models.CLEM
 
             if (startDate.Year == endDate.Year)
             {
-                sqlQuery += " AND (( Year = " + startDate.Year + " AND Month >= " + startDate.Month + " AND Month < " + endDate.Month + ")"
+                sqlQuery += " AND (( "+YearColumnName+" = " + startDate.Year + " AND " + MonthColumnName + " >= " + startDate.Month + " AND " + MonthColumnName + " < " + endDate.Month + ")"
                 + ")";
             }
             else
             {
-                sqlQuery += " AND (( Year = " + startDate.Year + " AND Month >= " + startDate.Month + ")"
-                + " OR  ( Year > " + startDate.Year + " AND Year < " + endDate.Year + ")"
-                + " OR  ( Year = " + endDate.Year + " AND Month < " + endDate.Month + ")"
+                sqlQuery += " AND (( " + YearColumnName + " = " + startDate.Year + " AND " + MonthColumnName + " >= " + startDate.Month + ")"
+                + " OR  ( " + YearColumnName + " > " + startDate.Year + " AND " + YearColumnName + " < " + endDate.Year + ")"
+                + " OR  ( " + YearColumnName + " = " + endDate.Year + " AND " + MonthColumnName + " < " + endDate.Month + ")"
                 + ")";
             }
 
@@ -287,7 +285,7 @@ namespace Models.CLEM
             List<CropDataType> cropDetails = new List<CropDataType>();
             if (results.Rows.Count > 0)
             {
-                results.DefaultView.Sort = "Year, Month";
+                results.DefaultView.Sort = YearColumnName+","+MonthColumnName;
 
                 // convert to list<CropDataType>
                 foreach (DataRowView row in results.DefaultView)
@@ -334,26 +332,47 @@ namespace Models.CLEM
             if (FileName == null || FileName == "")
             {
                 html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
+                html += "\n</div>";
             }
             else if (!this.FileExists)
             {
-                html += "The database <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
+                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
+                html += "\n</div>";
             }
             else
             {
+                html += "Using <span class=\"filelink\">" + FileName + "</span>";
+
                 if (TableName == null || TableName == "")
                 {
-                    html += "Using <span class=\"errorlink\">[TABLE NOT SET]</span>";
+                    html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">Using table <span class=\"errorlink\">[TABLE NOT SET]</span></div>";
                 }
                 else
                 {
-                    html += "Using table <span class=\"setvalue\">" + TableName + "</span>";
+                    // Add table name
+                    html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
+                    html += "Using table <span class=\"filelink\">" + TableName + "</span>";
+                    // add column links
+                    html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is <span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>";
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is <span class=\"setvalue\">" + CropNameColumnName + "</span></div>";
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is <span class=\"setvalue\">" + YearColumnName + "</span></div>";
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is <span class=\"setvalue\">" + MonthColumnName + "</span></div>";
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is <span class=\"setvalue\">" + AmountColumnName + "</span></div>";
+                    if(PercentNitrogenColumnName == "")
+                    {
+                        html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">IGNORED</span></div>";
+                    }
+                    else
+                    {
+                        html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>";
+                    }
+                    html += "\n</div>";
                 }
-
-                html += " in database <span class=\"filelink\">" + FileName + "</span>";
+                html += "\n</div>";
             }
-            html += "\n</div>";
             return html;
+
         }
     }
 

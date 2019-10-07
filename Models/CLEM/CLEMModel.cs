@@ -72,15 +72,19 @@ namespace Models.CLEM
                         System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
                         try
                         {
-                            //Is it an array?
-                            if (property.PropertyType.IsArray)
+                            object result = property.GetValue(this, null);
+                            if (result is null)
                             {
-                                property.SetValue(this, dv.Value, null);
-                            }
-                            else
-                            {
-                                //Use set value for.. not arrays
-                                property.SetValue(this, dv.Value, null);
+                                //Is it an array?
+                                if (property.PropertyType.IsArray)
+                                {
+                                    property.SetValue(this, dv.Value, null);
+                                }
+                                else
+                                {
+                                    //Use set value for.. not arrays
+                                    property.SetValue(this, dv.Value, null);
+                                }
                             }
                         }
                         catch (Exception ex)
