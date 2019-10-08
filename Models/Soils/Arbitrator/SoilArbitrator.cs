@@ -99,9 +99,9 @@
             InitialSoilState.Initialise();
 
             Estimate UptakeEstimate1 = new Estimate(this.Parent, arbitrationType, InitialSoilState, uptakeModels);
-            //Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate1 * 0.5, uptakeModels);
-            //Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5, uptakeModels);
-            //Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3, uptakeModels);
+            Estimate UptakeEstimate2 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate1 * 0.5, uptakeModels);
+            Estimate UptakeEstimate3 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate2 * 0.5, uptakeModels);
+            Estimate UptakeEstimate4 = new Estimate(this.Parent, arbitrationType, InitialSoilState - UptakeEstimate3, uptakeModels);
 
             List<ZoneWaterAndN> listOfZoneUptakes = new List<ZoneWaterAndN>();
             List <CropUptakes> ActualUptakes = new List<CropUptakes>();
@@ -111,10 +111,10 @@
                 CU.Crop = U.Crop;
                 foreach (ZoneWaterAndN ZU in U.Zones)
                 {
-                    ZoneWaterAndN NewZone = UptakeEstimate1.UptakeZone(CU.Crop, ZU.Zone.Name);// * (1.0 / 6.0)
-              //                          + UptakeEstimate2.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
-              //                          + UptakeEstimate3.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
-              //                          + UptakeEstimate4.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 6.0);
+                    ZoneWaterAndN NewZone = UptakeEstimate1.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 6.0)
+                                        + UptakeEstimate2.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
+                                        + UptakeEstimate3.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 3.0)
+                                        + UptakeEstimate4.UptakeZone(CU.Crop, ZU.Zone.Name) * (1.0 / 6.0);
                     CU.Zones.Add(NewZone);
                     listOfZoneUptakes.Add(NewZone);
                 }
