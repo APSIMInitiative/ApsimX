@@ -71,7 +71,7 @@ namespace Models.PMF
                 BAT.SupplyDemandRatioN = Math.Min(BAT.SupplyDemandRatioN, 1);
                 // BAT.SupplyDemandRatioN = Math.Max(BAT.SupplyDemandRatioN, 0); // ?
             }
-
+            
             // todo - what if root demand exceeds supply?
             double rootAllocation = BAT.SupplyDemandRatioN * BAT.StructuralDemand[rootIndex];
             rootAllocation = Math.Min(rootAllocation, NotAllocated);

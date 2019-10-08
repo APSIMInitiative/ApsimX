@@ -662,6 +662,7 @@ namespace Models.PMF.Organs
             }
             LAIDead = SenescedLai; // drew todo
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
+            
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
             CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAIDead), 0.0, 0.999999999);
             var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
@@ -1244,6 +1245,7 @@ namespace Models.PMF.Organs
                 nGreenToday += newN; // local variable
                 nProvided += newN;
                 DltSenescedLaiN += senescenceLAI;
+
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                 DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
 
@@ -1279,6 +1281,7 @@ namespace Models.PMF.Organs
                     nGreenToday += newN;
                     nProvided += newN;
                     DltSenescedLaiN += senescenceLAI;
+                    
                     DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                     DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
                     return nProvided;
@@ -1308,6 +1311,7 @@ namespace Models.PMF.Organs
                     nGreenToday += newN;
                     nProvided += newN;
                     DltSenescedLaiN += senescenceLAI;
+                    
                     DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                     DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
                     return nProvided;
