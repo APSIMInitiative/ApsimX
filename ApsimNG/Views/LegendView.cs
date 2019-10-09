@@ -31,7 +31,7 @@ namespace UserInterface.Views
         public event PositionChangedDelegate OnPositionChanged;
         public event EventHandler DisabledSeriesChanged;
 
-        private ComboBox combobox1 = null;
+        private ComboBox combobox1 = null; // fixme - should use IDropDownView, and make public.
         private HBox hbox1 = null;
         private Gtk.TreeView listview = null;
 

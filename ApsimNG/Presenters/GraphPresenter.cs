@@ -41,9 +41,6 @@ namespace UserInterface.Presenters
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>The current presenter</summary>
-        private IPresenter currentPresenter = null;
-
         /// <summary>The series definitions to show on graph.</summary>
         public List<SeriesDefinition> SeriesDefinitions { get; set; } = new List<SeriesDefinition>();
 
@@ -87,9 +84,9 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             explorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             graphView.OnAxisClick -= OnAxisClick;
@@ -203,6 +200,9 @@ namespace UserInterface.Presenters
         }
 
         public List<string> SimulationFilter { get; set; }
+
+        /// <summary>The current presenter</summary>
+        public IPresenter CurrentPresenter { get; set; }
 
         /// <summary>
         /// Iff set to true, the legend will appear inside the graph boundaries.
@@ -426,13 +426,13 @@ namespace UserInterface.Presenters
         /// <param name="axisType">Type of the axis.</param>
         private void OnAxisClick(Axis.AxisType axisType)
         {
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             AxisPresenter axisPresenter = new AxisPresenter();
-            currentPresenter = axisPresenter;
+            CurrentPresenter = axisPresenter;
             AxisView a = new AxisView(graphView as GraphView);
             string dimension = (axisType == Axis.AxisType.Left || axisType == Axis.AxisType.Right) ? "Y" : "X";
             graphView.ShowEditorPanel(a.MainWidget, dimension + "-Axis options");
@@ -444,13 +444,13 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnCaptionClick(object sender, EventArgs e)
         {
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             TitlePresenter titlePresenter = new TitlePresenter();
-            currentPresenter = titlePresenter;
+            CurrentPresenter = titlePresenter;
             titlePresenter.ShowCaption = true;
 
             TitleView t = new TitleView(graphView as GraphView);
@@ -487,13 +487,13 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnLegendClick(object sender, LegendClickArgs e)
         {
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             LegendPresenter presenter = new LegendPresenter(this);
-            currentPresenter = presenter;
+            CurrentPresenter = presenter;
 
             LegendView view = new LegendView(graphView as GraphView);
             graphView.ShowEditorPanel(view.MainWidget, "Legend options");

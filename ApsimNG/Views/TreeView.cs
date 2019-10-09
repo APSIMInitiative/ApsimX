@@ -197,6 +197,28 @@ namespace UserInterface.Views
             treeview1.SetCursor(selPath, treeview1.GetColumn(0), true);
         }
 
+        private TreePath CreatePath(Utility.TreeNode node)
+        {
+            return new TreePath(node.Indices);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expandedNodes"></param>
+        public void ExpandNodes(Utility.TreeNode[] expandedNodes)
+        {
+            foreach (var node in expandedNodes)
+                treeview1.ExpandRow(CreatePath(node), false);
+        }
+
+        public Utility.TreeNode[] GetExpandedNodes()
+        {
+            List<Utility.TreeNode> expandedRows = new List<Utility.TreeNode>();
+            treeview1.MapExpandedRows((view, path) => expandedRows.Add(new Utility.TreeNode(path.Indices)));
+            return expandedRows.ToArray();
+        }
+
         /// <summary>Deletes the specified node.</summary>
         /// <param name="nodePath">The node path.</param>
         public void Delete(string nodePath)
@@ -827,6 +849,26 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Expands all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        public void ExpandChildren(string path)
+        {
+            TreePath nodePath = treemodel.GetPath(FindNode(path));
+            treeview1.ExpandRow(nodePath, true);
+        }
+
+        /// <summary>
+        /// Collapses all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        public void CollapseChildren(string path)
+        {
+            TreePath nodePath = treemodel.GetPath(FindNode(path));
+            treeview1.CollapseRow(nodePath);
         }
     }
 }

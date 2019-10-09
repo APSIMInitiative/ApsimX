@@ -38,6 +38,9 @@ namespace Models.Graph
         /// <summary>
         /// An enumeration for the position of the legend
         /// </summary>
+        /// <remarks>
+        /// fixme - we should support all valid OxyPlot legend position types.
+        /// </remarks>
         public enum LegendPositionType
         {
             /// <summary>
