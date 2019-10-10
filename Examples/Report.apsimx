@@ -5,6 +5,15 @@
   "Name": "Simulations",
   "Children": [
     {
+      "$type": "Models.Memo, Models",
+      "Text": "**About this example**\n\nThe is a nonsense sort of simulation - its only purpose is to show examples of the different reporting capabilities.\n\nYou will see that many of the Report models have been placed inside Folders. This is not required to make the simulation run but neither does it break the simulation. Their purpose is only to create headings in the generated documentation.\n\n",
+      "Name": "About this example",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
       "$type": "Models.Core.Simulation, Models",
       "Name": "Simulation",
       "Children": [
@@ -14,7 +23,7 @@
           "End": "1981-12-31T00:00:00",
           "Name": "Clock",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -25,7 +34,7 @@
           "CaptureSummaryText": true,
           "Name": "SummaryFile",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -35,7 +44,7 @@
           "ExcelWorkSheetName": null,
           "Name": "Weather",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -43,7 +52,7 @@
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "SoilArbitrator",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -160,6 +169,32 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\r\n\r\n        [Separator(\"NOTE - all dates or date strings are entered with comma-separation and no spaces\")]\r\n        [Separator(\"Example for reporting in particular days but the same days every year\")]\r\n        [Description(\"Name of the Report model for reporting on below dates every year: \")] public string ReportEveryYear_Name { get; set; } \r\n        [Description(\"Enter one or more dates (as dd-mmm) for reporting : \")] public string[] ReportEveryYear_Dates { get; set; } \r\n\r\n        [Separator(\"Example for reporting on absolute dates\")]\r\n        [Description(\"Name of the Report model for reporting on completely specified dates: \")] public string ReportSpecificDates_Name { get; set; } \r\n        [Description(\"Enter one or more dates (as dd-mmm) for reporting : \")] public DateTime[] ReportSpecificDates_Dates { get; set; } \r\n\r\n\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n\r\n\t\t\t// example for reporting on irregular dates but the same dates every year\r\n        \tforeach (string ddMMM in ReportEveryYear_Dates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.DatesEqual(ddMMM, clock.Today))\r\n    \t\t\t{\r\n\t                Models.Report.Report myReport = Apsim.Find(zone, ReportEveryYear_Name) as Models.Report.Report;\r\n    \t            if (myReport == null)\r\n        \t            throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportEveryYear_Name));\r\n            \t    myReport.DoOutput();\r\n    \t\t\t}\r\n        \t}\r\n\r\n\t\t\t// example for reporting on fully-specified dates that are not necessarily the same dates every year\r\n        \tforeach (DateTime ddMMMyy in ReportSpecificDates_Dates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.Equals(ddMMMyy, clock.Today))\r\n    \t\t\t{\r\n\t                Models.Report.Report myReport = Apsim.Find(zone, ReportSpecificDates_Name) as Models.Report.Report;\r\n    \t            if (myReport == null)\r\n        \t            throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportSpecificDates_Name));\r\n            \t    myReport.DoOutput();\r\n    \t\t\t}\r\n        \t}\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "ReportEveryYear_Name",
+                      "Value": "ReportWheneverEveryYear"
+                    },
+                    {
+                      "Key": "ReportEveryYear_Dates",
+                      "Value": "21-mar,23-nov,11-aug"
+                    },
+                    {
+                      "Key": "ReportSpecificDates_Name",
+                      "Value": "ReportOnSpecificDates"
+                    },
+                    {
+                      "Key": "ReportSpecificDates_Dates",
+                      "Value": "03/01/1980 00:00:00,10/15/1981 00:00:00"
+                    }
+                  ],
+                  "Name": "ReportExampleHelper",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -172,9 +207,21 @@
                 "[Clock].Today",
                 "[Wheat].Grain.Total.Wt*10 as Yield_kgDMha  // example of changing units from g/m2 to kg/ha",
                 "[Weather].Rain as DailyRainfall",
-                "Sum of [Weather].Rain from [Clock].StartOfSimulation to [Clock].Today as CumulativeRainfall",
-                "Sum of [Weather].Rain from 1-Jan to [Clock].Today as AnnualRainfall",
-                "Sum of [Weather].Rain from [Clock].StartOfMonth to [Clock].Today as MonthlyRainfall",
+                "",
+                "//this should work from any Clock event but \"StartOfSimulation\" fails so use \"StartDay\"",
+                "Sum of [Weather].Rain from [Clock].StartDate to [Clock].Today as CumulativeRainfall",
+                "//Sum of [Weather].Rain from [ReportExampleHelper].Script.ReportDate to [Clock].Today as CumulativeRainfall",
+                "",
+                "//the \"from 1-Jan\" means that the accumulation re-zeroes every year",
+                "Sum of [Weather].Rain from 1-Jan to [Clock].Today as AnnualRainfall                      ",
+                "",
+                "",
+                "",
+                "",
+                "//the \"from [Clock].StartOfMonth\" means that the accumulation re-zeroes every first day of the month. ",
+                "Sum of [Weather].Rain from [Clock].StartOfMonth to [Clock].Today as MonthlyRainfall      ",
+                "",
+                "// For the examples on maximum temperature",
                 "[Weather].MaxT as MaxT"
               ],
               "EventNames": [
@@ -237,6 +284,81 @@
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Reporting At Irregular Intervals",
+              "Children": [
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "Sum of [Weather].Rain from [ReportWheneverEveryYear].DateOfLastOutput to [Clock].Today as IrregularIntervalRainfall   "
+                  ],
+                  "EventNames": [
+                    ""
+                  ],
+                  "Name": "ReportWheneverEveryYear",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "Sum of [Weather].Rain from [ReportWheneverEveryYear].DateOfLastOutput to [Clock].Today as IntervalRainfall   ",
+                    "Sum of [Weather].Rain from [Clock].StartDate to [Clock].Today as CumulativeIntervalAnnualRainfall   "
+                  ],
+                  "EventNames": [
+                    ""
+                  ],
+                  "Name": "ReportOnSpecificDates",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Sometimes in a simulation you might want to report at irregular intervals. These might align with measurement dates, some key dates in the production system.\n\nthe first thing to note is that if you are triggering reporting from a Manager (in this example it is called \"ReportExampleHelper\" in the \"Managers\" folder) the trigger should happen after all the science models and Manager scripts have done their calculations for the day. This is acheived by putting the Manager after all the other Managers and using the \"DoManagementCalculations\" stage of the day when subscribing to the event in the Manager. See approximately line 26 (this may get a bit out of date sorry) in the Manager.\n\n\t\t[EventSubscribe(\"DoManagementCalculations\")]\n\n**Report irregularly but on the same days every year**\n\nThe reporting from \"ReportWheneverEveryYear\" is driven by the Manager script \"ReportExampleHelper\". The first two properties give then name of this report and a list of year-free dates (i.e. as dd-mmm) on which the reporting should happen every year. See the code in ReportExampleHelper pasted below as an example of how to do this. Note that the dates do not have to be in any sensible order.\n\n\t\t\t// example for reporting on irregular dates but the same dates every year\n        \tforeach (string ddMMM in ReportEveryYear_Dates)\n        \t{\n    \t\t\tif (DateUtilities.DatesEqual(ddMMM, clock.Today))\n    \t\t\t{\n\t                Models.Report.Report myReport = Apsim.Find(zone, ReportEveryYear_Name) as Models.Report.Report;\n    \t            if (myReport == null)\n        \t            throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportEveryYear_Name));\n            \t    myReport.DoOutput();\n    \t\t\t}\n        \t}\n\nLooking in the data reported from this component, there are six lines (three dates entered in \"ReportExampleHelper\" and a two-year simulation) showing the actual data for reporting and the sum of the rainfall since the last time this report model produced an output. There is no value for the first row because there is no DateOfLastOutput until the simulation progressed past an output date (that should make some sort of sense!). Of course any type(s) of outputs could be reported on these dates.\n\n\t\tSum of [Weather].Rain from [ReportWheneverEveryYear].DateOfLastOutput to [Clock].Today as IrregularIntervalRainfall\n\n**Report on fully-specified dates**\n\nThis example is for when the reporting is for fully-specified dates and usually these will not be the same every year. This also driven by the Manager script \"ReportExampleHelper\". The third and fourth properties then name of the date-specific report and a list of one or more full dates (i.e. as dd-mmm-yyyy) on which the reporting should be tgriggered. See the code in ReportExampleHelper pasted below as an example of how to do this. Note that the dates do not have to be in any sensible order.\n\n\n\t\t\t// example for reporting on fully specified dates that are not necessarily the same dates every year\n        \tforeach (DateTime ddMMMyy in ReportSpecificDates_Dates)\n        \t{\n    \t\t\tif (DateUtilities.Equals(ddMMMyy, clock.Today))\n    \t\t\t{\n\t                Models.Report.Report myReport = Apsim.Find(zone, ReportSpecificDates_Name) as Models.Report.Report;\n    \t            if (myReport == null)\n        \t            throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportSpecificDates_Name));\n            \t    myReport.DoOutput();\n    \t\t\t}\n        \t}\n\nExamining the output data in \"ReportOnSpecificDates\" there are only two rows - these correspond to the dates entered in \"ReportExampleHelper\". There are two data columns. One of these is the raainfall since the last report (as in the any-year example just above) and the other is the sum of rainfall since the start of the simulation.\n\n\tSum of [Weather].Rain from [ReportWheneverEveryYear].DateOfLastOutput to [Clock].Today as IntervalRainfall   \n\tSum of [Weather].Rain from [Clock].StartDate to [Clock].Today as CumulativeIntervalAnnualRainfall ",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "//Sum of [Weather].Rain from [ReportWhenever].DateOfLastOutput to [Clock].Today as AnnualRainfall   "
+              ],
+              "EventNames": [
+                ""
+              ],
+              "Name": "ReportSpecificDates",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "**Report whenever you want**\n\nSometimes in a simulation you might want to report at irregular intervals. These might align with measurement dates",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -419,12 +541,12 @@
                       "XFMetadata": null,
                       "Name": "WheatSoil",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -476,7 +598,7 @@
                   "KLAT": null,
                   "Name": "SoilWater",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -548,7 +670,7 @@
                   ],
                   "Name": "Organic",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -604,7 +726,7 @@
                   "ESP": null,
                   "Name": "Chemical",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -616,7 +738,7 @@
                   "RelativeTo": null,
                   "Name": "InitialWater",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -701,7 +823,7 @@
                   "PHUnits": 0,
                   "Name": "InitialN",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -709,7 +831,7 @@
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "CERESSoilTemperature",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -802,8 +924,8 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Atmosphere",
                         "Location": "48, 338",
-                        "Colour": "White",
-                        "OutlineColour": "White",
+                        "Colour": "255, 255, 255",
+                        "OutlineColour": "255, 255, 255",
                         "Transparent": true
                       },
                       {
@@ -940,12 +1062,12 @@
                   },
                   "ResourceName": "Nutrient",
                   "Name": "Nutrient",
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -960,7 +1082,7 @@
               "FractionFaecesAdded": 0.5,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -971,7 +1093,7 @@
               "DaysAfterEnding": 0,
               "ResourceName": "Wheat",
               "Name": "Wheat",
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -987,7 +1109,7 @@
               "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
               "Children": [],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
@@ -1163,11 +1285,11 @@
               "Type": 1,
               "XAxis": 3,
               "YAxis": 2,
-              "ColourArgb": -16747854,
+              "ColourArgb": -990142,
               "FactorToVaryColours": null,
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
-              "Marker": 1,
+              "Marker": 9,
               "MarkerSize": 0,
               "Line": 4,
               "LineThickness": 0,
@@ -1264,7 +1386,7 @@
           "Type": 1,
           "XAxis": 3,
           "YAxis": 0,
-          "ColourArgb": -1663232,
+          "ColourArgb": -2793984,
           "FactorToVaryColours": null,
           "FactorToVaryMarkers": null,
           "FactorToVaryLines": null,
