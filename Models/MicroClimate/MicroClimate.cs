@@ -156,7 +156,10 @@ namespace Models
         {
             get
             {
-                return zoneMicroClimates.Max(m => m.Canopies.Max(c => c.Canopy.Height));
+                if (zoneMicroClimates.Sum(n => n.Canopies.Count) == 0)
+                    return 0;
+                else
+                    return zoneMicroClimates.Max(m => m.Canopies.Max(c => c.Canopy.Height));
             }
         }
 
