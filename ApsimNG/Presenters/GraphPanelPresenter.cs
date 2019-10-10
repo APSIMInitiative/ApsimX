@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Graph;
 using Models.Storage;
 using System;
@@ -180,7 +181,7 @@ namespace UserInterface.Presenters
             if (graphs != null)
                 foreach (GraphTab tab in graphs)
                     foreach (GraphPresenter graphPresenter in tab.Graphs.Select(g => g.Presenter))
-                        graphPresenter.Detach();
+                        graphPresenter?.Detach();
 
             graphs.Clear();
             view.RemoveGraphTabs();
@@ -192,10 +193,17 @@ namespace UserInterface.Presenters
             GraphTab tab = new GraphTab(sim, this.presenter);
             for (int i = 0; i < graphs.Length; i++)
             {
-                if (graphs[i].Enabled)
+                Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
+                graph.Parent = panel;
+                Apsim.ParentAllChildren(graph);
+
+                if (graph != null && graph.Enabled)
                 {
                     // Apply transformation to graph.
-                    panel.Script.TransformGraph(graphs[i], sim);
+                    panel.Script.TransformGraph(graph, sim);
+
+                    if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
+                        graph.LegendPosition = (Graph.LegendPositionType)Enum.Parse(typeof(Graph.LegendPositionType), panel.LegendPosition.ToString());
 
                     // Create and fill cache entry if it doesn't exist.
                     if (!panel.Cache.ContainsKey(sim) || panel.Cache[sim].Count <= i)
@@ -208,13 +216,13 @@ namespace UserInterface.Presenters
                         {
                             throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
                         }
-                        List<SeriesDefinition> definitions = graphs[i].GetDefinitionsToGraph(storage, new List<string>() { sim });
+                        List<SeriesDefinition> definitions = graph.GetDefinitionsToGraph(storage, new List<string>() { sim });
                         if (!panel.Cache.ContainsKey(sim))
                             panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
 
                         panel.Cache[sim][i] = definitions;
                     }
-                    tab.AddGraph(graphs[i], panel.Cache[sim][i]);
+                    tab.AddGraph(graph, panel.Cache[sim][i]);
                 }
 
                 if (processingThread.CancellationPending)

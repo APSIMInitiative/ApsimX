@@ -25,6 +25,38 @@ namespace Models.Graph
     public class GraphPanel : Model, IPostSimulationTool
     {
         /// <summary>
+        /// When set to anything other than default, changes the legend
+        /// position of all child graphs.
+        /// </summary>
+        public enum LegendPositionType
+        {
+            /// <summary>
+            /// Respect each graph's individual legend position.
+            /// </summary>
+            Default,
+
+            /// <summary>
+            /// Top Left
+            /// </summary>
+            TopLeft,
+
+            /// <summary>
+            /// Top Right
+            /// </summary>
+            TopRight,
+
+            /// <summary>
+            /// Bottom Left
+            /// </summary>
+            BottomLeft,
+
+            /// <summary>
+            /// Bottom Right
+            /// </summary>
+            BottomRight,
+        };
+
+        /// <summary>
         /// Called when the model is deserialised.
         /// </summary>
         public override void OnCreated()
@@ -59,6 +91,12 @@ namespace Models.Graph
         /// </summary>
         [Description("Number of columns of graphs per tab")]
         public int NumCols { get; set; } = 2;
+
+        /// <summary>
+        /// Graph legend position. Applies to all graphs.
+        /// </summary>
+        [Description("Graph legend position. Applies to all graphs. Set to Default to make graphs individually customisable.")]
+        public LegendPositionType LegendPosition { get; set; } = LegendPositionType.Default;
 
         /// <summary>
         /// Script which controls tab generation.
