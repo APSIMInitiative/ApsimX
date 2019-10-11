@@ -117,7 +117,7 @@ namespace Models.Report
         private string[] TidyUpEventNames()
         {
             List<string> eventNames = new List<string>();
-            for (int i = 0; i < EventNames.Length; i++)
+            for (int i = 0; i < EventNames?.Length; i++)
             {
                 string eventName = EventNames[i];
 
