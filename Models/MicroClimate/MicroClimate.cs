@@ -354,8 +354,8 @@ namespace Models
             dayLengthEvap = MathUtilities.DayLength(Clock.Today.DayOfYear, SunAngleNetPositiveRadiation, weather.Latitude);
             // VOS - a temporary kludge to get this running for high latitudes. MicroMet is due for a clean up soon so reconsider then.
             dayLengthEvap = Math.Max(dayLengthEvap, (dayLengthLight * 2.0 / 3.0));
-
-            if (zoneMicroClimates.Count == 2 && zoneMicroClimates[0].zone is Zones.RectangularZone && zoneMicroClimates[1].zone is Zones.RectangularZone)
+            if (zoneMicroClimates.Count == 2 && zoneMicroClimates[0].zone is Zones.RectangularZone 
+                && zoneMicroClimates[1].zone is Zones.RectangularZone && zoneMicroClimates[0].Canopies.Count > 0 && zoneMicroClimates[1].Canopies.Count > 0)
             {
                 // We are in a strip crop simulation
                 zoneMicroClimates[0].DoCanopyCompartments();
