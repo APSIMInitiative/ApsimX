@@ -275,6 +275,45 @@
         }
 
         /// <summary>
+        /// Ensures that comments work in event names:
+        /// 
+        /// Clock.Today.StartOfWeek // works normally
+        /// // should be ignored
+        /// //Clock.Today.EndOfWeek // entire line should be ignored
+        /// </summary>
+        [Test]
+        public static void TestCommentsInEventNames()
+        {
+            Simulations file = Utilities.GetRunnableSim();
+
+            Report report = Apsim.Find(file, typeof(Report)) as Report;
+            report.Name = "Report"; // Just to make sure
+            report.VariableNames = new string[] { "[Clock].Today.DayOfYear as doy" };
+            report.EventNames = new string[]
+            {
+                "[Clock].StartOfWeek // works normally",
+                "// Should be ignored",
+                "//[Clock].EndOfWeek // entire line should be ignored"
+            };
+
+            Clock clock = Apsim.Find(file, typeof(Clock)) as Clock;
+            clock.StartDate = new DateTime(2017, 1, 1);
+            clock.EndDate = new DateTime(2017, 3, 1);
+
+            Runner runner = new Runner(file);
+            List<Exception> errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            List<string> fieldNames = new List<string>() { "doy" };
+            IDataStore storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+            DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
+            double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "doy");
+            double[] expected = new double[] { 1, 8, 15, 22, 29, 36, 43, 50, 57 };
+            Assert.AreEqual(expected, actual);
+        }
+
+        /// <summary>
         /// Reads an .apsimx file from an embedded resource, runs it,
         /// and returns the root simulations node.
         /// </summary>

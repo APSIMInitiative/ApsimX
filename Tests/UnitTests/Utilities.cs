@@ -165,6 +165,7 @@ namespace UnitTests
                 }
             };
             Apsim.ParentAllChildren(sims);
+            sims.Write(sims.FileName);
             return sims;
         }
     }
