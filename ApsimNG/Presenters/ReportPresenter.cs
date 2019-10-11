@@ -73,8 +73,8 @@ namespace UserInterface.Presenters
             this.view = view as IReportView;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
-            this.view.VariableList.ScriptMode = false;
-            this.view.EventList.ScriptMode = false;
+            this.view.VariableList.Mode = EditorType.Report;
+            this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
