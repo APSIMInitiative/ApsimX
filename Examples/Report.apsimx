@@ -6,7 +6,7 @@
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "**About this example**\n\nThe is a nonsense sort of simulation - its only purpose is to show examples of the different reporting capabilities.\n\nYou will see that many of the Report models have been placed inside Folders. This is not required to make the simulation run but neither does it break the simulation. Their purpose is only to create headings in the generated documentation.\n\n",
+      "Text": "**About this example**\n\nThe simulations in this example are mostly nonsense - tjey are here to show examples of the different reporting capabilities and to provide a test that they continue to produce the correct results.\n\nSeveral  of the Report models have been placed inside Folders. This is not required to make the simulation run but neither does it break the simulation. Their purpose is only to create headings in the generated documentation.\n\n",
       "Name": "About this example",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -20,8 +20,26 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\nSetting up outputs from a simulation requires describing **what** to output and **when** that should be done. \n\n**Properties - setting up what should be reported**\n\nFigure 1 shows a screen capture of a simple report. The upper box (Properties) holds descriptions of what should be reported. The general syntax is:\n\n\t\t\t[Model].Variable\nThe first part, \"[Model]\" just above, gives the name of a model in the simulation. Models are almost any component in the simulation - e.g. Clock, Weather, Wheat, Irrigation - including Manager scripts (lthough these are a slightly special case and more on that below). The name of the model must be in square brackets. As with Manager scripts, Properties uses Intellisense to assist with constructing the output descripters. For example, see row 1 of Figure 1. After typing \"[Clock]\" once a \".\" is typed a drop-down list of possible variables will appear as hints and in Figure 1 the choice from the list was \"Today\" which gives the date of the simulation output. \n\n*Note that model and variable names are case-sensitive. Capitalisation in the right places is important.*\n\n**Reporting frequency - setting up when reports should happen**\nAlso needed is a specification of *when* an output should be made. The instruction for when to report is in the form of:\n\n\t\t\t[Model].Event\nAn Event is something that happens, like a stage of the day or a management action. The most-used examples of a reporting frequency are:\n\n\t\t\t[Clock].EndOfDay\nand\n\n\t\t\t[Wheat].Harvesting\nwhere “Wheat” might be any crop. \n\nIt is possible to place multiple events in the frequency. For example:\n\n\t\t\t[Wheat].Sowing\n\t\t\t[Wheat].Flowering\n\t\t\t[Wheat].Harvesting\n\t\t\t[Wheat].PlantEnding\n\nOther events:\n\n\t\t\t[Irrigation].Irrigated\n\t\t\t[Fertiliser].Fertilised\nshould work but currently do not.\n\n \n\n\n[Note that all the examples here are for reporting at the end of the simulation day. This is the most sensible time to do an output as all the models will have finished their calculations. It is possible to create outputs at different times of the day. This is an advanced topic and users are directed to https://apsimnextgeneration.netlify.com/development to understand stages within a simulation day.]\n\n**More advanced features**\nThis is the minimum that is needed to specify what to output but for convieience of users several other basic features are provided.\n\n",
-          "Name": "Reporting basics",
+          "Text": "\nSetting up outputs from a simulation requires describing **what** to output and **when** that should be done. \n\n**Properties - setting up what should be reported**\n\nFigure 1 shows a screen capture of a simple report. The upper box (Properties) holds descriptions of what should be reported. The general syntax is:\n\n\t\t\t[Model].Variable\nThe first part, \"[Model]\" just above, gives the name of a model in the simulation. Models are almost any component in the simulation - e.g. Clock, Weather, Wheat, Irrigation - including Manager scripts (lthough these are a slightly special case and more on that below). The name of the model must be in square brackets. As with Manager scripts, Properties uses Intellisense to assist with constructing the output descripters. For example, see row 1 of Figure 1. After typing \"[Clock]\" once a \".\" is typed a drop-down list of possible variables will appear as hints and in Figure 1 the choice from the list was \"Today\" which gives the date of the simulation output. \n\n*Note that model and variable names are case-sensitive. Capitalisation in the right places is important.*\n\nThe component \"ReportSimple\" shows four output examples (see also below). The second row (see also below) shows an example of relabelling the output (the \"as DairyRainfall\" text) - this simply allows the user to give a more relvant label for the output in the output file. \n\n\t\t\t[Weather].Rain as DailyRainfall\n\nThe third row shows that it may be necessary to work through several layers to get to the output wanted. In each case a \".\" after the variable name gives a list with hints for outputs.\n\n\t\t\t[Wheat].Grain.Total.Wt\n\nThe fourth row (also below) shows the special case of reporting an output from a Manager script. The first part (\"[SowingRule]\") is the name of the Mangager script (so the output text needs to say current with any name changes you might make). Outputs from Managers always need a \".Script\" before Intellisense will show the possible outputs.\n\n\t\t\t[SowingRule].Script.SowingDepth\n\n**Reporting frequency - setting up when reports should happen**\n\nAlso needed is a specification of *when* an output should be made. The instruction for when to report is in the form of:\n\n\t\t\t[Model].Event\nAn Event is something that happens, like a stage of the day or a management action. The most-used example of a reporting frequency is:\n\n\t\t\t[Clock].EndOfDay\nand this creates an output for every \"EndOfDay\" event - \"EndOfDay\" is an event created by Clock every day after all the models have done their calculations. Any (almost) event can be used to control the frequency of reporting such as:\n\n\t\t\t[Wheat].Sowing\n\t\t\t[Wheat].Flowering\n\t\t\t[Wheat].Harvesting\n\t\t\t[Wheat].PlantEnding\nwhere “Wheat” might be any crop. This also shows that multiple triggers for reporting can be used.\n\n**Note that other events:\n\n\t\t\t[Irrigation].Irrigated\n\t\t\t[Fertiliser].Fertilised\nshould work but currently do not (as of 11 October 2019).**\n\n \nIt is worth noting that when an event is used to trigger reporting, the output happens immediately rather than at the end of the simulation day. If you are getting strange outupts then consider this as a possible reason. To understand more about what order models do their calculations see https://apsimnextgeneration.netlify.com/development.\n\n",
+          "Name": "Reporting Basics",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "\nSeveral of the outputs from APSIM are arrays - water content in the soil layers is a good example of this - tand there are some features that make reporting arrays easier in APSIM.\n\nTo report all elements of an array, the syntax is the same as reporting a single variable. See for example in Row 2 of \"ReportArrays the text\n\n\t\t\t[Soil].SoilWater.SWmm\nproduces one column of output for each element (soil layer) in the array. When a particular layer is wated then specify that in square brackets so the \"[1]\" is the top (closest to the soil surface) layer. For example,\n\n\t\t\t[Soil].SoilWater.SWmm[1] as TopLayerWater_mm\n\nMore often some sort of aggregation is in the array is wanted. There are three options for specifying which elements should be addressed. Giving no layer information at all includes all of the array. A range is specified as, for example [3:6] for the third to sixth (inclusive, meaning four elements) layers. Giving the colon but no numerical value means from the first (e.g. [:5]) or to the last (e.g. [2:]) elements. Seome examples are in ReportArrays and pasted below.\n\n\t\t\tSum([Soil].SoilWater.SWmm) as TotalWaterStored\n\t\t\tSum([Soil].SoilWater.SWmm[1:2]) as WaterStoredTop2Layers\n\t\t\tSum([Soil].SoilWater.SWmm[1:3]) as WaterStoredTop3Layers\n\t\t\t//Sum([Soil].SoilWater.SWmm[4:]) as WaterStoredLayer4AndBelow\n\t\t\t//Sum([Soil].SoilWater.SWmm[:6]) as WaterStoredDowntoLayer6\n\nOptions for how to aggregate the elements of the arrays are: Sum, Mean, Min, and Max.\n\n\t\t\tMean([Soil].Nutrient.NO3.ppm[1:4]) as MeanNO3ppmTop4Layers\n\t\t\tMin([Soil].Nutrient.NO3.ppm[1:4]) as MinNO3ppmTop4Layers\n\t\t\tMax([Soil].Nutrient.NO3.ppm[1:4]) as MaxNO3ppmTop4Layers\n\n\n",
+          "Name": "Reporting Arrays",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "\nSeveral of the outputs from APSIM are arrays - water content in the soil layers is a good example of this - tand there are some features that make reporting arrays easier in APSIM.\n\nTo report all elements of an array, the syntax is the same as reporting a single variable. See for example in Row 2 of \"ReportArrays the text\n\n\t\t\t[Soil].SoilWater.SWmm\nproduces one column of output for each element (soil layer) in the array. When a particular layer is wated then specify that in square brackets so the \"[1]\" is the top (closest to the soil surface) layer. For example,\n\n\t\t\t[Soil].SoilWater.SWmm[1] as TopLayerWater_mm\n\nMore often some sort of aggregation is in the array is wanted. There are three options for specifying which elements should be addressed. Giving no layer information at all includes all of the array. A range is specified as, for example [3:6] for the third to sixth (inclusive, meaning four elements) layers. Giving the colon but no numerical value means from the first (e.g. [:5]) or to the last (e.g. [2:]) elements. Seome examples are in ReportArrays and pasted below.\n\n\t\t\tSum([Soil].SoilWater.SWmm) as TotalWaterStored\n\t\t\tSum([Soil].SoilWater.SWmm[1:2]) as WaterStoredTop2Layers\n\t\t\tSum([Soil].SoilWater.SWmm[1:3]) as WaterStoredTop3Layers\n\t\t\t//Sum([Soil].SoilWater.SWmm[4:]) as WaterStoredLayer4AndBelow\n\t\t\t//Sum([Soil].SoilWater.SWmm[:6]) as WaterStoredDowntoLayer6\n\nOptions for how to aggregate the elements of the arrays are: Sum, Ave, Min, and Max.\n\n\n",
+          "Name": "Reporting that is Aggregated in Time",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -194,8 +212,9 @@
                   "VariableNames": [
                     "[Clock].Today",
                     "[Weather].Rain as DailyRainfall",
-                    "[Wheat].Grain.Total.Wt*10 as Yield_kgDMha  // example of changing units from g/m2 to kg/ha",
-                    "[SowingRule].Script.SowingDepth"
+                    "[Wheat].Grain.Total.Wt",
+                    "[SowingRule].Script.SowingDepth",
+                    "[Weather].MaxT as MaxT"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
@@ -220,6 +239,69 @@
                   ],
                   "Name": "ReportOnCropEvents",
                   "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "Sum([Soil].SoilWater.SWmm) as TotalWaterStored",
+                    "Sum([Soil].SoilWater.SWmm[1:2]) as WaterStoredTop2Layers",
+                    "Sum([Soil].SoilWater.SWmm[1:3]) as WaterStoredTop3Layers",
+                    "//Sum([Soil].SoilWater.SWmm[4:]) as WaterStoredLayer4AndBelow",
+                    "//Sum([Soil].SoilWater.SWmm[:6]) as WaterStoredDowntoLayer6",
+                    "Mean([Soil].Nutrient.NO3.ppm[1:4]) as MeanNO3ppmTop4Layers",
+                    "Min([Soil].Nutrient.NO3.ppm[1:4]) as MinNO3ppmTop4Layers",
+                    "Max([Soil].Nutrient.NO3.ppm[1:4]) as MaxNO3ppmTop4Layers"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfDay"
+                  ],
+                  "Name": "ReportArrays",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Soil].SoilWater.SWmm"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfDay"
+                  ],
+                  "Name": "ReportingArraysAdvanced",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "Sum of [Weather].MaxT from [Clock].StartOfWeek             to [Clock].Today as AverageWeeklyMaxT",
+                    "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as AverageWeeklyMaxT_Repeated"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfWeek"
+                  ],
+                  "Name": "ReportWeekly",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
