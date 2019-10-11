@@ -5,6 +5,7 @@
     using Models.Core;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
+    using Models.Interfaces;
     using Models.Report;
     using Models.Storage;
     using NUnit.Framework;
@@ -16,6 +17,7 @@
     using System.Linq;
     using UnitTests.Core;
     using UnitTests.Storage;
+    using UnitTests.Weather;
 
     [TestFixture]
     public class ReportTests
@@ -227,6 +229,49 @@
                "ExperimentName,SimulationName,FolderName,FactorName,FactorValue\r\n" +
                "          exp1,          sim1,         F,  Cultivar,      cult1\r\n" +
                "          exp1,          sim1,         F,         N,          0\r\n");
+        }
+
+        /// <summary>
+        /// Reports DayOfYear as doy in multiple reports. Each
+        /// report has a different reporting frequency:
+        /// 
+        /// [Fertiliser].Fertilised
+        /// [Irrigation].Irrigated
+        /// </summary>
+        [Test]
+        public static void TestReportingOnModelEvents()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, out List<Exception> fileErrors);
+
+            if (fileErrors != null && fileErrors.Count > 0)
+                throw fileErrors[0];
+
+            // This simulation needs a weather node, but using a legit
+            // met component will just slow down the test.
+            IModel sim = Apsim.Find(file, typeof(Simulation));
+            Model weather = new MockWeather();
+            sim.Children.Add(weather);
+            weather.Parent = sim;
+
+            // Run the file.
+            var Runner = new Runner(file);
+            Runner.Run();
+
+            // Check that the report reported on the correct dates.
+            var storage = Apsim.Find(file, typeof(IDataStore)) as IDataStore;
+            List<string> fieldNames = new List<string>() { "doy" };
+
+            DataTable data = storage.Reader.GetData("ReportOnFertilisation", fieldNames: fieldNames);
+            double[] values = DataTableUtilities.GetColumnAsDoubles(data, "doy");
+            double[] expected = new double[] { 1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 364 };
+            Assert.AreEqual(expected, values);
+
+            data = storage.Reader.GetData("ReportOnIrrigation", fieldNames: fieldNames);
+            values = DataTableUtilities.GetColumnAsDoubles(data, "doy");
+            // There is one less irrigation event, as the manager script doesn't irrigate.
+            expected = new double[] { 1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335 };
+            Assert.AreEqual(expected, values);
         }
 
         /// <summary>

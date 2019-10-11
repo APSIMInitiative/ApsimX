@@ -43,6 +43,28 @@ namespace Models
         /// <value>The fraction ca.</value>
         public double FractionCa { get; set; }
     }
+
+    /// <summary>
+    /// Stores information about a fertiliser application.
+    /// </summary>
+    public class FertiliserApplicationType : EventArgs
+    {
+        /// <summary>
+        /// Amount of fertiliser applied.
+        /// </summary>
+        public double Amount { get; set; }
+
+        /// <summary>
+        /// Depth to which fertiliser was applied.
+        /// </summary>
+        public double Depth { get; set; }
+
+        /// <summary>
+        /// Type of fertiliser applied.
+        /// </summary>
+        public Fertiliser.Types FertiliserType { get; set; }
+    }
+
     /// <summary>
     /// The fertiliser model
     /// </summary>
@@ -70,6 +92,11 @@ namespace Models
         /// <value>The definitions.</value>
         [XmlIgnore]
         public List<FertiliserType> Definitions { get; set; }
+
+        /// <summary>
+        /// Invoked whenever fertiliser is applied.
+        /// </summary>
+        public event EventHandler<FertiliserApplicationType> Fertilised;
 
         /// <summary>Adds the definitions.</summary>
         private void AddDefinitions()
@@ -175,6 +202,8 @@ namespace Models
                 }
                 if (doOutput)
                     Summary.WriteMessage(this, string.Format("{0} kg/ha of {1} added at depth {2} layer {3}", Amount, Type, Depth, layer + 1));
+
+                Fertilised?.Invoke(this, new FertiliserApplicationType() { Amount = Amount, Depth = Depth, FertiliserType = Type });
             }
         }
 
