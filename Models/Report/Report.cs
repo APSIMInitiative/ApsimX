@@ -122,8 +122,15 @@ namespace Models.Report
             {
                 foreach (string eventName in EventNames)
                 {
-                    if (eventName != string.Empty)
-                        events.Subscribe(eventName.Trim(), DoOutputEvent);
+                    string nameOfEvent = eventName;
+
+                    // If there is a comment in this line, ignore everything after (and including) the comment.
+                    int commentIndex = nameOfEvent.IndexOf("//");
+                    if (commentIndex >= 0)
+                        nameOfEvent = nameOfEvent.Substring(0, commentIndex);
+
+                    if (nameOfEvent != string.Empty)
+                        events.Subscribe(nameOfEvent.Trim(), DoOutputEvent);
                 }
             }
         }
