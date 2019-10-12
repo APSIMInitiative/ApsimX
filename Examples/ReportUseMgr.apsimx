@@ -72,7 +72,7 @@
             },
             {
               "$type": "Models.Weather, Models",
-              "FileName": "WeatherFiles\\ReportTest.met",
+              "FileName": "WeatherFiles\\Dalby.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
@@ -204,14 +204,18 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\r\n\r\n        [Separator(\"This just gives an output of days since 1 Jan 1980 to assist with testing the Report model\")]\r\n        [Description(\"Incremented in DoManagementCalculations\")] public double NumDays { get; set; }\r\n        [Description(\"Incremented in DoWeather\")] public double NumDays1 { get; set; }\r\n\r\n        //[XmlIgnore][Units(\"-\")] public int NumDays { get; set; }\r\n\r\n        /*[EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \tNumDays = 0 ;\r\n\t\t}*/\t\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tNumDays += 1.0;\r\n        }\r\n\r\n        [EventSubscribe(\"DoWeather\")]\r\n        private void OnDoWeather(object sender, EventArgs e)\r\n        {\r\n        \tNumDays1 += 1.0;\r\n        }\r\n\r\n    }\r\n}\r\n",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\r\n\r\n        [Separator(\"This just gives an output of days since 1 Jan 1980 to assist with testing the Report model\")]\r\n        [Description(\"Incremented in DoWeather\")] public double NumDays_Weather { get; set; }\r\n        [Description(\"Incremented in DoManagement\")] public double NumDays_Management { get; set; }\r\n        [Description(\"Incremented in DoManagementCalculations\")] public double NumDays_ManagementCalcs { get; set; }\r\n\r\n        [EventSubscribe(\"DoWeather\")]\r\n        private void OnDoWeather(object sender, EventArgs e)\r\n        {\r\n        \tNumDays_Weather += 1.0;\r\n\r\n\t\t}\t\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tNumDays_Management += 1.0;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n        \tNumDays_ManagementCalcs += 1.0;\r\n        }\r\n\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
-                          "Key": "NumDays",
+                          "Key": "NumDays_Weather",
                           "Value": "0"
                         },
                         {
-                          "Key": "NumDays1",
+                          "Key": "NumDays_Management",
+                          "Value": "0"
+                        },
+                        {
+                          "Key": "NumDays_ManagementCalcs",
                           "Value": "0"
                         }
                       ],
@@ -259,13 +263,14 @@
                     "[Wheat].Grain.Total.Wt",
                     "[SowingRule].Script.SowingDepth",
                     "[Weather].MaxT as MaxT",
-                    "[Weather].DayOfYear",
-                    "[Weather].DayOfFile"
+                    "[CountDays].Script.NumDays_Weather",
+                    "[CountDays].Script.NumDays_Management",
+                    "[CountDays].Script.NumDays_ManagementCalcs"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
                   ],
-                  "Name": "ReportSimple",
+                  "Name": "R01ReportSimple",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -276,6 +281,12 @@
                   "VariableNames": [
                     "[Clock].Today",
                     "[Wheat].AboveGroundLive.Wt",
+                    "[CountDays].Script.NumDays_Weather",
+                    "Sum of [CountDays].Script.NumDays_Weather from [R02ReportOnEvents].DateOfLastOutput to [Clock].Today as R02SumWeather",
+                    "Sum of [CountDays].Script.NumDays_Management from [R02ReportOnEvents].DateOfLastOutput to [Clock].Today as R02SumManagement",
+                    "Sum of [CountDays].Script.NumDays_ManagementCalcs from [R02ReportOnEvents].DateOfLastOutput to [Clock].Today as R02SumManageCalc",
+                    "",
+                    "",
                     "",
                     "// add [Wheat].Phenology.PhaseChanged",
                     "// [Irrigation].Irrigated",
@@ -288,10 +299,10 @@
                     "[Wheat].Harvesting",
                     "[Wheat].PlantEnding"
                   ],
-                  "Name": "ReportOnEvents",
+                  "Name": "R02ReportOnEvents",
                   "Children": [],
                   "IncludeInDocumentation": false,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -310,7 +321,135 @@
                   "EventNames": [
                     "[Clock].EndOfDay"
                   ],
-                  "Name": "ReportArrays",
+                  "Name": "R03ReportArrays",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Wheat].AboveGroundLive.Wt",
+                    "[CountDays].Script.NumDays_Weather ",
+                    "Sum of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04SumWeather",
+                    "//Sum of [CountDays].Script.NumDays_Management from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04SumManagement",
+                    "//Sum of [CountDays].Script.NumDays_ManagementCalcs from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04SumManageCalc",
+                    "",
+                    "First of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04FirstWeather",
+                    "//First of [CountDays].Script.NumDays_Management from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04FirstManagement",
+                    "//First of [CountDays].Script.NumDays_ManagementCalcs from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04FirstManageCalc",
+                    "",
+                    "Last of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04LastWeather",
+                    "//Last of [CountDays].Script.NumDays_Management from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04LastManagement",
+                    "//Last of [CountDays].Script.NumDays_ManagementCalcs from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04LastManageCalc",
+                    "",
+                    "Ave of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04AveWeather",
+                    "Min of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04MinWeather",
+                    "Max of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04MaxWeather",
+                    "Diff of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04DiffWeather"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfWeek"
+                  ],
+                  "Name": "R04ReportWeekly",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Wheat].AboveGroundLive.Wt",
+                    "[CountDays].Script.NumDays_Weather ",
+                    "Sum of [CountDays].Script.NumDays_Weather from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05SumWeather",
+                    "//Sum of [CountDays].Script.NumDays_Management from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05SumManagement",
+                    "//Sum of [CountDays].Script.NumDays_ManagementCalcs from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05SumManageCalc",
+                    "",
+                    "First of [CountDays].Script.NumDays_Weather from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05FirstWeather",
+                    "//First of [CountDays].Script.NumDays_Management from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05FirstManagement",
+                    "//First of [CountDays].Script.NumDays_ManagementCalcs from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05FirstManageCalc",
+                    "",
+                    "Last of [CountDays].Script.NumDays_Weather from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05LastWeather",
+                    "//Last of [CountDays].Script.NumDays_Management from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05LastManagement",
+                    "//Last of [CountDays].Script.NumDays_ManagementCalcs from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05LastManageCalc",
+                    "",
+                    "Ave of [CountDays].Script.NumDays_Weather from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05AveWeather",
+                    "Min of [CountDays].Script.NumDays_Weather from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05MinWeather",
+                    "Max of [CountDays].Script.NumDays_Weather from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05MaxWeather",
+                    "Diff of [CountDays].Script.NumDays_Weather from [R05ReportMonthly].DateOfLastOutput to [Clock].Today as R05DiffWeather"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfMonth"
+                  ],
+                  "Name": "R05ReportMonthly",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Wheat].AboveGroundLive.Wt",
+                    "[CountDays].Script.NumDays_Weather ",
+                    "Sum of [CountDays].Script.NumDays_Weather from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06SumWeather",
+                    "//Sum of [CountDays].Script.NumDays_Management from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06SumManagement",
+                    "//Sum of [CountDays].Script.NumDays_ManagementCalcs from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06SumManageCalc",
+                    "",
+                    "First of [CountDays].Script.NumDays_Weather from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06FirstWeather",
+                    "//First of [CountDays].Script.NumDays_Management from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06FirstManagement",
+                    "//First of [CountDays].Script.NumDays_ManagementCalcs from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06FirstManageCalc",
+                    "",
+                    "Last of [CountDays].Script.NumDays_Weather from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06LastWeather",
+                    "//Last of [CountDays].Script.NumDays_Management from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06LastManagement",
+                    "//Last of [CountDays].Script.NumDays_ManagementCalcs from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06LastManageCalc",
+                    "",
+                    "Ave of [CountDays].Script.NumDays_Weather from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06AveWeather",
+                    "Min of [CountDays].Script.NumDays_Weather from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06MinWeather",
+                    "Max of [CountDays].Script.NumDays_Weather from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06MaxWeather",
+                    "Diff of [CountDays].Script.NumDays_Weather from [R06ReportYearly].DateOfLastOutput to [Clock].Today as R06DiffWeather"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfYear"
+                  ],
+                  "Name": "R06ReportYearly",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Wheat].AboveGroundLive.Wt",
+                    "[CountDays].Script.NumDays_Weather ",
+                    "Sum of [CountDays].Script.NumDays_Weather from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07SumWeather",
+                    "//Sum of [CountDays].Script.NumDays_Management from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07SumManagement",
+                    "//Sum of [CountDays].Script.NumDays_ManagementCalcs from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07SumManageCalc",
+                    "",
+                    "First of [CountDays].Script.NumDays_Weather from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07FirstWeather",
+                    "//First of [CountDays].Script.NumDays_Management from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07FirstManagement",
+                    "//First of [CountDays].Script.NumDays_ManagementCalcs from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07FirstManageCalc",
+                    "",
+                    "Last of [CountDays].Script.NumDays_Weather from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07LastWeather",
+                    "//Last of [CountDays].Script.NumDays_Management from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07LastManagement",
+                    "//Last of [CountDays].Script.NumDays_ManagementCalcs from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07LastManageCalc",
+                    "",
+                    "Ave of [CountDays].Script.NumDays_Weather from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07AveWeather",
+                    "Min of [CountDays].Script.NumDays_Weather from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07MinWeather",
+                    "Max of [CountDays].Script.NumDays_Weather from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07MaxWeather",
+                    "Diff of [CountDays].Script.NumDays_Weather from [R07ReportSimulation].DateOfLastOutput to [Clock].Today as R07DiffWeather"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfSimulation"
+                  ],
+                  "Name": "R07ReportSimulation",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -341,7 +480,7 @@
                   "Name": "ReportWeekly",
                   "Children": [],
                   "IncludeInDocumentation": false,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -393,7 +532,7 @@
                   "Name": "ReportMonthly",
                   "Children": [],
                   "IncludeInDocumentation": false,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -416,7 +555,7 @@
                   "Name": "ReportYearly",
                   "Children": [],
                   "IncludeInDocumentation": false,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -444,7 +583,7 @@
                   "Name": "ReportSimulation",
                   "Children": [],
                   "IncludeInDocumentation": false,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
