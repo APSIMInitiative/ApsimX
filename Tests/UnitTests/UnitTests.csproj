@@ -223,6 +223,7 @@
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion63 before.json" />
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion63 after.json" />
     <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\BasicSimulation.apsimx" />
+    <EmbeddedResource Include="BasicFile.apsimx" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
