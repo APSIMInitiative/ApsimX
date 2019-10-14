@@ -229,9 +229,9 @@
                             18.0
                           ],
                           "Y": [
-                            500.0,
-                            500.0,
-                            104.0
+                            521.0,
+                            521.0,
+                            90.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -273,17 +273,13 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             10.0,
-                            12.0,
                             14.0,
-                            16.0,
                             18.0
                           ],
                           "Y": [
-                            889.0,
-                            389.0,
-                            269.0,
-                            269.0,
-                            269.0
+                            646.0,
+                            265.0,
+                            265.0
                           ],
                           "Name": "XYPairs",
                           "Children": [],
@@ -309,7 +305,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 340.0,
+                      "FixedValue": 310.0,
                       "Units": null,
                       "Name": "Target",
                       "Children": [],
@@ -2059,7 +2055,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.21,
+                      "FixedValue": 1.41,
                       "Units": null,
                       "Name": "RUE",
                       "Children": [],
@@ -2204,7 +2200,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 52.0,
+                                  "FixedValue": 50.0,
                                   "Units": null,
                                   "Name": "Constant",
                                   "Children": [],
@@ -2224,282 +2220,73 @@
                               "Name": "Vegetative",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "XProperty": "[Phenology].Photoperiod.Value()",
+                                  "$type": "Models.Functions.LessThanFunction, Models",
                                   "Name": "Phyllochron",
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        10.0,
-                                        16.5
-                                      ],
-                                      "Y": [
-                                        51.0,
-                                        28.0
-                                      ],
-                                      "Name": "XYPairs",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].DeltaPhotoperiod.Value()",
+                                      "Name": "DeltaPhotoperiod",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.0,
+                                      "Units": null,
+                                      "Name": "Zero",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "XProperty": "[Phenology].Photoperiod.Value()",
+                                      "Name": "Decreasing",
                                       "Children": [
                                         {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            10.0,
+                                            16.5
                                           ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron1.Vegetative.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron1.Vegetative.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
+                                          "Y": [
+                                            49.0,
+                                            34.0
                                           ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
-                                        },
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "XProperty": "[Phenology].Photoperiod.Value()",
+                                      "Name": "Increasing",
+                                      "Children": [
                                         {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            10.0,
+                                            12.0,
+                                            16.5
                                           ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph1",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron1.Vegetative.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron1.Vegetative.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
+                                          "Y": [
+                                            49.0,
+                                            31.0,
+                                            31.0
                                           ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
-                                          ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph2",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron1.Vegetative.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron1.Vegetative.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
-                                          ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph3",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Vegetative.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Vegetative.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
@@ -2541,404 +2328,7 @@
                                         61.0
                                       ],
                                       "Name": "XYPairs",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
-                                          ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
-                                          ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph1",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
-                                          ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph2",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
-                                          ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph3",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
-                                          ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph4",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Graph.Graph, Models",
-                                          "Caption": null,
-                                          "Axis": [
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 0,
-                                              "Title": "Y",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            },
-                                            {
-                                              "$type": "Models.Graph.Axis, Models",
-                                              "Type": 3,
-                                              "Title": "X",
-                                              "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
-                                              "DateTimeAxis": false,
-                                              "CrossesAtZero": false
-                                            }
-                                          ],
-                                          "LegendPosition": 3,
-                                          "DisabledSeries": null,
-                                          "Name": "Graph5",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Series, Models",
-                                              "Type": 1,
-                                              "XAxis": 3,
-                                              "YAxis": 0,
-                                              "ColourArgb": -65536,
-                                              "FactorToVaryColours": null,
-                                              "FactorToVaryMarkers": null,
-                                              "FactorToVaryLines": null,
-                                              "Marker": 11,
-                                              "MarkerSize": 0,
-                                              "Line": 0,
-                                              "LineThickness": 0,
-                                              "Checkpoint": "Current",
-                                              "TableName": null,
-                                              "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.X",
-                                              "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.NodeNumber.DeltaNode.Phyllochron.Reproductive.Phyllochron.XYPairs.Y",
-                                              "X2FieldName": null,
-                                              "Y2FieldName": null,
-                                              "ShowInLegend": false,
-                                              "IncludeSeriesNameInLegend": false,
-                                              "Cumulative": false,
-                                              "CumulativeX": false,
-                                              "Filter": null,
-                                              "Name": "Series",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -3032,7 +2422,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 0.002,
                                   "Units": null,
                                   "Name": "Constant",
                                   "Children": [],
@@ -3090,11 +2480,78 @@
                                           "Y": [
                                             0.0,
                                             0.0,
-                                            0.0088,
-                                            0.0188
+                                            0.015,
+                                            0.018
                                           ],
                                           "Name": "XYPairs",
-                                          "Children": [],
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Graph.Graph, Models",
+                                              "Caption": null,
+                                              "Axis": [
+                                                {
+                                                  "$type": "Models.Graph.Axis, Models",
+                                                  "Type": 0,
+                                                  "Title": "Y",
+                                                  "Inverted": false,
+                                                  "Minimum": "NaN",
+                                                  "Maximum": "NaN",
+                                                  "Interval": "NaN",
+                                                  "DateTimeAxis": false,
+                                                  "CrossesAtZero": false
+                                                },
+                                                {
+                                                  "$type": "Models.Graph.Axis, Models",
+                                                  "Type": 3,
+                                                  "Title": "X",
+                                                  "Inverted": false,
+                                                  "Minimum": "NaN",
+                                                  "Maximum": "NaN",
+                                                  "Interval": "NaN",
+                                                  "DateTimeAxis": false,
+                                                  "CrossesAtZero": false
+                                                }
+                                              ],
+                                              "LegendPosition": 3,
+                                              "DisabledSeries": [],
+                                              "Name": "Graph",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Graph.Series, Models",
+                                                  "Type": 1,
+                                                  "XAxis": 3,
+                                                  "YAxis": 0,
+                                                  "ColourArgb": -65536,
+                                                  "FactorToVaryColours": null,
+                                                  "FactorToVaryMarkers": null,
+                                                  "FactorToVaryLines": null,
+                                                  "Marker": 11,
+                                                  "MarkerSize": 0,
+                                                  "Line": 0,
+                                                  "LineThickness": 0,
+                                                  "Checkpoint": "Current",
+                                                  "TableName": null,
+                                                  "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.Area.DeltaLAI.LAER.Vegetative.LAER.Increasing.XYPairs.X",
+                                                  "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.Area.DeltaLAI.LAER.Vegetative.LAER.Increasing.XYPairs.Y",
+                                                  "X2FieldName": null,
+                                                  "Y2FieldName": null,
+                                                  "ShowInLegend": false,
+                                                  "IncludeSeriesNameInLegend": false,
+                                                  "Cumulative": false,
+                                                  "CumulativeX": false,
+                                                  "Filter": null,
+                                                  "Name": "Series",
+                                                  "Children": [],
+                                                  "IncludeInDocumentation": true,
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
@@ -3114,14 +2571,14 @@
                                           "X": [
                                             8.0,
                                             10.0,
-                                            11.0,
+                                            12.0,
                                             16.0
                                           ],
                                           "Y": [
                                             0.0,
                                             0.0,
-                                            0.015,
-                                            0.02
+                                            0.011,
+                                            0.018
                                           ],
                                           "Name": "XYPairs",
                                           "Children": [],
@@ -3152,7 +2609,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 0.0001,
                                   "Units": null,
                                   "Name": "Constant",
                                   "Children": [],
@@ -3188,10 +2645,10 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                250.0
+                                150.0
                               ],
                               "Y": [
-                                0.1,
+                                0.01,
                                 1.0
                               ],
                               "Name": "XYPairs",
@@ -6671,7 +6128,7 @@
                                   ],
                                   "Y": [
                                     0.0,
-                                    50.0
+                                    300.0
                                   ],
                                   "Name": "XYPairs",
                                   "Children": [],
@@ -6821,7 +6278,7 @@
                                   "Y": [
                                     0.0,
                                     0.0,
-                                    1.3
+                                    2.0
                                   ],
                                   "Name": "XYPairs",
                                   "Children": [],
@@ -13316,6 +12773,138 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "Aboveground live weight (kg DM/ha)",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "FloDays",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Defoliation",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "FloDays",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "Aboveground live weight (kg DM/ha)",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "BudsDays",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Defoliation",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "BudsDays",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -16447,7 +16036,7 @@
                           "Line": 0,
                           "LineThickness": 0,
                           "Checkpoint": "Current",
-                          "TableName": "PredictedObserved",
+                          "TableName": "Report",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "LeafWt",
                           "X2FieldName": null,
@@ -16612,113 +16201,6 @@
                         {
                           "$type": "Models.Graph.Axis, Models",
                           "Type": 0,
-                          "Title": "RootWt (Kg/ha)",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 1,
-                      "DisabledSeries": [],
-                      "Name": "RootWt",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "RootWt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph.EventNamesOnGraph, Models",
-                              "ColumnName": "Lucerne.Phenology.CurrentStageName",
-                              "SimulationName": "Iversen_91DefoliationLL",
-                              "Name": "EventNamesOnGraph",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 0,
-                          "MarkerSize": 0,
-                          "Line": 4,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "ObsAllData",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "RootWt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Observed",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": "Date",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
                           "Title": null,
                           "Inverted": false,
                           "Minimum": "NaN",
@@ -16795,7 +16277,14 @@
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": [],
+                      "DisabledSeries": [
+                        "SL",
+                        "SS",
+                        "LS",
+                        "Iversen_91DefoliationSL",
+                        "Iversen_91DefoliationSS",
+                        "Iversen_91DefoliationLS"
+                      ],
                       "Name": "RootWt1",
                       "Children": [
                         {
@@ -16823,6 +16312,36 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "ObsAllData",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "RootWt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -16950,72 +16469,6 @@
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
-                          "IncludeSeriesNameInLegend": false,
-                          "Cumulative": false,
-                          "CumulativeX": false,
-                          "Filter": null,
-                          "Name": "Predicted",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Graph.Graph, Models",
-                      "Caption": null,
-                      "Axis": [
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 3,
-                          "Title": "Date",
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        },
-                        {
-                          "$type": "Models.Graph.Axis, Models",
-                          "Type": 0,
-                          "Title": null,
-                          "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
-                        }
-                      ],
-                      "LegendPosition": 1,
-                      "DisabledSeries": [],
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph.Series, Models",
-                          "Type": 1,
-                          "XAxis": 3,
-                          "YAxis": 0,
-                          "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
-                          "Marker": 11,
-                          "MarkerSize": 0,
-                          "Line": 0,
-                          "LineThickness": 0,
-                          "Checkpoint": "Current",
-                          "TableName": "Report",
-                          "XFieldName": "Clock.Today",
-                          "YFieldName": "Lucerne.TapRoot.Live.StorageWt",
-                          "X2FieldName": null,
-                          "Y2FieldName": null,
-                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -17403,7 +16856,7 @@
                         {
                           "$type": "Models.Graph.Axis, Models",
                           "Type": 0,
-                          "Title": "RootWt (Kg/ha)",
+                          "Title": "",
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
@@ -17413,7 +16866,11 @@
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": [],
+                      "DisabledSeries": [
+                        "SL",
+                        "SS",
+                        "LS"
+                      ],
                       "Name": "LAI",
                       "Children": [
                         {
@@ -23547,7 +23004,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2015-06-10",
+                                  "Date": "2015-06-11",
                                   "Action": " [Mower].Script.Cut();",
                                   "Enabled": true
                                 },
@@ -25899,7 +25356,24 @@
                         }
                       ],
                       "LegendPosition": 0,
-                      "DisabledSeries": [],
+                      "DisabledSeries": [
+                        "Iversen_121DefoliationSSFDFD2",
+                        "Iversen_121DefoliationLLFDFD2",
+                        "Iversen_121DefoliationHHFDFD2",
+                        "Iversen_121DefoliationSSFDFD5",
+                        "Iversen_121DefoliationHHFDFD5",
+                        "Iversen_121DefoliationSSFDFD10",
+                        "Iversen_121DefoliationLLFDFD10",
+                        "Iversen_121DefoliationHHFDFD10",
+                        "Iversen_121DefoliationSSFDFD2SS",
+                        "Iversen_121DefoliationLLFDFD2LL",
+                        "Iversen_121DefoliationHHFDFD2HH",
+                        "Iversen_121DefoliationSSFDFD5SS",
+                        "Iversen_121DefoliationHHFDFD5HH",
+                        "Iversen_121DefoliationSSFDFD10SS",
+                        "Iversen_121DefoliationLLFDFD10LL",
+                        "Iversen_121DefoliationHHFDFD10HH"
+                      ],
                       "Name": "AboveGroundWt",
                       "Children": [
                         {
@@ -25908,7 +25382,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 0,
@@ -25938,7 +25412,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": "Defoliation",
                           "Marker": 11,
@@ -26188,12 +25662,12 @@
                       ],
                       "LegendPosition": 1,
                       "DisabledSeries": [
-                        "SSFD2",
-                        "LLFD2",
+                        "HHFD2",
                         "SSFD5",
-                        "LLFD5",
+                        "HHFD5",
                         "SSFD10",
-                        "LLFD10"
+                        "LLFD10",
+                        "HHFD10"
                       ],
                       "Name": "RootWt",
                       "Children": [
@@ -26518,7 +25992,14 @@
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": [],
+                      "DisabledSeries": [
+                        "LLFD2",
+                        "HHFD2",
+                        "LLFD5",
+                        "HHFD5",
+                        "LLFD10",
+                        "HHFD10"
+                      ],
                       "Name": "RootN",
                       "Children": [
                         {
@@ -26892,7 +26373,7 @@
                         {
                           "$type": "Models.Graph.Axis, Models",
                           "Type": 0,
-                          "Title": "Aboveground live weight (kg DM/ha)",
+                          "Title": "",
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
@@ -26906,7 +26387,7 @@
                         "SSFD2",
                         "LLFD2",
                         "HHFD2",
-                        "SSFD5",
+                        "LLFD5",
                         "HHFD5",
                         "SSFD10",
                         "LLFD10",
@@ -35302,7 +34783,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": null,
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 0,
@@ -35310,9 +34791,9 @@
                           "Line": 4,
                           "LineThickness": 0,
                           "Checkpoint": "Current",
-                          "TableName": "ObsAll",
+                          "TableName": "ObsAllData",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Shootbiomass",
+                          "YFieldName": "ShootWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -35332,7 +34813,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": null,
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
@@ -35342,7 +34823,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "shootbiomass",
+                          "YFieldName": "ShootWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -70267,408 +69748,675 @@
               "Name": "Factors",
               "Children": [
                 {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Cutting]",
-                  "Name": "Defoliation",
+                  "$type": "Models.Factorial.Permutation, Models",
+                  "Name": "Permutation",
                   "Children": [
                     {
-                      "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "",
+                      "Name": "Rest",
+                      "Children": [
                         {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-01-10",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[Cutting]"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "Feb",
+                          "Children": [
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-09-25",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-11-18",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-12-12",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-12-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-01-17",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-02-07",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-03-22",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-05-04",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-07-13",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-09-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-10-11",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-11-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "0001-01-01",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-12-27",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-01-12",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-01-31",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-03-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-05-16",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-08-09",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                }
+                              ],
+                              "Name": "Cutting",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-02-08",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[Cutting]"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "March",
+                          "Children": [
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-09-25",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-11-18",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-12-12",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-12-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-01-17",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-02-07",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-02-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-03-22",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-05-04",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-07-13",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-09-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-10-11",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-11-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-12-01",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-12-27",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-01-12",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-01-31",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-03-07",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-03-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-05-16",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-08-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                }
+                              ],
+                              "Name": "Cutting",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-03-14",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[Cutting]"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "May",
+                          "Children": [
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-09-25",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-11-18",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-12-12",
+                                  "Action": "[Mower].Script.Cut(); ",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-12-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-01-17",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-02-07",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-02-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-03-22",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-04-10",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-05-04",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-07-13",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-09-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-10-11",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-11-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-12-01",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-12-27",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-01-12",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-01-31",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-03-07",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-03-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-04-16",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-05-16",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-08-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                }
+                              ],
+                              "Name": "Cutting",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-04-18",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-05-06",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-09-17",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-10-29",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-11-27",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-12-28",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-01-29",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-02-25",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-04-17",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-06-12",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-09-11",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-11-06",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-12-04",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-12-24",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-01-17",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-02-11",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-03-17",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-05-12",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-12-11",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-01-07",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-02-27",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-04-23",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-06-16",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-08-16",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-10-06",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-11-23",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2017-01-05",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2017-03-07",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[Cutting]"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "Never",
+                          "Children": [
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-09-25",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-11-18",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-12-12",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2017-12-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-01-17",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-02-07",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-02-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-03-22",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-04-10",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-05-04",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-06-01",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-07-13",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-09-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-10-11",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-11-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-12-01",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2018-12-27",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-01-12",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-01-31",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-03-07",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-03-28",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-04-16",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-05-16",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-06-25",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "2019-08-08",
+                                  "Action": "[Mower].Script.Cut();",
+                                  "Enabled": true
+                                }
+                              ],
+                              "Name": "Cutting",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
-                      "Name": "Cutting",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Cutting]",
-                  "Name": "FD",
-                  "Children": [
+                    },
                     {
-                      "$type": "Models.Operations, Models",
-                      "Operation": [
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "",
+                      "Name": "FD",
+                      "Children": [
                         {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-01-10",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[LucerneSowingRule].Script.CultivarName = FD5"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "FD6",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-02-08",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-03-14",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-04-18",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-05-06",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-09-17",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-10-29",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-11-27",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2013-12-28",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-01-29",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-02-25",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-04-17",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-06-12",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-09-11",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-11-06",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-12-04",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2014-12-24",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-01-17",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-02-11",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-03-17",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-05-12",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2015-12-11",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-01-07",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-02-27",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-04-23",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-06-16",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-08-16",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-10-06",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2016-11-23",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2017-01-05",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2017-03-07",
-                          "Action": " [Mower].Script.Cut();",
-                          "Enabled": true
+                          "$type": "Models.Factorial.CompositeFactor, Models",
+                          "Specifications": [
+                            "[LucerneSowingRule].Script.CultivarName = FD10"
+                          ],
+                          "Paths": null,
+                          "Values": null,
+                          "Name": "FD10",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
-                      "Name": "Cutting",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -70689,8 +70437,8 @@
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "Start": "2012-10-17T00:00:00",
-                  "End": "2017-04-10T00:00:00",
+                  "Start": "2017-05-11T00:00:00",
+                  "End": "2019-08-10T00:00:00",
                   "Name": "clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -70902,7 +70650,50 @@
                     },
                     {
                       "$type": "Models.Operations, Models",
-                      "Operation": null,
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2017-11-27",
+                          "Action": "[Irrigation].Apply(35);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2017-12-20",
+                          "Action": "[Irrigation].Apply(35);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2017-12-29",
+                          "Action": "[Irrigation].Apply(35);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2018-01-22",
+                          "Action": "[Irrigation].Apply(65);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2018-02-14",
+                          "Action": "[Irrigation].Apply(65);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2018-02-23",
+                          "Action": "[Irrigation].Apply(65);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2018-03-22",
+                          "Action": "[Irrigation].Apply(65);",
+                          "Enabled": true
+                        }
+                      ],
                       "Name": "IrrigationEvents",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -71562,7 +71353,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -71630,7 +71421,14 @@
                     }
                   ],
                   "LegendPosition": 0,
-                  "DisabledSeries": [],
+                  "DisabledSeries": [
+                    "BalcarceGermanRestMarchFDFD6",
+                    "BalcarceGermanRestMayFDFD6",
+                    "BalcarceGermanRestFebFDFD10",
+                    "BalcarceGermanRestMarchFDFD10",
+                    "BalcarceGermanRestMayFDFD10",
+                    "BalcarceGermanRestNeverFDFD10"
+                  ],
                   "Name": "AboveGroundWt",
                   "Children": [
                     {
@@ -71639,7 +71437,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
@@ -71652,7 +71450,7 @@
                       "YFieldName": "ShootWt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -71669,7 +71467,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -71716,7 +71514,7 @@
                     {
                       "$type": "Models.Graph.Axis, Models",
                       "Type": 0,
-                      "Title": "Leaf Area Index (m2/m2)",
+                      "Title": "",
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
@@ -71726,8 +71524,15 @@
                     }
                   ],
                   "LegendPosition": 1,
-                  "DisabledSeries": [],
-                  "Name": "LAI",
+                  "DisabledSeries": [
+                    "BalcarceGermanRestMarchFDFD6",
+                    "BalcarceGermanRestMayFDFD6",
+                    "BalcarceGermanRestFebFDFD10",
+                    "BalcarceGermanRestMarchFDFD10",
+                    "BalcarceGermanRestMayFDFD10",
+                    "BalcarceGermanRestNeverFDFD10"
+                  ],
+                  "Name": "NodeNumber",
                   "Children": [
                     {
                       "$type": "Models.Graph.Series, Models",
@@ -71735,7 +71540,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -71745,7 +71550,7 @@
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "LAI",
+                      "YFieldName": "NodeNumber",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
@@ -71765,7 +71570,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": null,
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
@@ -71773,9 +71578,9 @@
                       "Line": 4,
                       "LineThickness": 0,
                       "Checkpoint": "Current",
-                      "TableName": "LucerneAllObs",
+                      "TableName": "ObsAllData",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "lai",
+                      "YFieldName": "NodeNumber",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -71785,6 +71590,524 @@
                       "Filter": null,
                       "Name": "Observed",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": "Date",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": "Aboveground live weight (kg DM/ha)",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "DisabledSeries": [
+                    "BalcarceGermanRestMarchFDFD6",
+                    "BalcarceGermanRestMayFDFD6",
+                    "BalcarceGermanRestFebFDFD10",
+                    "BalcarceGermanRestMarchFDFD10",
+                    "BalcarceGermanRestMayFDFD10",
+                    "BalcarceGermanRestNeverFDFD10"
+                  ],
+                  "Name": "RootWt",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "ObsAllData",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "RootWt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "RootWt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": "Date",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": "",
+                      "Inverted": false,
+                      "Minimum": 0.0,
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 1,
+                  "DisabledSeries": [
+                    "BalcarceGermanRestMarchFDFD6",
+                    "BalcarceGermanRestMayFDFD6",
+                    "BalcarceGermanRestFebFDFD10",
+                    "BalcarceGermanRestMarchFDFD10",
+                    "BalcarceGermanRestMayFDFD10",
+                    "BalcarceGermanRestNeverFDFD10"
+                  ],
+                  "Name": "Height",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Height",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "ObsAllData",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Height",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Observed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": "Date",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": "Aboveground live weight (kg DM/ha)",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "DisabledSeries": [],
+                  "Name": "AboveGroundWt1",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.ShootWt",
+                      "YFieldName": "Predicted.RootWt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": "Date",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": "",
+                      "Inverted": false,
+                      "Minimum": 0.0,
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 1,
+                  "DisabledSeries": [],
+                  "Name": "Height1",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.Height",
+                      "YFieldName": "Predicted.Height",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": "",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": "",
+                      "Inverted": false,
+                      "Minimum": 0.0,
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 1,
+                  "DisabledSeries": [],
+                  "Name": "NodeNumber1",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.NodeNumber",
+                      "YFieldName": "Predicted.NodeNumber",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 3,
+                      "Title": "Date",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Graph.Axis, Models",
+                      "Type": 0,
+                      "Title": "Aboveground live weight (kg DM/ha)",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "DisabledSeries": [],
+                  "Name": "RootWt1",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "Checkpoint": "Current",
+                      "TableName": "PredictedObserved",
+                      "XFieldName": "Observed.RootWt",
+                      "YFieldName": "Predicted.RootWt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
