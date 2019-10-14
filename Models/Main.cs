@@ -226,6 +226,9 @@
             string[] lines = File.ReadAllLines(configFileName);
             for (int i = 0; i < lines.Length; i++)
             {
+                if (string.IsNullOrWhiteSpace(lines[i]))
+                    continue;
+
                 string[] values = lines[i].Split('=');
                 if (values.Length != 2)
                     throw new Exception($"Wrong number of values specified on line {i} of config file '{configFileName}'.");
