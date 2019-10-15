@@ -345,7 +345,7 @@
                     "//Last of [CountDays].Script.NumDays_Management from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04LastManagement",
                     "//Last of [CountDays].Script.NumDays_ManagementCalcs from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04LastManageCalc",
                     "",
-                    "Ave of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04AveWeather",
+                    "Avg of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04MeanWeather",
                     "Min of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04MinWeather",
                     "Max of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04MaxWeather",
                     "Diff of [CountDays].Script.NumDays_Weather from [R04ReportWeekly].DateOfLastOutput to [Clock].Today as R04DiffWeather"
