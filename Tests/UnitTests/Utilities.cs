@@ -113,10 +113,19 @@ namespace UnitTests
             sims.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
             sims.Write(sims.FileName);
             string pathToModels = typeof(IModel).Assembly.Location;
+            return RunModels(sims.FileName + " " + arguments);
+        }
+
+        public static string RunModels(string arguments)
+        {
+            string pathToModels = typeof(IModel).Assembly.Location;
 
             ProcessUtilities.ProcessWithRedirectedOutput proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(pathToModels, sims.FileName + " " + arguments, Path.GetTempPath(), true);
+            proc.Start(pathToModels, arguments, Path.GetTempPath(), true);
             proc.WaitForExit();
+
+            if (proc.ExitCode != 0)
+                throw new Exception(proc.StdOut);
 
             return proc.StdOut;
         }

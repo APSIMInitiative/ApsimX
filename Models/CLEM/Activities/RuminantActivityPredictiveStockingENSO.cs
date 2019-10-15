@@ -346,7 +346,7 @@ namespace Models.CLEM.Activities
             }
 
             // remove wet breeders with no calf
-            // currently ignore pregant
+            // currently ignore pregnant
             // is lactating with no calves are sold.
 
             // TODO manage calves from sold wet breeders. eg move to yards
