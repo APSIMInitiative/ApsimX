@@ -72,7 +72,7 @@ namespace UserInterface.Presenters
 
             scriptModel = manager.Children.FirstOrDefault();
             propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
-            managerView.Editor.ScriptMode = true;
+            managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
             managerView.Editor.LeaveEditor += OnEditorLeave;
