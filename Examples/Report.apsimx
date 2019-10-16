@@ -96,6 +96,52 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "StartDate",
+                      "Value": "1-may"
+                    },
+                    {
+                      "Key": "EndDate",
+                      "Value": "10-jul"
+                    },
+                    {
+                      "Key": "MinESW",
+                      "Value": "100"
+                    },
+                    {
+                      "Key": "MinRain",
+                      "Value": "25"
+                    },
+                    {
+                      "Key": "RainDays",
+                      "Value": "7"
+                    },
+                    {
+                      "Key": "CultivarName",
+                      "Value": "Hartog"
+                    },
+                    {
+                      "Key": "SowingDepth",
+                      "Value": "30"
+                    },
+                    {
+                      "Key": "RowSpacing",
+                      "Value": "250"
+                    },
+                    {
+                      "Key": "Population",
+                      "Value": "120"
+                    }
+                  ],
+                  "Name": "Sowing",
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
                   "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n            {\r\n            \tSummary.WriteMessage(this, \"Sowing fertilsier\");\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
@@ -117,341 +163,66 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
-                  "Name": "Managers",
-                  "Children": [
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [],
+                  "Name": "Harvest",
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                  "Parameters": [
                     {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                      "Parameters": [
-                        {
-                          "Key": "StartDate",
-                          "Value": "1-may"
-                        },
-                        {
-                          "Key": "EndDate",
-                          "Value": "10-jul"
-                        },
-                        {
-                          "Key": "MinESW",
-                          "Value": "100"
-                        },
-                        {
-                          "Key": "MinRain",
-                          "Value": "25"
-                        },
-                        {
-                          "Key": "RainDays",
-                          "Value": "7"
-                        },
-                        {
-                          "Key": "CultivarName",
-                          "Value": "Hartog"
-                        },
-                        {
-                          "Key": "SowingDepth",
-                          "Value": "30"
-                        },
-                        {
-                          "Key": "RowSpacing",
-                          "Value": "250"
-                        },
-                        {
-                          "Key": "Population",
-                          "Value": "120"
-                        }
-                      ],
-                      "Name": "SowingRule",
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Key": "FASW",
+                      "Value": "0"
                     },
                     {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n\r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n            {\r\n            \tSummary.WriteMessage(this, \"Sowing fertilsier\");\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n            }\r\n        }\r\n        \r\n    }\r\n}\r\n",
-                      "Parameters": [
-                        {
-                          "Key": "Crop",
-                          "Value": "[Wheat]"
-                        },
-                        {
-                          "Key": "FertiliserType",
-                          "Value": "UreaN"
-                        },
-                        {
-                          "Key": "Amount",
-                          "Value": "160"
-                        }
-                      ],
-                      "Name": "Fertilise at sowing",
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
+                      "Key": "WaterDeficit",
+                      "Value": "0"
                     },
                     {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                      "Parameters": [],
-                      "Name": "Harvest",
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Key": "AutoIrrigationOn",
+                      "Value": "True"
                     },
                     {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
-                      "Parameters": [
-                        {
-                          "Key": "FASW",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "WaterDeficit",
-                          "Value": "0"
-                        },
-                        {
-                          "Key": "AutoIrrigationOn",
-                          "Value": "True"
-                        },
-                        {
-                          "Key": "FASWThreshold",
-                          "Value": "0.75"
-                        },
-                        {
-                          "Key": "FASWDepth",
-                          "Value": "600"
-                        }
-                      ],
-                      "Name": "AutoIrrig",
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
+                      "Key": "FASWThreshold",
+                      "Value": "0.75"
                     },
                     {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\r\n\r\n        [Separator(\"NOTE - all dates or date strings are entered with comma-separation and no spaces\")]\r\n        [Separator(\"Example for reporting in particular days but the same days every year\")]\r\n        [Description(\"Name of the Report model for reporting on below dates every year: \")] public string ReportEveryYear_Name { get; set; } \r\n        [Description(\"Enter one or more dates (as dd-mmm) for reporting : \")] public string[] ReportEveryYear_Dates { get; set; } \r\n\r\n        [Separator(\"Example for reporting on absolute dates\")]\r\n        [Description(\"Name of the Report model for reporting on completely specified dates: \")] public string ReportSpecificDates_Name { get; set; } \r\n        [Description(\"Enter one or more dates (as dd-mmm) for reporting : \")] public DateTime[] ReportSpecificDates_Dates { get; set; } \r\n\r\n\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n\r\n\t\t\t// example for reporting on irregular dates but the same dates every year\r\n        \tforeach (string ddMMM in ReportEveryYear_Dates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.DatesEqual(ddMMM, clock.Today))\r\n    \t\t\t{\r\n\t                Models.Report.Report myReport = Apsim.Find(zone, ReportEveryYear_Name) as Models.Report.Report;\r\n    \t            if (myReport == null)\r\n        \t            throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportEveryYear_Name));\r\n            \t    myReport.DoOutput();\r\n    \t\t\t}\r\n        \t}\r\n\r\n\t\t\t// example for reporting on fully-specified dates that are not necessarily the same dates every year\r\n        \tforeach (DateTime ddMMMyy in ReportSpecificDates_Dates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.Equals(ddMMMyy, clock.Today))\r\n    \t\t\t{\r\n\t                Models.Report.Report myReport = Apsim.Find(zone, ReportSpecificDates_Name) as Models.Report.Report;\r\n    \t            if (myReport == null)\r\n        \t            throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportSpecificDates_Name));\r\n            \t    myReport.DoOutput();\r\n    \t\t\t}\r\n        \t}\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n",
-                      "Parameters": [
-                        {
-                          "Key": "ReportEveryYear_Name",
-                          "Value": "ReportWheneverEveryYear"
-                        },
-                        {
-                          "Key": "ReportEveryYear_Dates",
-                          "Value": "21-mar,23-nov,11-aug"
-                        },
-                        {
-                          "Key": "ReportSpecificDates_Name",
-                          "Value": "ReportOnSpecificDates"
-                        },
-                        {
-                          "Key": "ReportSpecificDates_Dates",
-                          "Value": "03/01/1980 00:00:00,10/15/1981 00:00:00"
-                        }
-                      ],
-                      "Name": "ReportExampleHelper",
-                      "IncludeInDocumentation": false,
-                      "Enabled": false,
-                      "ReadOnly": false
+                      "Key": "FASWDepth",
+                      "Value": "600"
                     }
                   ],
+                  "Name": "AutoIrrig",
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Report.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "[Weather].Rain as DailyRainfall",
-                    "[Wheat].Grain.Total.Wt",
-                    "[SowingRule].Script.SowingDepth",
-                    "[Weather].MaxT as MaxT",
-                    "[Weather].DayOfYear",
-                    "[Weather].DayOfFile"
+                  "$type": "Models.Manager, Models",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Zone zone;\r\n\r\n        [Separator(\"NOTE - all dates or date strings are entered with comma-separation and no spaces\")]\r\n        [Separator(\"Example for reporting in particular days but the same days every year\")]\r\n        [Description(\"Name of the Report model for reporting on below dates every year: \")] public string ReportEveryYear_Name { get; set; } \r\n        [Description(\"Enter one or more dates (as dd-mmm) for reporting : \")] public string[] ReportEveryYear_Dates { get; set; } \r\n\r\n        [Separator(\"Example for reporting on absolute dates\")]\r\n        [Description(\"Name of the Report model for reporting on completely specified dates: \")] public string ReportSpecificDates_Name { get; set; } \r\n        [Description(\"Enter one or more dates (as dd-mmm) for reporting : \")] public DateTime[] ReportSpecificDates_Dates { get; set; } \r\n\r\n\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n\r\n\t\t\t// example for reporting on irregular dates but the same dates every year\r\n        \tforeach (string ddMMM in ReportEveryYear_Dates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.DatesEqual(ddMMM, clock.Today))\r\n    \t\t\t{\r\n\t                Models.Report.Report myReport = Apsim.Find(zone, ReportEveryYear_Name) as Models.Report.Report;\r\n    \t            if (myReport == null)\r\n        \t            throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportEveryYear_Name));\r\n            \t    myReport.DoOutput();\r\n    \t\t\t}\r\n        \t}\r\n\r\n\t\t\t// example for reporting on fully-specified dates that are not necessarily the same dates every year\r\n        \tforeach (DateTime ddMMMyy in ReportSpecificDates_Dates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.Equals(ddMMMyy, clock.Today))\r\n    \t\t\t{\r\n\t                Models.Report.Report myReport = Apsim.Find(zone, ReportSpecificDates_Name) as Models.Report.Report;\r\n    \t            if (myReport == null)\r\n        \t            throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportSpecificDates_Name));\r\n            \t    myReport.DoOutput();\r\n    \t\t\t}\r\n        \t}\r\n\r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "ReportEveryYear_Name",
+                      "Value": "ReportWheneverEveryYear"
+                    },
+                    {
+                      "Key": "ReportEveryYear_Dates",
+                      "Value": "21-mar,23-nov,11-aug"
+                    },
+                    {
+                      "Key": "ReportSpecificDates_Name",
+                      "Value": "ReportOnSpecificDates"
+                    },
+                    {
+                      "Key": "ReportSpecificDates_Dates",
+                      "Value": "03/01/1980 00:00:00,10/15/1981 00:00:00"
+                    }
                   ],
-                  "EventNames": [
-                    "[Clock].EndOfDay"
-                  ],
-                  "Name": "ReportSimple",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report.Report, Models",
-                  "VariableNames": [
-                    "ock].Today",
-                    "[Wheat].AboveGroundLive.Wt",
-                    "Sum([Soil].Nutrient.MineralN)",
-                    "[Wheat].Phenology.CurrentPhaseName",
-                    "[Irrigation].IrrigationApplied",
-                    "[Fertiliser].NitrogenApplied"
-                  ],
-                  "EventNames": [
-                    "[Wheat].Sowing",
-                    "[Wheat].Flowering",
-                    "[Wheat].Harvesting",
-                    "[Wheat].Phenology.PhaseChanged",
-                    "[Irrigation].Irrigated",
-                    "[Fertiliser].Fertilised"
-                  ],
-                  "Name": "ReportOnEvents",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "Sum([Soil].SoilWater.SWmm) as TotalWaterStored",
-                    "Sum([Soil].SoilWater.SWmm[1:2]) as WaterStoredTop2Layers",
-                    "Sum([Soil].SoilWater.SWmm[1:3]) as WaterStoredTop3Layers",
-                    "//Sum([Soil].SoilWater.SWmm[4:]) as WaterStoredLayer4AndBelow",
-                    "//Sum([Soil].SoilWater.SWmm[:6]) as WaterStoredDowntoLayer6",
-                    "Mean([Soil].Nutrient.NO3.ppm[1:4]) as MeanNO3ppmTop4Layers",
-                    "Min([Soil].Nutrient.NO3.ppm[1:4]) as MinNO3ppmTop4Layers",
-                    "Max([Soil].Nutrient.NO3.ppm[1:4]) as MaxNO3ppmTop4Layers"
-                  ],
-                  "EventNames": [
-                    "[Clock].EndOfDay"
-                  ],
-                  "Name": "ReportArrays",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "[Weather].DayOfFile",
-                    "Sum of [Weather].DayOfFile from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumWeeklyMaxT_V2",
-                    "Sum of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as SumWeeklyMaxT",
-                    "Av22e of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as MeanWeeklyMaxT",
-                    "Min of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as MinWeeklyMaxT",
-                    "Max of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as MaxWeeklyMaxT",
-                    "First of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as FirstWeeklyMaxT",
-                    "Last of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as LastWeeklyMaxT",
-                    "Diff of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as DiffWeeklyMaxT",
-                    "//Sum of ([Weather].DayOfFile-[Weather].DayOfFile+1) from [Clock].StartOfWeek to [Clock].Today as CountOfDays",
-                    "",
-                    "//Sum of ([Weather].DayOfFile-[Weather].DayOfFile+1) from 1-Jan to [Clock].Today as Test1",
-                    "//Sum of ([Weather].DayOfFile-[Weather].DayOfFile+1) from 16-Jan to [Clock].Today as Test2",
-                    "//Sum of ([Weather].DayOfFile-[Weather].DayOfFile+1) from 24-Feb to [Clock].Today as Test3"
-                  ],
-                  "EventNames": [
-                    "[Clock].EndOfWeek"
-                  ],
-                  "Name": "ReportWeekly",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "[CountDays].Script.NumDays1",
-                    "",
-                    "Sum of [CountDays].Script.NumDays1 from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumWeeklyMaxT_V2",
-                    "Sum of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as SumWeeklyMaxT",
-                    "Av22e of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as MeanWeeklyMaxT",
-                    "Min of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as MinWeeklyMaxT",
-                    "Max of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as MaxWeeklyMaxT",
-                    "First of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as FirstWeeklyMaxT",
-                    "Last of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as LastWeeklyMaxT",
-                    "Diff of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as DiffWeeklyMaxT",
-                    "Sum of ([CountDays].Script.NumDays1-[CountDays].Script.NumDays1+1) from [Clock].StartOfWeek to [Clock].Today as CountOfDays",
-                    "",
-                    "Sum of ([CountDays].Script.NumDays1-[CountDays].Script.NumDays1+1) from 1-Jan to [Clock].Today as Test1",
-                    "Sum of ([CountDays].Script.NumDays1-[CountDays].Script.NumDays1+1) from 16-Jan to [Clock].Today as Test2",
-                    "Sum of ([CountDays].Script.NumDays1-[CountDays].Script.NumDays1+1) from 24-Feb to [Clock].Today as Test3"
-                  ],
-                  "EventNames": [
-                    "[Clock].EndOfWeek"
-                  ],
-                  "Name": "ReportWeekly1",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumMonthlyMaxT_V2",
-                    "Sum of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as SumMonthlyMaxT",
-                    "Ave of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as MeanMonthlyMaxT",
-                    "Min of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as MinMonthlyMaxT",
-                    "Max of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as MaxMonthlyMaxT",
-                    "First of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as FirstMonthlyMaxT",
-                    "Last of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as LastMonthlyMaxT",
-                    "Diff of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as DiffMonthlyMaxT",
-                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from [Clock].StartOfMonth to [Clock].Today as CountOfDaysInMonth"
-                  ],
-                  "EventNames": [
-                    "[Clock].EndOfMonth"
-                  ],
-                  "Name": "ReportMonthly",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumYearlyMaxT_V2",
-                    "Sum of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as SumYearlyMaxT",
-                    "Ave of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as MeanYearlyMaxT",
-                    "Min of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as MinYearlyMaxT",
-                    "Max of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as MaxYearlyMaxT",
-                    "First of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as FirstYearlyMaxT",
-                    "Last of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as LastYearlyMaxT",
-                    "Diff of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as DiffYearlyMaxT",
-                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from [Clock].StartOfYear to [Clock].Today as CountOfDaysInYear"
-                  ],
-                  "EventNames": [
-                    "[Clock].EndOfYear"
-                  ],
-                  "Name": "ReportYearly",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today",
-                    "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumSimulationMaxT_V2",
-                    "Sum of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as SumSimulationMaxT",
-                    "Ave of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as MeanSimulationMaxT",
-                    "Min of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as MinSimulationMaxT",
-                    "Max of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as MaxSimulationMaxT",
-                    "First of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as FirstSimulationMaxT",
-                    "Last of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as LastSimulationMaxT",
-                    "Diff of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as DiffSimulationMaxT",
-                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from [Clock].StartOfSimulation to [Clock].Today as CountOfDaysInSimulation",
-                    "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumSimulationMaxT_V2",
-                    "",
-                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from 24-Feb to [Clock].Today as Test24Feb",
-                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from 24-Feb-1980 to [Clock].Today as Test24Feb80"
-                  ],
-                  "EventNames": [
-                    "[Clock].EndOfDay",
-                    "[Clock].EndOfSimulation"
-                  ],
-                  "Name": "ReportSimulation",
-                  "Children": [],
+                  "Name": "ReportExampleHelper",
                   "IncludeInDocumentation": false,
                   "Enabled": false,
                   "ReadOnly": false
@@ -468,6 +239,48 @@
                   "$type": "Models.Irrigation, Models",
                   "Name": "Irrigation",
                   "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.MicroClimate, Models",
+                  "a_interception": 0.0,
+                  "b_interception": 1.0,
+                  "c_interception": 0.0,
+                  "d_interception": 0.0,
+                  "soil_albedo": 0.3,
+                  "SoilHeatFluxFraction": 0.4,
+                  "NightInterceptionFraction": 0.5,
+                  "ReferenceHeight": 2.0,
+                  "Name": "MicroClimate",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Plant, Models",
+                  "CropType": "Wheat",
+                  "IsEnding": false,
+                  "DaysAfterEnding": 0,
+                  "ResourceName": "Wheat",
+                  "Name": "Wheat",
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "InitialResidueName": "wheat_stubble",
+                  "InitialResidueType": "wheat",
+                  "InitialResidueMass": 500.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 100.0,
+                  "FractionFaecesAdded": 0.5,
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1141,45 +954,200 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "InitialResidueName": "wheat_stubble",
-                  "InitialResidueType": "wheat",
-                  "InitialResidueMass": 500.0,
-                  "InitialStandingFraction": 0.0,
-                  "InitialCPR": 0.0,
-                  "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 0.5,
-                  "ResourceName": "SurfaceOrganicMatter",
-                  "Name": "SurfaceOrganicMatter",
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Plant, Models",
-                  "CropType": "Wheat",
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
-                  "ResourceName": "Wheat",
-                  "Name": "Wheat",
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.MicroClimate, Models",
-                  "a_interception": 0.0,
-                  "b_interception": 1.0,
-                  "c_interception": 0.0,
-                  "d_interception": 0.0,
-                  "soil_albedo": 0.3,
-                  "SoilHeatFluxFraction": 0.4,
-                  "NightInterceptionFraction": 0.5,
-                  "ReferenceHeight": 2.0,
-                  "Name": "MicroClimate",
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Weather].Rain as DailyRainfall",
+                    "[Wheat].Grain.Total.Wt",
+                    "[SowingRule].Script.SowingDepth",
+                    "[Weather].MaxT as MaxT",
+                    "[Weather].DayOfYear",
+                    "[Weather].DayOfFile"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfDay"
+                  ],
+                  "Name": "ReportSimple",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "ock].Today",
+                    "[Wheat].AboveGroundLive.Wt",
+                    "Sum([Soil].Nutrient.MineralN)",
+                    "[Wheat].Phenology.CurrentPhaseName",
+                    "[Irrigation].IrrigationApplied",
+                    "[Fertiliser].NitrogenApplied"
+                  ],
+                  "EventNames": [
+                    "[Wheat].Sowing",
+                    "[Wheat].Flowering",
+                    "[Wheat].Harvesting",
+                    "[Wheat].Phenology.PhaseChanged",
+                    "[Irrigation].Irrigated",
+                    "[Fertiliser].Fertilised"
+                  ],
+                  "Name": "ReportOnEvents",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "Sum([Soil].SoilWater.SWmm) as TotalWaterStored",
+                    "Sum([Soil].SoilWater.SWmm[1:2]) as WaterStoredTop2Layers",
+                    "Sum([Soil].SoilWater.SWmm[1:3]) as WaterStoredTop3Layers",
+                    "//Sum([Soil].SoilWater.SWmm[4:]) as WaterStoredLayer4AndBelow",
+                    "//Sum([Soil].SoilWater.SWmm[:6]) as WaterStoredDowntoLayer6",
+                    "Mean([Soil].Nutrient.NO3.ppm[1:4]) as MeanNO3ppmTop4Layers",
+                    "Min([Soil].Nutrient.NO3.ppm[1:4]) as MinNO3ppmTop4Layers",
+                    "Max([Soil].Nutrient.NO3.ppm[1:4]) as MaxNO3ppmTop4Layers"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfDay"
+                  ],
+                  "Name": "ReportArrays",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Weather].DayOfFile",
+                    "Sum of [Weather].DayOfFile from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumWeeklyMaxT_V2",
+                    "Sum of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as SumWeeklyMaxT",
+                    "Av22e of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as MeanWeeklyMaxT",
+                    "Min of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as MinWeeklyMaxT",
+                    "Max of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as MaxWeeklyMaxT",
+                    "First of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as FirstWeeklyMaxT",
+                    "Last of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as LastWeeklyMaxT",
+                    "Diff of [Weather].DayOfFile from [Clock].StartOfWeek to [Clock].Today as DiffWeeklyMaxT",
+                    "//Sum of ([Weather].DayOfFile-[Weather].DayOfFile+1) from [Clock].StartOfWeek to [Clock].Today as CountOfDays",
+                    "",
+                    "//Sum of ([Weather].DayOfFile-[Weather].DayOfFile+1) from 1-Jan to [Clock].Today as Test1",
+                    "//Sum of ([Weather].DayOfFile-[Weather].DayOfFile+1) from 16-Jan to [Clock].Today as Test2",
+                    "//Sum of ([Weather].DayOfFile-[Weather].DayOfFile+1) from 24-Feb to [Clock].Today as Test3"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfWeek"
+                  ],
+                  "Name": "ReportWeekly",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[CountDays].Script.NumDays1",
+                    "",
+                    "Sum of [CountDays].Script.NumDays1 from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumWeeklyMaxT_V2",
+                    "Sum of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as SumWeeklyMaxT",
+                    "Av22e of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as MeanWeeklyMaxT",
+                    "Min of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as MinWeeklyMaxT",
+                    "Max of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as MaxWeeklyMaxT",
+                    "First of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as FirstWeeklyMaxT",
+                    "Last of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as LastWeeklyMaxT",
+                    "Diff of [CountDays].Script.NumDays1 from [Clock].StartOfWeek to [Clock].Today as DiffWeeklyMaxT",
+                    "Sum of ([CountDays].Script.NumDays1-[CountDays].Script.NumDays1+1) from [Clock].StartOfWeek to [Clock].Today as CountOfDays",
+                    "",
+                    "Sum of ([CountDays].Script.NumDays1-[CountDays].Script.NumDays1+1) from 1-Jan to [Clock].Today as Test1",
+                    "Sum of ([CountDays].Script.NumDays1-[CountDays].Script.NumDays1+1) from 16-Jan to [Clock].Today as Test2",
+                    "Sum of ([CountDays].Script.NumDays1-[CountDays].Script.NumDays1+1) from 24-Feb to [Clock].Today as Test3"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfWeek"
+                  ],
+                  "Name": "ReportWeekly1",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumMonthlyMaxT_V2",
+                    "Sum of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as SumMonthlyMaxT",
+                    "Ave of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as MeanMonthlyMaxT",
+                    "Min of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as MinMonthlyMaxT",
+                    "Max of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as MaxMonthlyMaxT",
+                    "First of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as FirstMonthlyMaxT",
+                    "Last of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as LastMonthlyMaxT",
+                    "Diff of [Weather].MaxT from [Clock].StartOfMonth to [Clock].Today as DiffMonthlyMaxT",
+                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from [Clock].StartOfMonth to [Clock].Today as CountOfDaysInMonth"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfMonth"
+                  ],
+                  "Name": "ReportMonthly",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumYearlyMaxT_V2",
+                    "Sum of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as SumYearlyMaxT",
+                    "Ave of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as MeanYearlyMaxT",
+                    "Min of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as MinYearlyMaxT",
+                    "Max of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as MaxYearlyMaxT",
+                    "First of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as FirstYearlyMaxT",
+                    "Last of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as LastYearlyMaxT",
+                    "Diff of [Weather].MaxT from [Clock].StartOfYear to [Clock].Today as DiffYearlyMaxT",
+                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from [Clock].StartOfYear to [Clock].Today as CountOfDaysInYear"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfYear"
+                  ],
+                  "Name": "ReportYearly",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumSimulationMaxT_V2",
+                    "Sum of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as SumSimulationMaxT",
+                    "Ave of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as MeanSimulationMaxT",
+                    "Min of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as MinSimulationMaxT",
+                    "Max of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as MaxSimulationMaxT",
+                    "First of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as FirstSimulationMaxT",
+                    "Last of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as LastSimulationMaxT",
+                    "Diff of [Weather].MaxT from [Clock].StartOfSimulation to [Clock].Today as DiffSimulationMaxT",
+                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from [Clock].StartOfSimulation to [Clock].Today as CountOfDaysInSimulation",
+                    "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumSimulationMaxT_V2",
+                    "",
+                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from 24-Feb to [Clock].Today as Test24Feb",
+                    "Sum of ([Weather].MaxT-[Weather].MaxT+1) from 24-Feb-1980 to [Clock].Today as Test24Feb80"
+                  ],
+                  "EventNames": [
+                    "[Clock].EndOfDay",
+                    "[Clock].EndOfSimulation"
+                  ],
+                  "Name": "ReportSimulation",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
