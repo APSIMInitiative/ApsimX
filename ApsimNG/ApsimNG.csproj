@@ -482,6 +482,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\GraphPanel.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMarkForSale.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CommonLandFoodStoreType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Permutation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostUsePricing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFeedGroup.png" />
@@ -761,6 +763,7 @@
     <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
     <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
     <EmbeddedResource Include="Resources\RadInt.jpg" />
+    <EmbeddedResource Include="Resources\SyntaxHighlighting\Report.xml" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />

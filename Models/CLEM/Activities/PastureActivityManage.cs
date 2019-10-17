@@ -296,7 +296,7 @@ namespace Models.CLEM.Activities
             else
             {
                 this.Status = ActivityStatus.Critical;
-                throw new Exception("No pasture data is available for [a="+this.Name+"]\nCheck that data is available for specified soil id etc. ");
+                throw new Exception("No pasture data is available for [a="+this.Name+"]\nCheck that data is available for specified land id and climate region id etc. ");
             }
 
             // report activity performed.

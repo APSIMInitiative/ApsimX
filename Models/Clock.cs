@@ -266,6 +266,8 @@
         [EventSubscribe("DoCommence")]
         private void OnDoCommence(object sender, CommenceArgs e)
         {
+            Today = StartDate;
+
             if (DoInitialSummary != null)
                 DoInitialSummary.Invoke(this, args);
 
