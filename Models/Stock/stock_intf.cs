@@ -298,6 +298,16 @@ namespace Models.GrazPlan
     public class SingleGenotypeInits
     {
         /// <summary>
+        /// Gets or sets the death rates
+        /// </summary>
+        public double[] DeathRate = new double[2];
+
+        /// <summary>
+        /// Conception rates
+        /// </summary>
+        public double[] Conceptions = new double[4];    // array[1..3]
+
+        /// <summary>
         /// Gets or sets the genotype name
         /// </summary>
         public string GenotypeName { get; set; }
@@ -341,16 +351,6 @@ namespace Models.GrazPlan
         /// Gets or sets the peak milk production
         /// </summary>
         public double PeakMilk { get; set; }
-
-        /// <summary>
-        /// Gets or sets the death rates
-        /// </summary>
-        public double[] DeathRate = new double[2];      
-        
-        /// <summary>
-        /// Conception rates
-        /// </summary>
-        public double[] Conceptions = new double[4];    // array[1..3]
     }
 
     /// <summary>
@@ -945,7 +945,7 @@ namespace Models.GrazPlan
         /// <param name="posIdx">Position in stock list</param>
         /// <param name="startTime">Start time</param>
         /// <param name="deltaTime">Time adjustment</param>
-        /// <param name="feedSuppFirst"></param>
+        /// <param name="feedSuppFirst">Feed supplement first</param>
         private void ComputeGrazing(int posIdx, double startTime, double deltaTime, bool feedSuppFirst)
         {
             this.At(posIdx).Grazing(deltaTime, (startTime == 0.0), feedSuppFirst, ref this.stock[posIdx].PastIntakeRate[0], ref this.stock[posIdx].SuppIntakeRate[0]);
@@ -1705,7 +1705,7 @@ namespace Models.GrazPlan
         /// <param name="paddName">Paddock name</param>
         /// <param name="suppKG">The amount of supplement</param>
         /// <param name="supplement">The supplement to use</param>
-        /// <param name="feedSuppFirst"></param>
+        /// <param name="feedSuppFirst">Feed supplement first</param>
         public void PlaceSuppInPadd(string paddName, double suppKG, FoodSupplement supplement, bool feedSuppFirst)
         {
             PaddockInfo thePadd;
@@ -2069,7 +2069,7 @@ namespace Models.GrazPlan
         /// default birth weight.                                                   
         /// </summary>
         /// <param name="srw">Standard reference weight</param>
-        /// <param name="bw"></param>
+        /// <param name="bw">Birth weight</param>
         /// <param name="ageDays">Age in days</param>
         /// <param name="parameters">Breed parameter set</param>
         /// <returns>The maximum normal weight kg</returns>
@@ -2131,9 +2131,24 @@ namespace Models.GrazPlan
         /// </summary>
         internal class AgeInfo
         {
+            /// <summary>
+            /// Proportion
+            /// </summary>
             public double Propn;
+
+            /// <summary>
+            /// Proportion pregnant
+            /// </summary>
             public double[] PropnPreg = new double[4];
+
+            /// <summary>
+            /// Proportion lactating
+            /// </summary>
             public double[] PropnLact = new double[4];
+
+            /// <summary>
+            /// The animal numbers preg and lactating
+            /// </summary>
             public int[,] Numbers = new int[4, 4];
 
             /// <summary>
@@ -2338,7 +2353,9 @@ namespace Models.GrazPlan
                         for (cohortIdx = cohortsInfo.MinYears; cohortIdx <= cohortsInfo.MaxYears; cohortIdx++)
                         {
                             pregRate = this.GetOffspringRates(
-                                                        mainGenotype, latitude, mateDOY,
+                                                        mainGenotype, 
+                                                        latitude, 
+                                                        mateDOY,
                                                         ageInfoList[cohortIdx].AgeAtMating,
                                                         ageInfoList[cohortIdx].SizeAtMating,
                                                         condition);
@@ -2974,8 +2991,11 @@ namespace Models.GrazPlan
                         diffs.FleeceWt = diffRatio * srcGroup.FleeceCutWeight;              // assumed genetic!                    
                     }                       
 
-                    this.Add(srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF),     // Now we have computed Diffs, we split  
-                         this.GetPaddInfo(groupIdx), this.GetTag(groupIdx), this.GetPriority(groupIdx));   // up the animals                      
+                    this.Add(
+                         srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF),     // Now we have computed Diffs, we split  
+                         this.GetPaddInfo(groupIdx), 
+                         this.GetTag(groupIdx), 
+                         this.GetPriority(groupIdx));   // up the animals                      
                 } 
             }
         }
@@ -3228,7 +3248,7 @@ namespace Models.GrazPlan
         /// for this component.
         /// </summary>
         /// <param name="currentDay">Todays date</param>
-        /// <param name="latitude">Latitude</param>
+        /// <param name="latitude">The Latitude</param>
         public void ManageInternalInit(int currentDay, double latitude)
         {
             int i;
@@ -3409,15 +3429,16 @@ namespace Models.GrazPlan
         /// <returns>True if the keyword is found</returns>
         private bool ParseRepro(string keyword, ref GrazType.ReproType repro)
         {
-            ReproRecord[] SexKeywords = new ReproRecord[8] {
-                        new ReproRecord(name : "ram",    repro : GrazType.ReproType.Male),
-                        new ReproRecord(name : "crypto",  repro : GrazType.ReproType.Male),
-                        new ReproRecord(name : "wether", repro : GrazType.ReproType.Castrated),
-                        new ReproRecord(name : "ewe",    repro : GrazType.ReproType.Empty),
-                        new ReproRecord(name : "bull",   repro : GrazType.ReproType.Male),
-                        new ReproRecord(name : "steer",  repro : GrazType.ReproType.Castrated),
-                        new ReproRecord(name : "heifer", repro : GrazType.ReproType.Empty),
-                        new ReproRecord(name : "cow",    repro : GrazType.ReproType.Empty)
+            ReproRecord[] sexKeywords = new ReproRecord[8] 
+            {
+                        new ReproRecord(name: "ram",    repro: GrazType.ReproType.Male),
+                        new ReproRecord(name: "crypto", repro: GrazType.ReproType.Male),
+                        new ReproRecord(name: "wether", repro: GrazType.ReproType.Castrated),
+                        new ReproRecord(name: "ewe",    repro: GrazType.ReproType.Empty),
+                        new ReproRecord(name: "bull",   repro: GrazType.ReproType.Male),
+                        new ReproRecord(name: "steer",  repro: GrazType.ReproType.Castrated),
+                        new ReproRecord(name: "heifer", repro: GrazType.ReproType.Empty),
+                        new ReproRecord(name: "cow",    repro: GrazType.ReproType.Empty)
             };
 
             int idx;
@@ -3427,10 +3448,10 @@ namespace Models.GrazPlan
             if ((keyword != string.Empty) && (keyword[keyword.Length - 1] == 's'))                 // Plurals are allowed                   
                 keyword = keyword.Substring(0, keyword.Length - 1);
             idx = 0;
-            while ((idx <= 7) && (keyword != SexKeywords[idx].Name))
+            while ((idx <= 7) && (keyword != sexKeywords[idx].Name))
                 idx++;
             if (idx <= 7)
-                repro = SexKeywords[idx].Repro;
+                repro = sexKeywords[idx].Repro;
             else
                 repro = GrazType.ReproType.Castrated;
             if ((idx > 7) && (keyword.Length > 0))
