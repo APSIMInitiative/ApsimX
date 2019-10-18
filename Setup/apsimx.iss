@@ -145,11 +145,10 @@ Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 Source: ..\Bin\*.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\Tools\*.*; DestDir: {app}\Bin\Tools; Flags: ignoreversion;
-Source: ..\DeploymentSupport\Windows\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; Check: not Is64BitInstallMode
-Source: ..\DeploymentSupport\Windows\lib\gtk-2.0\2.10.0\engines\*.dll; DestDir: {app}\lib\gtk-2.0\2.10.0\engines; Flags: ignoreversion; Check: not Is64BitInstallMode
+Source: ..\DeploymentSupport\Windows\Bin32\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; Check: not Is64BitInstallMode
+Source: ..\DeploymentSupport\Windows\Bin32\lib\gtk-2.0\2.10.0\engines\*.dll; DestDir: {app}\lib\gtk-2.0\2.10.0\engines; Flags: ignoreversion; Check: not Is64BitInstallMode
 Source: ..\DeploymentSupport\Windows\Bin64\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; Check: Is64BitInstallMode
 Source: ..\DeploymentSupport\Windows\Bin64\lib\gtk-2.0\2.10.0\engines\*.dll; DestDir: {app}\lib\gtk-2.0\2.10.0\engines; Flags: ignoreversion; Check: Is64BitInstallMode
-;Source: ..\DeploymentSupport\Windows\Bin\x64\*.dll; DestDir: {app}\Bin\x64; Flags: ignoreversion;
 Source: ..\Bin\.gtkrc; DestDir: {app}\Bin; Flags: ignoreversion;
 Source: ..\Bin\ApsimNG.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\Models.xml; DestDir: {app}\Bin; Flags: ignoreversion; 

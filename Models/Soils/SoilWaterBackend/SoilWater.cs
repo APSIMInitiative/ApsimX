@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.APSoil;
+using Models.Core;
 using Models.Interfaces;
 using Models.PMF;
 using Models.Soils.SoilWaterBackend;
@@ -271,8 +272,23 @@ namespace Models.Soils
         /// <value>
         /// The thickness.
         /// </value>
-        [Description("Depth (mm)")]
+        [Units("mm")]
         public double[] Thickness { get; set; }
+
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("mm")]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
 
         /// <summary>
         /// Fractional amount of water above DUL that can drain under gravity per day

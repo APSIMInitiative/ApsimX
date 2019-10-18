@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils
 {
+    using APSIM.Shared.APSoil;
     using Models.Core;
     using System;
 
@@ -10,10 +11,31 @@
     [ValidParent(ParentType=typeof(Soil))]
     public class Physical : Model
     {
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
+
         /// <summary>Gets or sets the thickness.</summary>
-        [Description("Depth (mm)")]
         [Summary]
+        [Units("mm")]
         public double[] Thickness { get; set; }
+
+        /// <summary>Particle size clay.</summary>
+        [Summary]
+        [Description("Clay")]
+        [Units("%")]
+        public double[] ParticleSizeClay { get; set; }
 
         /// <summary>Gets or sets the bd.</summary>
         [Summary]

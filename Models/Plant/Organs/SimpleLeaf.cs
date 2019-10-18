@@ -751,16 +751,16 @@ namespace Models.PMF.Organs
         {
             // save current state
             if (plant.IsEmerged)
-                startLive = Live;
+                startLive = ReflectionUtilities.Clone(Live) as Biomass;
             if (leafInitialised)
             {
                 FRGR = frgr.Value();
                 if (cover == null && extinctionCoefficient == null)
                     throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
                 if (cover != null)
-                    LAI = (Math.Log(1 - CoverGreen) / (extinctionCoefficient.Value() * -1)) * plant.populationFactor;
+                    LAI = (Math.Log(1 - CoverGreen) / (extinctionCoefficient.Value() * -1));
                 if (area != null)
-                    LAI = area.Value() * plant.populationFactor;
+                    LAI = area.Value();
 
                 Height = tallness.Value();
                 if (baseHeight == null)
@@ -801,8 +801,8 @@ namespace Models.PMF.Organs
         {
             if (MathUtilities.IsPositive(dmConversionEfficiency.Value()))
             {
-                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value()) * plant.populationFactor;
-                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value()) * plant.populationFactor;
+                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
                 DMDemand.Metabolic = 0;
             }
             else

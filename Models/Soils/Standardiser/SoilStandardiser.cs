@@ -62,7 +62,7 @@
         private static void CreateInitialSample(Soil soil)
         {
             var soilOrganicMatter = soil.Children.Find(child => child is Organic) as Organic;
-            var analysis = soil.Children.Find(child => child is Analysis) as Analysis;
+            var analysis = soil.Children.Find(child => child is Chemical) as Chemical;
             var initial = soil.Children.Find(child => child is Sample) as Sample;
             if (initial == null)
             {

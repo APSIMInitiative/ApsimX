@@ -219,15 +219,15 @@
         public void MoveUpDown()
         {
             CommandHistory commandHistory = new CommandHistory();
-            Model modelToMove = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
+            Model modelToMove = Apsim.Get(simulations, "APS14.Factors.Permutation.NRate") as Model;
 
             MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, null);
             moveCommand.Do(commandHistory);
 
             Model modelToMove2 = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
 
-            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Name, "NRate");
-            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children.Count, 4);
+            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children[0].Name, "NRate");
+            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children[0].Children.Count, 4);
         }
 
        

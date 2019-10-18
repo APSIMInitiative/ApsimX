@@ -11,7 +11,9 @@
     /// Its sole purpose is to apply the object values to the model represented by the paths.
     /// If Specifications are specified then they are used instead of paths and values.
     /// </summary>
+    [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(Factor))]
+    [ValidParent(ParentType = typeof(Permutation))]
     [Serializable]
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.CompositeFactorPresenter")]
@@ -65,22 +67,19 @@
         /// <param name="simulationDescription">A description of a simulation.</param>
         public void ApplyToSimulation(SimulationDescription simulationDescription)
         {
-            List<string> allPaths;
-            List<object> allValues;
+            List<string> allPaths = new List<string>();
+            List<object> allValues = new List<object>();
             if (Specifications != null)
             {
                 // Compound factorvalue i.e. multiple specifications that all
                 // work on a single simulation.
-                allPaths = new List<string>();
-                allValues = new List<object>();
-
                 foreach (var specification in Specifications)
                     ParseSpecification(specification, allPaths, allValues);
             }
-            else
+            if (Paths != null)
             {
-                allPaths = Paths;
-                allValues = Values;
+                allPaths.AddRange(Paths);
+                allValues.AddRange(Values);
             }
 
             if (allPaths.Count > 1 && allPaths.Count != allValues.Count)
@@ -95,21 +94,24 @@
                     simulationDescription.AddOverride(new PropertyReplacement(allPaths[i], allValues[i]));
             }
 
-            // Set descriptors in simulation.
-            string descriptorName = Name;
-            if (Parent != null)
-                descriptorName = Parent.Name;
-            if (Specifications != null && Specifications.Count > 0)
+            if (!(Parent is Factors))
             {
-                // compound factor value ie. one that has multiple specifications. 
-                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, Name));
-            }
-            else
-            {
-                if (allValues[0] is IModel)
-                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, (allValues[0] as IModel).Name));
+                // Set descriptors in simulation.
+                string descriptorName = Name;
+                if (Parent != null)
+                    descriptorName = Parent.Name;
+                if (Specifications != null && Specifications.Count > 0)
+                {
+                    // compound factor value ie. one that has multiple specifications. 
+                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, Name));
+                }
                 else
-                    simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, allValues[0].ToString()));
+                {
+                    if (allValues[0] is IModel)
+                        simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, (allValues[0] as IModel).Name));
+                    else
+                        simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName, allValues[0].ToString()));
+                }
             }
         }
 

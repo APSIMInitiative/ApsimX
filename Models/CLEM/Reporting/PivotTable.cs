@@ -19,69 +19,50 @@ namespace Models.CLEM.Reporting
     [ViewName("ApsimNG.Views.CLEM.PivotTableView")]
     [PresenterName("ApsimNG.Presenters.CLEM.PivotTablePresenter")]
     [ValidParent(ParentType = typeof(CLEMFolder))]
+    [ValidParent(ParentType = typeof(Folder))]
     [Description("Generates a Pivot Table from the DataStore")]
     [Version(1, 0, 1, "")]
     public class PivotTable : Model
     {
         /// <summary>
-        /// The list of all pivots
+        /// Returns the current filter
         /// </summary>
-        public List<string> Pivots { get; set; } = null;
-
-        /// <summary>
-        /// Tracks the id of the current pivot
-        /// </summary>
-        public int ID { get; set; } = 0;
+        public string Filter { get; set; } = "";
 
         /// <summary>
         /// Tracks the active selection in the ledger box
         /// </summary>
-        public int Ledger { get; set; } = 0;
+        public int LedgerViewBox { get; set; } = 0;
 
         /// <summary>
         /// Tracks the active selection in the expression box
         /// </summary>
-        public int Expression { get; set; } = 0;
+        public int ExpressionViewBox { get; set; } = 0;
 
         /// <summary>
         /// Tracks the active selection in the value box
         /// </summary>
-        public int Value { get; set; } = 0;
+        public int ValueViewBox { get; set; } = 0;
 
         /// <summary>
         /// Tracks the active selection in the row box
         /// </summary>
-        public int Row { get; set; } = 5;
+        public int RowViewBox { get; set; } = 5;
 
         /// <summary>
         /// Tracks the active selection in the column box
         /// </summary>
-        public int Column { get; set; } = 7;
+        public int ColumnViewBox { get; set; } = 7;
 
         /// <summary>
         /// Tracks the active selection in the pivot box
         /// </summary>
-        public int Pivot { get; set; } = 4;
+        public int FilterViewBox { get; set; } = 4;
 
         /// <summary>
         /// Tracks the active selection in the time box
         /// </summary>
-        public int Time { get; set; } = 0;
-
-        /// <summary>
-        /// Returns the current pivot
-        /// </summary>
-        public string GetPivot()
-        {
-            if (Pivots.Count > ID)
-            {
-                return Pivots[ID];
-            }
-            else
-            {
-                throw new IndexOutOfRangeException(ID.ToString());
-            }
-        }
+        public int TimeViewBox { get; set; } = 0;
 
     }
 }

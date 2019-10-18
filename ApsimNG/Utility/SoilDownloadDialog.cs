@@ -270,8 +270,7 @@
                 }
                 else if (dest is Zone)
                 {
-                    string modelStr = FileFormat.WriteToString(newSoil);
-                    AddModelCommand command = new AddModelCommand(replaceNode, modelStr, owningView, explorerPresenter);
+                    AddModelCommand command = new AddModelCommand(replaceNode, newSoil, owningView, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
                 MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
@@ -804,7 +803,7 @@
                     }
 
                     newSoil = new Soil(); 
-                    Analysis analysis = new Analysis();
+                    Chemical analysis = new Chemical();
                     Physical waterNode = new Physical(); 
                     Organic organicMatter = new Organic();
                     SoilWater soilWater = new SoilWater();
@@ -909,19 +908,14 @@
                         dul[i] = thetaWwp[i] + awc20[i];  // This could be made Moore complex
                     waterNode.DUL = ConvertLayers(dul, layerCount);
 
-                    analysis.ParticleSizeSand = ConvertLayers(sand, layerCount);
-                    analysis.ParticleSizeSilt = ConvertLayers(silt, layerCount);
-                    analysis.ParticleSizeClay = ConvertLayers(clay, layerCount);
-                    analysis.Rocks = ConvertLayers(coarse, layerCount);
-                    analysis.PHUnits = Sample.PHSampleUnitsEnum.Water;
+                    var particleSizeSand = ConvertLayers(sand, layerCount);
+                    waterNode.ParticleSizeClay = ConvertLayers(clay, layerCount);
                     analysis.PH = ConvertLayers(phWater, layerCount);
-                    analysis.CEC = ConvertLayers(cationEC, layerCount);
                     // Obviously using the averaging in "ConvertLayers" for texture classes is not really correct, but should be OK as a first pass if we don't have sharply contrasting layers
                     double[] classes = ConvertLayers(texture, layerCount);
                     string[] textures = new string[layerCount];
                     for (int i = 0; i < layerCount; i++)
                         textures[i] = textureClasses[(int)Math.Round(classes[i]) - 1];
-                    analysis.Texture = textures;
 
 
                     double[] xf = new double[layerCount];
@@ -937,7 +931,7 @@
 
                     for (int i = 0; i < layerCount; i++)
                     {
-                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * analysis.ParticleSizeSand[i])) / p3;
+                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * particleSizeSand[i])) / p3;
                         xf[i] = Math.Max(0.1, Math.Min(1.0, xf[i]));
                         double effectiveThickness = thickness[i] * xf[i];
                         double bottomEffDepth = topEffDepth + effectiveThickness;

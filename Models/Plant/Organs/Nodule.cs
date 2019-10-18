@@ -392,8 +392,8 @@ namespace Models.PMF.Organs
         {
             if (dmConversionEfficiency.Value() > 0.0)
             {
-                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value()) * parentPlant.populationFactor;
-                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value()) * parentPlant.populationFactor;
+                DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value()) ;
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
                 DMDemand.Metabolic = 0;
             }
             else
@@ -511,7 +511,7 @@ namespace Models.PMF.Organs
         {
             // save current state
             if (parentPlant.IsEmerged)
-                startLive = Live;
+                startLive = ReflectionUtilities.Clone(Live) as Biomass;
         }
 
         /// <summary>Does the nutrient allocations.</summary>

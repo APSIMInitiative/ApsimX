@@ -79,15 +79,65 @@ namespace Models.Report
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
+        /// <summary>
+        /// Date of the last report event.
+        /// </summary>
+        [JsonIgnore]
+        public DateTime DateOfLastOutput { get; set; }
+
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            DateOfLastOutput = DateTime.MaxValue;
             dataToWriteToDb = null;
 
-            // sanitise the variable names and remove duplicates
+            // Tidy up variable/event names.
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
+
+            // Locate reporting variables.
+            FindVariableMembers();
+
+            // Silently do nothing if no event names present.
+            if (EventNames == null || EventNames.Length < 1)
+                return;
+
+            // Subscribe to events.
+            foreach (string eventName in EventNames)
+                events.Subscribe(eventName, DoOutputEvent);
+        }
+
+        /// <summary>
+        /// Sanitises the event names and removes duplicates/comments.
+        /// </summary>
+        /// <returns></returns>
+        private string[] TidyUpEventNames()
+        {
+            List<string> eventNames = new List<string>();
+            for (int i = 0; i < EventNames?.Length; i++)
+            {
+                string eventName = EventNames[i];
+
+                // If there is a comment in this line, ignore everything after (and including) the comment.
+                int commentIndex = eventName.IndexOf("//");
+                if (commentIndex >= 0)
+                    eventName = eventName.Substring(0, commentIndex);
+
+                if (!string.IsNullOrWhiteSpace(eventName))
+                    eventNames.Add(eventName.Trim());
+            }
+
+            return eventNames.ToArray();
+        }
+
+        /// <summary>
+        /// Sanitises the variable names and removes duplicates/comments.
+        /// </summary>
+        private string[] TidyUpVariableNames()
+        {
             List<string> variableNames = new List<string>();
             variableNames.Add("Parent.Name as Zone");
             for (int i = 0; i < this.VariableNames.Length; i++)
@@ -107,18 +157,8 @@ namespace Models.Report
                         variableNames.Add(variable.Trim());
                 }
             }
-            this.VariableNames = variableNames.ToArray();
-            this.FindVariableMembers();
 
-            // Subscribe to events.
-            if (EventNames != null)
-            {
-                foreach (string eventName in EventNames)
-                {
-                    if (eventName != string.Empty)
-                        events.Subscribe(eventName.Trim(), DoOutputEvent);
-                }
-            }
+            return variableNames.ToArray();
         }
 
         /// <summary>Invoked when a simulation is completed.</summary>
@@ -165,6 +205,8 @@ namespace Models.Report
                 storage.Writer.WriteTable(dataToWriteToDb);
                 dataToWriteToDb = null;
             }
+
+            DateOfLastOutput = clock.Today;
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>

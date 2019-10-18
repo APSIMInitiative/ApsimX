@@ -28,6 +28,7 @@ namespace Models.Graph
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(Folder))]
+    [ValidParent(ParentType = typeof(GraphPanel))]
     public class Graph : Model, AutoDocumentation.ITag, ICustomDocumentation
     {
         /// <summary>The data tables on the graph.</summary>
@@ -37,6 +38,9 @@ namespace Models.Graph
         /// <summary>
         /// An enumeration for the position of the legend
         /// </summary>
+        /// <remarks>
+        /// fixme - we should support all valid OxyPlot legend position types.
+        /// </remarks>
         public enum LegendPositionType
         {
             /// <summary>
@@ -89,13 +93,14 @@ namespace Models.Graph
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
         /// <param name="storage">Storage service</param>
-        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage)
+        /// <param name="simulationFilter">(Optional) Simulation name filter.</param>
+        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage, List<string> simulationFilter = null)
         {
             EnsureAllAxesExist();
 
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)).Where(g => g.Enabled))
-                series.GetSeriesToPutOnGraph(storage, definitions);
+                series.GetSeriesToPutOnGraph(storage, definitions, simulationFilter);
 
             return definitions;
         }

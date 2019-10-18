@@ -146,7 +146,7 @@
             Assert.AreEqual(som.Carbon, new double[] { 1.04, 0.89, 0.89, 0.89 });
             Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01});
 
-            Analysis a = s.Children[5] as Analysis;
+            Chemical a = s.Children[5] as Chemical;
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(a.NO3N, new double[] { 6.5, 2.1, 2.1, 1.0 });
             Assert.AreEqual(a.NH4N, new double[] { 0.5, 0.1, 0.1, 0.2 });

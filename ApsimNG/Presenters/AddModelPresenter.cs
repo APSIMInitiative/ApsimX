@@ -69,9 +69,8 @@
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 try
                 {
-                    object child = Activator.CreateInstance(selectedModelType, true);
-                    string childString = FileFormat.WriteToString(child as IModel);
-                    explorerPresenter.Add(childString, Apsim.FullPath(this.model));
+                    IModel child = (IModel)Activator.CreateInstance(selectedModelType, true);
+                    explorerPresenter.Add(child, Apsim.FullPath(this.model));
                 }
                 finally
                 {

@@ -10,7 +10,8 @@
     public class JobManager : IJobManager
     {
         private Queue<IRunnable> jobs = new Queue<IRunnable>();
-        private int numJobsToRun;
+        /// <summary> number of jobs </summary>
+        protected int numJobsToRun;
         private bool initialised;
 
         /// <summary>Invoked when this job manager has finished everything.</summary>
@@ -48,8 +49,10 @@
             PostRun(args);
             Interlocked.Decrement(ref numJobsToRun);
             if (numJobsToRun == 0)
+            {
                 PostAllRuns();
-            Completed?.Invoke(this, new EventArgs());
+                Completed?.Invoke(this, new EventArgs());
+            }
         }
 
         /// <summary>Called once to do initialisation before any jobs are run. Should throw on error.</summary>

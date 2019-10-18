@@ -16,7 +16,7 @@
         public static void Standardise(Soil soil)
         {
             var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
-            var analysisNode = Apsim.Child(soil, typeof(Analysis)) as Analysis;
+            var analysisNode = Apsim.Child(soil, typeof(Chemical)) as Chemical;
             var layerStructure = Apsim.Child(soil, typeof(LayerStructure)) as LayerStructure;
 
             // Determine the target layer structure.
@@ -67,7 +67,12 @@
                 soil.SAT = MapConcentration(soil.SAT, soil.Thickness, toThickness, MathUtilities.LastValue(soil.SAT));
                 soil.KS = MapConcentration(soil.KS, soil.Thickness, toThickness, MathUtilities.LastValue(soil.KS));
                 soil.Thickness = toThickness;
-
+                if (water != null)
+                    if (water.ParticleSizeClay != null && water.ParticleSizeClay.Length == water.Thickness.Length)
+                        water.ParticleSizeClay = MapConcentration(water.ParticleSizeClay, water.Thickness, toThickness, MathUtilities.LastValue(water.ParticleSizeClay));
+                    else
+                        water.ParticleSizeClay = null;
+                
                 if (needToConstrainCropLL)
                 {
                     foreach (var crop in soil.Crops)
@@ -132,7 +137,7 @@
         /// <summary>Sets the analysis thickness.</summary>
         /// <param name="analysis">The analysis.</param>
         /// <param name="thickness">The thickness to change the analysis to.</param>
-        private static void SetAnalysisThickness(Analysis analysis, double[] thickness)
+        private static void SetAnalysisThickness(Chemical analysis, double[] thickness)
         {
             if (analysis != null && !MathUtilities.AreEqual(thickness, analysis.Thickness))
             {
@@ -142,35 +147,10 @@
                 analysis.NO3N = MapConcentration(analysis.NO3N, analysis.Thickness, thickness, 1.0);
                 analysis.NH4N = MapConcentration(analysis.NH4N, analysis.Thickness, thickness, 0.2);
                 analysis.CL = MapConcentration(analysis.CL, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.CL));
-                analysis.CLMetadata = metadata;
                 analysis.EC = MapConcentration(analysis.EC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.EC));
-                analysis.ECMetadata = metadata;
                 analysis.ESP = MapConcentration(analysis.ESP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ESP));
-                analysis.ESPMetadata = metadata;
-                if (analysis.ParticleSizeClay != null && analysis.ParticleSizeClay.Length == analysis.Thickness.Length)
-                {
-                    analysis.ParticleSizeClay = MapConcentration(analysis.ParticleSizeClay, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeClay));
-                    analysis.ParticleSizeClayMetadata = metadata;
-                }
-                else
-                    analysis.ParticleSizeClay = null;
-                if (analysis.ParticleSizeSand != null && analysis.ParticleSizeSand.Length == analysis.Thickness.Length)
-                {
-                    analysis.ParticleSizeSand = MapConcentration(analysis.ParticleSizeSand, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeSand));
-                    analysis.ParticleSizeSandMetadata = metadata;
-                }
-                else
-                    analysis.ParticleSizeSand = null;
-                if (analysis.ParticleSizeSilt != null && analysis.ParticleSizeSilt.Length == analysis.Thickness.Length)
-                {
-                    analysis.ParticleSizeSilt = MapConcentration(analysis.ParticleSizeSilt, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ParticleSizeSilt));
-                    analysis.ParticleSizeSiltMetadata = metadata;
-                }
-                else
-                    analysis.ParticleSizeSilt = null;
 
                 analysis.PH = MapConcentration(analysis.PH, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.PH));
-                analysis.PHMetadata = metadata;
                 analysis.Thickness = thickness;
             }
         }
