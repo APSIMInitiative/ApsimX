@@ -160,7 +160,7 @@ namespace UserInterface.Presenters
                     // thread, and certain parts running on the worker thread. In such an
                     // implementation, large chunks of functionality would need to be moved
                     // into the view and the synchronisation would be a nightmare.
-                    if (panel.SameAxes)
+                    if (panel.SameXAxes || panel.SameYAxes)
                     {
                         presenter.MainPresenter.ShowWaitCursor(true);
                         StandardiseAxes();
@@ -196,6 +196,12 @@ namespace UserInterface.Presenters
                 Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
                 graph.Parent = panel;
                 Apsim.ParentAllChildren(graph);
+
+                if (panel.LegendOutsideGraph)
+                    graph.LegendOutsideGraph = true;
+
+                if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
+                    graph.LegendOrientation = (Graph.LegendOrientationType)Enum.Parse(typeof(Graph.LegendOrientationType), panel.LegendOrientation.ToString());
 
                 if (graph != null && graph.Enabled)
                 {
@@ -256,9 +262,19 @@ namespace UserInterface.Presenters
                 graphPresenter.DrawGraph(series);
 
                 Axis[] axes = graphView.Axes.ToArray(); // This should always be length 2
+                Axis[] xAxes = axes.Where(a => a.Type == Axis.AxisType.Bottom || a.Type == Axis.AxisType.Top).ToArray();
+                Axis[] yAxes = axes.Where(a => a.Type == Axis.AxisType.Left|| a.Type == Axis.AxisType.Right).ToArray();
+
                 foreach (GraphTab tab in graphs)
+                {
                     if (tab.Graphs[i].View != null)
-                        FormatAxes(tab.Graphs[i].View, axes);
+                    {
+                        if (panel.SameXAxes)
+                            FormatAxes(tab.Graphs[i].View, xAxes);
+                        if (panel.SameYAxes)
+                            FormatAxes(tab.Graphs[i].View, yAxes);
+                    }
+                }
             }
         }
 

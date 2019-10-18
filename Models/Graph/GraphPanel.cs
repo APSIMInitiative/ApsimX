@@ -28,6 +28,11 @@ namespace Models.Graph
         /// When set to anything other than default, changes the legend
         /// position of all child graphs.
         /// </summary>
+        /// <remarks>
+        /// This is basically a duplicate of Graph.LegendPositionType, but the
+        /// key difference is that this enum has an extra value - default which
+        /// tells the UI to respect each graph's individual legend position.
+        /// </remarks>
         public enum LegendPositionType
         {
             /// <summary>
@@ -54,7 +59,55 @@ namespace Models.Graph
             /// Bottom Right
             /// </summary>
             BottomRight,
+
+            /// <summary>
+            /// Left-middle
+            /// </summary>
+            LeftMiddle,
+
+            /// <summary>
+            /// Right-middle
+            /// </summary>
+            RightMiddle,
+
+            /// <summary>
+            /// Top of the graph, in the middle
+            /// </summary>
+            TopCenter,
+
+            /// <summary>
+            /// Bottom of the graph, in the middle
+            /// </summary>
+            BottomCenter
         };
+
+        /// <summary>
+        /// When set to anything other than default, changes the legend
+        /// orientation of all child graphs.
+        /// </summary>
+        /// <remarks>
+        /// This is basically a duplicate of Graph.LegendPositionType, but the
+        /// key difference is that this enum has an extra value - default, which
+        /// tells the UI to respect each graph's individual legend position.
+        /// </remarks>
+        public enum LegendOrientationType
+        {
+            /// <summary>
+            /// Default legend orientation - respect each graph's
+            /// individual settings.
+            /// </summary>
+            Default,
+
+            /// <summary>
+            /// Forces all graphs to use vertical legend orientation.
+            /// </summary>
+            Vertical,
+
+            /// <summary>
+            /// Forces all graphs to use horizontal legend orientation.
+            /// </summary>
+            Horizontal
+        }
 
         /// <summary>
         /// Called when the model is deserialised.
@@ -81,22 +134,43 @@ namespace Models.Graph
         }
 
         /// <summary>
-        /// Use same axes scales for all graphs?
+        /// Use same x-axis scales for all graphs?
         /// </summary>
-        [Description("Use same axes scales in all tabs?")]
-        public bool SameAxes { get; set; }
+        [Separator("Axis settings")]
+        [Description("Use same x-axis scales in all tabs?")]
+        public bool SameXAxes { get; set; }
 
         /// <summary>
-        /// Number of columns in page of graphs.
+        /// Use same y-axis scales for all graphs?
         /// </summary>
-        [Description("Number of columns of graphs per tab")]
-        public int NumCols { get; set; } = 2;
+        [Description("Use same y-axis scales in all tabs?")]
+        public bool SameYAxes { get; set; }
+
+        /// <summary>
+        /// Move legends outside graph area?
+        /// </summary>
+        [Separator("Legend settings")]
+        [Description("Move legends outside graph area?")]
+        public bool LegendOutsideGraph { get; set; }
 
         /// <summary>
         /// Graph legend position. Applies to all graphs.
         /// </summary>
         [Description("Graph legend position. Applies to all graphs. Set to Default to make graphs individually customisable.")]
         public LegendPositionType LegendPosition { get; set; } = LegendPositionType.Default;
+
+        /// <summary>
+        /// Graph legend orientation. Applies to all graphs.
+        /// </summary>
+        [Description("Graph legend orientation. Applies to all graphs. Set to default to make graphs individually customisable.")]
+        public LegendOrientationType LegendOrientation { get; set; } = LegendOrientationType.Default;
+
+        /// <summary>
+        /// Number of columns in page of graphs.
+        /// </summary>
+        [Separator("Panel settings")]
+        [Description("Number of columns of graphs per tab")]
+        public int NumCols { get; set; } = 2;
 
         /// <summary>
         /// Script which controls tab generation.
