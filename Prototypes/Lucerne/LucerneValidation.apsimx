@@ -2255,7 +2255,7 @@
                                           ],
                                           "Y": [
                                             49.0,
-                                            34.0
+                                            35.0
                                           ],
                                           "Name": "XYPairs",
                                           "Children": [],
@@ -2324,8 +2324,8 @@
                                         16.0
                                       ],
                                       "Y": [
-                                        61.0,
-                                        61.0
+                                        69.0,
+                                        69.0
                                       ],
                                       "Name": "XYPairs",
                                       "Children": [],
@@ -22824,7 +22824,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2017-02-28",
+                                  "Date": "2017-02-27",
                                   "Action": " [Mower].Script.Cut();",
                                   "Enabled": true
                                 },
@@ -22950,7 +22950,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2019-03-12",
+                                  "Date": "2019-03-11",
                                   "Action": " [Mower].Script.Cut();",
                                   "Enabled": true
                                 },
@@ -71526,11 +71526,7 @@
                   "LegendPosition": 1,
                   "DisabledSeries": [
                     "BalcarceGermanRestMarchFDFD6",
-                    "BalcarceGermanRestMayFDFD6",
-                    "BalcarceGermanRestFebFDFD10",
-                    "BalcarceGermanRestMarchFDFD10",
-                    "BalcarceGermanRestMayFDFD10",
-                    "BalcarceGermanRestNeverFDFD10"
+                    "BalcarceGermanRestMayFDFD6"
                   ],
                   "Name": "NodeNumber",
                   "Children": [
