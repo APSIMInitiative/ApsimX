@@ -8,7 +8,7 @@ getPackage <- function(pkg, pkgpath) {
         if (!dir.exists(pkgpath)) {
             dir.create(pkgpath)
         }
-        install.packages(pkg, repos = "https://cran.csiro.au/", lib = pkgpath)
+        install.packages(pkg, repos = "https://cran.csiro.au/", lib = pkgpath,dependencies = TRUE)
 	} else {
 		print(paste('Package', pkg, 'is already installed.'))
 	}
