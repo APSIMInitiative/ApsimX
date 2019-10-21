@@ -763,6 +763,7 @@
     <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\G_Range.png" />
     <EmbeddedResource Include="Resources\RadInt.jpg" />
+    <EmbeddedResource Include="Resources\SyntaxHighlighting\Report.xml" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
