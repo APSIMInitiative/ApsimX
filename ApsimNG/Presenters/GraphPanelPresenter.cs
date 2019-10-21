@@ -180,8 +180,13 @@ namespace UserInterface.Presenters
         {
             if (graphs != null)
                 foreach (GraphTab tab in graphs)
+                {
                     foreach (GraphPresenter graphPresenter in tab.Graphs.Select(g => g.Presenter))
                         graphPresenter?.Detach();
+
+                    foreach (GraphView graphView in tab.Graphs.Select(g => g.View))
+                        graphView?.Clear();
+                }
 
             graphs.Clear();
             view.RemoveGraphTabs();
