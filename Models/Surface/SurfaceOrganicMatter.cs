@@ -49,6 +49,11 @@
         /// <summary>The surf om</summary>
         private List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();
 
+        /// <summary>
+        /// List of residue layers dimensions that are passed to microclimate for arbitrating interception of radiation and rainfall
+        /// </summary>
+        public List<ICanopy> ResidueLayers { get; set; } = new List<ICanopy>();
+
         /// <summary>The number surfom</summary>
         private int numSurfom = 0;
 
@@ -114,6 +119,8 @@
 
         /// <summary>extinction coefficient for standing residues</summary>
         private double standingExtinctCoeff = 0.5;
+
+        //private double lyingExtinctionCoeff = 1.0;
 
         /// <summary>fraction of incoming faeces to add</summary>
         private double fractionFaecesAdded = 0.5;
@@ -431,6 +438,15 @@
             actualSOMDecomp = SoilNitrogen.CalculateActualSOMDecomp();
             if (actualSOMDecomp != null)
                 DecomposeSurfom(actualSOMDecomp);
+
+            ResidueLayers = new List<ICanopy>();
+            foreach (SurfOrganicMatterType pool in SurfOM)
+            {
+                if (pool.CanopyLying.CoverTotal > 0)
+                    ResidueLayers.Add(pool.CanopyLying);
+                if (pool.CanopyStanding.CoverTotal > 0)
+                    ResidueLayers.Add(pool.CanopyStanding);
+            }
         }
 
         /// <summary>
@@ -960,11 +976,28 @@
         {
             double areaLying = 0;
             double areaStanding = 0;
+            double amountLying = 0;
+            double amountStanding = 0;
             for (int i = 0; i < maxFr; i++)
             {
                 areaLying += SurfOM[SOMindex].Lying[i].amount * specific_area[SOMindex];
+                amountLying += SurfOM[SOMindex].Lying[i].amount;
                 areaStanding += SurfOM[SOMindex].Standing[i].amount * specific_area[SOMindex];
+                amountStanding += SurfOM[SOMindex].Standing[i].amount;
             }
+
+            //Very Important Note,  #FixMe,  The following variables have been programmed to get the plumbing working so microclimate deals with 
+            //interception of radiation and precipitation from residues but have been set to 0 to reproduce existing behaviour until such time
+            //that models can be parameterised to include redisue interception accurately
+            SurfOM[SOMindex].CanopyLying.LAITotal = 0;//= areaLying;
+            SurfOM[SOMindex].CanopyStanding.LAITotal = 0;//= areaStanding;
+            SurfOM[SOMindex].CanopyLying.CoverTotal = 0;//= 1 - Math.Exp(-lyingExtinctionCoeff * areaLying);
+            SurfOM[SOMindex].CanopyStanding.CoverTotal = 0;//= 1 - Math.Exp(-standingExtinctCoeff * areaStanding);
+            SurfOM[SOMindex].CanopyLying.Height = 0;//= 50; //Assuming lying layers are 5 cm deep
+            SurfOM[SOMindex].CanopyStanding.Height = 0;//= 700; //Fixme this should come from the crops height
+            SurfOM[SOMindex].CanopyLying.Depth = 0;//= SurfOM[SOMindex].CanopyLying.Height;
+            SurfOM[SOMindex].CanopyStanding.Depth = 0;//= SurfOM[SOMindex].CanopyStanding.Height;
+
             double F_Cover = AddCover(1.0 - (double)Math.Exp(-areaLying), 1.0 - (double)Math.Exp(-(standingExtinctCoeff) * areaStanding));
             return MathUtilities.Bound(F_Cover, 0.0, 1.0);
         }
