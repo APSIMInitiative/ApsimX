@@ -267,16 +267,17 @@
                 VariableNames = new string[0],
                 EventNames = new string[0]
             };
+            var storage = new MockStorage();
             Utilities.InjectLink(report, "simulation", sim);
             Utilities.InjectLink(report, "locator", new MockLocator());
-            Utilities.InjectLink(report, "storage", new MockStorage());
+            Utilities.InjectLink(report, "storage", storage);
             Utilities.InjectLink(report, "clock", new MockClock());
 
             var events = new Events(report);
             events.Publish("StartOfSimulation", new object[] { report, new EventArgs() });
 
-            Assert.AreEqual(MockStorage.tables[0].TableName, "_Factors");
-            Assert.AreEqual(Utilities.TableToString(MockStorage.tables[0]),
+            Assert.AreEqual(storage.tables[0].TableName, "_Factors");
+            Assert.AreEqual(Utilities.TableToString(storage.tables[0]),
                "ExperimentName,SimulationName,FolderName,FactorName,FactorValue\r\n" +
                "          exp1,          sim1,         F,  Cultivar,      cult1\r\n" +
                "          exp1,          sim1,         F,         N,          0\r\n");

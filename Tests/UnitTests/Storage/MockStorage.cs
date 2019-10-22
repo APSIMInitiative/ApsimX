@@ -12,7 +12,7 @@ namespace UnitTests.Storage
         internal List<string> columnNames = new List<string>();
         internal List<Row> rows = new List<Row>();
 
-        internal static List<DataTable> tables = new List<DataTable>();
+        internal List<DataTable> tables = new List<DataTable>();
 
         public string[] SimulationNames
         {
