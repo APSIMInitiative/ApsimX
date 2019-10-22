@@ -96,11 +96,12 @@ namespace UserInterface.Presenters
                 ".folder {color:#666666; font-style: italic; font-size:1.1em; }" +
                 ".cropmixedlabel {color:#666666; font-style: italic; font-size:1.1em; padding: 5px 0px 10px 0px; }" +
                 ".croprotationlabel {color:#666666; font-style: italic; font-size:1.1em; padding: 5px 0px 10px 0px; }" +
-                ".cropmixedborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:1px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px; }" +
-                ".croprotationborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:2px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px; }" +
+                ".cropmixedborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:1px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px;margin-top:10px; }" +
+                ".croprotationborder {border-color:#86b2b1; background-color:[CropRotationBack] !important; border-width:2px; border-style:solid; padding:0px 10px 0px 10px; margin-bottom:5px;margin-top:10px; }" +
                 ".labourgroupsborder {border-color:[LabourGroupBorder]; background-color:[LabourGroupBack] !important; border-width:1px; border-style:solid; padding:10px; margin-bottom:5px; margin-top:5px;}" +
                 ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
-                ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold }" +
+                ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
+                ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:5px; margin:10px 0px 5px 0px; border-radius:5px; }" +
                 ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
                 ".filtererror {float: left; border-color:red; background-color:red !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
