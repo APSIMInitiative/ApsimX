@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.VisualBasic;
     using Models.Core;
     using Models.Core.Interfaces;
     using System;
@@ -298,7 +299,11 @@
 
                 SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
 
-                CSharpCompilation compilation = CSharpCompilation.Create(
+                bool VB = code.IndexOf("Imports System") != -1;
+                Compilation compilation;
+                if (VB)
+                {
+                    compilation = VisualBasicCompilation.Create(
                     Path.GetFileNameWithoutExtension(assemblyFileName),
                     new[] { syntaxTree },
                     new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
@@ -310,10 +315,30 @@
                             MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
                             MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
                             MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
-                            MetadataReference.CreateFromFile(typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location),
+                            MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
                             MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location)
                      },
-                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+                    new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+                }
+                else
+                {
+                    compilation = CSharpCompilation.Create(
+                        Path.GetFileNameWithoutExtension(assemblyFileName),
+                        new[] { syntaxTree },
+                        new[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "mscorlib.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Runtime.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Core.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
+                            MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
+                            MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
+                            MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location)
+                         },
+                        new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
+                }
 
                 MemoryStream ms = new MemoryStream();
                 MemoryStream pdbStream = new MemoryStream();
@@ -326,81 +351,6 @@
                     ms.Seek(0, SeekOrigin.Begin);
                     return System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms);
                 }
-
-
-
-
-                bool VB = code.IndexOf("Imports System") != -1;
-                string Language;
-                if (VB)
-                    Language = CodeDomProvider.GetLanguageFromExtension(".vb");
-                else
-                    Language = CodeDomProvider.GetLanguageFromExtension(".cs");
-
-                if (Language != null && CodeDomProvider.IsDefinedLanguage(Language))
-                {
-                    CodeDomProvider Provider = CodeDomProvider.CreateProvider(Language);
-                    if (Provider != null)
-                    {
-                        CompilerParameters Params = new CompilerParameters();
-
-                        string[] source = new string[1];
-                        if (assemblyFileName == null)
-                        {
-                            Params.GenerateInMemory = true;
-                            source[0] = code;
-                        }
-                        else
-                        {
-                            Params.GenerateInMemory = false;
-                            Params.OutputAssembly = assemblyFileName;
-                            string sourceFileName;
-                            if (VB)
-                                sourceFileName = Path.ChangeExtension(assemblyFileName, ".vb");
-                            else
-                                sourceFileName = Path.ChangeExtension(assemblyFileName, ".cs");
-                            File.WriteAllText(sourceFileName, code);
-                            source[0] = sourceFileName;
-                        }
-                        Params.TreatWarningsAsErrors = false;
-                        Params.IncludeDebugInformation = true;
-                        Params.WarningLevel = 2;
-                        Params.ReferencedAssemblies.Add("System.dll");
-                        Params.ReferencedAssemblies.Add("System.Runtime.dll");
-                        Params.ReferencedAssemblies.Add("System.Xml.dll");
-                        Params.ReferencedAssemblies.Add("System.Windows.Forms.dll");
-                        Params.ReferencedAssemblies.Add("System.Data.dll");
-                        Params.ReferencedAssemblies.Add("System.Core.dll");
-                        Params.ReferencedAssemblies.Add(typeof(MathNet.Numerics.Fit).Assembly.Location); // MathNet.Numerics
-                        Params.ReferencedAssemblies.Add(typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location); // APSIM.Shared.dll
-                        Params.ReferencedAssemblies.Add(typeof(IModel).Assembly.Location); // Models.exe
-                        Params.ReferencedAssemblies.AddRange(referencedAssemblies);
-
-                        if (!Params.ReferencedAssemblies.Contains(Assembly.GetCallingAssembly().Location))
-                            Params.ReferencedAssemblies.Add(Assembly.GetCallingAssembly().Location);
-                        Params.TempFiles = new TempFileCollection(Path.GetTempPath());  // ensure that any temp files are in a writeable area
-                        Params.TempFiles.KeepFiles = false;
-                        CompilerResults results;
-                        if (assemblyFileName == null)
-                            results = Provider.CompileAssemblyFromSource(Params, source);
-                        else
-                            results = Provider.CompileAssemblyFromFile(Params, source);
-                        string Errors = "";
-                        foreach (CompilerError err in results.Errors)
-                        {
-                            if (Errors != "")
-                                Errors += "\r\n";
-
-                            Errors += err.ErrorText + ". Line number: " + err.Line.ToString();
-                        }
-                        if (Errors != "")
-                            throw new Exception(Errors);
-
-                        AssemblyCache.Add(code, results.CompiledAssembly);
-                        return results.CompiledAssembly;
-                    }
-                }
-                throw new Exception("Cannot compile manager script to an assembly");
             }
         }
     }
