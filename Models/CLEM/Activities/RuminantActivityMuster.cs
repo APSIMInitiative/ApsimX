@@ -78,7 +78,6 @@ namespace Models.CLEM.Activities
                 if(ind.Location != pastureName)
                 {
                     this.Status = ActivityStatus.Success;
-                    //this.SetStatusSuccess();
                 }
 
                 ind.Location = pastureName;
