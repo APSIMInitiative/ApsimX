@@ -160,6 +160,9 @@
             events.Subscribe("[Clock].DoReportCalculations", OnDoReportCalculations);
             events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
 
+            if (from == null || string.IsNullOrEmpty(from.ToString()))
+                throw new Exception("No 'from' clause was specified in temporal aggregation");
+
             if (DateTime.TryParse(from.ToString(), out DateTime date))
             {
                 // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
@@ -174,7 +177,11 @@
             {
                 // Assume the string is an event name.
                 events.Subscribe(from.ToString(), OnFromEvent);
+                inCaptureWindow = true;
             }
+
+            if (to == null || string.IsNullOrEmpty(to.ToString()))
+                throw new Exception("No 'to' clause was specified in temporal aggregation");
 
             if (DateTime.TryParse(to.ToString(), out date))
             {
