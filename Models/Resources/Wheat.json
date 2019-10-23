@@ -7103,7 +7103,7 @@
               ],
               "Name": "Alberic",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7118,7 +7118,7 @@
               ],
               "Name": "Amarok",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7131,7 +7131,7 @@
               ],
               "Name": "Aspiring",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7143,11 +7143,12 @@
                 "[Phenology].PpSensitivity.FixedValue = 5",
                 "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                "[Leaf].ExtinctionCoeff.FixedValue = 0.7"
+                "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
               ],
               "Name": "BattenWinter",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7159,11 +7160,12 @@
                 "[Phenology].PpSensitivity.FixedValue = 5",
                 "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                "[Leaf].ExtinctionCoeff.FixedValue = 0.7"
+                "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
               ],
               "Name": "BattenSpring",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7176,7 +7178,7 @@
               ],
               "Name": "Centaur",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7191,7 +7193,7 @@
               ],
               "Name": "Claire",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7205,7 +7207,7 @@
               ],
               "Name": "Conquest",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7218,23 +7220,29 @@
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80",
                 "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1600",
                 "[Grain].MaximumPotentialGrainSize.FixedValue = 0.051",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 25",
-                "[Leaf].ExtinctionCoeff.FixedValue = 0.5",
-                "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20"
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 35",
+                "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.5",
+                "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,4,7,12,20",
+                "[Grain].MaximumNConc.FixedValue = 0.025",
+                "[Grain].MaxNConcDailyGrowth.FixedValue = 0.025",
+                "[Leaf].ExtinctionCoeff.DevelopmentFactor.XYPairs.Y = 1,1,1.4",
+                "[Leaf].CohortParameters.MinimumNConc.XYPairs.Y = 0.01,0.008,0.008",
+                "[Stem].MinimumNConc.FixedValue = 0.006",
+                "[Spike].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.05"
               ],
               "Name": "Discovery",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This is a spring wheat with a high grain number and later tillering\r\n",
+                  "Text": "This is a spring wheat with a high grain number and later tillering\n",
                   "Name": "Memo",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7247,7 +7255,7 @@
               ],
               "Name": "Einstein",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7260,7 +7268,7 @@
               ],
               "Name": "Exceed",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7273,7 +7281,7 @@
               ],
               "Name": "Majestic",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7286,7 +7294,7 @@
               ],
               "Name": "Option",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7301,7 +7309,7 @@
               ],
               "Name": "Otane",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7314,7 +7322,7 @@
               ],
               "Name": "Pennant",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7327,7 +7335,7 @@
               ],
               "Name": "Regency",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7340,7 +7348,7 @@
               ],
               "Name": "Richmond",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7353,7 +7361,7 @@
               ],
               "Name": "Robigus",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7368,7 +7376,7 @@
               ],
               "Name": "Rongotea",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7381,7 +7389,7 @@
               ],
               "Name": "Rubric",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7394,7 +7402,7 @@
               ],
               "Name": "Sage",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7407,7 +7415,7 @@
               ],
               "Name": "Saracen",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7420,7 +7428,7 @@
               ],
               "Name": "Savannah",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7433,7 +7441,7 @@
               ],
               "Name": "Solstice",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7446,7 +7454,7 @@
               ],
               "Name": "Tanker",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7459,7 +7467,7 @@
               ],
               "Name": "Tribute",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7473,13 +7481,14 @@
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
                 "[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.X = 0,1,8",
                 "[Phenology].DailyVernalisation.TempResponseProfile.XYPairs.Y = 0,1.204,0",
-                "[Leaf].ExtinctionCoeff.FixedValue = 0.7",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
+                "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.035",
                 "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000"
               ],
               "Name": "Wakanui",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7492,12 +7501,12 @@
               ],
               "Name": "Weston",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -7516,7 +7525,7 @@
               ],
               "Name": "Axe",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7530,7 +7539,7 @@
               ],
               "Name": "Bolac",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7548,7 +7557,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Anlace",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7556,7 +7565,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Arrivato",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7564,7 +7573,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Babbler",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7572,7 +7581,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Barham",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7580,7 +7589,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Baxter",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7588,7 +7597,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Bowie",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7596,7 +7605,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Buckley",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7604,7 +7613,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Buckly",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7612,7 +7621,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Burunga",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7620,7 +7629,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Camm",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7628,7 +7637,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Carinya",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7636,7 +7645,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "ChiefCLPlus",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7644,7 +7653,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "CLF_Janz",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7652,7 +7661,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Dagger",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7660,7 +7669,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "DBAAurora",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7668,7 +7677,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "ElmoreCLPlus",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7676,7 +7685,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Espada",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7684,7 +7693,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Frame",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7692,7 +7701,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Gazelle",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7700,7 +7709,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Halberd",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7708,7 +7717,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Hybrid_Meteor",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7716,7 +7725,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "JusticaCLPlus",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7724,7 +7733,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Preston",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7732,7 +7741,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Saphire",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7740,7 +7749,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Scout",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7748,7 +7757,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Stiletto",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7756,7 +7765,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Ventura",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7764,12 +7773,12 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Wallup",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7783,7 +7792,38 @@
               ],
               "Name": "Derrimut",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 1",
+                "[Phenology].PpSensitivity.FixedValue = 4",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+              ],
+              "Name": "EGAGregory",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Gregory",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Lancer",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7796,7 +7836,7 @@
               ],
               "Name": "GattonHartog",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7812,7 +7852,7 @@
               ],
               "Name": "Gamenya",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7830,7 +7870,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Braewood",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7838,7 +7878,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Chara",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7846,7 +7886,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Clearfield_stl",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7854,7 +7894,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Drysdale",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7862,7 +7902,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Envoy",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7870,7 +7910,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Estoc",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7878,7 +7918,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Giles",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7886,7 +7926,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Harper",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7894,7 +7934,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Krichauff",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7902,7 +7942,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Magenta",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7910,7 +7950,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Mitch",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7918,7 +7958,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Phantom",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7926,7 +7966,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Pugsley",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7934,7 +7974,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Sentinel",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7942,7 +7982,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Silverstar",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7950,7 +7990,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Suneca",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7958,7 +7998,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Sunlin",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7966,7 +8006,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Sunvale",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7974,7 +8014,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Trojan",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -7982,12 +8022,12 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Strzelecki",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8001,7 +8041,7 @@
               ],
               "Name": "Gladius",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8017,7 +8057,7 @@
               ],
               "Name": "Gutha",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8027,7 +8067,8 @@
                 "[Phenology].MinimumLeafNumber.FixedValue = 6",
                 "[Phenology].VrnSensitivity.FixedValue = 0",
                 "[Phenology].PpSensitivity.FixedValue = 4",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20"
               ],
               "Name": "H45",
               "Children": [
@@ -8035,7 +8076,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Saintly",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8043,7 +8084,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Tamarinrock",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8051,7 +8092,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Waagin",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8059,7 +8100,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Wollaroi",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8067,12 +8108,12 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Zippy",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8086,7 +8127,231 @@
               ],
               "Name": "H46",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 5",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041"
+              ],
+              "Name": "Hartog",
+              "Children": [
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Annuello",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Carnamah",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Catalina",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "CLF_Stiletto",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Cobra",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Corack",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Correll",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Diamondbird",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Gladius",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Goroke",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "GrenadeCLPlus",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Guardian",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Halbred",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Impala",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Justica",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Kord",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Merlin",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Mitre",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Peake",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Shield",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Spitfire",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Sunguard",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Sunstate",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Yallaroi",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Yawa",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Alias, Models",
+                  "Name": "Yitpi",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8104,7 +8369,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Agtscythe",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8112,7 +8377,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Arrino",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8120,7 +8385,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Bonnie_rock",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8128,7 +8393,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Bowerbird",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8136,7 +8401,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Condo",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8144,7 +8409,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Dart",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8152,7 +8417,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Dollarbird",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8160,7 +8425,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Emurock",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8168,7 +8433,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Hyperno",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8176,7 +8441,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "ImposeCLPlus",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8184,7 +8449,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Kalka",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8192,7 +8457,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Kirchauff",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8200,7 +8465,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Kukri",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8208,7 +8473,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Hunter",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8216,7 +8481,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "LRPBArrow",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8224,7 +8489,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Mace",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8232,7 +8497,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Ouyen",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8240,7 +8505,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Ruby",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8248,7 +8513,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Tamaroi",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8256,7 +8521,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Young",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8264,12 +8529,12 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Katana",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8283,7 +8548,7 @@
               ],
               "Name": "Janz",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8301,7 +8566,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Beaufort",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8309,7 +8574,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Calingiri",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8317,7 +8582,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Endure",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8325,7 +8590,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Forrest",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8333,7 +8598,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Scenario",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8341,12 +8606,12 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Zen",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8360,7 +8625,7 @@
               ],
               "Name": "Kennedy",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8374,7 +8639,7 @@
               ],
               "Name": "Lang",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8388,7 +8653,7 @@
               ],
               "Name": "Livingston",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8406,12 +8671,12 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Crusader",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8425,7 +8690,7 @@
               ],
               "Name": "Mace",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8444,7 +8709,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Adagio",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8452,7 +8717,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Brennan",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8460,7 +8725,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Declic",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8468,12 +8733,12 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Revenue",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8483,11 +8748,12 @@
                 "[Phenology].MinimumLeafNumber.FixedValue = 7",
                 "[Phenology].VrnSensitivity.FixedValue = 1",
                 "[Phenology].PpSensitivity.FixedValue = 4",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100"
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
               ],
               "Name": "Matong",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8501,7 +8767,7 @@
               ],
               "Name": "McCubbin",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8516,7 +8782,7 @@
               ],
               "Name": "Mercury",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8530,14 +8796,14 @@
               ],
               "Name": "Ruby",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                "[Phenology].MinimumLeafNumber.FixedValue = 7",
                 "[Phenology].VrnSensitivity.FixedValue = 0",
                 "[Phenology].PpSensitivity.FixedValue = 4",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
@@ -8545,7 +8811,7 @@
               ],
               "Name": "Spear",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8559,7 +8825,7 @@
               ],
               "Name": "Sunbri",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8578,7 +8844,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Advantage",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8586,7 +8852,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Bellaroi",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8594,7 +8860,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Caparoi",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8602,7 +8868,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Ellison",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8610,12 +8876,12 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Suntop",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8629,7 +8895,7 @@
               ],
               "Name": "Ventura",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8647,7 +8913,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Lorikeet",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8655,7 +8921,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Rosella",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8663,7 +8929,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Whistler",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8671,7 +8937,7 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Wylah",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8679,12 +8945,12 @@
                   "$type": "Models.Core.Alias, Models",
                   "Name": "Eaglehawk",
                   "Children": [],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8698,14 +8964,14 @@
               ],
               "Name": "Westonia",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 5",
+                "[Phenology].MinimumLeafNumber.FixedValue = 6",
                 "[Phenology].VrnSensitivity.FixedValue = 0",
                 "[Phenology].PpSensitivity.FixedValue = 4",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
@@ -8714,7 +8980,7 @@
               ],
               "Name": "Wilgoyne",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8728,7 +8994,7 @@
               ],
               "Name": "Wyalkatchem",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8744,7 +9010,7 @@
               ],
               "Name": "Yitpi",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8758,12 +9024,12 @@
               ],
               "Name": "Young",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -8775,22 +9041,25 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].MinimumLeafNumber.FixedValue = 7",
-                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].VrnSensitivity.FixedValue = 4",
                 "[Phenology].PpSensitivity.FixedValue = 4",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 15",
+                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 16",
                 "[Grain].MaximumPotentialGrainSize.FixedValue = 0.050",
                 "[Grain].MaximumNConc.FixedValue = 0.026",
-                "[Phenology].GrainFilling.Target.FixedValue = 800"
+                "[Phenology].GrainFilling.Target.FixedValue = 450",
+                "[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2",
+                "[Stem].DMDemands.Structural.StructuralFraction.VegetativeGrowth.Fraction.FixedValue = 0.6",
+                "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
               ],
               "Name": "Konya",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -8808,12 +9077,12 @@
               ],
               "Name": "Keyu13",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -8832,7 +9101,7 @@
               ],
               "Name": "Yecora",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8847,7 +9116,7 @@
               ],
               "Name": "Rex",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8862,7 +9131,7 @@
               ],
               "Name": "Nugaines",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8877,7 +9146,7 @@
               ],
               "Name": "Hyslop",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8892,12 +9161,12 @@
               ],
               "Name": "Stephens",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -8913,11 +9182,11 @@
                 "[Phenology].PpSensitivity.FixedValue = 3",
                 "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                "[Leaf].ExtinctionCoeff.FixedValue = 0.8"
+                "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
               ],
               "Name": "Dekan",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8929,11 +9198,11 @@
                 "[Phenology].PpSensitivity.FixedValue = 3",
                 "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                "[Leaf].ExtinctionCoeff.FixedValue = 0.8"
+                "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
               ],
               "Name": "Rosario",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -8945,16 +9214,30 @@
                 "[Phenology].PpSensitivity.FixedValue = 3",
                 "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
                 "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                "[Leaf].ExtinctionCoeff.FixedValue = 0.8"
+                "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.8"
               ],
               "Name": "Ararat",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Cultivar, Models",
+              "Command": [
+                "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                "[Phenology].VrnSensitivity.FixedValue = 0",
+                "[Phenology].PpSensitivity.FixedValue = 0",
+                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+              ],
+              "Name": "Tybalt",
+              "Children": [],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -8974,12 +9257,12 @@
               ],
               "Name": "HAR1685",
               "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -8997,290 +9280,7 @@
               ],
               "Name": "Gorgan",
               "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.CultivarFolder, Models",
-          "Name": "TraitMod",
-          "Children": [
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 5",
-                "[Phenology].PpSensitivity.FixedValue = 5",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 95",
-                "[Phenology].GrainFilling.Target.FixedValue = 740",
-                "",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.070"
-              ],
-              "Name": "EGAGregory20152",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 1.4",
-                "[Phenology].PpSensitivity.FixedValue = 2.8",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
-                "",
-                "[Phenology].GrainFilling.Target.FixedValue = 740",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
-                "",
-                "",
-                "[Grain].MinimumNConc.FixedValue = 0.001"
-              ],
-              "Name": "Hartog",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 1.7",
-                "[Phenology].PpSensitivity.FixedValue = 3.5",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 95",
-                "",
-                "[Phenology].GrainFilling.Target.FixedValue = 740",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30"
-              ],
-              "Name": "Hartog20152",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 4",
-                "[Phenology].PpSensitivity.FixedValue = 3.5",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 85",
-                "[Phenology].GrainFilling.Target.FixedValue = 740",
-                "",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "",
-                "[Grain].MinimumNConc.FixedValue = 0.001"
-              ],
-              "Name": "EGAGregory",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 2.5",
-                "[Phenology].PpSensitivity.FixedValue = 2",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Phenology].GrainFilling.Target.FixedValue = 700",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.060",
-                "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,1,2,3,5,8,0,0",
-                "[Leaf].InitialLeaves[1].Area = 100",
-                "[Structure].BranchingRate.StressFactors.CoverEffect.XYPairs.X = 0,0.05,0.1"
-              ],
-              "Name": "7770",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 2.5",
-                "[Phenology].PpSensitivity.FixedValue = 2",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Phenology].GrainFilling.Target.FixedValue = 700",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.060",
-                "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,1,1,1,0,0,0,0,0",
-                "[Leaf].InitialLeaves[1].Area = 100"
-              ],
-              "Name": "7770tin",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 2",
-                "[Phenology].PpSensitivity.FixedValue = 1.5",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Phenology].GrainFilling.Target.FixedValue = 900",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.060",
-                "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,1,1,2,1,0,0,0,0",
-                "[Leaf].InitialLeaves[1].Area = 100"
-              ],
-              "Name": "7770_2016",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 2",
-                "[Phenology].PpSensitivity.FixedValue = 1.5",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 80",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Phenology].GrainFilling.Target.FixedValue = 900",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.060",
-                "[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,1,1,1,0,0,0,0,0",
-                "[Leaf].InitialLeaves[1].Area = 100"
-              ],
-              "Name": "7770tin_2016",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 1.7",
-                "[Phenology].PpSensitivity.FixedValue = 3",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
-                "[Phenology].GrainFilling.Target.FixedValue = 900",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30"
-              ],
-              "Name": "Hartog2016",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 1.4",
-                "[Phenology].PpSensitivity.FixedValue = 2.6",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
-                "",
-                "[Phenology].GrainFilling.Target.FixedValue = 740",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
-                "",
-                "",
-                "[Grain].MinimumNConc.FixedValue = 0.001"
-              ],
-              "Name": "HartogGatton2010Standard",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 2",
-                "[Phenology].PpSensitivity.FixedValue = 4.1",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
-                "",
-                "[Phenology].GrainFilling.Target.FixedValue = 740",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
-                "",
-                "",
-                "[Grain].MinimumNConc.FixedValue = 0.001"
-              ],
-              "Name": "HartogHertimage2009",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 1.4",
-                "[Phenology].PpSensitivity.FixedValue = 3.7",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
-                "",
-                "[Phenology].GrainFilling.Target.FixedValue = 740",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
-                "",
-                "",
-                "[Grain].MinimumNConc.FixedValue = 0.001"
-              ],
-              "Name": "HartogHertimage2011",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 1.4",
-                "[Phenology].PpSensitivity.FixedValue = 3.7",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
-                "",
-                "[Phenology].GrainFilling.Target.FixedValue = 740",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
-                "",
-                "",
-                "[Grain].MinimumNConc.FixedValue = 0.001"
-              ],
-              "Name": "HartogGatton2010Late",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Cultivar, Models",
-              "Command": [
-                "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                "[Phenology].VrnSensitivity.FixedValue = 1.4",
-                "[Phenology].PpSensitivity.FixedValue = 4.2",
-                "[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
-                "",
-                "[Phenology].GrainFilling.Target.FixedValue = 740",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
-                "",
-                "",
-                "[Grain].MinimumNConc.FixedValue = 0.001"
-              ],
-              "Name": "HartogAPS6",
-              "Children": [],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
@@ -9290,7 +9290,7 @@
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": false,
+      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
