@@ -94,6 +94,10 @@ namespace Models
         /// <summary>The weather</summary>
         [Link]
         private IWeather weather = null;
+        
+        /// <summary>The surface organic matter model</summary>
+        [Link(IsOptional = true)]
+        private ISurfaceOrganicMatter residues = null;
 
         /// <summary>List of uptakes</summary>
         private List<ZoneMicroClimate> zoneMicroClimates = new List<ZoneMicroClimate>();
@@ -152,7 +156,10 @@ namespace Models
         {
             get
             {
-                return zoneMicroClimates.Max(m => m.Canopies.Max(c => c.Canopy.Height));
+                if (zoneMicroClimates.Sum(n => n.Canopies.Count) == 0)
+                    return 0;
+                else
+                    return zoneMicroClimates.Max(m => m.Canopies.Max(c => c.Canopy.Height));
             }
         }
 
@@ -306,9 +313,10 @@ namespace Models
         /// <summary>Called when simulation commences.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
         {
+            zoneMicroClimates.Clear();
             foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
                 CreateZoneMicroClimate(newZone);
             if (zoneMicroClimates.Count == 0)
@@ -325,8 +333,15 @@ namespace Models
             myZoneMC.zone = newZone;
             myZoneMC.Reset();
             foreach (ICanopy canopy in Apsim.ChildrenRecursively(newZone, typeof(ICanopy)))
-                myZoneMC.Canopies.Add(new CanopyType(canopy));
+                if (canopy.Height > 0)
+                    myZoneMC.Canopies.Add(new CanopyType(canopy));
+            if (residues != null)
+                foreach (ICanopy residue in residues.ResidueLayers)
+                {
+                    myZoneMC.Canopies.Add(new CanopyType(residue));
+                }
             zoneMicroClimates.Add(myZoneMC);
+
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
@@ -339,20 +354,19 @@ namespace Models
             dayLengthEvap = MathUtilities.DayLength(Clock.Today.DayOfYear, SunAngleNetPositiveRadiation, weather.Latitude);
             // VOS - a temporary kludge to get this running for high latitudes. MicroMet is due for a clean up soon so reconsider then.
             dayLengthEvap = Math.Max(dayLengthEvap, (dayLengthLight * 2.0 / 3.0));
-
-            if (zoneMicroClimates.Count == 2 && zoneMicroClimates[0].zone is Zones.RectangularZone && zoneMicroClimates[1].zone is Zones.RectangularZone)
+            if (zoneMicroClimates.Count == 2 && zoneMicroClimates[0].zone is Zones.RectangularZone 
+                && zoneMicroClimates[1].zone is Zones.RectangularZone && zoneMicroClimates[0].Canopies.Count > 0 && zoneMicroClimates[1].Canopies.Count > 0)
             {
                 // We are in a strip crop simulation
                 zoneMicroClimates[0].DoCanopyCompartments();
                 zoneMicroClimates[1].DoCanopyCompartments();
                 CalculateStripZoneShortWaveRadiation();
-
             }
             else // Normal 1D zones are to be used
                 foreach (ZoneMicroClimate ZoneMC in zoneMicroClimates)
                 {
                     ZoneMC.DoCanopyCompartments();
-                    CalculateLayeredShortWaveRadiation(ZoneMC);
+                    CalculateLayeredShortWaveRadiation(ZoneMC, weather.Radn);
                 }
 
             // Light distribution is now complete so calculate remaining micromet equations
@@ -409,13 +423,13 @@ namespace Models
                 shortest = zoneMicroClimates[0];
             }
 
-            if (tallest.Canopies.Count>1)
-                throw (new Exception("Strip crop light interception model must only have one canopy in zone called "+tallest.zone.Name));
-            if (shortest.Canopies.Count > 1)
-                throw (new Exception("Strip crop light interception model must only have one canopy in zone called " + shortest.zone.Name));
-            if (shortest.DeltaZ.Length > 1)
-                throw (new Exception("Strip crop light interception model must only have one canopy layer in zone called " + shortest.zone.Name));
-            if (tallest.DeltaZ.Length > 1)
+            bool TallestIsTree = false;
+            foreach (CanopyType c in tallest.Canopies)
+            {
+                if ((c.Canopy.Height - c.Canopy.Depth) > 0)
+                    TallestIsTree = true;
+            }
+            if (TallestIsTree)
                 doTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
             else
                 doStripCropShortWaveRadiation(ref tallest, ref shortest);
@@ -431,14 +445,34 @@ namespace Models
             if (MathUtilities.Sum(tree.DeltaZ) > 0)  // Don't perform calculations if layers are empty
             {
                 double Ht = MathUtilities.Sum(tree.DeltaZ);                // Height of tree canopy
-                double CDt = tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
+                double CDt = 0;//tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
+                foreach (CanopyType c in tree.Canopies)
+                    if (c.Canopy.Depth < c.Canopy.Height)
+                    {
+                        if (CDt > 0.0)
+                            throw new Exception("Can't have two tree canopies");
+                        else
+                        {
+                            CDt = c.Canopy.Depth/1000;
+                        }
+                    }
                 double CBHt = Ht - CDt;                                    // Base hight of the tree canopy
                 double Ha = MathUtilities.Sum(alley.DeltaZ);               // Height of alley canopy
                 if ((Ha > CBHt) & (tree.DeltaZ.Length > 1))
                     throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
                 double Wt = (tree.zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alley.zone as Zones.RectangularZone).Width;   // Width of alley zone
-                double CWt = Math.Min(tree.Canopies[0].Canopy.Width / 1000,(Wt + Wa));// Width of the tree canopy
+                double CWt = 0;//Math.Min(tree.Canopies[0].Canopy.Width / 1000, (Wt + Wa));// Width of the tree canopy
+                foreach (CanopyType c in tree.Canopies)
+                    if (c.Canopy.Depth < c.Canopy.Height)
+                    {
+                        if (CWt > 0.0)
+                            throw new Exception("Can't have two tree canopies");
+                        else
+                        {
+                            CWt = Math.Min(c.Canopy.Width / 1000,(Wt + Wa));
+                        }
+                    }
                 double WaOl = Math.Min(CWt - Wt, Wa);                         // Width of tree canopy that overlap the alley zone
                 double WaOp = Wa - WaOl;                                      // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                                  // Fraction of space in tree canopy
@@ -472,18 +506,14 @@ namespace Models
                 Ft = (Wt) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
                 Fs = (Wa) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
 
-                tree.Canopies[0].Rs[1] = weather.Radn * It / Ft;
-                tree.SurfaceRs = weather.Radn * St / Ft;
-
-                if (alley.Canopies[0].Rs != null)
-                    if (alley.Canopies[0].Rs.Length > 0)
-                        alley.Canopies[0].Rs[0] = weather.Radn * Ia / Fs;
-                alley.SurfaceRs = weather.Radn * Sa / Fs;
+                CalculateLayeredShortWaveRadiation(tree, weather.Radn * It / Ft);
+                
+                CalculateLayeredShortWaveRadiation(alley, weather.Radn * Ia / Fs);
             }
             else
             {
                 tree.SurfaceRs = weather.Radn;
-                alley.SurfaceRs = weather.Radn;
+                CalculateLayeredShortWaveRadiation(alley, weather.Radn);
             }
         }
 
@@ -526,13 +556,15 @@ namespace Models
                 if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
                     throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
 
-                tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
-                tallest.SurfaceRs = weather.Radn * Soilt / Ft;
+                //tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
+                //tallest.SurfaceRs = weather.Radn * Soilt / Ft;
+                CalculateLayeredShortWaveRadiation(tallest, weather.Radn * (Intttop + Inttbot) / Ft);
 
-                if (shortest.Canopies[0].Rs != null)
-                    if (shortest.Canopies[0].Rs.Length > 0)
-                        shortest.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
-                shortest.SurfaceRs = weather.Radn * Soils / Fs;
+               // if (shortest.Canopies[0].Rs != null)
+               //     if (shortest.Canopies[0].Rs.Length > 0)
+               //         shortest.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
+                //shortest.SurfaceRs = weather.Radn * Soils / Fs;
+                CalculateLayeredShortWaveRadiation(shortest, weather.Radn * Ints / Fs);
             }
             else
             {
@@ -599,7 +631,10 @@ namespace Models
 
             ISoilWater zonesoilwater = Apsim.Find(ZoneMC.zone, typeof(ISoilWater)) as ISoilWater;
             if (zonesoilwater != null)
+            {
                 zonesoilwater.PotentialInfiltration = Math.Max(0, weather.Rain - totalInterception);
+                zonesoilwater.PrecipitationInterception = totalInterception;
+            }
         }
 
         /// <summary>Calculate the Penman-Monteith water demand</summary>

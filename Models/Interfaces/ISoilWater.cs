@@ -67,6 +67,9 @@
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
         double PotentialInfiltration { get; set; }
+        
+        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
+        double PrecipitationInterception { get; set; }
 
         /// <summary>Sets the water table.</summary>
         /// <param name="InitialDepth">The initial depth.</param>

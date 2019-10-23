@@ -125,6 +125,8 @@
         /// <param name="table">The data to write.</param>
         public void WriteTable(DataTable table)
         {
+            if (table == null)
+                return;
             // NOTE: This can be called from many threads. Don't actually
             // write to the database on these threads. We have a single worker
             // thread to do that.
@@ -165,22 +167,31 @@
         {
             if (commandRunner != null)
             {
-                WaitForIdle();
+                try
+                {
+                    WaitForIdle();
 
-                WriteSimulationIDs();
-                WriteCheckpointIDs();
-                WriteAllUnits();
+                    WriteSimulationIDs();
+                    WriteCheckpointIDs();
+                    WriteAllUnits();
+                }
+                catch
+                {
+                    // Swallow exceptions
+                }
+                finally
+                {
+                    WaitForIdle();
 
-                WaitForIdle();
-
-                stopping = true;
-                commandRunner.Stop();
-                commandRunner = null;
-                commands.Clear();
-                simulationIDs.Clear();
-                checkpointIDs.Clear();
-                simulationNamesThatHaveBeenCleanedUp.Clear();
-                units.Clear();
+                    stopping = true;
+                    commandRunner.Stop();
+                    commandRunner = null;
+                    commands.Clear();
+                    simulationIDs.Clear();
+                    checkpointIDs.Clear();
+                    simulationNamesThatHaveBeenCleanedUp.Clear();
+                    units.Clear();
+                }
             }
         }
 

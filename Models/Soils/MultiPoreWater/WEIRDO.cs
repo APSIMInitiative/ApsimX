@@ -30,6 +30,8 @@ namespace Models.Soils
     public class WEIRDO : Model, ISoilWater
     {
         #region IsoilInterface
+        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
+        public double PrecipitationInterception { get; set; }
         ///<summary> This doesn't do anything currently</summary>
         [XmlIgnore]
         public double PotentialInfiltration { get; set; }

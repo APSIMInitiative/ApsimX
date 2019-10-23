@@ -209,6 +209,7 @@
     <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
+    <Compile Include="EventArguments\GridCellChangedArgs.cs" />
     <Compile Include="EventArguments\GridCellPasteArgs.cs" />
     <Compile Include="EventArguments\CopyEventArgs.cs" />
     <Compile Include="EventArguments\GridCellsChangedArgs.cs" />
@@ -219,8 +220,10 @@
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Interfaces\IGraphPanelView.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
     <Compile Include="Interfaces\IPropertyTreeView.cs" />
+    <Compile Include="Interfaces\ITernaryGraphView.cs" />
     <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
     <Compile Include="Presenters\CLEM\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMFileCropPresenter.cs" />
@@ -238,9 +241,14 @@
     <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
+    <Compile Include="Presenters\GraphPanelPresenter.cs" />
+    <Compile Include="Presenters\ProfileGridPresenter.cs" />
     <Compile Include="Presenters\PropertyAndTablePresenter.cs" />
+    <Compile Include="Utility\ApsimFileMetadata.cs" />
+    <Compile Include="Presenters\TernaryGraphPresenter.cs" />
     <Compile Include="Utility\Colour.cs" />
     <Compile Include="Presenters\CompositeFactorPresenter.cs" />
+    <Compile Include="Utility\ConfigurationConverter.cs" />
     <Compile Include="Utility\FindAllReferencesDialog.cs" />
     <Compile Include="Utility\WeatherDownloadDialog.cs" />
     <Compile Include="Views\CLEM\ActivityLedgerGridView.cs" />
@@ -255,12 +263,13 @@
     <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\FactorView.cs" />
+    <Compile Include="Views\GraphPanelView.cs" />
     <Compile Include="Views\HelpView.cs" />
     <Compile Include="Views\LabelView.cs" />
     <Compile Include="Views\ListView.cs" />
     <Compile Include="Views\MenuItemView.cs" />
     <Compile Include="Views\MethodCompletionView.cs" />
-    <Compile Include="Views\FormattedGridView.cs" />
+    <Compile Include="Views\TernaryGraphView.cs" />
     <Compile Include="Views\UpgradeView.cs" />
     <Compile Include="Classes\Grid\GridColumn.cs" />
     <Compile Include="Interfaces\IAxisView.cs" />
@@ -472,6 +481,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMarkForSale.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CommonLandFoodStoreType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Permutation.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\TransmutationCostUsePricing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourFeedGroup.png" />
@@ -751,6 +762,7 @@
     <EmbeddedResource Include="Resources\MenuImages\Settings.png" />
     <EmbeddedResource Include="Resources\LargeImages\WhiteClover.png" />
     <EmbeddedResource Include="Resources\RadInt.jpg" />
+    <EmbeddedResource Include="Resources\SyntaxHighlighting\Report.xml" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
@@ -1125,6 +1137,6 @@
   -->
   <Target Name="BeforeBuild">
     <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\lib ..\lib\ &gt;nul" />
+    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\Bin64\lib ..\lib\ &gt;nul" />
   </Target>
 </Project>

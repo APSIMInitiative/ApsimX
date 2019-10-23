@@ -188,14 +188,15 @@ namespace Models
         /// <summary>
         /// Calculates interception of short wave by canopy compartments
         /// </summary>
-        private void CalculateLayeredShortWaveRadiation(ZoneMicroClimate ZoneMC)
+        private void CalculateLayeredShortWaveRadiation(ZoneMicroClimate ZoneMC, double Rin)
         {
                 // Perform Top-Down Light Balance
                 // ==============================
-                double Rin = weather.Radn;
                 double Rint = 0;
                 for (int i = ZoneMC.numLayers - 1; i >= 0; i += -1)
                 {
+                    if (double.IsNaN(Rint))
+                    throw new Exception("Bad Radiation Value in Light partitioning");
                     Rint = Rin * (1.0 - Math.Exp(-ZoneMC.layerKtot[i] * ZoneMC.LAItotsum[i]));
                     for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
                         ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);

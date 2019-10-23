@@ -103,12 +103,14 @@ namespace UserInterface.Views
             ForegroundColour = Utility.Colour.ToOxy(foreground);
             if (!Utility.Configuration.Settings.DarkTheme)
                 BackColor = Utility.Colour.ToOxy(Color.White);
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             plot1.Model.MouseDown -= OnChartClick;
             plot1.Model.MouseUp -= OnChartMouseUp;
+            plot1.Model.MouseMove -= OnChartMouseMove;
             captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -233,6 +235,21 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get
+            {
+                return plot1.Model.LegendPlacement == LegendPlacement.Inside;
+            }
+            set
+            {
+                plot1.Model.LegendPlacement = value ? LegendPlacement.Inside : LegendPlacement.Outside;
+            }
+        }
+
+        /// <summary>
         /// Clear the graph of everything.
         /// </summary>
         public void Clear()
@@ -332,7 +349,7 @@ namespace UserInterface.Views
                 else
                     series.ToolTip = title;
 
-                if (colour == Color.Empty)
+                if (colour.ToArgb() == Color.Empty.ToArgb())
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
@@ -883,10 +900,15 @@ namespace UserInterface.Views
         /// <param name="text">Text of the title</param>
         public void FormatTitle(string text)
         {
-            this.plot1.Model.Title = text;
-            this.plot1.Model.TitleFont = Font;
-            this.plot1.Model.TitleFontSize = 30;
-            this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
+            if (string.IsNullOrWhiteSpace(text))
+                plot1.Model.Title = null;
+            else
+            {
+                this.plot1.Model.Title = text;
+                this.plot1.Model.TitleFont = Font;
+                this.plot1.Model.TitleFontSize = 30;
+                this.plot1.Model.TitleFontWeight = OxyPlot.FontWeights.Bold;
+            }
         }
 
         /// <summary>
@@ -1324,6 +1346,23 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Convert the OxyPlot.AxisPosition into an Axis.AxisType.
+        /// </summary>
+        /// <param name="type">The axis type</param>
+        /// <returns>The position of the axis.</returns>
+        private Models.Graph.Axis.AxisType AxisPositionToType(AxisPosition type)
+        {
+            if (type == AxisPosition.Bottom)
+                return Models.Graph.Axis.AxisType.Bottom;
+            else if (type == AxisPosition.Left)
+                return Models.Graph.Axis.AxisType.Left;
+            else if (type == AxisPosition.Top)
+                return Models.Graph.Axis.AxisType.Top;
+
+            return Models.Graph.Axis.AxisType.Right;
+        }
+
+        /// <summary>
         /// User has double clicked somewhere on a graph.
         /// </summary>
         /// <param name="sender">Event sender</param>
@@ -1413,6 +1452,30 @@ namespace UserInterface.Views
                 OnCaptionClick.Invoke(this, e);
         }
 
+        public Models.Graph.Axis[] Axes
+        {
+            get
+            {
+                List<Models.Graph.Axis> axes = new List<Models.Graph.Axis>();
+                foreach (var oxyAxis in plot1.Model.Axes)
+                {
+                    var axis = new Models.Graph.Axis();
+                    axis.CrossesAtZero = oxyAxis.PositionAtZeroCrossing;
+                    axis.DateTimeAxis = oxyAxis is DateTimeAxis;
+                    axis.Interval = oxyAxis.ActualMajorStep;
+                    axis.Inverted = MathUtilities.FloatsAreEqual(oxyAxis.StartPosition, 1);
+                    axis.Maximum = oxyAxis.ActualMaximum;
+                    axis.Minimum = oxyAxis.ActualMinimum;
+                    axis.Title = oxyAxis.Title;
+                    axis.Type = AxisPositionToType(oxyAxis.Position);
+
+                    axes.Add(axis);
+                }
+
+                return axes.ToArray();
+            }
+        }
+
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
@@ -1440,6 +1503,19 @@ namespace UserInterface.Views
             }
             else
                 return double.NaN;
+        }
+
+        /// <summary>
+        /// Gets the interval (major step) of the specified axis.
+        /// </summary>
+        public string AxisTitle(Models.Graph.Axis.AxisType axisType)
+        {
+            OxyPlot.Axes.Axis axis = GetAxis(axisType);
+
+            if (axis != null)
+                return axis.Title;
+
+            return string.Empty;
         }
 
         /// <summary>
