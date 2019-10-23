@@ -39,6 +39,8 @@
 
         public double Wind { get; set; }
 
+        public double DiffuseFraction { get; set; }
+
         public double CalculateDayLength(double Twilight)
         {
             throw new NotImplementedException();

@@ -136,7 +136,7 @@ namespace Models
         public double Amp { get {return 0;}}
 
         /// <summary>
-        /// Gets the diffuse fraction.
+        /// Gets the temperature amplitude.
         /// </summary>
         public double DiffuseFraction { get; set; }
 

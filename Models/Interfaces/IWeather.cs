@@ -59,6 +59,8 @@
         /// <summary>Gets the diffuse fraction.</summary>
         double DiffuseFraction { get; }
 
+        /// <summary>Gets the CO2.</summary>
+
         /// <summary>
         /// Gets the duration of the day in hours.
         /// </summary>
