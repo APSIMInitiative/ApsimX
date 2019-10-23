@@ -43,6 +43,11 @@ namespace UserInterface.Presenters
 
         public void RefreshSummary()
         {
+            this.genericView.SetContents(CreateHTML(), false, false);
+        }
+
+        public string CreateHTML() //void RefreshSummary()
+        {
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
                 "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
@@ -144,15 +149,12 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[LabourGroupBack]", "#FFFFFF");
                 htmlString = htmlString.Replace("[LabourGroupBorder]", "#996633");
 
-
                 // filters
                 htmlString = htmlString.Replace("[FiltContBack]", "#fbe8fc");
 
                 // values
                 htmlString = htmlString.Replace("[ValueSetBack]", "#e8fbfc");
                 htmlString = htmlString.Replace("[ValueSetFont]", "#000000");
-
-
             }
             else
             {
@@ -189,7 +191,6 @@ namespace UserInterface.Presenters
                 // values
                 htmlString = htmlString.Replace("[ValueSetBack]", "#49adc4");
                 htmlString = htmlString.Replace("[ValueSetFont]", "#0e2023");
-
             }
 
             if (model.GetType() == typeof(ZoneCLEM))
@@ -202,7 +203,7 @@ namespace UserInterface.Presenters
             }
             htmlString += "\n</body>\n</html>";
 
-            this.genericView.SetContents(htmlString, false, false);
+            return htmlString;
         }
 
         /// <summary>
