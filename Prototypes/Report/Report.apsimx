@@ -704,7 +704,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Inert",
                         "Location": "656, 254",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -712,7 +712,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "SurfaceResidue",
                         "Location": "566, 69",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -720,7 +720,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMLignin",
                         "Location": "261, 69",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -728,7 +728,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCellulose",
                         "Location": "397, 70",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -736,7 +736,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCarbohydrate",
                         "Location": "123, 70",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -744,7 +744,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Microbial",
                         "Location": "218, 299",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -752,7 +752,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Humic",
                         "Location": "458, 293",
-                        "Colour": "0, 158, 115",
+                        "Colour": "0, 114, 178",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -760,7 +760,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Urea",
                         "Location": "529, 419",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -768,7 +768,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NO3",
                         "Location": "185, 435",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -776,7 +776,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NH4",
                         "Location": "357, 422",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -792,7 +792,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNO3",
                         "Location": "688, 415",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -800,7 +800,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNH4",
                         "Location": "691, 421",
-                        "Colour": "86, 180, 233",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       }
@@ -939,7 +939,7 @@
                 "[Wheat].Grain.Total.Wt",
                 "[SowingRule].Script.SowingDepth",
                 "[Weather].MaxT as MaxT",
-                "Min of [Weather].MaxT from [ReportSimple].DateOfLastOutput to [Clock].Today as TestMaxT"
+                "Min of [Weather].MaxT from [ReportSimple].DayAfterLastOutput to [Clock].Today as TestMaxT"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -1033,13 +1033,13 @@
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "Sum of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as SumDailyMaxT",
-                "Avg of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as MeanDailyMaxT  // note this is to be replaced with Mean rather than Avg",
-                "Min of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as MinDailyMaxT",
-                "Max of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as MaxDailyMaxT",
-                "First of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as FirstDailyMaxT",
-                "Last of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as LastDailyMaxT",
-                "Diff of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as DiffDailyMaxT"
+                "Sum of [Weather].MaxT from [ReportDaily].DayAfterLastOutput to [Clock].Today as SumDailyMaxT",
+                "Avg of [Weather].MaxT from [ReportDaily].DayAfterLastOutput to [Clock].Today as MeanDailyMaxT  // note this is to be replaced with Mean rather than Avg",
+                "Min of [Weather].MaxT from [ReportDaily].DayAfterLastOutput to [Clock].Today as MinDailyMaxT",
+                "Max of [Weather].MaxT from [ReportDaily].DayAfterLastOutput to [Clock].Today as MaxDailyMaxT",
+                "First of [Weather].MaxT from [ReportDaily].DayAfterLastOutput to [Clock].Today as FirstDailyMaxT",
+                "Last of [Weather].MaxT from [ReportDaily].DayAfterLastOutput to [Clock].Today as LastDailyMaxT",
+                "Diff of [Weather].MaxT from [ReportDaily].DayAfterLastOutput to [Clock].Today as DiffDailyMaxT"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -1054,13 +1054,13 @@
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "Sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as SumWeeklyMaxT",
-                "Avg of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as MeanWeeklyMaxT  // note this is to be replaced with Mean rather than Avg",
-                "Min of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as MinWeeklyMaxT",
-                "Max of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as MaxWeeklyMaxT",
-                "First of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as FirstWeeklyMaxT",
-                "Last of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as LastWeeklyMaxT",
-                "Diff of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as DiffWeeklyMaxT"
+                "Sum of [Weather].MaxT from [ReportWeekly].DayAfterLastOutput to [Clock].Today as SumWeeklyMaxT",
+                "Avg of [Weather].MaxT from [ReportWeekly].DayAfterLastOutput to [Clock].Today as MeanWeeklyMaxT  // note this is to be replaced with Mean rather than Avg",
+                "Min of [Weather].MaxT from [ReportWeekly].DayAfterLastOutput to [Clock].Today as MinWeeklyMaxT",
+                "Max of [Weather].MaxT from [ReportWeekly].DayAfterLastOutput to [Clock].Today as MaxWeeklyMaxT",
+                "First of [Weather].MaxT from [ReportWeekly].DayAfterLastOutput to [Clock].Today as FirstWeeklyMaxT",
+                "Last of [Weather].MaxT from [ReportWeekly].DayAfterLastOutput to [Clock].Today as LastWeeklyMaxT",
+                "Diff of [Weather].MaxT from [ReportWeekly].DayAfterLastOutput to [Clock].Today as DiffWeeklyMaxT"
               ],
               "EventNames": [
                 "[Clock].EndOfWeek"
@@ -1075,13 +1075,13 @@
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "Sum of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as SumMonthlyMaxT",
-                "Avg of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as MeanMonthlyMaxT  // note this is to be replaced with Mean rather than Avg",
-                "Min of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as MinMonthlyMaxT",
-                "Max of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as MaxMonthlyMaxT",
-                "First of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as FirstMonthlyMaxT",
-                "Last of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as LastMonthlyMaxT",
-                "Diff of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as DiffMonthlyMaxT"
+                "Sum of [Weather].MaxT from [ReportMonthly].DayAfterLastOutput to [Clock].Today as SumMonthlyMaxT",
+                "Avg of [Weather].MaxT from [ReportMonthly].DayAfterLastOutput to [Clock].Today as MeanMonthlyMaxT  // note this is to be replaced with Mean rather than Avg",
+                "Min of [Weather].MaxT from [ReportMonthly].DayAfterLastOutput to [Clock].Today as MinMonthlyMaxT",
+                "Max of [Weather].MaxT from [ReportMonthly].DayAfterLastOutput to [Clock].Today as MaxMonthlyMaxT",
+                "First of [Weather].MaxT from [ReportMonthly].DayAfterLastOutput to [Clock].Today as FirstMonthlyMaxT",
+                "Last of [Weather].MaxT from [ReportMonthly].DayAfterLastOutput to [Clock].Today as LastMonthlyMaxT",
+                "Diff of [Weather].MaxT from [ReportMonthly].DayAfterLastOutput to [Clock].Today as DiffMonthlyMaxT"
               ],
               "EventNames": [
                 "[Clock].EndOfMonth"
@@ -1096,13 +1096,13 @@
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "Sum of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as SumYearlyMaxT",
-                "Avg of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as MeanYearlyMaxT  // note this is to be replaced with Mean rather than Avg",
-                "Min of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as MinYearlyMaxT",
-                "Max of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as MaxYearlyMaxT",
-                "First of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as FirstYearlyMaxT",
-                "Last of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as LastYearlyMaxT",
-                "Diff of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as DiffYearlyMaxT"
+                "Sum of [Weather].MaxT from [ReportYearly].DayAfterLastOutput to [Clock].Today as SumYearlyMaxT",
+                "Avg of [Weather].MaxT from [ReportYearly].DayAfterLastOutput to [Clock].Today as MeanYearlyMaxT  // note this is to be replaced with Mean rather than Avg",
+                "Min of [Weather].MaxT from [ReportYearly].DayAfterLastOutput to [Clock].Today as MinYearlyMaxT",
+                "Max of [Weather].MaxT from [ReportYearly].DayAfterLastOutput to [Clock].Today as MaxYearlyMaxT",
+                "First of [Weather].MaxT from [ReportYearly].DayAfterLastOutput to [Clock].Today as FirstYearlyMaxT",
+                "Last of [Weather].MaxT from [ReportYearly].DayAfterLastOutput to [Clock].Today as LastYearlyMaxT",
+                "Diff of [Weather].MaxT from [ReportYearly].DayAfterLastOutput to [Clock].Today as DiffYearlyMaxT"
               ],
               "EventNames": [
                 "[Clock].EndOfYear"
@@ -1117,13 +1117,13 @@
               "$type": "Models.Report.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "Sum of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as SumSimulationMaxT",
-                "Avg of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as MeanSimulationMaxT  // note this is to be replaced with Mean rather than Avg",
-                "Min of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as MinSimulationMaxT",
-                "Max of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as MaxSimulationMaxT",
-                "First of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as FirstSimulationMaxT",
-                "Last of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as LastSimulationMaxT",
-                "Diff of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as DiffSimulationMaxT"
+                "Sum of [Weather].MaxT from [ReportSimulation].DayAfterLastOutput to [Clock].Today as SumSimulationMaxT",
+                "Avg of [Weather].MaxT from [ReportSimulation].DayAfterLastOutput to [Clock].Today as MeanSimulationMaxT  // note this is to be replaced with Mean rather than Avg",
+                "Min of [Weather].MaxT from [ReportSimulation].DayAfterLastOutput to [Clock].Today as MinSimulationMaxT",
+                "Max of [Weather].MaxT from [ReportSimulation].DayAfterLastOutput to [Clock].Today as MaxSimulationMaxT",
+                "First of [Weather].MaxT from [ReportSimulation].DayAfterLastOutput to [Clock].Today as FirstSimulationMaxT",
+                "Last of [Weather].MaxT from [ReportSimulation].DayAfterLastOutput to [Clock].Today as LastSimulationMaxT",
+                "Diff of [Weather].MaxT from [ReportSimulation].DayAfterLastOutput to [Clock].Today as DiffSimulationMaxT"
               ],
               "EventNames": [
                 "[Clock].EndOfSimulation"
