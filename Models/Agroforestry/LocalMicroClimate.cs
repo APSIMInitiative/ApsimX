@@ -92,6 +92,9 @@ namespace Models.Agroforestry
         /// <summary>Gets the temperature amplitude.</summary>
         public double Amp { get { return weather.Amp; } }
 
+        /// <summary>Gets the diffuse fraction.</summary>
+        public double DiffuseFraction { get { return weather.DiffuseFraction; } }
+
         /// <summary>Gets the duration of the day in hours.</summary>
         public double CalculateDayLength(double Twilight) { return weather.CalculateDayLength(Twilight); }
 

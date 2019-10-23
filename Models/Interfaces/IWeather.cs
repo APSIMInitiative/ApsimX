@@ -56,6 +56,9 @@
         /// <summary>Gets the temperature amplitude.</summary>
         double Amp { get; }
 
+        /// <summary>Gets the diffuse fraction.</summary>
+        double DiffuseFraction { get; }
+
         /// <summary>
         /// Gets the duration of the day in hours.
         /// </summary>

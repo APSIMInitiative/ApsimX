@@ -4893,7 +4893,7 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Weather].CO2",
+                  "XProperty": "[IWeather].CO2",
                   "Name": "CO2Factor",
                   "Children": [
                     {

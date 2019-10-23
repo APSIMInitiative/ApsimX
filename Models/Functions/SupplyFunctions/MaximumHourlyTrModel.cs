@@ -43,7 +43,7 @@ namespace Models.Functions.SupplyFunctions
         //[Input]
         /// <summary>The weather data</summary>
         [Link]
-        private Weather Weather = null;
+        private IWeather Weather = null;
 
         /// <summary>The Clock</summary>
         [Link]
@@ -72,7 +72,7 @@ namespace Models.Functions.SupplyFunctions
         private readonly IFunction TEC = null;
 
         /// <summary>The CO2 impact on RUE</summary>
-        [Link]
+        [Link(IsOptional = true)]
         private readonly IFunction FCO2 = null;
 
         /// <summary>The stress impact on PgMax</summary>

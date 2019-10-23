@@ -136,6 +136,11 @@ namespace Models
         public double Amp { get {return 0;}}
 
         /// <summary>
+        /// Gets the diffuse fraction.
+        /// </summary>
+        public double DiffuseFraction { get; set; }
+
+        /// <summary>
         /// Gets the duration of the day in hours.
         /// </summary>
         [Description("Day Length (h)")]
