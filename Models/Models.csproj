@@ -363,7 +363,7 @@
     <Compile Include="Lifecycle\LifestageProcess.cs" />
     <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="MicroClimate\CanopyType.cs" />
+    <Compile Include="MicroClimate\MicroClimateCanopy.cs" />
     <Compile Include="MicroClimate\MicroClimateZone.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
     <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />

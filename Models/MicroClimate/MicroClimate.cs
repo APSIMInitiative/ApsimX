@@ -27,10 +27,6 @@
         [Link]
         private IWeather weather = null;
 
-        /// <summary>The surface organic matter model</summary>
-        [Link(IsOptional = true)]
-        private ISurfaceOrganicMatter residues = null;
-
         /// <summary>The sun set angle (degrees)</summary>
         private const double sunSetAngle = 0.0;
 
@@ -220,9 +216,9 @@
         {
             microClimatesZones = new List<MicroClimateZone>();
             foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
-                microClimatesZones.Add(new MicroClimateZone(clock, weather, newZone, residues));
+                microClimatesZones.Add(new MicroClimateZone(clock, weather, newZone));
             if (microClimatesZones.Count == 0)
-                microClimatesZones.Add(new MicroClimateZone(clock, weather, this.Parent as Zone, residues));
+                microClimatesZones.Add(new MicroClimateZone(clock, weather, this.Parent as Zone));
         }
 
         /// <summary>Called start of each day.</summary>
@@ -293,15 +289,15 @@
             }
 
             bool TallestIsTree = false;
-            foreach (CanopyType c in tallest.Canopies)
+            foreach (MicroClimateCanopy c in tallest.Canopies)
             {
                 if ((c.Canopy.Height - c.Canopy.Depth) > 0)
                     TallestIsTree = true;
             }
             if (TallestIsTree)
-                doTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
+                DoTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
             else
-                doStripCropShortWaveRadiation(ref tallest, ref shortest);
+                DoStripCropShortWaveRadiation(ref tallest, ref shortest);
         }
 
         /// <summary>
@@ -309,13 +305,13 @@
         /// </summary>
         /// <param name="tree"></param>
         /// <param name="alley"></param>
-        private void doTreeRowCropShortWaveRadiation(ref MicroClimateZone tree, ref MicroClimateZone alley)
+        private void DoTreeRowCropShortWaveRadiation(ref MicroClimateZone tree, ref MicroClimateZone alley)
         {
             if (MathUtilities.Sum(tree.DeltaZ) > 0)  // Don't perform calculations if layers are empty
             {
                 double Ht = MathUtilities.Sum(tree.DeltaZ);                // Height of tree canopy
                 double CDt = 0;//tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
-                foreach (CanopyType c in tree.Canopies)
+                foreach (MicroClimateCanopy c in tree.Canopies)
                     if (c.Canopy.Depth < c.Canopy.Height)
                     {
                         if (CDt > 0.0)
@@ -332,7 +328,7 @@
                 double Wt = (tree.Zone as Zones.RectangularZone).Width;    // Width of tree zone
                 double Wa = (alley.Zone as Zones.RectangularZone).Width;   // Width of alley zone
                 double CWt = 0;//Math.Min(tree.Canopies[0].Canopy.Width / 1000, (Wt + Wa));// Width of the tree canopy
-                foreach (CanopyType c in tree.Canopies)
+                foreach (MicroClimateCanopy c in tree.Canopies)
                     if (c.Canopy.Depth < c.Canopy.Height)
                     {
                         if (CWt > 0.0)
@@ -391,7 +387,7 @@
         /// </summary>
         /// <param name="tallest"></param>
         /// <param name="shortest"></param>
-        private void doStripCropShortWaveRadiation(ref MicroClimateZone tallest, ref MicroClimateZone shortest)
+        private void DoStripCropShortWaveRadiation(ref MicroClimateZone tallest, ref MicroClimateZone shortest)
         {
             if (MathUtilities.Sum(tallest.DeltaZ) > 0)  // Don't perform calculations if layers are empty
             {
