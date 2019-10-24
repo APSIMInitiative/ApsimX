@@ -101,13 +101,61 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Monthly dietary components
         /// </summary>
-        public List<ResourceRequest> DietaryComponentList { get; set; }
+        public List<LabourDietComponent> DietaryComponentList { get; set; }
+
+        /// <summary>
+        /// A method to calculate the details of the current intake
+        /// </summary>
+        /// <param name="metric">the name of the metric to report</param>
+        /// <returns></returns>
+        public double GetDietDetails(string metric)
+        {
+            double value = 0;
+            if (DietaryComponentList != null)
+            {
+                foreach (LabourDietComponent dietComponent in DietaryComponentList)
+                {
+                    double doubleResult = 0;
+                    var result = (dietComponent.FoodStore as CLEMResourceTypeBase).ConvertTo(metric, dietComponent.AmountConsumed);
+                    if (result != null)
+                    {
+                        Double.TryParse(result.ToString(), out doubleResult);
+                    }
+                    value += doubleResult;
+                }
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// A method to calculate the details of the current intake
+        /// </summary>
+        /// <returns></returns>
+        public double GetAmountConsumed()
+        { 
+             return DietaryComponentList.Sum(a => a.AmountConsumed);
+        }
+
+        /// <summary>
+        /// A method to calculate the details of the current intake
+        /// </summary>
+        /// <returns></returns>
+        public double GetAmountConsumed(string foodTypeName)
+        {
+            return DietaryComponentList.Where(a => a.FoodStore.Name == foodTypeName).Sum(a => a.AmountConsumed);
+        }
+
+        /// <summary>
+        /// The amount of feed eaten during the feed to target activity processing.
+        /// </summary>
+        [XmlIgnore]
+        public double FeedToTargetIntake { get; set; }
 
         /// <summary>
         /// Number of individuals
         /// </summary>
         [Description("Number of individuals")]
-        [Required, GreaterThanEqualValue(1)]
+        [Required, GreaterThanEqualValue(0)]
         public int Individuals { get; set; }
 
         /// <summary>
@@ -231,21 +279,21 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add intake to the DietaryComponents list
         /// </summary>
-        /// <param name="request"></param>
-        public void AddIntake(ResourceRequest request)
+        /// <param name="dietComponent"></param>
+        public void AddIntake(LabourDietComponent dietComponent)
         {
             if (DietaryComponentList == null)
             {
-                DietaryComponentList = new List<ResourceRequest>();
+                DietaryComponentList = new List<LabourDietComponent>();
             }
-            ResourceRequest alreadyEaten = DietaryComponentList.Where(a => a.ResourceTypeName == request.ResourceTypeName).FirstOrDefault();
+            LabourDietComponent alreadyEaten = DietaryComponentList.Where(a => a.FoodStore.Name == dietComponent.FoodStore.Name).FirstOrDefault();
             if (alreadyEaten != null)
             {
-                alreadyEaten.Provided += request.Provided;
+                alreadyEaten.AmountConsumed += dietComponent.AmountConsumed;
             }
             else
             {
-                DietaryComponentList.Add(request);
+                DietaryComponentList.Add(dietComponent);
             }
         }
 

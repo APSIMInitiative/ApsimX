@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, true);
+            this.InitialiseHerd(true, true);
 
             // check GrazeFoodStoreExists
             grazeStore = "";
@@ -97,8 +97,8 @@ namespace Models.CLEM.Activities
                 int weanedCount = 0;
                 ResourceRequest labour = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).FirstOrDefault<ResourceRequest>();
                 // Perform weaning
-                int count = this.CurrentHerd(true).Where(a => a.Weaned == false).Count();
-                foreach (var ind in this.CurrentHerd(true).Where(a => a.Weaned == false))
+                int count = this.CurrentHerd(false).Where(a => a.Weaned == false).Count();
+                foreach (var ind in this.CurrentHerd(false).Where(a => a.Weaned == false))
                 {
                     if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
                     {
@@ -136,7 +136,7 @@ namespace Models.CLEM.Activities
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = CurrentHerd(false);
-            int head = this.CurrentHerd(true).Where(a => a.Weaned == false).Count();
+            int head = herd.Where(a => a.Weaned == false).Count();
 
             double daysNeeded = 0;
             switch (requirement.UnitType)
