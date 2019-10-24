@@ -5216,16 +5216,6 @@
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.5,
           "Units": null,
-          "Name": "ExtinctionCoeff",
-          "Children": [],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.5,
-          "Units": null,
           "Name": "StructuralFraction",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -5413,6 +5403,62 @@
           "Units": null,
           "Name": "StomatalConductanceCO2Modifier",
           "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.MultiplyFunction, Models",
+          "Name": "ExtinctionCoeff",
+          "Children": [
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.5,
+              "Units": null,
+              "Name": "VegetativePhase",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "XProperty": "[Phenology].Stage",
+              "Name": "DevelopmentFactor",
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    3.0,
+                    4.7,
+                    5.0
+                  ],
+                  "Y": [
+                    1.0,
+                    1.0,
+                    1.2
+                  ],
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Exntiction coefficient increases at stem extension as leaves become more prostrate",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
