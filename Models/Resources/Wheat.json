@@ -1757,6 +1757,74 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Functions.MultiplyFunction, Models",
+          "Name": "MaintenanceRespirationFunction",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Maintenance Respiration Function",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.01,
+              "Units": null,
+              "Name": "MaintenanceFractionAt20C",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.WangEngelTempFunction, Models",
+              "MinTemp": -50.0,
+              "OptTemp": 48.0,
+              "MaxTemp": 60.0,
+              "RefTemp": 20.0,
+              "MaximumTemperatureWeighting": 0.75,
+              "Name": "WangEngelTempFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "LiveLeafWtFraction",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Live.Wt",
+                  "Name": "LiveLeafWt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Wt",
+                  "Name": "LeafWt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.7067,
           "Units": null,
@@ -2225,7 +2293,25 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
-        },
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Organs.Root, Models",
+      "DMSupply": null,
+      "NSupply": null,
+      "DMDemand": null,
+      "NDemand": null,
+      "potentialDMAllocation": null,
+      "GrowthRespiration": 0.0,
+      "MaintenanceRespiration": 0.0,
+      "RootAngle": 45.0,
+      "SWAvailabilityRatio": 0.0,
+      "Name": "Root",
+      "Children": [
         {
           "$type": "Models.Functions.MultiplyFunction, Models",
           "Name": "MaintenanceRespirationFunction",
@@ -2241,7 +2327,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.01,
+              "FixedValue": 0.015,
               "Units": null,
               "Name": "MaintenanceFractionAt20C",
               "Children": [],
@@ -2255,7 +2341,7 @@
               "OptTemp": 48.0,
               "MaxTemp": 60.0,
               "RefTemp": 20.0,
-              "MaximumTemperatureWeighting": 0.5,
+              "MaximumTemperatureWeighting": 0.75,
               "Name": "WangEngelTempFunction",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -2293,25 +2379,7 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
-        }
-      ],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.PMF.Organs.Root, Models",
-      "DMSupply": null,
-      "NSupply": null,
-      "DMDemand": null,
-      "NDemand": null,
-      "potentialDMAllocation": null,
-      "GrowthRespiration": 0.0,
-      "MaintenanceRespiration": 0.0,
-      "RootAngle": 45.0,
-      "SWAvailabilityRatio": 0.0,
-      "Name": "Root",
-      "Children": [
+        },
         {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.6925,
@@ -2979,74 +3047,6 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.MultiplyFunction, Models",
-          "Name": "MaintenanceRespirationFunction",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "Maintenance Respiration Function",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.015,
-              "Units": null,
-              "Name": "MaintenanceFractionAt20C",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.WangEngelTempFunction, Models",
-              "MinTemp": -50.0,
-              "OptTemp": 48.0,
-              "MaxTemp": 60.0,
-              "RefTemp": 20.0,
-              "MaximumTemperatureWeighting": 0.5,
-              "Name": "WangEngelTempFunction",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "LiveLeafWtFraction",
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Live.Wt",
-                  "Name": "LiveLeafWt",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Wt",
-                  "Name": "LeafWt",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
@@ -3088,7 +3088,7 @@
           "VPDThresh": 999.0,
           "HighVPDReduction": 0.0,
           "MaxTr": 999.0,
-          "MaximumTempWeight": 0.66,
+          "MaximumTempWeight": 0.5,
           "KDIF": 0.7,
           "LUEref": 0.6,
           "PgMax": 45.0,
@@ -3239,11 +3239,11 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.DailyMeanVPD, Models",
-                      "MaximumVPDWeight": 0.66,
+                      "MaximumVPDWeight": 0.75,
                       "Name": "VPD",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -3261,12 +3261,12 @@
                       "Name": "XYPairs",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
@@ -3317,7 +3317,7 @@
               "OptTemp": 48.0,
               "MaxTemp": 60.0,
               "RefTemp": 20.0,
-              "MaximumTemperatureWeighting": 0.5,
+              "MaximumTemperatureWeighting": 0.75,
               "Name": "WangEngelTempFunction",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -4621,6 +4621,74 @@
       "Name": "Spike",
       "Children": [
         {
+          "$type": "Models.Functions.MultiplyFunction, Models",
+          "Name": "MaintenanceRespirationFunction",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Maintenance Respiration Function",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.015,
+              "Units": null,
+              "Name": "MaintenanceFractionAt20C",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.WangEngelTempFunction, Models",
+              "MinTemp": -50.0,
+              "OptTemp": 48.0,
+              "MaxTemp": 60.0,
+              "RefTemp": 20.0,
+              "MaximumTemperatureWeighting": 0.75,
+              "Name": "WangEngelTempFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "LiveLeafWtFraction",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Live.Wt",
+                  "Name": "LiveLeafWt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Wt",
+                  "Name": "LeafWt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
           "Units": null,
@@ -5288,7 +5356,22 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
-        },
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PMF.Organs.GenericOrgan, Models",
+      "StartLive": null,
+      "DMSupply": null,
+      "NSupply": null,
+      "DMDemand": null,
+      "NDemand": null,
+      "potentialDMAllocation": null,
+      "Name": "Stem",
+      "Children": [
         {
           "$type": "Models.Functions.MultiplyFunction, Models",
           "Name": "MaintenanceRespirationFunction",
@@ -5304,7 +5387,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.015,
+              "FixedValue": 0.02,
               "Units": null,
               "Name": "MaintenanceFractionAt20C",
               "Children": [],
@@ -5318,7 +5401,7 @@
               "OptTemp": 48.0,
               "MaxTemp": 60.0,
               "RefTemp": 20.0,
-              "MaximumTemperatureWeighting": 0.5,
+              "MaximumTemperatureWeighting": 0.75,
               "Name": "WangEngelTempFunction",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -5356,22 +5439,7 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
-        }
-      ],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.PMF.Organs.GenericOrgan, Models",
-      "StartLive": null,
-      "DMSupply": null,
-      "NSupply": null,
-      "DMDemand": null,
-      "NDemand": null,
-      "potentialDMAllocation": null,
-      "Name": "Stem",
-      "Children": [
+        },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
           "XProperty": "[Phenology].Stage",
@@ -6103,74 +6171,6 @@
           "Name": "RetranslocateNitrogen",
           "Children": [],
           "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.MultiplyFunction, Models",
-          "Name": "MaintenanceRespirationFunction",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "Maintenance Respiration Function",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.02,
-              "Units": null,
-              "Name": "MaintenanceFractionAt20C",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.WangEngelTempFunction, Models",
-              "MinTemp": -50.0,
-              "OptTemp": 48.0,
-              "MaxTemp": 60.0,
-              "RefTemp": 20.0,
-              "MaximumTemperatureWeighting": 0.5,
-              "Name": "WangEngelTempFunction",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "LiveLeafWtFraction",
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Live.Wt",
-                  "Name": "LiveLeafWt",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Wt",
-                  "Name": "LeafWt",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
