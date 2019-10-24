@@ -80,8 +80,13 @@
                 IList array = value as IList;
                 for (int arrayIndex = 0; arrayIndex < array.Count; arrayIndex++)
                 {
+                    int startIndex = 0;
                     string heading = name;
-                    heading += "(" + (arrayIndex + 1).ToString() + ")";
+                    string arraySpecification = StringUtilities.SplitOffBracketedValue(ref heading, '(', ')');
+                    if (arraySpecification != string.Empty)
+                        startIndex = Convert.ToInt32(arraySpecification) - 1;
+
+                    heading += "(" + (startIndex + arrayIndex + 1).ToString() + ")";
 
                     object arrayElement = array[arrayIndex];
                     FlattenValueIntoRow(heading, units, arrayElement, row);  // recursion                }

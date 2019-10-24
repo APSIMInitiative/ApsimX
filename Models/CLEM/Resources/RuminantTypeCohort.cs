@@ -211,18 +211,18 @@ namespace Models.CLEM.Resources
 
                 if (WeightSD > 0)
                 {
-                    html += "\n<div class=\"activityentry\">Individuals will be randomally assigned a weight based on a mean "+ ((Weight == 0) ? "(using the normalised weight) " : "") + "of <span class=\"setvalue\">" + weightToUse.ToString("#,##0") + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>";
-                    if (Math.Abs(weightToUse - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                    html += "\n<div class=\"activityentry\">Individuals will be randomally assigned a weight based on a mean "+ ((Weight == 0) ? "(using the normalised weight) " : "") + "of <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>";
+                    if (Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                     {
-                        html += "<div class=\"activityentry\">These individuals should weigh close to normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg</div>";
+                        html += "<div class=\"activityentry\">These individuals should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age</div>";
                     }
                 }
                 else
                 {
-                    html += "\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + ((Weight == 0)?" the normalised weight of ":"") + " <span class=\"setvalue\">" + weightToUse.ToString("#,##0") + "</span> kg";
-                    if (Math.Abs(weightToUse - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                    html += "\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + ((Weight == 0)?" the normalised weight of ":"") + " <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg";
+                    if (Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                     {
-                        html += ", but should weigh close to normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg";
+                        html += ", but should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age";
                     }
                     html += "</div>";
                 }

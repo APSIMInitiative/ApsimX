@@ -326,7 +326,10 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 0)
+            {
+                html += "\n</div>";
+            }
             return html;
         }
 
@@ -337,12 +340,22 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
-            if (rotation)
+
+            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() == 0)
             {
-                html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+                html += "\n<div class=\"errorbanner clearfix\">";
+                html += "<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>";
+                html += "</div>";
             }
-            html += "\n<div class=\"croprotationborder\">";
+            else
+            {
+                bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
+                if (rotation)
+                {
+                    html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+                }
+                html += "\n<div class=\"croprotationborder\">";
+            }
             return html;
         }
     }
