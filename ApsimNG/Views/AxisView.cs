@@ -66,9 +66,9 @@ namespace UserInterface.Views
             checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
             mainWidget = table1;
             entryTitle.Changed += TitleTextBox_TextChanged;
-            entryMin.FocusOutEvent += OnMinimumChanged;
-            entryMax.FocusOutEvent += OnMaximumChanged;
-            entryInterval.FocusOutEvent += OnIntervalChanged;
+            entryMin.Changed += OnMinimumChanged;
+            entryMax.Changed += OnMaximumChanged;
+            entryInterval.Changed += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             checkbutton2.Toggled += OnCrossesAtZeroChanged;
             mainWidget.Destroyed += _mainWidget_Destroyed;
