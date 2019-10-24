@@ -80,7 +80,7 @@ if errorlevel 1 (
 	exit /b 1
 ) else echo Done.
 echo Uploading %file_name%...
-@curl -s -u !APSIM_SITE_CREDS! -T %file_name% ftp://www.apsim.info/APSIM/ApsimXFiles/
+@curl -s -u !APSIM_SITE_CREDS! -T %file_name% ftp://apsimdev.apsim.info/APSIM/ApsimXFiles/
 if errorlevel 1 (
 	echo Encountered an error while uploading %file_name%!
 ) else (
