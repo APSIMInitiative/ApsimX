@@ -3082,6 +3082,281 @@
       "Name": "Leaf",
       "Children": [
         {
+          "$type": "Models.Functions.SupplyFunctions.MaximumHourlyTrModel, Models",
+          "AssimilateType": "gross",
+          "SWType": "numeric",
+          "VPDThresh": 999.0,
+          "HighVPDReduction": 0.0,
+          "MaxTr": 999.0,
+          "MaximumTempWeight": 0.66,
+          "KDIF": 0.7,
+          "LUEref": 0.6,
+          "PgMax": 45.0,
+          "Pathway": "C3",
+          "Name": "Photosynthesis",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "This module (Ababaei and Chenu, 2019) simulates photosynthesis using the Soil-Plant-Atmosphere System Simulation (SPASS) developed by Wang (1997), with a few modifications, such as a downscaling to hourly time step with the temperature diurnal pattern from Resource et al. (1981). Hence, the model simulates hourly potential biomass assimilation. VPD is calculated as the difference between hourly saturated vapor pressure (SVP) and SVP at minimum temperature (Messina et al., 2015) and is used to calculate hourly transpiration as follows:\n\nTR<sub>pot,t</sub> = (ΔDM<sub>pot,t</sub> × VPD<sub>t</sub>) / TEC\n\nwhere TR<sub>pot</sub> is the potential transpiration driven by radiation interception (mm), ΔDM<sub>pot</sub> is the hourly potential increase in dry matter (i.e. amount of CO<sub>2</sub> fixed by photosynthesis; g.m<sup>-2</sup>), TEC is the transpiration efficiency coefficient (kPa.gC<sup>-1</sup>.m<sup>-2</sup>.mm water<sup>-1</sup>), and t is time.\n\nThe potential transpiration is then adjusted based on the level of evaporative demand and soil water stress when applicable. First, VPD-limited hourly transpiration (TR<sub>VPD-limited,t</sub>) is calculated as follows for VPD<sub>t</sub> > VPD<sub>ref</sub>:\n\nTR<sub>VPDref</sub> = (ΔDM<sub>pot,VPDref</sub> × VPD<sub>ref</sub>)/TEC\n\nReduction<sub>t</sub> = Max(0,TR<sub>pot,t</sub> - TR<sub>VPDref</sub>) × α\n\nTR<sub>VPD-limited,t</sub> = TR<sub>pot,t</sub> - Reduction<sub>t</sub>\n\nwhere VPD<sub>ref</sub> is the threshold VPD above which transpiration rate is reduced (kPa), TR<sub>VPDref</sub> is the transpiration rate at VPD<sub>ref</sub> (mm.hr<sup>-1</sup>), ΔDM<sub>pot,VPDref</sub> is the interpolated hourly hourly increase in dry matter (i.e. growth) at VPD<sub>ref</sub> (g.m<sup>-2</sup>), Reduction is the reduction in transpiration rate above VPD<sub>ref</sub> (mm.hr<sup>-1</sup>), and α is the reduction factor for VPD<sub>t</sub> > VPD<sub>ref</sub> (decimal; zero for no reduction, 1 for complete capping of transpiration rate at TR<sub>VPDref</sub>)\n\nThen, soil-water-limited hourly transpiration (TR<sub>water-limited</sub>) is calculated. Hourly transpiration is capped starting from the maximum TR<sub>VPD-limited</sub> at midday until the total plant available soil moisture can meet the crop daily water demand. Finally, actual hourly increase in dry matter (ΔDM) is calculated based on TR<sub>water-limited</sub>, as follows:\n\nΔDM<sub>t</sub> = (TR<sub>water-limited,t</sub> × TEC) / VPD<sub>t</sub>\n\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].RadIntTot",
+              "Name": "RadIntTot",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "TEC",
+              "Children": [
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Phenology].Stage",
+                  "Name": "TEC_Ref",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        1.0,
+                        2.0,
+                        3.0,
+                        4.0,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0
+                      ],
+                      "Y": [
+                        0.0,
+                        0.0,
+                        0.006,
+                        0.006,
+                        0.006,
+                        0.006,
+                        0.006,
+                        0.006,
+                        0.0025,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[IWeather].CO2",
+                  "Name": "CO2Factor",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        350.0,
+                        700.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.37
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Const",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MinimumFunction, Models",
+              "Name": "LUEStress",
+              "Children": [
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Leaf].Fn",
+                  "Name": "FN",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        1.0,
+                        1.5
+                      ],
+                      "Y": [
+                        0.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "VPD.Value()",
+                  "Name": "FVPD",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DailyMeanVPD, Models",
+                      "MaximumVPDWeight": 0.66,
+                      "Name": "VPD",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        10.0,
+                        40.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        0.0
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.SupplyFunctions.RUECO2Function, Models",
+              "PhotosyntheticPathway": "C3",
+              "Name": "FCO2",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.MultiplyFunction, Models",
+          "Name": "MaintenanceRespirationFunction",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Maintenance Respiration Function",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.03,
+              "Units": null,
+              "Name": "MaintenanceFractionAt20C",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.WangEngelTempFunction, Models",
+              "MinTemp": -50.0,
+              "OptTemp": 48.0,
+              "MaxTemp": 60.0,
+              "RefTemp": 20.0,
+              "MaximumTemperatureWeighting": 0.5,
+              "Name": "WangEngelTempFunction",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "LiveLeafWtFraction",
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Live.Wt",
+                  "Name": "LiveLeafWt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Wt",
+                  "Name": "LeafWt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Functions.ExpressionFunction, Models",
           "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
           "Name": "CO2internal",
@@ -4327,281 +4602,6 @@
           "Name": "CarbonConcentration",
           "Children": [],
           "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.SupplyFunctions.MaximumHourlyTrModel, Models",
-          "AssimilateType": "gross",
-          "SWType": "numeric",
-          "VPDThresh": 999.0,
-          "HighVPDReduction": 0.0,
-          "MaxTr": 999.0,
-          "MaximumTempWeight": 0.5,
-          "KDIF": 0.7,
-          "LUEref": 0.6,
-          "PgMax": 45.0,
-          "Pathway": "C3",
-          "Name": "Photosynthesis",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "This module (Ababaei and Chenu, 2019) simulates photosynthesis using the Soil-Plant-Atmosphere System Simulation (SPASS) developed by Wang (1997), with a few modifications, such as a downscaling to hourly time step with the temperature diurnal pattern from Resource et al. (1981). Hence, the model simulates hourly potential biomass assimilation. VPD is calculated as the difference between hourly saturated vapor pressure (SVP) and SVP at minimum temperature (Messina et al., 2015) and is used to calculate hourly transpiration as follows:\n\nTR<sub>pot,t</sub> = (ΔDM<sub>pot,t</sub> × VPD<sub>t</sub>) / TEC\n\nwhere TR<sub>pot</sub> is the potential transpiration driven by radiation interception (mm), ΔDM<sub>pot</sub> is the hourly potential increase in dry matter (i.e. amount of CO<sub>2</sub> fixed by photosynthesis; g.m<sup>-2</sup>), TEC is the transpiration efficiency coefficient (kPa.gC<sup>-1</sup>.m<sup>-2</sup>.mm water<sup>-1</sup>), and t is time.\n\nThe potential transpiration is then adjusted based on the level of evaporative demand and soil water stress when applicable. First, VPD-limited hourly transpiration (TR<sub>VPD-limited,t</sub>) is calculated as follows for VPD<sub>t</sub> > VPD<sub>ref</sub>:\n\nTR<sub>VPDref</sub> = (ΔDM<sub>pot,VPDref</sub> × VPD<sub>ref</sub>)/TEC\n\nReduction<sub>t</sub> = Max(0,TR<sub>pot,t</sub> - TR<sub>VPDref</sub>) × α\n\nTR<sub>VPD-limited,t</sub> = TR<sub>pot,t</sub> - Reduction<sub>t</sub>\n\nwhere VPD<sub>ref</sub> is the threshold VPD above which transpiration rate is reduced (kPa), TR<sub>VPDref</sub> is the transpiration rate at VPD<sub>ref</sub> (mm.hr<sup>-1</sup>), ΔDM<sub>pot,VPDref</sub> is the interpolated hourly hourly increase in dry matter (i.e. growth) at VPD<sub>ref</sub> (g.m<sup>-2</sup>), Reduction is the reduction in transpiration rate above VPD<sub>ref</sub> (mm.hr<sup>-1</sup>), and α is the reduction factor for VPD<sub>t</sub> > VPD<sub>ref</sub> (decimal; zero for no reduction, 1 for complete capping of transpiration rate at TR<sub>VPDref</sub>)\n\nThen, soil-water-limited hourly transpiration (TR<sub>water-limited</sub>) is calculated. Hourly transpiration is capped starting from the maximum TR<sub>VPD-limited</sub> at midday until the total plant available soil moisture can meet the crop daily water demand. Finally, actual hourly increase in dry matter (ΔDM) is calculated based on TR<sub>water-limited</sub>, as follows:\n\nΔDM<sub>t</sub> = (TR<sub>water-limited,t</sub> × TEC) / VPD<sub>t</sub>\n\n",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Leaf].RadIntTot",
-              "Name": "RadIntTot",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "TEC",
-              "Children": [
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Stage",
-                  "Name": "TEC_Ref",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        7.0,
-                        8.0,
-                        9.0,
-                        10.0
-                      ],
-                      "Y": [
-                        0.0,
-                        0.0,
-                        0.006,
-                        0.006,
-                        0.006,
-                        0.006,
-                        0.006,
-                        0.006,
-                        0.0025,
-                        0.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[IWeather].CO2",
-                  "Name": "CO2Factor",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        350.0,
-                        700.0
-                      ],
-                      "Y": [
-                        1.0,
-                        1.37
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "Const",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MinimumFunction, Models",
-              "Name": "LUEStress",
-              "Children": [
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fn",
-                  "Name": "FN",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        1.0,
-                        1.5
-                      ],
-                      "Y": [
-                        0.0,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "VPD.Value()",
-                  "Name": "FVPD",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.DailyMeanVPD, Models",
-                      "MaximumVPDWeight": 0.66,
-                      "Name": "VPD",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        10.0,
-                        40.0
-                      ],
-                      "Y": [
-                        1.0,
-                        1.0,
-                        0.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.SupplyFunctions.RUECO2Function, Models",
-              "PhotosyntheticPathway": "C3",
-              "Name": "FCO2",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.MultiplyFunction, Models",
-          "Name": "MaintenanceRespirationFunction",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "Maintenance Respiration Function",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.03,
-              "Units": null,
-              "Name": "MaintenanceFractionAt20C",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.WangEngelTempFunction, Models",
-              "MinTemp": -50.0,
-              "OptTemp": 48.0,
-              "MaxTemp": 60.0,
-              "RefTemp": 20.0,
-              "MaximumTemperatureWeighting": 0.5,
-              "Name": "WangEngelTempFunction",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.DivideFunction, Models",
-              "Name": "LiveLeafWtFraction",
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Live.Wt",
-                  "Name": "LiveLeafWt",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Wt",
-                  "Name": "LeafWt",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         }
