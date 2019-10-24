@@ -2313,6 +2313,16 @@
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.03,
           "Units": null,
+          "Name": "MaximumNConc",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.03,
+          "Units": null,
           "Name": "MaxNConcDailyGrowth",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -2626,16 +2636,6 @@
           "FixedValue": 0.45,
           "Units": null,
           "Name": "CarbonConcentration",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.0123,
-          "Units": null,
-          "Name": "MinimumNConc1",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
