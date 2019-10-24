@@ -6,7 +6,7 @@
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# Report Model Documentation and Examples\n\n*Dean Holzworth (CSIRO, Australia) and Val Snow (AgResearch, New Zealand)*\n\n(Text last updated 22 October 2019)\n\n**Report** is the model in APSIM that is used to generate columns of simulation outputs for further analysis. \n\nThe simulations in this example are to show examples of the different reporting capabilities and to provide a test that they continue to produce the correct results.\n\nThe intention is that this documentation is read alongside the simulation that produced it to see the detail of the examples. The simulation is to be found under the \"Examples\" button as Report.apsim.\n\n\n   \n\n\n\n\n",
+      "Text": "# Report Model Documentation and Examples\n\n*Dean Holzworth (CSIRO, Australia) and Val Snow (AgResearch, New Zealand)*\n\n(Text last updated 24 October 2019)\n\n**Report** is the model in APSIM that is used to generate columns of simulation outputs for further analysis. \n\nThe simulations in this example are to show examples of the different reporting capabilities and to provide a test that they continue to produce the correct results.\n\nThe intention is that this documentation is read alongside the simulation that produced it to see the detail of the examples. The simulation is to be found under the \"Examples\" button as Report.apsim.\n\n\n   \n\n\n\n\n",
       "Name": "About this example",
       "Children": [],
       "IncludeInDocumentation": true,
