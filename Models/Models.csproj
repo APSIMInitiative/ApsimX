@@ -360,7 +360,7 @@
     <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MicroClimate\CanopyType.cs" />
-    <Compile Include="MicroClimate\ZoneMicroClimate.cs" />
+    <Compile Include="MicroClimate\MicroClimateZone.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
     <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
     <Compile Include="Plant\Arbitrator\PriorityThenRelativeAllocation.cs" />
@@ -506,7 +506,6 @@
     <Compile Include="Log.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="MicroClimate\MicroClimate.cs" />
-    <Compile Include="MicroClimate\MicroClimateScience.cs" />
     <Compile Include="Operations.cs" />
     <Compile Include="Plant\Arbitrator\OrganArbitrator.cs" />
     <Compile Include="Plant\Biomass\ArrayBiomass.cs" />
