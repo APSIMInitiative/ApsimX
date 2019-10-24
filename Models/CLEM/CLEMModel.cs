@@ -98,7 +98,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Determines if this compoenent has a valid parent based on parent attributes
+        /// Determines if this component has a valid parent based on parent attributes
         /// </summary>
         /// <returns></returns>
         public bool ValidParent()
