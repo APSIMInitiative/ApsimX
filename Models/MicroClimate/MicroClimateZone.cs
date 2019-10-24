@@ -4,6 +4,7 @@
     using Models.Core;
     using Models.Interfaces;
     using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     /// <summary>
@@ -17,6 +18,15 @@
 
         /// <summary>The weather model.</summary>
         private IWeather weather;
+
+        /// <summary>The surface organic matter model.</summary>
+        private ISurfaceOrganicMatter surfaceOM;
+
+        /// <summary>Models in the simulation that implement ICanopy.</summary>
+        private IEnumerable<ICanopy> canopyModels;
+
+        /// <summary>Models in the simulation that implement IHaveCanopy.</summary>
+        private IEnumerable<IHaveCanopy> modelsThatHaveCanopies;
 
         /// <summary>Canopy emissivity</summary>
         private const double canopyEmissivity = 0.96;
@@ -85,10 +95,10 @@
         private const double residue_albedo = 0.23;
 
         /// <summary>The Albedo of the combined soil-plant system for this zone</summary>
-        public double Albedo = 0;
+        public double Albedo;
 
         /// <summary>Emissivity of the combined soil-plant system for this zone.</summary>
-        public double Emissivity = 0;
+        public double Emissivity;
 
         /// <summary>Net long-wave radiation of the whole system (MJ/m2/day)</summary>
         public double NetLongWaveRadiation;
@@ -100,7 +110,7 @@
         public double IncomingRs;
 
         /// <summary>The shortwave radiation reaching the surface</summary>
-        public double SurfaceRs = 0;
+        public double SurfaceRs;
 
         /// <summary>The delta z</summary>
         public double[] DeltaZ = new double[-1 + 1];
@@ -115,10 +125,10 @@
         public int numLayers;
 
         /// <summary>The soil heat flux</summary>
-        public double SoilHeatFlux = 0;
+        public double SoilHeatFlux;
 
         /// <summary>The dry leaf time fraction</summary>
-        public double DryLeafFraction = 0;
+        public double DryLeafFraction;
 
         /// <summary>Gets or sets the component data.</summary>
         public List<CanopyType> Canopies = new List<CanopyType>();
@@ -133,30 +143,46 @@
             clock = clockModel;
             weather = weatherModel;
             Zone = zoneModel;
-            SoilHeatFlux = 0.0;
-            DryLeafFraction = 0.0;
-            Albedo = 0.0;// albedo;
-            NetLongWaveRadiation = 0;
-            sumRs = 0;
-            IncomingRs = 0;
-            SurfaceRs = 0.0;
-            numLayers = 0;
-            DeltaZ = new double[-1 + 1];
-            layerKtot = new double[-1 + 1];
-            LAItotsum = new double[-1 + 1];
-            Canopies.Clear();
-
-            foreach (ICanopy canopy in Apsim.ChildrenRecursively(zoneModel, typeof(ICanopy)))
-                if (canopy.Height > 0)
-                    Canopies.Add(new CanopyType(canopy));
-
-            if (residues != null)
-                foreach (ICanopy residue in residues.ResidueLayers)
-                    Canopies.Add(new CanopyType(residue));
+            surfaceOM = residues;
+            canopyModels = Apsim.ChildrenRecursively(Zone, typeof(ICanopy)).Cast<ICanopy>();
+            modelsThatHaveCanopies = Apsim.ChildrenRecursively(Zone, typeof(IHaveCanopy)).Cast<IHaveCanopy>();
         }
 
         /// <summary>The zone model.</summary>
         public Zone Zone { get; }
+
+        /// <summary>
+        /// Zeros all variables.
+        /// </summary>
+        public void OnStartOfDay()
+        {
+            Albedo = 0;
+            Emissivity = 0;
+            NetLongWaveRadiation = 0;
+            sumRs = 0;
+            IncomingRs = 0;
+            SurfaceRs = 0.0;
+            DeltaZ = new double[-1 + 1];
+            layerKtot = new double[-1 + 1];
+            LAItotsum = new double[-1 + 1];
+            numLayers = 0;
+            SoilHeatFlux = 0.0;
+            DryLeafFraction = 0.0;
+
+            // Canopies come and go each day so clear the list of canopies and 
+            // go find the canopies we need to work with today.
+            Canopies.Clear();
+
+            // There are two ways to finding canopies in the simulation.
+            // 1. Some models ARE canopies e.g. Leaf, SimpleLeaf.
+            foreach (ICanopy canopy in canopyModels)
+                if (canopy.Height > 0)
+                    Canopies.Add(new CanopyType(canopy));
+
+            // 2. Some models HAVE canopies e.g. SurfaceOM.
+            foreach (var modelThatHasCanopy in modelsThatHaveCanopies)
+                modelThatHasCanopy.Canopies.ForEach(canopy => Canopies.Add(new CanopyType(canopy)));
+        }
 
         /// <summary>Canopies the compartments.</summary>
         public void DoCanopyCompartments()

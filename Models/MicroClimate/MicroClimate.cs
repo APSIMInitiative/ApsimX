@@ -38,7 +38,7 @@
         private const double sunAngleNetPositiveRadiation = 15;
 
         /// <summary>List of uptakes</summary>
-        private List<MicroClimateZone> microClimatesZones = new List<MicroClimateZone>();
+        private List<MicroClimateZone> microClimatesZones;
 
         /// <summary>This is the length of time within the day during which evaporation will take place</summary>
         private double dayLengthEvap;
@@ -212,17 +212,26 @@
             get { return MathUtilities.Divide(RadiationInterception, weather.Radn, 0.0); }
         }
 
-        /// <summary>Called when simulation commences.</summary>
+        /// <summary>Called when simulation starts.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs e)
+        /// <param name="e">The event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            microClimatesZones.Clear();
+            microClimatesZones = new List<MicroClimateZone>();
             foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
                 microClimatesZones.Add(new MicroClimateZone(clock, weather, newZone, residues));
             if (microClimatesZones.Count == 0)
                 microClimatesZones.Add(new MicroClimateZone(clock, weather, this.Parent as Zone, residues));
+        }
+
+        /// <summary>Called start of each day.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The event data.</param>
+        [EventSubscribe("StartOfDay")]
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            microClimatesZones.ForEach(zone => zone.OnStartOfDay());
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
