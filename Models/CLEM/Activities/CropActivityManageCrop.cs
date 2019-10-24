@@ -102,33 +102,30 @@ namespace Models.CLEM.Activities
             if (UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
-                Area = LinkedLandItem.AreaAvailable;
             }
-            else
+
+            ResourceRequestList = new List<ResourceRequest>
             {
-                ResourceRequestList = new List<ResourceRequest>
+                new ResourceRequest()
                 {
-                    new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                        ResourceType = typeof(Land),
-                        ResourceTypeName = LandItemNameToUse.Split('.').Last(),
-                        ActivityModel = this,
-                        Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
-                        FilterDetails = null
-                    }
-                };
-
-                CheckResources(ResourceRequestList, Guid.NewGuid());
-                gotLandRequested = TakeResources(ResourceRequestList, false);
-
-                //Now the Land has been allocated we have an Area 
-                if (gotLandRequested)
-                {
-                    //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
-                    Area = ResourceRequestList.FirstOrDefault().Provided;
+                    AllowTransmutation = false,
+                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                    ResourceType = typeof(Land),
+                    ResourceTypeName = LandItemNameToUse.Split('.').Last(),
+                    ActivityModel = this,
+                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    FilterDetails = null
                 }
+            };
+
+            CheckResources(ResourceRequestList, Guid.NewGuid());
+            gotLandRequested = TakeResources(ResourceRequestList, false);
+
+            //Now the Land has been allocated we have an Area 
+            if (gotLandRequested)
+            {
+                //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
+                Area = ResourceRequestList.FirstOrDefault().Provided;
             }
 
             // set and enable first crop in the list for rotational cropping.
