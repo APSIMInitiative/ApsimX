@@ -2310,38 +2310,6 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[Phenology].Stage",
-          "Name": "MaximumNConc",
-          "Children": [
-            {
-              "$type": "Models.Functions.XYPairs, Models",
-              "X": [
-                0.0,
-                6.0,
-                7.33,
-                7.331,
-                8.0
-              ],
-              "Y": [
-                0.0,
-                0.03,
-                0.03,
-                0.03,
-                0.03
-              ],
-              "Name": "XYPairs",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.03,
           "Units": null,
@@ -2658,6 +2626,16 @@
           "FixedValue": 0.45,
           "Units": null,
           "Name": "CarbonConcentration",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0123,
+          "Units": null,
+          "Name": "MinimumNConc1",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
