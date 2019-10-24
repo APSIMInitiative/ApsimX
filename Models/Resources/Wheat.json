@@ -4337,7 +4337,7 @@
           "VPDThresh": 999.0,
           "HighVPDReduction": 0.0,
           "MaxTr": 999.0,
-          "MaximumTempWeight": -1.0,
+          "MaximumTempWeight": 0.5,
           "KDIF": 0.7,
           "LUEref": 0.6,
           "PgMax": 45.0,
