@@ -195,6 +195,15 @@ namespace Models.CLEM.Resources
                     html += "\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire") + "</div>";
                 }
 
+                RuminantType rumtype = Apsim.Parent(this, typeof(RuminantType)) as RuminantType;
+                if (rumtype != null)
+                {
+                    // derived from activity such as Trade
+                    CLEMRuminantActivityBase parentBase = Parent as CLEMRuminantActivityBase;
+                    parentBase.InitialiseHerd(true, true);
+                    var rum = parentBase.CurrentHerd(false).FirstOrDefault() as Ruminant;
+                    rumtype = rum.BreedParams;
+                }
                 Ruminant newInd = new Ruminant(this.Age, this.Gender, 0, Apsim.Parent(this, typeof(RuminantType)) as RuminantType);
 
                 string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
