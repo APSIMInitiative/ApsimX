@@ -11,7 +11,7 @@ using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant feed activity</summary>
+    /// <summary>Labour (Human) feed activity</summary>
     /// <summary>This activity provides food to specified people based on a feeding style</summary>
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
@@ -23,13 +23,10 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs human feeding based upon the current labour filtering and a feeding style.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/LabourFeed.htm")]
+    [HelpUri(@"Content/Features/Activities/Labour/LabourFeed.htm")]
     public class LabourActivityFeed : CLEMActivityBase
     {
         private double feedRequired = 0;
-
-        //[Link]
-        //Clock Clock = null;
 
         /// <summary>
         /// Name of Human Food to use (with Resource Group name appended to the front [separated with a '.'])
@@ -91,10 +88,10 @@ namespace Models.CLEM.Activities
                     switch (FeedStyle)
                     {
                         case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                            feedRequired += Math.Min(value * 30.4, FeedType.MaximumDailyIntakePerAE*ind.AdultEquivalent*30.4);
+                            feedRequired += value * 30.4;
                             break;
                         case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
-                            feedRequired += Math.Min(value, FeedType.MaximumDailyIntakePerAE) * ind.AdultEquivalent * 30.4;
+                            feedRequired += value * ind.AdultEquivalent * 30.4;
                             break;
                         default:
                             throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
@@ -234,14 +231,26 @@ namespace Models.CLEM.Activities
                         switch (FeedStyle)
                         {
                             case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                                feedRequest.Provided = Math.Min(value * 30.4, FeedType.MaximumDailyIntakePerAE * ind.AdultEquivalent * 30.4);
+                                feedRequest.Provided = value * 30.4;
                                 feedRequest.Provided *= feedLimit;
-                                ind.AddIntake(feedRequest);
+                                feedRequest.Provided *= (feedRequest.Resource as HumanFoodStoreType).EdibleProportion;
+                                ind.AddIntake(new LabourDietComponent()
+                                {
+                                    AmountConsumed = feedRequest.Provided,
+                                    FoodStore = feedRequest.Resource as HumanFoodStoreType
+                                }
+                                );
                                 break;
                             case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
-                                feedRequest.Provided = Math.Min(value, FeedType.MaximumDailyIntakePerAE) * ind.AdultEquivalent * 30.4;
+                                feedRequest.Provided = value * ind.AdultEquivalent * 30.4;
                                 feedRequest.Provided *= feedLimit;
-                                ind.AddIntake(feedRequest);
+                                feedRequest.Provided *= (feedRequest.Resource as HumanFoodStoreType).EdibleProportion;
+                                ind.AddIntake(new LabourDietComponent()
+                                {
+                                    AmountConsumed = feedRequest.Provided,
+                                    FoodStore = feedRequest.Resource as HumanFoodStoreType
+                                }
+                                );
                                 break;
                             default:
                                 throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
@@ -250,7 +259,6 @@ namespace Models.CLEM.Activities
                 }
                 SetStatusSuccess();
             }
-
         }
 
         /// <summary>
