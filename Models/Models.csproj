@@ -625,6 +625,7 @@
     <Compile Include="Soils\WaterModel\UnsaturatedFlow.cs" />
     <Compile Include="Soils\WaterModel\WaterTable.cs" />
     <Compile Include="Weather\ControlledEnvironment.cs" />
+    <Compile Include="Weather\SlopeEffectsOnWeather.cs" />
     <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Main.cs" />
