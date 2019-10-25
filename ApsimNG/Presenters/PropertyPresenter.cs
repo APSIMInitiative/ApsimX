@@ -808,7 +808,11 @@ namespace UserInterface.Presenters
                 SetPropertyValue(property, newValue);
 
                 // Update the value shown in the grid.
-                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(property, cell.RowIndex, cell.ColIndex);
+                object val = GetCellValue(property, cell.RowIndex, cell.ColIndex);
+                // Special handling for enumerations, as we want to display the description, not the value
+                if (val.GetType().IsEnum)
+                    val = VariableProperty.GetEnumDescription(val as Enum);
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = val;
             }
 
             UpdateReadOnlyProperties();

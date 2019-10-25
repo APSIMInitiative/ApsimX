@@ -840,14 +840,17 @@ namespace UserInterface.Views
         /// Format the legend.
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
-        public void FormatLegend(Models.Graph.Graph.LegendPositionType legendPositionType)
+        /// <param name="orientation">Orientation of items in the legend.</param>
+        public void FormatLegend(Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation)
         {
             LegendPosition oxyLegendPosition;
-            if (Enum.TryParse<LegendPosition>(legendPositionType.ToString(), out oxyLegendPosition))
+            if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
             {
                 this.plot1.Model.LegendFont = Font;
                 this.plot1.Model.LegendFontSize = FontSize;
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
+                if (Enum.TryParse(orientation.ToString(), out LegendOrientation legendOrientation))
+                    plot1.Model.LegendOrientation = legendOrientation;
             }
 
             this.plot1.Model.LegendSymbolLength = 30;
