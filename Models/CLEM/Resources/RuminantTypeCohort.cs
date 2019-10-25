@@ -227,53 +227,56 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                // when formatted for parent control. i.e. child fo trade 
-                html += "\n<div class=\"resourcebanneralone clearfix\">";
-                html += "Buy ";
-                if (Number > 0)
+                if (this.Parent is CLEMActivityBase)
                 {
-                    html += "<span class=\"setvalue\">";
-                    html += Number.ToString();
-                }
-                else
-                {
-                    html += "<span class=\"errorlink\">";
-                    html += "NOT SET";
-                }
-                html += "</span> x ";
-                if (Age > 0)
-                {
-                    html += "<span class=\"setvalue\">";
-                    html += Number.ToString();
-                }
-                else
-                {
-                    html += "<span class=\"errorlink\">";
-                    html += "NOT SET";
-                }
-                html += "</span> month old ";
-                html += "<span class=\"setvalue\">";
-                html += Gender.ToString()+((Number>1)?"s":"");
-                html += "</span> weighing ";
-                if (Weight > 0)
-                {
-                    html += "<span class=\"setvalue\">";
-                    html += Weight.ToString();
-                    html += "</span> kg ";
-                    if (WeightSD > 0)
+                    // when formatted for parent control. i.e. child fo trade 
+                    html += "\n<div class=\"resourcebanneralone clearfix\">";
+                    html += "Buy ";
+                    if (Number > 0)
                     {
-                        html += "with a standard deviation of <span class=\"setvalue\">";
-                        html += WeightSD.ToString();
+                        html += "<span class=\"setvalue\">";
+                        html += Number.ToString();
+                    }
+                    else
+                    {
+                        html += "<span class=\"errorlink\">";
+                        html += "NOT SET";
+                    }
+                    html += "</span> x ";
+                    if (Age > 0)
+                    {
+                        html += "<span class=\"setvalue\">";
+                        html += Number.ToString();
+                    }
+                    else
+                    {
+                        html += "<span class=\"errorlink\">";
+                        html += "NOT SET";
+                    }
+                    html += "</span> month old ";
+                    html += "<span class=\"setvalue\">";
+                    html += Gender.ToString() + ((Number > 1) ? "s" : "");
+                    html += "</span> weighing ";
+                    if (Weight > 0)
+                    {
+                        html += "<span class=\"setvalue\">";
+                        html += Weight.ToString();
+                        html += "</span> kg ";
+                        if (WeightSD > 0)
+                        {
+                            html += "with a standard deviation of <span class=\"setvalue\">";
+                            html += WeightSD.ToString();
+                            html += "</span>";
+                        }
+                    }
+                    else
+                    {
+                        html += "<span class=\"setvalue\">";
+                        html += "Normalised weight";
                         html += "</span>";
                     }
+                    html += "\n</div>";
                 }
-                else
-                {
-                    html += "<span class=\"setvalue\">";
-                    html += "Normalised weight";
-                    html += "</span>";
-                }
-                html += "\n</div>";
             }
             return html;
         }
