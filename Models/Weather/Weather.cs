@@ -302,10 +302,10 @@
         {
             get
             {
-                if (this.reader == null || this.reader.Constant("Latitude") == null)
+                if (this.reader == null && !this.OpenDataFile())
                     return 0;
-                else
-                    return this.reader.ConstantAsDouble("Latitude");
+
+                return this.reader.ConstantAsDouble("Latitude");
             }
         }
 

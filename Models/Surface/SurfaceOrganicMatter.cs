@@ -18,7 +18,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter
+    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy
     {
         /// <summary>Link to the soil component</summary>
         [Link]
@@ -49,10 +49,8 @@
         /// <summary>The surf om</summary>
         private List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();
 
-        /// <summary>
-        /// List of residue layers dimensions that are passed to microclimate for arbitrating interception of radiation and rainfall
-        /// </summary>
-        public List<ICanopy> ResidueLayers { get; set; } = new List<ICanopy>();
+        /// <summary>List of canopies that MicroClimate will use.</summary>
+        public List<ICanopy> Canopies { get; set; } = new List<ICanopy>();
 
         /// <summary>The number surfom</summary>
         private int numSurfom = 0;
@@ -439,13 +437,13 @@
             if (actualSOMDecomp != null)
                 DecomposeSurfom(actualSOMDecomp);
 
-            ResidueLayers = new List<ICanopy>();
+            Canopies = new List<ICanopy>();
             foreach (SurfOrganicMatterType pool in SurfOM)
             {
                 if (pool.CanopyLying.CoverTotal > 0)
-                    ResidueLayers.Add(pool.CanopyLying);
+                    Canopies.Add(pool.CanopyLying);
                 if (pool.CanopyStanding.CoverTotal > 0)
-                    ResidueLayers.Add(pool.CanopyStanding);
+                    Canopies.Add(pool.CanopyStanding);
             }
         }
 
