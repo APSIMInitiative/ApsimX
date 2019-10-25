@@ -169,4 +169,10 @@
   <data name="Nutrient" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Nutrient.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
- </root>
+  <data name="AGPRyegrass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AGPRyegrass.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="AGPWhiteClover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AGPWhiteClover.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>
