@@ -1,6 +1,7 @@
 ﻿namespace Models.Interfaces
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>This interface describes MicroClimate / canopy comms.</summary>
     public interface ICanopy
@@ -45,14 +46,20 @@
         CanopyEnergyBalanceInterceptionlayerType[] LightProfile { set; } 
     }
 
-    /// <summary>
-    /// A canopy energy balance type
-    /// </summary>
+    /// <summary>This interface describes a model that has a list of canopies.</summary>
+    public interface IHaveCanopy
+    {
+        /// <summary>List of canopies that MicroClimate will use.</summary>
+        List<ICanopy> Canopies { get; }
+    }
+
+    /// <summary>A canopy energy balance type</summary>
     [Serializable]
     public class CanopyEnergyBalanceInterceptionlayerType
     {
         /// <summary>The thickness</summary>
         public double thickness;
+
         /// <summary>The amount</summary>
         public double amount;
     }
