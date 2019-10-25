@@ -458,7 +458,7 @@ namespace Models.Properties {
         ///  &quot;Children&quot;: [
         ///    {
         ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;\r\n## Presentation\r\n\r\nThis model has been built using APSIM&apos;s Plant Modelling Framework (PMF), as introduced in [brown_plant_2014] and described in more detail in www.apsim.info.  It aims to simulate the development and growth of white clover (*Trifolium rep [rest of string was truncated]&quot;;.
+        ///      &quot;Text&quot;: &quot;\r\n## Presentation\r\n\r\nThis model has been built using APSIM&apos;s Plant Modelling Framework (PMF), as introduced in [brown_plant_2014] and described in more detail in apsimdev.apsim.info.  It aims to simulate the development and growth of white clover (*Trifolium rep [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WhiteClover {
             get {

@@ -482,6 +482,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\GraphPanel.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\Ryegrass.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SlopeEffectsOnWeather.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedTarget.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedToTargets.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMarkForSale.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CommonLandFoodStoreType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Permutation.png" />
