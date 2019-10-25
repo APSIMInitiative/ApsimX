@@ -133,6 +133,8 @@ namespace Models.CLEM.Activities
 
         private ActivityCutAndCarryLimiter limiter;
 
+        private string addReason = "Harvest";
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -183,6 +185,7 @@ namespace Models.CLEM.Activities
             if((LinkedResourceItem as Model).Parent.GetType() == typeof(GrazeFoodStore))
             {
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = (Parent as IPastureManager);
+                addReason = "Growth";
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
@@ -426,7 +429,7 @@ namespace Models.CLEM.Activities
                             {
                                 //Add without adding any new nitrogen.
                                 //The nitrogen value for this feed item in the store remains the same.
-                                LinkedResourceItem.Add(AmountHarvested, this, "Harvest");
+                                LinkedResourceItem.Add(AmountHarvested, this, addReason);
                             }
                             else
                             {
@@ -439,7 +442,7 @@ namespace Models.CLEM.Activities
                                 {
                                     packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
                                 }
-                                LinkedResourceItem.Add(packet, this, "Harvest");
+                                LinkedResourceItem.Add(packet, this, addReason);
                             }
                             SetStatusSuccess();
                         }
