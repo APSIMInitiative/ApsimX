@@ -196,23 +196,20 @@ namespace Models.CLEM.Resources
                 }
 
                 RuminantType rumtype = Apsim.Parent(this, typeof(RuminantType)) as RuminantType;
+                Ruminant newInd = null;
+                string normWtString = "Unavailable";
+
                 if (rumtype != null)
                 {
-                    // derived from activity such as Trade
-                    CLEMRuminantActivityBase parentBase = Parent as CLEMRuminantActivityBase;
-                    parentBase.InitialiseHerd(true, true);
-                    var rum = parentBase.CurrentHerd(false).FirstOrDefault() as Ruminant;
-                    rumtype = rum.BreedParams;
+                    newInd = new Ruminant(this.Age, this.Gender, 0, Apsim.Parent(this, typeof(RuminantType)) as RuminantType);
+                    normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                 }
-                Ruminant newInd = new Ruminant(this.Age, this.Gender, 0, Apsim.Parent(this, typeof(RuminantType)) as RuminantType);
-
-                string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
-                double weightToUse = newInd.Weight;
 
                 if (WeightSD > 0)
                 {
                     html += "\n<div class=\"activityentry\">Individuals will be randomally assigned a weight based on a mean "+ ((Weight == 0) ? "(using the normalised weight) " : "") + "of <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>";
-                    if (Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+            
+                    if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                     {
                         html += "<div class=\"activityentry\">These individuals should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age</div>";
                     }
@@ -220,13 +217,63 @@ namespace Models.CLEM.Resources
                 else
                 {
                     html += "\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + ((Weight == 0)?" the normalised weight of ":"") + " <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg";
-                    if (Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                    if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                     {
                         html += ", but should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age";
                     }
                     html += "</div>";
                 }
                 html += "</div>";
+            }
+            else
+            {
+                // when formatted for parent control. i.e. child fo trade 
+                html += "\n<div class=\"resourcebanneralone clearfix\">";
+                html += "Buy ";
+                if (Number > 0)
+                {
+                    html += "<span class=\"setvalue\">";
+                    html += Number.ToString();
+                }
+                else
+                {
+                    html += "<span class=\"errorlink\">";
+                    html += "NOT SET";
+                }
+                html += "</span> x ";
+                if (Age > 0)
+                {
+                    html += "<span class=\"setvalue\">";
+                    html += Number.ToString();
+                }
+                else
+                {
+                    html += "<span class=\"errorlink\">";
+                    html += "NOT SET";
+                }
+                html += "</span> month old ";
+                html += "<span class=\"setvalue\">";
+                html += Gender.ToString()+((Number>1)?"s":"");
+                html += "</span> weighing ";
+                if (Weight > 0)
+                {
+                    html += "<span class=\"setvalue\">";
+                    html += Weight.ToString();
+                    html += "</span> kg ";
+                    if (WeightSD > 0)
+                    {
+                        html += "with a standard deviation of <span class=\"setvalue\">";
+                        html += WeightSD.ToString();
+                        html += "</span>";
+                    }
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">";
+                    html += "Normalised weight";
+                    html += "</span>";
+                }
+                html += "\n</div>";
             }
             return html;
         }
@@ -238,19 +285,27 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
+
             if (formatForParentControl)
             {
-                Ruminant newInd = new Ruminant(this.Age, this.Gender, 0, Apsim.Parent(this, typeof(RuminantType)) as RuminantType);
-                double normalisedWt = newInd.NormalisedAnimalWeight;
+                RuminantType rumtype = Apsim.Parent(this, typeof(RuminantType)) as RuminantType;
+                Ruminant newInd = null;
+                string normWtString = "Unavailable";
+                double normalisedWt = 0;
 
-                string normWtString = normalisedWt.ToString("#,##0");
-                if(Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                if (rumtype != null)
                 {
-                    normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
-                    (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
-                }
+                    newInd = new Ruminant(this.Age, this.Gender, 0, Apsim.Parent(this, typeof(RuminantType)) as RuminantType);
+                    normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
+                    normalisedWt = newInd.NormalisedAnimalWeight;
+                    if (Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                    {
+                        normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
+                        (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
+                    }
 
-                html += "\n<tr><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Gender + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>"+normWtString+"</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td></tr>";
+                    html += "\n<tr><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Gender + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>" + normWtString + "</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td></tr>";
+                }
             }
             else
             {
