@@ -273,6 +273,8 @@ namespace Models.CLEM.Activities
             // grow individuals
 
             List<string> breeds = herd.Select(a => a.BreedParams.Name).Distinct().ToList();
+            this.Status = ActivityStatus.NotNeeded;
+
             foreach (string breed in breeds)
             {
                 double totalMethane = 0;
