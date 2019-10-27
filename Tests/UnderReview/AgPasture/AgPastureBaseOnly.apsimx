@@ -1,0 +1,2346 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 67,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "DevReportingRadcliffe",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1982-07-01T00:00:00",
+          "End": "1984-06-30T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Weather, Models",
+          "FileName": "Ruakura.met",
+          "ExcelWorkSheetName": "",
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock Clock;\r\n        [Link] Weather Weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public yesnoType AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public yesnoType WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [XmlIgnore] public string Message { get; set; }\r\n\r\n        [XmlIgnore] public bool doControl { get; set; }\r\n        [XmlIgnore] public int doControlInt { get; set; }\r\n        //public DateTime ControlStartDate { get; set; }\r\n        //public DateTime ControlEndDate { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")] private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the dates\r\n            //ControlStartDate = DateTime.Parse(ControlStart + \"-\" + Clock.Today.Year.ToString());\r\n            //ControlEndDate = DateTime.Parse(ControlEnd + \"-\" + Clock.Today.Year.ToString());\r\n            Message = \"\";\r\n        }\r\n\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl == yesnoType.yes) && (Clock.Today >= EnableDate))\r\n            {\r\n            \tdoControl = true;\r\n\t            if (WithinYearControl == yesnoType.yes)\r\n\t            \tdoControl = DateUtilities.WithinDates(ControlStart, Clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (doControl)\r\n            \tdoControlInt = 1;\r\n            else\r\n            \tdoControlInt = 0;\r\n\r\n            if (doControl)\r\n            {\r\n                // do the weather alterations \r\n                Weather.Rain = RainfallMultiplier * Weather.Rain + RainfallAddition;\r\n                Weather.Radn = RadiationMultiplier * Weather.Radn + RadiationAddition;\r\n                Weather.MinT = MinTMultiplier * Weather.MinT + MinTAddition;\r\n                Weather.MaxT = MaxTMultiplier * Weather.MaxT + MaxTAddition;\r\n                Weather.Wind = WindMultiplier * Weather.Wind + WindAddition;\r\n                Weather.VP = VPMultiplier * Weather.VP + VPAddition;\r\n            }\r\n        }\r\n\r\n        public enum yesnoType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n\t}\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "AllowControl",
+              "Value": "no"
+            },
+            {
+              "Key": "EnableDate",
+              "Value": "05/30/1979 00:00:00"
+            },
+            {
+              "Key": "WithinYearControl",
+              "Value": "no"
+            },
+            {
+              "Key": "ControlStart",
+              "Value": "01-jan"
+            },
+            {
+              "Key": "ControlEnd",
+              "Value": "31-dec"
+            },
+            {
+              "Key": "RainfallMultiplier",
+              "Value": "0.7791"
+            },
+            {
+              "Key": "RainfallAddition",
+              "Value": "0"
+            },
+            {
+              "Key": "RadiationMultiplier",
+              "Value": "1"
+            },
+            {
+              "Key": "RadiationAddition",
+              "Value": "0"
+            },
+            {
+              "Key": "MinTMultiplier",
+              "Value": "0.9484"
+            },
+            {
+              "Key": "MinTAddition",
+              "Value": "0"
+            },
+            {
+              "Key": "MaxTMultiplier",
+              "Value": "0.9484"
+            },
+            {
+              "Key": "MaxTAddition",
+              "Value": "0"
+            },
+            {
+              "Key": "WindMultiplier",
+              "Value": "1"
+            },
+            {
+              "Key": "WindAddition",
+              "Value": "0"
+            },
+            {
+              "Key": "VPMultiplier",
+              "Value": "1"
+            },
+            {
+              "Key": "VPAddition",
+              "Value": "0"
+            }
+          ],
+          "Name": "ClimateController",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "Summary",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "SoilArbitrator",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "Field",
+          "Children": [
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "// Defoliates AgPasture on a regular rotation or one-off via a schedule\r\n// currenty defoliates the amount specified by spreading evenly over the specified period\r\n\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nusing Models.AgPasture;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone myZone;\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser fertiliser;\r\n        [ScopedLinkByName] ISolute no3;\r\n        [Link] Soil mySoil;\r\n        [Link] ISummary summary = null;\r\n\r\n        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();\r\n        \r\n        // - Paramters for this manager\r\n        [Description(\"Allow this manager to control defoliation? \")]\r\n        public yesnoType AllowControl { get; set; }\r\n        [Description(\"Date to begin the rotation: \")]\r\n        public DateTime CutRotationStartDate { get; set; }\r\n        [Description(\"Date to finish the rotation: \")]\r\n        public DateTime CutRotationEndDate { get; set; }\r\n        [Description(\"How the interval is defined: \")]\r\n        public rotationIntervalTypes IntervalType { get; set; }\r\n        [Description(\"Rotation interval (days): \")]\r\n        public int CutInterval { get; set; }\r\n        [Description(\"Duration of each event (days): \")]\r\n        public int DurationOfCut { get; set; }\r\n        [Description(\"What amount is being defined: \")]\r\n        public removeAmountTypes RemoveAmountType { get; set; }\r\n        [Description(\"Amount to use (kg/ha): \")]\r\n        public double AmountGiven { get; set; }\r\n        [Description(\"How much of DM is removed from the field: \")]\r\n        public removeDMTypes DMRemoveType { get; set; }\r\n        [Description(\"Fraction of N that is removed from the field (0-1): \")]\r\n        public double FractionN2Remove { get; set; }\r\n        [Description(\"How defoliated material is returned to the field? \")]\r\n        public returnTypes ReturnType { get; set; }\r\n        [Description(\"How the partition of N to dung and urine are defined:\")]\r\n        public dungNContentTypes NDungType { get; set; }\r\n        [Description(\"Proportion of returned N that goes to dung (0-1): \")]\r\n        public double ProportionN2Dung { get; set; }\r\n        [Description(\"The C:N of dung (typically around 20): \")]\r\n        public double CNRatioDung { get; set; }\r\n        [Description(\"Depth down to which urine is applied (mm): \")]\r\n        public double UrineDepth { get; set; }\r\n\r\n        // - Outputs from this manager\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Pasture DM defoliated today\r\n        public double DefoliatedWt { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Pasture N defoliate today\r\n        public double DefoliatedN { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Pasture DM harvested today\r\n        public double HarvestedWt { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Pasture N harvested today\r\n        public double HarvestedN { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Pasture DM removed from the field\r\n        public double RemovedWt { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Pasture N removed from the field\r\n        public double RemovedN { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Residue DM returned to the field\r\n        public double ReturnedWt { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Residue N returned to the field\r\n        public double ReturnedN { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Harvested N returned as dung (SurfaceOM)\r\n        public double NReturnedInDung { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Harvested N returned as urine (urea)\r\n        public double NReturnedInUrine { get; set; }\r\n        [XmlIgnore][Units(\"day\")]// Description: Number of days after last defoliation\r\n        public int DaysAfterCut { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Total standing DM (Leaf + Stem/Sheath) before cut\r\n        public double PreHarvestDM { get; set; }\r\n        [XmlIgnore][Units(\"g/m2\")]// Description: Total standing DM (Leaf + Stem/Sheath) after cut\r\n        public double PostHarvestDM { get; set; }\r\n\r\n        [XmlIgnore][Units(\"\")] public bool HarvestedToday { get; set; } // auxiliary flag for defoliation\r\n\r\n        // - Internal variables\r\n        // fraction of harvested Dm to actually remove from field\r\n        private double fractionDM2Remove = 1.0;\r\n        // number of days for each defoliation event\r\n        private int cuttingDuration = 0;\r\n        // counter for day within each defoliation\r\n        private int daysCutting = 0;\r\n        // total existing DM harvestable\r\n        private double existingDM;\r\n        // total herbage to remove in g/m2 per day\r\n        private double herbageToRemove;\r\n        // type of DM amount (ResidualDM or DMToRemove)\r\n        private string amountType;\r\n        // auxiliary flag for defoliation\r\n        private bool aCutHasHappened = false;\r\n        // fraction of urine that is applied to each layer\r\n        private double[] fractionUrine;\r\n        // number of layer in the soil\r\n        private int nLayers;\r\n\r\n        // - Event to add residue or dung to surface OM\r\n        public event BiomassRemovedDelegate BiomassRemoved;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            foreach (PastureSpecies species in Apsim.Children(myZone, typeof(PastureSpecies)))\r\n                Pasture.Add(species);\r\n\r\n            // reset variables\r\n            DaysAfterCut = 0;\r\n            resetVariables();\r\n            cuttingDuration = DurationOfCut;\r\n            HarvestedToday = false;\r\n            \r\n            // get the type of amount given\r\n            if (RemoveAmountType == removeAmountTypes.ResidualDM)\r\n                amountType = \"SetResidueAmount\";\r\n            else\r\n                amountType = \"SetRemoveAmount\";\r\n\r\n            // make sure that rotation start when startDate < simulationStartDay\r\n            if ((Clock.Today > CutRotationStartDate) && (Clock.Today < CutRotationEndDate))\r\n                CutRotationStartDate = Clock.Today;\r\n                \r\n            // set the fraction of urine for each layer\r\n            nLayers = mySoil.Thickness.Length;\r\n            fractionUrine = new double[nLayers];\r\n            double soilDepth = 0.0;\r\n            double distFactor = 1.5;\r\n            if (ReturnType == returnTypes.AsDungUrine)\r\n            {\r\n                double atZ0;\r\n                double atZ1;\r\n                double totalProp = UrineDepth * Math.Pow(1.0, distFactor) / (distFactor + 1.0);\r\n                \r\n                atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1.0);\r\n                for (int z = 0; z < nLayers; z++)\r\n                {\r\n                    atZ0 = atZ1;\r\n                    soilDepth += mySoil.Thickness[z];\r\n                    atZ1 = (UrineDepth - soilDepth) * Math.Pow(1.0 - soilDepth / UrineDepth, distFactor) / (distFactor + 1);\r\n                    if (1.0 - (soilDepth / UrineDepth) < 0.0)\r\n                        atZ1 = 0;\r\n                    fractionUrine[z] = (atZ0 - atZ1) / totalProp;\r\n                }\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            HarvestedToday = false;\r\n\r\n\t\t\t// Check whether defoliation is allowed at all\r\n            if (AllowControl == yesnoType.yes)\r\n            {\r\n                // Check whether defoliation can start\r\n                if ((Clock.Today >= CutRotationStartDate) && (Clock.Today <= CutRotationEndDate))\r\n                {\r\n                    if (Clock.Today == CutRotationStartDate)\r\n                        DaysAfterCut = CutInterval;\r\n    \r\n                    // Check whether we should start a defoliation\r\n                    if ((Pasture[0].IsAlive) && (DaysAfterCut >= (CutInterval - 1)))\r\n                        StartDefoliation(AmountGiven, amountType, DurationOfCut);\r\n                }\r\n            }\r\n            //// Note: Only the code above should be limited by 'AllowControl'. So the rest of the code\r\n            ////  can be used by being called from another manager or a schedulle thingy\r\n\r\n\r\n            // Check whether we need to continue cutting\r\n            if ((daysCutting > 0) && (daysCutting < cuttingDuration))\r\n            {\r\n                // reset outputs\r\n                resetVariables();\r\n\r\n                defoliatePasture(herbageToRemove);\r\n                if (ReturnType == returnTypes.AsResidue)\r\n                    returnResidues();\r\n                else\r\n                    returnExcreta();\r\n                daysCutting += 1;\r\n                if (daysCutting == cuttingDuration)\r\n                {\r\n                    PostHarvestDM = 0.0;\r\n                    foreach (PastureSpecies species in Pasture)\r\n                        PostHarvestDM += species.StandingHerbageWt;\r\n                }\r\n            }\r\n\r\n            // reset outputs\r\n            if (daysCutting < 0)\r\n            {\r\n                resetVariables();\r\n                daysCutting = 0;\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            // Check whether a cutting has finished\r\n            if (daysCutting == cuttingDuration)\r\n            {\r\n                aCutHasHappened = true;\r\n                daysCutting = -1;\r\n            }\r\n\r\n            // Increase the counter for days after cutting\r\n            if (aCutHasHappened && (daysCutting == 0))\r\n                DaysAfterCut += 1;\r\n        }\r\n\r\n        // Resets the values of all outputs\r\n        private void resetVariables()\r\n        {\r\n            DefoliatedWt = 0.0;\r\n            DefoliatedN = 0.0;\r\n            HarvestedWt = 0.0;\r\n            HarvestedN = 0.0;\r\n            RemovedWt = 0.0;\r\n            RemovedN = 0.0;\r\n            ReturnedWt = 0.0;\r\n            ReturnedN = 0.0;\r\n            NReturnedInDung = 0.0;\r\n            NReturnedInUrine = 0.0;\r\n        }\r\n\r\n        // Description: Perform the basic calculations for defoliation\r\n        public void StartDefoliation(double amountDM, string amountType, int duration)\r\n        {\r\n            // Get the existing plant amount\r\n            existingDM = 0.0;\r\n            PreHarvestDM = 0.0;\r\n            HarvestedToday = true;\r\n            foreach (PastureSpecies species in Pasture)\r\n            {\r\n                PreHarvestDM += species.StandingHerbageWt;\r\n                existingDM += species.HarvestableWt;\r\n            }\r\n            \r\n            // Check the amount to remove and print some info\r\n            if ((amountType == \"SetRemoveAmount\") && (existingDM >= amountDM / duration))\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliating \" + (10 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\r\n                herbageToRemove = amountDM / duration;\r\n            }\r\n            else if ((amountType == \"SetResidueAmount\") && (existingDM >= amountDM))\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliating down to approximately \" + (10 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\r\n                herbageToRemove = (PreHarvestDM - amountDM) / duration;\r\n            }\r\n            else\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliation will not happend because there is not enough plant material\");\r\n                if (IntervalType == rotationIntervalTypes.FixedInterval)\r\n                    DaysAfterCut = -duration;\r\n                return;\r\n            }\r\n\r\n            // Start defoliation\r\n            cuttingDuration = duration;\r\n            defoliatePasture(herbageToRemove);\r\n            if (ReturnType == returnTypes.AsResidue)\r\n                returnResidues();\r\n            else\r\n                returnExcreta();\r\n                \r\n            daysCutting = 1;\r\n            DaysAfterCut = 0;\r\n            if (daysCutting == cuttingDuration)\r\n            {\r\n                PostHarvestDM = 0.0;\r\n                foreach (PastureSpecies species in Pasture)\r\n                    PostHarvestDM += species.StandingHerbageWt;\r\n            }\r\n        }\r\n\r\n        // Do the DM removal\r\n        private void defoliatePasture(double removeAmount)\r\n        {\r\n            // Remove a proportion of required DM from each species\r\n            DefoliatedWt = 0.0;\r\n            DefoliatedN = 0.0;\r\n            foreach (PastureSpecies species in Pasture)\r\n            {\r\n                double amountToRemove = removeAmount * species.HarvestableWt / existingDM;\r\n                species.Graze(amount: amountToRemove, type: \"SetRemoveAmount\");\r\n                DefoliatedWt += species.HarvestedWt;\r\n                DefoliatedN += species.HarvestedN;\r\n            }\r\n            \r\n            // total harvested is equal total defoliated, for now\r\n            HarvestedWt = DefoliatedWt;\r\n            HarvestedN = DefoliatedN;\r\n\r\n            // get amounts actually removed from field and that to be returned (dung/urine)\r\n            if (DMRemoveType == removeDMTypes.RemoveAll)\r\n                fractionDM2Remove = 1.0;\r\n            else if (DMRemoveType == removeDMTypes.RemoveNone)\r\n                fractionDM2Remove = 0.0;\r\n            else\r\n            {\r\n                fractionDM2Remove = 0.0;\r\n                foreach (PastureSpecies species in Pasture)\r\n                    fractionDM2Remove += species.HarvestedDigestibility * species.HarvestedWt;\r\n                fractionDM2Remove /= removeAmount;\r\n            }\r\n            \r\n            RemovedWt = HarvestedWt * fractionDM2Remove;\r\n            RemovedN = HarvestedN * FractionN2Remove;\r\n            ReturnedWt = HarvestedWt - RemovedWt;\r\n            ReturnedN = HarvestedN - RemovedN;\r\n\r\n            if (ReturnType == returnTypes.AsDungUrine)\r\n            {\r\n                if (NDungType == dungNContentTypes.DefineProportion)\r\n                    NReturnedInDung = ReturnedN * ProportionN2Dung;\r\n                else\r\n                    NReturnedInDung = Math.Min(ReturnedN, ReturnedWt * 0.4 / CNRatioDung);\r\n                NReturnedInUrine = ReturnedN - NReturnedInDung;\r\n            }\r\n            else\r\n            {\r\n                NReturnedInDung = 0.0;\r\n                NReturnedInUrine = 0.0;\r\n            }\r\n        }\r\n        \r\n        // Return dung and urine\r\n        private void returnExcreta()\r\n        {\r\n            if ((ReturnedWt > 0.0) || (NReturnedInDung > 0.0))\r\n            {\r\n                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\r\n                string[] type = new string[] { \"RuminantDung_PastureFed\" };\r\n                float[] dltdm = new float[] { (Single)ReturnedWt };\r\n                float[] dltn = new float[] { (Single)NReturnedInDung };\r\n                float[] dltp = new float[] { 0 };\r\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n                BiomassDung.crop_type = \"RuminantDung_PastureFed\";\r\n                BiomassDung.dm_type = type;\r\n                BiomassDung.dlt_crop_dm = dltdm;\r\n                BiomassDung.dlt_dm_n = dltn;\r\n                BiomassDung.dlt_dm_p = dltp;\r\n                BiomassDung.fraction_to_residue = fraction;\r\n                BiomassRemoved.Invoke(BiomassDung);\r\n            }\r\n\r\n            if (NReturnedInUrine > 0.0)\r\n            {\r\n                double[] myUrineDeposition = new double[nLayers];\r\n                for (int z = 0; z < nLayers; z++)\r\n                    myUrineDeposition[z] = NReturnedInUrine * fractionUrine[z];\r\n\r\n                no3.AddKgHaDelta(SoluteSetterType.Fertiliser, myUrineDeposition);\r\n                //fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, 1.0);\r\n            }\r\n        }\r\n\r\n        // Return pasture residues\r\n        private void returnResidues()\r\n        {\r\n            if ((ReturnedWt > 0.0) || (ReturnedN > 0.0))\r\n            {\r\n                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\r\n                string[] type = new string[] { \"Grass\" };\r\n                float[] dltdm = new float[] { (Single)ReturnedWt };\r\n                float[] dltn = new float[] { (Single)ReturnedN };\r\n                float[] dltp = new float[] { 0 };\r\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n                BiomassDung.crop_type = \"Grass\";\r\n                BiomassDung.dm_type = type;\r\n                BiomassDung.dlt_crop_dm = dltdm;\r\n                BiomassDung.dlt_dm_n = dltn;\r\n                BiomassDung.dlt_dm_p = dltp;\r\n                BiomassDung.fraction_to_residue = fraction;\r\n                BiomassRemoved.Invoke(BiomassDung);\r\n            }\r\n        }\r\n        \r\n        // Auxiliary bits and pieces  - - - - - - - - - - - - - - - - - - - - - - - -  - - - - -  - -\r\n\r\n        public enum yesnoType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        public enum removeAmountTypes\r\n        {\r\n            /// <summary>Setting DM amount to remove</summary>\r\n            DMToRemove,\r\n            /// <summary>Setting residual DM amount</summary>\r\n            ResidualDM\r\n        }\r\n\r\n        public enum rotationIntervalTypes\r\n        {\r\n            /// <summary>Setting a fixed interval</summary>\r\n            FixedInterval,\r\n            /// <summary>Setting a target (minimum) inteval</summary>\r\n            TargetInterval\r\n        }\r\n\r\n        public enum removeDMTypes\r\n        {\r\n            /// <summary>Remove all DM</summary>\r\n            RemoveAll,\r\n            /// <summary>Remove no DM</summary>\r\n            RemoveNone,\r\n            /// <summary>Remove a fraction based on digestibility</summary>\r\n            BasedOnDigestibility\r\n        }\r\n        \r\n        public enum returnTypes\r\n        {\r\n            /// <summary>Return plant material as residue</summary>\r\n            AsResidue,\r\n            /// <summary>Return meterial as dung and urine</summary>\r\n            AsDungUrine\r\n        }\r\n\r\n        public enum dungNContentTypes\r\n        {\r\n            /// <summary>Define the proportion of N returned as dung</summary>\r\n            DefineProportion,\r\n            /// <summary>Define the C:N of dung</summary>\r\n            DefineCNratio,\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "AllowControl",
+                  "Value": "no"
+                },
+                {
+                  "Key": "CutRotationStartDate",
+                  "Value": "01/01/1900 00:00:00"
+                },
+                {
+                  "Key": "CutRotationEndDate",
+                  "Value": "12/31/2100 00:00:00"
+                },
+                {
+                  "Key": "IntervalType",
+                  "Value": "FixedInterval"
+                },
+                {
+                  "Key": "CutInterval",
+                  "Value": "21"
+                },
+                {
+                  "Key": "DurationOfCut",
+                  "Value": "1"
+                },
+                {
+                  "Key": "RemoveAmountType",
+                  "Value": "ResidualDM"
+                },
+                {
+                  "Key": "AmountGiven",
+                  "Value": "1000"
+                },
+                {
+                  "Key": "DMRemoveType",
+                  "Value": "BasedOnDigestibility"
+                },
+                {
+                  "Key": "FractionN2Remove",
+                  "Value": "0.75"
+                },
+                {
+                  "Key": "ReturnType",
+                  "Value": "AsDungUrine"
+                },
+                {
+                  "Key": "NDungType",
+                  "Value": "DefineProportion"
+                },
+                {
+                  "Key": "ProportionN2Dung",
+                  "Value": "0.4"
+                },
+                {
+                  "Key": "CNRatioDung",
+                  "Value": "0"
+                },
+                {
+                  "Key": "UrineDepth",
+                  "Value": "250"
+                }
+              ],
+              "Name": "CutRotation",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        //Communication to other modules\r\n        [Link] ISummary summary = null;\r\n        [Link] Irrigation Irrigation;\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        [Link(IsOptional = true)] IPlant existingCrop;\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [XmlIgnore] public double TopSWdeficit { get; set; }\r\n        [XmlIgnore] public double TopSWC { get; set; }\r\n        [XmlIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [XmlIgnore] public double AmountToApply { get; set; }\r\n        [XmlIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = Soil.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);\r\n                TopLL += Soil.LL15mm[layer] * fracLayer;\r\n                TopDUL += Soil.DULmm[layer] * fracLayer;\r\n                depthFromSurface += Soil.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + Soil.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / Soil.Thickness[layer]);\r\n                TopSWC += Soil.SoilWater.SWmm[layer] * fracLayer;\r\n                depthFromSurface += Soil.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "allowIrrigation",
+                  "Value": "False"
+                },
+                {
+                  "Key": "seasonStart",
+                  "Value": "15-Aug"
+                },
+                {
+                  "Key": "seasonEnd",
+                  "Value": "30-May"
+                },
+                {
+                  "Key": "seasonsAllocation",
+                  "Value": "10000"
+                },
+                {
+                  "Key": "triggerDeficit",
+                  "Value": "50"
+                },
+                {
+                  "Key": "targetDeficit",
+                  "Value": "99"
+                },
+                {
+                  "Key": "returndays",
+                  "Value": "1"
+                },
+                {
+                  "Key": "maximumAmount",
+                  "Value": "30"
+                },
+                {
+                  "Key": "depthPAWC",
+                  "Value": "300"
+                }
+              ],
+              "Name": "AutomaticIrrigation",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Operations, Models",
+              "Operation": null,
+              "Name": "IrrigationSchedule",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Operations, Models",
+              "Operation": [
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1982-07-15",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1982-08-12",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1982-09-09",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1982-10-07",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1982-11-04",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1982-12-02",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1982-12-30",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-01-27",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-02-24",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-03-24",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-04-21",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-05-19",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-06-16",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-07-14",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-08-11",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-09-08",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-10-06",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-11-03",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-12-01",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1983-12-29",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1) ",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-01-26",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-02-23",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-03-22",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-04-19",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-05-17",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-06-14",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-07-12",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-08-09",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-09-06",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-10-04",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-11-01",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-11-29",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1984-12-27",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-01-24",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-02-21",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-03-21",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-04-18",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-05-16",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-06-13",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-07-11",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-08-08",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-09-05",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-10-03",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1) ",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-10-31",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-11-28",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1985-12-26",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-01-23",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-02-20",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-03-20",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-04-17",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-05-15",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-06-12",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-07-10",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-08-07",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-09-04",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-10-02",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-10-30",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-11-27",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1986-12-25",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-01-22",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-02-19",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-03-19",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-04-16",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-05-14",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-06-11",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-07-09",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-08-06",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-09-03",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-10-01",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-10-29",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-11-26",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1987-12-24",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-01-21",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-02-18",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-03-17",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-04-14",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-05-12",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-06-09",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-07-07",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-08-04",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-09-01",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-09-29",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-10-27",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1) ",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-11-24",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1988-12-22",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-01-19",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-02-16",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-03-16",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-04-13",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-05-11",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-06-08",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-07-06",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-08-03",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-08-31",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-09-28",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-10-26",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-11-23",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1) ",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1989-12-21",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-01-18",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-02-15",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-03-15",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-04-12",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-05-10",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-06-07",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-07-05",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-08-02",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-08-30",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-09-27",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-10-25",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-11-22",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1990-12-20",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-01-17",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-02-14",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-03-14",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-04-11",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-05-09",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-06-06",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-07-04",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-08-01",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-08-29",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1) ",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-09-26",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-10-24",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-11-21",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1991-12-19",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1992-01-16",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1992-02-13",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1992-03-12",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1992-04-09",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1992-05-07",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                },
+                {
+                  "$type": "Models.Operation, Models",
+                  "Date": "1992-06-04",
+                  "Action": "[CutRotation].Script.StartDefoliation(amountDM: 1000, amountType: \"SetResidueAmount\",duration:1)",
+                  "Enabled": true
+                }
+              ],
+              "Name": "CuttingRuakura",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using Models.Interfaces;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Simulation Simulation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser fertiliser;\r\n        [Link] private Soil mySoil;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private ISummary summary;\r\n        // - Links to APSIM models\r\n        //[Link] AgPasture.PastureSpecies Pasture;\r\n\r\n        List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();\r\n\r\n        //[ScopedLinkByName] Report.Report HarvestReport;\r\n\r\n\r\n        [Separator(\"Point to component and true/false variable for the harvesting\")]\r\n        [Description(\"Name of the component that does the harvesting       :\")] public string CutterName { get; set; }\r\n        [Description(\"Name of the variable that indicates harvesting today :\")] public string HarvestName { get; set; }\r\n\r\n        [Separator(\"NOTE WELL!! MUST start the sim the data after annual reporting and do a harvest on annual reporting day\")]\r\n        [Description(\"Do reporting on each harvest?    :\")] public bool EnableOnHarvest { get; set; }\r\n        [Description(\"Name of the component for harvest-based reporting    :\")] public string ReportNameHarvest { get; set; }\r\n\r\n        [Description(\"Do reporting at the end of each production year?    :\")] public bool EnableOnAnnual { get; set; }\r\n        [Description(\"Name of the component for annual reporting    :\")] public string ReportNameAnnual { get; set; }\r\n        [Description(\"Date for annual reporting - NOTE - must coincide with the end of one of the seasons below (dd-mmm)    :\")] public string ReportDateAnnual { get; set; }\r\n\r\n        [Description(\"Do the seasonal reporting)?    :\")] public bool EnableOnSeason { get; set; }\r\n        [Description(\"Name of the component for seasonal reporting    :\")] public string ReportNameSeasonal { get; set; }\r\n        [Description(\"Last day of summer for seasonal reporting (dd-mmm)\")] public string SummerEndDate { get; set; }\r\n        [Description(\"Last day of autumn for seasonal reporting (dd-mmm)\")] public string AutumnEndDate { get; set; }\r\n        [Description(\"Last day of winter for seasonal reporting (dd-mmm)\")] public string WinterEndDate { get; set; }\r\n        [Description(\"Last day of spring for seasonal reporting (dd-mmm)\")] public string SpringEndDate { get; set; }\r\n\r\n        [Description(\"Do the summary reporting (at the end of the simulation)?    :\")] public bool EnableOnSummary { get; set; }\r\n        [Description(\"Name of the component for summary (comparison to observed) reporting    :\")] public string ReportNameSummary { get; set; }\r\n\r\n\r\n\r\n        public double AnnualHarvestedWt { get; set; }\r\n        public double AnnualIrrigated { get; set; }\r\n        public double IntervalNHA { get; set; }\r\n\r\n        private bool doAnnualReport = false;\r\n        private bool doAnnualReportCalculations = false;\r\n        private bool doSeasonalReport = false;\r\n        private bool doSummerReport = false;\r\n        private bool doAutumnReport = false;\r\n        private bool doWinterReport = false;\r\n        private bool doSpringReport = false;\r\n        private bool doSummerReportCalculations = false;\r\n        private bool doAutumnReportCalculations = false;\r\n        private bool doWinterReportCalculations = false;\r\n        private bool doSpringReportCalculations = false;\r\n\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveAnnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdAnnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngAnnHarvested { get; set; }\r\n\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveSummerHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdSummerHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngSummerHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveAutumnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdAutumnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngAutumnHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveWinterHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdWinterHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngWinterHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double AveSpringHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double StdSpringHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double RngSpringHarvested { get; set; }\r\n\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double[] AveSeasonalHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double[] StdSeasonalHarvested { get; set; }\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public double[] RngSeasonalHarvested { get; set; }\r\n\r\n        [XmlIgnore][Units(\"-\")] public string Season { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double SeasonNHA  { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double SummerNHA  { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double AutumnNHA  { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double WinterNHA  { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double SpringNHA  { get; set; }\r\n\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> AnnHarvested = new List<double>();\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> SummerHarvested = new List<double>();\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> AutumnHarvested = new List<double>();\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> WinterHarvested = new List<double>();\r\n        [XmlIgnore][Units(\"kgDM/ha\")] public List<double> SpringHarvested = new List<double>();\r\n        //List<double> harvestedWtSums = new List<double>();\r\n        private int CountYears = 0;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            foreach (PastureSpecies species in Apsim.Children(zone, typeof(PastureSpecies)))\r\n                Pasture.Add(species);\r\n\r\n\t\t\tCountYears = 0;\r\n\r\n            Season = \"Unknown\";\r\n            SeasonNHA = 0.0;\r\n            SummerNHA = 0.0;\r\n            AutumnNHA = 0.0;\r\n            WinterNHA = 0.0;\r\n            SpringNHA = 0.0;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfYear\")]\r\n        private void OnStartOfYear(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Is this the day for annual reporting?\r\n            doAnnualReportCalculations = false;  // this is to capture annual harvests etc for the final Summary report\r\n            if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today))\r\n                doAnnualReportCalculations = true;\r\n\r\n            doAnnualReport = false;\r\n            if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today) && (EnableOnAnnual))\r\n                doAnnualReport = true;\r\n            else if (DateUtilities.DatesEqual(ReportDateAnnual, Clock.Today.AddDays(-1)))\r\n            {\r\n                AnnualHarvestedWt = 0.0;\r\n                AnnualIrrigated = 0.0;            \r\n            }\r\n\r\n            doSummerReport = false;\r\n            doAutumnReport = false;\r\n            doWinterReport = false;\r\n            doSpringReport = false;\r\n            doSummerReportCalculations = false;\r\n            doAutumnReportCalculations = false;\r\n            doWinterReportCalculations = false;\r\n            doSpringReportCalculations = false;\r\n            if (DateUtilities.DatesEqual(SummerEndDate, Clock.Today))\r\n            {\r\n            \tSeason = \"Summer\";\r\n            \tdoSummerReport = true;\r\n            \tdoSummerReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(SummerEndDate, Clock.Today.AddDays(-1)))\r\n            \tSeasonNHA = 0.0;  // could move this zeroing\r\n            else if (DateUtilities.DatesEqual(AutumnEndDate, Clock.Today))\r\n            {\r\n            \tSeason = \"Autumn\";\r\n            \tdoAutumnReport = true;\r\n            \tdoAutumnReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(AutumnEndDate, Clock.Today.AddDays(-1)))\r\n            \tSeasonNHA = 0.0;\r\n            else if (DateUtilities.DatesEqual(WinterEndDate, Clock.Today))\r\n            {\r\n            \tSeason = \"Winter\";\r\n            \tdoWinterReport = true;\r\n            \tdoWinterReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(WinterEndDate, Clock.Today.AddDays(-1)))\r\n            \tSeasonNHA = 0.0;\r\n            else if (DateUtilities.DatesEqual(SpringEndDate, Clock.Today))\r\n            {\r\n            \tSeason = \"Spring\";\r\n            \tdoSpringReport = true;\r\n            \tdoSpringReportCalculations = true;\r\n            }\r\n            else if (DateUtilities.DatesEqual(SpringEndDate, Clock.Today.AddDays(-1)))\r\n            \tSeasonNHA = 0.0;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n        \tforeach (PastureSpecies species in Pasture)\r\n            {\r\n\t\t        AnnualHarvestedWt += species.NetGrowthWt;\r\n\t            IntervalNHA += species.NetGrowthWt;\r\n    \t        SeasonNHA += species.NetGrowthWt;\r\n            }\r\n\r\n            AnnualIrrigated += Irrigation.IrrigationApplied;\r\n\r\n            bool aCut = (bool)Apsim.Get(zone, \"[\" + CutterName + \"].Script.\" + HarvestName);\r\n            if ((aCut) && (EnableOnHarvest))\r\n            {\r\n                Models.Report.Report harvestReport = Apsim.Find(this, ReportNameHarvest) as Models.Report.Report;\r\n                if (harvestReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportNameHarvest));\r\n                harvestReport.DoOutput();\r\n                IntervalNHA = 0.0;\r\n            }\r\n\r\n            if (doSummerReport | doAutumnReport | doWinterReport | doSpringReport)\r\n            {\r\n                Models.Report.Report seasonalReport = Apsim.Find(this, ReportNameSeasonal) as Models.Report.Report;\r\n                if (seasonalReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportNameSeasonal));\r\n                seasonalReport.DoOutput();\r\n            }\r\n\r\n            if (doAnnualReportCalculations)\r\n                AnnHarvested.Add(AnnualHarvestedWt);\r\n            if (doSummerReportCalculations)\r\n                SummerHarvested.Add(SeasonNHA);\r\n            if (doAutumnReportCalculations)\r\n                AutumnHarvested.Add(SeasonNHA);\r\n            if (doWinterReportCalculations)\r\n                WinterHarvested.Add(SeasonNHA);\r\n            if (doSpringReportCalculations)\r\n                SpringHarvested.Add(SeasonNHA);\r\n\r\n            if (doAnnualReport)\r\n            {\r\n                Models.Report.Report annualReport = Apsim.Find(this, ReportNameAnnual) as Models.Report.Report;\r\n                if (annualReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate annual report {0}.\", ReportNameAnnual));\r\n                annualReport.DoOutput();\r\n            }\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"EndOfSimulation\")]\r\n        private void OnEndOfSimulation(object sender, EventArgs e)\r\n        {\r\n            if (EnableOnSummary)\r\n            {\r\n\r\n                AveAnnHarvested = MathUtilities.Average(AnnHarvested);\r\n                StdAnnHarvested = MathUtilities.SampleStandardDeviation(AnnHarvested);\r\n                RngAnnHarvested = MathUtilities.Max(AnnHarvested) - MathUtilities.Min(AnnHarvested);\r\n\r\n                AveSummerHarvested = MathUtilities.Average(SummerHarvested);\r\n                StdSummerHarvested = MathUtilities.SampleStandardDeviation(SummerHarvested);\r\n                RngSummerHarvested = MathUtilities.Max(SummerHarvested) - MathUtilities.Min(SummerHarvested);\r\n\r\n                AveAutumnHarvested = MathUtilities.Average(AutumnHarvested);\r\n                StdAutumnHarvested = MathUtilities.SampleStandardDeviation(AutumnHarvested);\r\n                RngAutumnHarvested = MathUtilities.Max(AutumnHarvested) - MathUtilities.Min(AutumnHarvested);\r\n\r\n                AveWinterHarvested = MathUtilities.Average(WinterHarvested);\r\n                StdWinterHarvested = MathUtilities.SampleStandardDeviation(WinterHarvested);\r\n                RngWinterHarvested = MathUtilities.Max(WinterHarvested) - MathUtilities.Min(WinterHarvested);\r\n\r\n                AveSpringHarvested = MathUtilities.Average(SpringHarvested);\r\n                StdSpringHarvested = MathUtilities.SampleStandardDeviation(SpringHarvested);\r\n                RngSpringHarvested = MathUtilities.Max(SpringHarvested) - MathUtilities.Min(SpringHarvested);\r\n\r\n\r\n\r\n                Models.Report.Report summaryReport = Apsim.Find(this, ReportNameSummary) as Models.Report.Report;\r\n                if (summaryReport == null)\r\n                    throw new Exception(string.Format(\"Unable to locate annual report {0}.\", ReportNameSummary));\r\n                summaryReport.DoOutput();\r\n            }\r\n        }\r\n\r\n\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "CutterName",
+                  "Value": "CutRotation"
+                },
+                {
+                  "Key": "HarvestName",
+                  "Value": "HarvestedToday"
+                },
+                {
+                  "Key": "EnableOnHarvest",
+                  "Value": "True"
+                },
+                {
+                  "Key": "ReportNameHarvest",
+                  "Value": "HarvestReport"
+                },
+                {
+                  "Key": "EnableOnAnnual",
+                  "Value": "True"
+                },
+                {
+                  "Key": "ReportNameAnnual",
+                  "Value": "AnnualReport"
+                },
+                {
+                  "Key": "ReportDateAnnual",
+                  "Value": "31-may"
+                },
+                {
+                  "Key": "EnableOnSeason",
+                  "Value": "True"
+                },
+                {
+                  "Key": "ReportNameSeasonal",
+                  "Value": "SeasonalReport"
+                },
+                {
+                  "Key": "SummerEndDate",
+                  "Value": "28-feb"
+                },
+                {
+                  "Key": "AutumnEndDate",
+                  "Value": "31-may"
+                },
+                {
+                  "Key": "WinterEndDate",
+                  "Value": "31-aug"
+                },
+                {
+                  "Key": "SpringEndDate",
+                  "Value": "30-nov"
+                },
+                {
+                  "Key": "EnableOnSummary",
+                  "Value": "True"
+                },
+                {
+                  "Key": "ReportNameSummary",
+                  "Value": "SummaryReport"
+                },
+                {
+                  "Key": "AnnualHarvestedWt",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AnnualIrrigated",
+                  "Value": "0"
+                },
+                {
+                  "Key": "IntervalNHA",
+                  "Value": "0"
+                }
+              ],
+              "Name": "DoReporting",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 0.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "soil_albedo": 0.23,
+              "SoilHeatFluxFraction": 0.4,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Irrigation, Models",
+              "Name": "Irrigation",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "Name": "Fertiliser",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
+              "InitialResidueName": "Sward",
+              "InitialResidueType": "grass",
+              "InitialResidueMass": 1000.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 15.0,
+              "FractionFaecesAdded": 0.5,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "SurfaceOrganicMatter",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": null,
+              "ASCSubOrder": null,
+              "SoilType": "Black Vertosol",
+              "LocalName": null,
+              "Site": "Dalby",
+              "NearestTown": "Dalby, Q 4405",
+              "Region": "Darling Downs",
+              "State": "Queensland",
+              "Country": null,
+              "NaturalVegetation": null,
+              "ApsoilNumber": "27",
+              "Latitude": -27.12,
+              "Longitude": 151.305,
+              "LocationAccuracy": "+/-20m",
+              "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba",
+              "Comments": "This was just copied from the original simulation done in the older APSIM",
+              "Name": "Soil",
+              "Children": [
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": [
+                    7.619,
+                    7.3572499999999987,
+                    3.8709999999999991,
+                    3.84,
+                    3.81,
+                    3.7789999999999995,
+                    3.6910000000000007
+                  ],
+                  "NH4N": [
+                    0.132,
+                    0.132,
+                    0.132,
+                    0.13200000000000003,
+                    0.13199999999999998,
+                    0.13199999999999998,
+                    0.13199999999999998
+                  ],
+                  "PH": [
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0,
+                    6.0
+                  ],
+                  "CL": null,
+                  "EC": null,
+                  "ESP": null,
+                  "Name": "Chemical",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "BD": [
+                    1.25,
+                    1.31,
+                    1.23,
+                    1.24,
+                    1.25,
+                    1.26,
+                    1.29
+                  ],
+                  "AirDry": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "LL15": [
+                    0.14,
+                    0.14,
+                    0.14,
+                    0.14,
+                    0.14,
+                    0.14,
+                    0.14
+                  ],
+                  "DUL": [
+                    0.35,
+                    0.35,
+                    0.32,
+                    0.32,
+                    0.2,
+                    0.2,
+                    0.2
+                  ],
+                  "SAT": [
+                    0.48,
+                    0.48,
+                    0.48,
+                    0.48,
+                    0.45,
+                    0.45,
+                    0.45
+                  ],
+                  "KS": null,
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "Name": "Physical",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02,
+                        0.02,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "SwardSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02,
+                        0.02,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "RyegrassSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14,
+                        0.14
+                      ],
+                      "KL": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.02,
+                        0.02,
+                        0.0,
+                        0.0
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        0.0,
+                        0.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "WhiteCloverSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilWater, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 6.0,
+                  "SummerCona": 3.5,
+                  "WinterDate": "1-apr",
+                  "WinterU": 2.0,
+                  "WinterCona": 2.0,
+                  "DiffusConst": 88.0,
+                  "DiffusSlope": 35.0,
+                  "Salb": 0.13,
+                  "CN2Bare": 73.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "slope": 0.0,
+                  "discharge_width": 0.0,
+                  "catchment_area": 0.0,
+                  "max_pond": 0.0,
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "SWCON": [
+                    0.3,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4
+                  ],
+                  "KLAT": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "PrecipitationInterception": 0.0,
+                  "Name": "SoilWater",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogen, Models",
+                  "fom_types": [
+                    "default",
+                    "manure",
+                    "mucuna",
+                    "lablab",
+                    "shemp",
+                    "stable"
+                  ],
+                  "fract_carb": [
+                    0.2,
+                    0.3,
+                    0.54,
+                    0.57,
+                    0.45,
+                    0.0
+                  ],
+                  "fract_cell": [
+                    0.7,
+                    0.3,
+                    0.37,
+                    0.37,
+                    0.47,
+                    0.1
+                  ],
+                  "fract_lign": [
+                    0.1,
+                    0.4,
+                    0.09,
+                    0.06,
+                    0.08,
+                    0.9
+                  ],
+                  "Name": "SoilNitrogen",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "Name": "NO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "Name": "NH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "Name": "Urea",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                      "Name": "PlantAvailableNO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                      "Name": "PlantAvailableNH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "Depth": [
+                    "0-10",
+                    "10-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    100.0,
+                    200.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Carbon": [
+                    8.2,
+                    5.5,
+                    1.7,
+                    1.7,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "SoilCNRatio": [
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5,
+                    12.5
+                  ],
+                  "FBiom": [
+                    0.08,
+                    0.02,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.58,
+                    0.7,
+                    0.9,
+                    0.9,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "FOM": [
+                    366.24739555275761,
+                    262.42772632965438,
+                    159.17046197761169,
+                    96.541765310045449,
+                    58.555540603324104,
+                    35.515730671964057,
+                    21.541379554642571
+                  ],
+                  "Name": "Organic",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.InitialWater, Models",
+                  "PercentMethod": 0,
+                  "FractionFull": 0.93,
+                  "DepthWetSoil": "NaN",
+                  "RelativeTo": null,
+                  "Name": "Initial water",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": null,
+                  "NH4N": null,
+                  "SW": null,
+                  "OC": null,
+                  "EC": null,
+                  "CL": null,
+                  "ESP": null,
+                  "PH": null,
+                  "SWUnits": 0,
+                  "OCUnits": 0,
+                  "PHUnits": 0,
+                  "Name": "Initial nitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "CERESSoilTemperature",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "MaximumNUptake": 10.0,
+              "Albedo": 0.26,
+              "Gsmax": 0.011,
+              "R50": 200.0,
+              "SpeciesFamily": 0,
+              "PhotosyntheticPathway": 0,
+              "InitialShootDM": 1500.0,
+              "InitialRootDM": 450.0,
+              "InitialRootDepth": 750.0,
+              "ReferencePhotosyntheticRate": 1.0,
+              "LightExtinctionCoefficient": 0.5,
+              "GrowthTminimum": 1.0,
+              "GrowthToptimum": 20.0,
+              "GrowthTEffectExponent": 1.7,
+              "UseHeatStressFactor": 0,
+              "HeatOnsetTemperature": 28.0,
+              "HeatFullTemperature": 35.0,
+              "HeatRecoverySumDD": 30.0,
+              "HeatRecoveryTReference": 25.0,
+              "UseColdStressFactor": 0,
+              "ColdOnsetTemperature": 1.0,
+              "ColdFullTemperature": -5.0,
+              "ColdRecoverySumDD": 25.0,
+              "ColdRecoveryTReference": 0.0,
+              "MaintenanceRespirationCoefficient": 0.03,
+              "GrowthRespirationCoefficient": 0.25,
+              "RespirationTReference": 20.0,
+              "RespirationExponent": 1.5,
+              "NThresholdsForLeaves": [
+                0.04,
+                0.012,
+                0.05
+              ],
+              "NThresholdsForStems": [
+                0.02,
+                0.006,
+                0.025
+              ],
+              "NThresholdsForStolons": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "NThresholdsForRoots": [
+                0.02,
+                0.006,
+                0.025
+              ],
+              "DegreesDayForGermination": 125.0,
+              "TargetShootRootRatio": 4.0,
+              "MaxRootAllocation": 0.25,
+              "ShootRootGlfFactor": 0.5,
+              "UseReproSeasonFactor": 0,
+              "ReproSeasonReferenceLatitude": 41.0,
+              "ReproSeasonTimingCoeff": 0.14,
+              "ReproSeasonMaxAllocationIncrease": 0.5,
+              "ReproSeasonAllocationCoeff": 0.1,
+              "FractionLeafMaximum": 0.7,
+              "FractionLeafMinimum": 0.7,
+              "FractionLeafDMThreshold": 500.0,
+              "FractionLeafDMFactor": 2000.0,
+              "FractionLeafExponent": 3.0,
+              "FractionToStolon": 0.0,
+              "SpecificLeafArea": 20.0,
+              "SpecificRootLength": 100.0,
+              "StolonEffectOnLAI": 0.0,
+              "ShootMaxEffectOnLAI": 1000.0,
+              "MaxStemEffectOnLAI": 1.0,
+              "LiveLeavesPerTiller": 3.0,
+              "TissueTurnoverRateShoot": 0.05,
+              "TissueTurnoverRateRoot": 0.02,
+              "DetachmentRateShoot": 0.08,
+              "TurnoverTemperatureMin": 2.0,
+              "TurnoverTemperatureRef": 20.0,
+              "TurnoverTemperatureExponent": 1.0,
+              "TurnoverDroughtEffectMax": 1.0,
+              "TurnoverDroughtThreshold": 0.5,
+              "TurnoverDefoliationCoefficient": 0.5,
+              "TurnoverDefoliationRootEffect": 0.1,
+              "FractionNLuxuryRemobilisable": [
+                0.1,
+                0.1,
+                0.1
+              ],
+              "MinimumNFixation": 0.0,
+              "MaximumNFixation": 0.0,
+              "SoilSaturationEffectMax": 0.1,
+              "MinimumWaterFreePorosity": -1.0,
+              "SoilSaturationRecoveryFactor": 0.25,
+              "NDillutionCoefficient": 0.25,
+              "GlfGeneric": 1.0,
+              "GlfSoilFertility": 1.0,
+              "PlantHeightMinimum": 300.0,
+              "PlantHeightMaximum": 300.0,
+              "PlantHeightMassForMax": 10000.0,
+              "PlantHeightExponent": 2.8,
+              "RootDepthMinimum": 50.0,
+              "RootDepthMaximum": 1000.0,
+              "RootElongationRate": 25.0,
+              "RootDistributionDepthParam": 250.0,
+              "RootDistributionExponent": 3.2,
+              "DigestibilitiesCellWall": [
+                0.9,
+                0.7,
+                0.6,
+                0.2
+              ],
+              "MinimumGreenWt": 100.0,
+              "FractionStolonStanding": 0.0,
+              "PreferenceForGreenOverDead": 1.0,
+              "PreferenceForLeafOverStems": 1.0,
+              "WaterAvailableMethod": 0,
+              "NitrogenAvailableMethod": 0,
+              "Name": "Ryegrass",
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                  "Name": "Leaves",
+                  "Children": [
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort2",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "Dead",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                  "Name": "Stems",
+                  "Children": [
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort2",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "Dead",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                  "Name": "Stolons",
+                  "Children": [
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort2",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "Dead",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.PastureSpecies, Models",
+              "MaximumNUptake": 10.0,
+              "Albedo": 0.26,
+              "Gsmax": 0.011,
+              "R50": 200.0,
+              "SpeciesFamily": 1,
+              "PhotosyntheticPathway": 0,
+              "InitialShootDM": 500.0,
+              "InitialRootDM": 150.0,
+              "InitialRootDepth": 350.0,
+              "ReferencePhotosyntheticRate": 1.0,
+              "LightExtinctionCoefficient": 0.8,
+              "GrowthTminimum": 2.0,
+              "GrowthToptimum": 22.0,
+              "GrowthTEffectExponent": 1.7,
+              "UseHeatStressFactor": 0,
+              "HeatOnsetTemperature": 30.0,
+              "HeatFullTemperature": 36.0,
+              "HeatRecoverySumDD": 20.0,
+              "HeatRecoveryTReference": 25.0,
+              "UseColdStressFactor": 0,
+              "ColdOnsetTemperature": 2.0,
+              "ColdFullTemperature": -5.0,
+              "ColdRecoverySumDD": 20.0,
+              "ColdRecoveryTReference": 0.0,
+              "MaintenanceRespirationCoefficient": 0.04,
+              "GrowthRespirationCoefficient": 0.25,
+              "RespirationTReference": 20.0,
+              "RespirationExponent": 1.5,
+              "NThresholdsForLeaves": [
+                0.045,
+                0.02,
+                0.055
+              ],
+              "NThresholdsForStems": [
+                0.0225,
+                0.01,
+                0.0275
+              ],
+              "NThresholdsForStolons": [
+                0.0225,
+                0.01,
+                0.0275
+              ],
+              "NThresholdsForRoots": [
+                0.0225,
+                0.01,
+                0.0275
+              ],
+              "DegreesDayForGermination": 125.0,
+              "TargetShootRootRatio": 4.0,
+              "MaxRootAllocation": 0.25,
+              "ShootRootGlfFactor": 0.5,
+              "UseReproSeasonFactor": 0,
+              "ReproSeasonReferenceLatitude": 41.0,
+              "ReproSeasonTimingCoeff": 0.14,
+              "ReproSeasonMaxAllocationIncrease": 0.5,
+              "ReproSeasonAllocationCoeff": 0.1,
+              "FractionLeafMaximum": 0.56,
+              "FractionLeafMinimum": 0.28,
+              "FractionLeafDMThreshold": 500.0,
+              "FractionLeafDMFactor": 2000.0,
+              "FractionLeafExponent": 3.0,
+              "FractionToStolon": 0.2,
+              "SpecificLeafArea": 32.0,
+              "SpecificRootLength": 45.0,
+              "StolonEffectOnLAI": 0.3,
+              "ShootMaxEffectOnLAI": 500.0,
+              "MaxStemEffectOnLAI": 0.5,
+              "LiveLeavesPerTiller": 3.0,
+              "TissueTurnoverRateShoot": 0.05,
+              "TissueTurnoverRateRoot": 0.02,
+              "DetachmentRateShoot": 0.11,
+              "TurnoverTemperatureMin": 2.0,
+              "TurnoverTemperatureRef": 20.0,
+              "TurnoverTemperatureExponent": 1.0,
+              "TurnoverDroughtEffectMax": 1.0,
+              "TurnoverDroughtThreshold": 0.5,
+              "TurnoverDefoliationCoefficient": 0.5,
+              "TurnoverDefoliationRootEffect": 0.1,
+              "FractionNLuxuryRemobilisable": [
+                0.1,
+                0.1,
+                0.1
+              ],
+              "MinimumNFixation": 0.2,
+              "MaximumNFixation": 0.6,
+              "SoilSaturationEffectMax": 0.1,
+              "MinimumWaterFreePorosity": -1.0,
+              "SoilSaturationRecoveryFactor": 0.25,
+              "NDillutionCoefficient": 1.0,
+              "GlfGeneric": 1.0,
+              "GlfSoilFertility": 1.0,
+              "PlantHeightMinimum": 300.0,
+              "PlantHeightMaximum": 300.0,
+              "PlantHeightMassForMax": 7500.0,
+              "PlantHeightExponent": 2.5,
+              "RootDepthMinimum": 30.0,
+              "RootDepthMaximum": 350.0,
+              "RootElongationRate": 25.0,
+              "RootDistributionDepthParam": 70.0,
+              "RootDistributionExponent": 2.5,
+              "DigestibilitiesCellWall": [
+                0.9,
+                0.8,
+                0.7,
+                0.2
+              ],
+              "MinimumGreenWt": 50.0,
+              "FractionStolonStanding": 0.0,
+              "PreferenceForGreenOverDead": 1.0,
+              "PreferenceForLeafOverStems": 1.0,
+              "WaterAvailableMethod": 0,
+              "NitrogenAvailableMethod": 0,
+              "Name": "WhiteClover",
+              "Children": [
+                {
+                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                  "Name": "Leaves",
+                  "Children": [
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort2",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "Dead",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                  "Name": "Stems",
+                  "Children": [
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort2",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "Dead",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+                  "Name": "Stolons",
+                  "Children": [
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort2",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "LeafCohort3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.AgPasture.GenericTissue, Models",
+                      "Name": "Dead",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "([Ryegrass].HarvestedWt + [WhiteClover].HarvestedWt) as HarvestedWt",
+                "([Ryegrass].HarvestedWt) as HarvestedWtRye",
+                "([WhiteClover].HarvestedWt) as HarvestedWtWhite",
+                "([Ryegrass].StandingHerbageWt + [WhiteClover].StandingHerbageWt) as StandingHerbageWt",
+                "(Sum([Soil].SoilNitrogen.Urea.kgha) + Sum([Soil].SoilNitrogen.NH4.kgha) + Sum([Soil].SoilNitrogen.NO3.kgha)) as MinN",
+                "(Sum([Soil].SoilWater.ESW) as ESW ",
+                "[CutRotation].Script.NReturnedInUrine",
+                "(Sum([Soil].SoilNitrogen.PlantAvailableNH4.kgha + [Soil].SoilNitrogen.PlantAvailableNO3.kgha)) as TotalPlantAvailableN",
+                "([WhiteClover].HarvestedWt / ([WhiteClover].HarvestedWt + [Ryegrass].HarvestedWt + 1.0)) as PropCloverHarvested",
+                "([Ryegrass].DeadTissuesWt) + ([WhiteClover].DeadTissuesWt) as Senescence",
+                "[Irrigation].IrrigationApplied as Irrigation"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "Name": "DailyReport",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "([Ryegrass].HarvestedWt + [WhiteClover].HarvestedWt) as HarvestedWt",
+                "([Ryegrass].StandingHerbageWt + [WhiteClover].StandingHerbageWt) as StandingHerbageWt",
+                "([WhiteClover].HarvestedWt / ([WhiteClover].HarvestedWt + [Ryegrass].HarvestedWt + 1.0)) as PropCloverHarvested"
+              ],
+              "EventNames": [
+                ""
+              ],
+              "Name": "HarvestReport",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "[Clock].Today.Year as Year",
+                "[DoReporting].Script.Season as Season",
+                "[DoReporting].Script.SeasonNHA as SeasonNHA"
+              ],
+              "EventNames": [
+                ""
+              ],
+              "Name": "SeasonalReport",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "[DoReporting].Script.AnnualHarvestedWt as AnnualHarvestedWt",
+                "[DoReporting].Script.AnnualIrrigated as AnnualIrrigated"
+              ],
+              "EventNames": [
+                ""
+              ],
+              "Name": "AnnualReport",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today as Date",
+                "[DoReporting].Script.AveAnnHarvested as AveAnnualHarvestedWt",
+                "[DoReporting].Script.StdAnnHarvested as StdAnnualHarvestedWt",
+                "[DoReporting].Script.RngAnnHarvested as RngAnnualHarvestedWt",
+                "[DoReporting].Script.AveSummerHarvested as AveSummerHarvested",
+                "[DoReporting].Script.StdSummerHarvested as StdSummerHarvested",
+                "[DoReporting].Script.RngSummerHarvested as RngSummerHarvested",
+                "[DoReporting].Script.AveAutumnHarvested as AveAutumnHarvested",
+                "[DoReporting].Script.StdAutumnHarvested as StdAutumnHarvested",
+                "[DoReporting].Script.RngAutumnHarvested as RngAutumnHarvested",
+                "[DoReporting].Script.AveWinterHarvested as AveWinterHarvested",
+                "[DoReporting].Script.StdWinterHarvested as StdWinterHarvested",
+                "[DoReporting].Script.RngWinterHarvested as RngWinterHarvested",
+                "[DoReporting].Script.AveSpringHarvested as AveSpringHarvested",
+                "[DoReporting].Script.StdSpringHarvested as StdSpringHarvested",
+                "[DoReporting].Script.RngSpringHarvested as RngSpringHarvested"
+              ],
+              "EventNames": [
+                ""
+              ],
+              "Name": "SummaryReport",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

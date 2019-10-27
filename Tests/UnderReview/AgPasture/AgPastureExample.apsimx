@@ -257,7 +257,7 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "ResidueLayers": [],
+              "Canopies": [],
               "InitialResidueName": "Sward",
               "InitialResidueType": "grass",
               "InitialResidueMass": 1000.0,
@@ -1782,7 +1782,7 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "ResidueLayers": [],
+                  "Canopies": [],
                   "InitialResidueName": "Sward",
                   "InitialResidueType": "grass",
                   "InitialResidueMass": 1000.0,
