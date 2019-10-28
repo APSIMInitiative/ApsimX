@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using ApsimNG.Cloud;
-using Microsoft.WindowsAzure.Storage;
+using Microsoft.Azure.Storage;
 using Microsoft.Azure.Batch;
 using UserInterface.Interfaces;
 using System.IO;
 using System.ComponentModel;
 using Models.Core;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -156,12 +156,12 @@ namespace UserInterface.Presenters
                 storageAuth = StorageCredentials.FromConfiguration();
                 batchAuth = BatchCredentials.FromConfiguration();
 
-                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
+                storageAccount = new CloudStorageAccount(new Microsoft.Azure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
                 var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchAuth.Url, batchAuth.Account, batchAuth.Key);
                 batchCli = BatchClient.Open(sharedCredentials);
 
                 blobCli = storageAccount.CreateCloudBlobClient();
-                blobCli.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
+                blobCli.DefaultRequestOptions.RetryPolicy = new Microsoft.Azure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
 
                 if (!fetchJobs.IsBusy) fetchJobs.RunWorkerAsync();
             }
