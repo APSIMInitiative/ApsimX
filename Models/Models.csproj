@@ -109,8 +109,8 @@
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\MigraDoc.RtfRendering-gdi.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp-gdi, Version=1.50.3638.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\PdfSharp-gdi.dll</HintPath>
@@ -153,6 +153,8 @@
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
+    <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
+    <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
     <Compile Include="CLEM\Resources\LabourDietComponent.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
@@ -368,7 +370,7 @@
     <Compile Include="Lifecycle\LifestageProcess.cs" />
     <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="MicroClimate\CanopyType.cs" />
+    <Compile Include="MicroClimate\MicroClimateCanopy.cs" />
     <Compile Include="MicroClimate\MicroClimateZone.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
     <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
