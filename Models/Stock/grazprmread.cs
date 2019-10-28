@@ -88,17 +88,17 @@ namespace Models.GrazPlan
 
             try
             {
-                Params.sName = Parser.getAttrValue(aNode, "name");                        // Name and version information. The     
-                Params.sEnglishName = Params.sName;
+                Params.Name = Parser.getAttrValue(aNode, "name");                        // Name and version information. The     
+                Params.EnglishName = Params.Name;
                 if (Params.NodeIsRoot())                                                     //   version is passed to child sets   
-                    Params.sVersion = Parser.getAttrValue(aNode, "version");               //   during creation                   
+                    Params.Version = Parser.getAttrValue(aNode, "version");               //   during creation                   
 
                 childNode = Parser.firstElementChild(aNode, "translate");                 // See if tbere's a translation of the name matching our current language setting 
                 while (childNode != null)
                 {
                     sLang = Parser.getAttrValue(childNode, "lang");
                     sDummy = Parser.getText(childNode);
-                    Params.addTranslation(sLang, sDummy);
+                    Params.AddTranslation(sLang, sDummy);
                     childNode = Parser.nextElementSibling(childNode, "translate");
                 }
 
@@ -117,7 +117,7 @@ namespace Models.GrazPlan
                     readParamValues(ref Params, sTag, sValues, bModify);
                     childNode = Parser.nextElementSibling(childNode, "par");
                 }
-                Params.deriveParams();
+                Params.DeriveParams();
 
                 childNode = Parser.firstElementChild(aNode, "set");                       // Create child parameter sets from the  
                 while (childNode != null)                                                   //   <set> elements                     
@@ -159,18 +159,18 @@ namespace Models.GrazPlan
             if ((sTag != "") && (sValues != ""))
             {
                 Definition = Params.GetDefinition(sTag);
-                if ((Definition == null) || (Definition.iDimension() > 1))
+                if ((Definition == null) || (Definition.Dimension() > 1))
                     throw new Exception("Invalid tag when reading parameters: " + sTag);
 
-                if (Definition.bIsScalar())                                                // Reference to a single value           
+                if (Definition.IsScalar())                                                // Reference to a single value           
                     assignParameter(ref Params, sTag, sValues, bPropagate);
                 else
                 {                                                                      // Reference to a list of values         
-                    for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)
+                    for (Idx = 0; Idx <= Definition.Count - 1; Idx++)
                     {
                         sValue = stripValue(ref sValues);
                         if (sValue != "")                                                  // Null string denotes "leave value at   
-                            assignParameter(ref Params, sTag + Definition.item(Idx).sPartName,             //   default"                    
+                            assignParameter(ref Params, sTag + Definition.Item(Idx).PartName,             //   default"                    
                                              sValue, bPropagate);
                     }
                 }
@@ -250,19 +250,19 @@ namespace Models.GrazPlan
 
             if (!Definition.ValueIsDefined())
                 result = false;
-            else if ((subSet.Parent == null) || (!subSet.Parent.IsDefined(Definition.sFullName)))
+            else if ((subSet.Parent == null) || (!subSet.Parent.IsDefined(Definition.FullName)))
                 result = true;
             else
             {
-                switch (Definition.paramType)
+                switch (Definition.ParamType)
                 {
-                    case ptyReal: result = (subSet.fParam(Definition.sFullName) != subSet.Parent.fParam(Definition.sFullName));
+                    case ptyReal: result = (subSet.dParam(Definition.FullName) != subSet.Parent.dParam(Definition.FullName));
                         break;
-                    case ptyInt: result = (subSet.iParam(Definition.sFullName) != subSet.Parent.iParam(Definition.sFullName));
+                    case ptyInt: result = (subSet.iParam(Definition.FullName) != subSet.Parent.iParam(Definition.FullName));
                         break;
-                    case ptyBool: result = (subSet.bParam(Definition.sFullName) != subSet.Parent.bParam(Definition.sFullName));
+                    case ptyBool: result = (subSet.bParam(Definition.FullName) != subSet.Parent.bParam(Definition.FullName));
                         break;
-                    case ptyText: result = (subSet.sParam(Definition.sFullName) != subSet.Parent.sParam(Definition.sFullName));
+                    case ptyText: result = (subSet.sParam(Definition.FullName) != subSet.Parent.sParam(Definition.FullName));
                         break;
                     default: result = false;
                         break;
@@ -277,43 +277,43 @@ namespace Models.GrazPlan
             string sLine;
             int Idx;
 
-            if (Definition.iDimension() > 1)                                         // Multi-dimensional array of            
-                for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)                                  //   parameters - recurse                
-                    writeParameters(subSet, Definition.item(Idx), Strings, iIndent);
+            if (Definition.Dimension() > 1)                                         // Multi-dimensional array of            
+                for (Idx = 0; Idx <= Definition.Count - 1; Idx++)                                  //   parameters - recurse                
+                    writeParameters(subSet, Definition.Item(Idx), Strings, iIndent);
 
-            else if (Definition.bIsScalar() && bDiffers(subSet, Definition))      // Single parameter value                
+            else if (Definition.IsScalar() && bDiffers(subSet, Definition))      // Single parameter value                
             {
                 sLine = new string(' ', iIndent)
-                       + "<par name=\"" + Definition.sFullName + "\">"
-                       + subSet.sParam(Definition.sFullName)
+                       + "<par name=\"" + Definition.FullName + "\">"
+                       + subSet.sParam(Definition.FullName)
                        + "</par>";
                 Strings.Add(sLine);
             }
             else                                                                     // List of parameter values (one-        
             {                                                                    //   dimensional)                        
                 iDiffCount = 0;
-                for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)
-                    if (bDiffers(subSet, Definition.item(Idx)))
+                for (Idx = 0; Idx <= Definition.Count - 1; Idx++)
+                    if (bDiffers(subSet, Definition.Item(Idx)))
                         iDiffCount++;
 
                 if (iDiffCount > 1)                                                // More than one difference - write      
                 {                                                                  //   the differing values in a list      
                     sLine = new string(' ', iIndent)
-                             + "<par name=\"" + Definition.sFullName + "\">";
-                    for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)
+                             + "<par name=\"" + Definition.FullName + "\">";
+                    for (Idx = 0; Idx <= Definition.Count - 1; Idx++)
                     {
                         if (Idx > 0)
                             sLine += ',';
-                        if (bDiffers(subSet, Definition.item(Idx)))
-                            sLine += subSet.sParam(Definition.item(Idx).sFullName);
+                        if (bDiffers(subSet, Definition.Item(Idx)))
+                            sLine += subSet.sParam(Definition.Item(Idx).FullName);
                     }
                     sLine += "</par>";
                     Strings.Add(sLine);
                 }
                 else if (iDiffCount == 1)                                           // Only one parameter is different -     
-                    for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)                               //  write it as a scalar                
-                        if (bDiffers(subSet, Definition.item(Idx)))
-                            writeParameters(subSet, Definition.item(Idx), Strings, iIndent);
+                    for (Idx = 0; Idx <= Definition.Count - 1; Idx++)                               //  write it as a scalar                
+                        if (bDiffers(subSet, Definition.Item(Idx)))
+                            writeParameters(subSet, Definition.Item(Idx), Strings, iIndent);
             }
         }
 
@@ -335,28 +335,28 @@ namespace Models.GrazPlan
             if (!subSet.NodeIsRoot())
                 Strings.Add("");
 
-            sLine = new string(' ', iIndent) + "<" + sElem + " name=\"" + subSet.sEnglishName + "\"";
+            sLine = new string(' ', iIndent) + "<" + sElem + " name=\"" + subSet.EnglishName + "\"";
             if (subSet.NodeIsRoot())
-                sLine += " version=\"" + subSet.sVersion + "\">";
+                sLine += " version=\"" + subSet.Version + "\">";
             else
             {
-                if (subSet.iLocaleCount() > 0)
+                if (subSet.LocaleCount() > 0)
                 {
-                    sLine += " locales=\"" + subSet.getLocale(0);
-                    for (Idx = 1; Idx <= subSet.iLocaleCount() - 1; Idx++)
-                        sLine += ";" + subSet.getLocale(Idx);
+                    sLine += " locales=\"" + subSet.GetLocale(0);
+                    for (Idx = 1; Idx <= subSet.LocaleCount() - 1; Idx++)
+                        sLine += ";" + subSet.GetLocale(Idx);
                     sLine += "\"";
                 }
                 sLine += ">";
             }
             Strings.Add(sLine);
 
-            if (subSet.iTranslationCount() > 0)
-                for (Idx = 0; Idx <= subSet.iTranslationCount() - 1; Idx++)
+            if (subSet.TranslationCount() > 0)
+                for (Idx = 0; Idx <= subSet.TranslationCount() - 1; Idx++)
                 {
                     sLine = new string(' ', iIndent + 2) + "<translate lang=\"" +
-                             subSet.getTranslation(Idx).sLang + "\">" +
-                             TTypedValue.escapeText(subSet.getTranslation(Idx).sText) + "</translate>";
+                             subSet.GetTranslation(Idx).sLang + "\">" +
+                             TTypedValue.escapeText(subSet.GetTranslation(Idx).sText) + "</translate>";
                     Strings.Add(sLine);
                 }
 
@@ -367,7 +367,7 @@ namespace Models.GrazPlan
 
             sLine = new string(' ', iIndent) + "</" + sElem + ">";
             if (!subSet.NodeIsRoot() && (subSet.ChildCount() > 0))
-                sLine += "<!-- " + subSet.sEnglishName + " -->";
+                sLine += "<!-- " + subSet.EnglishName + " -->";
 
             Strings.Add(sLine);
         }
@@ -382,7 +382,7 @@ namespace Models.GrazPlan
         public void readDefaults(string sPrmID, ref ParameterSet Params)
         {
             readFromResource(sPrmID, ref Params, false);
-            Params.sCurrLocale = GrazLocale.sDefaultLocale();
+            Params.CurrLocale = GrazLocale.DefaultLocale();
         }
 
         /// <summary>

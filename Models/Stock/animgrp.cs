@@ -1,3 +1,9 @@
+// -----------------------------------------------------------------------
+// <copyright file="animgrp.cs" company="CSIRO">
+//      CSIRO Agriculture & Food
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace Models.GrazPlan
 {
     using StdUnits;
@@ -2252,7 +2258,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         protected string GetBreed()
         {
-            return AParams.sName;
+            return AParams.Name;
         }
 
         //TODO: Test this function
@@ -2793,7 +2799,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public bool Similar(AnimalGroup AG)
         {
-            bool Result = ((Genotype.sName == AG.Genotype.sName)
+            bool Result = ((Genotype.Name == AG.Genotype.Name)
                   && (ReproStatus == AG.ReproStatus)
                   && (NoFoetuses == AG.NoFoetuses)
                   && (NoOffspring == AG.NoOffspring)

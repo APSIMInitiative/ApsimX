@@ -619,7 +619,7 @@ namespace UserInterface.Views
 
                 genotypeAnimals[index] = breedParams.Animal;
 
-                theGenoType.Name = breedParams.sName;
+                theGenoType.Name = breedParams.Name;
                 theGenoType.DamBreed = string.Empty;
                 theGenoType.SireBreed = string.Empty;
                 theGenoType.Generation = 0;

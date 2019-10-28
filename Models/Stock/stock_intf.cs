@@ -597,7 +597,7 @@ namespace Models.GrazPlan
             result.CopyAll(animalParams.AnimalParamsGlb());
             if (constFileName != string.Empty)
                 GlobalParameterFactory.ParamXMLFactory().readFromFile(constFileName, result, true);
-            result.sCurrLocale = GrazLocale.sDefaultLocale();
+            result.CurrLocale = GrazLocale.DefaultLocale();
 
             return result;
         }
@@ -1481,7 +1481,7 @@ namespace Models.GrazPlan
             else
             {
                 idx = 0;
-                while ((idx < this.genotypeParams.Length) && (genoName.ToLower() != this.genotypeParams[idx].sName.ToLower()))
+                while ((idx < this.genotypeParams.Length) && (genoName.ToLower() != this.genotypeParams[idx].Name.ToLower()))
                     idx++;
 
                 if (idx < this.genotypeParams.Length)
@@ -3820,7 +3820,7 @@ namespace Models.GrazPlan
                                                     this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].DamBreed, genoIdx),
                                                     this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].SireBreed, genoIdx));
 
-            result.sName = genoInits[genoIdx].GenotypeName;
+            result.Name = genoInits[genoIdx].GenotypeName;
 
             if (this.IsGiven(genoInits[genoIdx].SRW))
                 result.BreedSRW = genoInits[genoIdx].SRW;

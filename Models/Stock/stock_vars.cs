@@ -466,7 +466,7 @@ namespace Models.GrazPlan
                     generation = 0;
                 }
 
-                genoValues[idx].Name = parameters.sName;
+                genoValues[idx].Name = parameters.Name;
                 genoValues[idx].DamBreed = damBreed;
                 genoValues[idx].SireBreed = sireBreed;
                 genoValues[idx].Generation = generation;
@@ -515,7 +515,7 @@ namespace Models.GrazPlan
 
                     initValue[jdx] = new SheepInit();
 
-                    initValue[jdx].Genotype = animalGroup.Genotype.sName;
+                    initValue[jdx].Genotype = animalGroup.Genotype.Name;
                     initValue[jdx].Number = animalGroup.NoAnimals;
                     initValue[jdx].Sex = model.SexString(idx, false);
                     initValue[jdx].Age = animalGroup.AgeDays;
@@ -542,7 +542,7 @@ namespace Models.GrazPlan
                     if ((animalGroup.Pregnancy > 0) || (animalGroup.Young != null))
                     {
                         if (animalGroup.MatedTo != null)
-                            initValue[jdx].MatedTo = animalGroup.MatedTo.sName;
+                            initValue[jdx].MatedTo = animalGroup.MatedTo.Name;
                         else
                             initValue[jdx].MatedTo = string.Empty;
                     }
@@ -595,7 +595,7 @@ namespace Models.GrazPlan
 
                     initValue[jdx] = new CattleInit();
 
-                    initValue[jdx].Genotype = animalGroup.Genotype.sName;
+                    initValue[jdx].Genotype = animalGroup.Genotype.Name;
                     initValue[jdx].Number = animalGroup.NoAnimals;
                     initValue[jdx].Sex = model.SexString(idx, false);
                     initValue[jdx].Age = animalGroup.AgeDays;
@@ -623,7 +623,7 @@ namespace Models.GrazPlan
                     if ((animalGroup.Pregnancy > 0) || (animalGroup.Young != null))
                     {
                         if (animalGroup.MatedTo != null)
-                            initValue[jdx].MatedTo = animalGroup.MatedTo.sName;
+                            initValue[jdx].MatedTo = animalGroup.MatedTo.Name;
                         else
                             initValue[jdx].MatedTo = string.Empty;
                     }
