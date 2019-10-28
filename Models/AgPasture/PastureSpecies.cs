@@ -1,22 +1,17 @@
-﻿//--------------------------------------------------------------------------------------------------------------------------
-// <copyright file="AgPasture.PastureSpecies.cs" project="AgPasture" solution="APSIMx" company="APSIM Initiative">
-//     Copyright (c) APSIM initiative. All rights reserved.
-// </copyright>
-//--------------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Serialization;
-using Models.Core;
-using Models.Soils;
-using Models.PMF;
-using Models.Soils.Arbitrator;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-
-namespace Models.AgPasture
+﻿namespace Models.AgPasture
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml.Serialization;
+    using Models.Core;
+    using Models.Soils;
+    using Models.PMF;
+    using Models.Soils.Arbitrator;
+    using Models.Interfaces;
+    using APSIM.Shared.Utilities;
+    using Models.Functions;
+
     /// <summary>
     /// # [Name]
     /// Describes a pasture species.
@@ -25,7 +20,6 @@ namespace Models.AgPasture
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Sward))]
     public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
@@ -1795,11 +1789,9 @@ namespace Models.AgPasture
         /// <summary>Describes the FVPD function.</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public BrokenStick FVPDFunction = new BrokenStick
-        {
-            X = new double[] { 0.0, 10.0, 50.0 },
-            Y = new double[] { 1.0, 1.0, 1.0 }
-        };
+        public LinearInterpolationFunction FVPDFunction 
+            = new LinearInterpolationFunction(x: new double[] { 0.0, 10.0, 50.0 },
+                                              y: new double[] { 1.0, 1.0, 1.0 });
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
@@ -3062,7 +3054,7 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double FVPD
         {
-            get { return FVPDFunction.Value(VPD()); }
+            get { return FVPDFunction.ValueForX(VPD()); }
         }
 
         /// <summary>Gets the temperature factor for respiration (0-1).</summary>
@@ -3663,13 +3655,6 @@ namespace Models.AgPasture
 
         #region Initialisation methods  ------------------------------------------------------------------------------------
 
-        [Serializable]
-        class RootZone
-        {
-            public string ZoneName;
-            public double RootDepth;
-            public double RootDM;
-        }
         private List<RootZone> RootZonesInitialisations = new List<RootZone>();
 
         /// <summary>
@@ -6041,53 +6026,5 @@ namespace Models.AgPasture
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
-
-        #region Auxiliary classes  -----------------------------------------------------------------------------------------
-
-        /// <summary>Basic values defining the state of a pasture species.</summary>
-        [Serializable]
-        internal class SpeciesBasicStateSettings
-        {
-            /// <summary>Plant phenological stage.</summary>
-            internal int PhenoStage;
-
-            /// <summary>DM weight for each biomass pool (kg/ha).</summary>
-            internal double[] DMWeight;
-
-            /// <summary>N amount for each biomass pool (kg/ha).</summary>
-            internal double[] NAmount;
-
-            /// <summary>Root depth (mm).</summary>
-            internal double RootDepth;
-
-            /// <summary>Constructor, initialise the arrays.</summary>
-            public SpeciesBasicStateSettings()
-            {
-                // there are 12 tissue pools, in order: leaf1, leaf2, leaf3, leaf4, stem1, stem2, stem3, stem4, stolon1, stolon2, stolon3, and root
-                DMWeight = new double[12];
-                NAmount = new double[12];
-            }
-        }
-
-        #endregion  --------------------------------------------------------------------------------------------------------
-    }
-
-    /// <summary>Defines a broken stick (piecewise) function.</summary>
-    [Serializable]
-    public class BrokenStick
-    {
-        /// <summary>The values for x.</summary>
-        public double[] X;
-        /// <summary>The values for y.</summary>
-        public double[] Y;
-
-        /// <summary>Computes the function value at the specified x.</summary>
-        /// <param name="newX">The x value</param>
-        /// <returns>The interpolated value</returns>
-        public double Value(double newX)
-        {
-            bool didInterpolate;
-            return MathUtilities.LinearInterpReal(newX, X, Y, out didInterpolate);
-        }
     }
 }

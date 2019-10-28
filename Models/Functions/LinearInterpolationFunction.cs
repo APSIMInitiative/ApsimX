@@ -38,6 +38,12 @@ namespace Models.Functions
         public LinearInterpolationFunction() { }
 
         /// <summary>Constructor</summary>
+        public LinearInterpolationFunction(double[] x, double[] y) 
+        {
+            XYPairs = new XYPairs() { X = x, Y = y };
+        }
+
+        /// <summary>Constructor</summary>
         /// <param name="xproperty">x property</param>
         /// <param name="x">x values.</param>
         /// <param name="y">y values.</param>
