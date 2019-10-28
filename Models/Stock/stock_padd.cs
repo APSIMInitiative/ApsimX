@@ -802,7 +802,7 @@ namespace Models.GrazPlan
                 throw new Exception("Stock: Unit (" + units + ") not recognised");
 
             if (forage != null)
-                forage.SetAvailForage(GrazType.scaleGrazingInputs(grazingInput, scaleInput));
+                forage.SetAvailForage(GrazType.ScaleGrazingInputs(grazingInput, scaleInput));
             else
                 throw new Exception("Stock: Forage not recognised");
         }
