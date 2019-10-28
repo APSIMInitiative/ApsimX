@@ -41,7 +41,8 @@ namespace Models.CLEM.Reporting
             Female = female;
 
             // Calculate conception date
-            ConceptionDate = dateTime.AddMonths(Convert.ToInt32(female.Age - female.AgeAtLastConception));
+            ConceptionDate = dateTime.AddMonths(-1*Convert.ToInt32(female.Age - female.AgeAtLastConception));
+            ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
         }
     }
 }
