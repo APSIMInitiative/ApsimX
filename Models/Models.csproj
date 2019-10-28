@@ -748,6 +748,7 @@
     <None Include="Resources\FodderBeet.json" />
     <EmbeddedResource Include="Resources\Nutrient.json" />
     <None Include="Resources\Potato.json" />
+    <None Include="Resources\RedClover.json" />
     <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>
