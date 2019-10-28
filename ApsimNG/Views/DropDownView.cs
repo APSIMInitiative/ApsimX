@@ -27,6 +27,9 @@ namespace UserInterface.Views
 
         /// <summary>Gets or sets whether the control should be editable.</summary>
         bool IsEditable { get; set; }
+
+        /// <summary>Controls whether the user can change the selected item.</summary>
+        bool IsSensitive { get; set; }
     }
 
     /// <summary>A drop down view.</summary>
@@ -204,7 +207,18 @@ namespace UserInterface.Views
             set
             {
                 comboRender.Editable = value;
-                comboRender.Sensitive = value;
+            }
+        }
+
+        /// <summary>Controls whether the user can change the selected item.</summary>
+        public bool IsSensitive
+        {
+            get
+            {
+                return comboRender.Sensitive;
+            }
+            set
+            {
                 combobox1.Sensitive = value;
             }
         }
