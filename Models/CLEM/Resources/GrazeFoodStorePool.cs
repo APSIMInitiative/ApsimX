@@ -54,12 +54,6 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         public int Age { get; set; }
 
-        ///// <summary>
-        ///// Current pool grazing limit based on ruminant eating pool
-        ///// </summary>
-        //[XmlIgnore]
-        //public double Limit { get; set; }
-
         /// <summary>
         /// Amount to set at start (kg)
         /// </summary>

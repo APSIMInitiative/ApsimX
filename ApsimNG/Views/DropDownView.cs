@@ -204,6 +204,8 @@ namespace UserInterface.Views
             set
             {
                 comboRender.Editable = value;
+                comboRender.Sensitive = value;
+                combobox1.Sensitive = value;
             }
         }
 

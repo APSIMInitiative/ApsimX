@@ -88,6 +88,11 @@ namespace Models.CLEM.Activities
                 if (ind.Age >= weaningAge)
                 {
                     ind.Wean(true, "Natural");
+                    if (ind.Mother != null)
+                    {
+                        // report conception status changed when last multiple birth dies.
+                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                    }
                 }
             }
         }
@@ -273,6 +278,8 @@ namespace Models.CLEM.Activities
             // grow individuals
 
             List<string> breeds = herd.Select(a => a.BreedParams.Name).Distinct().ToList();
+            this.Status = ActivityStatus.NotNeeded;
+
             foreach (string breed in breeds)
             {
                 double totalMethane = 0;

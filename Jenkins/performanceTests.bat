@@ -51,6 +51,7 @@ if errorlevel 1 (
 	echo Commit author:		"%COMMIT_AUTHOR%"
 	echo Log file:
 	type bin\Release\PerformanceCollector.txt
+	exit /b 1
 ) else (
 	echo Done.
 )
