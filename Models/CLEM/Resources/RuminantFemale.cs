@@ -121,10 +121,6 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                //if(SuccessfulPregnancy)
-                //{
-                //    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength && this.AgeAtLastConception > this.AgeAtLastBirth;
-                //}
                 if (IsPregnant)
                 {
                     return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength;
@@ -160,7 +156,6 @@ namespace Models.CLEM.Resources
             get
             {
                 return (CarryingCount > 0);
-//                return (this.Age < this.AgeAtLastConception + this.BreedParams.GestationLength && this.SuccessfulPregnancy);
             }
         }
 
