@@ -143,9 +143,12 @@
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedTarget.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedToTargets.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
+    <Compile Include="CLEM\Resources\LabourDietComponent.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
     <Compile Include="CLEM\FileSQLiteCrop.cs" />
@@ -154,6 +157,7 @@
     <Compile Include="CLEM\ICLEMUI.cs" />
     <Compile Include="CLEM\IFileCrop.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
+    <Compile Include="CLEM\Resources\HumanFoodStorePool.cs" />
     <Compile Include="CLEM\Resources\LabourPricing.cs" />
     <Compile Include="CLEM\Resources\ResourceUnitsConverter.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionByCondition.cs" />
@@ -359,8 +363,8 @@
     <Compile Include="Lifecycle\LifestageProcess.cs" />
     <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="MicroClimate\CanopyType.cs" />
-    <Compile Include="MicroClimate\ZoneMicroClimate.cs" />
+    <Compile Include="MicroClimate\MicroClimateCanopy.cs" />
+    <Compile Include="MicroClimate\MicroClimateZone.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
     <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
     <Compile Include="Plant\Arbitrator\PriorityThenRelativeAllocation.cs" />
@@ -506,7 +510,6 @@
     <Compile Include="Log.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="MicroClimate\MicroClimate.cs" />
-    <Compile Include="MicroClimate\MicroClimateScience.cs" />
     <Compile Include="Operations.cs" />
     <Compile Include="Plant\Arbitrator\OrganArbitrator.cs" />
     <Compile Include="Plant\Biomass\ArrayBiomass.cs" />
@@ -622,6 +625,7 @@
     <Compile Include="Soils\WaterModel\UnsaturatedFlow.cs" />
     <Compile Include="Soils\WaterModel\WaterTable.cs" />
     <Compile Include="Weather\ControlledEnvironment.cs" />
+    <Compile Include="Weather\SlopeEffectsOnWeather.cs" />
     <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Main.cs" />

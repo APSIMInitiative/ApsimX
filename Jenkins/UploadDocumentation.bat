@@ -13,8 +13,8 @@ if not exist %apsimx%\Documentation\PDF (
 )
 
 rem Upload under review models' documentation
-call :upload "%apsimx%\Documentation\PDF\UnderReview" ftp://www.apsim.info/APSIM/ApsimXFiles/UnderReview/
-call :upload "%apsimx%\Documentation\PDF" ftp://www.apsim.info/APSIM/ApsimXFiles/
+call :upload "%apsimx%\Documentation\PDF\UnderReview" ftp://apsimdev.apsim.info/APSIM/ApsimXFiles/UnderReview/
+call :upload "%apsimx%\Documentation\PDF" ftp://apsimdev.apsim.info/APSIM/ApsimXFiles/
 endlocal
 exit /b
 

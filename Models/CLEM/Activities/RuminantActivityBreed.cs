@@ -577,13 +577,24 @@ namespace Models.CLEM.Activities
                 html += "Using Artificial insemination";
                 html += "</div>";
             }
+            else
+            {
+                html += "\n<div class=\"activityentry\">";
+                html += "This simulation uses natural (uncontrolled) mating";
+                html += "</div>";
+            }
             if (InferStartupPregnancy)
             {
                 html += "\n<div class=\"activityentry\">";
                 html += "Pregnancy status of breeders from matings prior to simulation start will be predicted";
                 html += "</div>";
             }
-
+            else
+            {
+                html += "\n<div class=\"activityentry\">";
+                html += "No pregnancy of breeders from matings prior to simulation start is inferred";
+                html += "</div>";
+            }
             return html;
         }
     }

@@ -24,6 +24,18 @@ namespace Models.CLEM.Resources
         Clock Clock = null;
 
         /// <summary>
+        /// Determine whether transmutation has been defined for this foodtype
+        /// </summary>
+        [XmlIgnore]
+        public bool TransmutationDefined 
+        {
+            get
+            {
+                return Apsim.Children(this, typeof(Transmutation)).Count() > 0;
+            }
+        }
+
+        /// <summary>
         /// Resource price
         /// </summary>
         public ResourcePricing Price
@@ -72,10 +84,6 @@ namespace Models.CLEM.Resources
                 {
                     double packets = amount / price.PacketSize;
                     // this does not include whole packet restriction as needs to report full value
-                    //if(price.UseWholePackets)
-                    //{
-                    //    packets = Math.Floor(packets);
-                    //}
                     return packets * price.PricePerPacket;
                 }
                 else
@@ -88,7 +96,14 @@ namespace Models.CLEM.Resources
                 ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
                 if (converter != null)
                 {
-                    return amount * converter.Factor;
+                    double result = amount;
+                    // convert to edible proportion for all HumanFoodStore converters
+                    // this assumes these are all nutritional. Price will be handled above.
+                    if(this.GetType() == typeof(HumanFoodStoreType))
+                    {
+                        result *= (this as HumanFoodStoreType).EdibleProportion;
+                    }
+                    return result * converter.Factor;
                 }
                 else
                 {
@@ -108,6 +123,24 @@ namespace Models.CLEM.Resources
         public object ConvertTo(string converterName)
         {
             return ConvertTo(converterName, (this as IResourceType).Amount);
+        }
+
+        /// <summary>
+        /// Convert the current amount of this resource to another value using ResourceType supplied converter
+        /// </summary>
+        /// <param name="converterName">Name of converter to use</param>
+        /// <returns>Value to report</returns>
+        public double ConversionFactor(string converterName)
+        {
+            ResourceUnitsConverter converter = Apsim.Children(this, typeof(ResourceUnitsConverter)).Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
+            if (converter is null)
+            {
+                return 0;
+            }
+            else
+            {
+                return converter.Factor;
+            }
         }
 
         /// <summary>

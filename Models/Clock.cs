@@ -303,9 +303,6 @@
                 if (Today.DayOfWeek == DayOfWeek.Sunday && StartOfWeek != null)
                     StartOfWeek.Invoke(this, args);
 
-                if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
-                    EndOfWeek.Invoke(this, args);
-
                 if (DoManagement != null)
                     DoManagement.Invoke(this, args);
 
@@ -365,6 +362,9 @@
 
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);
+
+                if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
+                    EndOfWeek.Invoke(this, args);
 
                 if (Today == EndDate && EndOfSimulation != null)
                     EndOfSimulation.Invoke(this, args);
