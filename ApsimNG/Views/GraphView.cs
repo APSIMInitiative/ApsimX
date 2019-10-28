@@ -723,6 +723,7 @@ namespace UserInterface.Views
 
         private List<BoxPlotItem> GetBoxPlotItems(double[] data)
         {
+            data = data.Where(d => !double.IsNaN(d)).ToArray();
             double[] fiveNumberSummary = data.FiveNumberSummary();
             double min = fiveNumberSummary[0];
             double lowerQuartile = fiveNumberSummary[1];
