@@ -26,6 +26,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
+        [Link]
+        Clock Clock = null;
+
         /// <summary>
         /// Weaning age (months)
         /// </summary>
@@ -106,6 +109,11 @@ namespace Models.CLEM.Activities
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
+                        if (ind.Mother != null)
+                        {
+                            // report conception status changed when offspring weaned.
+                            ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                        }
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity

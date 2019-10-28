@@ -88,6 +88,11 @@ namespace Models.CLEM.Activities
                 if (ind.Age >= weaningAge)
                 {
                     ind.Wean(true, "Natural");
+                    if (ind.Mother != null)
+                    {
+                        // report conception status changed when last multiple birth dies.
+                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                    }
                 }
             }
         }
