@@ -1826,8 +1826,8 @@
         },
         {
           "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.7067,
-          "Units": null,
+          "FixedValue": 0.9,
+          "Units": "0.7067",
           "Name": "DMConversionEfficiency",
           "Children": [],
           "IncludeInDocumentation": true,
