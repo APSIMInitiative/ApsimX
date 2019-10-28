@@ -509,7 +509,7 @@
                       "LLMetadata": null,
                       "KLMetadata": null,
                       "XFMetadata": null,
-                      "Name": "RyegrassSoil",
+                      "Name": "AGPRyegrassSoil",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -547,7 +547,7 @@
                       "LLMetadata": null,
                       "KLMetadata": null,
                       "XFMetadata": null,
-                      "Name": "WhiteCloverSoil",
+                      "Name": "AGPWhiteCloverSoil",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -899,7 +899,7 @@
               "FractionLeafDMFactor": 2000.0,
               "FractionLeafExponent": 3.0,
               "FractionToStolon": 0.0,
-              "SpecificLeafArea": 25.0,
+              "SpecificLeafArea": 20.0,
               "SpecificRootLength": 100.0,
               "StolonEffectOnLAI": 0.0,
               "ShootMaxEffectOnLAI": 1000.0,
@@ -928,18 +928,18 @@
               "NDillutionCoefficient": 0.25,
               "GlfGeneric": 1.0,
               "GlfSoilFertility": 1.0,
-              "PlantHeightMinimum": 25.0,
-              "PlantHeightMaximum": 600.0,
+              "PlantHeightMinimum": 300.0,
+              "PlantHeightMaximum": 300.0,
               "PlantHeightMassForMax": 10000.0,
               "PlantHeightExponent": 2.8,
               "RootDepthMinimum": 50.0,
-              "RootDepthMaximum": 750.0,
+              "RootDepthMaximum": 1000.0,
               "RootElongationRate": 25.0,
-              "RootDistributionDepthParam": 90.0,
+              "RootDistributionDepthParam": 250.0,
               "RootDistributionExponent": 3.2,
               "DigestibilitiesCellWall": [
-                0.6,
-                0.6,
+                0.9,
+                0.7,
                 0.6,
                 0.2
               ],
@@ -949,132 +949,8 @@
               "PreferenceForLeafOverStems": 1.0,
               "WaterAvailableMethod": 0,
               "NitrogenAvailableMethod": 0,
-              "Name": "Ryegrass",
-              "Children": [
-                {
-                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                  "Name": "Leaves",
-                  "Children": [
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort2",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "Dead",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                  "Name": "Stems",
-                  "Children": [
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort2",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "Dead",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                  "Name": "Stolons",
-                  "Children": [
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort2",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "Dead",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "ResourceName": "AGPRyegrass",
+              "Name": "AGPRyegrass",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1103,7 +979,7 @@
               "UseColdStressFactor": 0,
               "ColdOnsetTemperature": 2.0,
               "ColdFullTemperature": -5.0,
-              "ColdRecoverySumDD": 30.0,
+              "ColdRecoverySumDD": 20.0,
               "ColdRecoveryTReference": 0.0,
               "MaintenanceRespirationCoefficient": 0.04,
               "GrowthRespirationCoefficient": 0.25,
@@ -1144,7 +1020,7 @@
               "FractionLeafDMFactor": 2000.0,
               "FractionLeafExponent": 3.0,
               "FractionToStolon": 0.2,
-              "SpecificLeafArea": 30.0,
+              "SpecificLeafArea": 32.0,
               "SpecificRootLength": 45.0,
               "StolonEffectOnLAI": 0.3,
               "ShootMaxEffectOnLAI": 500.0,
@@ -1173,8 +1049,8 @@
               "NDillutionCoefficient": 1.0,
               "GlfGeneric": 1.0,
               "GlfSoilFertility": 1.0,
-              "PlantHeightMinimum": 25.0,
-              "PlantHeightMaximum": 350.0,
+              "PlantHeightMinimum": 300.0,
+              "PlantHeightMaximum": 300.0,
               "PlantHeightMassForMax": 7500.0,
               "PlantHeightExponent": 2.5,
               "RootDepthMinimum": 30.0,
@@ -1183,9 +1059,9 @@
               "RootDistributionDepthParam": 70.0,
               "RootDistributionExponent": 2.5,
               "DigestibilitiesCellWall": [
-                0.6,
-                0.6,
-                0.6,
+                0.9,
+                0.8,
+                0.7,
                 0.2
               ],
               "MinimumGreenWt": 50.0,
@@ -1194,132 +1070,8 @@
               "PreferenceForLeafOverStems": 1.0,
               "WaterAvailableMethod": 0,
               "NitrogenAvailableMethod": 0,
-              "Name": "WhiteClover",
-              "Children": [
-                {
-                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                  "Name": "Leaves",
-                  "Children": [
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort2",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "Dead",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                  "Name": "Stems",
-                  "Children": [
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort2",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "Dead",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                  "Name": "Stolons",
-                  "Children": [
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort2",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "LeafCohort3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.GenericTissue, Models",
-                      "Name": "Dead",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "ResourceName": "AGPWhiteClover",
+              "Name": "AGPWhiteClover",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1333,35 +1085,35 @@
                 "// If the name of the Report component (\"ReportExample\") here is changed in the simulation tree then all the references to that name in the outputs below also need to be changed",
                 "",
                 "// If all you want is harvested pasture or net herbage growth and/or standing biomass ....",
-                "Sum of ([Ryegrass].HarvestedWt + [WhiteClover].HarvestedWt) from [ReportExample].DayAfterLastOutput to [Clock].Today as HarvestedWt   //the amount harvested (kg DM /ha)",
-                "Sum of ([Ryegrass].NetGrowthWt + [WhiteClover].NetGrowthWt) from [ReportExample].DayAfterLastOutput to [Clock].Today as NetGrowthWt   //the amount harvested (kg DM /ha)",
-                "Mean of ([Ryegrass].AboveGroundWt + [WhiteClover].AboveGroundWt) from [ReportExample].DayAfterLastOutput to [Clock].Today as StandingBiomass   //pasture biomass (could also be reported as Last rather than Mean) (kg DM /ha)",
+                "Sum of ([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) from [ReportExample].DayAfterLastOutput to [Clock].Today as HarvestedWt   //the amount harvested (kg DM /ha)",
+                "Sum of ([AGPRyegrass].NetGrowthWt + [AGPWhiteClover].NetGrowthWt) from [ReportExample].DayAfterLastOutput to [Clock].Today as NetGrowthWt   //the amount harvested (kg DM /ha)",
+                "Mean of ([AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt) from [ReportExample].DayAfterLastOutput to [Clock].Today as StandingBiomass   //pasture biomass (could also be reported as Last rather than Mean) (kg DM /ha)",
                 "",
                 "// outputs that are used more frequently than others",
-                "Sum of ([Ryegrass].WaterDemand + [WhiteClover].WaterDemand) from [ReportExample].DayAfterLastOutput to [Clock].Today as WaterDemand   //how much soil water the pasture could use (mm)",
-                "Sum of (sum([Ryegrass].WaterUptake) + Sum([WhiteClover].WaterUptake)) from [ReportExample].DayAfterLastOutput to [Clock].Today as WaterUptake    //the amount of water actuially taken up from the soil (mm)",
-                "Sum of ([Ryegrass].SoilDemandN + [WhiteClover].SoilDemandN) from [ReportExample].DayAfterLastOutput to [Clock].Today as NDemand                   //N demand (kg N /ha)",
-                "Sum of ([Ryegrass].SoilUptakeN + [WhiteClover].SoilUptakeN) from [ReportExample].DayAfterLastOutput to [Clock].Today as NitrogenUptake       //N uptake from the soil (kg N /ha)",
-                "Sum of ([Ryegrass].SoilUptakeN + [WhiteClover].SoilUptakeN) from [ReportExample].DayAfterLastOutput to [Clock].Today as NitrogenUptake       //N uptake from the soil (kg N /ha)",
-                "Sum of [WhiteClover].FixedN from [ReportExample].DayAfterLastOutput to [Clock].Today as NitrogenFixed       //N uptake from the soil (kg N /ha)",
-                "Mean of ([Ryegrass].AboveGroundWt + [WhiteClover].AboveGroundWt) from [ReportExample].DayAfterLastOutput to [Clock].Today as HerbageMass",
-                "Mean of ([Ryegrass].LAIGreen + [WhiteClover].LAIGreen) from [ReportExample].DayAfterLastOutput to [Clock].Today as LAIGreen",
-                "Mean of ([Ryegrass].LAIDead + [WhiteClover].LAIDead + [Ryegrass].LAIGreen + [WhiteClover].LAIGreen) from [ReportExample].DayAfterLastOutput to [Clock].Today as LAITotal",
+                "Sum of ([AGPRyegrass].WaterDemand + [AGPWhiteClover].WaterDemand) from [ReportExample].DayAfterLastOutput to [Clock].Today as WaterDemand   //how much soil water the pasture could use (mm)",
+                "Sum of (sum([AGPRyegrass].WaterUptake) + Sum([AGPWhiteClover].WaterUptake)) from [ReportExample].DayAfterLastOutput to [Clock].Today as WaterUptake    //the amount of water actuially taken up from the soil (mm)",
+                "Sum of ([AGPRyegrass].SoilDemandN + [AGPWhiteClover].SoilDemandN) from [ReportExample].DayAfterLastOutput to [Clock].Today as NDemand                   //N demand (kg N /ha)",
+                "Sum of ([AGPRyegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN) from [ReportExample].DayAfterLastOutput to [Clock].Today as NitrogenUptake       //N uptake from the soil (kg N /ha)",
+                "Sum of ([AGPRyegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN) from [ReportExample].DayAfterLastOutput to [Clock].Today as NitrogenUptake       //N uptake from the soil (kg N /ha)",
+                "Sum of [AGPWhiteClover].FixedN from [ReportExample].DayAfterLastOutput to [Clock].Today as NitrogenFixed       //N uptake from the soil (kg N /ha)",
+                "Mean of ([AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt) from [ReportExample].DayAfterLastOutput to [Clock].Today as HerbageMass",
+                "Mean of ([AGPRyegrass].LAIGreen + [AGPWhiteClover].LAIGreen) from [ReportExample].DayAfterLastOutput to [Clock].Today as LAIGreen",
+                "Mean of ([AGPRyegrass].LAIDead + [AGPWhiteClover].LAIDead + [AGPRyegrass].LAIGreen + [AGPWhiteClover].LAIGreen) from [ReportExample].DayAfterLastOutput to [Clock].Today as LAITotal",
                 "",
                 "// outputs that indicate what conditions are limiting growth - each growth-limiting factor is 0 (full stress) to 1 (no stress) but there are two components and the values are added so 2 indicates no stress",
-                "Mean of ([Ryegrass].GlfTemperature + [WhiteClover].GlfTemperature) from [ReportExample].DayAfterLastOutput to [Clock].Today as GlfTemp       //stress from non-optimal temperature",
-                "Mean of ([Ryegrass].GlfWaterSupply + [WhiteClover].GlfWaterSupply) from [ReportExample].DayAfterLastOutput to [Clock].Today as GlfWater       //stress from water limitation",
-                "Mean of ([Ryegrass].GlfNSupply + [WhiteClover].GlfNSupply) from [ReportExample].DayAfterLastOutput to [Clock].Today as GlfNitrogen       //stress from N limitation",
+                "Mean of ([AGPRyegrass].GlfTemperature + [AGPWhiteClover].GlfTemperature) from [ReportExample].DayAfterLastOutput to [Clock].Today as GlfTemp       //stress from non-optimal temperature",
+                "Mean of ([AGPRyegrass].GlfWaterSupply + [AGPWhiteClover].GlfWaterSupply) from [ReportExample].DayAfterLastOutput to [Clock].Today as GlfWater       //stress from water limitation",
+                "Mean of ([AGPRyegrass].GlfNSupply + [AGPWhiteClover].GlfNSupply) from [ReportExample].DayAfterLastOutput to [Clock].Today as GlfNitrogen       //stress from N limitation",
                 "",
                 "// photsynthesis-related outputs - all these are in units of C not DM",
-                "Sum of ([Ryegrass].GPP +[WhiteClover].GPP) from [ReportExample].DayAfterLastOutput to [Clock].Today as GrossPrimaryProduction       //GPP (kg C /ha) ",
-                "Sum of ([Ryegrass].NPP +[WhiteClover].NPP) from [ReportExample].DayAfterLastOutput to [Clock].Today as NettPrimaryProduction        //NPP (kg C /ha)",
+                "Sum of ([AGPRyegrass].GPP +[AGPWhiteClover].GPP) from [ReportExample].DayAfterLastOutput to [Clock].Today as GrossPrimaryProduction       //GPP (kg C /ha) ",
+                "Sum of ([AGPRyegrass].NPP +[AGPWhiteClover].NPP) from [ReportExample].DayAfterLastOutput to [Clock].Today as NettPrimaryProduction        //NPP (kg C /ha)",
                 "",
                 "// examples of more detailed tissue-based information - see the list of outputs for many more options",
-                "[Ryegrass].LeafStage1NConc as RyegrassEmergingLeafNConc ",
-                "[Ryegrass].LeafStage2NConc as RyegrassDevelopingLeafNConc ",
-                "[Ryegrass].LeafStage3NConc as RyegrassMatureLeafNConc ",
-                "[Ryegrass].LeafStage4NConc as RyegrassDeadLeafNConc "
+                "[AGPRyegrass].LeafStage1NConc as RyegrassEmergingLeafNConc ",
+                "[AGPRyegrass].LeafStage2NConc as RyegrassDevelopingLeafNConc ",
+                "[AGPRyegrass].LeafStage3NConc as RyegrassMatureLeafNConc ",
+                "[AGPRyegrass].LeafStage4NConc as RyegrassDeadLeafNConc "
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -1381,7 +1133,7 @@
                 "// If the name of the Report component (\"Report\") here is changed in the simulation tree then all the references to that name in the outputs below also need to be changed",
                 "",
                 "// If all you want is an annual pattern of harvested pasture based on the production year (July to June)  ....",
-                "Sum of ([Ryegrass].HarvestedWt + [WhiteClover].HarvestedWt) from 1-Jul to [Clock].Today as HarvestedWt   //the amount harvested (kg DM /ha)"
+                "Sum of ([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) from 1-Jul to [Clock].Today as HarvestedWt   //the amount harvested (kg DM /ha)"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -2034,7 +1786,7 @@
                           "LLMetadata": null,
                           "KLMetadata": null,
                           "XFMetadata": null,
-                          "Name": "RyegrassSoil",
+                          "Name": "AGPRyegrassSoil",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2072,7 +1824,7 @@
                           "LLMetadata": null,
                           "KLMetadata": null,
                           "XFMetadata": null,
-                          "Name": "WhiteCloverSoil",
+                          "Name": "AGPWhiteCloverSoil",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2424,7 +2176,7 @@
                   "FractionLeafDMFactor": 2000.0,
                   "FractionLeafExponent": 3.0,
                   "FractionToStolon": 0.0,
-                  "SpecificLeafArea": 25.0,
+                  "SpecificLeafArea": 20.0,
                   "SpecificRootLength": 100.0,
                   "StolonEffectOnLAI": 0.0,
                   "ShootMaxEffectOnLAI": 1000.0,
@@ -2453,18 +2205,18 @@
                   "NDillutionCoefficient": 0.25,
                   "GlfGeneric": 1.0,
                   "GlfSoilFertility": 1.0,
-                  "PlantHeightMinimum": 25.0,
-                  "PlantHeightMaximum": 600.0,
+                  "PlantHeightMinimum": 300.0,
+                  "PlantHeightMaximum": 300.0,
                   "PlantHeightMassForMax": 10000.0,
                   "PlantHeightExponent": 2.8,
                   "RootDepthMinimum": 50.0,
-                  "RootDepthMaximum": 750.0,
+                  "RootDepthMaximum": 1000.0,
                   "RootElongationRate": 25.0,
-                  "RootDistributionDepthParam": 90.0,
+                  "RootDistributionDepthParam": 250.0,
                   "RootDistributionExponent": 3.2,
                   "DigestibilitiesCellWall": [
-                    0.6,
-                    0.6,
+                    0.9,
+                    0.7,
                     0.6,
                     0.2
                   ],
@@ -2474,132 +2226,8 @@
                   "PreferenceForLeafOverStems": 1.0,
                   "WaterAvailableMethod": 0,
                   "NitrogenAvailableMethod": 0,
-                  "Name": "Ryegrass",
-                  "Children": [
-                    {
-                      "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                      "Name": "Leaves",
-                      "Children": [
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort1",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort2",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort3",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "Dead",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                      "Name": "Stems",
-                      "Children": [
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort1",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort2",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort3",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "Dead",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                      "Name": "Stolons",
-                      "Children": [
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort1",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort2",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort3",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "Dead",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "ResourceName": "AGPRyegrass",
+                  "Name": "AGPRyegrass",
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2628,7 +2256,7 @@
                   "UseColdStressFactor": 0,
                   "ColdOnsetTemperature": 2.0,
                   "ColdFullTemperature": -5.0,
-                  "ColdRecoverySumDD": 30.0,
+                  "ColdRecoverySumDD": 20.0,
                   "ColdRecoveryTReference": 0.0,
                   "MaintenanceRespirationCoefficient": 0.04,
                   "GrowthRespirationCoefficient": 0.25,
@@ -2669,7 +2297,7 @@
                   "FractionLeafDMFactor": 2000.0,
                   "FractionLeafExponent": 3.0,
                   "FractionToStolon": 0.2,
-                  "SpecificLeafArea": 30.0,
+                  "SpecificLeafArea": 32.0,
                   "SpecificRootLength": 45.0,
                   "StolonEffectOnLAI": 0.3,
                   "ShootMaxEffectOnLAI": 500.0,
@@ -2698,8 +2326,8 @@
                   "NDillutionCoefficient": 1.0,
                   "GlfGeneric": 1.0,
                   "GlfSoilFertility": 1.0,
-                  "PlantHeightMinimum": 25.0,
-                  "PlantHeightMaximum": 350.0,
+                  "PlantHeightMinimum": 300.0,
+                  "PlantHeightMaximum": 300.0,
                   "PlantHeightMassForMax": 7500.0,
                   "PlantHeightExponent": 2.5,
                   "RootDepthMinimum": 30.0,
@@ -2708,9 +2336,9 @@
                   "RootDistributionDepthParam": 70.0,
                   "RootDistributionExponent": 2.5,
                   "DigestibilitiesCellWall": [
-                    0.6,
-                    0.6,
-                    0.6,
+                    0.9,
+                    0.8,
+                    0.7,
                     0.2
                   ],
                   "MinimumGreenWt": 50.0,
@@ -2719,132 +2347,8 @@
                   "PreferenceForLeafOverStems": 1.0,
                   "WaterAvailableMethod": 0,
                   "NitrogenAvailableMethod": 0,
-                  "Name": "WhiteClover",
-                  "Children": [
-                    {
-                      "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                      "Name": "Leaves",
-                      "Children": [
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort1",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort2",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort3",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "Dead",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                      "Name": "Stems",
-                      "Children": [
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort1",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort2",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort3",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "Dead",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                      "Name": "Stolons",
-                      "Children": [
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort1",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort2",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "LeafCohort3",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.GenericTissue, Models",
-                          "Name": "Dead",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "ResourceName": "AGPWhiteClover",
+                  "Name": "AGPWhiteClover",
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2857,7 +2361,7 @@
                     "",
                     "Sum of [FertiliseFixedDates].Script.Amount from 1-Jul to [Clock].Today as FertiliserNApplied_kgN_ha   // fertiliser applied",
                     "Sum of [Fertiliser].NitrogenApplied from 1-Jul to [Clock].Today as FertiliserNApplied_kgN_ha   // fertiliser applied",
-                    "Sum of ([Ryegrass].HarvestedWt + [WhiteClover].HarvestedWt) / 1000.0 from 1-Jul to [Clock].Today as HarvestedWt_t_ha   //the amount harvested (kg DM /ha)"
+                    "Sum of ([AGPRyegrass].HarvestedWt + [AGPWhiteClover].HarvestedWt) / 1000.0 from 1-Jul to [Clock].Today as HarvestedWt_t_ha   //the amount harvested (kg DM /ha)"
                   ],
                   "EventNames": [
                     "//[Clock].EndOfMonth"
