@@ -693,13 +693,32 @@ namespace UserInterface.Views
 
             // Line thickness
             if (lineThickness == LineThicknessType.Thin)
-                series.StrokeThickness = 0.5;
+            {
+                double thickness = 0.5;
+                series.StrokeThickness = thickness;
+                series.MeanThickness = thickness;
+                series.MedianThickness = thickness;
+            }
 
             OxyColor oxyColour = Utility.Colour.ToOxy(colour);
             series.Fill = oxyColour;
             series.Stroke = oxyColour;
 
+            EnsureAxisExists(xAxisType, typeof(double));
+            EnsureAxisExists(yAxisType, typeof(double));
+
+            series.XAxisKey = xAxisType.ToString();
+            series.YAxisKey = yAxisType.ToString();
+
+            double width = 0.5;
+            series.BoxWidth = width;
+            series.WhiskerWidth = width;
+
             plot1.Model.Series.Add(series);
+
+            OxyPlot.Axes.Axis xAxis = GetAxis(xAxisType);
+            xAxis.Minimum = 0 - width;
+            xAxis.Maximum = plot1.Model.Series.OfType<BoxPlotSeries>().Count() - 1 + width;
         }
 
         private List<BoxPlotItem> GetBoxPlotItems(double[] data)
@@ -711,8 +730,8 @@ namespace UserInterface.Views
             double upperQuartile = fiveNumberSummary[3];
             double max = fiveNumberSummary[4];
 
-
-            return new List<BoxPlotItem>() { new BoxPlotItem(0, min, lowerQuartile, median, upperQuartile, max) };
+            int index = plot1.Model.Series.OfType<BoxPlotSeries>().Count();
+            return new List<BoxPlotItem>() { new BoxPlotItem(index, min, lowerQuartile, median, upperQuartile, max) };
         }
 
         /// <summary>
