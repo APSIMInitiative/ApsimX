@@ -48,6 +48,7 @@ namespace Models.CLEM.Activities
         [Category("General", "Breeders")]
         [Description("Maximum female breeder age (months) for culling")]
         [Required, GreaterThanEqualValue(0)]
+        [System.ComponentModel.DefaultValueAttribute(120)]
         public double MaximumBreederAge { get; set; }
 
         /// <summary>
@@ -88,6 +89,7 @@ namespace Models.CLEM.Activities
         [Category("General", "Breeding males")]
         [Description("Maximum male breeder age (months) for culling")]
         [Required, GreaterThanEqualValue(0)]
+        [System.ComponentModel.DefaultValueAttribute(120)]
         public double MaximumBullAge { get; set; }
 
         /// <summary>
@@ -95,9 +97,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("General", "Breeding males")]
         [Description("Male breeder age (months) at purchase")]
+        [System.ComponentModel.DefaultValueAttribute(48)]
         [Required, GreaterThanValue(0)]
         public double BullAgeAtPurchase { get; set; }
-
 
         /// <summary>
         /// Allow natural herd replacement of sires
@@ -127,6 +129,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("General", "Males")]
         [Description("Male selling age (months)")]
+        [System.ComponentModel.DefaultValueAttribute(24)]
         [Required, GreaterThanEqualValue(0)]
         public double MaleSellingAge { get; set; }
 
