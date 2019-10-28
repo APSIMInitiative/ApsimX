@@ -576,6 +576,8 @@ namespace UserInterface.Presenters
             this.seriesView.X.IsEditable = !isBoxPlot;
             seriesView.MarkerSize.IsEditable = !isBoxPlot;
             seriesView.MarkerType.IsEditable = !isBoxPlot;
+            seriesView.XCumulative.IsSensitive = !isBoxPlot;
+            seriesView.XOnTop.IsSensitive = !isBoxPlot;
         }
 
         /// <summary>Populate the line drop down.</summary>
