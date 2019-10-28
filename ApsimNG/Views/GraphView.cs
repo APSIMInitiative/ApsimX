@@ -23,6 +23,7 @@ namespace UserInterface.Views
     using APSIM.Shared.Utilities;
     using System.Linq;
     using System.Globalization;
+    using MathNet.Numerics.Statistics;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -644,6 +645,93 @@ namespace UserInterface.Views
                 EnsureMonotonic(series.Points.Select(p => p.X).ToArray());
                 EnsureMonotonic(series.Points2.Select(p => p.X).ToArray());
             }
+        }
+
+        /// <summary>
+        /// Draw a box-and-whisker plot.
+        /// colour.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        public void DrawBoxPLot(
+            string title,
+            object[] x,
+            double[] y,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend,
+            Models.Graph.LineType lineType,
+            Models.Graph.MarkerType markerType,
+            Models.Graph.LineThicknessType lineThickness)
+        {
+            BoxPlotSeries series = new BoxPlotSeries();
+            series.Items = GetBoxPlotItems(y);
+            series.Title = title;
+
+            // Line style
+            if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
+            {
+                series.LineStyle = oxyLineType;
+                if (series.LineStyle == LineStyle.None)
+                    series.Fill = OxyColors.Transparent;
+                    series.Stroke = OxyColors.Transparent;
+            }
+
+            // Min/max lines = marker type
+            string marker = markerType.ToString();
+            if (marker.StartsWith("Filled"))
+                marker = marker.Remove(0, 6);
+
+            if (Enum.TryParse(marker, out OxyPlot.MarkerType oxyMarkerType))
+                series.OutlierType = oxyMarkerType;
+
+            // Line thickness
+            if (lineThickness == LineThicknessType.Thin)
+            {
+                double thickness = 0.5;
+                series.StrokeThickness = thickness;
+                series.MeanThickness = thickness;
+                series.MedianThickness = thickness;
+            }
+
+            OxyColor oxyColour = Utility.Colour.ToOxy(colour);
+            series.Fill = oxyColour;
+            series.Stroke = oxyColour;
+
+            EnsureAxisExists(xAxisType, typeof(double));
+            EnsureAxisExists(yAxisType, typeof(double));
+
+            series.XAxisKey = xAxisType.ToString();
+            series.YAxisKey = yAxisType.ToString();
+
+            double width = 0.5;
+            series.BoxWidth = width;
+            series.WhiskerWidth = width;
+
+            plot1.Model.Series.Add(series);
+
+            OxyPlot.Axes.Axis xAxis = GetAxis(xAxisType);
+            xAxis.Minimum = 0 - width;
+            xAxis.Maximum = plot1.Model.Series.OfType<BoxPlotSeries>().Count() - 1 + width;
+        }
+
+        private List<BoxPlotItem> GetBoxPlotItems(double[] data)
+        {
+            double[] fiveNumberSummary = data.FiveNumberSummary();
+            double min = fiveNumberSummary[0];
+            double lowerQuartile = fiveNumberSummary[1];
+            double median = fiveNumberSummary[2];
+            double upperQuartile = fiveNumberSummary[3];
+            double max = fiveNumberSummary[4];
+
+            int index = plot1.Model.Series.OfType<BoxPlotSeries>().Count();
+            return new List<BoxPlotItem>() { new BoxPlotItem(index, min, lowerQuartile, median, upperQuartile, max) };
         }
 
         /// <summary>

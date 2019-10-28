@@ -170,7 +170,11 @@ namespace Models.Core
                     int posPeriod = namePath.IndexOf('.', 1);
                     if (posPeriod == -1)
                     {
-                        posPeriod = namePath.Length;
+                        // Path starts with a . and only contains a single period.
+                        // If name matches then no problem. Otherwise we need to return null.
+                        posPeriod = namePath.IndexOf('.');
+                        if (namePath.Remove(0, posPeriod) == relativeToModel.Name)
+                            posPeriod = namePath.Length;
                     }
 
                     namePath = namePath.Remove(0, posPeriod);
