@@ -191,7 +191,8 @@
                 {
                     // Write a script to get random numbers from R.
                     string script = string.Format
-                        ($"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                        ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+                        $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                          $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                          "n <- {0}" + Environment.NewLine +
                          "nparams <- {1}" + Environment.NewLine +
@@ -321,6 +322,7 @@
                         DataTableUtilities.DataTableToText(X2, 0, ",", true, writer, excelFriendly: false, decimalFormatString: "F6");
 
                     string script = string.Format(
+                         $".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
                          $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                          $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                          "params <- c({0})" + Environment.NewLine +
@@ -440,7 +442,8 @@
         private string GetSobolRScript()
         {
             string script = string.Format
-                ($"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+                 $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                  $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                  "n <- {0}" + Environment.NewLine +
                  "nparams <- {1}" + Environment.NewLine +

@@ -45,14 +45,14 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "<div class=\"activityentry\">";
-            html += "Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\nNo breeding females will conceove if this ration is below ";
+            html += "Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\nNo breeding females will concieve if this ratio is below ";
             if (ConditionCutOff == 0)
             {
-                html += "<span class=\"errorlink\">No set<\\span>";
+                html += "<span class=\"errorlink\">No set</span>";
             }
             else
             {
-                html += "<span class=\"setvalue\">" + ConditionCutOff.ToString("0.0##") + "<\\span>";
+                html += "<span class=\"setvalue\">" + ConditionCutOff.ToString("0.0##") + "</span>";
             }
             html += "</div>";
             return html;
