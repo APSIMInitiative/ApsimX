@@ -573,9 +573,9 @@ namespace UserInterface.Presenters
             // Box plots ignore x variable, markertype, marker size,
             // so don't make these controls editable if the series is a box plot.
             bool isBoxPlot = series.Type == SeriesType.Box;
-            this.seriesView.X.IsEditable = !isBoxPlot;
-            seriesView.MarkerSize.IsEditable = !isBoxPlot;
-            seriesView.MarkerType.IsEditable = !isBoxPlot;
+            this.seriesView.X.IsSensitive = !isBoxPlot;
+            seriesView.MarkerSize.IsSensitive = !isBoxPlot;
+            seriesView.MarkerType.IsSensitive = !isBoxPlot;
             seriesView.XCumulative.IsSensitive = !isBoxPlot;
             seriesView.XOnTop.IsSensitive = !isBoxPlot;
         }

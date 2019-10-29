@@ -62,6 +62,58 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///    &quot;$type&quot;: &quot;Models.AgPasture.PastureSpecies, Models&quot;,
+        ///    &quot;MaximumNUptake&quot;: 10.0,
+        ///    &quot;Albedo&quot;: 0.26,
+        ///    &quot;Gsmax&quot;: 0.011,
+        ///    &quot;R50&quot;: 200.0,
+        ///    &quot;SpeciesFamily&quot;: 0,
+        ///    &quot;PhotosyntheticPathway&quot;: 0,
+        ///    &quot;InitialShootDM&quot;: 1500.0,
+        ///    &quot;InitialRootDM&quot;: 450.0,
+        ///    &quot;InitialRootDepth&quot;: 750.0,
+        ///    &quot;ReferencePhotosyntheticRate&quot;: 1.0,
+        ///    &quot;LightExtinctionCoefficient&quot;: 0.5,
+        ///    &quot;GrowthTminimum&quot;: 1.0,
+        ///    &quot;GrowthToptimum&quot;: 20.0,
+        ///    &quot;GrowthTEffectExponent&quot;: 1.7,
+        ///    &quot;UseHeatStressFactor&quot;: 0,
+        ///    &quot;Hea [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AGPRyegrass {
+            get {
+                return ResourceManager.GetString("AGPRyegrass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///    &quot;$type&quot;: &quot;Models.AgPasture.PastureSpecies, Models&quot;,
+        ///    &quot;MaximumNUptake&quot;: 10.0,
+        ///    &quot;Albedo&quot;: 0.26,
+        ///    &quot;Gsmax&quot;: 0.011,
+        ///    &quot;R50&quot;: 200.0,
+        ///    &quot;SpeciesFamily&quot;: 1,
+        ///    &quot;PhotosyntheticPathway&quot;: 0,
+        ///    &quot;InitialShootDM&quot;: 500.0,
+        ///    &quot;InitialRootDM&quot;: 150.0,
+        ///    &quot;InitialRootDepth&quot;: 350.0,
+        ///    &quot;ReferencePhotosyntheticRate&quot;: 1.0,
+        ///    &quot;LightExtinctionCoefficient&quot;: 0.8,
+        ///    &quot;GrowthTminimum&quot;: 2.0,
+        ///    &quot;GrowthToptimum&quot;: 22.0,
+        ///    &quot;GrowthTEffectExponent&quot;: 1.7,
+        ///    &quot;UseHeatStressFactor&quot;: 0,
+        ///    &quot;Heat [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AGPWhiteClover {
+            get {
+                return ResourceManager.GetString("AGPWhiteClover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
         ///  &quot;Version&quot;: 67,
@@ -321,6 +373,16 @@ namespace Models.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] RedClover {
+            get {
+                object obj = ResourceManager.GetObject("RedClover", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;parameters name=&quot;standard&quot; version=&quot;2.0&quot;&gt;
         ///  &lt;par name=&quot;editor&quot;&gt;Andrew Moore&lt;/par&gt;
         ///  &lt;par name=&quot;edited&quot;&gt;30 Jan 2013&lt;/par&gt;
@@ -334,16 +396,6 @@ namespace Models.Properties {
         internal static string RUMINANT_PARAM_GLB {
             get {
                 return ResourceManager.GetString("RUMINANT_PARAM_GLB", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Ryegrass {
-            get {
-                object obj = ResourceManager.GetObject("Ryegrass", resourceCulture);
-                return ((byte[])(obj));
             }
         }
         
