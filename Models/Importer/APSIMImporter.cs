@@ -424,41 +424,6 @@
                         XmlUtilities.SetValue(newNode, "InitialCNR", "80");
                     }
 
-                    // Add Fertiliser/Irrigation nodes if necessary.
-                    XmlNode[] operationsNodes = XmlUtilities.ChildNodesByName(newPaddockNode, "operations").ToArray();
-                    if (operationsNodes != null && operationsNodes.Length > 0)
-                    {
-                        bool needFert = XmlUtilities.ChildNodesByName(newPaddockNode, "fertiliser").Count < 1;
-                        bool needIrr = XmlUtilities.ChildNodesByName(newPaddockNode, "irrigation").Count < 1;
-
-                        foreach (XmlNode operations in operationsNodes)
-                        {
-                            List<XmlNode> children = XmlUtilities.ChildNodesByName(operations, "Operation");
-                            if (children != null && children.Count > 0)
-                            {
-                                foreach (XmlNode operation in children)
-                                {
-                                    XmlNode action = XmlUtilities.ChildByNameAndType(operation, "Action", "Action");
-                                    if (action == null)
-                                        continue;
-
-                                    string str = action.InnerText;
-                                    if (str.Contains("Fertiliser") && needFert)
-                                    {
-                                        needFert = false;
-                                        AddCompNode(newPaddockNode, "Fertiliser", "Fertiliser");
-                                    }
-
-                                    if (str.Contains("Irrigation") && needIrr)
-                                    {
-                                        needIrr = false;
-                                        AddCompNode(newPaddockNode, "Irrigation", "Irrigation");
-                                    }
-                                }
-                            }
-                        }
-                    }
-
                     // alway ensure that MicroClimate exists in this paddock
                     if (!this.microClimateExists)
                     {
