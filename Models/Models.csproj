@@ -132,9 +132,14 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgPasture\AgPasture.PastureSpecies.cs" />
-    <Compile Include="AgPasture\AgPasture.PastureSpecies.Organs.cs" />
     <Compile Include="AgPasture\AgPasture.Sward.cs" />
+    <Compile Include="AgPasture\PastureSpecies.cs" />
+    <Compile Include="AgPasture\PastureAboveGroundOrgan.cs" />
+    <Compile Include="AgPasture\PastureBelowGroundOrgan.cs" />
+    <Compile Include="AgPasture\GenericTissue.cs" />
+    <Compile Include="AgPasture\RootTissue.cs" />
+    <Compile Include="AgPasture\RootZone.cs" />
+    <Compile Include="AgPasture\SpeciesBasicStateSettings.cs" />
     <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
     <Compile Include="Agroforestry\TreeProxy.cs" />
@@ -738,9 +743,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
+    <None Include="Resources\AGPRyegrass.json" />
+    <None Include="Resources\AGPWhiteClover.json" />
     <None Include="Resources\FodderBeet.json" />
     <EmbeddedResource Include="Resources\Nutrient.json" />
     <None Include="Resources\Potato.json" />
+    <None Include="Resources\RedClover.json" />
     <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>
