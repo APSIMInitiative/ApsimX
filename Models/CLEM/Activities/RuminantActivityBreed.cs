@@ -133,6 +133,8 @@ namespace Models.CLEM.Activities
                                         if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                         {
                                             female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
+                                            // report conception status changed
+                                            female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
                                         }
                                     }
                                 }
@@ -155,6 +157,8 @@ namespace Models.CLEM.Activities
                                             if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                             {
                                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
+                                                // report conception status changed
+                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
                                             }
                                             numberServiced++;
                                         }
@@ -251,6 +255,11 @@ namespace Models.CLEM.Activities
                         if (ZoneCLEM.RandomGenerator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                         {
                             female.OneOffspringDies();
+                            if (female.NumberOfOffspring == 0)
+                            {
+                                // report conception status changed when last multiple birth dies.
+                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, Clock.Today));
+                            }
                         }
                     }
                 }
@@ -297,6 +306,8 @@ namespace Models.CLEM.Activities
                             female.WeightLossDueToCalf += newCalfRuminant.Weight;
                         }
                         female.UpdateBirthDetails();
+                        // report conception status changed when last multiple birth dies.
+                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, Clock.Today));
                     }
                 }
 
@@ -319,6 +330,8 @@ namespace Models.CLEM.Activities
                             if (conceptionRate > 0 && ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                             {
                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
+                                // report conception status changed when last multiple birth dies.
+                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
                             }
                         }
                     }
@@ -338,6 +351,8 @@ namespace Models.CLEM.Activities
                                 if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
+                                    // report conception status changed when last multiple birth dies.
+                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
                                 }
                                 numberServiced++;
                             }

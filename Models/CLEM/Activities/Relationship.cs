@@ -17,6 +17,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
+    [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"content/features/Relationships/Relationship.htm")]

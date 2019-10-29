@@ -7,9 +7,7 @@
     using System.Linq;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// A micro climate wrapper around a Zone instance. 
-    /// </summary>
+    /// <summary>A micro climate wrapper around a Zone instance.</summary>
     [Serializable]
     public class MicroClimateZone
     {
@@ -21,6 +19,9 @@
 
         /// <summary>The surface organic matter model.</summary>
         private ISurfaceOrganicMatter surfaceOM;
+
+        /// <summary>The soil water model.</summary>
+        private ISoilWater soilWater;
 
         /// <summary>Models in the simulation that implement ICanopy.</summary>
         private IEnumerable<ICanopy> canopyModels;
@@ -131,179 +132,26 @@
         public double DryLeafFraction;
 
         /// <summary>Gets or sets the component data.</summary>
-        public List<CanopyType> Canopies = new List<CanopyType>();
+        public List<MicroClimateCanopy> Canopies = new List<MicroClimateCanopy>();
 
         /// <summary>Constructor.</summary>
         /// <param name="clockModel">The clock model.</param>
         /// <param name="weatherModel">The weather model.</param>
         /// <param name="zoneModel">The zone model.</param>
-        /// <param name="residues">The surface organic matter model.</param>
-        public MicroClimateZone(Clock clockModel, IWeather weatherModel, Zone zoneModel, ISurfaceOrganicMatter residues)
+        public MicroClimateZone(Clock clockModel, IWeather weatherModel, Zone zoneModel)
         {
             clock = clockModel;
             weather = weatherModel;
             Zone = zoneModel;
-            surfaceOM = residues;
             canopyModels = Apsim.ChildrenRecursively(Zone, typeof(ICanopy)).Cast<ICanopy>();
             modelsThatHaveCanopies = Apsim.ChildrenRecursively(Zone, typeof(IHaveCanopy)).Cast<IHaveCanopy>();
+            soilWater = Apsim.Find(Zone, typeof(ISoilWater)) as ISoilWater;
+            surfaceOM = Apsim.Find(Zone, typeof(ISurfaceOrganicMatter)) as ISurfaceOrganicMatter;
         }
 
         /// <summary>The zone model.</summary>
         public Zone Zone { get; }
 
-        /// <summary>
-        /// Zeros all variables.
-        /// </summary>
-        public void OnStartOfDay()
-        {
-            Albedo = 0;
-            Emissivity = 0;
-            NetLongWaveRadiation = 0;
-            sumRs = 0;
-            IncomingRs = 0;
-            SurfaceRs = 0.0;
-            DeltaZ = new double[-1 + 1];
-            layerKtot = new double[-1 + 1];
-            LAItotsum = new double[-1 + 1];
-            numLayers = 0;
-            SoilHeatFlux = 0.0;
-            DryLeafFraction = 0.0;
-
-            // Canopies come and go each day so clear the list of canopies and 
-            // go find the canopies we need to work with today.
-            Canopies.Clear();
-
-            // There are two ways to finding canopies in the simulation.
-            // 1. Some models ARE canopies e.g. Leaf, SimpleLeaf.
-            foreach (ICanopy canopy in canopyModels)
-                if (canopy.Height > 0)
-                    Canopies.Add(new CanopyType(canopy));
-
-            // 2. Some models HAVE canopies e.g. SurfaceOM.
-            foreach (var modelThatHasCanopy in modelsThatHaveCanopies)
-                modelThatHasCanopy.Canopies.ForEach(canopy => Canopies.Add(new CanopyType(canopy)));
-        }
-
-        /// <summary>Canopies the compartments.</summary>
-        public void DoCanopyCompartments()
-        {
-            DefineLayers();
-            DivideComponents();
-            CalculateLightExtinctionVariables();
-        }
-
-        /// <summary>Break the combined Canopy into layers</summary>
-        private void DefineLayers()
-        {
-            double[] nodes = new double[2 * Canopies.Count];
-            int numNodes = 1;
-            for (int compNo = 0; compNo <= Canopies.Count - 1; compNo++)
-            {
-                double HeightMetres = Math.Round(Canopies[compNo].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
-                double DepthMetres = Math.Round(Canopies[compNo].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
-                double canopyBase = HeightMetres - DepthMetres;
-                if (Array.IndexOf(nodes, HeightMetres) == -1)
-                {
-                    nodes[numNodes] = HeightMetres;
-                    numNodes = numNodes + 1;
-                }
-                if (Array.IndexOf(nodes, canopyBase) == -1)
-                {
-                    nodes[0] = canopyBase;
-                    numNodes = numNodes + 1;
-                }
-            }
-            Array.Resize<double>(ref nodes, numNodes);
-            Array.Sort(nodes);
-            numLayers = numNodes - 1;
-            if (DeltaZ.Length != numLayers)
-            {
-                // Number of layers has changed; adjust array lengths
-                Array.Resize<double>(ref DeltaZ, numLayers);
-                Array.Resize<double>(ref layerKtot, numLayers);
-                Array.Resize<double>(ref LAItotsum, numLayers);
-
-                for (int j = 0; j <= Canopies.Count - 1; j++)
-                {
-                    Array.Resize<double>(ref Canopies[j].Ftot, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Fgreen, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Rs, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Rl, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Rsoil, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Gc, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Ga, numLayers);
-                    Array.Resize<double>(ref Canopies[j].PET, numLayers);
-                    Array.Resize<double>(ref Canopies[j].PETr, numLayers);
-                    Array.Resize<double>(ref Canopies[j].PETa, numLayers);
-                    Array.Resize<double>(ref Canopies[j].Omega, numLayers);
-                    Array.Resize<double>(ref Canopies[j].interception, numLayers);
-                }
-            }
-            for (int i = 0; i <= numNodes - 2; i++)
-                DeltaZ[i] = nodes[i + 1] - nodes[i];
-        }
-
-        /// <summary>Break the components into layers</summary>
-        private void DivideComponents()
-        {
-            double top = 0.0;
-            double bottom = 0.0;
-            for (int i = 0; i <= numLayers - 1; i++)
-            {
-                bottom = top;
-                top = top + DeltaZ[i];
-                LAItotsum[i] = 0.0;
-
-                // Calculate LAI for layer i and component j
-                // ===========================================
-                for (int j = 0; j <= Canopies.Count - 1; j++)
-                {
-                    Array.Resize(ref Canopies[j].LAI, numLayers);
-                    Array.Resize(ref Canopies[j].LAItot, numLayers);
-                    double HeightMetres = Math.Round(Canopies[j].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
-                    double DepthMetres = Math.Round(Canopies[j].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
-                    if ((HeightMetres > bottom) && (HeightMetres - DepthMetres < top))
-                    {
-                        double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAITotal, DepthMetres, 0.0);
-                        Canopies[j].LAItot[i] = Ld * DeltaZ[i];
-                        Canopies[j].LAI[i] = Canopies[j].LAItot[i] * MathUtilities.Divide(Canopies[j].Canopy.LAI, Canopies[j].Canopy.LAITotal, 0.0);
-                        LAItotsum[i] += Canopies[j].LAItot[i];
-                    }
-                }
-                // Calculate fractional contribution for layer i and component j
-                // ====================================================================
-                for (int j = 0; j <= Canopies.Count - 1; j++)
-                {
-                    Canopies[j].Ftot[i] = MathUtilities.Divide(Canopies[j].LAItot[i], LAItotsum[i], 0.0);
-                    Canopies[j].Fgreen[i] = MathUtilities.Divide(Canopies[j].LAI[i], LAItotsum[i], 0.0);  // Note: Sum of Fgreen will be < 1 as it is green over total
-                }
-            }
-        }
-
-        /// <summary>Calculate light extinction parameters</summary>
-        private void CalculateLightExtinctionVariables()
-        {
-            // Calculate effective K from LAI and cover
-            // =========================================
-            for (int j = 0; j <= Canopies.Count - 1; j++)
-            {
-                if (MathUtilities.FloatsAreEqual(Canopies[j].Canopy.CoverGreen, 1.0, 1E-10))
-                    throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.999999999");
-
-                Canopies[j].K = MathUtilities.Divide(-Math.Log(1.0 - Canopies[j].Canopy.CoverGreen), Canopies[j].Canopy.LAI, 0.0);
-                Canopies[j].Ktot = MathUtilities.Divide(-Math.Log(1.0 - Canopies[j].Canopy.CoverTotal), Canopies[j].Canopy.LAITotal, 0.0);
-            }
-
-            // Calculate extinction for individual layers
-            // ============================================
-            for (int i = 0; i <= numLayers - 1; i++)
-            {
-                layerKtot[i] = 0.0;
-                for (int j = 0; j <= Canopies.Count - 1; j++)
-                    layerKtot[i] += Canopies[j].Ftot[i] * Canopies[j].Ktot;
-            }
-        }
-            
         /// <summary>Gets the intercepted precipitation.</summary>
         [Description("Intercepted precipitation")]
         [Units("mm")]
@@ -380,14 +228,43 @@
             get { return weather == null ? 0.0 : weather.Radn * (1.0 - Albedo); }
         }
 
-        /// <summary>
-        /// Calculate the proportion of light intercepted by a given component that corresponds to green leaf
-        /// </summary>
-        public double RadnGreenFraction(int j)
+        /// <summary>Called at the start of day to initialise the zone for the day.</summary>
+        public void OnStartOfDay()
         {
-            double klGreen = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
-            double klTot = -Math.Log(1.0 - Canopies[j].Canopy.CoverTotal);
-            return MathUtilities.Divide(klGreen, klTot, 0.0);
+            Albedo = 0;
+            Emissivity = 0;
+            NetLongWaveRadiation = 0;
+            sumRs = 0;
+            IncomingRs = 0;
+            SurfaceRs = 0.0;
+            DeltaZ = new double[-1 + 1];
+            layerKtot = new double[-1 + 1];
+            LAItotsum = new double[-1 + 1];
+            numLayers = 0;
+            SoilHeatFlux = 0.0;
+            DryLeafFraction = 0.0;
+
+            // Canopies come and go each day so clear the list of canopies and 
+            // go find the canopies we need to work with today.
+            Canopies.Clear();
+
+            // There are two ways to finding canopies in the simulation.
+            // 1. Some models ARE canopies e.g. Leaf, SimpleLeaf.
+            foreach (ICanopy canopy in canopyModels)
+                if (canopy.Height > 0)
+                    Canopies.Add(new MicroClimateCanopy(canopy));
+
+            // 2. Some models HAVE canopies e.g. SurfaceOM.
+            foreach (var modelThatHasCanopy in modelsThatHaveCanopies)
+                modelThatHasCanopy.Canopies.ForEach(canopy => Canopies.Add(new MicroClimateCanopy(canopy)));
+        }
+
+        /// <summary>Canopies the compartments.</summary>
+        public void DoCanopyCompartments()
+        {
+            DefineLayers();
+            DivideComponents();
+            CalculateLightExtinctionVariables();
         }
 
         /// <summary>Calculate the overall system energy terms.</summary>
@@ -502,11 +379,10 @@
                 for (int j = 0; j <= Canopies.Count - 1; j++)
                     Canopies[j].interception[i] = MathUtilities.Divide(Canopies[j].LAI[i], sumLAI, 0.0) * totalInterception;
 
-            ISoilWater zonesoilwater = Apsim.Find(Zone, typeof(ISoilWater)) as ISoilWater;
-            if (zonesoilwater != null)
+            if (soilWater != null)
             {
-                zonesoilwater.PotentialInfiltration = Math.Max(0, weather.Rain - totalInterception);
-                zonesoilwater.PrecipitationInterception = totalInterception;
+                soilWater.PotentialInfiltration = Math.Max(0, weather.Rain - totalInterception);
+                soilWater.PrecipitationInterception = totalInterception;
             }
         }
 
@@ -584,21 +460,139 @@
         /// <summary>Calculate the amtospheric potential evaporation rate for each zone</summary>
         public void CalculateEo()
         {
-            ISoilWater zoneSoilWater = Apsim.Find(Zone, typeof(ISoilWater)) as ISoilWater;
-            ISurfaceOrganicMatter zoneSurfaceOM = Apsim.Find(Zone, typeof(ISurfaceOrganicMatter)) as ISurfaceOrganicMatter;
 
             double CoverGreen = 0;
             for (int j = 0; j <= Canopies.Count - 1; j++)
                 if (Canopies[j].Canopy != null)
                     CoverGreen += (1 - CoverGreen) * Canopies[j].Canopy.CoverGreen;
 
-            if (weather != null && zoneSoilWater != null && zoneSurfaceOM != null)
-                zoneSoilWater.Eo = AtmosphericPotentialEvaporationRate(weather.Radn,
+            if (weather != null && soilWater != null && surfaceOM != null)
+                soilWater.Eo = AtmosphericPotentialEvaporationRate(weather.Radn,
                                                              weather.MaxT,
                                                              weather.MinT,
-                                                             zoneSoilWater.Salb,
-                                                             zoneSurfaceOM.Cover,
+                                                             soilWater.Salb,
+                                                             surfaceOM.Cover,
                                                              CoverGreen);
+        }
+
+        /// <summary>Break the combined Canopy into layers</summary>
+        private void DefineLayers()
+        {
+            double[] nodes = new double[2 * Canopies.Count];
+            int numNodes = 1;
+            for (int compNo = 0; compNo <= Canopies.Count - 1; compNo++)
+            {
+                double HeightMetres = Math.Round(Canopies[compNo].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                double DepthMetres = Math.Round(Canopies[compNo].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                double canopyBase = HeightMetres - DepthMetres;
+                if (Array.IndexOf(nodes, HeightMetres) == -1)
+                {
+                    nodes[numNodes] = HeightMetres;
+                    numNodes = numNodes + 1;
+                }
+                if (Array.IndexOf(nodes, canopyBase) == -1)
+                {
+                    nodes[0] = canopyBase;
+                    numNodes = numNodes + 1;
+                }
+            }
+            Array.Resize<double>(ref nodes, numNodes);
+            Array.Sort(nodes);
+            numLayers = numNodes - 1;
+            if (DeltaZ.Length != numLayers)
+            {
+                // Number of layers has changed; adjust array lengths
+                Array.Resize<double>(ref DeltaZ, numLayers);
+                Array.Resize<double>(ref layerKtot, numLayers);
+                Array.Resize<double>(ref LAItotsum, numLayers);
+
+                for (int j = 0; j <= Canopies.Count - 1; j++)
+                {
+                    Array.Resize<double>(ref Canopies[j].Ftot, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Fgreen, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Rs, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Rl, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Rsoil, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Gc, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Ga, numLayers);
+                    Array.Resize<double>(ref Canopies[j].PET, numLayers);
+                    Array.Resize<double>(ref Canopies[j].PETr, numLayers);
+                    Array.Resize<double>(ref Canopies[j].PETa, numLayers);
+                    Array.Resize<double>(ref Canopies[j].Omega, numLayers);
+                    Array.Resize<double>(ref Canopies[j].interception, numLayers);
+                }
+            }
+            for (int i = 0; i <= numNodes - 2; i++)
+                DeltaZ[i] = nodes[i + 1] - nodes[i];
+        }
+
+        /// <summary>Break the components into layers</summary>
+        private void DivideComponents()
+        {
+            double top = 0.0;
+            double bottom = 0.0;
+            for (int i = 0; i <= numLayers - 1; i++)
+            {
+                bottom = top;
+                top = top + DeltaZ[i];
+                LAItotsum[i] = 0.0;
+
+                // Calculate LAI for layer i and component j
+                // ===========================================
+                for (int j = 0; j <= Canopies.Count - 1; j++)
+                {
+                    Array.Resize(ref Canopies[j].LAI, numLayers);
+                    Array.Resize(ref Canopies[j].LAItot, numLayers);
+                    double HeightMetres = Math.Round(Canopies[j].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                    double DepthMetres = Math.Round(Canopies[j].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
+                    if ((HeightMetres > bottom) && (HeightMetres - DepthMetres < top))
+                    {
+                        double Ld = MathUtilities.Divide(Canopies[j].Canopy.LAITotal, DepthMetres, 0.0);
+                        Canopies[j].LAItot[i] = Ld * DeltaZ[i];
+                        Canopies[j].LAI[i] = Canopies[j].LAItot[i] * MathUtilities.Divide(Canopies[j].Canopy.LAI, Canopies[j].Canopy.LAITotal, 0.0);
+                        LAItotsum[i] += Canopies[j].LAItot[i];
+                    }
+                }
+                // Calculate fractional contribution for layer i and component j
+                // ====================================================================
+                for (int j = 0; j <= Canopies.Count - 1; j++)
+                {
+                    Canopies[j].Ftot[i] = MathUtilities.Divide(Canopies[j].LAItot[i], LAItotsum[i], 0.0);
+                    Canopies[j].Fgreen[i] = MathUtilities.Divide(Canopies[j].LAI[i], LAItotsum[i], 0.0);  // Note: Sum of Fgreen will be < 1 as it is green over total
+                }
+            }
+        }
+
+        /// <summary>Calculate light extinction parameters</summary>
+        private void CalculateLightExtinctionVariables()
+        {
+            // Calculate effective K from LAI and cover
+            // =========================================
+            for (int j = 0; j <= Canopies.Count - 1; j++)
+            {
+                if (MathUtilities.FloatsAreEqual(Canopies[j].Canopy.CoverGreen, 1.0, 1E-10))
+                    throw new Exception("Unrealistically high cover value in MicroMet i.e. > 0.999999999");
+
+                Canopies[j].K = MathUtilities.Divide(-Math.Log(1.0 - Canopies[j].Canopy.CoverGreen), Canopies[j].Canopy.LAI, 0.0);
+                Canopies[j].Ktot = MathUtilities.Divide(-Math.Log(1.0 - Canopies[j].Canopy.CoverTotal), Canopies[j].Canopy.LAITotal, 0.0);
+            }
+
+            // Calculate extinction for individual layers
+            // ============================================
+            for (int i = 0; i <= numLayers - 1; i++)
+            {
+                layerKtot[i] = 0.0;
+                for (int j = 0; j <= Canopies.Count - 1; j++)
+                    layerKtot[i] += Canopies[j].Ftot[i] * Canopies[j].Ktot;
+            }
+        }
+
+        /// <summary>Calculate the proportion of light intercepted by a given component that corresponds to green leaf.</summary>
+        private double RadnGreenFraction(int j)
+        {
+            double klGreen = -Math.Log(1.0 - Canopies[j].Canopy.CoverGreen);
+            double klTot = -Math.Log(1.0 - Canopies[j].Canopy.CoverTotal);
+            return MathUtilities.Divide(klGreen, klTot, 0.0);
         }
 
         private double CalcSunshineHours(double rand, double dayLengthLight, double latitude, double day)

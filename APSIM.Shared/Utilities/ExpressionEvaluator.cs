@@ -101,20 +101,20 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>Gets the equation.</summary>
         /// <value>The equation.</value>
-        public ArrayList Equation
+        public List<Symbol> Equation
         {
             get
             {
-                return (ArrayList)m_equation.Clone();
+                return new List<Symbol>(m_equation);
             }
         }
         /// <summary>Gets the postfix.</summary>
         /// <value>The postfix.</value>
-        public ArrayList Postfix
+        public List<Symbol> Postfix
         {
             get
             {
-                return (ArrayList)m_postfix.Clone();
+                return new List<Symbol>(m_postfix);
             }
         }
 
@@ -150,11 +150,11 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>Gets or sets the variables.</summary>
         /// <value>The variables.</value>
-        public ArrayList Variables
+        public List<Symbol> Variables
         {
             get
             {
-                ArrayList var = new ArrayList();
+                List<Symbol> var = new List<Symbol>();
                 foreach (Symbol sym in m_equation)
                 {
                     if ((sym.m_type == ExpressionType.Variable) && (!var.Contains(sym)))
@@ -378,7 +378,7 @@ namespace APSIM.Shared.Utilities
         public void Infix2Postfix()
         {
             Symbol tpSym;
-            Stack tpStack = new Stack();
+            Stack<Symbol> tpStack = new Stack<Symbol>();
             for (int i = 0; i < m_equation.Count; i++)
             {
                 Symbol sym = (Symbol)m_equation[i];
@@ -390,11 +390,11 @@ namespace APSIM.Shared.Utilities
                 {
                     if (tpStack.Count > 0)
                     {
-                        tpSym = (Symbol)tpStack.Pop();
+                        tpSym = tpStack.Pop();
                         while ((tpSym.m_name != "(") && (tpSym.m_name != "{"))
                         {
                             m_postfix.Add(tpSym);
-                            tpSym = (Symbol)tpStack.Pop();
+                            tpSym = tpStack.Pop();
                         }
                     }
                 }
@@ -402,11 +402,11 @@ namespace APSIM.Shared.Utilities
                 {
                     if (tpStack.Count > 0)
                     {
-                        tpSym = (Symbol)tpStack.Pop();
+                        tpSym = tpStack.Pop();
                         while ((tpStack.Count != 0) && ((tpSym.m_type == ExpressionType.Operator) || (tpSym.m_type == ExpressionType.EvalFunction) || (tpSym.m_type == ExpressionType.Comma)) && (Precedence(tpSym) >= Precedence(sym)))
                         {
                             m_postfix.Add(tpSym);
-                            tpSym = (Symbol)tpStack.Pop();
+                            tpSym = tpStack.Pop();
                         }
                         if (((tpSym.m_type == ExpressionType.Operator) || (tpSym.m_type == ExpressionType.EvalFunction) || (tpSym.m_type == ExpressionType.Comma)) && (Precedence(tpSym) >= Precedence(sym)))
                             m_postfix.Add(tpSym);
@@ -418,7 +418,7 @@ namespace APSIM.Shared.Utilities
             }
             while (tpStack.Count > 0)
             {
-                tpSym = (Symbol)tpStack.Pop();
+                tpSym = tpStack.Pop();
                 m_postfix.Add(tpSym);
             }
         }
@@ -427,8 +427,8 @@ namespace APSIM.Shared.Utilities
         public void EvaluatePostfix()
         {
             Symbol tpSym1, tpSym2, tpResult;
-            Stack tpStack = new Stack();
-            ArrayList fnParam = new ArrayList();
+            Stack<Symbol> tpStack = new Stack<Symbol>();
+            List<Symbol> fnParam = new List<Symbol>();
             m_bError = false;
             foreach (Symbol sym in m_postfix)
             {
@@ -438,7 +438,7 @@ namespace APSIM.Shared.Utilities
                 {
                     tpSym1 = (Symbol)tpStack.Pop();
                     if (tpStack.Count > 0 && sym.m_name != "--")
-                        tpSym2 = (Symbol)tpStack.Pop();
+                        tpSym2 = tpStack.Pop();
                     else
                         tpSym2 = new Symbol();
                     tpResult = Evaluate(tpSym2, sym, tpSym1);
@@ -453,7 +453,7 @@ namespace APSIM.Shared.Utilities
                 else if (sym.m_type == ExpressionType.EvalFunction)
                 {
                     fnParam.Clear();
-                    tpSym1 = (Symbol)tpStack.Pop();
+                    tpSym1 = tpStack.Pop();
                     if ((tpSym1.m_type == ExpressionType.Value) || (tpSym1.m_type == ExpressionType.Variable) || (tpSym1.m_type == ExpressionType.Result))
                     {
                         tpResult = EvaluateFunction(sym.m_name, tpSym1);
@@ -469,9 +469,9 @@ namespace APSIM.Shared.Utilities
                     {
                         while (tpSym1.m_type == ExpressionType.Comma)
                         {
-                            tpSym1 = (Symbol)tpStack.Pop();
+                            tpSym1 = tpStack.Pop();
                             fnParam.Add(tpSym1);
-                            tpSym1 = (Symbol)tpStack.Pop();
+                            tpSym1 = tpStack.Pop();
                         }
                         fnParam.Add(tpSym1);
                         tpResult = EvaluateFunction(sym.m_name, fnParam.ToArray());
@@ -499,7 +499,7 @@ namespace APSIM.Shared.Utilities
             }
             if (tpStack.Count == 1)
             {
-                tpResult = (Symbol)tpStack.Pop();
+                tpResult = tpStack.Pop();
                 m_result = tpResult.m_value;
                 if (tpResult.m_values != null)
                 {
@@ -1003,9 +1003,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>The m_results</summary>
         protected double[] m_results = null;
         /// <summary>The m_equation</summary>
-        protected ArrayList m_equation = new ArrayList();
+        protected List<Symbol> m_equation = new List<Symbol>();
         /// <summary>The m_postfix</summary>
-        protected ArrayList m_postfix = new ArrayList();
+        protected List<Symbol> m_postfix = new List<Symbol>();
         /// <summary>The m_default function evaluation</summary>
         protected EvaluateFunctionDelegate m_defaultFunctionEvaluation;
     }
