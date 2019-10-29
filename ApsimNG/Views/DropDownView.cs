@@ -215,7 +215,7 @@ namespace UserInterface.Views
         {
             get
             {
-                return comboRender.Sensitive;
+                return combobox1.Sensitive;
             }
             set
             {
