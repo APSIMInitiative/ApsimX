@@ -6,6 +6,7 @@
 namespace Models.Interfaces
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>Surface organic matter interface.</summary>
     public interface ISurfaceOrganicMatter

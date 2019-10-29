@@ -161,7 +161,7 @@ namespace UserInterface.Presenters
 
             if((e as TabChangedEventArgs).TabName == "Summary")
             {
-            (summaryPresenter as CLEMSummaryPresenter).RefreshSummary();
+                (summaryPresenter as CLEMSummaryPresenter).RefreshSummary();
             }
         }
 

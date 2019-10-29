@@ -80,10 +80,10 @@ namespace Models.Report
         public string[] EventNames { get; set; }
 
         /// <summary>
-        /// Date of the last report event.
+        /// Date of the day after last time report did write to storage.
         /// </summary>
         [JsonIgnore]
-        public DateTime DateOfLastOutput { get; set; }
+        public DateTime DayAfterLastOutput { get; set; }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -91,7 +91,7 @@ namespace Models.Report
         [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            DateOfLastOutput = DateTime.MaxValue;
+            DayAfterLastOutput = clock.Today;
             dataToWriteToDb = null;
 
             // Tidy up variable/event names.
@@ -139,7 +139,8 @@ namespace Models.Report
         private string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
+            IModel zone = Apsim.Parent(this, typeof(Zone));
+            variableNames.Add($"[{zone.Name}].Name as Zone");
             for (int i = 0; i < this.VariableNames.Length; i++)
             {
                 bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
@@ -206,7 +207,7 @@ namespace Models.Report
                 dataToWriteToDb = null;
             }
 
-            DateOfLastOutput = clock.Today;
+            DayAfterLastOutput = clock.Today.AddDays(1);
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>

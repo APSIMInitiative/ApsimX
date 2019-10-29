@@ -7,6 +7,7 @@ using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Resources
 {
@@ -77,8 +78,8 @@ namespace Models.CLEM.Resources
         /// <returns>boolean</returns>
         public bool PricingAvailable() {  return (PriceList != null); }
 
-        private List<string> WarningsMultipleEntry = new List<string>();
-        private List<string> WarningsNotFound = new List<string>();
+        private readonly List<string> WarningsMultipleEntry = new List<string>();
+        private readonly List<string> WarningsNotFound = new List<string>();
 
         /// <summary>
         /// Get value of a specific individual
@@ -105,7 +106,6 @@ namespace Models.CLEM.Resources
                     Warnings.Add(warning);
                     Summary.WriteWarning(this, warning);
                 }
-//                Summary.WriteWarning(this, "No "+purchaseStyle.ToString()+" price entry was found for indiviudal [" + ind.ID + "] with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight + "])");
             }
             return 0;
         }
@@ -280,6 +280,27 @@ namespace Models.CLEM.Resources
                 }
                 return 0;
             }
+        }
+
+        /// <summary>
+        /// Returns the most recent conception status
+        /// </summary>
+        [XmlIgnore]
+        public ConceptionStatusChangedEventArgs LastConceptionStatus { get; set; }
+
+        /// <summary>
+        /// The conception status of a female changed for advanced reporting
+        /// </summary>
+        public event EventHandler ConceptionStatusChanged;
+
+        /// <summary>
+        /// Conception status changed 
+        /// </summary>
+        /// <param name="e"></param>
+        public void OnConceptionStatusChanged(ConceptionStatusChangedEventArgs e)
+        {
+            LastConceptionStatus = e;
+            ConceptionStatusChanged?.Invoke(this, e);
         }
 
         #region Grow Activity

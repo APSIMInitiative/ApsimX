@@ -1160,7 +1160,7 @@ namespace UserInterface.Views
         /// <param name="e">Event argument.</param>
         private void OnHelpClick(object sender, EventArgs e)
         {
-            Process.Start("https://www.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
+            Process.Start("https://apsimdev.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
         }
     }
 }

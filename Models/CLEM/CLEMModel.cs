@@ -98,7 +98,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Determines if this compoenent has a valid parent based on parent attributes
+        /// Determines if this component has a valid parent based on parent attributes
         /// </summary>
         /// <returns></returns>
         public bool ValidParent()
@@ -292,6 +292,13 @@ namespace Models.CLEM
                         html += "<span class=\"setvalue\">" + units + "</span>";
                     }
                     html += "</div>";
+                }
+            }
+            if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+            {
+                if (this.Children.Count() == 0)
+                {
+                    html += "\n<div class=\"activityentry\">Empty</div>";
                 }
             }
             return html;

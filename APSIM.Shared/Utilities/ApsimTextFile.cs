@@ -74,7 +74,7 @@ namespace APSIM.Shared.Utilities
         public StringCollection Units;
 
         /// <summary>The _ constants</summary>
-        private ArrayList _Constants = new ArrayList();
+        private List<ApsimConstant> _Constants = new List<ApsimConstant>();
 
         /// <summary>Is the file a CSV file</summary>
         private bool IsCSVFile = false;
@@ -253,7 +253,7 @@ namespace APSIM.Shared.Utilities
         public DateTime LastDate { get { return _LastDate; } }
 
         /// <summary>Gets the constants.</summary>
-        public ArrayList Constants { get { return _Constants; } }
+        public List<ApsimConstant> Constants { get { return _Constants; } }
 
         /// <summary>
         /// Constants the specified constant name.
@@ -323,7 +323,7 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
-                ArrayList addedConstants = new ArrayList();
+                List<ApsimConstant> addedConstants = new List<ApsimConstant>();
 
                 StringCollection words = new StringCollection();
                 bool checkHeadingsExist = true;

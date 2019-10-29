@@ -299,6 +299,19 @@ namespace UserInterface.Presenters
                             colour,
                             definition.ShowInLegend);
                     }
+                    else if (definition.Type == SeriesType.Box)
+                    {
+                        graphView.DrawBoxPLot(definition.Title,
+                            definition.X.Cast<object>().ToArray(),
+                            definition.Y.Cast<double>().ToArray(),
+                            definition.XAxis,
+                            definition.YAxis,
+                            definition.Colour,
+                            definition.ShowInLegend,
+                            definition.Line,
+                            definition.Marker,
+                            definition.LineThickness);
+                    }
                 }
                 catch (Exception err)
                 {

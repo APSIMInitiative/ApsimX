@@ -26,6 +26,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
+        [Link]
+        Clock Clock = null;
+
         /// <summary>
         /// Weaning age (months)
         /// </summary>
@@ -63,7 +66,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, true);
+            this.InitialiseHerd(true, true);
 
             // check GrazeFoodStoreExists
             grazeStore = "";
@@ -97,8 +100,8 @@ namespace Models.CLEM.Activities
                 int weanedCount = 0;
                 ResourceRequest labour = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).FirstOrDefault<ResourceRequest>();
                 // Perform weaning
-                int count = this.CurrentHerd(true).Where(a => a.Weaned == false).Count();
-                foreach (var ind in this.CurrentHerd(true).Where(a => a.Weaned == false))
+                int count = this.CurrentHerd(false).Where(a => a.Weaned == false).Count();
+                foreach (var ind in this.CurrentHerd(false).Where(a => a.Weaned == false))
                 {
                     if (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight)
                     {
@@ -106,6 +109,11 @@ namespace Models.CLEM.Activities
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
+                        if (ind.Mother != null)
+                        {
+                            // report conception status changed when offspring weaned.
+                            ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                        }
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
@@ -136,7 +144,7 @@ namespace Models.CLEM.Activities
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = CurrentHerd(false);
-            int head = this.CurrentHerd(true).Where(a => a.Weaned == false).Count();
+            int head = herd.Where(a => a.Weaned == false).Count();
 
             double daysNeeded = 0;
             switch (requirement.UnitType)

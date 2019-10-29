@@ -208,10 +208,15 @@ namespace UserInterface.Presenters
         {
             SeriesType seriesType = (SeriesType)Enum.Parse(typeof(SeriesType), this.seriesView.SeriesType.SelectedValue);
             this.SetModelProperty("Type", seriesType);
-            
+
             // This doesn't quite work yet. If the previous series was a scatter plot, there is no x2, y2 to work with
             // and things go a bit awry.
             // this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
+
+            // If the series is a box plot, then we want to disable certain unused controls
+            // such as x variable, marker type, etc. These also need to be
+            // re-enabled if we change series type.
+            DisableUnusedControls();
         }
 
         /// <summary>Series line type has been changed by the user.</summary>
@@ -556,9 +561,23 @@ namespace UserInterface.Presenters
 
             this.seriesView.ShowX2Y2(series.Type == SeriesType.Region);
 
+            DisableUnusedControls();
+
             explorerPresenter.MainPresenter.ClearStatusPanel();
             if (warnings != null && warnings.Count > 0)
                 explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
+        }
+
+        private void DisableUnusedControls()
+        {
+            // Box plots ignore x variable, markertype, marker size,
+            // so don't make these controls editable if the series is a box plot.
+            bool isBoxPlot = series.Type == SeriesType.Box;
+            this.seriesView.X.IsSensitive = !isBoxPlot;
+            seriesView.MarkerSize.IsSensitive = !isBoxPlot;
+            seriesView.MarkerType.IsSensitive = !isBoxPlot;
+            seriesView.XCumulative.IsSensitive = !isBoxPlot;
+            seriesView.XOnTop.IsSensitive = !isBoxPlot;
         }
 
         /// <summary>Populate the line drop down.</summary>

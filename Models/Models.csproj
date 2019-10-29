@@ -109,8 +109,8 @@
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\MigraDoc.RtfRendering-gdi.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp-gdi, Version=1.50.3638.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp-MigraDoc-gdi.1.50.3638-beta\lib\net20\PdfSharp-gdi.dll</HintPath>
@@ -132,9 +132,14 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgPasture\AgPasture.PastureSpecies.cs" />
-    <Compile Include="AgPasture\AgPasture.PastureSpecies.Organs.cs" />
     <Compile Include="AgPasture\AgPasture.Sward.cs" />
+    <Compile Include="AgPasture\PastureSpecies.cs" />
+    <Compile Include="AgPasture\PastureAboveGroundOrgan.cs" />
+    <Compile Include="AgPasture\PastureBelowGroundOrgan.cs" />
+    <Compile Include="AgPasture\GenericTissue.cs" />
+    <Compile Include="AgPasture\RootTissue.cs" />
+    <Compile Include="AgPasture\RootZone.cs" />
+    <Compile Include="AgPasture\SpeciesBasicStateSettings.cs" />
     <Compile Include="Agroforestry\AgroforestrySystem.cs" />
     <Compile Include="Agroforestry\LocalMicroClimate.cs" />
     <Compile Include="Agroforestry\TreeProxy.cs" />
@@ -143,9 +148,14 @@
     <Compile Include="Aqua\Prawns.cs" />
     <Compile Include="Aqua\WaterPropertiesData.cs" />
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedTarget.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedToTargets.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
+    <Compile Include="CLEM\Reporting\ConceptionStatus.cs" />
+    <Compile Include="CLEM\Reporting\ConceptionStatusChangedEventArgs.cs" />
+    <Compile Include="CLEM\Resources\LabourDietComponent.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
     <Compile Include="CLEM\FileSQLiteCrop.cs" />
@@ -154,6 +164,7 @@
     <Compile Include="CLEM\ICLEMUI.cs" />
     <Compile Include="CLEM\IFileCrop.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
+    <Compile Include="CLEM\Resources\HumanFoodStorePool.cs" />
     <Compile Include="CLEM\Resources\LabourPricing.cs" />
     <Compile Include="CLEM\Resources\ResourceUnitsConverter.cs" />
     <Compile Include="CLEM\Resources\RuminantConceptionByCondition.cs" />
@@ -359,8 +370,8 @@
     <Compile Include="Lifecycle\LifestageProcess.cs" />
     <Compile Include="Lifecycle\LifestageReproductionProcess.cs" />
     <Compile Include="Map.cs" />
-    <Compile Include="MicroClimate\CanopyType.cs" />
-    <Compile Include="MicroClimate\ZoneMicroClimate.cs" />
+    <Compile Include="MicroClimate\MicroClimateCanopy.cs" />
+    <Compile Include="MicroClimate\MicroClimateZone.cs" />
     <Compile Include="Plant\Arbitrator\BiomassArbitrationType.cs" />
     <Compile Include="Plant\Arbitrator\IArbitrationMethod.cs" />
     <Compile Include="Plant\Arbitrator\PriorityThenRelativeAllocation.cs" />
@@ -506,7 +517,6 @@
     <Compile Include="Log.cs" />
     <Compile Include="Manager.cs" />
     <Compile Include="MicroClimate\MicroClimate.cs" />
-    <Compile Include="MicroClimate\MicroClimateScience.cs" />
     <Compile Include="Operations.cs" />
     <Compile Include="Plant\Arbitrator\OrganArbitrator.cs" />
     <Compile Include="Plant\Biomass\ArrayBiomass.cs" />
@@ -622,6 +632,7 @@
     <Compile Include="Soils\WaterModel\UnsaturatedFlow.cs" />
     <Compile Include="Soils\WaterModel\WaterTable.cs" />
     <Compile Include="Weather\ControlledEnvironment.cs" />
+    <Compile Include="Weather\SlopeEffectsOnWeather.cs" />
     <Compile Include="Weather\Weather.cs" />
     <Compile Include="Report\Report.cs" />
     <Compile Include="Main.cs" />
@@ -732,9 +743,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
+    <None Include="Resources\AGPRyegrass.json" />
+    <None Include="Resources\AGPWhiteClover.json" />
     <None Include="Resources\FodderBeet.json" />
     <EmbeddedResource Include="Resources\Nutrient.json" />
     <None Include="Resources\Potato.json" />
+    <None Include="Resources\RedClover.json" />
     <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>

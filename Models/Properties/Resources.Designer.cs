@@ -19,7 +19,7 @@ namespace Models.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -62,9 +62,61 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
+        ///    &quot;$type&quot;: &quot;Models.AgPasture.PastureSpecies, Models&quot;,
+        ///    &quot;MaximumNUptake&quot;: 10.0,
+        ///    &quot;Albedo&quot;: 0.26,
+        ///    &quot;Gsmax&quot;: 0.011,
+        ///    &quot;R50&quot;: 200.0,
+        ///    &quot;SpeciesFamily&quot;: 0,
+        ///    &quot;PhotosyntheticPathway&quot;: 0,
+        ///    &quot;InitialShootDM&quot;: 1500.0,
+        ///    &quot;InitialRootDM&quot;: 450.0,
+        ///    &quot;InitialRootDepth&quot;: 750.0,
+        ///    &quot;ReferencePhotosyntheticRate&quot;: 1.0,
+        ///    &quot;LightExtinctionCoefficient&quot;: 0.5,
+        ///    &quot;GrowthTminimum&quot;: 1.0,
+        ///    &quot;GrowthToptimum&quot;: 20.0,
+        ///    &quot;GrowthTEffectExponent&quot;: 1.7,
+        ///    &quot;UseHeatStressFactor&quot;: 0,
+        ///    &quot;Hea [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AGPRyegrass {
+            get {
+                return ResourceManager.GetString("AGPRyegrass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
+        ///    &quot;$type&quot;: &quot;Models.AgPasture.PastureSpecies, Models&quot;,
+        ///    &quot;MaximumNUptake&quot;: 10.0,
+        ///    &quot;Albedo&quot;: 0.26,
+        ///    &quot;Gsmax&quot;: 0.011,
+        ///    &quot;R50&quot;: 200.0,
+        ///    &quot;SpeciesFamily&quot;: 1,
+        ///    &quot;PhotosyntheticPathway&quot;: 0,
+        ///    &quot;InitialShootDM&quot;: 500.0,
+        ///    &quot;InitialRootDM&quot;: 150.0,
+        ///    &quot;InitialRootDepth&quot;: 350.0,
+        ///    &quot;ReferencePhotosyntheticRate&quot;: 1.0,
+        ///    &quot;LightExtinctionCoefficient&quot;: 0.8,
+        ///    &quot;GrowthTminimum&quot;: 2.0,
+        ///    &quot;GrowthToptimum&quot;: 22.0,
+        ///    &quot;GrowthTEffectExponent&quot;: 1.7,
+        ///    &quot;UseHeatStressFactor&quot;: 0,
+        ///    &quot;Heat [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AGPWhiteClover {
+            get {
+                return ResourceManager.GetString("AGPWhiteClover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -92,7 +144,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -117,7 +169,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -142,20 +194,23 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
         ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///      &quot;CropType&quot;: &quot;Potato&quot;,
+        ///      &quot;CropType&quot;: &quot;FodderBeet&quot;,
         ///      &quot;IsEnding&quot;: false,
         ///      &quot;DaysAfterEnding&quot;: 0,
         ///      &quot;ResourceName&quot;: null,
-        ///      &quot;Name&quot;: &quot;Potato&quot;,
+        ///      &quot;Name&quot;: &quot;FodderBeet&quot;,
         ///      &quot;Children&quot;: [
         ///        {
-        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///          &quot;Text&quot;: &quot;\n# The APSIM Potato Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\n#Building the mo [rest of string was truncated]&quot;;.
+        ///          &quot;$type&quot;: &quot;Models.PMF.OrganArbitrator, Models&quot;,
+        ///          &quot;Name&quot;: &quot;Arbitrator&quot;,
+        ///          &quot;Children&quot;: [
+        ///            {
+        ///              &quot;$ty [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string FodderBeet {
             get {
@@ -167,7 +222,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -195,7 +250,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -206,9 +261,9 @@ namespace Models.Properties {
         ///          {
         ///            &quot;$type&quot;: &quot;Models.Graph.Node, Models&quot;,
         ///            &quot;Name&quot;: &quot;Inert&quot;,
-        ///            &quot;Location&quot;: &quot;65, 426&quot;,
-        ///            &quot;Colour&quot;: &quot;0, 114, 178&quot;,
-        ///            &quot;OutlineColour&quot;: &quot;Black&quot;,        /// [rest of string was truncated]&quot;;.
+        ///            &quot;Location&quot;: &quot;656, 254&quot;,
+        ///            &quot;Colour&quot;: &quot;0, 158, 115&quot;,
+        ///            &quot;OutlineColour&quot;: &quot;Black&quot;, [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Nutrient {
             get {
@@ -220,7 +275,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -245,7 +300,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -271,7 +326,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -296,7 +351,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -314,6 +369,16 @@ namespace Models.Properties {
         internal static string Potato {
             get {
                 return ResourceManager.GetString("Potato", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] RedClover {
+            get {
+                object obj = ResourceManager.GetObject("RedClover", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -338,7 +403,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -363,7 +428,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -400,7 +465,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -426,7 +491,7 @@ namespace Models.Properties {
         ///   Looks up a localized string similar to {
         ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
         ///  &quot;ExplorerWidth&quot;: 0,
-        ///  &quot;Version&quot;: 56,
+        ///  &quot;Version&quot;: 67,
         ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
@@ -449,16 +514,22 @@ namespace Models.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
-        ///  &quot;CropType&quot;: &quot;WhiteClover&quot;,
-        ///  &quot;IsEnding&quot;: false,
-        ///  &quot;DaysAfterEnding&quot;: 0,
-        ///  &quot;ResourceName&quot;: null,
-        ///  &quot;Name&quot;: &quot;WhiteClover&quot;,
+        ///  &quot;$type&quot;: &quot;Models.Core.Simulations, Models&quot;,
+        ///  &quot;ExplorerWidth&quot;: 0,
+        ///  &quot;Version&quot;: 67,
+        ///  &quot;Name&quot;: &quot;Simulations&quot;,
         ///  &quot;Children&quot;: [
         ///    {
-        ///      &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
-        ///      &quot;Text&quot;: &quot;\r\n## Presentation\r\n\r\nThis model has been built using APSIM&apos;s Plant Modelling Framework (PMF), as introduced in [brown_plant_2014] and described in more detail in www.apsim.info.  It aims to simulate the development and growth of white clover (*Trifolium rep [rest of string was truncated]&quot;;.
+        ///      &quot;$type&quot;: &quot;Models.PMF.Plant, Models&quot;,
+        ///      &quot;CropType&quot;: &quot;WhiteClover&quot;,
+        ///      &quot;IsEnding&quot;: false,
+        ///      &quot;DaysAfterEnding&quot;: 0,
+        ///      &quot;ResourceName&quot;: null,
+        ///      &quot;Name&quot;: &quot;WhiteClover&quot;,
+        ///      &quot;Children&quot;: [
+        ///        {
+        ///          &quot;$type&quot;: &quot;Models.Memo, Models&quot;,
+        ///          &quot;Text&quot;: &quot;\r\n## Presentation\r\n\r\nThis model has been built using APSIM&apos;s Plant Modelling Fr [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string WhiteClover {
             get {
