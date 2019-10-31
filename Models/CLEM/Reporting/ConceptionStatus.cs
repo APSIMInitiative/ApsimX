@@ -20,6 +20,14 @@
         /// <summary>
         /// Survived to wean
         /// </summary>
-        Weaned
+        Weaned,
+        /// <summary>
+        /// Unsuccessful mating
+        /// </summary>
+        Unsuccessful,
+        /// <summary>
+        /// Not mated
+        /// </summary>
+        NotMated
     }
 }
