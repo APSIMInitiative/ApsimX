@@ -145,7 +145,7 @@ namespace UserInterface.Presenters
                 }
 
                 // Format the legend.
-                graphView.FormatLegend(graph.LegendPosition);
+                graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation);
 
                 // Format the title
                 graphView.FormatTitle(graph.Name);
@@ -168,6 +168,7 @@ namespace UserInterface.Presenters
                 List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
                 this.graph.DisabledSeries.Clear();
                 this.graph.DisabledSeries.AddRange(seriesTitlesToKeep);
+                graphView.LegendInsideGraph = !graph.LegendOutsideGraph;
 
                 graphView.Refresh();
             }
