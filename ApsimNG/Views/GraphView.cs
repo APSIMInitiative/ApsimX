@@ -700,6 +700,10 @@ namespace UserInterface.Views
                 series.MedianThickness = thickness;
             }
 
+            // Colour
+            if (colour.ToArgb() == Color.Empty.ToArgb())
+                colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+
             OxyColor oxyColour = Utility.Colour.ToOxy(colour);
             series.Fill = oxyColour;
             series.Stroke = oxyColour;
@@ -723,6 +727,7 @@ namespace UserInterface.Views
 
         private List<BoxPlotItem> GetBoxPlotItems(double[] data)
         {
+            data = data.Where(d => !double.IsNaN(d)).ToArray();
             double[] fiveNumberSummary = data.FiveNumberSummary();
             double min = fiveNumberSummary[0];
             double lowerQuartile = fiveNumberSummary[1];
