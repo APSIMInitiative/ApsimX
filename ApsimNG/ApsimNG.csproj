@@ -125,6 +125,7 @@
     <EmbeddedResource Include="Resources\Glade\ExperimentView.glade" />
     <EmbeddedResource Include="Resources\Glade\FactorView.glade" />
     <EmbeddedResource Include="Resources\Glade\WeatherDownload.glade" />
+    <EmbeddedResource Include="Resources\Glade\AddModelView.glade" />
     <None Include="Resources\InputNextBackView.glade" />
     <EmbeddedResource Include="Resources\Glade\StringEntryForm.glade" />
     <None Include="Resources\Report.xshd" />

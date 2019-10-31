@@ -435,19 +435,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Event handler for adding a factor
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Add factor", AppliesTo = new Type[] { typeof(Factors) })]
-        public void AddFactor(object sender, EventArgs e)
-        {
-            Model factors = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-            if (factors != null)
-                this.explorerPresenter.Add(new Factor(), this.explorerPresenter.CurrentNodePath);
-        }
-
-        /// <summary>
         /// Export the data store to EXCEL format
         /// </summary>
         /// <param name="sender">Sender of the event</param>
@@ -555,24 +542,9 @@ namespace UserInterface.Presenters
             object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
             explorerPresenter.HideRightHandPanel();
             explorerPresenter.ShowInRightHandPanel(model,
-                                                   "UserInterface.Views.ListButtonView",
-                                                   "UserInterface.Presenters.AddModelPresenter");
+                                                   "ApsimNG.Resources.Glade.AddModelView.glade",
+                                                   new AddModelPresenter());
         }
-
-        /// <summary>
-        /// Event handler for a Add function action
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Add function...")]
-        public void AddFunction(object sender, EventArgs e)
-        {
-            object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
-            explorerPresenter.ShowInRightHandPanel(model,
-                                                   "UserInterface.Views.ListButtonView",
-                                                   "UserInterface.Presenters.AddFunctionPresenter");
-        }
-
 
         public bool ShowIncludeInDocumentationChecked()
         {
