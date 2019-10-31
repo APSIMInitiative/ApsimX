@@ -102,8 +102,6 @@ namespace Models.PMF
         private bool doIncrement;
         private double stage;
         private IPhase previousPhase;
-        private List<double> massFlowEstimates;
-        private List<double> diffusionEstimates;
 
         /// <summary>
         /// (Fractional) number of days from floral init to start grain fill.
@@ -142,9 +140,6 @@ namespace Models.PMF
             zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
             DaysTotal = new List<double>();
             previousPhase = phenology.CurrentPhase;
-
-            massFlowEstimates = new List<double>();
-            diffusionEstimates = new List<double>();
         }
 
         [EventSubscribe("StartOfDay")]
@@ -177,8 +172,6 @@ namespace Models.PMF
             for (int i = 0; i < Organs.Count; i++)
                 N.UptakeSupply[i] = 0;
             UpdateTTElapsed();
-            diffusionEstimates.Clear();
-            massFlowEstimates.Clear();
         }
 
         /// <summary>
@@ -473,9 +466,6 @@ namespace Models.PMF
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
 
-                        massFlowEstimates.Add(actualMassFlow);
-                        diffusionEstimates.Add(actualDiffusion);
-
                         //adjust diffusion values proportionally
                         //make sure organNO3Supply is in kg/ha
                         for (int layer = 0; layer < organNO3Supply.Length; layer++)
@@ -548,18 +538,6 @@ namespace Models.PMF
         {
             if (Plant.IsEmerged)
             {
-                // Update reporting variables. This is a temporary debugging measure and should not be committed under any circumstances.
-                // If you're reading this, blame drew.
-                if (massFlowEstimates.Count == 4)
-                    NMassFlowSupply = (massFlowEstimates[0] + 2 * massFlowEstimates[1] + 2 * massFlowEstimates[2] + massFlowEstimates[3]) / 6; // tmp debugging calc
-                else
-                    NMassFlowSupply = massFlowEstimates.LastOrDefault();
-
-                if (diffusionEstimates.Count == 4)
-                    NDiffusionSupply = (diffusionEstimates[0] + 2 * diffusionEstimates[1] + 2 * diffusionEstimates[2] + diffusionEstimates[3]) / 6; // tmp debugging calc
-                else
-                    NDiffusionSupply = diffusionEstimates.LastOrDefault();
-
                 // Calculate the total no3 and nh4 across all zones.
                 var nSupply = 0.0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
