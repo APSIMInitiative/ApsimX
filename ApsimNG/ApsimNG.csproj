@@ -481,6 +481,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\GraphPanel.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPWhiteClover.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPRyegrass.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SlopeEffectsOnWeather.png" />
