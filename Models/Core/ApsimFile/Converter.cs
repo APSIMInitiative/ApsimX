@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 67; } }
+        public static int LatestVersion { get { return 68; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1252,7 +1252,42 @@
                 clock["End"] = clock["EndDate"];
             }
         }
-        
+
+        /// <summary>
+        /// Upgrades to version 68. Removes AgPasture.Sward
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion68(JObject root, string fileName)
+        {
+            foreach (JObject sward in JsonUtilities.ChildrenRecursively(root, "Sward"))
+            {
+                foreach (JObject pastureSpecies in JsonUtilities.Children(sward))
+                {
+                    if (pastureSpecies["Name"].ToString().Equals("Ryegrass", StringComparison.InvariantCultureIgnoreCase))
+                        pastureSpecies["Name"] = "AGPRyegrass";
+                    if (pastureSpecies["Name"].ToString().Equals("WhiteClover", StringComparison.InvariantCultureIgnoreCase))
+                        pastureSpecies["Name"] = "AGPWhiteClover";
+
+                    pastureSpecies["ResourceName"] = pastureSpecies["Name"];
+
+                    var swardParentChildren = JsonUtilities.Parent(sward)["Children"] as JArray;
+                    swardParentChildren.Add(pastureSpecies);
+                }
+                sward.Remove();
+            }
+
+            foreach (JObject soilCrop in JsonUtilities.ChildrenRecursively(root, "SoilCrop"))
+            {
+                if (soilCrop["Name"].ToString().Equals("SwardSoil", StringComparison.InvariantCultureIgnoreCase))
+                    soilCrop.Remove();
+                if (soilCrop["Name"].ToString().Equals("RyegrassSoil", StringComparison.InvariantCultureIgnoreCase))
+                    soilCrop["Name"] = "AGPRyegrassSoil";
+                if (soilCrop["Name"].ToString().Equals("WhiteCloverSoil", StringComparison.InvariantCultureIgnoreCase))
+                    soilCrop["Name"] = "AGPWhiteCloverSoil";
+            }
+        }
+
         /// <summary>
         /// Changes initial Root Wt to an array.
         /// </summary>
