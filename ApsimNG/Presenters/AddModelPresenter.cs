@@ -76,13 +76,10 @@
 
         private static void AddTreeNodeIfDoesntExist(Apsim.ModelDescription modelThatCanBeAdded, TreeViewNode parent)
         {
-            var namespaceWords = modelThatCanBeAdded.modelType.Namespace.Split(".".ToCharArray()).ToList();
+            var namespaceWords = modelThatCanBeAdded.ModelType.Namespace.Split(".".ToCharArray()).ToList();
 
             // Remove the first namespace word ('Models')
             namespaceWords.Remove(namespaceWords.First());
-
-            // Remove the last word - model name.
-            namespaceWords.Remove(namespaceWords.Last());
 
             foreach (var namespaceWord in namespaceWords.Where(word => word != "Models"))
             {
@@ -102,8 +99,8 @@
             // Add the last model
             var description = new TreeViewNode()
             {
-                Name = modelThatCanBeAdded.modelType.Name,
-                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(modelThatCanBeAdded.modelType, modelThatCanBeAdded.modelName)
+                Name = modelThatCanBeAdded.ModelName,
+                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(modelThatCanBeAdded.ModelType, modelThatCanBeAdded.ModelName)
             };
             parent.Children.Add(description);
         }
@@ -125,13 +122,13 @@
             var namespaceWords = tree.SelectedNode.Split(".".ToCharArray()).ToList();
             var modelName = namespaceWords.Last();
 
-            var selectedModelType = this.allowableChildModels.FirstOrDefault(m => m.modelName == modelName);
+            var selectedModelType = this.allowableChildModels.FirstOrDefault(m => m.ModelName == modelName);
             if (selectedModelType != null)
             {
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 try
                 {
-                    IModel child = (IModel)Activator.CreateInstance(selectedModelType.modelType, true);
+                    IModel child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
                     child.Name = modelName;
                     explorerPresenter.Add(child, Apsim.FullPath(this.model));
                 }
@@ -195,7 +192,7 @@
         {
             string filter = filterEdit.Value;
             PopulateTree(allowableChildModels
-                            .Where(m => m.modelName.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0));
+                            .Where(m => m.ModelName.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0));
         }
     }
 }

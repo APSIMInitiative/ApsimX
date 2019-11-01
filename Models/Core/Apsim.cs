@@ -570,7 +570,7 @@
             }
 
             // Remove models that cannot be added to parent.
-            allowableModels.RemoveWhere(t => !IsChildAllowable(parent, t.modelType));
+            allowableModels.RemoveWhere(t => !IsChildAllowable(parent, t.ModelType));
             
             //allowableModels.Sort(new ReflectionUtilities.TypeComparer());
             return allowableModels;
@@ -620,31 +620,31 @@
             /// <summary>Constructor.</summary>
             public ModelDescription(Type t) 
             { 
-                modelType = t;
-                modelName = modelType.Name;
+                ModelType = t;
+                ModelName = ModelType.Name;
             }
 
             /// <summary>Constructor.</summary>
             public ModelDescription(Type t, string name, string resourceName) 
             { 
-                modelType = t;
-                modelName = name;
+                ModelType = t;
+                ModelName = name;
                 resourceString = resourceName; 
             }
 
             /// <summary>Type of model.</summary>
-            public Type modelType { get; }
+            public Type ModelType { get; }
 
             /// <summary>Name of model.</summary>
-            public string modelName { get; }
+            public string ModelName { get; }
 
             /// <summary>Comparison method.</summary>
             /// <param name="other">The other instance to compare this one to.</param>
             public int CompareTo(ModelDescription other)
             {
-                int comparison = modelType.FullName.CompareTo(other.modelType.FullName);
+                int comparison = ModelType.FullName.CompareTo(other.ModelType.FullName);
                 if (comparison == 0)
-                    comparison = modelName.CompareTo(other.modelName);
+                    comparison = ModelName.CompareTo(other.ModelName);
                 return comparison;
             }
         }
