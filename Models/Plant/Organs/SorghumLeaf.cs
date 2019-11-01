@@ -316,8 +316,24 @@ namespace Models.PMF.Organs
         [ChildLinkByName]
         public IFunction AMaxIntercept = null;
 
+        [ChildLinkByName]
+        private IFunction senLightTimeConst = null;
+
+        /// <summary>Temperature threshold for leaf death.</summary>
+        [ChildLinkByName]
+        private IFunction frostKill = null;
+
+        /// <summary>Delay factor for water senescence.</summary>
+        [ChildLinkByName]
+        private IFunction senWaterTimeConst = null;
+
+        /// <summary>supply:demand ratio for onset of water senescence.</summary>
+        [ChildLinkByName]
+        private IFunction senThreshold = null;
+
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassRUE { get; set; }
+
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassTE { get; set; }
 
@@ -682,15 +698,16 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>sen_light_time_const.</summary>
-        public double senLightTimeConst { get; set; } = 10;
+        public double SenLightTimeConst { get { return senLightTimeConst.Value(); } }
+
         /// <summary>temperature threshold for leaf death.</summary>
-        public double frostKill { get; set; } = 1.0;
+        public double FrostKill { get { return frostKill.Value(); } }
 
         /// <summary>supply:demand ratio for onset of water senescence.</summary>
-        public double senThreshold { get; set; } = 0.25;
-        /// <summary>delay factor for water senescence.</summary>
-        public double senWaterTimeConst { get; set; } = 10.0;
+        public double SenThreshold { get { return senThreshold.Value(); } }
 
+        /// <summary>Delay factor for water senescence.</summary>
+        public double SenWaterTimeConst { get { return senWaterTimeConst.Value(); } }
 
         /// <summary>Only water stress at this stage.</summary>
         /// Diff between potentialLAI and stressedLAI
@@ -782,7 +799,7 @@ namespace Models.PMF.Organs
         {
             //  calculate senecence due to frost
             double dltSlaiFrost = 0.0;
-            if (MetData.MinT < frostKill)
+            if (MetData.MinT < FrostKill)
             {
                 if(phenology.Between("Germination", "FloralInitiation"))
                 {
@@ -830,10 +847,8 @@ namespace Models.PMF.Organs
             //avSD.push_back(plant->water->getSdRatio());
 
             double dltSlaiWater = 0.0;
-            if (avSDRatio < senThreshold)
-            {
-                dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst, 0.0));
-            }
+            if (avSDRatio < senThreshold.Value())
+                dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst.Value(), 0.0));
             dltSlaiWater = Math.Min(LAI, dltSlaiWater);
             return dltSlaiWater;
             //return 0.0;
@@ -862,7 +877,7 @@ namespace Models.PMF.Organs
             double radnTransmitted = MetData.Radn - radnInt;
             double dltSlaiLight = 0.0;
             if (radnTransmitted < SenRadnCrit)
-                dltSlaiLight = Math.Max(0.0, MathUtilities.Divide(LAI - avgLaiEquilibLight, senLightTimeConst, 0.0));
+                dltSlaiLight = Math.Max(0.0, MathUtilities.Divide(LAI - avgLaiEquilibLight, SenLightTimeConst, 0.0));
             dltSlaiLight = Math.Min(dltSlaiLight, LAI);
             return dltSlaiLight;
         }

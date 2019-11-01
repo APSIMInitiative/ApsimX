@@ -46,12 +46,15 @@ namespace Models.PMF.Organs
         /// <summary>The aMaxIntercept for this Culm</summary>
         public double AMaxIntercept { get; set; }
 
+        /// <summary>
+        /// leaf_no_correction in old apsim.
+        /// </summary>
+        public double LeafNoCorrection { get; set; }
     }
 
     ///<summary>
     /// A Culm represents a collection of leaves
     /// </summary>
-
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -134,9 +137,9 @@ namespace Models.PMF.Organs
         /// <summary>Add number of new leaf appeared</summary>
         public double calcPotentialArea()
         {
-            var leafNoCorrection = 1.52;
+            //var leafNoCorrection = 1.52;
             //once leaf no is calculated leaf area of largest expanding leaf is determined
-            double leafNoEffective = Math.Min(CurrentLeafNumber + leafNoCorrection, FinalLeafNumber - culmParameters.LeafNoAtAppearance);
+            double leafNoEffective = Math.Min(CurrentLeafNumber + culmParameters.LeafNoCorrection, FinalLeafNumber - culmParameters.LeafNoAtAppearance);
             var leafsize = calcIndividualLeafSize(leafNoEffective);
 
             double leafArea = leafsize * smm2sm * culmParameters.Density * dltLeafNo; // in dltLai

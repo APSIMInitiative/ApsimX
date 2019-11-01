@@ -111,6 +111,9 @@ namespace Models.PMF.Struct
         [Link]
         private IFunction remainingLeavesForFinalAppearanceRate = null;
 
+        [Link]
+        private IFunction leafNoCorrection = null;
+
         private bool leavesInitialised;
         private double tillersAdded;
         private bool dayofEmergence;
@@ -174,7 +177,8 @@ namespace Models.PMF.Struct
                         RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
                         AMaxIntercept = leaf.AMaxIntercept.Value(),
                         AMaxSlope = leaf.AMaxSlope.Value(),
-                        AX0 = leaf.AX0.Value()
+                        AX0 = leaf.AX0.Value(),
+                        LeafNoCorrection = leafNoCorrection.Value()
                     });
                 }
 
@@ -338,7 +342,8 @@ namespace Models.PMF.Struct
                     RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
                     AMaxIntercept = leaf.AMaxIntercept.Value(),
                     AMaxSlope = leaf.AMaxSlope.Value(),
-                    AX0 = leaf.AX0.Value()
+                    AX0 = leaf.AX0.Value(),
+                    LeafNoCorrection = leafNoCorrection.Value()
                 });
                 newCulm.FinalLeafNumber = FinalLeafNo;
                 newCulm.calcLeafAppearance(dltTTDayBefore);
