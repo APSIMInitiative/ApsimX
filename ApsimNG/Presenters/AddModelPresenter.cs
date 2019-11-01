@@ -76,14 +76,13 @@
 
         private static void AddTreeNodeIfDoesntExist(Apsim.ModelDescription modelThatCanBeAdded, TreeViewNode parent)
         {
-            var namespaceWords = modelThatCanBeAdded.modelType.FullName.Split(".".ToCharArray()).ToList();
+            var namespaceWords = modelThatCanBeAdded.modelType.Namespace.Split(".".ToCharArray()).ToList();
 
             // Remove the first namespace word ('Models')
             namespaceWords.Remove(namespaceWords.First());
 
             // Remove the last word - model name.
-            var modelName = namespaceWords.Last();
-            namespaceWords.Remove(modelName);
+            namespaceWords.Remove(namespaceWords.Last());
 
             foreach (var namespaceWord in namespaceWords.Where(word => word != "Models"))
             {
@@ -103,7 +102,7 @@
             // Add the last model
             var description = new TreeViewNode()
             {
-                Name = modelThatCanBeAdded.modelName,
+                Name = modelThatCanBeAdded.modelType.Name,
                 ResourceNameForImage = ExplorerPresenter.GetIconResourceName(modelThatCanBeAdded.modelType, modelThatCanBeAdded.modelName)
             };
             parent.Children.Add(description);
