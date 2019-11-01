@@ -118,7 +118,7 @@ namespace UserInterface.Presenters
             seriesView.IncludeSeriesNameInLegend.Changed += OnIncludeSeriesNameInLegendChanged;
             seriesView.YCumulative.Changed += OnCumulativeYChanged;
             seriesView.XCumulative.Changed += OnCumulativeXChanged;
-            seriesView.Filter.Changed += OnFilterChanged;
+            seriesView.Filter.Leave += OnFilterChanged;
             seriesView.Filter.IntellisenseItemsNeeded += OnIntellisenseItemsNeeded;
         }
 
@@ -143,7 +143,7 @@ namespace UserInterface.Presenters
             seriesView.IncludeSeriesNameInLegend.Changed -= OnIncludeSeriesNameInLegendChanged;
             seriesView.YCumulative.Changed -= OnCumulativeYChanged;
             seriesView.XCumulative.Changed -= OnCumulativeXChanged;
-            seriesView.Filter.Changed -= OnFilterChanged;
+            seriesView.Filter.Leave -= OnFilterChanged;
             seriesView.Filter.IntellisenseItemsNeeded -= OnIntellisenseItemsNeeded;
         }
 
