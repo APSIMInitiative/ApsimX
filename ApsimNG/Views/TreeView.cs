@@ -43,9 +43,28 @@ namespace UserInterface.Views
         private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(Color), typeof(bool));
 
         /// <summary>Constructor</summary>
+        public TreeView()
+        {
+        }
+
+        /// <summary>Constructor</summary>
+        public TreeView(ViewBase owner) : base(owner)
+        {
+            Initialise(owner, new Gtk.TreeView());
+        }
+
+        /// <summary>Constructor</summary>
         public TreeView(ViewBase owner, Gtk.TreeView treeView) : base(owner)
         {
-            treeview1 = treeView;
+            Initialise(owner, treeView);
+        }
+
+        /// <summary>Gets or sets whether tree nodes can be changed.</summary>
+        public bool ReadOnly { get; set; }
+
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            treeview1 = (Gtk.TreeView) gtkControl;
             mainWidget = treeview1;
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -105,6 +124,9 @@ namespace UserInterface.Views
 
         /// <summary>Invoked then a node is renamed.</summary>
         public event EventHandler<NodeRenameArgs> Renamed;
+
+        /// <summary>Invoked then a node is double clicked.</summary>
+        public event EventHandler<EventArgs> DoubleClicked;
 
         /// <summary>Gets or sets the currently selected node.</summary>
         public string SelectedNode
@@ -189,12 +211,15 @@ namespace UserInterface.Views
         /// <summary>Puts the current node into edit mode so user can rename it.</summary>
         public void BeginRenamingCurrentNode()
         {
-            textRender.Editable = true;
-            TreePath selPath;
-            TreeViewColumn selCol;
-            treeview1.GetCursor(out selPath, out selCol);
-            treeview1.GrabFocus();
-            treeview1.SetCursor(selPath, treeview1.GetColumn(0), true);
+            if (!ReadOnly)
+            {
+                textRender.Editable = true;
+                TreePath selPath;
+                TreeViewColumn selCol;
+                treeview1.GetCursor(out selPath, out selCol);
+                treeview1.GrabFocus();
+                treeview1.SetCursor(selPath, treeview1.GetColumn(0), true);
+            }
         }
 
         private TreePath CreatePath(Utility.TreeNode node)
@@ -557,6 +582,8 @@ namespace UserInterface.Views
                 else
                     treeview1.ExpandRow(e.Path, false);
                 e.RetVal = true;
+
+                DoubleClicked?.Invoke(this, new EventArgs());
             }
             catch (Exception err)
             {
