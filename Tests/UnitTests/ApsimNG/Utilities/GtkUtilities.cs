@@ -44,6 +44,19 @@ namespace UnitTests.ApsimNG.Utilities
                 WaitForGtkEvents();
         }
 
+        public static void ClickOnCheckBox(ICheckBoxView checkBox, bool wait = true)
+        {
+            CheckButton button = (CheckButton)ReflectionUtilities.GetValueOfFieldOrProperty("checkbutton1", checkBox);
+            ClickOnCheckBox(button, wait);
+        }
+
+        public static void ClickOnCheckBox(CheckButton checkBox, bool wait = true)
+        {
+            checkBox.Active = !checkBox.Active;
+            if (wait)
+                WaitForGtkEvents();
+        }
+
         /// <summary>
         /// Waits for the Gtk event loop to clear.
         /// </summary>
@@ -288,7 +301,7 @@ namespace UnitTests.ApsimNG.Utilities
 
             return modifier;
         }
-
+        
         public static void SelectComboBoxItem(IDropDownView view, string item, bool wait = true)
         {
             ComboBox combo = ReflectionUtilities.GetValueOfFieldOrProperty("combobox1", view) as ComboBox;

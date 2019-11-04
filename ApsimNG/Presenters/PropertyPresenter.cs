@@ -274,7 +274,7 @@ namespace UserInterface.Presenters
             if (this.model != null)
             {
                 var orderedMembers = GetMembers(model);
-
+                properties.Clear();
                 foreach (MemberInfo member in orderedMembers)
                 {
                     IVariable property = null;

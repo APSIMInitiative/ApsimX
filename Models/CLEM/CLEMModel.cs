@@ -294,6 +294,13 @@ namespace Models.CLEM
                     html += "</div>";
                 }
             }
+            if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+            {
+                if (this.Children.Count() == 0)
+                {
+                    html += "\n<div class=\"activityentry\">Empty</div>";
+                }
+            }
             return html;
         }
 

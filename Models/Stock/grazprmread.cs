@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
+using APSIM.Shared.Utilities;
 using CMPServices;
 
 //Classes for I/O of the generic parameter set class, ParameterSet.           
@@ -393,7 +395,7 @@ namespace Models.GrazPlan
         /// <param name="bModify"></param>
         public void readFromResource(string sResID, ref ParameterSet Params, bool bModify)
         {
-            string paramStr = Properties.Resources.ResourceManager.GetString(sResID);
+            string paramStr = ReflectionUtilities.GetResourceAsString(sResID);
             readFromXML(paramStr, ref Params, bModify);
         }
 

@@ -71,7 +71,11 @@
             else if (value.GetType() == typeof(DateTime) || value.GetType() == typeof(string) || !value.GetType().IsClass)
             {
                 // Scalar
-                var newColumnName = AddColumnToTable(row.Table, name, value.GetType());
+                Type dataType = value.GetType();
+                if (dataType.IsEnum)
+                    dataType = typeof(string);
+
+                var newColumnName = AddColumnToTable(row.Table, name, dataType);
                 row[newColumnName] = value;
             }
             else if (value.GetType().GetInterface("IList") != null)

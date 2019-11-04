@@ -1,5 +1,6 @@
 ﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
     using Models.Core.Interfaces;
     using System;
     using System.Collections.Generic;
@@ -26,7 +27,7 @@
             // lookup the resource get the xml and then deserialise to a model.
             if (ResourceName != null && ResourceName != "")
             {
-                string contents = Properties.Resources.ResourceManager.GetString(ResourceName);
+                string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
                 if (contents != null)
                 {
                     List<Exception> creationExceptions;

@@ -63,10 +63,10 @@ namespace UserInterface.Presenters
             this.view.FileName.Value = dataStore.FileName;
 
             this.view.TableList.Changed += this.OnTableSelected;
-            this.view.ColumnFilter.Changed += OnColumnFilterChanged;
+            this.view.ColumnFilter.Leave += OnColumnFilterChanged;
             this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
-            this.view.RowFilter.Changed += OnColumnFilterChanged;
-            this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
+            this.view.RowFilter.Leave += OnColumnFilterChanged;
+            this.view.MaximumNumberRecords.Leave += OnMaximumNumberRecordsChanged;
             this.view.FileNameChanged += OnFileNameChanged;
             PopulateGrid();
         }
@@ -77,9 +77,9 @@ namespace UserInterface.Presenters
             (view.MaximumNumberRecords as EditView).EndEdit();
             (view.FileName as EditView).EndEdit();
             view.TableList.Changed -= OnTableSelected;
-            view.ColumnFilter.Changed -= OnColumnFilterChanged;
-            view.RowFilter.Changed -= OnColumnFilterChanged;
-            view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
+            view.ColumnFilter.Leave -= OnColumnFilterChanged;
+            view.RowFilter.Leave -= OnColumnFilterChanged;
+            view.MaximumNumberRecords.Leave -= OnMaximumNumberRecordsChanged;
             view.FileNameChanged -= OnFileNameChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
