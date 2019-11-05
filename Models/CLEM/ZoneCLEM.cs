@@ -214,7 +214,7 @@ namespace Models.CLEM
             }
             else
             {
-                randomGenerator = new Random(RandomSeed);
+                randomGenerator = new Random(Guid.NewGuid().GetHashCode());
             }
             EcologicalIndicatorsCalculationInterval = 12;
         }
