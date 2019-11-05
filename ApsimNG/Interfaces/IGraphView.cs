@@ -286,7 +286,8 @@ namespace UserInterface.Interfaces
         /// Format the legend.
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
-        void FormatLegend(Models.Graph.Graph.LegendPositionType legendPositionType);
+        /// <param name="orientation">Orientation of items in the legend.</param>
+        void FormatLegend(Models.Graph.Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation);
 
         /// <summary>
         /// Format the title.

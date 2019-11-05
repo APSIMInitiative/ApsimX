@@ -444,11 +444,6 @@
     <Compile Include="Factorial\Factors.cs" />
     <Compile Include="Memo.cs" />
     <Compile Include="Plant\SimpleTree\SimpleTree.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Core\IEvent.cs" />
     <Compile Include="Core\ILocator.cs" />
     <Compile Include="Report\IReportColumn.cs" />
@@ -743,13 +738,13 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
-    <None Include="Resources\AGPRyegrass.json" />
-    <None Include="Resources\AGPWhiteClover.json" />
-    <None Include="Resources\FodderBeet.json" />
+    <EmbeddedResource Include="Resources\AGPRyegrass.json" />
+    <EmbeddedResource Include="Resources\AGPWhiteClover.json" />
+    <EmbeddedResource Include="Resources\FodderBeet.json" />
     <EmbeddedResource Include="Resources\Nutrient.json" />
-    <None Include="Resources\Potato.json" />
-    <None Include="Resources\RedClover.json" />
-    <None Include="Resources\WhiteClover.json" />
+    <EmbeddedResource Include="Resources\Potato.json" />
+    <EmbeddedResource Include="Resources\RedClover.json" />
+    <EmbeddedResource Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -774,40 +769,25 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\GetPackage.R" />
     <EmbeddedResource Include="Resources\Eucalyptus.json" />
-    <None Include="Resources\Barley.json" />
-    <None Include="Resources\ruminant.prm" />
-    <None Include="Resources\Wheat.json">
-      <SubType>Designer</SubType>
-    </None>
+    <EmbeddedResource Include="Resources\Barley.json" />
+    <EmbeddedResource Include="Resources\ruminant.prm" />
+    <EmbeddedResource Include="Resources\Wheat.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\OilPalm.json">
-      <SubType>Designer</SubType>
-    </None>
+    <EmbeddedResource Include="Resources\OilPalm.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Oats.json">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\Maize.json" />
-    <None Include="Resources\Chicory.json" />
-    <None Include="Resources\Plantain.json" />
-    <None Include="Resources\SurfaceOrganicMatter.json">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Resources\SCRUM.json" />
-    <None Include="Resources\Slurp.json" />
-    <None Include="Resources\Supplement.txt" />
+    <EmbeddedResource Include="Resources\Oats.json" />
+    <EmbeddedResource Include="Resources\Maize.json" />
+    <EmbeddedResource Include="Resources\Chicory.json" />
+    <EmbeddedResource Include="Resources\Plantain.json" />
+    <EmbeddedResource Include="Resources\SurfaceOrganicMatter.json" />
+    <EmbeddedResource Include="Resources\SCRUM.json" />
+    <EmbeddedResource Include="Resources\Slurp.json" />
+    <EmbeddedResource Include="Resources\Supplement.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
