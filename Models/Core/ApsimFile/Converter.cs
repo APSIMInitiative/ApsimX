@@ -1277,13 +1277,27 @@
                 sward.Remove();
             }
 
+            bool foundAgPastureWhiteClover = false; // as opposed to a PMF whiteclover
+            foreach (JObject pastureSpecies in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
+            {
+                if (pastureSpecies["Name"].ToString().Equals("Ryegrass", StringComparison.InvariantCultureIgnoreCase))
+                    pastureSpecies["Name"] = "AGPRyegrass";
+                if (pastureSpecies["Name"].ToString().Equals("WhiteClover", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    pastureSpecies["Name"] = "AGPWhiteClover";
+                    foundAgPastureWhiteClover = true;
+                }
+
+                pastureSpecies["ResourceName"] = pastureSpecies["Name"];
+            }
+
             foreach (JObject soilCrop in JsonUtilities.ChildrenRecursively(root, "SoilCrop"))
             {
                 if (soilCrop["Name"].ToString().Equals("SwardSoil", StringComparison.InvariantCultureIgnoreCase))
                     soilCrop.Remove();
                 if (soilCrop["Name"].ToString().Equals("RyegrassSoil", StringComparison.InvariantCultureIgnoreCase))
                     soilCrop["Name"] = "AGPRyegrassSoil";
-                if (soilCrop["Name"].ToString().Equals("WhiteCloverSoil", StringComparison.InvariantCultureIgnoreCase))
+                if (foundAgPastureWhiteClover && soilCrop["Name"].ToString().Equals("WhiteCloverSoil", StringComparison.InvariantCultureIgnoreCase))
                     soilCrop["Name"] = "AGPWhiteCloverSoil";
             }
         }

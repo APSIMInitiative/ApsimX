@@ -1,7 +1,7 @@
 {
     "$type": "Models.Core.Simulations, Models",
     "ExplorerWidth": 0,
-    "Version": 67,
+    "Version": 68,
     "Name": "Simulations",
     "Children": [
         {
@@ -119,7 +119,7 @@
             "PreferenceForLeafOverStems": 1.0,
             "WaterAvailableMethod": 0,
             "NitrogenAvailableMethod": 0,
-            "Name": "Ryegrass",
+            "Name": "AGPRyegrass",
             "Children": [
                 {
                     "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
