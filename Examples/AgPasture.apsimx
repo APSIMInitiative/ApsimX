@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 309,
-  "Version": 67,
+  "ExplorerWidth": 300,
+  "Version": 68,
   "Name": "Simulations",
   "Children": [
     {
@@ -439,44 +439,6 @@
                   "KSMetadata": null,
                   "Name": "Physical",
                   "Children": [
-                    {
-                      "$type": "Models.Soils.SoilCrop, Models",
-                      "LL": [
-                        0.15,
-                        0.14,
-                        0.06,
-                        0.02,
-                        0.01,
-                        0.01,
-                        0.01
-                      ],
-                      "KL": [
-                        0.1,
-                        0.1,
-                        0.08,
-                        0.04,
-                        0.01,
-                        0.0,
-                        0.0
-                      ],
-                      "XF": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        0.0,
-                        0.0
-                      ],
-                      "LLMetadata": null,
-                      "KLMetadata": null,
-                      "XFMetadata": null,
-                      "Name": "SwardSoil",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
                       "LL": [
@@ -1718,44 +1680,6 @@
                       "KSMetadata": null,
                       "Name": "Physical",
                       "Children": [
-                        {
-                          "$type": "Models.Soils.SoilCrop, Models",
-                          "LL": [
-                            0.15,
-                            0.14,
-                            0.06,
-                            0.02,
-                            0.01,
-                            0.01,
-                            0.01
-                          ],
-                          "KL": [
-                            0.1,
-                            0.1,
-                            0.08,
-                            0.04,
-                            0.01,
-                            0.0,
-                            0.0
-                          ],
-                          "XF": [
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            1.0,
-                            0.0,
-                            0.0
-                          ],
-                          "LLMetadata": null,
-                          "KLMetadata": null,
-                          "XFMetadata": null,
-                          "Name": "SwardSoil",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
                           "LL": [
