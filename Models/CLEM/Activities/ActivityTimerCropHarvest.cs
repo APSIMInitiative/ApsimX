@@ -203,7 +203,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">";
             if (OffsetMonthHarvestStart + OffsetMonthHarvestStop == 0)
             {
                 html += "\n<div class=\"filter\">At harvest";
@@ -240,6 +240,10 @@ namespace Models.CLEM.Activities
                 html += Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ";
                 html += (OffsetMonthHarvestStop > 0) ? "after " : "before ";
                 html += "</div>";
+            }
+            if (!this.Enabled)
+            {
+                html += " - DISABLED!";
             }
             html += "\n</div>";
             return html;

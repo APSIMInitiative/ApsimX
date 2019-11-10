@@ -354,6 +354,7 @@ namespace Models.CLEM.Activities
 
                 if (methaneEmissions != null)
                 {
+                    // g per day -> total kg
                     methaneEmissions.Add(totalMethane * 30.4 / 1000, this, breed);
                 }
             }

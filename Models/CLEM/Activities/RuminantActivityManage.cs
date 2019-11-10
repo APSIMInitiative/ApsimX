@@ -120,6 +120,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Fill breeding males up to required amount
         /// </summary>
+        [Category("General", "Breeding males")]
         [Description("Fill breeding males up to required number")]
         [Required]
         public bool FillBreedingMalesAtStartup { get; set; }
