@@ -1312,8 +1312,15 @@
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
-                // Rename [LinkByPath(...)] -> [Link(Type = LinkType.Path, ...)]
-                manager.ReplaceRegex(@"\[LinkByPath\(([^\)]+)\)", @"[Link(Type = LinkType.Path, $1)");
+                // Here I assume that all [LinkByPath] links will have a path argument supplied.
+                // [LinkByPath(...)] -> [Link(Type = LinkType.Path, ByName = false, ...)]
+                manager.ReplaceRegex(@"\[LinkByPath\(([^\)]+)\)", @"[Link(Type = LinkType.Path, ByName = false, $1)");
+
+                // [ParentLink(...)] -> [Link(Type = LinkType.Ancestor, ByName = false, ...)]
+                manager.ReplaceRegex(@"\[ParentLink\(([^\)]+)\)", @"[Link(Type = LinkType.Ancestor, ByName = false, $1)");
+
+                // [ParentLink] -> [Link(Type = LinkType.Ancestor, ByName = false)]
+                manager.Replace("[ParentLink]", "[Link(Type = LinkType.Ancestor, ByName = false)]", caseSensitive: true);
             }
         }
 

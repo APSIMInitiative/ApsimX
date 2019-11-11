@@ -55,6 +55,9 @@ namespace Models.Core
         /// <summary>Controls how the link will be resolved. The values are mutually exclusive.</summary>
         public LinkType Type { get; set; }
 
+        /// <summary>Iff true, target model must have the same name as the field/property to which this link is applied. Defaults to true.</summary>
+        public bool ByName { get; set; } = true;
+
         /// <summary>Is this link a scoped link</summary>
         public virtual bool IsScoped(IVariable field)
         {
@@ -63,19 +66,16 @@ namespace Models.Core
                 field.DataType.Name == "Object")
                 return false;
             else
-                return true;
+                return true; // return Type == LinkType.Scoped;
         }
 
         /// <summary>Should the fields name be used when matching?</summary>
         public virtual bool UseNameToMatch(IVariable field)
         {
-            if (Type == LinkType.Path)
-                return false;
-
             if (IsScoped(field))
                 return false;
 
-            return true;
+            return ByName;
         }
     }
 
@@ -141,21 +141,5 @@ namespace Models.Core
 
         /// <summary>Should the fields name be used when matching?</summary>
         public override bool UseNameToMatch(IVariable field) { return true; }
-    }
-
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate a parent object of the 
-    /// related fields type and store a reference to it in the field. If no matching
-    /// model is found (and IsOptional is not specified or is false), then an 
-    /// exception will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ParentLinkAttribute : LinkAttribute
-    {
-        /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(IVariable fieldInfo) { return false; }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(IVariable field) { return false; }
     }
 }

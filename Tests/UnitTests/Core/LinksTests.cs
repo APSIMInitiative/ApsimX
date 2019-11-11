@@ -70,20 +70,23 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithParentLink : Model
     {
-        [ParentLink]
+        [Link(Type = LinkType.Ancestor, ByName = false)]
         public Zone zone = null;
 
-        [ParentLink]
+        [Link(Type = LinkType.Ancestor, ByName = false)]
         public Simulation sim = null;
+
+        [Link(Type = LinkType.Ancestor, IsOptional = true)]
+        public Simulation sim2 = null;
     }
 
     [Serializable]
     class ModelWithLinkByPath : Model
     {
-        [Link(Type = LinkType.Path, Path = "[zone2].irrig1")]
+        [Link(Type = LinkType.Path, ByName = false, Path = "[zone2].irrig1")]
         public IIrrigation irrigation1 = null;
 
-        [Link(Type = LinkType.Path, Path = ".Simulations.Simulation.zone2.irrig2")]
+        [Link(Type = LinkType.Path, ByName = false, Path = ".Simulations.Simulation.zone2.irrig2")]
         public IIrrigation irrigation2 = null;
     }
 
@@ -291,7 +294,7 @@ namespace UnitTests.Core
             Assert.AreEqual(model.zone2.Name, "zone2");
         }
 
-        /// <summary>Ensure a [ParentLink] works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Ancestor)] works</summary>
         [Test]
         public void EnsureParentLinkWorks()
         {

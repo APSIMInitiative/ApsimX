@@ -136,7 +136,7 @@ namespace Models.Core
                     }
                     if (matches.Count == 0)
                     {
-                        if (link is ParentLinkAttribute)
+                        if (link.Type == LinkType.Ancestor)
                         {
                             matches = new List<object>();
                             matches.Add(GetParent(obj, fieldType));
