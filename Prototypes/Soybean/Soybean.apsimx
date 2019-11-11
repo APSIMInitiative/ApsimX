@@ -6794,6 +6794,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 3024.0,
@@ -7565,6 +7566,7 @@
                                     0.2
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -12092,6 +12094,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 2000.0,
@@ -12863,6 +12866,7 @@
                                     0.7
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -17632,6 +17636,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4000.0,
@@ -18468,6 +18473,7 @@
                                     0.7
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -21855,6 +21861,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 2800.0,
@@ -22700,6 +22707,7 @@
                                     0.7
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -27388,6 +27396,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -27751,6 +27760,7 @@
                                     0.423
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -28292,6 +28302,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -28655,6 +28666,7 @@
                                     0.423
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -29196,6 +29208,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -29559,6 +29572,7 @@
                                     0.423
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -30582,6 +30596,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -30978,6 +30993,7 @@
                                     0.369
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -31667,6 +31683,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -32063,6 +32080,7 @@
                                     0.369
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -33549,6 +33567,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -33925,6 +33944,7 @@
                                     0.369
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -34526,6 +34546,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -34902,6 +34923,7 @@
                                     0.369
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -35868,6 +35890,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 996.0,
@@ -36441,6 +36464,7 @@
                                   ],
                                   "SWCON": null,
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -40950,6 +40974,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 996.0,
@@ -41523,6 +41548,7 @@
                                   ],
                                   "SWCON": null,
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -45175,6 +45201,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 100.0,
@@ -45550,6 +45577,7 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -47283,6 +47311,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 100.0,
@@ -47658,6 +47687,7 @@
                                     0.0,
                                     0.0
                                   ],
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -51674,6 +51704,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -52055,6 +52086,7 @@
                                     0.369
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -53597,6 +53629,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -53990,6 +54023,7 @@
                                     0.7
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -55349,6 +55383,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -55721,6 +55756,7 @@
                                     0.7
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -56890,6 +56926,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -57263,6 +57300,7 @@
                                     0.7
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -58823,6 +58861,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -59198,6 +59237,7 @@
                                     0.7
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -60872,6 +60912,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -61239,6 +61280,7 @@
                                     0.369
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -61979,6 +62021,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                              "ResidueLayers": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -62346,6 +62389,7 @@
                                     0.369
                                   ],
                                   "KLAT": null,
+                                  "PrecipitationInterception": 0.0,
                                   "Name": "SoilWater",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
