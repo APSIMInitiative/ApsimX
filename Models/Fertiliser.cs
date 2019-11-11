@@ -79,13 +79,13 @@ namespace Models
         [Link] private ISummary Summary = null;
 
         /// <summary>NO3 solute</summary>
-        [Link] private ISolute NO3 = null;
+        [ScopedLinkByName] private ISolute NO3 = null;
 
         /// <summary>NO3 solute</summary>
-        [Link] private ISolute NH4 = null;
+        [ScopedLinkByName] private ISolute NH4 = null;
 
         /// <summary>NO3 solute</summary>
-        [Link] private ISolute Urea = null;
+        [ScopedLinkByName] private ISolute Urea = null;
 
         // Parameters
         /// <summary>Gets or sets the definitions.</summary>

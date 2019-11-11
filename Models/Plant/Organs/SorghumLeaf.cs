@@ -253,7 +253,7 @@ namespace Models.PMF.Organs
         IFunction HeightFunction = null;
 
         /// <summary>The lai dead function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         IFunction dltLAIFunction = null;
 
         ///// <summary>The lai dead function</summary>
@@ -273,47 +273,47 @@ namespace Models.PMF.Organs
         IFunction WaterDemandFunction = null;
 
         /// <summary>DM Fixation Demand Function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         IFunction DMSupplyFixation = null;
 
         /// <summary>DM Fixation Demand Function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         IFunction PotentialBiomassTEFunction = null;
         
         /// <summary>Input for NewLeafSLN</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         IFunction NewLeafSLN = null;
         
         /// <summary>Input for TargetSLN</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         public IFunction TargetSLN = null;
 
         /// <summary>Input for SenescedLeafSLN.</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         IFunction SenescedLeafSLN = null;
 
         /// <summary>Intercept for N Dilutions</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         IFunction NDilutionIntercept = null;
 
         /// <summary>Slope for N Dilutions</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         IFunction NDilutionSlope = null;
 
         /// <summary>Slope for N Dilutions</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         IFunction MinPlantWt = null;
 
         /// <summary>/// The aX0 for this Culm </summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         public IFunction AX0 = null;
 
         /// <summary> The aMaxSlope for this Culm </summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         public IFunction AMaxSlope = null;
 
         /// <summary>The aMaxIntercept for this Culm</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         public IFunction AMaxIntercept = null;
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
@@ -941,80 +941,80 @@ namespace Models.PMF.Organs
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child, ByName = false)]
+        [ChildLink]
         private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The senescence rate function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("/d")]
         protected IFunction SenescenceRate = null;
 
         /// <summary>Radiation level for onset of light senescence.</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("Mj/m^2")]
         private IFunction senRadnCrit = null;
 
         ///// <summary>The N retranslocation factor</summary>
-        //[Link(Type = LinkType.Child)]
+        //[ChildLinkByName]
         //[Units("/d")]
         //protected IFunction NRetranslocationFactor = null;
 
         ///// <summary>The N reallocation factor</summary>
-        //[Link(Type = LinkType.Child)]
+        //[ChildLinkByName]
         //[Units("/d")]
         //protected IFunction nReallocationFactor = null;
 
         // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
-        //[Link(Type = LinkType.Child)]
+        //[ChildLinkByName]
         //private IFunction nitrogenDemandSwitch = null;
 
         ///// <summary>The DM retranslocation factor</summary>
-        //[Link(Type = LinkType.Child)]
+        //[ChildLinkByName]
         //[Units("/d")]
         //private IFunction dmRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
 
         /// <summary>The DM demand function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>The N demand function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/m2")]
         private IFunction initialWtFunction = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/m2")]
         private IFunction initialLAIFunction = null;
 
         /// <summary>The initial SLN value</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/m2")]
         private IFunction initialSLNFunction = null;
 
         /// <summary>The maximum N concentration</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/g")]
         private IFunction maximumNConc = null;
 
         /// <summary>The minimum N concentration</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/g")]
         private IFunction minimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/g")]
         private IFunction criticalNConc = null;
 

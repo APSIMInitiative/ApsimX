@@ -23,7 +23,7 @@ namespace Models.Functions
         public string WhenToHold { get; set; }
 
         /// <summary>The value to hold after event</summary>
-        [Link(Type = LinkType.Child, ByName = false)]
+        [ChildLink]
         IFunction ValueToHold = null;
 
         /// <summary>The phenology</summary>

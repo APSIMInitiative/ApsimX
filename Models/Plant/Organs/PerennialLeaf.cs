@@ -76,7 +76,7 @@ namespace Models.PMF.Organs
         protected ISummary Summary = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child, ByName = false)]
+        [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The dry matter supply</summary>
@@ -214,12 +214,12 @@ namespace Models.PMF.Organs
 
 
         /// <summary>The DM demand function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>The N demand function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 

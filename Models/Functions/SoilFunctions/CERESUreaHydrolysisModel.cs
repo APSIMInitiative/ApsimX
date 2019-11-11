@@ -20,7 +20,7 @@ namespace Models.Functions
         [Link]
         Soil soil = null;
 
-        [Link(Type = LinkType.Child, ByName = false)]
+        [ChildLink]
         CERESMineralisationWaterFactor CERESWF = null;
 
    

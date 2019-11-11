@@ -76,7 +76,7 @@
         [Link]
         private Structure structure = null;
 
-        [Link(Type = LinkType.Child, ByName = false)]
+        [ChildLink]
         private IFunction stemSenescenceAge = null;
 
         /// <summary>The apex group.</summary>

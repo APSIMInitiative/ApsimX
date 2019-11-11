@@ -466,11 +466,11 @@ namespace Models
         private ISummary Summary = null;
 
         /// <summary>Link to NO3 solute.</summary>
-        [Link]
+        [ScopedLinkByName]
         private ISolute NO3 = null;
         
         /// <summary>Link to NH4 solute.</summary>
-        [Link]
+        [ScopedLinkByName]
         private ISolute NH4 = null;
 
         #endregion

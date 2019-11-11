@@ -38,7 +38,7 @@ namespace Models.PMF.Organs
         IFunction NConc = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child, ByName = false)]
+        [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The dry matter potentially being allocated</summary>

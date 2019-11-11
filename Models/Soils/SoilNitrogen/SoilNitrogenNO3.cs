@@ -9,7 +9,7 @@
     [Serializable]
     public class SoilNitrogenNO3 : Model, ISolute
     {
-        [Link(Type = LinkType.Ancestor, ByName = false)]
+        [ParentLink]
         SoilNitrogen parent = null;
 
         /// <summary>Solute amount (kg/ha)</summary>

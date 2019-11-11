@@ -64,17 +64,17 @@
         [Link]
         private Soil Soil = null;
 
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         INutrientPool FOMCellulose = null;
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         INutrientPool FOMCarbohydrate = null;
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         INutrientPool FOMLignin = null;
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         INutrientPool SurfaceResidue = null;
-        [Link]
+        [ScopedLinkByName]
         private ISolute NO3 = null;
-        [Link]
+        [ScopedLinkByName]
         private ISolute NH4 = null;
 
         // Carbon content of FOM

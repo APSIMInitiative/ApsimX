@@ -77,128 +77,128 @@ namespace Models.PMF.Organs
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child, ByName = false)]
+        [ChildLink]
         private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The DM demand function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>Link to the KNO3 link</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         private IFunction kno3 = null;
 
         /// <summary>Link to the KNH4 link</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         private IFunction knh4 = null;
 
         /// <summary>Soil water factor for N Uptake</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         private IFunction nUptakeSWFactor = null;
 
         /// <summary>Gets or sets the initial biomass dry matter weight</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/plant")]
         private IFunction initialDM = null;
 
         /// <summary>Gets or sets the specific root length</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("m/g")]
         private IFunction specificRootLength = null;
 
         /// <summary>The nitrogen demand switch</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         private IFunction nitrogenDemandSwitch = null;
 
         /// <summary>The N demand function</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The nitrogen root calc switch</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         private IFunction NitrogenRootCalcSwitch = null;
 
         /// <summary>The nitrogen root calc switch</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         public IFunction RootFrontCalcSwitch = null;
 
         /// <summary>The N retranslocation factor</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         [Units("/d")]
         private IFunction nRetranslocationFactor = null;
 
         /// <summary>The N reallocation factor</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         [Units("/d")]
         private IFunction nReallocationFactor = null;
 
         /// <summary>The DM retranslocation factor</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         [Units("/d")]
         private IFunction dmRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
 
         /// <summary>The biomass senescence rate</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("/d")]
         private IFunction senescenceRate = null;
 
         /// <summary>The root front velocity</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("mm/d")]
         private IFunction rootFrontVelocity = null;
 
         /// <summary>The maximum N concentration</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/g")]
         private IFunction maximumNConc = null;
 
         /// <summary>The minimum N concentration</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("g/g")]
         private IFunction minimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         [Units("g/g")]
         private IFunction criticalNConc = null;
 
         /// <summary>The maximum daily N uptake</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("kg N/ha")]
         private IFunction maxDailyNUptake = null;
 
         /// <summary>The kl modifier</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("0-1")]
         private IFunction klModifier = null;
 
         /// <summary>The Maximum Root Depth</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("mm")]
         private IFunction maximumRootDepth = null;
         
         /// <summary>Dry matter efficiency function</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         private IFunction dmConversionEfficiency = null;
         
         /// <summary>Carbon concentration</summary>
         [Units("-")]
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         private IFunction carbonConcentration = null;
 
         /// <summary>The cost for remobilisation</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         private IFunction remobilisationCost = null;
 
         /// <summary>The proportion of biomass respired each day</summary> 
-        [Link(Type = LinkType.Child)]
+        [ChildLinkByName]
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
 
@@ -942,23 +942,23 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Link to the KNO3 link</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         public IFunction RootDepthStressFactor = null;
 
         /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         public IFunction MaxNUptakeRate = null;
 
         /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         public IFunction NSupplyFraction = null;
 
         /// <summary>Used to calc maximim diffusion rate</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         public IFunction DltThermalTime = null;
 
         /// <summary>Used to calc maximim diffusion rate</summary>
-        [Link(Type = LinkType.Child, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         public IFunction MaxDiffusion = null;
 
         /// <summary>The kgha2gsm</summary>

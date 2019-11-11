@@ -30,7 +30,7 @@ namespace Models.PMF.Library
         Summary summary = null;
 
         /// <summary>Biomass removal defaults for different event types e.g. prune, cut etc.</summary>
-        [Link(Type = LinkType.Child, ByName = false)]
+        [ChildLink]
         public List<OrganBiomassRemovalType> defaults = null;
 
         /// <summary>Invoked when fresh organic matter needs to be incorporated into soil</summary>

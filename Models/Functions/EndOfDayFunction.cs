@@ -18,7 +18,7 @@ namespace Models.Functions
         /// <summary>
         /// The child function.
         /// </summary>
-        [Link(Type = LinkType.Child, ByName = false)]
+        [ChildLink]
         private IFunction child = null;
 
         /// <summary>

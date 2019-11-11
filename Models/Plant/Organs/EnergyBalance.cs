@@ -29,7 +29,7 @@ namespace Models.PMF.Organs
         private Plant parentPlant = null;
 
         /// <summary>The parent organ</summary>
-        [Link(Type = LinkType.Ancestor, ByName = false)]
+        [ParentLink]
         private GenericOrgan parentOrgan= null;
  
         /// <summary>The FRGR function</summary>
