@@ -1316,11 +1316,11 @@
                 // model type is IFunction or Biomass. I've removed this hack which means that all such links
                 // must be adjusted accordingly.
 
-                // [Link(...)] Biomass -> [Link(ByName = true, ...)] Biomass
-                manager.ReplaceRegex(@"\[Link\(([^\)]+)\)\](\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(ByName = true, $1)]$2");
+                // [Link(...)] [Units] [...] Biomass -> [Link(ByName = true, ...)] [Units] [...] Biomass
+                manager.ReplaceRegex(@"\[Link\(([^\)]+)\)\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(ByName = true, $1)]$2");
 
                 // [Link] IFunction -> [Link(ByName = true)] IFunction
-                manager.ReplaceRegex(@"\[Link\](\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(ByName = true)]$1");
+                manager.ReplaceRegex(@"\[Link\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(ByName = true)]$1");
 
                 // Here I assume that all [LinkByPath] links will have a path argument supplied.
                 // [LinkByPath(...)] -> [Link(Type = LinkType.Path, ...)]
