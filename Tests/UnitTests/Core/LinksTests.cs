@@ -80,10 +80,10 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithLinkByPath : Model
     {
-        [LinkByPath(Path = "[zone2].irrig1")]
+        [Link(Type = LinkType.Path, Path = "[zone2].irrig1")]
         public IIrrigation irrigation1 = null;
 
-        [LinkByPath(Path = ".Simulations.Simulation.zone2.irrig2")]
+        [Link(Type = LinkType.Path, Path = ".Simulations.Simulation.zone2.irrig2")]
         public IIrrigation irrigation2 = null;
     }
 
