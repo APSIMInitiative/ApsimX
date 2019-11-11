@@ -1345,6 +1345,8 @@
 
                 // [Link(Type = LinkType.Child, ByName = false)] -> [Link(ByName = false)]
                 manager.Replace("[ChildLink]", "[Link(Type = LinkType.Child, ByName = false)]", caseSensitive: true);
+
+                manager.Save();
             }
         }
 
