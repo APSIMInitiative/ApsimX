@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 68; } }
+        public static int LatestVersion { get { return 69; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1299,6 +1299,21 @@
                     soilCrop["Name"] = "AGPRyegrassSoil";
                 if (foundAgPastureWhiteClover && soilCrop["Name"].ToString().Equals("WhiteCloverSoil", StringComparison.InvariantCultureIgnoreCase))
                     soilCrop["Name"] = "AGPWhiteCloverSoil";
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 69. Fixes link attributes in manager scripts after
+        /// link refactoring.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the .apsimx file.</param>
+        private static void UpgradeToVersion69(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                // Rename [LinkByPath(...)] -> [Link(Type = LinkType.Path, ...)]
+                manager.ReplaceRegex(@"\[LinkByPath\(([^\)]+)\)", @"[Link(Type = LinkType.Path, $1)");
             }
         }
 

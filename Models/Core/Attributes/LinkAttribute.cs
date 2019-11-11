@@ -12,6 +12,32 @@ namespace Models.Core
     using System.Xml.Serialization;
 
     /// <summary>
+    /// Enumeration of all possible types of links.
+    /// </summary>
+    public enum LinkType
+    {
+        /// <summary>
+        /// A link to the first matching model in scope.
+        /// </summary>
+        Scoped,
+
+        /// <summary>
+        /// A link to a model via an absolute path.
+        /// </summary>
+        Path,
+
+        /// <summary>
+        /// A link to a child model.
+        /// </summary>
+        Child,
+
+        /// <summary>
+        /// A link to an ancestor model.
+        /// </summary>
+        Ancestor
+    }
+
+    /// <summary>
     /// When applied to a field, the infrastructure will locate an object that matches the 
     /// related field and store a reference to it in the field (dependency injection). 
     /// If no matching model is found (and IsOptional is not specified or is false), then an 
@@ -20,11 +46,14 @@ namespace Models.Core
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class LinkAttribute : XmlIgnoreAttribute
     {
-        /// <summary>Stores the value of IsOptional if specified.</summary>
-        private bool isOptional = false;
+        /// <summary>Iff true, an exception will not be thrown if an object cannot be found.</summary>
+        public bool IsOptional { get; set; }
 
-        /// <summary>When true, the infrastructure will not throw an exception when an object cannot be found.</summary>
-        public bool IsOptional { get { return this.isOptional; } set { this.isOptional = value; } }
+        /// <summary>Absolute path to the link target. Only used if Type is set to LinkType.Path.</summary>
+        public string Path { get; set; }
+
+        /// <summary>Controls how the link will be resolved. The values are mutually exclusive.</summary>
+        public LinkType Type { get; set; }
 
         /// <summary>Is this link a scoped link</summary>
         public virtual bool IsScoped(IVariable field)
@@ -40,28 +69,13 @@ namespace Models.Core
         /// <summary>Should the fields name be used when matching?</summary>
         public virtual bool UseNameToMatch(IVariable field)
         {
+            if (Type == LinkType.Path)
+                return false;
+
             if (IsScoped(field))
                 return false;
-            else
-                return true;
-        }
-    }
 
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate an object that matches the 
-    /// related field and path and store a reference to it in the field (dependency injection). 
-    /// If no matching model is found then an will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class LinkByPathAttribute : LinkAttribute
-    {
-        /// <summary>The path to use to find a link match.</summary>
-        public string Path { get; set; }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(IVariable field)
-        {
-            return false;
+            return true;
         }
     }
 

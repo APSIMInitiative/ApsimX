@@ -141,10 +141,10 @@ namespace Models.Core
                             matches = new List<object>();
                             matches.Add(GetParent(obj, fieldType));
                         }
-                        else if (link is LinkByPathAttribute)
+                        else if (link.Type == LinkType.Path)
                         {
                             var locater = new Locater();
-                            object match = locater.Get((link as LinkByPathAttribute).Path, obj as Model);
+                            object match = locater.Get(link.Path, obj as Model);
                             if (match != null)
                                 matches.Add(match);
                         }
