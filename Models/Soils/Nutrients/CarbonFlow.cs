@@ -26,10 +26,10 @@ namespace Models.Soils.Nutrients
         [ChildLinkByName]
         private IFunction CO2Efficiency = null;
 
-        [ScopedLinkByName]
+        [Link]
         ISolute NO3 = null;
 
-        [ScopedLinkByName]
+        [Link]
         ISolute NH4 = null;
 
 

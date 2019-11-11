@@ -21,7 +21,7 @@ namespace Models.Functions
         [Link]
         Soil soil = null;
 
-        [ScopedLinkByName]
+        [Link]
         Solute NO3 = null;
 
         [Link]

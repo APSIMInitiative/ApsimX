@@ -82,7 +82,7 @@
         [Link]
         SoilNitrogen soilNitrogen = null;
 
-        [ScopedLinkByName]
+        [Link]
         ISolute NO3 =  null;
 
         [Link]

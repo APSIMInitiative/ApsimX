@@ -16,7 +16,7 @@ namespace Models.Functions
     public class CERESNitrificationModel : Model, IFunction, ICustomDocumentation
     {
 
-        [ScopedLinkByName]
+        [Link]
         Solute NH4 = null;
 
         [ChildLink]

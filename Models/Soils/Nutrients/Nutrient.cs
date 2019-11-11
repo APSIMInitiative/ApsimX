@@ -72,9 +72,9 @@
         INutrientPool FOMLignin = null;
         [ChildLinkByName]
         INutrientPool SurfaceResidue = null;
-        [ScopedLinkByName]
+        [Link]
         private ISolute NO3 = null;
-        [ScopedLinkByName]
+        [Link]
         private ISolute NH4 = null;
 
         // Carbon content of FOM

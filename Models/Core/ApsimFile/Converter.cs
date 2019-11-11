@@ -1321,6 +1321,20 @@
 
                 // [ParentLink] -> [Link(Type = LinkType.Ancestor, ByName = false)]
                 manager.Replace("[ParentLink]", "[Link(Type = LinkType.Ancestor, ByName = false)]", caseSensitive: true);
+
+                // [ScopedLinkByName(...)] -> [Link(...)]
+                manager.ReplaceRegex(@"\[ScopedLinkByName\(([^\)]+)\)", @"[Link($1)");
+
+                // [ScopedLinkByName] -> [Link]
+                manager.Replace("[ScopedLinkByName]", "[Link]");
+
+                // [ScopedLink(...)] -> [Link(ByName = false, ...)]
+                manager.ReplaceRegex(@"\[ScopedLink\(([^\)]+)\)", @"[Link($1)");
+
+                // [ScopedLink] -> [Link(ByName = false)]
+                manager.Replace("[ScopedLink]", "[Link(ByName = false)]");
+
+
             }
         }
 

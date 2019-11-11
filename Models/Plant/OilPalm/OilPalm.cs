@@ -136,7 +136,7 @@ namespace Models.PMF.OilPalm
         ISummary Summary = null;
 
         /// <summary>NO3 solute.</summary>
-        [ScopedLinkByName]
+        [Link]
         private ISolute NO3 = null;
 
 

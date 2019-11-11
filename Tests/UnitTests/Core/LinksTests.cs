@@ -40,7 +40,7 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithScopedLinkByName : Model
     {
-        [ScopedLinkByName]
+        [Link]
         public Zone zone2 = null;
 
     }
@@ -48,7 +48,7 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithScopedLink : Model
     {
-        [ScopedLink]
+        [Link(ByName = false)]
         public Zone zone2 = null;
     }
 
@@ -202,7 +202,7 @@ namespace UnitTests.Core
             Assert.AreEqual(model.zone2.Name, "zone2");
         }
 
-        /// <summary>Ensure a [ScopedLink] finds the closest match</summary>
+        /// <summary>Ensure a [Link(ByName = false)] finds the closest match</summary>
         [Test]
         public void EnsureScopedLinkWorks()
         {
