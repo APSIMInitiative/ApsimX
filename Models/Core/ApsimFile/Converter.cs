@@ -1313,38 +1313,38 @@
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {
                 // Here I assume that all [LinkByPath] links will have a path argument supplied.
-                // [LinkByPath(...)] -> [Link(Type = LinkType.Path, ByName = false, ...)]
-                manager.ReplaceRegex(@"\[LinkByPath\(([^\)]+)\)", @"[Link(Type = LinkType.Path, ByName = false, $1)");
+                // [LinkByPath(...)] -> [Link(Type = LinkType.Path, ...)]
+                manager.ReplaceRegex(@"\[LinkByPath\(([^\)]+)\)", @"[Link(Type = LinkType.Path, $1)");
 
-                // [ParentLink(...)] -> [Link(Type = LinkType.Ancestor, ByName = false, ...)]
-                manager.ReplaceRegex(@"\[ParentLink\(([^\)]+)\)", @"[Link(Type = LinkType.Ancestor, ByName = false, $1)");
+                // [ParentLink(...)] -> [Link(Type = LinkType.Ancestor, ...)]
+                manager.ReplaceRegex(@"\[ParentLink\(([^\)]+)\)", @"[Link(Type = LinkType.Ancestor, $1)");
 
                 // [ParentLink] -> [Link(Type = LinkType.Ancestor, ByName = false)]
-                manager.Replace("[ParentLink]", "[Link(Type = LinkType.Ancestor, ByName = false)]", caseSensitive: true);
+                manager.Replace("[ParentLink]", "[Link(Type = LinkType.Ancestor)]", caseSensitive: true);
 
-                // [ScopedLinkByName(...)] -> [Link(...)]
-                manager.ReplaceRegex(@"\[ScopedLinkByName\(([^\)]+)\)", @"[Link($1)");
+                // [ScopedLinkByName(...)] -> [Link(ByName = true, ...)]
+                manager.ReplaceRegex(@"\[ScopedLinkByName\(([^\)]+)\)", @"[Link(ByName = true, $1)");
 
-                // [ScopedLinkByName] -> [Link]
-                manager.Replace("[ScopedLinkByName]", "[Link]", caseSensitive: true);
+                // [ScopedLinkByName] -> [Link(ByName = true)]
+                manager.Replace("[ScopedLinkByName]", "[Link(ByName = true)]", caseSensitive: true);
 
-                // [ScopedLink(...)] -> [Link(ByName = false, ...)]
+                // [ScopedLink(...)] -> [Link(...)]
                 manager.ReplaceRegex(@"\[ScopedLink\(([^\)]+)\)", @"[Link($1)");
 
-                // [ScopedLink] -> [Link(ByName = false)]
-                manager.Replace("[ScopedLink]", "[Link(ByName = false)]", caseSensitive: true);
+                // [ScopedLink] -> [Link]
+                manager.Replace("[ScopedLink]", "[Link]", caseSensitive: true);
 
-                // [ChildLinkByName(...)] -> [Link(...)]
-                manager.ReplaceRegex(@"\[ChildLinkByName\(([^\)]+)\)", @"[Link(Type = LinkType.Child, $1)");
+                // [ChildLinkByName(...)] -> [Link(Type = LinkType.Child, ByName = true, ...)]
+                manager.ReplaceRegex(@"\[ChildLinkByName\(([^\)]+)\)", @"[Link(Type = LinkType.Child, ByName = true, $1)");
 
-                // [Link(Type = LinkType.Child)] -> [Link]
-                manager.Replace("[ChildLinkByName]", "[Link(Type = LinkType.Child)]", caseSensitive: true);
+                // [ChildLinkByName] -> [Link(Type = LinkType.Child, ByName = true)]
+                manager.Replace("[ChildLinkByName]", "[Link(Type = LinkType.Child, ByName = true)]", caseSensitive: true);
 
-                // [ChildLink(...)] -> [Link(ByName = false, ...)]
-                manager.ReplaceRegex(@"\[ChildLink\(([^\)]+)\)", @"[Link(Type = LinkType.Child, ByName = false, $1)");
+                // [ChildLink(...)] -> [Link(Type = LinkType.Child, ...)]
+                manager.ReplaceRegex(@"\[ChildLink\(([^\)]+)\)", @"[Link(Type = LinkType.Child, $1)");
 
-                // [Link(Type = LinkType.Child, ByName = false)] -> [Link(ByName = false)]
-                manager.Replace("[ChildLink]", "[Link(Type = LinkType.Child, ByName = false)]", caseSensitive: true);
+                // [ChildLink] -> [Link(Type = LinkType.Child)]
+                manager.Replace("[ChildLink]", "[Link(Type = LinkType.Child)]", caseSensitive: true);
 
                 manager.Save();
             }

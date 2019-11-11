@@ -55,8 +55,8 @@ namespace Models.Core
         /// <summary>Controls how the link will be resolved. The values are mutually exclusive. Default value is <see cref="LinkType.Scoped"/>.</summary>
         public LinkType Type { get; set; } = LinkType.Scoped;
 
-        /// <summary>Iff true, target model must have the same name as the field/property to which this link is applied. Defaults to true.</summary>
-        public bool ByName { get; set; } = true;
+        /// <summary>Iff true, target model must have the same name as the field/property to which this link is applied. Defaults to false.</summary>
+        public bool ByName { get; set; }
 
         /// <summary>Is this link a scoped link</summary>
         public virtual bool IsScoped(IVariable field)
