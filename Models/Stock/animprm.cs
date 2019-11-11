@@ -20,7 +20,7 @@ namespace Models.GrazPlan
             if (_GAnimalParams == null)
             {
                 _GAnimalParams = new AnimalParamSet();
-                GlobalParameterFactory.ParamXMLFactory().readDefaults("Models.Resources.ruminant.prm", ref _GAnimalParams);
+                GlobalParameterFactory.ParamXMLFactory().ReadDefaults("Models.Resources.ruminant.prm", ref _GAnimalParams);
             }
             return (AnimalParamSet)_GAnimalParams;
         }
@@ -371,43 +371,43 @@ namespace Models.GrazPlan
         /// </summary>
         override protected void DefineEntries()
         {
-            DefineParameters("editor", ptyText);
-            DefineParameters("edited", ptyText);
+            DefineParameters("editor", TYPETEXT);
+            DefineParameters("edited", TYPETEXT);
 
-            DefineParameters("animal", ptyText);
-            DefineParameters("srw", ptyReal);
-            DefineParameters("dairy", ptyBool);
-            DefineParameters("c-pfw", ptyReal);
-            DefineParameters("c-mu", ptyReal);
-            DefineParameters("c-srs-castr;male", ptyReal);
-            DefineParameters("c-n-1:4", ptyReal);
-            DefineParameters("c-i-1:20", ptyReal);
-            DefineParameters("c-idy-1:3", ptyReal);
-            DefineParameters("c-imx-1:3", ptyReal);
-            DefineParameters("c-r-1:20", ptyReal);
-            DefineParameters("c-k-1:16", ptyReal);
-            DefineParameters("c-m-1:17", ptyReal);
-            DefineParameters("c-rd-1:8", ptyReal);
-            DefineParameters("c-a-1:9", ptyReal);
-            DefineParameters("c-p-1:13", ptyReal);
-            DefineParameters("c-p14-1:3", ptyReal);
-            DefineParameters("c-p15-1:3", ptyReal);
-            DefineParameters("c-l0-1:3", ptyReal);
-            DefineParameters("c-l-1:25", ptyReal);
-            DefineParameters("c-w-1:14", ptyReal);
-            DefineParameters("c-c-1:16", ptyReal);
-            DefineParameters("c-g-1:18", ptyReal);
-            DefineParameters("c-ph-1:15", ptyReal);
-            DefineParameters("c-su-1:4", ptyReal);
-            DefineParameters("c-h-1:7", ptyReal);
-            DefineParameters("c-aa-1:3", ptyReal);
-            DefineParameters("c-f1-1:3", ptyReal);
-            DefineParameters("c-f2-1:3", ptyReal);
-            DefineParameters("c-f3-1:3", ptyReal);
-            DefineParameters("c-f4", ptyInt);
-            DefineParameters("c-pbt-female;male", ptyInt);
-            DefineParameters("c-d-1:15", ptyReal);
-            DefineParameters("c-swn", ptyReal);
+            DefineParameters("animal", TYPETEXT);
+            DefineParameters("srw", TYPEREAL);
+            DefineParameters("dairy", TYPEBOOL);
+            DefineParameters("c-pfw", TYPEREAL);
+            DefineParameters("c-mu", TYPEREAL);
+            DefineParameters("c-srs-castr;male", TYPEREAL);
+            DefineParameters("c-n-1:4", TYPEREAL);
+            DefineParameters("c-i-1:20", TYPEREAL);
+            DefineParameters("c-idy-1:3", TYPEREAL);
+            DefineParameters("c-imx-1:3", TYPEREAL);
+            DefineParameters("c-r-1:20", TYPEREAL);
+            DefineParameters("c-k-1:16", TYPEREAL);
+            DefineParameters("c-m-1:17", TYPEREAL);
+            DefineParameters("c-rd-1:8", TYPEREAL);
+            DefineParameters("c-a-1:9", TYPEREAL);
+            DefineParameters("c-p-1:13", TYPEREAL);
+            DefineParameters("c-p14-1:3", TYPEREAL);
+            DefineParameters("c-p15-1:3", TYPEREAL);
+            DefineParameters("c-l0-1:3", TYPEREAL);
+            DefineParameters("c-l-1:25", TYPEREAL);
+            DefineParameters("c-w-1:14", TYPEREAL);
+            DefineParameters("c-c-1:16", TYPEREAL);
+            DefineParameters("c-g-1:18", TYPEREAL);
+            DefineParameters("c-ph-1:15", TYPEREAL);
+            DefineParameters("c-su-1:4", TYPEREAL);
+            DefineParameters("c-h-1:7", TYPEREAL);
+            DefineParameters("c-aa-1:3", TYPEREAL);
+            DefineParameters("c-f1-1:3", TYPEREAL);
+            DefineParameters("c-f2-1:3", TYPEREAL);
+            DefineParameters("c-f3-1:3", TYPEREAL);
+            DefineParameters("c-f4", TYPEINT);
+            DefineParameters("c-pbt-female;male", TYPEINT);
+            DefineParameters("c-d-1:15", TYPEREAL);
+            DefineParameters("c-swn", TYPEREAL);
         }
         /// <summary>
         /// Get the floating point value
@@ -1151,7 +1151,7 @@ namespace Models.GrazPlan
                     for (Idx = 0; Idx <= ParamCount() - 1; Idx++)
                     {
                         prmDefn = GetParam(Idx);
-                        if (prmDefn.ParamType == ptyReal)
+                        if (prmDefn.ParamType == TYPEREAL)
                         {
                             fParamSum = 0.0;
                             fPropnSum = 0.0;
@@ -1159,7 +1159,7 @@ namespace Models.GrazPlan
                             {
                                 if (Blend[Jdx].Breed.IsDefined(prmDefn.FullName))
                                 {
-                                    fParamSum = fParamSum + Blend[Jdx].fPropn * Blend[Jdx].Breed.dParam(prmDefn.FullName);
+                                    fParamSum = fParamSum + Blend[Jdx].fPropn * Blend[Jdx].Breed.ParamReal(prmDefn.FullName);
                                     fPropnSum = fPropnSum + Blend[Jdx].fPropn;
                                 }
                             }
@@ -1290,13 +1290,13 @@ namespace Models.GrazPlan
                     {
                         switch (Defn.ParamType)
                         {
-                            case ptyText: result = (result && (this.sParam(sTag) == otherSet.sParam(sTag)));
+                            case TYPETEXT: result = (result && (this.ParamStr(sTag) == otherSet.ParamStr(sTag)));
                                 break;
-                            case ptyReal: result = (result && (this.dParam(sTag) == otherSet.dParam(sTag)));
+                            case TYPEREAL: result = (result && (this.ParamReal(sTag) == otherSet.ParamReal(sTag)));
                                 break;
-                            case ptyInt: result = (result && (this.iParam(sTag) == otherSet.iParam(sTag)));
+                            case TYPEINT: result = (result && (this.ParamInt(sTag) == otherSet.ParamInt(sTag)));
                                 break;
-                            case ptyBool: result = (result && (this.bParam(sTag) == otherSet.bParam(sTag)));
+                            case TYPEBOOL: result = (result && (this.ParamBool(sTag) == otherSet.ParamBool(sTag)));
                                 break;
                         }
                     }

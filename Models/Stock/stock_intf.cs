@@ -596,7 +596,7 @@ namespace Models.GrazPlan
             GlobalAnimalParams animalParams = new GlobalAnimalParams();
             result.CopyAll(animalParams.AnimalParamsGlb());
             if (constFileName != string.Empty)
-                GlobalParameterFactory.ParamXMLFactory().readFromFile(constFileName, result, true);
+                GlobalParameterFactory.ParamXMLFactory().ReadFromFile(constFileName, result, true);
             result.CurrLocale = GrazLocale.DefaultLocale();
 
             return result;

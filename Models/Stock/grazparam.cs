@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------
 // <copyright file="grazparam.cs" company="CSIRO">
-//      CSIRO Agriculture & Food
+//     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -217,7 +217,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the parameter definition at Idx
         /// </summary>
-        /// <param name="idx"></param>
+        /// <param name="idx">The index</param>
         /// <returns>The parameter definition</returns>
         public ParameterDefinition getParam(int idx)
         {
@@ -341,12 +341,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// Language
         /// </summary>
-        public string sLang;
+        public string Lang;
 
         /// <summary>
         /// 
         /// </summary>
-        public string sText;
+        public string Text;
     }
 
     // =================================================================================
@@ -360,22 +360,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// Real-single type
         /// </summary>
-        protected const TTypedValue.TBaseType ptyReal = TTypedValue.TBaseType.ITYPE_SINGLE;
+        protected const TTypedValue.TBaseType TYPEREAL = TTypedValue.TBaseType.ITYPE_SINGLE;
 
         /// <summary>
         /// Integer type
         /// </summary>
-        protected const TTypedValue.TBaseType ptyInt = TTypedValue.TBaseType.ITYPE_INT4;
+        protected const TTypedValue.TBaseType TYPEINT = TTypedValue.TBaseType.ITYPE_INT4;
 
         /// <summary>
         /// Boolean type
         /// </summary>
-        protected const TTypedValue.TBaseType ptyBool = TTypedValue.TBaseType.ITYPE_BOOL;
+        protected const TTypedValue.TBaseType TYPEBOOL = TTypedValue.TBaseType.ITYPE_BOOL;
 
         /// <summary>
         /// String type
         /// </summary>
-        protected const TTypedValue.TBaseType ptyText = TTypedValue.TBaseType.ITYPE_STR;
+        protected const TTypedValue.TBaseType TYPETEXT = TTypedValue.TBaseType.ITYPE_STR;
 
         private string FVersion;
         private string FName;
@@ -405,7 +405,7 @@ namespace Models.GrazPlan
         /// Propagates the new current locale to the entire parameter set              
         /// </summary>
         /// <param name="localeName"></param>
-        private void setCurrLocale(string localeName)
+        private void SetCurrLocale(string localeName)
         {
             ParameterSet ancestor;
             int idx;
@@ -483,13 +483,13 @@ namespace Models.GrazPlan
             {
                 switch (defn.ParamType)
                 {
-                    case ptyReal: this.SetParam(defn.FullName, srcSet.dParam(defn.FullName));
+                    case TYPEREAL: this.SetParam(defn.FullName, srcSet.ParamReal(defn.FullName));
                         break;
-                    case ptyInt: this.SetParam(defn.FullName, srcSet.iParam(defn.FullName));
+                    case TYPEINT: this.SetParam(defn.FullName, srcSet.ParamInt(defn.FullName));
                         break;
-                    case ptyBool: this.SetParam(defn.FullName, srcSet.bParam(defn.FullName));
+                    case TYPEBOOL: this.SetParam(defn.FullName, srcSet.ParamBool(defn.FullName));
                         break;
-                    case ptyText: this.SetParam(defn.FullName, srcSet.sParam(defn.FullName));
+                    case TYPETEXT: this.SetParam(defn.FullName, srcSet.ParamStr(defn.FullName));
                         break;
                 }
             }
@@ -569,7 +569,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="tagList">Array of tags</param>
         /// <returns>The integer value</returns>
-        virtual protected int GetIntParam(string[] tagList)
+        protected virtual int GetIntParam(string[] tagList)
         {
             return 0;
         }
@@ -579,7 +579,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="tagList">Array of tags</param>
         /// <returns>The Boolean value</returns>
-        virtual protected bool GetBoolParam(string[] tagList)
+        protected virtual bool GetBoolParam(string[] tagList)
         {
             return false;
         }
@@ -757,9 +757,9 @@ namespace Models.GrazPlan
             found = false;
             for (idx = 0; idx <= this.FTranslations.Length - 1; idx++)
             {
-                if (string.Compare(this.FTranslations[idx].sLang, lang, true) == 0)
+                if (string.Compare(this.FTranslations[idx].Lang, lang, true) == 0)
                 {
-                    this.FTranslations[idx].sText = text;
+                    this.FTranslations[idx].Text = text;
                     found = true;
                 }
             }
@@ -767,8 +767,8 @@ namespace Models.GrazPlan
             {
                 idx = this.FTranslations.Length;
                 Array.Resize(ref this.FTranslations, idx + 1);
-                this.FTranslations[idx].sLang = lang;
-                this.FTranslations[idx].sText = text;
+                this.FTranslations[idx].Lang = lang;
+                this.FTranslations[idx].Text = text;
             }
             if ((string.Compare("en", lang, true) == 0) || (string.Compare(this.Name, string.Empty) == 0))
                 this.Name = text;
@@ -901,7 +901,7 @@ namespace Models.GrazPlan
                 idx = 0;
                 while (!result && (idx < this.FLocales.Length))
                 {
-                    result = (locale == this.FLocales[idx].ToLower());
+                    result = locale == this.FLocales[idx].ToLower();
                     idx++;
                 }
             }
@@ -915,7 +915,7 @@ namespace Models.GrazPlan
         public string CurrLocale
         {
             get { return this.FCurrLocale; }
-            set { this.setCurrLocale(value); }
+            set { this.SetCurrLocale(value); }
         }
 
         /// <summary>
@@ -1003,7 +1003,7 @@ namespace Models.GrazPlan
         /// <returns>True if this is the root</returns>
         public bool NodeIsRoot()
         {
-            return (this.Parent == null);
+            return this.Parent == null;
         }
 
         /// <summary>
@@ -1252,7 +1252,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="tag">The tag name</param>
         /// <returns>Returns the parameter value</returns>
-        public double dParam(string tag)
+        public double ParamReal(string tag)
         {
             string[] tagList = new string[0];
             ParameterDefinition definition;
@@ -1275,7 +1275,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="tag">The tag name</param>
         /// <returns>The integer value</returns>
-        public int iParam(string tag)
+        public int ParamInt(string tag)
         {
             string[] tagList = new string[0];
             ParameterDefinition definition;
@@ -1298,7 +1298,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="tag">The tag name</param>
         /// <returns>The boolean value</returns>
-        public bool bParam(string tag)
+        public bool ParamBool(string tag)
         {
             string[] tagList = new string[0];
             ParameterDefinition definition;
@@ -1321,7 +1321,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="tag">The tag name</param>
         /// <returns>The parameter value</returns>
-        public string sParam(string tag)
+        public string ParamStr(string tag)
         {
             string[] tagList = new string[0];
             ParameterDefinition definition;
@@ -1331,19 +1331,19 @@ namespace Models.GrazPlan
             definition = this.GetDefinition(tagList);
             if ((definition == null) || !definition.IsScalar())
                 throw new Exception("Invalid parameter name " + tag);
-            else if (!(definition.ValueIsDefined()))
+            else if (!definition.ValueIsDefined())
                 throw new Exception("Parameter value undefined: " + tag);
             else
             {
                 switch (definition.ParamType)
                 {
-                    case ptyText: result = this.GetTextParam(tagList);
+                    case TYPETEXT: result = this.GetTextParam(tagList);
                         break;
-                    case ptyReal: result = string.Format("{0:G}", this.GetRealParam(tagList));
+                    case TYPEREAL: result = string.Format("{0:G}", this.GetRealParam(tagList));
                         break;
-                    case ptyInt: result = string.Format("{0:D}", this.GetIntParam(tagList));
+                    case TYPEINT: result = string.Format("{0:D}", this.GetIntParam(tagList));
                         break;
-                    case ptyBool: if (this.GetBoolParam(tagList))
+                    case TYPEBOOL: if (this.GetBoolParam(tagList))
                             result = "true";
                         else
                             result = "false";
@@ -1437,9 +1437,9 @@ namespace Models.GrazPlan
             {
                 switch (definition.ParamType)
                 {
-                    case ptyText: this.SetTextParam(tagList, newValue);
+                    case TYPETEXT: this.SetTextParam(tagList, newValue);
                         break;
-                    case ptyReal:
+                    case TYPEREAL:
                         {
                             try
                             {
@@ -1452,7 +1452,7 @@ namespace Models.GrazPlan
                             }
                         }
                         break;
-                    case ptyInt:
+                    case TYPEINT:
                         {
                             try
                             {
@@ -1465,7 +1465,7 @@ namespace Models.GrazPlan
                             }
                         }
                         break;
-                    case ptyBool:
+                    case TYPEBOOL:
                         {
                             if (newValue.ToLower() == "true")
                                 this.SetBoolParam(tagList, true);
@@ -1551,8 +1551,8 @@ namespace Models.GrazPlan
                     for (itrans = 0; itrans <= child.TranslationCount() - 1; itrans++)
                     {
                         translation = child.GetTranslation(itrans);
-                        if (string.Compare(translation.sLang, this.GetUILang(), true) == 0)
-                            child.Name = translation.sText;
+                        if (string.Compare(translation.Lang, this.GetUILang(), true) == 0)
+                            child.Name = translation.Text;
                     }
                 }
             }
