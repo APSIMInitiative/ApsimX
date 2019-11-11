@@ -170,7 +170,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled)?"1":"0.4") + "\">";
             html += "\n<div class=\"filter\">";
             html += "Perform every ";
             if (Interval > 0)
@@ -195,6 +195,10 @@ namespace Models.CLEM.Activities
                 html += "NOT SET";
             }
             html += "</span></div>";
+            if(!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             html += "\n</div>";
             return html;
         }

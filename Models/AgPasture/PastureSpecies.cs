@@ -5238,7 +5238,7 @@
         /// <summary>Removes a given amount of DM (and N) from this plant.</summary>
         /// <param name="amountToRemove">The DM amount to remove (kg/ha)</param>
         /// <returns>The DM amount actually removed (kg/ha)</returns>
-        internal double RemoveDM(double amountToRemove)
+        public double RemoveDM(double amountToRemove)
         {
             // get existing DM and N amounts
             double preRemovalDMShoot = AboveGroundWt;
