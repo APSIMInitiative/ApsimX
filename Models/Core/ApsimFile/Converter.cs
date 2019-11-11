@@ -1338,13 +1338,13 @@
                 manager.ReplaceRegex(@"\[ChildLinkByName\(([^\)]+)\)", @"[Link(Type = LinkType.Child, $1)");
 
                 // [Link(Type = LinkType.Child)] -> [Link]
-                manager.Replace("[Link(Type = LinkType.Child)]", "[Link(Type = LinkType.Child)]", caseSensitive: true);
+                manager.Replace("[ChildLinkByName]", "[Link(Type = LinkType.Child)]", caseSensitive: true);
 
                 // [ChildLink(...)] -> [Link(ByName = false, ...)]
                 manager.ReplaceRegex(@"\[ChildLink\(([^\)]+)\)", @"[Link(Type = LinkType.Child, ByName = false, $1)");
 
                 // [Link(Type = LinkType.Child, ByName = false)] -> [Link(ByName = false)]
-                manager.Replace("[Link(Type = LinkType.Child, ByName = false)]", "[Link(Type = LinkType.Child, ByName = false)]", caseSensitive: true);
+                manager.Replace("[ChildLink]", "[Link(Type = LinkType.Child, ByName = false)]", caseSensitive: true);
             }
         }
 

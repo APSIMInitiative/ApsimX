@@ -75,36 +75,4 @@ namespace Models.Core
             return ByName;
         }
     }
-    
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate a child object of the 
-    /// related fields type and store a reference to it in the field. If no matching
-    /// model is found (and IsOptional is not specified or is false), then an 
-    /// exception will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ChildLinkAttribute : LinkAttribute
-    {
-        /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(IVariable fieldInfo) { return false; }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(IVariable field) { return false; }
-    }
-
-    /// <summary>
-    /// When applied to a field, the infrastructure will locate a child object of the 
-    /// related fields type and name and store a reference to it in the field. If no matching
-    /// model is found (and IsOptional is not specified or is false), then an 
-    /// exception will be thrown. 
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ChildLinkByNameAttribute : LinkAttribute
-    {
-        /// <summary>Is this link a scoped link</summary>
-        public override bool IsScoped(IVariable fieldInfo) { return false; }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public override bool UseNameToMatch(IVariable field) { return true; }
-    }
 }
