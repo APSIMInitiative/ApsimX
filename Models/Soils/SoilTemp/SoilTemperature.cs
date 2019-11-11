@@ -673,16 +673,9 @@
         ///     ''' <remarks></remarks>
         private void GetOtherVariables()
         {
-            BoundCheck(weather.MaxT, weather.MinT, 100.0, "maxt");
             gMaxT = weather.MaxT;
-
-            BoundCheck(weather.MinT, -100.0, weather.MaxT, "mint");
             gMinT = weather.MinT;
-
-            BoundCheck(timestep, 0, System.Convert.ToDouble(DAYmins), "timestep");
             gTimeStepSec = System.Convert.ToDouble(timestep) * MIN2SEC;
-
-            BoundCheckArray(soil.SoilWater.SW, 0.0, 1.0, "sw");
             soil.SoilWater.SW.CopyTo(gSW, 1);
             gSW[gNz] = gSW[gNumLayers];
             // Debug(test): multiplyArray(gSW, 0.1)
@@ -940,14 +933,30 @@
             d[gNz] += nu * gThermalConductance_zb[gNz] * TNew_zb[gNz + 1];
             // For a no-flux condition, K(M) = 0, so nothing is added.
 
+            for (int node = SURFACEnode; node <= gNz - 1; node++)
+            {
+                if (double.IsNaN(b[node]))
+                {
+
+                }
+            }
+
             // The Thomas algorithm
             // Calculate coeffs A, B, C, D for intermediate nodes
             for (int node = SURFACEnode; node <= gNz - 1; node++)
             {
+                if (double.IsNaN(b[node]))
+                {
+
+                }
                 c[node] /= b[node];
                 d[node] /= b[node];
                 b[node + 1] -= a[node + 1] * c[node];
                 d[node + 1] -= a[node + 1] * d[node];
+            }
+            if (double.IsNaN(b[gNz]))
+            {
+
             }
             TNew_zb[gNz] = d[gNz] / b[gNz];  // do temperature at bottom node
 
