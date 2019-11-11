@@ -30,90 +30,90 @@ namespace Models.PMF.Organs
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child, ByName = false)]
         private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The senescence rate function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         public IFunction SenescenceRate = null;
 
         /// <summary>The detachment rate function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         private IFunction detachmentRateFunction = null;
 
         /// <summary>The N retranslocation factor</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         public IFunction NRetranslocationFactor = null;
 
         /// <summary>The N reallocation factor</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         protected IFunction nReallocationFactor = null;
 
         // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child)]
         //private IFunction nitrogenDemandSwitch = null;
 
         /// <summary>The DM retranslocation factor</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         public IFunction DMRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
 
         /// <summary>The DM demand function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>The N demand function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("g/m2")]
         private IFunction initialWtFunction = null;
 
         /// <summary>The initial N Concentration</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, IsOptional = true)]
         [Units("g/m2")]
         private IFunction initialNConcFunction = null;
 
         /// <summary>The maximum N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("g/g")]
         private IFunction maximumNConc = null;
 
         /// <summary>The minimum N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("g/g")]
         private IFunction minimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("g/g")]
         private IFunction criticalNConc = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
 
         /// <summary>Dry matter conversion efficiency</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         public IFunction DMConversionEfficiency = null;
 
         /// <summary>The cost for remobilisation</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("")]
         private IFunction remobilisationCost = null;
 
@@ -128,7 +128,7 @@ namespace Models.PMF.Organs
         IFunction Photosynthesis = null;
 
         /// <summary>The RetranslocationMethod</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         public IRetranslocateMethod RetranslocateNitrogen = null;
 
         /// <summary>The live biomass state at start of the computation round</summary>

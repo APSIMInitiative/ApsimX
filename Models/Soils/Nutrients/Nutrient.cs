@@ -64,13 +64,13 @@
         [Link]
         private Soil Soil = null;
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         INutrientPool FOMCellulose = null;
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         INutrientPool FOMCarbohydrate = null;
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         INutrientPool FOMLignin = null;
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         INutrientPool SurfaceResidue = null;
         [Link]
         private ISolute NO3 = null;

@@ -112,7 +112,7 @@ namespace Models.PMF.Organs
         IFunction DMDemandFunction = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child, ByName = false)]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Dry matter conversion efficiency</summary>

@@ -17,10 +17,10 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         private IFunction target = null;
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         private IFunction progression = null;
 
         // 2. Public properties

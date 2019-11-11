@@ -449,7 +449,7 @@ namespace Models.PMF.Organs
         IFunction CarbonConcentration = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child, ByName = false)]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Gets or sets the k dead.</summary>

@@ -56,14 +56,14 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithChildLink : Model
     {
-        [ChildLink]
+        [Link(Type = LinkType.Child, ByName = false)]
         public Zone zone2 = null;
     }
 
     [Serializable]
     class ModelWithChildLinkByName : Model
     {
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         public Zone zone2 = null;
     }
 
@@ -227,7 +227,7 @@ namespace UnitTests.Core
             Assert.AreEqual(model.zone2.Name, "zone1");
         }
 
-        /// <summary>Ensure a [ChildLink] finds works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Child, ByName = false)] finds works</summary>
         [Test]
         public void EnsureChildLinkWorks()
         {
@@ -264,7 +264,7 @@ namespace UnitTests.Core
             });
         }
 
-        /// <summary>Ensure a [ChildLinkByName] finds works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Child)] finds works</summary>
         [Test]
         public void EnsureChildLinkByNameWorks()
         {

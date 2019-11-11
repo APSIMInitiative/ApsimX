@@ -22,12 +22,12 @@ namespace Models.PMF
     public class RetranslocateAvailableN : Model, IRetranslocateMethod, ICustomDocumentation
     {
         /// <summary>The calculation for N retranslocation function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         public IFunction RetranslocateFunction = null;
 
         /// <summary>The calculation for DM retranslocation function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         [Units("/d")]
         public IFunction RetranslocateDMFunction = null;
 

@@ -26,7 +26,7 @@ namespace Models.PMF.Phen
         private Plant plant = null;
 
         /// <summary>The thermal time</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         public IFunction thermalTime = null;
 
         [Link(IsOptional = true)]

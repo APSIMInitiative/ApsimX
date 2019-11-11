@@ -45,11 +45,11 @@ namespace Models.PMF
         #region Links and Input parameters
 
         ///// <summary>The method used to arbitrate N allocations</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child)]
         //private IArbitrationMethod NArbitrator = null;
 
         ///// <summary>The method used to arbitrate N allocations</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child)]
         //private IArbitrationMethod DMArbitrator = null;
 
         ///// <summary>The kgha2gsm</summary>

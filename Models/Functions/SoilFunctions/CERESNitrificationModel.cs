@@ -19,13 +19,13 @@ namespace Models.Functions
         [Link]
         Solute NH4 = null;
 
-        [ChildLink]
+        [Link(Type = LinkType.Child, ByName = false)]
         CERESMineralisationTemperatureFactor CERESTF = null;
 
-        [ChildLink]
+        [Link(Type = LinkType.Child, ByName = false)]
         CERESNitrificationWaterFactor CERESWF = null;
 
-        [ChildLink]
+        [Link(Type = LinkType.Child, ByName = false)]
         CERESNitrificationpHFactor CERESpHF = null;
 
         /// <summary>Gets the value.</summary>

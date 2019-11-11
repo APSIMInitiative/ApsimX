@@ -1326,15 +1326,25 @@
                 manager.ReplaceRegex(@"\[ScopedLinkByName\(([^\)]+)\)", @"[Link($1)");
 
                 // [ScopedLinkByName] -> [Link]
-                manager.Replace("[ScopedLinkByName]", "[Link]");
+                manager.Replace("[ScopedLinkByName]", "[Link]", caseSensitive: true);
 
                 // [ScopedLink(...)] -> [Link(ByName = false, ...)]
                 manager.ReplaceRegex(@"\[ScopedLink\(([^\)]+)\)", @"[Link($1)");
 
                 // [ScopedLink] -> [Link(ByName = false)]
-                manager.Replace("[ScopedLink]", "[Link(ByName = false)]");
+                manager.Replace("[ScopedLink]", "[Link(ByName = false)]", caseSensitive: true);
 
+                // [ChildLinkByName(...)] -> [Link(...)]
+                manager.ReplaceRegex(@"\[ChildLinkByName\(([^\)]+)\)", @"[Link(Type = LinkType.Child, $1)");
 
+                // [Link(Type = LinkType.Child)] -> [Link]
+                manager.Replace("[Link(Type = LinkType.Child)]", "[Link(Type = LinkType.Child)]", caseSensitive: true);
+
+                // [ChildLink(...)] -> [Link(ByName = false, ...)]
+                manager.ReplaceRegex(@"\[ChildLink\(([^\)]+)\)", @"[Link(Type = LinkType.Child, ByName = false, $1)");
+
+                // [Link(Type = LinkType.Child, ByName = false)] -> [Link(ByName = false)]
+                manager.Replace("[Link(Type = LinkType.Child, ByName = false)]", "[Link(Type = LinkType.Child, ByName = false)]", caseSensitive: true);
             }
         }
 

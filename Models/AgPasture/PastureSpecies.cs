@@ -1800,15 +1800,15 @@
         ////- Plant parts and state >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Holds info about state of leaves (DM and N).</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         private PastureAboveGroundOrgan leaves = null;
 
         /// <summary>Holds info about state of sheath/stems (DM and N).</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         private PastureAboveGroundOrgan stems = null;
 
         /// <summary>Holds info about state of stolons (DM and N).</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child)]
         private PastureAboveGroundOrgan stolons = null;
 
         /// <summary>Holds the info about state of roots (DM and N). It is a list of root organs, one for each zone where roots are growing.</summary>
