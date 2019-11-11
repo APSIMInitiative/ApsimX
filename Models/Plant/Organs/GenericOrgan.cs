@@ -368,6 +368,9 @@ namespace Models.PMF.Organs
             if (StartLive.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
                 senescedFrac = 1.0;  // remaining amount too small, senesce all
 
+            if (senescedFrac > 0 && StartLive.Wt>0 && Name=="Shell")
+            { }
+
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, StartLive.StorageN + StartLive.MetabolicN))
                 throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
             double StorageNReallocation = Math.Min(nitrogen.Reallocation, StartLive.StorageN * senescedFrac * nReallocationFactor.Value());
