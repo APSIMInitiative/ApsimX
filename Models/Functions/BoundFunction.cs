@@ -17,15 +17,15 @@ namespace Models.PMF.Functions
     public class BoundFunction : Model, IFunction
     {
         /// <summary>The value to be bound within the Upper and LowerBoundry</summary>
-        [Link]
+        [Link(ByName = true)]
         IFunction Variable = null;
 
         /// <summary>The upper limit to constrain the variable to</summary>
-        [Link]
+        [Link(ByName = true)]
         IFunction UpperBoundry = null;
 
         /// <summary>The lower limit to constrain the variable to</summary>
-        [Link]
+        [Link(ByName = true)]
         IFunction LowerBoundry = null;
         
         /// <summary>Gets the value.</summary>

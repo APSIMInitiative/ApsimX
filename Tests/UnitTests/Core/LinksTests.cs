@@ -21,7 +21,7 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithIFunctions : Model
     {
-        [Link]
+        [Link(ByName = true)]
         public IFunction model2 = null;
 
     }
@@ -178,7 +178,7 @@ namespace UnitTests.Core
             Assert.AreEqual(model.model2.Value(), 2);
         }
 
-        /// <summary>Ensure a [ScopedLinkByName] works.</summary>
+        /// <summary>Ensure a [Link(ByName = true)] works.</summary>
         [Test]
         public void EnsureScopedLinkByNameWorks()
         {

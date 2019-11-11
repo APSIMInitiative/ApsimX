@@ -49,7 +49,7 @@ namespace Models.Functions.DemandFunctions
         /// <summary>
         /// Thermal time that drives berry development
         /// </summary>
-        [Link]
+        [Link(ByName = true)]
         public IFunction TT = null;
 
         private double yesterdaysDM = 0;

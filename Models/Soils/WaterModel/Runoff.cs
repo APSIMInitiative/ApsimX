@@ -49,11 +49,11 @@
         private WaterBalance soil = null;
 
         /// <summary>A function for reducing CN due to cover.</summary>
-        [Link]
+        [Link(ByName = true)]
         private IFunction reductionForCover = null;
 
         /// <summary>A function for reducing CN due to tillage.</summary>
-        [Link]
+        [Link(ByName = true)]
         private IFunction reductionForTillage = null;
 
         // --- Privates ----------------------------------------------------------------------

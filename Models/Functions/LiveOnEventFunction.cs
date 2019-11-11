@@ -30,11 +30,11 @@ namespace Models.Functions
         private bool preEvent;
 
         /// <summary>The pre event value</summary>
-        [Link]
+        [Link(ByName = true)]
         IFunction PreEventValue = null;
 
         /// <summary>The post event value</summary>
-        [Link]
+        [Link(ByName = true)]
         IFunction PostEventValue = null;
 
         /// <summary>Called when [simulation commencing].</summary>

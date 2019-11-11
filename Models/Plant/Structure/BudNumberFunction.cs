@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Models.Core;
 using Models.PMF.Phen;
 using Models.Functions;
@@ -19,7 +19,7 @@ namespace Models.PMF.Struct
         [Link]
         Structure structure = null;
 
-        [Link]
+        [Link(ByName = true)]
         private IFunction FractionOfBudBurst = null;
 
         /// <summary>The stage on which bud number is set</summary>

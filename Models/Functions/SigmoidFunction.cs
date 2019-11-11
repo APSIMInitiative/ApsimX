@@ -17,16 +17,16 @@ namespace Models.Functions
     public class SigmoidFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The ymax</summary>
-        [Link]
+        [Link(ByName = true)]
         IFunction Ymax = null;
         /// <summary>The x value</summary>
-        [Link]
+        [Link(ByName = true)]
         IFunction XValue = null;
         /// <summary>The Xo</summary>
-        [Link]
+        [Link(ByName = true)]
         IFunction Xo = null;
         /// <summary>The b</summary>
-        [Link]
+        [Link(ByName = true)]
         IFunction b = null;
 
         /// <summary>Gets the value.</summary>

@@ -1,4 +1,4 @@
-namespace Models.PMF.Organs
+﻿namespace Models.PMF.Organs
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -55,183 +55,183 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Relative growth rate factor.
         /// </summary>
-        [Link]
+        [Link(ByName = true)]
         private IFunction frgr = null;
 
         /// <summary>
         /// The effect of CO2 on stomatal conductance.
         /// </summary>
-        [Link]
+        [Link(ByName = true)]
         private IFunction stomatalConductanceCO2Modifier = null;
 
         /// <summary>
         /// The photosynthesis function.
         /// </summary>
-        [Link]
+        [Link(ByName = true)]
         private IFunction photosynthesis = null;
 
         /// <summary>
         /// The height function.
         /// </summary>
-        [Link]
+        [Link(ByName = true)]
         private IFunction tallness = null;
 
         /// <summary>
         /// The lai dead function.
         /// </summary>
-        [Link]
+        [Link(ByName = true)]
         private IFunction laiDead = null;
 
         /// <summary>
         /// Carbon concentration.
         /// </summary>
-        [Link]
+        [Link(ByName = true)]
         private IFunction carbonConcentration = null;
 
         /// <summary>
         /// Water Demand Function.
         /// </summary>
-        [Link(IsOptional = true)]
+        [Link(ByName = true, IsOptional = true)]
         private IFunction waterDemand = null;
 
         /// <summary>
         /// The cover function.
         /// </summary>
-        [Link(IsOptional = true)]
+        [Link(ByName = true, IsOptional = true)]
         private IFunction cover = null;
 
         /// <summary>
         /// The lai function.
         /// </summary>
-        [Link(IsOptional = true)]
+        [Link(ByName = true, IsOptional = true)]
         private IFunction area = null;
 
         /// <summary>
         /// The extinction coefficient function.
         /// </summary>
-        [Link(IsOptional = true)]
+        [Link(ByName = true, IsOptional = true)]
         private IFunction extinctionCoefficient = null;
 
         /// <summary>
         /// The height of the base of the canopy.
         /// </summary>
-        [Link(IsOptional = true)]
+        [Link(ByName = true, IsOptional = true)]
         private IFunction baseHeight = null;
 
         /// <summary>
         /// The with of a single plant.
         /// </summary>
-        [Link(IsOptional = true)]
+        [Link(ByName = true, IsOptional = true)]
         private IFunction wideness = null;
 
         /// <summary>
         /// Link to biomass removal model.
         /// </summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>
         /// The senescence rate function.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         protected IFunction senescenceRate = null;
 
         /// <summary>
         /// The detachment rate function.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction detachmentRate = null;
 
         /// <summary>
         /// The N retranslocation factor.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         protected IFunction nRetranslocationFactor = null;
 
         /// <summary>
         /// The N reallocation factor.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         protected IFunction nReallocationFactor = null;
 
         /// <summary>
         /// The DM retranslocation factor.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction dmRetranslocationFactor = null;
 
         /// <summary>
         /// The DM reallocation factor.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
 
         /// <summary>
         /// The DM demand function.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>
         /// The N demand function.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>
         /// The initial biomass dry matter weight.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2")]
         private IFunction initialWt = null;
 
         /// <summary>
         /// The maximum N concentration.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction maximumNConc = null;
 
         /// <summary>
         /// The minimum N concentration.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction minimumNConc = null;
 
         /// <summary>
         /// The critical N concentration.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction criticalNConc = null;
 
         /// <summary>
         /// The proportion of biomass respired each day.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction maintenanceRespiration = null;
 
         /// <summary>
         /// Dry matter conversion efficiency.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction dmConversionEfficiency = null;
 
         /// <summary>
         /// The cost for remobilisation.
         /// </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("")]
         private IFunction remobilisationCost = null;
 

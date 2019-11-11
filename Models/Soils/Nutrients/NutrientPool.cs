@@ -25,10 +25,10 @@
         [Link]
         Soil soil = null;
 
-        [Link]
+        [Link(ByName = true)]
         IFunction InitialCarbon = null;
 
-        [Link]
+        [Link(ByName = true)]
         IFunction InitialNitrogen = null;
 
         /// <summary>Initial carbon/nitrogen ratio</summary>

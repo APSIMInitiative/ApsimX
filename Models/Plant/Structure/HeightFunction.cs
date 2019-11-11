@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -16,7 +16,7 @@ namespace Models.PMF.Struct
     public class HeightFunction : Model, IFunction
     {
         /// <summary>The potential height</summary>
-        [Link]
+        [Link(ByName = true)]
         private IFunction PotentialHeight = null;
 
         /// <summary>The potential height yesterday</summary>
