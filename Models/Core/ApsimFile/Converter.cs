@@ -1314,13 +1314,15 @@
             {
                 // The linking code previously had a hack which automatically enabled link by name if the target
                 // model type is IFunction or Biomass. I've removed this hack which means that all such links
-                // must be adjusted accordingly.
+                // must be adjusted accordingly. Technically this would also apply to any classes which implement
+                // IFunction or Biomass but in practice this is very rare...I'm not going to worry about it except
+                // for in the case of XYPairs - there are a number of links to XYPairs.
 
                 // [Link(...)] [Units] [...] Biomass -> [Link(ByName = true, ...)] [Units] [...] Biomass
-                manager.ReplaceRegex(@"\[Link\(([^\)]+)\)\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(Type = LinkType.Child, ByName = true, $1)]$2");
+                manager.ReplaceRegex(@"\[Link\(([^\)]+)\)\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass|XYPairs))", @"[Link(Type = LinkType.Child, ByName = true, $1)]$2");
 
                 // [Link] IFunction -> [Link(ByName = true)] IFunction
-                manager.ReplaceRegex(@"\[Link\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(Type = LinkType.Child, ByName = true)]$1");
+                manager.ReplaceRegex(@"\[Link\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass|XYPairs))", @"[Link(Type = LinkType.Child, ByName = true)]$1");
 
                 // Here I assume that all [LinkByPath] links will have a path argument supplied.
                 // [LinkByPath(...)] -> [Link(Type = LinkType.Path, ...)]
