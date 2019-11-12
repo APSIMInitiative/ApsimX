@@ -1,4 +1,4 @@
-﻿namespace Models.PMF
+namespace Models.PMF
 {
     using Models.Core;
     using Models.Functions;
@@ -50,7 +50,7 @@
         public Root Root = null;
 
         /// <summary>Above ground weight</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         public Biomass AboveGround { get; set; }
 
        /// <summary> Clock </summary>
@@ -198,7 +198,7 @@
         public void Harvest() { Harvest(null); }
 
         /// <summary>The plant mortality rate</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         [Units("")]
         IFunction MortalityRate = null;
         #endregion

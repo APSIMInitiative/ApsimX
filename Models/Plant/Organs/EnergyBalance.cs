@@ -1,4 +1,4 @@
-﻿namespace Models.PMF.Organs
+namespace Models.PMF.Organs
 {
     using Models.Core;
     using Models.Functions;
@@ -29,39 +29,39 @@
         private Plant parentPlant = null;
 
         /// <summary>The parent organ</summary>
-        [Link(Type = LinkType.Ancestor)]
+        [ParentLink]
         private GenericOrgan parentOrgan= null;
  
         /// <summary>The FRGR function</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction FRGRFunction = null;  
 
         /// <summary>The effect of CO2 on stomatal conductance</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction StomatalConductanceCO2Modifier = null;
 
         /// <summary>The cover function</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         IFunction CoverFunction = null;
 
         /// <summary>The lai function</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         IFunction GAIFunction = null;
    
         /// <summary>The extinction coefficient function</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         IFunction ExtinctionCoefficientFunction = null;
     
         /// <summary>The height function</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction HeightFunction = null;
      
         /// <summary>TThe depth of canopy which organ resides in</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction DepthFunction = null;
       
         /// <summary>The lai dead function</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction GAIDeadFunction = null;
 
 

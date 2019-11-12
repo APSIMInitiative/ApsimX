@@ -52,7 +52,7 @@ namespace Models.Functions
         /// Child function whose value will be successively subtracted from the
         /// accumulator.
         /// </summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLink]
         private IFunction child = null;
 
         /// <summary>

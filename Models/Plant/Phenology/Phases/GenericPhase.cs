@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
@@ -17,10 +17,10 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         private IFunction target = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         private IFunction progression = null;
 
         // 2. Public properties

@@ -12,7 +12,7 @@
     public class PastureAboveGroundOrgan : Model, IRemovableBiomass
     {
         /// <summary>The collection of tissues for this organ.</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLink]
         public GenericTissue[] Tissue;
 
         /// <summary>

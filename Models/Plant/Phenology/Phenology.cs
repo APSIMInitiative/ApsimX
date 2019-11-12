@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
@@ -26,7 +26,7 @@ namespace Models.PMF.Phen
         private Plant plant = null;
 
         /// <summary>The thermal time</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         public IFunction thermalTime = null;
 
         [Link(IsOptional = true)]
@@ -130,7 +130,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>A temporary flag for sorghum to reset the thermal time at change of phase.</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         public IFunction SorghumFlag  = null;
 
         ///6. Public methods

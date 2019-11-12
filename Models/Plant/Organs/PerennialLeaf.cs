@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Functions;
@@ -29,7 +29,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
-        [Link(ByName = true)]
+        [Link]
         IFunction CarbonConcentration = null;
 
         /// <summary>Gets the cohort live.</summary>
@@ -76,7 +76,7 @@ namespace Models.PMF.Organs
         protected ISummary Summary = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The dry matter supply</summary>
@@ -205,53 +205,53 @@ namespace Models.PMF.Organs
 
         #region Parameters
         /// <summary>The FRGR function</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction FRGRFunction = null;   
         /// <summary>The effect of CO2 on stomatal conductance</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction StomatalConductanceCO2Modifier = null;
 
 
 
         /// <summary>The DM demand function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>The N demand function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The extinction coefficient function</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction ExtinctionCoefficient = null;
         /// <summary>The extinction coefficient function for dead leaves</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction ExtinctionCoefficientDead = null;
         /// <summary>The photosynthesis</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction Photosynthesis = null;
         /// <summary>The height function</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction HeightFunction = null;
         /// <summary>Leaf Residence Time</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction LeafResidenceTime = null;
         /// <summary>Leaf Development Rate</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction LeafDevelopmentRate = null;
         /// <summary>Leaf Death</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction LeafKillFraction = null;
         /// <summary>Minimum LAI</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction MinimumLAI = null;
         /// <summary>Leaf Detachment Time</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction LeafDetachmentTime = null;
         /// <summary>SpecificLeafArea</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction SpecificLeafAreaFunction = null;
 
         /// <summary>The structure</summary>
@@ -446,41 +446,41 @@ namespace Models.PMF.Organs
 
         #region Class Parameter Function Links
         /// <summary>The n reallocation factor</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("/d")]
         IFunction NReallocationFactor = null;
 
         /// <summary>The n retranslocation factor</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("/d")]
         IFunction NRetranslocationFactor = null;
 
         /// <summary>The dm retranslocation factor</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("/d")]
         IFunction DMRetranslocationFactor = null;
 
         /// <summary>The initial wt function</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/m2")]
         IFunction InitialWtFunction = null;
         /// <summary>The dry matter content</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         [Units("g/g")]
         IFunction DryMatterContent = null;
         /// <summary>The maximum n conc</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/g")]
         public IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Units("g/g")]
-        [Link(ByName = true)]
+        [Link]
         public IFunction MinimumNConc = null;
         /// <summary>The proportion of biomass repired each day</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
         /// <summary>Dry matter conversion efficiency</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction DMConversionEfficiency = null;
         #endregion
 

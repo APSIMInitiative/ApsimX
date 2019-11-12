@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
@@ -305,104 +305,104 @@ namespace Models.PMF.Organs
         public class LeafCohortParameters : Model
         {
             /// <summary>The maximum area</summary>
-            [Link(ByName = true)]
+            [Link]
             [Units("mm2")]
             public IFunction MaxArea = null;
             /// <summary>The growth duration</summary>
-            [Link(ByName = true)]
+            [Link]
             [Units("deg day")]
             public IFunction GrowthDuration = null;
             /// <summary>The lag duration</summary>
-            [Link(ByName = true)]
+            [Link]
             [Units("deg day")]
             public IFunction LagDuration = null;
             /// <summary>The senescence duration</summary>
-            [Link(ByName = true)]
+            [Link]
             [Units("deg day")]
             public IFunction SenescenceDuration = null;
             /// <summary>The detachment lag duration</summary>
-            [Link(ByName = true)]
+            [Link]
             [Units("deg day")]
             public IFunction DetachmentLagDuration = null;
             /// <summary>The detachment duration</summary>
-            [Link(ByName = true)]
+            [Link]
             [Units("deg day")]
             public IFunction DetachmentDuration = null;
             /// <summary>The specific leaf area maximum</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction SpecificLeafAreaMax = null;
             /// <summary>The specific leaf area minimum</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction SpecificLeafAreaMin = null;
             /// <summary>The structural fraction</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction StructuralFraction = null;
             /// <summary>The maximum n conc</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction MaximumNConc = null;
             /// <summary>The minimum n conc</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction MinimumNConc = null;
             /// <summary>The initial n conc</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction InitialNConc = null;
             /// <summary>The n reallocation factor</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction NReallocationFactor = null;
             /// <summary>The dm reallocation factor</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction DMReallocationFactor = null;
             /// <summary>The n retranslocation factor</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction NRetranslocationFactor = null;
             /// <summary>The expansion stress</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction ExpansionStress = null;
 
             /// <summary>The expansion stress</summary>
             public double ExpansionStressValue { get; set; }
 
             /// <summary>The critical n conc</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction CriticalNConc = null;
             /// <summary>The dm retranslocation factor</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction DMRetranslocationFactor = null;
             /// <summary>The shade induced senescence rate</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction ShadeInducedSenescenceRate = null;
             /// <summary>The drought induced reduction of lag phase through acceleration of tt accumulation by the cohort during this phase</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction DroughtInducedLagAcceleration = null;
             /// <summary>The drought induced reduction of senescence phase through acceleration of tt accumulation by the cohort during this phase</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction DroughtInducedSenAcceleration = null;
             /// <summary>The non structural fraction</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction StorageFraction = null;
             /// <summary>The cell division stress</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction CellDivisionStress = null;
             /// <summary>The Shape of the sigmoidal function of leaf area increase</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction LeafSizeShapeParameter = null;
             /// <summary>The size of leaves on senessing tillers relative to the dominant tillers in that cohort</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction SenessingLeafRelativeSize = null;
             /// <summary>The proportion of mass that is respired each day</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction MaintenanceRespirationFunction = null;
             /// <summary>Modify leaf size by age</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction LeafSizeAgeMultiplier = null;
             /// <summary>Modify lag duration by age</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction LagDurationAgeMultiplier = null;
             /// <summary>Modify senescence duration by age</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction SenescenceDurationAgeMultiplier = null;
             /// <summary>The cost for remobilisation</summary>
-            [Link(ByName = true)]
+            [Link]
             public IFunction RemobilisationCost = null;
         }
         #endregion
@@ -415,41 +415,41 @@ namespace Models.PMF.Organs
         /// <summary>The leaf cohort parameters</summary>
         [Link] LeafCohortParameters CohortParameters = null;
         /// <summary>The photosynthesis</summary>
-        [Link(ByName = true)] IFunction Photosynthesis = null;
+        [Link] IFunction Photosynthesis = null;
         /// <summary>The Fractional Growth Rate</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction FRGRFunction = null;
         /// <summary>The effect of CO2 on stomatal conductance</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction StomatalConductanceCO2Modifier = null;
 
         /// <summary>The thermal time</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction ThermalTime = null;
         /// <summary>The extinction coeff</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction ExtinctionCoeff = null;
         /// <summary>The frost fraction</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction FrostFraction = null;
 
         /// <summary>The structural fraction</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction StructuralFraction = null;
         /// <summary>The dm demand function</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         IFunction DMDemandFunction = null;
         /// <summary>The dm demand function</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction DMConversionEfficiency = null;
 
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
-        [Link(ByName = true)]
+        [Link]
         IFunction CarbonConcentration = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Gets or sets the k dead.</summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
@@ -75,56 +75,56 @@ namespace Models.PMF.Organs
         public double NFixationCost { get { return 0; } }
 
         /// <summary>The water content</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/g")]
         [Description("Water content used to calculate a fresh weight.")]
         IFunction WaterContent = null;
         
         /// <summary>The Maximum potential size of individual grains</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/grain")]
         IFunction MaximumPotentialGrainSize = null;
         
         /// <summary>The number function</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("/m2")]
         IFunction NumberFunction = null;
         /// <summary>The n filling rate</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/m2/d")]
         IFunction NFillingRate = null;
         /// <summary>The maximum n conc</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/g")]
         IFunction MinimumNConc = null;
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
-        [Link(ByName = true)]
+        [Link]
         IFunction CarbonConcentration = null;
 
         /// <summary>The dm demand function</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/m2/d")]
         IFunction DMDemandFunction = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>Dry matter conversion efficiency</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction DMConversionEfficiency = null;
 
         /// <summary>The proportion of biomass repired each day</summary>
-        [Link(ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
 
         /// <summary>The cost for remobilisation</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction RemobilisationCost = null;
 
         #endregion

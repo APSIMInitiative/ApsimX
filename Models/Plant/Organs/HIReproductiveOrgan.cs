@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -24,21 +24,21 @@ namespace Models.PMF.Organs
         protected Plant parentPlant = null;
 
         /// <summary>Gets or sets the above ground.</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction AboveGroundWt = null;
 
         /// <summary>The water content</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction WaterContent = null;
         /// <summary>The hi increment</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction HIIncrement = null;
         /// <summary>The n conc</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction NConc = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLink]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The dry matter potentially being allocated</summary>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,27 +20,27 @@ namespace Models.Functions.SupplyFunctions
     public class RUEModel : Model, IFunction
     {
         /// <summary>The rue</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction RUE = null;
 
         /// <summary>The fc o2</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction FCO2 = null;
 
         /// <summary>The function</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction FN = null;
 
         /// <summary>The ft</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction FT = null;
 
         /// <summary>The fw</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction FW = null;
 
         /// <summary>The FVPD</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction FVPD = null;
 
         /// <summary>The met data</summary>
@@ -48,7 +48,7 @@ namespace Models.Functions.SupplyFunctions
         IWeather MetData = null;
 
         /// <summary>The radiation interception data</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction RadnInt = null;
 
         #region Class Data Members

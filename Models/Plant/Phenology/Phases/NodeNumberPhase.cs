@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
@@ -24,7 +24,7 @@ namespace Models.PMF.Phen
         [Link]
         Structure structure = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         private IFunction CompletionNodeNumber = null;
 
         //2. Private and protected fields

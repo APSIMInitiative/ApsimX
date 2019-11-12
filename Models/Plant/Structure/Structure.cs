@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
@@ -60,25 +60,25 @@ namespace Models.PMF.Struct
         private Phenology phenology = null;
 
         /// <summary>The thermal time</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction thermalTime = null;
 
-        [Link(ByName = true)]
+        [Link]
         private IFunction phyllochron = null;
 
         /// <summary>The main stem final node number</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction finalLeafNumber = null;
 
-        [Link(ByName = true)]
+        [Link]
         private IFunction heightModel = null;
 
         /// <summary>Branching rate</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction branchingRate = null;
 
         /// <summary>Branch mortality</summary>
-        [Link(ByName = true)]
+        [Link]
         public IFunction branchMortality = null;
 
 

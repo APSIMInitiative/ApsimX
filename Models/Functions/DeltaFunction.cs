@@ -23,7 +23,7 @@ namespace Models.Functions
         public string StartStageName { get; set; }
 
         /// <summary>The child function to return a delta for</summary>
-        [Link(ByName = true)]
+        [Link]
         IFunction Integral = null;
 
         /// <summary>The phenology</summary>

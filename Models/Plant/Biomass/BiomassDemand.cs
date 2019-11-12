@@ -14,17 +14,17 @@ namespace Models.PMF
     public class BiomassDemand : Model, ICustomDocumentation
     {
         /// <summary>The demand for the structural fraction.</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/m2")]
         public IFunction Structural = null;
 
         /// <summary>The demand for the metabolic fraction.</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/m2")]
         public IFunction Metabolic = null;
 
         /// <summary>The demand for the storage fraction.</summary>
-        [Link(ByName = true)]
+        [Link]
         [Units("g/m2")]
         public IFunction Storage = null;
 
