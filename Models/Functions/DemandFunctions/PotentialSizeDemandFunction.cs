@@ -1,4 +1,4 @@
-using Models.Core;
+﻿using Models.Core;
 using Models.PMF.Phen;
 using System;
 
@@ -23,11 +23,11 @@ namespace Models.Functions.DemandFunctions
         public string EndStageName = "";
 
         /// <summary>The potential growth increment</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PotentialGrowthIncrement = null;
 
         /// <summary>The organ number</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction OrganNumber = null;
 
         /// <summary>The phenology</summary>
@@ -35,11 +35,11 @@ namespace Models.Functions.DemandFunctions
         Phenology Phenology = null;
 
         /// <summary>The thermal time</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction ThermalTime = null;
 
         /// <summary>The accum thermal time</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction AccumThermalTime = null;
 
         /// <summary>Gets the accumulated thermal time.</summary>

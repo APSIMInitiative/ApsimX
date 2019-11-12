@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 68; } }
+        public static int LatestVersion { get { return 69; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1299,6 +1299,64 @@
                     soilCrop["Name"] = "AGPRyegrassSoil";
                 if (foundAgPastureWhiteClover && soilCrop["Name"].ToString().Equals("WhiteCloverSoil", StringComparison.InvariantCultureIgnoreCase))
                     soilCrop["Name"] = "AGPWhiteCloverSoil";
+            }
+        }
+
+        /// <summary>
+        /// Upgrades to version 69. Fixes link attributes in manager scripts after
+        /// link refactoring.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the .apsimx file.</param>
+        private static void UpgradeToVersion69(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                // The linking code previously had a hack which automatically enabled link by name if the target
+                // model type is IFunction or Biomass (or any inherited class thereof). I've removed this hack 
+                // from the link resolution code, which means that all such links must be adjusted accordingly.
+
+                // [Link(...)] [Units] [...] Biomass -> [Link(ByName = true, ...)] [Units] [...] Biomass
+                manager.ReplaceRegex(@"\[Link\(([^\)]+)\)\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass|CNReductionForCover|CNReductionForTillage|RunoffModel|WaterTableModel|HeightFunction|DecumulateFunction|EndOfDayFunction|LiveOnEventFunction|AccumulateAtEvent|DailyMeanVPD|CERESDenitrificationWaterFactor|CERESDenitrificationTemperatureFactor|CERESMineralisationFOMCNRFactor|DayCentN2OFractionModel|CERESNitrificationpHFactor|CERESNitrificationWaterFactor|CERESUreaHydrolysisModel|CERESMineralisationWaterFactor|CERESMineralisationTemperatureFactor|CERESNitrificationModel|StringComparisonFunction|AccumulateByDate|AccumulateByNumericPhase|TrackerFunction|ArrayFunction|WangEngelTempFunction|BoundFunction|LinearAfterThresholdFunction|SoilWaterScale|MovingAverageFunction|HoldFunction|DeltaFunction|MovingSumFunction|QualitativePPEffect|AccumulateFunction|AddFunction|AgeCalculatorFunction|AirTemperatureFunction|BellCurveFunction|Constant|DivideFunction|ExponentialFunction|ExpressionFunction|ExternalVariable|LessThanFunction|LinearInterpolationFunction|MaximumFunction|MinimumFunction|MultiplyFunction|OnEventFunction|PhaseBasedSwitch|PhaseLookup|PhaseLookupValue|PhotoperiodDeltaFunction|PhotoperiodFunction|PowerFunction|SigmoidFunction|SoilTemperatureDepthFunction|SoilTemperatureFunction|SoilTemperatureWeightedFunction|SplineInterpolationFunction|StageBasedInterpolation|SubtractFunction|VariableReference|WeightedTemperatureFunction|XYPairs|CanopyPhotosynthesis|RUECO2Function|RUEModel|StorageDMDemandFunction|StorageNDemandFunction|InternodeCohortDemandFunction|BerryFillingRateFunction|TEWaterDemandFunction|FillingRateFunction|AllometricDemandFunction|InternodeDemandFunction|PartitionFractionDemandFunction|PopulationBasedDemandFunction|PotentialSizeDemandFunction|RelativeGrowthRateDemandFunction))", @"[Link(Type = LinkType.Child, ByName = true, $1)]$2");
+
+                // [Link] IFunction -> [Link(ByName = true)] IFunction
+                manager.ReplaceRegex(@"\[Link\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass|CNReductionForCover|CNReductionForTillage|RunoffModel|WaterTableModel|HeightFunction|DecumulateFunction|EndOfDayFunction|LiveOnEventFunction|AccumulateAtEvent|DailyMeanVPD|CERESDenitrificationWaterFactor|CERESDenitrificationTemperatureFactor|CERESMineralisationFOMCNRFactor|DayCentN2OFractionModel|CERESNitrificationpHFactor|CERESNitrificationWaterFactor|CERESUreaHydrolysisModel|CERESMineralisationWaterFactor|CERESMineralisationTemperatureFactor|CERESNitrificationModel|StringComparisonFunction|AccumulateByDate|AccumulateByNumericPhase|TrackerFunction|ArrayFunction|WangEngelTempFunction|BoundFunction|LinearAfterThresholdFunction|SoilWaterScale|MovingAverageFunction|HoldFunction|DeltaFunction|MovingSumFunction|QualitativePPEffect|AccumulateFunction|AddFunction|AgeCalculatorFunction|AirTemperatureFunction|BellCurveFunction|Constant|DivideFunction|ExponentialFunction|ExpressionFunction|ExternalVariable|LessThanFunction|LinearInterpolationFunction|MaximumFunction|MinimumFunction|MultiplyFunction|OnEventFunction|PhaseBasedSwitch|PhaseLookup|PhaseLookupValue|PhotoperiodDeltaFunction|PhotoperiodFunction|PowerFunction|SigmoidFunction|SoilTemperatureDepthFunction|SoilTemperatureFunction|SoilTemperatureWeightedFunction|SplineInterpolationFunction|StageBasedInterpolation|SubtractFunction|VariableReference|WeightedTemperatureFunction|XYPairs|CanopyPhotosynthesis|RUECO2Function|RUEModel|StorageDMDemandFunction|StorageNDemandFunction|InternodeCohortDemandFunction|BerryFillingRateFunction|TEWaterDemandFunction|FillingRateFunction|AllometricDemandFunction|InternodeDemandFunction|PartitionFractionDemandFunction|PopulationBasedDemandFunction|PotentialSizeDemandFunction|RelativeGrowthRateDemandFunction))", @"[Link(Type = LinkType.Child, ByName = true)]$1");
+
+                // Here I assume that all [LinkByPath] links will have a path argument supplied.
+                // [LinkByPath(...)] -> [Link(Type = LinkType.Path, ...)]
+                manager.ReplaceRegex(@"\[LinkByPath\(([^\)]+)\)", @"[Link(Type = LinkType.Path, $1)");
+
+                // [ParentLink(...)] -> [Link(Type = LinkType.Ancestor, ...)]
+                manager.ReplaceRegex(@"\[ParentLink\(([^\)]+)\)", @"[Link(Type = LinkType.Ancestor, $1)");
+
+                // [ParentLink] -> [Link(Type = LinkType.Ancestor, ByName = false)]
+                manager.Replace("[ParentLink]", "[Link(Type = LinkType.Ancestor)]", caseSensitive: true);
+
+                // [ScopedLinkByName(...)] -> [Link(ByName = true, ...)]
+                manager.ReplaceRegex(@"\[ScopedLinkByName\(([^\)]+)\)", @"[Link(ByName = true, $1)");
+
+                // [ScopedLinkByName] -> [Link(ByName = true)]
+                manager.Replace("[ScopedLinkByName]", "[Link(ByName = true)]", caseSensitive: true);
+
+                // [ScopedLink(...)] -> [Link(...)]
+                manager.ReplaceRegex(@"\[ScopedLink\(([^\)]+)\)", @"[Link($1)");
+
+                // [ScopedLink] -> [Link]
+                manager.Replace("[ScopedLink]", "[Link]", caseSensitive: true);
+
+                // [ChildLinkByName(...)] -> [Link(Type = LinkType.Child, ByName = true, ...)]
+                manager.ReplaceRegex(@"\[ChildLinkByName\(([^\)]+)\)", @"[Link(Type = LinkType.Child, ByName = true, $1)");
+
+                // [ChildLinkByName] -> [Link(Type = LinkType.Child, ByName = true)]
+                manager.Replace("[ChildLinkByName]", "[Link(Type = LinkType.Child, ByName = true)]", caseSensitive: true);
+
+                // [ChildLink(...)] -> [Link(Type = LinkType.Child, ...)]
+                manager.ReplaceRegex(@"\[ChildLink\(([^\)]+)\)", @"[Link(Type = LinkType.Child, $1)");
+
+                // [ChildLink] -> [Link(Type = LinkType.Child)]
+                manager.Replace("[ChildLink]", "[Link(Type = LinkType.Child)]", caseSensitive: true);
+
+                manager.Save();
             }
         }
 
