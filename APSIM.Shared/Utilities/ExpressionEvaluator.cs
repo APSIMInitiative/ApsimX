@@ -1001,7 +1001,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 50);
+                        result.m_value = MathUtilities.Percentile(Values, 0.5);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1016,7 +1016,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 5);
+                        result.m_value = MathUtilities.Percentile(Values, 0.05);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1031,7 +1031,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 10);
+                        result.m_value = MathUtilities.Percentile(Values, 0.10);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1046,7 +1046,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 15);
+                        result.m_value = MathUtilities.Percentile(Values, 0.15);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1061,7 +1061,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 20);
+                        result.m_value = MathUtilities.Percentile(Values, 0.20);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1076,7 +1076,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 25);
+                        result.m_value = MathUtilities.Percentile(Values, 0.25);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1091,7 +1091,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 30);
+                        result.m_value = MathUtilities.Percentile(Values, 0.30);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1106,7 +1106,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 35);
+                        result.m_value = MathUtilities.Percentile(Values, 0.35);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1121,7 +1121,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 40);
+                        result.m_value = MathUtilities.Percentile(Values, 0.40);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1136,7 +1136,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 45);
+                        result.m_value = MathUtilities.Percentile(Values, 0.45);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1151,7 +1151,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 50);
+                        result.m_value = MathUtilities.Percentile(Values, 0.50);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1166,7 +1166,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 55);
+                        result.m_value = MathUtilities.Percentile(Values, 0.55);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1181,7 +1181,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 60);
+                        result.m_value = MathUtilities.Percentile(Values, 0.60);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1196,7 +1196,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 65);
+                        result.m_value = MathUtilities.Percentile(Values, 0.65);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1211,7 +1211,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 70);
+                        result.m_value = MathUtilities.Percentile(Values, 0.70);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1226,7 +1226,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 75);
+                        result.m_value = MathUtilities.Percentile(Values, 0.75);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1241,7 +1241,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 80);
+                        result.m_value = MathUtilities.Percentile(Values, 0.80);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1256,7 +1256,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 85);
+                        result.m_value = MathUtilities.Percentile(Values, 0.85);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1271,7 +1271,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 90);
+                        result.m_value = MathUtilities.Percentile(Values, 0.90);
                         result.m_name = name;
                         result.m_values = null;
                     }
@@ -1286,7 +1286,7 @@ namespace APSIM.Shared.Utilities
                     {
                         result.m_value = ((Symbol)args[0]).m_value;
                         double[] Values = ((Symbol)args[0]).m_values;
-                        result.m_value = MathUtilities.Percentile(Values, 95);
+                        result.m_value = MathUtilities.Percentile(Values, 0.95);
                         result.m_name = name;
                         result.m_values = null;
                     }
