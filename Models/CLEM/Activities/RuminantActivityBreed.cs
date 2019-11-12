@@ -330,8 +330,13 @@ namespace Models.CLEM.Activities
                             if (conceptionRate > 0 && ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                             {
                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
-                                // report conception status changed when last multiple birth dies.
+                                // report conception status on conceiving.
                                 female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+                            }
+                            else
+                            {
+                                // report conception status on conceiving.
+                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, Clock.Today));
                             }
                         }
                     }
@@ -351,10 +356,20 @@ namespace Models.CLEM.Activities
                                 if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
-                                    // report conception status changed when last multiple birth dies.
+                                    // report conception status on conceiving.
                                     female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
                                 }
+                                else
+                                {
+                                    // report conception status on conceiving.
+                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, Clock.Today));
+                                }
                                 numberServiced++;
+                            }
+                            else
+                            {
+                                // report conception status on conceiving.
+                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotMated, female, Clock.Today));
                             }
                         }
                     }

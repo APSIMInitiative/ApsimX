@@ -66,49 +66,49 @@ namespace Models.PMF.Struct
         //private Phenology phenology = null;
 
         /// <summary>The thermal time</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction thermalTime = null;
 
         /// <summary>The main stem final node number</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction finalLeafNumber = null;
 
         /// <summary>Leaf initiation rate.</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction LeafInitiationRate = null;
 
         /// <summary>Number of seeds in leaf?</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction LeafNumSeed = null;
 
         /// <summary>Thermal time from floral init.</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction TTFi = null;
 
         /// <summary>FertileTillerNumber</summary>
         public double FinalLeafNo { get; set; }
 
         /// <summary>Number of leaves at emergence</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction LeafNumAtEmergence = null;
 
         //[Link]
         //private IFunction heightModel = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction verticalAdjustment = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction aTillerVert = null;
 
         /// <summary>The Initial Appearance rate for phyllocron</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction initialAppearanceRate = null;
         /// <summary>The Final Appearance rate for phyllocron</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction finalAppearanceRate = null;
         /// <summary>The Final Appearance rate for phyllocron</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction remainingLeavesForFinalAppearanceRate = null;
 
         [Link]

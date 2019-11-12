@@ -215,6 +215,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Pasture file name")]
+        [Models.Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage ="Pasture file name must be supplied.")]
         public string FileName { get; set; }
 

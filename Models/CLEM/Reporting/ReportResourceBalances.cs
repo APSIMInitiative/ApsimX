@@ -66,11 +66,8 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>
-            {
-                "Parent.Name as Zone"
-            };
-
+            
+            List<string> variableNames = new List<string>();
             if (VariableNames.Where(a => a.Contains("[Clock].Today")).Count() == 0)
             {
                 variableNames.Add("[Clock].Today as Date");
@@ -129,17 +126,18 @@ namespace Models.CLEM.Reporting
                                         }
                                     }
                                 }
-
-
                             }
                         }
                     }
                 }
             }
-            base.VariableNames = variableNames.ToArray();
+            VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
 
-            if (EventNames[0] == "")
+            if (EventNames.Length == 0 || EventNames[0] == "")
             {
                 events.Subscribe("[Clock].CLEMEndOfTimeStep", DoOutputEvent);
             }

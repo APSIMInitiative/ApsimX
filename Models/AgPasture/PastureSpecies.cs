@@ -1800,15 +1800,15 @@
         ////- Plant parts and state >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Holds info about state of leaves (DM and N).</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private PastureAboveGroundOrgan leaves = null;
 
         /// <summary>Holds info about state of sheath/stems (DM and N).</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private PastureAboveGroundOrgan stems = null;
 
         /// <summary>Holds info about state of stolons (DM and N).</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private PastureAboveGroundOrgan stolons = null;
 
         /// <summary>Holds the info about state of roots (DM and N). It is a list of root organs, one for each zone where roots are growing.</summary>
@@ -5238,7 +5238,7 @@
         /// <summary>Removes a given amount of DM (and N) from this plant.</summary>
         /// <param name="amountToRemove">The DM amount to remove (kg/ha)</param>
         /// <returns>The DM amount actually removed (kg/ha)</returns>
-        internal double RemoveDM(double amountToRemove)
+        public double RemoveDM(double amountToRemove)
         {
             // get existing DM and N amounts
             double preRemovalDMShoot = AboveGroundWt;

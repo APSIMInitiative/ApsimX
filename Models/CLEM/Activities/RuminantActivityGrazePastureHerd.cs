@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
             // This method will only fire if the user has added this activity to the UI
             // Otherwise all details will be provided from GrazeAll or GrazePaddock code [CLEMInitialiseActivity]
 
-            this.InitialiseHerd(true, true);
+            this.InitialiseHerd(true, false);
 
             // if no settings have been provided from parent set limiter to 1.0. i.e. no limitation
             if (GrazingCompetitionLimiter == 0)

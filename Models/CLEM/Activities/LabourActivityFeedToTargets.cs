@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs human feeding based upon the current labour filtering and a feeding style.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Labour/LabourFeedToTargets.htm")]
+    [HelpUri(@"Content/Features/Activities/Labour/LabourActivitiyFeedToTargets.htm")]
     public class LabourActivityFeedToTargets: CLEMActivityBase, IValidatableObject
     {
         private Labour people = null;
