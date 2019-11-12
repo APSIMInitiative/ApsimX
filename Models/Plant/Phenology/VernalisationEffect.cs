@@ -26,7 +26,7 @@ namespace Models.PMF.Phen
         protected IWeather MetData = null;
 
         /// <summary>The vernalisation sensitivity factor</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction VernSens = null;
 
         /// <summary>Amount of Vernal days accumulated</summary>

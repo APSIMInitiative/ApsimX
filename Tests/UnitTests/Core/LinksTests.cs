@@ -21,7 +21,7 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithIFunctions : Model
     {
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction model2 = null;
 
     }
@@ -40,7 +40,7 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithScopedLinkByName : Model
     {
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         public Zone zone2 = null;
 
     }
@@ -48,7 +48,7 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithScopedLink : Model
     {
-        [ScopedLink]
+        [Link]
         public Zone zone2 = null;
     }
 
@@ -56,34 +56,34 @@ namespace UnitTests.Core
     [Serializable]
     class ModelWithChildLink : Model
     {
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         public Zone zone2 = null;
     }
 
     [Serializable]
     class ModelWithChildLinkByName : Model
     {
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         public Zone zone2 = null;
     }
 
     [Serializable]
     class ModelWithParentLink : Model
     {
-        [ParentLink]
+        [Link(Type = LinkType.Ancestor)]
         public Zone zone = null;
 
-        [ParentLink]
+        [Link(Type = LinkType.Ancestor)]
         public Simulation sim = null;
     }
 
     [Serializable]
     class ModelWithLinkByPath : Model
     {
-        [LinkByPath(Path = "[zone2].irrig1")]
+        [Link(Type = LinkType.Path, Path = "[zone2].irrig1")]
         public IIrrigation irrigation1 = null;
 
-        [LinkByPath(Path = ".Simulations.Simulation.zone2.irrig2")]
+        [Link(Type = LinkType.Path, Path = ".Simulations.Simulation.zone2.irrig2")]
         public IIrrigation irrigation2 = null;
     }
 
@@ -175,7 +175,7 @@ namespace UnitTests.Core
             Assert.AreEqual(model.model2.Value(), 2);
         }
 
-        /// <summary>Ensure a [ScopedLinkByName] works.</summary>
+        /// <summary>Ensure a [Link(ByName = true)] works.</summary>
         [Test]
         public void EnsureScopedLinkByNameWorks()
         {
@@ -199,7 +199,7 @@ namespace UnitTests.Core
             Assert.AreEqual(model.zone2.Name, "zone2");
         }
 
-        /// <summary>Ensure a [ScopedLink] finds the closest match</summary>
+        /// <summary>Ensure a [Link] finds the closest match</summary>
         [Test]
         public void EnsureScopedLinkWorks()
         {
@@ -224,7 +224,7 @@ namespace UnitTests.Core
             Assert.AreEqual(model.zone2.Name, "zone1");
         }
 
-        /// <summary>Ensure a [ChildLink] finds works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Child)] finds works</summary>
         [Test]
         public void EnsureChildLinkWorks()
         {
@@ -261,7 +261,7 @@ namespace UnitTests.Core
             });
         }
 
-        /// <summary>Ensure a [ChildLinkByName] finds works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Child, ByName = true)] finds works</summary>
         [Test]
         public void EnsureChildLinkByNameWorks()
         {
@@ -291,7 +291,7 @@ namespace UnitTests.Core
             Assert.AreEqual(model.zone2.Name, "zone2");
         }
 
-        /// <summary>Ensure a [ParentLink] works</summary>
+        /// <summary>Ensure a [Link(Type = LinkType.Ancestor)] works</summary>
         [Test]
         public void EnsureParentLinkWorks()
         {
