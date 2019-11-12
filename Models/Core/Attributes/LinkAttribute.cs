@@ -57,22 +57,5 @@ namespace Models.Core
 
         /// <summary>Iff true, target model must have the same name as the field/property to which this link is applied. Defaults to false.</summary>
         public bool ByName { get; set; }
-
-        /// <summary>Is this link a scoped link</summary>
-        public virtual bool IsScoped(IVariable field)
-        {
-            if (typeof(IFunction).IsAssignableFrom(field.DataType) ||
-                typeof(Biomass).IsAssignableFrom(field.DataType) ||
-                field.DataType.Name == "Object")
-                return false;
-            else
-                return Type == LinkType.Scoped;
-        }
-
-        /// <summary>Should the fields name be used when matching?</summary>
-        public virtual bool UseNameToMatch(IVariable field)
-        {
-            return ByName;
-        }
     }
 }
