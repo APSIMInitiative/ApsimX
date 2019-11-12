@@ -1317,10 +1317,10 @@
                 // must be adjusted accordingly.
 
                 // [Link(...)] [Units] [...] Biomass -> [Link(ByName = true, ...)] [Units] [...] Biomass
-                manager.ReplaceRegex(@"\[Link\(([^\)]+)\)\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(ByName = true, $1)]$2");
+                manager.ReplaceRegex(@"\[Link\(([^\)]+)\)\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(Type = LinkType.Child, ByName = true, $1)]$2");
 
                 // [Link] IFunction -> [Link(ByName = true)] IFunction
-                manager.ReplaceRegex(@"\[Link\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(ByName = true)]$1");
+                manager.ReplaceRegex(@"\[Link\]((\s*\[[^\]]+\])*\s*(public|private|protected|internal|static|readonly| )*\s*(IFunction|Biomass))", @"[Link(Type = LinkType.Child, ByName = true)]$1");
 
                 // Here I assume that all [LinkByPath] links will have a path argument supplied.
                 // [LinkByPath(...)] -> [Link(Type = LinkType.Path, ...)]
