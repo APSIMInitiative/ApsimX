@@ -44,7 +44,7 @@
         private INutrient SoilNitrogen = null;
 
         /// <summary>Gets or sets the residue types.</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private ResidueTypes ResidueTypes = null;
 
         /// <summary>The surf om</summary>

@@ -16,16 +16,16 @@ namespace Models.Functions
     public class CERESNitrificationModel : Model, IFunction, ICustomDocumentation
     {
 
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         Solute NH4 = null;
 
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         CERESMineralisationTemperatureFactor CERESTF = null;
 
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         CERESNitrificationWaterFactor CERESWF = null;
 
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         CERESNitrificationpHFactor CERESpHF = null;
 
         /// <summary>Gets the value.</summary>
