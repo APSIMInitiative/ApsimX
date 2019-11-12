@@ -316,19 +316,19 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction AMaxIntercept = null;
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senLightTimeConst = null;
 
         /// <summary>Temperature threshold for leaf death.</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction frostKill = null;
 
         /// <summary>Delay factor for water senescence.</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senWaterTimeConst = null;
 
         /// <summary>supply:demand ratio for onset of water senescence.</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senThreshold = null;
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
