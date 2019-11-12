@@ -1,10 +1,10 @@
 I've added these constants but they're currently unused:
-- Grain.PotKernelWt
-- Grain.GNMaxCoeff
-- Grain.Pgrt0
-- Grain.Pgrt1
-- Grain.PgrBase
-- Grain.GNK
+- Grain.PotKernelWt			- done
+- Grain.GNMaxCoeff			- done
+- Grain.Pgrt0				- done
+- Grain.Pgrt1				- done
+- Grain.PgrBase				- done
+- Grain.GNK					- done
 
 - Leaf.aMaxA, bMaxB, cMaxC (largestLeafParams in old apsim)
 - Leaf.a0, a1, b0, b1 (bellCurveParams in old apsim)
