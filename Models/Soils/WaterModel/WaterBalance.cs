@@ -52,7 +52,7 @@
         private LateralFlowModel lateralFlowModel = null;
 
         /// <summary>Link to the runoff model.</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private RunoffModel runoffModel = null;
 
         /// <summary>Link to the saturated flow model.</summary>
@@ -68,7 +68,7 @@
         private EvaporationModel evaporationModel = null;
 
         /// <summary>Link to the water table model.</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private WaterTableModel waterTableModel = null;
 
         /// <summary>A link to a irrigation data.</summary>
@@ -82,7 +82,7 @@
         [Link]
         SoilNitrogen soilNitrogen = null;
 
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         ISolute NO3 =  null;
 
         [Link]
