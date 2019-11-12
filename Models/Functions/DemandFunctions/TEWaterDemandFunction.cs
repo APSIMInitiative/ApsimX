@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
@@ -13,16 +13,16 @@ namespace Models.Functions.DemandFunctions
     public class TEWaterDemandFunction : Model, IFunction
     {
         /// <summary>Average Daily Vapour Pressure Deficit as a proportion of daily Maximum.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         IFunction SVPFrac = null;
         /// <summary>The met data</summary>
         [Link]
         public IWeather MetData = null;
         /// <summary>The photosynthesis</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         IFunction Photosynthesis = null;
         /// <summary>Transpiration Efficiency Coefficient to relate TE to daily VPD</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         IFunction TranspirationEfficiencyCoefficient = null;
 
         /// <summary>Computes the vapour pressure deficit.</summary>

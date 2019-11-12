@@ -54,11 +54,11 @@ namespace Models.PMF
         public Soils.Soil Soil = null;
 
         /// <summary>The method used to arbitrate N allocations</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         protected IArbitrationMethod NArbitrator = null;
 
         /// <summary>The method used to arbitrate N allocations</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         protected IArbitrationMethod DMArbitrator = null;
 
         /// <summary>The kgha2gsm</summary>

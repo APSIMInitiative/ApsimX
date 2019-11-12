@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -15,7 +15,7 @@ namespace Models.Functions.DemandFunctions
     public class InternodeDemandFunction : Model, IFunction
     {
         /// <summary>The inter node wt</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         public IFunction InterNodeWt = null;
 
         /// <summary>The structure</summary>

@@ -17,7 +17,7 @@ namespace Models.Functions.DemandFunctions
     {
         /// <summary>The Storage Fraction</summary>
         [Description("StorageFraction")]
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         private IFunction storageFraction = null;
 
         private IArbitration parentOrgan = null;

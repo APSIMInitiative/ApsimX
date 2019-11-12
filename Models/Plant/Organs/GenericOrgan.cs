@@ -1,4 +1,4 @@
-﻿namespace Models.PMF.Organs
+namespace Models.PMF.Organs
 {
     using APSIM.Shared.Utilities;
     using Core;
@@ -30,105 +30,105 @@
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child)]
+        [ChildLink]
         private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The senescence rate function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("/d")]
         public IFunction SenescenceRate = null;
 
         /// <summary>The detachment rate function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("/d")]
         private IFunction detachmentRateFunction = null;
 
         /// <summary>The N retranslocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("/d")]
         public IFunction NRetranslocationFactor = null;
 
         /// <summary>The N reallocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("/d")]
         protected IFunction nReallocationFactor = null;
 
         // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
+        //[ChildLinkByName]
         //private IFunction nitrogenDemandSwitch = null;
 
         /// <summary>The DM retranslocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("/d")]
         public IFunction DMRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
 
         /// <summary>The DM demand function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>The N demand function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("g/m2")]
         private IFunction initialWtFunction = null;
 
         /// <summary>The initial N Concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [ChildLinkByName(IsOptional = true)]
         [Units("g/m2")]
         private IFunction initialNConcFunction = null;
 
         /// <summary>The maximum N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("g/g")]
         private IFunction maximumNConc = null;
 
         /// <summary>The minimum N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("g/g")]
         private IFunction minimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("g/g")]
         private IFunction criticalNConc = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
 
         /// <summary>Dry matter conversion efficiency</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("/d")]
         public IFunction DMConversionEfficiency = null;
 
         /// <summary>The cost for remobilisation</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         [Units("")]
         private IFunction remobilisationCost = null;
 
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         public IFunction CarbonConcentration = null;
 
         /// <summary>The photosynthesis</summary>
         /// [Units("g/m2")]
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(IsOptional = true)]
         IFunction Photosynthesis = null;
 
         /// <summary>The RetranslocationMethod</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [ChildLinkByName]
         public IRetranslocateMethod RetranslocateNitrogen = null;
 
         /// <summary>The live biomass state at start of the computation round</summary>

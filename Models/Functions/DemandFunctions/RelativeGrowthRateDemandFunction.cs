@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Models.Core;
 using Models.PMF.Phen;
 using Models.PMF;
@@ -20,11 +20,11 @@ namespace Models.Functions.DemandFunctions
         public string InitialStageName = "";
 
         /// <summary>The relative growth rate</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         IFunction RelativeGrowthRate = null;
 
         /// <summary>The organ number</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         IFunction OrganNumber = null;
 
         /// <summary>The phenology</summary>
@@ -32,7 +32,7 @@ namespace Models.Functions.DemandFunctions
         Phenology Phenology = null;
 
         /// <summary>The live</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         Biomass Live = null;
 
         /// <summary>The start wt</summary>

@@ -22,11 +22,11 @@ namespace Models.Functions
         public string StringValue { get; set; }
 
         /// <summary>The True Value</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         IFunction TrueValue = null;
 
         /// <summary>The False Value</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         IFunction FalseValue = null;
 
         [Link]

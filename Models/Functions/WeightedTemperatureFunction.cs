@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -17,7 +17,7 @@ namespace Models.Functions
         #region Class Data Members
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maximum temperature weighting</summary>

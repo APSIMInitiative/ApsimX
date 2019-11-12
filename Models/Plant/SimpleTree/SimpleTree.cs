@@ -95,11 +95,11 @@ namespace Models.PMF
         Soils.Soil Soil = null;
 
         /// <summary>NO3 solute.</summary>
-        [Link(ByName = true)]
+        [ScopedLinkByName]
         private ISolute NO3 = null;
 
         /// <summary>NH4 solute.</summary>
-        [Link(ByName = true)]
+        [ScopedLinkByName]
         private ISolute NH4 = null;
 
         /// <summary>

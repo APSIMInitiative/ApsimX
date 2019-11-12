@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -16,7 +16,7 @@ namespace Models.Functions
     public class SoilTemperatureFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The xy pairs</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link]
         private XYPairs XYPairs = null;               // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maxt_soil_surface</summary>
