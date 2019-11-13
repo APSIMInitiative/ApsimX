@@ -1154,7 +1154,7 @@ namespace Models
         {
             parmArray = new Parms[15];
             // Read in the whole parameter file as one big string
-            string allParmData = Properties.Resources.ResourceManager.GetString("GRangeLandUnits");
+            string allParmData = ReflectionUtilities.GetResourceAsString("Models.Resources.GRangeLandUnits.txt"); 
             // Split the string into lines
             string[] longParmStrings = allParmData.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             // Extract only the first part of each line
