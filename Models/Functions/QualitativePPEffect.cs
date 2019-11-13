@@ -14,7 +14,7 @@ namespace Models.Functions
     public class QualitativePPEffect : Model, IFunction
     {
         /// <summary>The photoperiod</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction Photoperiod = null;
 
         /// <summary>Gets or sets the Optimum Photoperiod</summary>
