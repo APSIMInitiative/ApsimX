@@ -39,6 +39,9 @@ namespace Models.LifeCycle
         private double StepMortality;
 
         [NonSerialized]
+        private double stepMigrants;
+
+        [NonSerialized]
         private List<ILifeStageProcess> ProcessList;
 
         /// <summary>
@@ -115,6 +118,14 @@ namespace Models.LifeCycle
         }
 
         /// <summary>
+        /// The number of organisms migrating to another lifestage for this timestep
+        /// </summary>
+        public double Migrants
+        {
+            get { return stepMigrants; }
+        }
+
+        /// <summary>
         /// Add the number of immigrants to this LifeStage
         /// </summary>
         /// <param name="number"></param>
@@ -151,6 +162,7 @@ namespace Models.LifeCycle
                 Cohort aCohort;
                 int count = CohortList.Count;
 
+                stepMigrants = 0;
                 StepMortality = 0;
                 // for each cohort in the lifestage
                 for (int i = 0; i < count; i++)
@@ -184,7 +196,8 @@ namespace Models.LifeCycle
                 newCohort.PhenoAge = 0;
                 newCohort.PhysiologicalAge = 0;
                 newCohort.Count = count;
-                srcCohort.Count = srcCohort.Count - count;
+                stepMigrants += count;
+                srcCohort.Count -= count;
             }
             else
             {
@@ -208,7 +221,7 @@ namespace Models.LifeCycle
                 int i = 0;
                 while (i < destStage.CohortList.Count)
                 {
-                    if (destStage.CohortList[i].PhenoAge == 0)
+                    if (destStage.CohortList[i].PhenoAge <= 0)
                     {
                         newCohort = destStage.CohortList[i];
                         i = destStage.CohortList.Count; // terminate loop

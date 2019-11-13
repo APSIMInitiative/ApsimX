@@ -68,7 +68,6 @@ namespace Models.LifeCycle
         /// </summary>
         public void Process(LifeStage host)
         {
-
         }
 
         /// <summary>
