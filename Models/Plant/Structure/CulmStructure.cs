@@ -111,7 +111,7 @@ namespace Models.PMF.Struct
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction remainingLeavesForFinalAppearanceRate = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction leafNoCorrection = null;
 
         private bool leavesInitialised;
