@@ -1,5 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Struct;
 using System;
@@ -40,16 +41,30 @@ namespace Models.PMF.Organs
         /// <summary>/// The aX0 for this Culm </summary>
         public double AX0 { get; set; }
 
-        /// <summary> The aMaxSlope for this Culm </summary>
-        public double AMaxSlope { get; set; }
-
-        /// <summary>The aMaxIntercept for this Culm</summary>
-        public double AMaxIntercept { get; set; }
-
         /// <summary>
         /// leaf_no_correction in old apsim.
         /// </summary>
         public double LeafNoCorrection { get; set; }
+
+        /// <summary>Encapsulates aMax (largest leaf size) calcaulations.</summary>
+        public IFunction LargestLeafSize { get; set; }
+
+        // at this point it seems like it would be simpler to give each culm a reference to
+        // the outside world (simulations tree) so it can find these values for itself, but
+        // for now let's keep this simple. Note the current method will also cause problems
+        // if these parameters become non-constant.
+
+        /// <summary>bellCurveParams[0]</summary>
+        public double A0 { get; set; }
+
+        /// <summary>bellCurveParams[1]</summary>
+        public double A1 { get; set; }
+
+        /// <summary>bellCurveParams[2]</summary>
+        public double B0 { get; set; }
+
+        /// <summary>bellCurveParams[3]</summary>
+        public double B1 { get; set; }
     }
 
     ///<summary>
@@ -182,11 +197,11 @@ namespace Models.PMF.Organs
                     }
                 }
             }
-            double a0 = -0.009, a1 = -0.2;
-            double b0 = 0.0006, b1 = -0.43;
+            //double a0 = -0.009, a1 = -0.2;
+            //double b0 = 0.0006, b1 = -0.43;
 
-            double a = a0 - Math.Exp(a1 * correctedFinalLeafNo); //breadth
-            double b = b0 - Math.Exp(b1 * correctedFinalLeafNo); //skewness
+            double a = culmParameters.A0 - Math.Exp(culmParameters.A1 * correctedFinalLeafNo); //breadth
+            double b = culmParameters.B0 - Math.Exp(culmParameters.B1 * correctedFinalLeafNo); //skewness
 
             //Relationship for calculating maximum individual leaf area from Total Leaf No
             //Source: Modelling genotypic and environmental control of leaf area dynamics in grain sorghum. II. Individual leaf level 
@@ -201,7 +216,7 @@ namespace Models.PMF.Organs
             //Calculation then changed to use the relationship as described in the Carberry paper in Table 2
             //The actual intercept and slope will be determined by the cultivar, and read from the config file (sorghum.xml)
             //aMaxS = 19.5; //not 100% sure what this number should be - tried a range and this provided the best fit forthe test data
-            double largestLeafSize = culmParameters.AMaxSlope * FinalLeafNumber + culmParameters.AMaxIntercept; //aMaxI is the intercept
+            double largestLeafSize = culmParameters.LargestLeafSize.Value();
 
             //a vertical adjustment is applied to each tiller - this was discussed in a meeting on 22/08/12 and derived 
             //from a set of graphs that I cant find that compared the curves of each tiller

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 67,
+  "Version": 69,
   "Name": "Simulations",
   "Children": [
     {
@@ -3697,7 +3697,17 @@
                   "FixedValue": 1.0,
                   "Units": "",
                   "Name": "RootFrontCalcSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Setting this to 0 will force sorghum to use the generic uptake *and* root growth routines",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -4021,10 +4031,6 @@
               "PhosphorusStress": 1.0,
               "FinalLeafNo": 0.0,
               "SowingDensity": 0.0,
-              "senLightTimeConst": 10.0,
-              "frostKill": 1.0,
-              "senThreshold": 0.25,
-              "senWaterTimeConst": 10.0,
               "LossFromExpansionStress": 0.0,
               "SenescedLai": 0.0,
               "DltRetranslocatedN": 0.0,
@@ -5754,6 +5760,60 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "LargestLeafSize",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Largest leaf size = aMaxS * FinalLeafNo + aMaxI",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "MultiplyFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].aMaxSlope",
+                          "Name": "aMaxS",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].FinalLeafNumber",
+                          "Name": "finalLeafNo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].aMaxIntercept",
+                      "Name": "aMaxI",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.687,
                   "Units": null,
@@ -5895,6 +5955,126 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "Upper",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 10.0,
+                  "Units": null,
+                  "Name": "SenLightTimeConst",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "FrostKill",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 10.0,
+                  "Units": null,
+                  "Name": "SenWaterTimeConst",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.25,
+                  "Units": null,
+                  "Name": "SenThreshold",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -0.009,
+                  "Units": null,
+                  "Name": "A0",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[0]",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -0.2,
+                  "Units": null,
+                  "Name": "A1",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[1]",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0006,
+                  "Units": null,
+                  "Name": "B0",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[2]",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": -0.43,
+                  "Units": null,
+                  "Name": "B1",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "bellCurveParams[3]",
+                      "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -8761,7 +8941,9 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
-                        ""
+                        "[Leaf].aX0.FixedValue = 0.786",
+                        "[Leaf].aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].aMaxIntercept.FixedValue = -321.13"
                       ],
                       "Name": "Buster",
                       "Children": [],
@@ -10236,7 +10418,7 @@
                   "Children": [
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n\t\t[Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "TotalSupply",
@@ -18058,7 +18240,7 @@
                   "Children": [
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n\t\t[Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "TotalSupply",
@@ -26746,7 +26928,7 @@
                   "Children": [
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n\t\t[Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "TotalSupply",
@@ -36759,7 +36941,7 @@
                   "Children": [
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n\t\t[Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "TotalSupply",
@@ -48649,7 +48831,7 @@
                   "Children": [
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n\t\t[Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Sorghum;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"TotalSupply\")]\r\n        public double TotalSupply { get; set; }\r\n   \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n            {\r\n            }\r\n\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sorghum.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Sorghum.Harvest();\r\n                Sorghum.EndCrop();\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "TotalSupply",

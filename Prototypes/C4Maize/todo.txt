@@ -6,9 +6,9 @@ I've added these constants but they're currently unused:
 - Grain.PgrBase				- done
 - Grain.GNK					- done
 
-- Leaf.aMaxA, bMaxB, cMaxC (largestLeafParams in old apsim)
-- Leaf.a0, a1, b0, b1 (bellCurveParams in old apsim)
-- Leaf.CO2TEModifier
+- Leaf.aMaxA, bMaxB, cMaxC (largestLeafParams in old apsim)		- done
+- Leaf.a0, a1, b0, b1 (bellCurveParams in old apsim) 			- done
+- Leaf.CO2TEModifier											- done
 
 - [Structure].MisAppearanceRate - need to refactor leaf appearance code to work with maize
 - [Structure].RemainingLeavesForFinalAppearanceRate2 (leaf_no_rate_change2 in old)

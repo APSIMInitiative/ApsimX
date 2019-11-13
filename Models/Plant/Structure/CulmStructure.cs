@@ -175,8 +175,11 @@ namespace Models.PMF.Struct
                         InitialAppearanceRate = initialAppearanceRate.Value(),
                         FinalAppearanceRate = finalAppearanceRate.Value(),
                         RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
-                        AMaxIntercept = leaf.AMaxIntercept.Value(),
-                        AMaxSlope = leaf.AMaxSlope.Value(),
+                        LargestLeafSize = leaf.LargestLeafSize,
+                        A0 = leaf.A0.Value(),
+                        A1 = leaf.A1.Value(),
+                        B0 = leaf.B0.Value(),
+                        B1 = leaf.B1.Value(),
                         AX0 = leaf.AX0.Value(),
                         LeafNoCorrection = leafNoCorrection.Value()
                     });
@@ -340,8 +343,11 @@ namespace Models.PMF.Struct
                     InitialAppearanceRate = initialAppearanceRate.Value(),
                     FinalAppearanceRate = finalAppearanceRate.Value(),
                     RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
-                    AMaxIntercept = leaf.AMaxIntercept.Value(),
-                    AMaxSlope = leaf.AMaxSlope.Value(),
+                    LargestLeafSize = leaf.LargestLeafSize,
+                    A0 = leaf.A0.Value(),
+                    A1 = leaf.A1.Value(),
+                    B0 = leaf.B0.Value(),
+                    B1 = leaf.B1.Value(),
                     AX0 = leaf.AX0.Value(),
                     LeafNoCorrection = leafNoCorrection.Value()
                 });
