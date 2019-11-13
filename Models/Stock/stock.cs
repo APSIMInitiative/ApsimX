@@ -4726,19 +4726,19 @@ namespace Models.GrazPlan
 
             this.stockModel.ReturnExcretion(paddID, out this.excretionInfo);
 
-            if (this.excretionInfo.dDefaecations > 0)
+            if (this.excretionInfo.Defaecations > 0)
             {
-                faecesValue.Defaecations = this.excretionInfo.dDefaecations;
-                faecesValue.VolumePerDefaecation = this.excretionInfo.dDefaecationVolume;
-                faecesValue.AreaPerDefaecation = this.excretionInfo.dDefaecationArea;
-                faecesValue.Eccentricity = this.excretionInfo.dDefaecationEccentricity;
+                faecesValue.Defaecations = this.excretionInfo.Defaecations;
+                faecesValue.VolumePerDefaecation = this.excretionInfo.DefaecationVolume;
+                faecesValue.AreaPerDefaecation = this.excretionInfo.DefaecationArea;
+                faecesValue.Eccentricity = this.excretionInfo.DefaecationEccentricity;
                 faecesValue.OMWeight = this.excretionInfo.OrgFaeces.DM;
                 faecesValue.OMN = this.excretionInfo.OrgFaeces.Nu[n];
                 faecesValue.OMP = this.excretionInfo.OrgFaeces.Nu[p];
                 faecesValue.OMS = this.excretionInfo.OrgFaeces.Nu[s];
                 faecesValue.OMAshAlk = this.excretionInfo.OrgFaeces.AshAlk;
-                faecesValue.NO3N = this.excretionInfo.InOrgFaeces.Nu[n] * this.excretionInfo.dFaecalNO3Propn;
-                faecesValue.NH4N = this.excretionInfo.InOrgFaeces.Nu[n] * (1.0 - this.excretionInfo.dFaecalNO3Propn);
+                faecesValue.NO3N = this.excretionInfo.InOrgFaeces.Nu[n] * this.excretionInfo.FaecalNO3Propn;
+                faecesValue.NH4N = this.excretionInfo.InOrgFaeces.Nu[n] * (1.0 - this.excretionInfo.FaecalNO3Propn);
                 faecesValue.POXP = this.excretionInfo.InOrgFaeces.Nu[p];
                 faecesValue.SO4S = this.excretionInfo.InOrgFaeces.Nu[s];
                 result = true;
@@ -4760,11 +4760,11 @@ namespace Models.GrazPlan
             bool result = false;
 
             this.stockModel.ReturnExcretion(paddID, out this.excretionInfo);
-            if (this.excretionInfo.dUrinations > 0)
+            if (this.excretionInfo.Urinations > 0)
             {
-                urineValue.Urinations = this.excretionInfo.dUrinations;
-                urineValue.VolumePerUrination = this.excretionInfo.dUrinationVolume;
-                urineValue.AreaPerUrination = this.excretionInfo.dUrinationArea;
+                urineValue.Urinations = this.excretionInfo.Urinations;
+                urineValue.VolumePerUrination = this.excretionInfo.UrinationVolume;
+                urineValue.AreaPerUrination = this.excretionInfo.UrinationArea;
                 urineValue.Eccentricity = this.excretionInfo.dUrinationEccentricity;
                 urineValue.Urea = this.excretionInfo.Urine.Nu[n];
                 urineValue.POX = this.excretionInfo.Urine.Nu[p];

@@ -1927,52 +1927,52 @@ namespace Models.GrazPlan
         /// <param name="srcExcretion">The excretion data</param>
         private void AddExcretions(ref ExcretionInfo destExcretion, ExcretionInfo srcExcretion)
         {
-            if (srcExcretion.dDefaecations > 0.0)
+            if (srcExcretion.Defaecations > 0.0)
             {
-                destExcretion.dDefaecationVolume = this.WeightedMean(
-                                                                    destExcretion.dDefaecationVolume, 
-                                                                    srcExcretion.dDefaecationVolume,
-                                                                    destExcretion.dDefaecations, 
-                                                                    srcExcretion.dDefaecations);
-                destExcretion.dDefaecationArea = this.WeightedMean( 
-                                                                    destExcretion.dDefaecationArea, 
-                                                                    srcExcretion.dDefaecationArea,
-                                                                    destExcretion.dDefaecations, 
-                                                                    srcExcretion.dDefaecations);
-                destExcretion.dDefaecationEccentricity = this.WeightedMean(
-                                                                            destExcretion.dDefaecationEccentricity, 
-                                                                            srcExcretion.dDefaecationEccentricity,
-                                                                            destExcretion.dDefaecations, 
-                                                                            srcExcretion.dDefaecations);
-                destExcretion.dFaecalNO3Propn = this.WeightedMean(
-                                                                    destExcretion.dFaecalNO3Propn, 
-                                                                    srcExcretion.dFaecalNO3Propn,
+                destExcretion.DefaecationVolume = this.WeightedMean(
+                                                                    destExcretion.DefaecationVolume, 
+                                                                    srcExcretion.DefaecationVolume,
+                                                                    destExcretion.Defaecations, 
+                                                                    srcExcretion.Defaecations);
+                destExcretion.DefaecationArea = this.WeightedMean( 
+                                                                    destExcretion.DefaecationArea, 
+                                                                    srcExcretion.DefaecationArea,
+                                                                    destExcretion.Defaecations, 
+                                                                    srcExcretion.Defaecations);
+                destExcretion.DefaecationEccentricity = this.WeightedMean(
+                                                                            destExcretion.DefaecationEccentricity, 
+                                                                            srcExcretion.DefaecationEccentricity,
+                                                                            destExcretion.Defaecations, 
+                                                                            srcExcretion.Defaecations);
+                destExcretion.FaecalNO3Propn = this.WeightedMean(
+                                                                    destExcretion.FaecalNO3Propn, 
+                                                                    srcExcretion.FaecalNO3Propn,
                                                                     destExcretion.InOrgFaeces.Nu[(int)GrazType.TOMElement.n], 
                                                                     srcExcretion.InOrgFaeces.Nu[(int)GrazType.TOMElement.n]);
-                destExcretion.dDefaecations = destExcretion.dDefaecations + srcExcretion.dDefaecations;
+                destExcretion.Defaecations = destExcretion.Defaecations + srcExcretion.Defaecations;
 
                 destExcretion.OrgFaeces = this.AddDMPool(destExcretion.OrgFaeces, srcExcretion.OrgFaeces);
                 destExcretion.InOrgFaeces = this.AddDMPool(destExcretion.InOrgFaeces, srcExcretion.InOrgFaeces);
             }
 
-            if (srcExcretion.dUrinations > 0.0)
+            if (srcExcretion.Urinations > 0.0)
             {
-                destExcretion.dUrinationVolume = this.WeightedMean(
-                                                                    destExcretion.dUrinationVolume, 
-                                                                    srcExcretion.dUrinationVolume,
-                                                                    destExcretion.dUrinations, 
-                                                                    srcExcretion.dUrinations);
-                destExcretion.dUrinationArea = this.WeightedMean(
-                                                                    destExcretion.dUrinationArea, 
-                                                                    srcExcretion.dUrinationArea,
-                                                                    destExcretion.dUrinations, 
-                                                                    srcExcretion.dUrinations);
+                destExcretion.UrinationVolume = this.WeightedMean(
+                                                                    destExcretion.UrinationVolume, 
+                                                                    srcExcretion.UrinationVolume,
+                                                                    destExcretion.Urinations, 
+                                                                    srcExcretion.Urinations);
+                destExcretion.UrinationArea = this.WeightedMean(
+                                                                    destExcretion.UrinationArea, 
+                                                                    srcExcretion.UrinationArea,
+                                                                    destExcretion.Urinations, 
+                                                                    srcExcretion.Urinations);
                 destExcretion.dUrinationEccentricity = this.WeightedMean(
                                                                             destExcretion.dUrinationEccentricity, 
                                                                             srcExcretion.dUrinationEccentricity,
-                                                                            destExcretion.dUrinations, 
-                                                                            srcExcretion.dUrinations);
-                destExcretion.dUrinations = destExcretion.dUrinations + srcExcretion.dUrinations;
+                                                                            destExcretion.Urinations, 
+                                                                            srcExcretion.Urinations);
+                destExcretion.Urinations = destExcretion.Urinations + srcExcretion.Urinations;
 
                 destExcretion.Urine = this.AddDMPool(destExcretion.Urine, srcExcretion.Urine);
             }
