@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 296,
-  "Version": 67,
+  "Version": 68,
   "Name": "Simulations",
   "Children": [
     {
@@ -70,6 +70,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "Field",
           "Children": [
             {
@@ -250,7 +252,7 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "ResidueLayers": [],
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 500.0,
@@ -1226,7 +1228,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Maximum Temperatures with Varying Aggregation",
           "Children": [
             {
@@ -1382,7 +1386,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Minimum Temperatures with Varying Aggregation",
           "Children": [
             {
@@ -1581,6 +1587,8 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "Field",
                   "Children": [
                     {
@@ -1839,7 +1847,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "ResidueLayers": [],
+                      "Canopies": [],
                       "InitialResidueName": "Sward",
                       "InitialResidueType": "grass",
                       "InitialResidueMass": 1000.0,
@@ -2053,7 +2061,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "SwardSoil",
+                              "Name": "AGPRyegrassSoil",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -2091,45 +2099,7 @@
                               "LLMetadata": null,
                               "KLMetadata": null,
                               "XFMetadata": null,
-                              "Name": "RyegrassSoil",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilCrop, Models",
-                              "LL": [
-                                0.15,
-                                0.14,
-                                0.06,
-                                0.02,
-                                0.01,
-                                0.01,
-                                0.01
-                              ],
-                              "KL": [
-                                0.1,
-                                0.1,
-                                0.08,
-                                0.04,
-                                0.01,
-                                0.0,
-                                0.0
-                              ],
-                              "XF": [
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                0.0,
-                                0.0
-                              ],
-                              "LLMetadata": null,
-                              "KLMetadata": null,
-                              "XFMetadata": null,
-                              "Name": "WhiteCloverSoil",
+                              "Name": "AGPWhiteCloverSoil",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -2481,7 +2451,7 @@
                       "FractionLeafDMFactor": 2000.0,
                       "FractionLeafExponent": 3.0,
                       "FractionToStolon": 0.0,
-                      "SpecificLeafArea": 25.0,
+                      "SpecificLeafArea": 20.0,
                       "SpecificRootLength": 100.0,
                       "StolonEffectOnLAI": 0.0,
                       "ShootMaxEffectOnLAI": 1000.0,
@@ -2510,18 +2480,18 @@
                       "NDillutionCoefficient": 0.25,
                       "GlfGeneric": 1.0,
                       "GlfSoilFertility": 1.0,
-                      "PlantHeightMinimum": 25.0,
-                      "PlantHeightMaximum": 600.0,
+                      "PlantHeightMinimum": 300.0,
+                      "PlantHeightMaximum": 300.0,
                       "PlantHeightMassForMax": 10000.0,
                       "PlantHeightExponent": 2.8,
                       "RootDepthMinimum": 50.0,
-                      "RootDepthMaximum": 750.0,
+                      "RootDepthMaximum": 1000.0,
                       "RootElongationRate": 25.0,
-                      "RootDistributionDepthParam": 90.0,
+                      "RootDistributionDepthParam": 250.0,
                       "RootDistributionExponent": 3.2,
                       "DigestibilitiesCellWall": [
-                        0.6,
-                        0.6,
+                        0.9,
+                        0.7,
                         0.6,
                         0.2
                       ],
@@ -2531,132 +2501,8 @@
                       "PreferenceForLeafOverStems": 1.0,
                       "WaterAvailableMethod": 0,
                       "NitrogenAvailableMethod": 0,
-                      "Name": "Ryegrass",
-                      "Children": [
-                        {
-                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                          "Name": "Leaves",
-                          "Children": [
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort1",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort2",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort3",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "Dead",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                          "Name": "Stems",
-                          "Children": [
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort1",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort2",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort3",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "Dead",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                          "Name": "Stolons",
-                          "Children": [
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort1",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort2",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort3",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "Dead",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "ResourceName": "AGPRyegrass",
+                      "Name": "AGPRyegrass",
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -2685,7 +2531,7 @@
                       "UseColdStressFactor": 0,
                       "ColdOnsetTemperature": 2.0,
                       "ColdFullTemperature": -5.0,
-                      "ColdRecoverySumDD": 30.0,
+                      "ColdRecoverySumDD": 20.0,
                       "ColdRecoveryTReference": 0.0,
                       "MaintenanceRespirationCoefficient": 0.04,
                       "GrowthRespirationCoefficient": 0.25,
@@ -2726,7 +2572,7 @@
                       "FractionLeafDMFactor": 2000.0,
                       "FractionLeafExponent": 3.0,
                       "FractionToStolon": 0.2,
-                      "SpecificLeafArea": 30.0,
+                      "SpecificLeafArea": 32.0,
                       "SpecificRootLength": 45.0,
                       "StolonEffectOnLAI": 0.3,
                       "ShootMaxEffectOnLAI": 500.0,
@@ -2755,8 +2601,8 @@
                       "NDillutionCoefficient": 1.0,
                       "GlfGeneric": 1.0,
                       "GlfSoilFertility": 1.0,
-                      "PlantHeightMinimum": 25.0,
-                      "PlantHeightMaximum": 350.0,
+                      "PlantHeightMinimum": 300.0,
+                      "PlantHeightMaximum": 300.0,
                       "PlantHeightMassForMax": 7500.0,
                       "PlantHeightExponent": 2.5,
                       "RootDepthMinimum": 30.0,
@@ -2765,9 +2611,9 @@
                       "RootDistributionDepthParam": 70.0,
                       "RootDistributionExponent": 2.5,
                       "DigestibilitiesCellWall": [
-                        0.6,
-                        0.6,
-                        0.6,
+                        0.9,
+                        0.8,
+                        0.7,
                         0.2
                       ],
                       "MinimumGreenWt": 50.0,
@@ -2776,132 +2622,8 @@
                       "PreferenceForLeafOverStems": 1.0,
                       "WaterAvailableMethod": 0,
                       "NitrogenAvailableMethod": 0,
-                      "Name": "WhiteClover",
-                      "Children": [
-                        {
-                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                          "Name": "Leaves",
-                          "Children": [
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort1",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort2",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort3",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "Dead",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                          "Name": "Stems",
-                          "Children": [
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort1",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort2",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort3",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "Dead",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-                          "Name": "Stolons",
-                          "Children": [
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort1",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort2",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "LeafCohort3",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.AgPasture.GenericTissue, Models",
-                              "Name": "Dead",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "ResourceName": "AGPWhiteClover",
+                      "Name": "AGPWhiteClover",
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -2910,7 +2632,7 @@
                       "$type": "Models.Report.Report, Models",
                       "VariableNames": [
                         "[Clock].Today as Date",
-                        "Sum of ([Ryegrass].NetGrowthWt + [WhiteClover].NetGrowthWt) from [AnnualReporting].DayAfterLastOutput to [Clock].Today as SumYearlyNetGrowth",
+                        "Sum of ([AGPRyegrass].NetGrowthWt + [AGPWhiteClover].NetGrowthWt) from [AnnualReporting].DayAfterLastOutput to [Clock].Today as SumYearlyNetGrowth",
                         "Sum([Soil].SoilNitrogen.TotalC)/1000 as SoilCarbonToday_tonnesPerHa",
                         "Diff of Sum([Soil].SoilNitrogen.TotalC) from [Clock].StartOfSimulation to [Clock].Today as ChangeInSoilCarbon  // this is a duplicate of that below as an example - this is more generic and will be valid if the start date is changed",
                         "Diff of Sum([Soil].SoilNitrogen.TotalC) from 01-jul-1980 to [Clock].Today as ChangeInSoilCarbon1               // the simulation starts on 1-7-80 so this gives the same output as above",
@@ -2929,7 +2651,7 @@
                       "$type": "Models.Report.Report, Models",
                       "VariableNames": [
                         "[Clock].Today as Date",
-                        "Sum of ([Ryegrass].NetGrowthWt + [WhiteClover].NetGrowthWt) from 1-Jul to [Clock].Today as CumulativeAnnualNetGrowth",
+                        "Sum of ([AGPRyegrass].NetGrowthWt + [AGPWhiteClover].NetGrowthWt) from 1-Jul to [Clock].Today as CumulativeAnnualNetGrowth",
                         "Mean of [Soil].SoilWater.Drainage from [MonthlyReporting].DayAfterLastOutput to [Clock].Today as MeanDrainage_mmPerDay",
                         "Sum of [Soil].SoilWater.LeachNO3 from [MonthlyReporting].DayAfterLastOutput to [Clock].Today as SumLeaching_kgPerHa",
                         "Sum of [Soil].SoilWater.LeachNO3 from 1-Jan to [Clock].Today as CumulativeAnnualLeaching"
@@ -3013,7 +2735,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Annual Accumulation of Pasture Growth Reported in June",
                   "Children": [
                     {
@@ -3139,7 +2863,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Change In Soil Carbon",
                   "Children": [
                     {
@@ -3284,7 +3010,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Daily and Monthly Leaching",
                   "Children": [
                     {
@@ -3453,6 +3181,8 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "Field",
                   "Children": [
                     {
@@ -3603,7 +3333,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "ResidueLayers": [],
+                      "Canopies": [],
                       "InitialResidueName": "wheat_stubble",
                       "InitialResidueType": "wheat",
                       "InitialResidueMass": 500.0,
@@ -4393,7 +4123,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Rainfall during Crop and All Year",
                   "Children": [
                     {
@@ -4508,7 +4240,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Soil water stroage",
                   "Children": [
                     {
@@ -4683,7 +4417,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Final and Harvested Yield",
                   "Children": [
                     {

@@ -119,17 +119,15 @@
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            var namespaceWords = tree.SelectedNode.Split(".".ToCharArray()).ToList();
-            var modelName = namespaceWords.Last();
+            Type modelType = typeof(IModel).Assembly.GetType(tree.SelectedNode);
 
-            var selectedModelType = this.allowableChildModels.FirstOrDefault(m => m.ModelName == modelName);
-            if (selectedModelType != null)
+            if (modelType != null)
             {
                 this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 try
                 {
-                    IModel child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
-                    child.Name = modelName;
+                    IModel child = (IModel)Activator.CreateInstance(modelType, true);
+                    child.Name = modelType.Name;
                     explorerPresenter.Add(child, Apsim.FullPath(this.model));
                 }
                 finally

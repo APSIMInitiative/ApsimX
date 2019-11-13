@@ -132,7 +132,6 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgPasture\AgPasture.Sward.cs" />
     <Compile Include="AgPasture\PastureSpecies.cs" />
     <Compile Include="AgPasture\PastureAboveGroundOrgan.cs" />
     <Compile Include="AgPasture\PastureBelowGroundOrgan.cs" />
