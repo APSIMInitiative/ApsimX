@@ -129,7 +129,8 @@ namespace Models.CLEM.Activities
                                     if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                                     {
                                         // calculate conception
-                                        double conceptionRate = ConceptionRate(female) * maleLimiter;
+                                        Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
+                                        double conceptionRate = ConceptionRate(female, out status) * maleLimiter;
                                         if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                         {
                                             female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
@@ -151,7 +152,8 @@ namespace Models.CLEM.Activities
                                     if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                                     {
                                         // calculate conception
-                                        double conceptionRate = ConceptionRate(female);
+                                        Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
+                                        double conceptionRate = ConceptionRate(female, out status);
                                         if (numberServiced <= numberPossible) // labour/finance limited number
                                         {
                                             if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
@@ -268,7 +270,6 @@ namespace Models.CLEM.Activities
                 int month = Clock.Today.Month;
                 foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
                 {
-
                     if (female.BirthDue)
                     {
                         female.WeightLossDueToCalf = 0;
@@ -311,69 +312,127 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                // uncontrolled conception
+                // restructure of conception between controlled and uncontrolled mating to combine neatly and remove duplicated code 11/11/2019
+                numberPossible = -1;
                 if (!UseAI)
                 {
-                    // check if males and females of breeding condition are together
+                    numberPossible = 0;
+                    // uncontrolled conception
                     if (location.GroupBy(a => a.Gender).Count() == 2)
                     {
-                        // servicing rate
                         int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
                         int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
-                        double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
-                        double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
-
-                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
-                        {
-                            // calculate conception
-                            double conceptionRate = ConceptionRate(female) * maleLimiter;
-                            if (conceptionRate > 0 && ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
-                            {
-                                female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
-                                // report conception status on conceiving.
-                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
-                            }
-                            else
-                            {
-                                // report conception status on conceiving.
-                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, Clock.Today));
-                            }
-                        }
+                        numberPossible = Convert.ToInt32(Math.Ceiling(maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30));
                     }
                 }
-                // controlled conception
                 else
                 {
-                    if (this.TimingOK)
+                    // controlled mating (AI)
+                    if(this.TimingOK)
                     {
                         numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
-                        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
-                        {
-                            // calculate conception
-                            double conceptionRate = ConceptionRate(female);
-                            if (numberServiced <= numberPossible & conceptionRate > 0) // labour/finance limited number
-                            {
-                                if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
-                                {
-                                    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
-                                    // report conception status on conceiving.
-                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
-                                }
-                                else
-                                {
-                                    // report conception status on conceiving.
-                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, Clock.Today));
-                                }
-                                numberServiced++;
-                            }
-                            else
-                            {
-                                // report conception status on conceiving.
-                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotMated, female, Clock.Today));
-                            }
-                        }
                     }
                 }
+
+                numberServiced = 1;
+                foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
+                {
+                    Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
+                    if (numberServiced <= numberPossible)
+                    {
+                        // calculate conception
+                        double conceptionRate = ConceptionRate(female, out status);
+                        if (conceptionRate > 0)
+                        {
+                            if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                            {
+                                female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
+                                status = Reporting.ConceptionStatus.Conceived;
+                            }
+                        }
+                        numberServiced++;
+                    }
+
+                    // report change in breeding status
+                    // do not report for -1 (controlled mating outside timing)
+                    if (numberPossible >= 0 && status != Reporting.ConceptionStatus.NotAvailable)
+                    {
+                        female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(status, female, Clock.Today));
+                    }
+                }
+
+                //// uncontrolled conception
+                //if (!UseAI)
+                //{
+                //    // check if males and females of breeding condition are together
+                //    if (location.GroupBy(a => a.Gender).Count() == 2)
+                //    {
+                //        // servicing rate
+                //        int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
+                //        int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
+                //        double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
+                //        double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
+
+                //        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
+                //        {
+                //            // calculate conception
+                //            double conceptionRate = ConceptionRate(female);
+                //            double conceptionRateLimited = ConceptionRate(female) * maleLimiter;
+                //            if (conceptionRate > 0 && ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRateLimited)
+                //            {
+                //                female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRateLimited, 0);
+                //                // report conception status on conceiving.
+                //                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+                //            }
+                //            else
+                //            {
+                //                // report conception status on conceiving.
+                //                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, Clock.Today));
+                //            }
+                //        }
+                //    }
+                //}
+                //// controlled conception
+                //else
+                //{
+                //    if (this.TimingOK)
+                //    {
+                //        numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
+                //        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
+                //        {
+                //            // calculate conception
+                //            double conceptionRate = ConceptionRate(female);
+                //            if (numberServiced <= numberPossible & conceptionRate > 0) // labour/finance limited number
+                //            {
+                //                if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
+                //                {
+                //                    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
+                //                    // report conception status on conceiving.
+                //                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+                //                }
+                //                else
+                //                {
+                //                    // report conception status on conceiving.
+                //                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, Clock.Today));
+                //                }
+                //                numberServiced++;
+                //            }
+                //            else
+                //            {
+                //                if (conceptionRate == 0)
+                //                {
+                //                    // report conception status not ready to mate.
+                //                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotReady, female, Clock.Today));
+                //                }
+                //                else
+                //                {
+                //                    // report conception status no mating occurred.
+                //                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotMated, female, Clock.Today));
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
             }
         }
 
@@ -381,12 +440,15 @@ namespace Models.CLEM.Activities
         /// Calculate conception rate for a female
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
+        /// <param name="status">Returns conception status</param>
         /// <returns></returns>
-        private double ConceptionRate(RuminantFemale female)
+        private double ConceptionRate(RuminantFemale female, out Reporting.ConceptionStatus status)
         {
             bool isConceptionReady = false;
+            status = Reporting.ConceptionStatus.NotAvailable;
             if (!female.IsPregnant)
             {
+                status = Reporting.ConceptionStatus.NotReady;
                 if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
                 {
                     isConceptionReady = true;
@@ -413,8 +475,10 @@ namespace Models.CLEM.Activities
             // if first mating and of age or sufficient time since last birth
             if(isConceptionReady)
             {
+                status = Reporting.ConceptionStatus.Unsuccessful;
+
                 // Get conception rate from conception model associated with the Ruminant Type parameters
-                if(female.BreedParams.ConceptionModel == null)
+                if (female.BreedParams.ConceptionModel == null)
                 {
                     throw new ApsimXException(this, String.Format("No conception details were found for [r={0}]\nPlease add a conception component below the [r=RuminantType]", female.BreedParams.Name));
                 }
