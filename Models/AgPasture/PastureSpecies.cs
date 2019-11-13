@@ -1050,7 +1050,7 @@
 
         /// <summary>Minimum plant height (mm).</summary>
         [Units("mm")]
-        public double PlantHeightMinimum = 25.0;
+        public double PlantHeightMinimum { get; set; } = 25.0;
 
         
 
