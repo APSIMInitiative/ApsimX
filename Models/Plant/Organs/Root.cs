@@ -937,10 +937,6 @@
         /// <summary>Gets the RootFront</summary>
         public double RootAngle { get; set; } = 45;
 
-        /// <summary>Gets the RootFront</summary>
-        public double SWAvailabilityRatio { get; set; }
-
-
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction RootDepthStressFactor = null;

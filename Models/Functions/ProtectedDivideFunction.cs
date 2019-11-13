@@ -20,6 +20,7 @@ namespace Models.Functions
     /// </remarks>
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [Serializable]
     public class ProtectedDivideFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>Value to return if numerator is 0.</summary>
@@ -30,29 +31,26 @@ namespace Models.Functions
         [Description("Value to return if denominator is 0:")]
         public double DenominatorErrVal { get; set; }
 
-        /// <summary>Numerator function.</summary>
-        [Link(Type = LinkType.Child)]
-        private IFunction numerator = null;
-
-        /// <summary>Denominator function.</summary>
-        [Link(Type = LinkType.Child)]
-        private IFunction denominator = null;
-
         /// <summary>
         /// Returns the value of the function.
         /// </summary>
         public double Value(int arrayIndex = -1)
         {
-            double x = numerator.Value(arrayIndex);
-            double y = denominator.Value(arrayIndex);
+            IFunction[] children = Apsim.Children(this, typeof(IFunction)).Cast<IFunction>().ToArray();
+            int n = children?.Length ?? 0;
+            if (n < 2)
+                throw new Exception($"Error in ProtectedDivideFunction {Name}: 2 child functions required, only found {n}");
 
-            if (MathUtilities.FloatsAreEqual(x, 0))
+            double numerator = children[0].Value(arrayIndex);
+            double denominator = children[1].Value(arrayIndex);
+
+            if (MathUtilities.FloatsAreEqual(numerator, 0))
                 return NumeratorErrVal;
 
-            if (MathUtilities.FloatsAreEqual(y, 0))
+            if (MathUtilities.FloatsAreEqual(denominator, 0))
                 return DenominatorErrVal;
 
-            return x / y;
+            return numerator / denominator;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
