@@ -77,6 +77,13 @@ namespace Models.PMF.Organs
     {
         private const double smm2sm = 0.000001;
         private CulmParameters culmParameters { get; set; }
+
+        private IFunction noRateChange1;
+        private IFunction noRateChange2;
+        private IFunction appearanceRate1;
+        private IFunction appearanceRate2;
+        private IFunction appearanceRate3;
+
         /// <summary> The proportion of a whole tiller</summary>
         public double Proportion { get; set; }
 
@@ -118,6 +125,35 @@ namespace Models.PMF.Organs
         {
             culmParameters = parameters;
             Proportion = culmParameters.InitialProportion;
+
+            // fixme - temp hack to get things running.
+            // Should replace these (and LargestLeafSize) with links in long run.
+            IModel reference = culmParameters.LargestLeafSize as IModel;
+
+            string path = "[Structure].RemainingLeavesForFinalAppearanceRate";
+            noRateChange1 = Apsim.Get(reference, path) as IFunction;
+            if (noRateChange1 == null)
+                throw new Exception($"Unable to find {path}");
+
+            path = "[Structure].RemainingLeavesForFinalAppearanceRate2";
+            noRateChange2 = Apsim.Get(reference, path) as IFunction;
+            if (noRateChange2 == null)
+                throw new Exception($"Unable to find {path}");
+
+            path = "[Structure].InitialAppearanceRate";
+            appearanceRate1 = Apsim.Get(reference, path) as IFunction;
+            if (appearanceRate1 == null)
+                throw new Exception($"Unable to find {path}");
+
+            path = "[Structure].MidAppearanceRate";
+            appearanceRate2 = Apsim.Get(reference, path) as IFunction;
+            if (appearanceRate2 == null)
+                throw new Exception($"Unable to find {path}");
+
+            path = "[Structure].FinalAppearanceRate";
+            appearanceRate3 = Apsim.Get(reference, path) as IFunction;
+            if (appearanceRate3 == null)
+                throw new Exception($"Unable to find {path}");
         }
 
         /// <summary>
@@ -136,9 +172,13 @@ namespace Models.PMF.Organs
             // Peter's 2 stage version used here, modified to apply to last few leaves before flag
             // i.e. c_leaf_no_rate_change is leaf number from the top down (e.g. 4)
 
-            double leafAppRate = culmParameters.InitialAppearanceRate;
-            if (MathUtilities.IsLessThanOrEqual(remainingLeaves, culmParameters.RemainingLeavesForFinalAppearanceRate))
-                leafAppRate = culmParameters.FinalAppearanceRate;
+            double leafAppRate;
+            if (MathUtilities.IsLessThanOrEqual(remainingLeaves, noRateChange2.Value()))
+                leafAppRate = appearanceRate3.Value();
+            else if (MathUtilities.IsLessThanOrEqual(remainingLeaves, noRateChange1.Value()))
+                leafAppRate = appearanceRate2.Value();
+            else
+                leafAppRate = appearanceRate1.Value();
 
             // If leaves are still growing, the cumulative number of phyllochrons or fully expanded
             // leaves is calculated from thermal time for the day.

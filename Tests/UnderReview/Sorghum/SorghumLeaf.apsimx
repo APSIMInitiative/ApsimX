@@ -1556,9 +1556,29 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 3.5,
+                  "Units": null,
+                  "Name": "RemainingLeavesForFinalAppearanceRate2",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 41.0,
                   "Units": null,
                   "Name": "InitialAppearanceRate",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 20.0,
+                  "Units": null,
+                  "Name": "MidAppearanceRate",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,

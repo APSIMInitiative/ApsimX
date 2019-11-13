@@ -1,17 +1,17 @@
 I've added these constants but they're currently unused:
-- Grain.PotKernelWt			- done
-- Grain.GNMaxCoeff			- done
-- Grain.Pgrt0				- done
-- Grain.Pgrt1				- done
-- Grain.PgrBase				- done
-- Grain.GNK					- done
+- Grain.PotKernelWt																				- done
+- Grain.GNMaxCoeff																				- done
+- Grain.Pgrt0																					- done
+- Grain.Pgrt1																					- done
+- Grain.PgrBase																					- done
+- Grain.GNK																						- done
 
-- Leaf.aMaxA, bMaxB, cMaxC (largestLeafParams in old apsim)		- done
-- Leaf.a0, a1, b0, b1 (bellCurveParams in old apsim) 			- done
-- Leaf.CO2TEModifier											- done
+- Leaf.aMaxA, bMaxB, cMaxC (largestLeafParams in old apsim)										- done
+- Leaf.a0, a1, b0, b1 (bellCurveParams in old apsim) 											- done
+- Leaf.CO2TEModifier																			- done
 
-- [Structure].MisAppearanceRate - need to refactor leaf appearance code to work with maize
-- [Structure].RemainingLeavesForFinalAppearanceRate2 (leaf_no_rate_change2 in old)
+- [Structure].MisAppearanceRate - need to refactor leaf appearance code to work with maize		- done
+- [Structure].RemainingLeavesForFinalAppearanceRate2 (leaf_no_rate_change2 in old)				- done
 
 - [Root].SWAfps
 
