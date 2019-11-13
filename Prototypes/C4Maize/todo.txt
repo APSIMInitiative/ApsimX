@@ -13,7 +13,7 @@ I've added these constants but they're currently unused:
 - [Structure].MisAppearanceRate - need to refactor leaf appearance code to work with maize		- done
 - [Structure].RemainingLeavesForFinalAppearanceRate2 (leaf_no_rate_change2 in old)				- done
 
-- [Root].SWAfps
+- [Root].SWAfps																					- done
 
 Need to double check that these aren't used:
 

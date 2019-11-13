@@ -254,6 +254,7 @@
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
+    <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
     <Compile Include="Graph\IGraphPanelScript.cs" />

@@ -224,7 +224,7 @@ namespace Models.PMF.Organs
                 root.SWAvailabilityRatio = MathUtilities.Divide(extractable, capacity, 10);
                 if (MathUtilities.FloatsAreEqual(extractable, 0))
                     root.SWAvailabilityRatio = 0; // :(
-                rootDepthWaterStress = root.RootDepthStressFactor.Value();
+                rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
             }
 
             double MaxDepth;
