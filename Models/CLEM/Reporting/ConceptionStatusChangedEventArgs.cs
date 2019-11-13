@@ -41,8 +41,22 @@ namespace Models.CLEM.Reporting
             Female = female;
 
             // Calculate conception date
-            ConceptionDate = dateTime.AddMonths(-1*Convert.ToInt32(female.Age - female.AgeAtLastConception));
-            ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
+            switch (Status)
+            {
+                case ConceptionStatus.Conceived:
+                case ConceptionStatus.Failed:
+                case ConceptionStatus.Birth:
+                case ConceptionStatus.Weaned:
+                    ConceptionDate = dateTime.AddMonths(-1 * Convert.ToInt32(female.Age - female.AgeAtLastConception));
+                    ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
+                    break;
+                case ConceptionStatus.Unsuccessful:
+                case ConceptionStatus.NotMated:
+                    ConceptionDate = dateTime;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

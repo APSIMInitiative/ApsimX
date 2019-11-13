@@ -41,6 +41,10 @@ namespace UserInterface.Presenters
             dataStorePresenter = new DataStorePresenter();
             activityGridPresenter = new ActivityLedgerGridPresenter();
             Simulation simulation = Apsim.Parent(report, typeof(Simulation)) as Simulation;
+            Zone paddock = Apsim.Parent(report, typeof(Zone)) as Zone;
+
+            if (paddock != null)
+                dataStorePresenter.ZoneFilter = paddock;
             if (simulation != null)
             {
                 if (simulation.Parent is Experiment)

@@ -65,3 +65,8 @@ style "msw-combobox-thickness" = "msw-default"
 
 widget_class "*TreeView*ComboBox*" style "msw-combobox-thickness"
 widget_class "*ComboBox*GtkFrame*" style "msw-combobox-thickness"
+
+style "selected_tab_style" {
+	bg[NORMAL]			= "#FFFFFF" # Selected tab colour
+}
+widget "*.GtkNotebook.selected-tab" style "selected_tab_style"

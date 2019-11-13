@@ -89,7 +89,7 @@ namespace UserInterface.Views
             vbox1.ReorderChild(hbox1, 2);
 
             fileName = new EditView(this);
-            fileName.Changed += OnFileNameChanged;
+            fileName.Leave += OnFileNameChanged;
             chooseFile = new Button("...");
             chooseFile.Clicked += OnChooseFile;
             HBox fileNameContainer = new HBox();
@@ -116,7 +116,7 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            fileName.Changed -= OnFileNameChanged;
+            fileName.Leave -= OnFileNameChanged;
             gridView.Dispose();
             gridView = null;
             dropDownView1.MainWidget.Destroy();

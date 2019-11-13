@@ -114,7 +114,7 @@ namespace Models.Report
         /// Sanitises the event names and removes duplicates/comments.
         /// </summary>
         /// <returns></returns>
-        private string[] TidyUpEventNames()
+        protected string[] TidyUpEventNames()
         {
             List<string> eventNames = new List<string>();
             for (int i = 0; i < EventNames?.Length; i++)
@@ -136,7 +136,7 @@ namespace Models.Report
         /// <summary>
         /// Sanitises the variable names and removes duplicates/comments.
         /// </summary>
-        private string[] TidyUpVariableNames()
+        protected string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
             IModel zone = Apsim.Parent(this, typeof(Zone));

@@ -25,8 +25,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unit type
         /// </summary>
+        [XmlIgnore]
         [Description("Units (nominal)")]
-        public string Units { get; set; }
+        public string Units { get { return "kg"; } }
 
         /// <summary>
         /// Starting amount
@@ -154,11 +155,12 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span>";
-            html += "</div>";
-            // the following line seems unneeded but may be part of wrapping divs
-            //            html += "</div>";
+            if (StartingAmount > 0)
+            {
+                html += "<div class=\"activityentry\">";
+                html += "There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span>";
+                html += "</div>";
+            }
             return html;
         }
 

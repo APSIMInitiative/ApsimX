@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 296,
-  "Version": 67,
+  "Version": 68,
   "Name": "Simulations",
   "Children": [
     {
@@ -61,6 +61,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "Field",
           "Children": [
             {
@@ -259,6 +261,7 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "grass",
               "InitialResidueType": "grass",
               "InitialResidueMass": 500.0,
@@ -509,6 +512,7 @@
                     0.2
                   ],
                   "KLAT": null,
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -640,7 +644,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Inert",
                         "Location": "656, 254",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -648,7 +652,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "SurfaceResidue",
                         "Location": "566, 69",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -656,7 +660,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMLignin",
                         "Location": "261, 69",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -664,7 +668,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCellulose",
                         "Location": "397, 70",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -672,7 +676,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCarbohydrate",
                         "Location": "123, 70",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -680,7 +684,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Microbial",
                         "Location": "218, 299",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -688,7 +692,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Humic",
                         "Location": "458, 293",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -696,7 +700,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Urea",
                         "Location": "529, 419",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -704,7 +708,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NO3",
                         "Location": "185, 435",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -712,7 +716,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NH4",
                         "Location": "357, 422",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -728,7 +732,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNO3",
                         "Location": "688, 415",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -736,7 +740,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNH4",
                         "Location": "691, 421",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       }
@@ -956,7 +960,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Biomass",
           "Children": [
             {
@@ -1082,7 +1088,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "PlantParts",
           "Children": [
             {
@@ -1279,7 +1287,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Harvests",
           "Children": [
             {
@@ -1375,7 +1385,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Water",
           "Children": [
             {

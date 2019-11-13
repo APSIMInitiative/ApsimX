@@ -478,5 +478,62 @@
             Assert.AreEqual(DataTableUtilities.GetColumnAsDoubles(data, "MockModel.Z(3)"),
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
         }
+
+        /// <summary>
+        /// This one reproduces bug #2038, where reporting an enum
+        /// coerces the enum value to an int rather than a string.
+        /// https://github.com/APSIMInitiative/ApsimX/issues/2038
+        /// </summary>
+        [Test]
+        public void TestEnumReporting()
+        {
+            Simulations sims = Utilities.GetRunnableSim();
+
+            IModel paddock = Apsim.Find(sims, typeof(Zone));
+            Manager script = new Manager();
+            script.Name = "Manager";
+            script.Code = @"using System;
+using Models.Core;
+using Models.PMF;
+
+namespace Models
+{
+	[Serializable]
+	public class Script : Model
+	{
+		public enum TestEnum
+		{
+			Red,
+			Green,
+			Blue
+		};
+
+		public TestEnum Value { get; set; }
+    }
+}";
+
+            paddock.Children.Add(script);
+            script.Parent = paddock;
+            script.OnCreated();
+
+            Report report = Apsim.Find(sims, typeof(Report)) as Report;
+            report.VariableNames = new string[]
+            {
+                "[Manager].Script.Value as x"
+            };
+            Runner runner = new Runner(sims);
+            List<Exception> errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw new Exception("Errors while running sims", errors[0]);
+
+            List<string> fieldNames = new List<string>() { "x" };
+            IDataStore storage = Apsim.Find(sims, typeof(IDataStore)) as IDataStore;
+            DataTable data = storage.Reader.GetData("Report", fieldNames: fieldNames);
+            string[] actual = DataTableUtilities.GetColumnAsStrings(data, "x");
+
+            // The enum values should have been cast to strings before being reported.
+            string[] expected = Enumerable.Repeat("Red", actual.Length).ToArray();
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

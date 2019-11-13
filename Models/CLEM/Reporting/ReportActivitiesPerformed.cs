@@ -64,10 +64,9 @@ namespace Models.CLEM.Reporting
         private void OnCommencing(object sender, EventArgs e)
         {
             dataToWriteToDb = null;
-            // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>
+
+            VariableNames = new string[]
             {
-                "Parent.Name as Zone",
                 "[Clock].Today as Date",
                 "[Activities].LastActivityPerformed.Name as Name",
                 "[Activities].LastActivityPerformed.Status as Status",
@@ -76,7 +75,9 @@ namespace Models.CLEM.Reporting
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
 
-            base.VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
 
             // Subscribe to events.

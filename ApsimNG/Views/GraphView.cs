@@ -700,6 +700,10 @@ namespace UserInterface.Views
                 series.MedianThickness = thickness;
             }
 
+            // Colour
+            if (colour.ToArgb() == Color.Empty.ToArgb())
+                colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+
             OxyColor oxyColour = Utility.Colour.ToOxy(colour);
             series.Fill = oxyColour;
             series.Stroke = oxyColour;
@@ -723,6 +727,7 @@ namespace UserInterface.Views
 
         private List<BoxPlotItem> GetBoxPlotItems(double[] data)
         {
+            data = data.Where(d => !double.IsNaN(d)).ToArray();
             double[] fiveNumberSummary = data.FiveNumberSummary();
             double min = fiveNumberSummary[0];
             double lowerQuartile = fiveNumberSummary[1];
@@ -928,14 +933,17 @@ namespace UserInterface.Views
         /// Format the legend.
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
-        public void FormatLegend(Models.Graph.Graph.LegendPositionType legendPositionType)
+        /// <param name="orientation">Orientation of items in the legend.</param>
+        public void FormatLegend(Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation)
         {
             LegendPosition oxyLegendPosition;
-            if (Enum.TryParse<LegendPosition>(legendPositionType.ToString(), out oxyLegendPosition))
+            if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
             {
                 this.plot1.Model.LegendFont = Font;
                 this.plot1.Model.LegendFontSize = FontSize;
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
+                if (Enum.TryParse(orientation.ToString(), out LegendOrientation legendOrientation))
+                    plot1.Model.LegendOrientation = legendOrientation;
             }
 
             this.plot1.Model.LegendSymbolLength = 30;

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -22,7 +22,7 @@ namespace Models.Functions
     {
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The x property</summary>
