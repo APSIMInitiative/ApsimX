@@ -535,17 +535,17 @@
         /// <summary>Gets or sets the leaf photosynthetic efficiency (mg CO2/J).</summary>
         [XmlIgnore]
         [Units("mg CO2/J")]
-        public double PhotosyntheticEfficiency = 0.01;
+        public double PhotosyntheticEfficiency { get; set; } = 0.01;
 
         /// <summary>Gets or sets the photosynthesis curvature parameter (J/kg/s).</summary>
         [XmlIgnore]
         [Units("J/kg/s")]
-        public double PhotosynthesisCurveFactor = 0.8;
+        public double PhotosynthesisCurveFactor { get; set; } = 0.8;
 
         /// <summary>Gets or sets the fraction of radiation that is photosynthetically active (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double FractionPAR = 0.5;
+        public double FractionPAR { get; set; } = 0.5;
 
         /// <summary>Light extinction coefficient (0-1).</summary>
         [Units("0-1")]
@@ -556,27 +556,27 @@
         /// <summary>Reference CO2 concentration for photosynthesis (ppm).</summary>
         [XmlIgnore]
         [Units("ppm")]
-        public double ReferenceCO2 = 380.0;
+        public double ReferenceCO2 { get; set; } = 380.0;
 
         /// <summary>Scaling parameter for the CO2 effect on photosynthesis (ppm).</summary>
         [XmlIgnore]
         [Units("ppm")]
-        public double CO2EffectScaleFactor = 700.0;
+        public double CO2EffectScaleFactor { get; set; } = 700.0;
 
         /// <summary>Scaling parameter for the CO2 effects on N requirements (ppm).</summary>
         [XmlIgnore]
         [Units("ppm")]
-        public double CO2EffectOffsetFactor = 600.0;
+        public double CO2EffectOffsetFactor { get; set; } = 600.0;
 
         /// <summary>Minimum value for the CO2 effect on N requirements (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double CO2EffectMinimum = 0.7;
+        public double CO2EffectMinimum { get; set; } = 0.7;
 
         /// <summary>Exponent controlling the CO2 effect on N requirements (>0.0).</summary>
         [XmlIgnore]
         [Units("-")]
-        public double CO2EffectExponent = 2.0;
+        public double CO2EffectExponent { get; set; } = 2.0;
 
         /// <summary>Minimum temperature for growth (oC).</summary>
         [Units("oC")]
@@ -586,7 +586,7 @@
 
         /// <summary>Optimum temperature for growth (oC).</summary>
         [Units("oC")]
-        public double myGrowthToptimum = 20.0;
+        public double GrowthToptimum { get; set; } = 20.0;
 
 
 
@@ -942,18 +942,18 @@
         /// <summary>Coefficient controlling detachment rate as function of moisture (>0.0).</summary>
         [XmlIgnore]
         [Units("-")]
-        public double DetachmentDroughtCoefficient = 3.0;
+        public double DetachmentDroughtCoefficient { get; set; } = 3.0;
 
         /// <summary>Minimum effect of drought on detachment rate (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double DetachmentDroughtEffectMin = 0.1;
+        public double DetachmentDroughtEffectMin { get; set; } = 0.1;
 
 
         /// <summary>Factor increasing tissue turnover rate due to stock trampling (>0.0).</summary>
         [XmlIgnore]
         [Units("-")]
-        public double TurnoverStockFactor = 0.01;
+        public double TurnoverStockFactor { get; set; } = 0.01;
 
         /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
         [Units("-")]
@@ -964,7 +964,7 @@
         /// <summary>Minimum significant daily effect of defoliation on tissue turnover rate (0-1).</summary>
         [XmlIgnore]
         [Units("/day")]
-        public double TurnoverDefoliationEffectMin = 0.025;
+        public double TurnoverDefoliationEffectMin { get; set; } = 0.025;
 
         /// <summary>Effect of defoliation on root turnover rate relative to stolon (0-1).</summary>
         [Units("0-1")]
@@ -1105,7 +1105,7 @@
         
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
-        public double myRootBottomDistributionFactor { get; set; } = 1.05;
+        public double RootBottomDistributionFactor { get; set; } = 1.05;
 
         ////- Digestibility and feed quality >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1137,12 +1137,12 @@
         /// <summary>Leaf proportion in the minimum green Wt (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double MinimumGreenLeafProp = 0.8;
+        public double MinimumGreenLeafProp { get; set; } = 0.8;
 
         /// <summary>Minimum root amount relative to minimum green Wt (>0.0).</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double MinimumGreenRootProp = 0.5;
+        public double MinimumGreenRootProp { get; set; } = 0.5;
 
         /// <summary>Proportion of stolon DM standing, available for removal (0-1).</summary>
         [Units("0-1")]
@@ -1186,51 +1186,51 @@
         /// <remarks>This is used to limit the amount taken up and avoid issues with very small numbers</remarks>
         [XmlIgnore]
         [Units("0-1")]
-        public double MaximumFractionAvailable = 0.999;
+        public double MaximumFractionAvailable { get; set; } = 0.999;
 
         /// <summary>Reference value for root length density for Water and N availability.</summary>
         [XmlIgnore]
         [Units("mm/mm^3")]
-        public double ReferenceRLD = 5.0;
+        public double ReferenceRLD { get; set; } = 5.0;
 
         /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
         [XmlIgnore]
         [Units("-")]
-        public double ExponentSoilMoisture = 1.50;
+        public double ExponentSoilMoisture { get; set; } = 1.50;
 
         /// <summary>Reference value of Ksat for water availability function.</summary>
         [XmlIgnore]
         [Units("mm/day")]
-        public double ReferenceKSuptake = 15.0;
+        public double ReferenceKSuptake { get; set; } = 15.0;
 
         /// <summary>Exponent of function determining soil extractable N.</summary>
         [XmlIgnore]
         [Units("-")]
-        public double NuptakeSWFactor = 0.25;
+        public double NuptakeSWFactor { get; set; } = 0.25;
 
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
         [Units("kg/ha")]
-        public double MaximumNUptake = 10.0;
+        public double MaximumNUptake { get; set; } = 10.0;
 
         /// <summary>Ammonium uptake coefficient.</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double KNH4 = 1.0;
+        public double KNH4 { get; set; } = 1.0;
 
         /// <summary>Nitrate uptake coefficient.</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double KNO3 = 1.0;
+        public double KNO3 { get; set; } = 1.0;
 
         /// <summary>Availability factor for NH4.</summary>
         [XmlIgnore]
         [Units("-")]
-        public double kuNH4 = 0.50;
+        public double kuNH4 { get; set; } = 0.50;
 
         /// <summary>Availability factor for NO3.</summary>
         [XmlIgnore]
         [Units("-")]
-        public double kuNO3 = 0.95;
+        public double kuNO3 { get; set; } = 0.95;
 
         ////- Parameters for annual species >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -3162,7 +3162,7 @@
                                         NThresholdsForRoots[0], NThresholdsForRoots[1], NThresholdsForRoots[2],
                                         MinimumGreenWt * MinimumGreenRootProp, FractionNLuxuryRemobilisable[0],
                                         SpecificRootLength, RootDepthMaximum,
-                                        RootDistributionDepthParam, RootDistributionExponent, myRootBottomDistributionFactor,
+                                        RootDistributionDepthParam, RootDistributionExponent, RootBottomDistributionFactor,
                                         WaterAvailableMethod, NitrogenAvailableMethod,
                                         KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
                                         ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
@@ -3185,7 +3185,7 @@
                                          NThresholdsForRoots[0], NThresholdsForRoots[1], NThresholdsForRoots[2],
                                          MinimumGreenWt * MinimumGreenRootProp, FractionNLuxuryRemobilisable[0],
                                          SpecificRootLength, RootDepthMaximum,
-                                         RootDistributionDepthParam, RootDistributionExponent, myRootBottomDistributionFactor,
+                                         RootDistributionDepthParam, RootDistributionExponent, RootBottomDistributionFactor,
                                          WaterAvailableMethod, NitrogenAvailableMethod,
                                          KNH4, KNO3, MaximumNUptake, kuNH4, kuNO3,
                                          ReferenceKSuptake, ReferenceRLD, ExponentSoilMoisture,
@@ -5182,13 +5182,13 @@
         private double TemperatureLimitingFactor(double temperature)
         {
             double result = 0.0;
-            double growthTmax = myGrowthToptimum + (myGrowthToptimum - GrowthTminimum) / GrowthTEffectExponent;
+            double growthTmax = GrowthToptimum + (GrowthToptimum - GrowthTminimum) / GrowthTEffectExponent;
             if (PhotosyntheticPathway == PhotosynthesisPathwayType.C3)
             {
                 if (temperature > GrowthTminimum && temperature < growthTmax)
                 {
                     double val1 = Math.Pow((temperature - GrowthTminimum), GrowthTEffectExponent) * (growthTmax - temperature);
-                    double val2 = Math.Pow((myGrowthToptimum - GrowthTminimum), GrowthTEffectExponent) * (growthTmax - myGrowthToptimum);
+                    double val2 = Math.Pow((GrowthToptimum - GrowthTminimum), GrowthTEffectExponent) * (growthTmax - GrowthToptimum);
                     result = val1 / val2;
                 }
             }
@@ -5196,11 +5196,11 @@
             {
                 if (temperature > GrowthTminimum)
                 {
-                    if (temperature > myGrowthToptimum)
-                        temperature = myGrowthToptimum;
+                    if (temperature > GrowthToptimum)
+                        temperature = GrowthToptimum;
 
                     double val1 = Math.Pow((temperature - GrowthTminimum), GrowthTEffectExponent) * (growthTmax - temperature);
-                    double val2 = Math.Pow((myGrowthToptimum - GrowthTminimum), GrowthTEffectExponent) * (growthTmax - myGrowthToptimum);
+                    double val2 = Math.Pow((GrowthToptimum - GrowthTminimum), GrowthTEffectExponent) * (growthTmax - GrowthToptimum);
                     result = val1 / val2;
                 }
             }
