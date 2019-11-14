@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
-    public class RuminantActivityFeed : CLEMRuminantActivityBase
+    public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
         Clock Clock = null;
@@ -67,6 +67,23 @@ namespace Models.CLEM.Activities
         public RuminantActivityFeed()
         {
             this.SetDefaults();
+        }
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (Apsim.Children(this, typeof(RuminantFeedGroup)).Count + Apsim.Children(this, typeof(RuminantFeedGroupMonthly)).Count == 0)
+            {
+                string[] memberNames = new string[] { "Feed ruminants activity" };
+                results.Add(new ValidationResult($"At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] filter group must be present under [a={this.Name}]", memberNames));
+            }
+            return results;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
