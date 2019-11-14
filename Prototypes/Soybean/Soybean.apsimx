@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 282,
   "Version": 67,
   "Name": "Simulations",
   "Children": [
@@ -508,7 +508,7 @@
                         },
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "SubtractFunction",
+                          "Name": "MidToLateGrainfilling",
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
@@ -927,7 +927,7 @@
                             1.5
                           ],
                           "Y": [
-                            1.0,
+                            0.0,
                             1.0,
                             1.0
                           ],
@@ -1313,25 +1313,51 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.08,
-                  "Units": null,
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Phenology].Stage",
                   "Name": "MaximumNConc",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        3.0,
+                        4.0,
+                        9.0
+                      ],
+                      "Y": [
+                        0.06,
+                        0.05,
+                        0.03
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.06,
-                  "Units": null,
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Phenology].Stage",
                   "Name": "CriticalNConc",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "",
-                      "Name": "Memo",
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        3.0,
+                        4.0,
+                        9.0
+                      ],
+                      "Y": [
+                        0.06,
+                        0.05,
+                        0.03
+                      ],
+                      "Name": "XYPairs",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1720,7 +1746,7 @@
                       ],
                       "Y": [
                         0.03,
-                        0.045
+                        0.03
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -1757,35 +1783,76 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Leaf].NodeNumber",
+                              "$type": "Models.Functions.PhaseLookup, Models",
                               "Name": "RelativeArea",
                               "Children": [
                                 {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "",
-                                  "Name": "Memo",
-                                  "Children": [],
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "Emergence",
+                                  "End": "StartPodDevelopment",
+                                  "Name": "BeforeEndPod",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "XProperty": "[Leaf].NodeNumber",
+                                      "Name": "RelativeArea",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Memo, Models",
+                                          "Text": "",
+                                          "Name": "Memo",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            2.0,
+                                            7.0,
+                                            10.0,
+                                            18.0
+                                          ],
+                                          "Y": [
+                                            0.6666,
+                                            1.0,
+                                            1.0,
+                                            0.83
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    2.0,
-                                    7.0,
-                                    10.0,
-                                    18.0
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "StartPodDevelopment",
+                                  "End": "EndCanopyDevelopment",
+                                  "Name": "AfterEndPod",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.4,
+                                      "Units": null,
+                                      "Name": "RelativeArea",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
                                   ],
-                                  "Y": [
-                                    0.6666,
-                                    1.0,
-                                    1.0,
-                                    0.83
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -6574,8 +6641,8 @@
           "$type": "Models.Map, Models",
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
-            "Latitude": 58.904645703020009,
-            "Longitude": 19.511718750000004
+            "Latitude": 58.81374171570782,
+            "Longitude": 19.687500000000004
           },
           "Zoom": 2.0,
           "Name": "Map",
@@ -32799,7 +32866,7 @@
                       "YAxis": 0,
                       "ColourArgb": -16777216,
                       "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": null,
+                      "FactorToVaryMarkers": "Cv",
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -43093,7 +43160,7 @@
                                   "XAxis": 3,
                                   "YAxis": 0,
                                   "ColourArgb": -16777216,
-                                  "FactorToVaryColours": null,
+                                  "FactorToVaryColours": "N",
                                   "FactorToVaryMarkers": null,
                                   "FactorToVaryLines": null,
                                   "Marker": 11,
@@ -47258,7 +47325,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "",
+                  "Text": "This dataset ([Muchow_etal_1993]) includes the cultvar \"Davis\" grown under irrigated conditions in a subtropical environment at the Gatton Research Station in southeastern Queensland, Australia.  Plants were sampled almost weekly for biomass partitioning, nitrogen and plant development.\n\n\n\n",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -47514,10 +47581,6 @@
                               "Code": "\r\n        using System;\r\n        using Models.Core;\r\n        using Models.PMF;\r\n        using APSIM.Shared.Utilities;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Soybean;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Soybean.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                               "Parameters": [
                                 {
-                                  "Key": "SowingDate",
-                                  "Value": "2001-06-10"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "200"
                                 },
@@ -47532,6 +47595,10 @@
                                 {
                                   "Key": "CultivarName",
                                   "Value": "Davis"
+                                },
+                                {
+                                  "Key": "SowingDate",
+                                  "Value": "06/10/2001 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -48985,7 +49052,18 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Predicted",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                                  "ColumnName": "Soybean.Phenology.CurrentStageName",
+                                  "SimulationName": null,
+                                  "Name": "EventNamesOnGraph",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -51924,7 +52002,7 @@
                                 },
                                 {
                                   "Key": "SowingDate",
-                                  "Value": "2001-06-10"
+                                  "Value": "06/10/2001 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -53506,6 +53584,15 @@
               "ShowPageOfGraphs": true,
               "Name": "Katherine",
               "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This dataset ([Muchow_etal_1993]) includes the cultvar \"Buchanan\" grown under a range of conditions in a tropical environment at the Katherin Research Station in the Northern Territory, Australia.  This includes two irrigated conditions in 1988 and two planting dates in 1989.\n\n\n\n",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
