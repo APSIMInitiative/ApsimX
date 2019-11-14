@@ -24,6 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    [Version(1, 0, 4, "Implemented conceptopn ststus reporting.")]
     [Version(1, 0, 3, "Removed the inter-parturition calculation and influence on uncontrolled mating\nIt is assumed that the individual based model will track conception timing based on the individual's body condition.")]
     [Version(1, 0, 2, "Added calculation for proportion offspring male parameter")]
     [Version(1, 0, 1, "")]
