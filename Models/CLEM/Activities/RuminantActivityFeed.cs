@@ -80,8 +80,8 @@ namespace Models.CLEM.Activities
 
             if (Apsim.Children(this, typeof(RuminantFeedGroup)).Count + Apsim.Children(this, typeof(RuminantFeedGroupMonthly)).Count == 0)
             {
-                string[] memberNames = new string[] { "Feed ruminants activity" };
-                results.Add(new ValidationResult($"At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] filter group must be present under [a={this.Name}]", memberNames));
+                string[] memberNames = new string[] { "Ruminant feed group" };
+                results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] filter group must be present", memberNames));
             }
             return results;
         }
