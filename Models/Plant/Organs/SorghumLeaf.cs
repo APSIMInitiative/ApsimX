@@ -351,6 +351,9 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senThreshold = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction nPhotoStress = null;
+
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassRUE { get; set; }
 
@@ -701,8 +704,8 @@ namespace Models.PMF.Organs
             
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
             CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAIDead), 0.0, 0.999999999);
-            var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
-            NitrogenPhotoStress = Math.Max(photoStress, 0.0);
+            //var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
+            NitrogenPhotoStress = nPhotoStress.Value(); // Math.Max(photoStress, 0.0);
 
             var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
             NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);

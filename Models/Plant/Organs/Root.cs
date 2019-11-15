@@ -913,17 +913,26 @@
                     proportion of the layer occupied by the roots. */
                 double top;
 
-                if (layer == 0) top = 0;
-                else
-                {
-                    top = MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
-                }
+                top = layer == 0 ? top = 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
 
-                if (top > zone.Depth) return 0.0;
+                if (top > zone.Depth)
+                    return 0;
+
                 double bottom = top + zone.soil.Thickness[layer];
 
-                double rootArea = calcRootArea(zone, top, bottom, zone.RightDist);    // Right side
-                rootArea += calcRootArea(zone, top, bottom, zone.LeftDist);          // Left Side
+                double rootArea;
+                IFunction calcType = Apsim.Child(this, "RootAreaCalcType") as IFunction;
+                if (calcType != null && MathUtilities.FloatsAreEqual(calcType.Value(), 1))
+                {
+                    rootArea = GetRootArea(top, bottom, zone.RootFront, zone.RightDist);
+                    rootArea += GetRootArea(top, bottom, zone.RootFront, zone.LeftDist);
+                }
+                else
+                {
+                    rootArea = calcRootArea(zone, top, bottom, zone.RightDist);    // Right side
+                    rootArea += calcRootArea(zone, top, bottom, zone.LeftDist);          // Left Side
+                }
+
                 double soilArea = (zone.RightDist + zone.LeftDist) * (bottom - top);
 
                 return Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
@@ -995,6 +1004,41 @@
 
             return Math.Min(depthInLayer * xDist, depthInLayer * hDist);
         }
+
+        double GetRootArea(double top, double bottom, double rootLength, double hDist)
+        {
+            // get the area occupied by roots in a semi-circular section between top and bottom
+            double SDepth, rootArea;
+
+            // intersection of roots and Section
+            if (rootLength <= hDist)
+                SDepth = 0.0;
+            else
+                SDepth = Math.Sqrt(Math.Pow(rootLength, 2) - Math.Pow(hDist, 2));
+
+            // Rectangle - SDepth past bottom of this area
+            if (SDepth >= bottom)
+                rootArea = (bottom - top) * hDist;
+            else               // roots Past top
+            {
+                double Theta = 2 * Math.Acos(MathUtilities.Divide(Math.Max(top, SDepth), rootLength, 0));
+                double topArea = (Math.Pow(rootLength, 2) / 2.0 * (Theta - Math.Sin(Theta))) / 2.0;
+
+                // bottom down
+                double bottomArea = 0;
+                if (rootLength > bottom)
+                {
+                    Theta = 2 * Math.Acos(bottom / rootLength);
+                    bottomArea = (Math.Pow(rootLength, 2) / 2.0 * (Theta - Math.Sin(Theta))) / 2.0;
+                }
+                // rectangle
+                if (SDepth > top)
+                    topArea = topArea + (SDepth - top) * hDist;
+                rootArea = topArea - bottomArea;
+            }
+            return rootArea;
+        }
+
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="amountToRemove">The fractions of biomass to remove</param>
