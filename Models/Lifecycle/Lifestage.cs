@@ -59,7 +59,7 @@ namespace Models.LifeCycle
         private List<Cohort> CohortList;
 
         [NonSerialized]
-        private double StepMortality;
+        private double stepMortality;
 
         [NonSerialized]
         private double stepMigrants;
@@ -136,7 +136,7 @@ namespace Models.LifeCycle
         {
             get
             {
-                return StepMortality;
+                return stepMortality;
             }
         }
 
@@ -186,7 +186,7 @@ namespace Models.LifeCycle
                 int count = CohortList.Count;
 
                 stepMigrants = 0;
-                StepMortality = 0;
+                stepMortality = 0;
                 // for each cohort in the lifestage
                 for (int i = 0; i < count; i++)
                 {
@@ -200,8 +200,9 @@ namespace Models.LifeCycle
                         proc.ProcessCohort(aCohort);    // execute process function and may include transfer to another lifestage
                     }
                     aCohort.AgeCohort();                // finally age the creatures in the cohort
-                    StepMortality += aCohort.Mortality;
+                    stepMortality += aCohort.Mortality;
                 }
+
                 RemoveEmptyCohorts();                   // remove any empty cohorts from the cohortlist
             }
         }
