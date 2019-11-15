@@ -31,12 +31,13 @@ namespace Models.Functions
                 returnValue = F.Value(arrayIndex);
 
                 if (ChildFunctions.Count > 1)
+                {
                     for (int i = 1; i < ChildFunctions.Count; i++)
                     {
                         F = ChildFunctions[i] as IFunction;
                         returnValue = returnValue - F.Value(arrayIndex);
                     }
-
+                }
             }
             return returnValue;
         }

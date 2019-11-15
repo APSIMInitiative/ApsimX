@@ -190,14 +190,15 @@ namespace Models.PMF.Organs
             //double leafNoEffective = Math.Min(CurrentLeafNumber - dltLeafNo + culmParameters.LeafNoCorrection, FinalLeafNumber);
             // else throw
             double leafNoEffective = this.leafNoEffective.Value();
-            var leafsize = calcIndividualLeafSize(leafNoEffective);
+            var leafsize = CalcIndividualLeafSize(leafNoEffective);
 
             double leafArea = leafsize * smm2sm * culmParameters.Density * dltLeafNo; // in dltLai
             TotalLAI += leafArea;
             return (leafArea * Proportion);
         }
 
-        private double calcIndividualLeafSize(double leafNo)
+        /// <summary>Calc size of individual leaf.</summary>
+        public double CalcIndividualLeafSize(double leafNo)
         {
             //double aX0 = 0.687;
             //double aMaxSlope = 22.25;

@@ -354,6 +354,15 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nPhotoStress = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction leafNoDeadIntercept = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction leafNoDeadSlope = null;
+
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private IFunction TTFromEmergence = null;
+
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassRUE { get; set; }
 
@@ -617,6 +626,16 @@ namespace Models.PMF.Organs
         //[Link]
         //SorghumArbitrator Arbitrator = null;
 
+        private double[] CalcLeafSize()
+        {
+            List<double> size = new List<double>();
+            if (Culms.Count > 0)
+                for (int i = 0; i < FinalLeafNo; i++)
+                    // Can get first culm to calc, should be ok
+                    size.Add(Culms[0].CalcIndividualLeafSize(i + 1));
+            return size.ToArray();
+        }
+
         #region Top Level time step functions
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
@@ -624,6 +643,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
+            leafSize = CalcLeafSize();
             // save current state
             if (parentPlant.IsEmerged)
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
@@ -639,6 +659,7 @@ namespace Models.PMF.Organs
                     dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
                     dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
                 }
+
                 //old model calculated BiomRUE at the end of the day
                 //this is done at strat of the day
                 BiomassRUE = Photosynthesis.Value();
@@ -684,6 +705,8 @@ namespace Models.PMF.Organs
 
             //UpdateVars
             SenescedLai += DltSenescedLai;
+            nDeadLeaves += dltDeadLeaves;
+            dltDeadLeaves = 0;
 
             LAI += DltLAI - DltSenescedLai;
 
@@ -753,7 +776,12 @@ namespace Models.PMF.Organs
         public double DltSenescedLaiWater { get; set; }
         /// <summary>Delta of LAI removed due to Frost Senescence.</summary>
         public double DltSenescedLaiFrost { get; set; }
+        /// <summary>Delta of LAI removed due to age senescence.</summary>
+        public double DltSenescedLaiAge { get; set; }
 
+        private double nDeadLeaves;
+        private double dltDeadLeaves;
+        private double[] leafSize;
         private double sdRatio;
         private double totalLaiEqlbLight;
         private double avgLaiEquilibLight;
@@ -802,6 +830,11 @@ namespace Models.PMF.Organs
         {
             DltSenescedLai = 0.0;
             DltSenescedLaiN = 0.0;
+
+            DltSenescedLaiAge = 0;
+            if (phenology.Between("Emergence", "HarvestRipe"))
+                DltSenescedLaiAge = CalcLaiSenescenceAge();
+            DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiAge);
 
             //sLai - is the running total of dltSLai
             //could be a stage issue here. should only be between fi and flag
@@ -875,6 +908,29 @@ namespace Models.PMF.Organs
             dltSlaiWater = Math.Min(LAI, dltSlaiWater);
             return dltSlaiWater;
             //return 0.0;
+        }
+        
+        /// <summary>Return the lai that would senesce on the current day from natural ageing</summary>
+        private double CalcLaiSenescenceAge()
+        {
+            dltDeadLeaves = CalcDltDeadLeaves();
+            double deadLeaves = nDeadLeaves + dltDeadLeaves;
+            double laiSenescenceAge = 0;
+            if (MathUtilities.IsPositive(deadLeaves))
+            {
+                int leafDying = (int)Math.Ceiling(deadLeaves);
+                double areaDying = (deadLeaves % 1.0) * leafSize[leafDying - 1];
+                laiSenescenceAge = (leafSize.Take(leafDying - 1).Sum() + areaDying) * smm2sm * SowingDensity;
+            }
+            return Math.Max(laiSenescenceAge - SenescedLai, 0);
+        }
+
+        private double CalcDltDeadLeaves()
+        {
+            double nDeadYesterday = nDeadLeaves;
+            double nDeadToday = FinalLeafNo * (leafNoDeadIntercept.Value() + leafNoDeadSlope.Value() * TTFromEmergence.Value());
+            nDeadToday = MathUtilities.Bound(nDeadToday, nDeadYesterday, FinalLeafNo);
+            return nDeadToday - nDeadYesterday;
         }
 
         private double calcLaiSenescenceLight()
@@ -1536,7 +1592,7 @@ namespace Models.PMF.Organs
                 //OnPlantSowing let structure do the clear so culms isn't cleared before initialising the first one
                 //Clear();
                 SowingDensity = data.Population;
-
+                nDeadLeaves = 0;
             }
         }
 
