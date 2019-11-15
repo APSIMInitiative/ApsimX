@@ -14,6 +14,29 @@ namespace Models.LifeCycle
     /// <summary>
     /// # [Name]
     /// A lifestage is a developmental segment of a lifecycle. It contains cohorts.
+    ///
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|CurrentCohort     |Cohort   |  |Reference to the current cohort    |
+    ///|OwningCycle       |LifeCycle|  |The owning LifeCycle |
+    ///|CohortCount       |int      |  |The count of cohorts in this LifeStage |
+    ///|TotalPopulation   |double   |  |Population of all the cohorts in this LifeStage |
+    ///|Populations       |double[] |  |Gets the array of cohort populations for this LifeStage |
+    ///|Mortality         |double   |  |The current mortality numbers for this time step |
+    ///|Migrants          |double   |  |The number of organisms migrating to another LifeStage for this time step |
+    ///
+    /// **Cohort**
+    /// 
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|PhenoAge     |double   |time steps  |Developmental level (within a LifeStage)    |
+    ///|ChronoAge    |double   |time steps  |Period of existence since start of egg(?) stage |
+    ///|PhysiologicalAge |double |0-1 |The fraction of maturity for the cohort |
+    ///|Count        |double |  |Count of organisms in this cohort |
+    ///|Fecundity    |double |  |The fecundity for the time step |
+    ///|Mortality    |double |  |The mortality for the time step |
+    ///|OwningStage  |LifeStage|  |The LifeStage that owns this cohort |
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]

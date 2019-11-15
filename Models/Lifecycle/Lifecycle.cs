@@ -12,7 +12,15 @@ namespace Models.LifeCycle
 
     /// <summary>
     /// # [Name]
-    /// A LifeCycle that contains LifeStages. 
+    /// A LifeCycle that contains LifeStages.
+    /// 
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|ChildStages       |List of LifeStage |  |List of child LifeStages       |
+    ///|CurrentLifeStage  |LifeStage         |  |Current LifeStage begin processed |
+    ///|InitialPopulation |double[]          |  |Initial population for each LifeStage |
+    ///|TotalPopulation   |double            |  |Total population of all the cohorts in this LifeCycle |
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
