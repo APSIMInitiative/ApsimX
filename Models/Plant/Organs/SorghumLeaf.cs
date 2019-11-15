@@ -360,9 +360,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction leafNoDeadSlope = null;
 
-        [Link(Type = LinkType.Scoped, ByName = true)]
-        private IFunction TTFromEmergence = null;
-
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassRUE { get; set; }
 
@@ -928,7 +925,7 @@ namespace Models.PMF.Organs
         private double CalcDltDeadLeaves()
         {
             double nDeadYesterday = nDeadLeaves;
-            double nDeadToday = FinalLeafNo * (leafNoDeadIntercept.Value() + leafNoDeadSlope.Value() * TTFromEmergence.Value());
+            double nDeadToday = FinalLeafNo * (leafNoDeadIntercept.Value() + leafNoDeadSlope.Value() * phenology.AccumulatedEmergedTT);
             nDeadToday = MathUtilities.Bound(nDeadToday, nDeadYesterday, FinalLeafNo);
             return nDeadToday - nDeadYesterday;
         }
