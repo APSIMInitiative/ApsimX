@@ -307,7 +307,7 @@ namespace Models.PMF
                 double[] kl = soilCrop.KL;
 
                 if (root.Depth != myZone.Depth)
-                    myZone.Depth += 0;
+                    myZone.Depth += 0; // wtf??
 
                 var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
                 var currentLayerProportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
@@ -465,6 +465,9 @@ namespace Models.PMF
                             var maxUptake = Math.Max(0, maxUptakeRateFrac * DltTT - actualMassFlow);
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
+
+                        NDiffusionSupply = actualDiffusion;
+                        NMassFlowSupply = actualMassFlow;
 
                         //adjust diffusion values proportionally
                         //make sure organNO3Supply is in kg/ha

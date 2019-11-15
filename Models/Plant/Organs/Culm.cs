@@ -83,6 +83,7 @@ namespace Models.PMF.Organs
         private IFunction appearanceRate1;
         private IFunction appearanceRate2;
         private IFunction appearanceRate3;
+        private IFunction leafNoEffective;
 
         /// <summary> The proportion of a whole tiller</summary>
         public double Proportion { get; set; }
@@ -129,31 +130,20 @@ namespace Models.PMF.Organs
             // fixme - temp hack to get things running.
             // Should replace these (and LargestLeafSize) with links in long run.
             IModel reference = culmParameters.LargestLeafSize as IModel;
+            noRateChange1 = GetFunction(reference, "[Structure].RemainingLeavesForFinalAppearanceRate");
+            noRateChange2 = GetFunction(reference, "[Structure].RemainingLeavesForFinalAppearanceRate2");
+            appearanceRate1 = GetFunction(reference, "[Structure].InitialAppearanceRate");
+            appearanceRate2 = GetFunction(reference, "[Structure].MidAppearanceRate");
+            appearanceRate3 = GetFunction(reference, "[Structure].FinalAppearanceRate");
+            leafNoEffective = GetFunction(reference, "[Structure].LeafNoEffective");
+        }
 
-            string path = "[Structure].RemainingLeavesForFinalAppearanceRate";
-            noRateChange1 = Apsim.Get(reference, path) as IFunction;
-            if (noRateChange1 == null)
+        private IFunction GetFunction(IModel reference, string path)
+        {
+            IFunction result = leafNoEffective = Apsim.Get(reference, path) as IFunction;
+            if (leafNoEffective == null)
                 throw new Exception($"Unable to find {path}");
-
-            path = "[Structure].RemainingLeavesForFinalAppearanceRate2";
-            noRateChange2 = Apsim.Get(reference, path) as IFunction;
-            if (noRateChange2 == null)
-                throw new Exception($"Unable to find {path}");
-
-            path = "[Structure].InitialAppearanceRate";
-            appearanceRate1 = Apsim.Get(reference, path) as IFunction;
-            if (appearanceRate1 == null)
-                throw new Exception($"Unable to find {path}");
-
-            path = "[Structure].MidAppearanceRate";
-            appearanceRate2 = Apsim.Get(reference, path) as IFunction;
-            if (appearanceRate2 == null)
-                throw new Exception($"Unable to find {path}");
-
-            path = "[Structure].FinalAppearanceRate";
-            appearanceRate3 = Apsim.Get(reference, path) as IFunction;
-            if (appearanceRate3 == null)
-                throw new Exception($"Unable to find {path}");
+            return result;
         }
 
         /// <summary>
@@ -194,7 +184,12 @@ namespace Models.PMF.Organs
         {
             //var leafNoCorrection = 1.52;
             //once leaf no is calculated leaf area of largest expanding leaf is determined
-            double leafNoEffective = Math.Min(CurrentLeafNumber + culmParameters.LeafNoCorrection, FinalLeafNumber - culmParameters.LeafNoAtAppearance);
+            // if sorghum
+            //double leafNoEffective = Math.Min(CurrentLeafNumber + culmParameters.LeafNoCorrection, FinalLeafNumber - culmParameters.LeafNoAtAppearance);
+            // else if maize
+            //double leafNoEffective = Math.Min(CurrentLeafNumber - dltLeafNo + culmParameters.LeafNoCorrection, FinalLeafNumber);
+            // else throw
+            double leafNoEffective = this.leafNoEffective.Value();
             var leafsize = calcIndividualLeafSize(leafNoEffective);
 
             double leafArea = leafsize * smm2sm * culmParameters.Density * dltLeafNo; // in dltLai

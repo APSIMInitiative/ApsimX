@@ -138,8 +138,8 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction leafInitRate = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction seedNo = null;
+        [Link(Type = LinkType.Scoped, ByName = true)]
+        private IFunction LeafNumSeed = null;
 
         #region Canopy interface
 
@@ -150,7 +150,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return seedNo?.Value() ?? 0;
+                return LeafNumSeed?.Value() ?? 0;
             }
         }
 

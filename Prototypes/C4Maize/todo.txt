@@ -17,5 +17,13 @@ I've added these constants but they're currently unused:
 
 Need to double check that these aren't used:
 
-- x_plant_rld (used for root length density calcs in old apsim)
-- y_rel_root_rate (as above)
+- x_plant_rld (used for root length density calcs in old apsim)									- done (unimportant/unused)
+- y_rel_root_rate (as above)																	- done (unimportant/unused)
+
+- leaf senescence due to age
+- avLaiEquilibWater calculation
+
+- fix leaf metabolic ndemand calc (stage lookup)												- done
+- marry sorghum/maize Culm.CalcPotentialArea leafNoEffective calculations						- done
+- LAI is incorrect in leaf ndemand calcs on day 55												- done
+- rue/te (and thus dltDM) are both incorrect on day 55											- 
