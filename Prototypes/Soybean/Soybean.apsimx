@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 67,
+  "Version": 69,
   "Name": "Simulations",
   "Children": [
     {
@@ -6428,6 +6428,15 @@
       "Name": "Validation",
       "Children": [
         {
+          "$type": "Models.Memo, Models",
+          "Text": "The soybean model has been tested across a range of planting and agronomic conditions.  These include datasets from Australia and USA covering a wide range of weather conditions (See graphs that follow) and agronomic factors (irrigation, fertiliser, sowing dates).",
+          "Name": "Memo",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Map, Models",
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
@@ -6469,7 +6478,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Growing Season Mean Air Temperature",
           "Children": [
             {
@@ -6535,7 +6546,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Growing Season Photoperiod",
           "Children": [
             {
@@ -6689,6 +6702,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -6725,7 +6740,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 3024.0,
@@ -7862,7 +7877,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Biomass",
                               "Children": [
                                 {
@@ -7958,7 +7975,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveWt",
                               "Children": [
                                 {
@@ -8054,7 +8073,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadWt",
                               "Children": [
                                 {
@@ -8150,7 +8171,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt",
                               "Children": [
                                 {
@@ -8246,7 +8269,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainWt",
                               "Children": [
                                 {
@@ -8342,7 +8367,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodWt",
                               "Children": [
                                 {
@@ -8438,7 +8465,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt and PodWt",
                               "Children": [
                                 {
@@ -8604,7 +8633,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -8700,7 +8731,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "MainStemLeafNo",
                               "Children": [
                                 {
@@ -8837,7 +8870,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SpecificLeafArea",
                               "Children": [
                                 {
@@ -8943,7 +8978,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Water Stress",
                               "Children": [
                                 {
@@ -9009,7 +9046,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Temperature Stress",
                               "Children": [
                                 {
@@ -9075,7 +9114,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "N Stress",
                               "Children": [
                                 {
@@ -9151,7 +9192,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodNumber",
                               "Children": [
                                 {
@@ -9257,7 +9300,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilWater15cm",
                               "Children": [
                                 {
@@ -9353,7 +9398,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilWater45cm",
                               "Children": [
                                 {
@@ -9449,7 +9496,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "WaterTable",
                               "Children": [
                                 {
@@ -9545,7 +9594,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ET",
                               "Children": [
                                 {
@@ -9641,7 +9692,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Pre vs Obs ET",
                               "Children": [
                                 {
@@ -9729,7 +9782,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilTemperature15cm",
                               "Children": [
                                 {
@@ -9825,7 +9880,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilTemperature45cm",
                               "Children": [
                                 {
@@ -9931,7 +9988,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "BiomassN",
                               "Children": [
                                 {
@@ -10027,7 +10086,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveN",
                               "Children": [
                                 {
@@ -10123,7 +10184,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadN",
                               "Children": [
                                 {
@@ -10219,7 +10282,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemN",
                               "Children": [
                                 {
@@ -10315,7 +10380,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainN",
                               "Children": [
                                 {
@@ -10411,7 +10478,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodN",
                               "Children": [
                                 {
@@ -10507,7 +10576,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellN",
                               "Children": [
                                 {
@@ -10613,7 +10684,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveNConc",
                               "Children": [
                                 {
@@ -10709,7 +10782,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadNConc",
                               "Children": [
                                 {
@@ -10805,7 +10880,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemNConc",
                               "Children": [
                                 {
@@ -10901,7 +10978,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainNConc",
                               "Children": [
                                 {
@@ -10997,7 +11076,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodNConc",
                               "Children": [
                                 {
@@ -11093,7 +11174,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellNConc",
                               "Children": [
                                 {
@@ -11199,7 +11282,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "FixationRate",
                               "Children": [
                                 {
@@ -11335,7 +11420,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "RootDepth",
                               "Children": [
                                 {
@@ -11441,7 +11528,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NO3 0 to 30 cm",
                               "Children": [
                                 {
@@ -11537,7 +11626,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NH4 0 to 30 cm",
                               "Children": [
                                 {
@@ -11633,7 +11724,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NO3 30 to 60 cm",
                               "Children": [
                                 {
@@ -11729,7 +11822,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NH4 30 to 60 cm",
                               "Children": [
                                 {
@@ -11835,7 +11930,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Residue Wt",
                               "Children": [
                                 {
@@ -11989,6 +12086,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -12025,7 +12124,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 2000.0,
@@ -13162,7 +13261,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Biomass",
                               "Children": [
                                 {
@@ -13258,7 +13359,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveWt",
                               "Children": [
                                 {
@@ -13354,7 +13457,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadWt",
                               "Children": [
                                 {
@@ -13461,7 +13566,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt",
                               "Children": [
                                 {
@@ -13598,7 +13705,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainWt",
                               "Children": [
                                 {
@@ -13694,7 +13803,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodWt",
                               "Children": [
                                 {
@@ -13790,7 +13901,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt and PodWt",
                               "Children": [
                                 {
@@ -13946,7 +14059,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellWt",
                               "Children": [
                                 {
@@ -14053,7 +14168,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "RootWt",
                               "Children": [
                                 {
@@ -14129,7 +14246,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -14236,7 +14355,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "MainStemLeafNo",
                               "Children": [
                                 {
@@ -14373,7 +14494,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SpecificLeafArea",
                               "Children": [
                                 {
@@ -14469,7 +14592,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PP",
                               "Children": [
                                 {
@@ -14545,7 +14670,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Water Stress",
                               "Children": [
                                 {
@@ -14611,7 +14738,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Temperature Stress",
                               "Children": [
                                 {
@@ -14677,7 +14806,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "N Stress",
                               "Children": [
                                 {
@@ -14753,7 +14884,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodNumber",
                               "Children": [
                                 {
@@ -14859,7 +14992,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilWater15cm",
                               "Children": [
                                 {
@@ -14955,7 +15090,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilWater45cm",
                               "Children": [
                                 {
@@ -15051,7 +15188,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "WaterTable",
                               "Children": [
                                 {
@@ -15147,7 +15286,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ET",
                               "Children": [
                                 {
@@ -15243,7 +15384,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Pre vs Obs ET",
                               "Children": [
                                 {
@@ -15331,7 +15474,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilTemperature15cm",
                               "Children": [
                                 {
@@ -15427,7 +15572,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilTemperature45cm",
                               "Children": [
                                 {
@@ -15533,7 +15680,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "BiomassN",
                               "Children": [
                                 {
@@ -15629,7 +15778,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveN",
                               "Children": [
                                 {
@@ -15725,7 +15876,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadN",
                               "Children": [
                                 {
@@ -15821,7 +15974,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemN",
                               "Children": [
                                 {
@@ -15917,7 +16072,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainN",
                               "Children": [
                                 {
@@ -16013,7 +16170,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodN",
                               "Children": [
                                 {
@@ -16109,7 +16268,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellN",
                               "Children": [
                                 {
@@ -16215,7 +16376,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveNConc",
                               "Children": [
                                 {
@@ -16311,7 +16474,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadNConc",
                               "Children": [
                                 {
@@ -16407,7 +16572,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemNConc",
                               "Children": [
                                 {
@@ -16503,7 +16670,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainNConc",
                               "Children": [
                                 {
@@ -16599,7 +16768,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodNConc",
                               "Children": [
                                 {
@@ -16695,7 +16866,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellNConc",
                               "Children": [
                                 {
@@ -16801,7 +16974,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "FixationRate",
                               "Children": [
                                 {
@@ -16877,7 +17052,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "RootDepth",
                               "Children": [
                                 {
@@ -16983,7 +17160,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NO3 0 to 30 cm",
                               "Children": [
                                 {
@@ -17079,7 +17258,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NH4 0 to 30 cm",
                               "Children": [
                                 {
@@ -17175,7 +17356,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NO3 30 to 60 cm",
                               "Children": [
                                 {
@@ -17271,7 +17454,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NH4 30 to 60 cm",
                               "Children": [
                                 {
@@ -17377,7 +17562,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Residue Wt",
                               "Children": [
                                 {
@@ -17531,6 +17718,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -17567,7 +17756,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4000.0,
@@ -18762,7 +18951,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Biomass",
                               "Children": [
                                 {
@@ -18858,7 +19049,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveWt",
                               "Children": [
                                 {
@@ -18954,7 +19147,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadWt",
                               "Children": [
                                 {
@@ -19050,7 +19245,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt",
                               "Children": [
                                 {
@@ -19146,7 +19343,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainWt",
                               "Children": [
                                 {
@@ -19252,7 +19451,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -19348,7 +19549,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "MainStemLeafNo",
                               "Children": [
                                 {
@@ -19444,7 +19647,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SpecificLeafArea",
                               "Children": [
                                 {
@@ -19550,7 +19755,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Water Stress",
                               "Children": [
                                 {
@@ -19616,7 +19823,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Temperature Stress",
                               "Children": [
                                 {
@@ -19692,7 +19901,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodNumber",
                               "Children": [
                                 {
@@ -19798,7 +20009,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "FixationRate",
                               "Children": [
                                 {
@@ -19924,7 +20137,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Biomass",
                               "Children": [
                                 {
@@ -20030,7 +20245,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "BiomassN",
                               "Children": [
                                 {
@@ -20126,7 +20343,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveN",
                               "Children": [
                                 {
@@ -20222,7 +20441,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadN",
                               "Children": [
                                 {
@@ -20318,7 +20539,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemN",
                               "Children": [
                                 {
@@ -20414,7 +20637,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainN",
                               "Children": [
                                 {
@@ -20510,7 +20735,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodN",
                               "Children": [
                                 {
@@ -20606,7 +20833,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellN",
                               "Children": [
                                 {
@@ -20712,7 +20941,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilWater15cm",
                               "Children": [
                                 {
@@ -20808,7 +21039,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilWater45cm",
                               "Children": [
                                 {
@@ -20904,7 +21137,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "WaterTable",
                               "Children": [
                                 {
@@ -21010,7 +21245,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilTemperature15cm",
                               "Children": [
                                 {
@@ -21106,7 +21343,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilTemperature45cm",
                               "Children": [
                                 {
@@ -21212,7 +21451,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NO3 0 to 30 cm",
                               "Children": [
                                 {
@@ -21308,7 +21549,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NH4 0 to 30 cm",
                               "Children": [
                                 {
@@ -21404,7 +21647,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NO3 30 to 60 cm",
                               "Children": [
                                 {
@@ -21500,7 +21745,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NH4 30 to 60 cm",
                               "Children": [
                                 {
@@ -21606,7 +21853,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Residue Wt",
                               "Children": [
                                 {
@@ -21756,6 +22005,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -21792,7 +22043,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 2800.0,
@@ -22973,7 +23224,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Biomass",
                               "Children": [
                                 {
@@ -23069,7 +23322,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveWt",
                               "Children": [
                                 {
@@ -23165,7 +23420,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadWt",
                               "Children": [
                                 {
@@ -23261,7 +23518,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt",
                               "Children": [
                                 {
@@ -23357,7 +23616,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainWt",
                               "Children": [
                                 {
@@ -23453,7 +23714,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodWt",
                               "Children": [
                                 {
@@ -23549,7 +23812,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt and PodWt",
                               "Children": [
                                 {
@@ -23715,7 +23980,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LAI",
                               "Children": [
                                 {
@@ -23811,7 +24078,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "MainStemLeafNo",
                               "Children": [
                                 {
@@ -23907,7 +24176,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SpecificLeafArea",
                               "Children": [
                                 {
@@ -24013,7 +24284,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Water Stress",
                               "Children": [
                                 {
@@ -24079,7 +24352,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Temperature Stress",
                               "Children": [
                                 {
@@ -24145,7 +24420,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "N Stress",
                               "Children": [
                                 {
@@ -24221,7 +24498,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodNumber",
                               "Children": [
                                 {
@@ -24327,7 +24606,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "BiomassN",
                               "Children": [
                                 {
@@ -24423,7 +24704,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveN",
                               "Children": [
                                 {
@@ -24519,7 +24802,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadN",
                               "Children": [
                                 {
@@ -24615,7 +24900,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemN",
                               "Children": [
                                 {
@@ -24711,7 +24998,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainN",
                               "Children": [
                                 {
@@ -24807,7 +25096,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodN",
                               "Children": [
                                 {
@@ -24903,7 +25194,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellN",
                               "Children": [
                                 {
@@ -25009,7 +25302,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveNConc",
                               "Children": [
                                 {
@@ -25105,7 +25400,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadNConc",
                               "Children": [
                                 {
@@ -25201,7 +25498,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemNConc",
                               "Children": [
                                 {
@@ -25297,7 +25596,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainNConc",
                               "Children": [
                                 {
@@ -25393,7 +25694,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodNConc",
                               "Children": [
                                 {
@@ -25489,7 +25792,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellNConc",
                               "Children": [
                                 {
@@ -25595,7 +25900,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "FixationRate",
                               "Children": [
                                 {
@@ -25671,7 +25978,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "RootDepth",
                               "Children": [
                                 {
@@ -25777,7 +26086,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilWater15cm",
                               "Children": [
                                 {
@@ -25873,7 +26184,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilWater45cm",
                               "Children": [
                                 {
@@ -25969,7 +26282,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "WaterTable",
                               "Children": [
                                 {
@@ -26075,7 +26390,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilTemperature15cm",
                               "Children": [
                                 {
@@ -26171,7 +26488,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "SoilTemperature45cm",
                               "Children": [
                                 {
@@ -26277,7 +26596,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NO3 0 to 30 cm",
                               "Children": [
                                 {
@@ -26373,7 +26694,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NH4 0 to 30 cm",
                               "Children": [
                                 {
@@ -26469,7 +26792,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NO3 30 to 60 cm",
                               "Children": [
                                 {
@@ -26565,7 +26890,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Soil NH4 30 to 60 cm",
                               "Children": [
                                 {
@@ -26671,7 +26998,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Residue Wt",
                               "Children": [
                                 {
@@ -26757,7 +27086,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "SoilWater 15cm",
                       "Children": [
                         {
@@ -26835,7 +27166,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "SoilWater 45cm",
                       "Children": [
                         {
@@ -26913,7 +27246,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "SoilTemperature 15cm",
                       "Children": [
                         {
@@ -26991,7 +27326,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "SoilTemperature 45cm",
                       "Children": [
                         {
@@ -27069,7 +27406,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Soil NO3 30cm",
                       "Children": [
                         {
@@ -27147,7 +27486,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Soil NO3 60cm",
                       "Children": [
                         {
@@ -27291,6 +27632,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -27327,7 +27670,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -28197,6 +28540,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -28233,7 +28578,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -29103,6 +29448,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -29139,7 +29486,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -29967,7 +30314,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Pred vs Obs EmergenceDAS",
                   "Children": [
                     {
@@ -30045,7 +30394,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Pred vs Obs FloweringDAS",
                   "Children": [
                     {
@@ -30123,7 +30474,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Pred vs Obs MaturityDAS",
                   "Children": [
                     {
@@ -30201,7 +30554,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "FloweringDAS",
                   "Children": [
                     {
@@ -30461,6 +30816,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -30527,7 +30884,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -31548,6 +31905,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -31614,7 +31973,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -32490,7 +32849,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Pred vs Obs EmergenceDAS",
                   "Children": [
                     {
@@ -32568,7 +32929,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Pred vs Obs FloweringDAS",
                   "Children": [
                     {
@@ -32646,7 +33009,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Pred vs Obs MaturityDAS",
                   "Children": [
                     {
@@ -32724,7 +33089,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Harvest Yield",
                   "Children": [
                     {
@@ -32818,7 +33185,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "EnvironmentFactors",
                       "Children": [
                         {
@@ -32914,7 +33283,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Water Stress",
                       "Children": [
                         {
@@ -32980,7 +33351,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Biomass",
                       "Children": [
                         {
@@ -33057,7 +33430,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "LAI",
                       "Children": [
                         {
@@ -33153,7 +33528,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "N Stress",
                       "Children": [
                         {
@@ -33219,7 +33596,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "N Fixation",
                       "Children": [
                         {
@@ -33285,7 +33664,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "HI",
                       "Children": [
                         {
@@ -33462,6 +33843,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -33498,7 +33881,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -34441,6 +34824,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -34477,7 +34862,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -35333,7 +35718,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Pred vs Obs FloweringDAS",
                   "Children": [
                     {
@@ -35411,7 +35798,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "FloweringDAS",
                   "Children": [
                     {
@@ -35801,6 +36190,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "Field",
                           "Children": [
                             {
@@ -35821,7 +36212,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 996.0,
@@ -36807,7 +37198,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Biomass",
                               "Children": [
                                 {
@@ -36903,7 +37296,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafWt",
                               "Children": [
                                 {
@@ -37029,7 +37424,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt",
                               "Children": [
                                 {
@@ -37125,7 +37522,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainWt",
                               "Children": [
                                 {
@@ -37221,7 +37620,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodWt",
                               "Children": [
                                 {
@@ -37317,7 +37718,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt and PodWt",
                               "Children": [
                                 {
@@ -37473,7 +37876,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellWt",
                               "Children": [
                                 {
@@ -37579,7 +37984,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Water Stress",
                               "Children": [
                                 {
@@ -37645,7 +38052,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Temperature Stress",
                               "Children": [
                                 {
@@ -37711,7 +38120,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "N Stress",
                               "Children": [
                                 {
@@ -37787,7 +38198,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "BiomassN",
                               "Children": [
                                 {
@@ -37883,7 +38296,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveN",
                               "Children": [
                                 {
@@ -37979,7 +38394,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemN",
                               "Children": [
                                 {
@@ -38105,7 +38522,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainN",
                               "Children": [
                                 {
@@ -38201,7 +38620,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodN",
                               "Children": [
                                 {
@@ -38297,7 +38718,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellN",
                               "Children": [
                                 {
@@ -38403,7 +38826,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveNConc",
                               "Children": [
                                 {
@@ -38499,7 +38924,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadNConc",
                               "Children": [
                                 {
@@ -38595,7 +39022,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemNConc",
                               "Children": [
                                 {
@@ -38691,7 +39120,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainNConc",
                               "Children": [
                                 {
@@ -38787,7 +39218,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodNConc",
                               "Children": [
                                 {
@@ -38883,7 +39316,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellNConc",
                               "Children": [
                                 {
@@ -38989,7 +39424,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "FixationRate",
                               "Children": [
                                 {
@@ -39417,6 +39854,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "Field",
                           "Children": [
                             {
@@ -39437,7 +39876,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 996.0,
@@ -40432,7 +40871,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Biomass",
                               "Children": [
                                 {
@@ -40528,7 +40969,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafWt",
                               "Children": [
                                 {
@@ -40665,7 +41108,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt",
                               "Children": [
                                 {
@@ -40791,7 +41236,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainWt",
                               "Children": [
                                 {
@@ -40887,7 +41334,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodWt",
                               "Children": [
                                 {
@@ -40983,7 +41432,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemWt and PodWt",
                               "Children": [
                                 {
@@ -41139,7 +41590,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellWt",
                               "Children": [
                                 {
@@ -41245,7 +41698,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Water Stress",
                               "Children": [
                                 {
@@ -41311,7 +41766,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "Temperature Stress",
                               "Children": [
                                 {
@@ -41377,7 +41834,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "N Stress",
                               "Children": [
                                 {
@@ -41453,7 +41912,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "BiomassN",
                               "Children": [
                                 {
@@ -41549,7 +42010,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafLiveN",
                               "Children": [
                                 {
@@ -41645,7 +42108,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemN",
                               "Children": [
                                 {
@@ -41782,7 +42247,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainN",
                               "Children": [
                                 {
@@ -41878,7 +42345,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodN",
                               "Children": [
                                 {
@@ -41974,7 +42443,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellN",
                               "Children": [
                                 {
@@ -42080,7 +42551,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafNConc",
                               "Children": [
                                 {
@@ -42176,7 +42649,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "LeafDeadNConc",
                               "Children": [
                                 {
@@ -42272,7 +42747,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "StemNConc",
                               "Children": [
                                 {
@@ -42368,7 +42845,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "GrainNConc",
                               "Children": [
                                 {
@@ -42464,7 +42943,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "PodNConc",
                               "Children": [
                                 {
@@ -42560,7 +43041,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "ShellNConc",
                               "Children": [
                                 {
@@ -42666,7 +43149,9 @@
                                 }
                               ],
                               "LegendPosition": 0,
+                              "LegendOrientation": 0,
                               "DisabledSeries": [],
+                              "LegendOutsideGraph": false,
                               "Name": "FixationRate",
                               "Children": [
                                 {
@@ -42873,6 +43358,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -42909,7 +43396,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 100.0,
@@ -43851,7 +44338,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Biomass",
                           "Children": [
                             {
@@ -43947,7 +44436,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "StemWt",
                           "Children": [
                             {
@@ -44043,7 +44534,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "GrainWt",
                           "Children": [
                             {
@@ -44149,7 +44642,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Water Stress",
                           "Children": [
                             {
@@ -44215,7 +44710,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Temperature Stress",
                           "Children": [
                             {
@@ -44281,7 +44778,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Stress",
                           "Children": [
                             {
@@ -44432,6 +44931,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -44468,7 +44969,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 100.0,
@@ -45380,7 +45881,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Biomass",
                           "Children": [
                             {
@@ -45476,7 +45979,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "LeafLiveWt",
                           "Children": [
                             {
@@ -45692,7 +46197,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "StemWt",
                           "Children": [
                             {
@@ -45818,7 +46325,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "GrainWt",
                           "Children": [
                             {
@@ -45914,7 +46423,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "PodWt",
                           "Children": [
                             {
@@ -46010,7 +46521,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "StemWt and PodWt",
                           "Children": [
                             {
@@ -46166,7 +46679,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "ShellWt",
                           "Children": [
                             {
@@ -46292,7 +46807,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "HarvestIndex",
                           "Children": [
                             {
@@ -46409,7 +46926,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "LAI",
                           "Children": [
                             {
@@ -46505,7 +47024,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "MainStemLeafNo",
                           "Children": [
                             {
@@ -46642,7 +47163,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "SpecificLeafArea",
                           "Children": [
                             {
@@ -46738,7 +47261,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "LightInterception",
                           "Children": [
                             {
@@ -46834,7 +47359,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Height",
                           "Children": [
                             {
@@ -46921,7 +47448,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Water Stress",
                           "Children": [
                             {
@@ -46987,7 +47516,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Temperature Stress",
                           "Children": [
                             {
@@ -47053,7 +47584,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Stress",
                           "Children": [
                             {
@@ -47129,7 +47662,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "BiomassN",
                           "Children": [
                             {
@@ -47225,7 +47760,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "LeafLiveN",
                           "Children": [
                             {
@@ -47321,7 +47858,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "StemN",
                           "Children": [
                             {
@@ -47417,7 +47956,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "GrainN",
                           "Children": [
                             {
@@ -47513,7 +48054,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "PodN",
                           "Children": [
                             {
@@ -47609,7 +48152,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "ShellN",
                           "Children": [
                             {
@@ -47715,7 +48260,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "LeafLiveNConc",
                           "Children": [
                             {
@@ -47811,7 +48358,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "StemNConc",
                           "Children": [
                             {
@@ -47907,7 +48456,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "GrainNConc",
                           "Children": [
                             {
@@ -48003,7 +48554,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "PodNConc",
                           "Children": [
                             {
@@ -48099,7 +48652,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "ShellNConc",
                           "Children": [
                             {
@@ -48330,6 +48885,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -48396,7 +48953,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -49257,7 +49814,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Biomass",
                           "Children": [
                             {
@@ -49353,7 +49912,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "PodWt",
                           "Children": [
                             {
@@ -49449,7 +50010,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "GrainWt",
                           "Children": [
                             {
@@ -49555,7 +50118,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Pred vs Obs FloweringDAS",
                           "Children": [
                             {
@@ -49633,7 +50198,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Pred vs Obs MaturityDAS",
                           "Children": [
                             {
@@ -49721,7 +50288,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "LAI",
                           "Children": [
                             {
@@ -49838,7 +50407,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "EnvironmentFactors",
                           "Children": [
                             {
@@ -49934,7 +50505,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Water Stress",
                           "Children": [
                             {
@@ -50000,7 +50573,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Stress",
                           "Children": [
                             {
@@ -50066,7 +50641,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Fixed",
                           "Children": [
                             {
@@ -50264,6 +50841,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -50330,7 +50909,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -51284,7 +51863,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Biomass",
                           "Children": [
                             {
@@ -51440,7 +52021,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "BiomassN",
                           "Children": [
                             {
@@ -51546,7 +52129,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "LAI",
                           "Children": [
                             {
@@ -51663,7 +52248,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "EnvironmentFactors",
                           "Children": [
                             {
@@ -51759,7 +52346,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Water Stress",
                           "Children": [
                             {
@@ -51825,7 +52414,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Stress",
                           "Children": [
                             {
@@ -51891,7 +52482,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Fixed",
                           "Children": [
                             {
@@ -52048,6 +52641,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -52084,7 +52679,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -53015,7 +53610,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "EnvironmentFactors",
                           "Children": [
                             {
@@ -53111,7 +53708,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Water Stress",
                           "Children": [
                             {
@@ -53177,7 +53776,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Stress",
                           "Children": [
                             {
@@ -53243,7 +53844,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Fixed",
                           "Children": [
                             {
@@ -53591,6 +54194,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -53627,7 +54232,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -54531,7 +55136,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Biomass",
                           "Children": [
                             {
@@ -54698,7 +55305,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "BiomassN",
                           "Children": [
                             {
@@ -54804,7 +55413,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "LAI",
                           "Children": [
                             {
@@ -54921,7 +55532,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "EnvironmentFactors",
                           "Children": [
                             {
@@ -55017,7 +55630,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Water Stress",
                           "Children": [
                             {
@@ -55083,7 +55698,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Stress",
                           "Children": [
                             {
@@ -55149,7 +55766,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Fixed",
                           "Children": [
                             {
@@ -55215,7 +55834,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "ESW",
                           "Children": [
                             {
@@ -55526,6 +56147,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -55562,7 +56185,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -56446,7 +57069,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Biomass",
                           "Children": [
                             {
@@ -56602,7 +57227,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "BiomassN",
                           "Children": [
                             {
@@ -56708,7 +57335,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "LAI",
                           "Children": [
                             {
@@ -56825,7 +57454,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "EnvironmentFactors",
                           "Children": [
                             {
@@ -56921,7 +57552,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "Water Stress",
                           "Children": [
                             {
@@ -56987,7 +57620,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Stress",
                           "Children": [
                             {
@@ -57053,7 +57688,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "N Fixed",
                           "Children": [
                             {
@@ -57119,7 +57756,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "RootDepth",
                           "Children": [
                             {
@@ -57185,7 +57824,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
                           "Name": "ESW",
                           "Children": [
                             {
@@ -57280,7 +57921,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Growing Season Photoperiod",
                   "Children": [
                     {
@@ -57547,6 +58190,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -57613,7 +58258,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -58656,6 +59301,8 @@
                           "$type": "Models.Core.Zone, Models",
                           "Area": 1.0,
                           "Slope": 0.0,
+                          "AspectAngle": 0.0,
+                          "Altitude": 50.0,
                           "Name": "paddock",
                           "Children": [
                             {
@@ -58722,7 +59369,7 @@
                             },
                             {
                               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                              "ResidueLayers": [],
+                              "Canopies": [],
                               "InitialResidueName": "maize",
                               "InitialResidueType": "maize",
                               "InitialResidueMass": 4500.0,
@@ -59583,7 +60230,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Pred vs Obs FloweringDAS",
                       "Children": [
                         {
@@ -59661,7 +60310,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
                       "Name": "Pred vs Obs MaturityDAS",
                       "Children": [
                         {
@@ -59768,7 +60419,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Pred vs Obs EmergenceDAS",
               "Children": [
                 {
@@ -59846,7 +60499,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "FloweringDAS",
               "Children": [
                 {
@@ -59924,7 +60579,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "MaturityDAS",
               "Children": [
                 {
@@ -60002,7 +60659,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "LAI",
               "Children": [
                 {
@@ -60080,7 +60739,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Biomass",
               "Children": [
                 {
@@ -60158,7 +60819,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "BiomassN",
               "Children": [
                 {
@@ -60236,7 +60899,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Harvest Yield",
               "Children": [
                 {
@@ -60314,7 +60979,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Pred vs Obs Harvest Index",
               "Children": [
                 {
@@ -60392,7 +61059,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Evapotranspiration",
               "Children": [
                 {
@@ -60470,7 +61139,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "RootDepth",
               "Children": [
                 {
@@ -60548,7 +61219,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "PodWt",
               "Children": [
                 {
@@ -60832,6 +61505,8 @@
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
                       "Name": "Field",
                       "Children": [
                         {
@@ -60852,7 +61527,7 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "ResidueLayers": [],
+                          "Canopies": [],
                           "InitialResidueName": "maize",
                           "InitialResidueType": "maize",
                           "InitialResidueMass": 4000.0,
@@ -61778,7 +62453,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Yield",
               "Children": [
                 {
@@ -61844,7 +62521,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "SoilNO3",
               "Children": [
                 {
@@ -61971,6 +62650,8 @@
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
                       "Name": "paddock",
                       "Children": [
                         {
@@ -62007,7 +62688,7 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "ResidueLayers": [],
+                          "Canopies": [],
                           "InitialResidueName": "maize",
                           "InitialResidueType": "maize",
                           "InitialResidueMass": 2000.0,
@@ -62993,7 +63674,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Yield CDF",
                   "Children": [
                     {
@@ -63059,7 +63742,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Yield",
                   "Children": [
                     {
@@ -63125,7 +63810,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "DaysToFlowering",
                   "Children": [
                     {
@@ -63191,7 +63878,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "DaysToMaturity",
                   "Children": [
                     {
@@ -63304,6 +63993,8 @@
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
                       "Name": "paddock",
                       "Children": [
                         {
@@ -63340,7 +64031,7 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "ResidueLayers": [],
+                          "Canopies": [],
                           "InitialResidueName": "maize",
                           "InitialResidueType": "maize",
                           "InitialResidueMass": 2000.0,
@@ -64120,7 +64811,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Yield CDF",
                   "Children": [
                     {
@@ -64186,7 +64879,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Yield",
                   "Children": [
                     {
@@ -64252,7 +64947,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "DaysToFlowering",
                   "Children": [
                     {
@@ -64318,7 +65015,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "DaysToMaturity",
                   "Children": [
                     {
@@ -64389,7 +65088,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Yield",
               "Children": [
                 {
@@ -64637,6 +65338,8 @@
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
                       "Name": "paddock",
                       "Children": [
                         {
@@ -64673,7 +65376,7 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "ResidueLayers": [],
+                          "Canopies": [],
                           "InitialResidueName": "maize",
                           "InitialResidueType": "maize",
                           "InitialResidueMass": 2000.0,
@@ -65453,7 +66156,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Yield",
                   "Children": [
                     {
@@ -65519,7 +66224,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "DaysToFlowering",
                   "Children": [
                     {
@@ -65585,7 +66292,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "DaysToMaturity",
                   "Children": [
                     {
@@ -65656,7 +66365,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Yield",
               "Children": [
                 {
