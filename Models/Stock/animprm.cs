@@ -20,7 +20,7 @@ namespace Models.GrazPlan
             if (_GAnimalParams == null)
             {
                 _GAnimalParams = new AnimalParamSet();
-                GlobalParameterFactory.ParamXMLFactory().readDefaults("RUMINANT_PARAM_GLB", ref _GAnimalParams);
+                GlobalParameterFactory.ParamXMLFactory().readDefaults("Models.Resources.ruminant.prm", ref _GAnimalParams);
             }
             return (AnimalParamSet)_GAnimalParams;
         }

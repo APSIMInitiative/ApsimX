@@ -4,6 +4,7 @@
     using Models.Core;
     using Models.Interfaces;
     using Models.PMF;
+    using Models.PMF.Interfaces;
     using Models.Soils;
     using System;
     using System.Collections.Generic;
@@ -18,7 +19,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter
+    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IRemovableBiomass
     {
         /// <summary>Link to the soil component</summary>
         [Link]
@@ -43,16 +44,14 @@
         private INutrient SoilNitrogen = null;
 
         /// <summary>Gets or sets the residue types.</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private ResidueTypes ResidueTypes = null;
 
         /// <summary>The surf om</summary>
         private List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();
 
-        /// <summary>
-        /// List of residue layers dimensions that are passed to microclimate for arbitrating interception of radiation and rainfall
-        /// </summary>
-        public List<ICanopy> ResidueLayers { get; set; } = new List<ICanopy>();
+        /// <summary>List of canopies that MicroClimate will use.</summary>
+        public List<ICanopy> Canopies { get; set; } = new List<ICanopy>();
 
         /// <summary>The number surfom</summary>
         private int numSurfom = 0;
@@ -249,6 +248,67 @@
             }
         }
 
+        /// <summary>Gets the live biomass for grazing</summary>
+        public Biomass Live
+        {
+            get
+            {
+                return new Biomass();
+            }
+        }
+
+        /// <summary>Gets the dead biomass for grazing</summary>
+        public Biomass Dead
+        {
+            get
+            {
+                return new Biomass() // Should this be in live i.e. no live SOM
+                {
+                    StructuralWt = SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
+                                   SurfOM.Sum(som => som.Lying.Sum(om => om.amount)),
+                    StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
+                                  SurfOM.Sum(som => som.Lying.Sum(om => om.N)),
+                    MetabolicWt = 0.0,
+                    MetabolicN = 0.0,
+                    StorageWt = 0.0,
+                    StorageN = 0.0,
+                    DMDOfStructural = 0.4  // ???????
+                };
+            }
+        }
+
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
+        
+        /// <summary>
+        /// Biomass removal logic for this organ.
+        /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            for (int i = 0; i < SurfOM.Count; i++)
+            {
+                double totalMassRemoved = 0;
+                foreach (var standing in SurfOM[i].Standing)
+                {
+                    double amountToRemove = standing.amount * biomassToRemove.FractionLiveToRemove;
+                    standing.amount -= amountToRemove;
+                    totalMassRemoved += amountToRemove;
+                }
+                foreach (var lying in SurfOM[i].Lying)
+                {
+                    double amountToRemove = lying.amount * biomassToRemove.FractionLiveToRemove;
+                    lying.amount -= amountToRemove;
+                    totalMassRemoved += amountToRemove;
+                }
+
+                SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+                SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+                SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+            }
+        }
+
         /// <summary>Called when [reset].</summary>
         public void Reset()
         {
@@ -439,13 +499,13 @@
             if (actualSOMDecomp != null)
                 DecomposeSurfom(actualSOMDecomp);
 
-            ResidueLayers = new List<ICanopy>();
+            Canopies = new List<ICanopy>();
             foreach (SurfOrganicMatterType pool in SurfOM)
             {
                 if (pool.CanopyLying.CoverTotal > 0)
-                    ResidueLayers.Add(pool.CanopyLying);
+                    Canopies.Add(pool.CanopyLying);
                 if (pool.CanopyStanding.CoverTotal > 0)
-                    ResidueLayers.Add(pool.CanopyStanding);
+                    Canopies.Add(pool.CanopyStanding);
             }
         }
 
@@ -1043,5 +1103,6 @@
 
             return newArray;
         }
+
     }
 }

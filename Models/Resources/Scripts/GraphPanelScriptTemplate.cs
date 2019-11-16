@@ -12,6 +12,7 @@ namespace Models
 	/// <summary>
 	/// This script must implement the IGraphPanelScript interface.
 	/// </summary>
+    [Serializable]
 	public class Script : Model, IGraphPanelScript
 	{
 		/// <summary>

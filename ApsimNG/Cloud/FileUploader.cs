@@ -1,7 +1,7 @@
 ﻿using System;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.WindowsAzure.Storage.RetryPolicies;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage.RetryPolicies;
 using System.Security.Cryptography;
 using System.IO;
 
@@ -40,7 +40,7 @@ namespace ApsimNG.Cloud
             CloudBlockBlob blob = containerRef.GetBlockBlobReference(remoteFileName);
             if (BlobNeedsUploading(blob, filePath))
             {
-                blob.UploadFromFileAsync(filePath, FileMode.Open, new AccessCondition(), new BlobRequestOptions { ParallelOperationThreadCount = 8, StoreBlobContentMD5 = true }, null).Wait();
+                blob.UploadFromFileAsync(filePath, new AccessCondition(), new BlobRequestOptions { ParallelOperationThreadCount = 8, StoreBlobContentMD5 = true }, null).Wait();
             }
 
             var policy = new SharedAccessBlobPolicy

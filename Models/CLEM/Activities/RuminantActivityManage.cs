@@ -48,6 +48,7 @@ namespace Models.CLEM.Activities
         [Category("General", "Breeders")]
         [Description("Maximum female breeder age (months) for culling")]
         [Required, GreaterThanEqualValue(0)]
+        [System.ComponentModel.DefaultValueAttribute(120)]
         public double MaximumBreederAge { get; set; }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace Models.CLEM.Activities
         [Category("General", "Breeders")]
         [Description("Proportion of max female breeders in single purchase")]
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required, Proportion, GreaterThanValue(0)]
+        [Required, Proportion, GreaterThanEqualValue(0)]
         public double MaximumProportionBreedersPerPurchase { get; set; }
 
         /// <summary>
@@ -88,7 +89,17 @@ namespace Models.CLEM.Activities
         [Category("General", "Breeding males")]
         [Description("Maximum male breeder age (months) for culling")]
         [Required, GreaterThanEqualValue(0)]
+        [System.ComponentModel.DefaultValueAttribute(120)]
         public double MaximumBullAge { get; set; }
+
+        /// <summary>
+        /// Bull age (months) at purchase
+        /// </summary>
+        [Category("General", "Breeding males")]
+        [Description("Male breeder age (months) at purchase")]
+        [System.ComponentModel.DefaultValueAttribute(48)]
+        [Required, GreaterThanValue(0)]
+        public double BullAgeAtPurchase { get; set; }
 
         /// <summary>
         /// Allow natural herd replacement of sires
@@ -109,6 +120,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Fill breeding males up to required amount
         /// </summary>
+        [Category("General", "Breeding males")]
         [Description("Fill breeding males up to required number")]
         [Required]
         public bool FillBreedingMalesAtStartup { get; set; }
@@ -118,6 +130,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("General", "Males")]
         [Description("Male selling age (months)")]
+        [System.ComponentModel.DefaultValueAttribute(24)]
         [Required, GreaterThanEqualValue(0)]
         public double MaleSellingAge { get; set; }
 
@@ -397,7 +410,7 @@ namespace Models.CLEM.Activities
                             {
                                 if (i < MaximumSiresPerPurchase)
                                 {
-                                    RuminantMale newbull = new RuminantMale(48, Sex.Male, 450, breedParams)
+                                    RuminantMale newbull = new RuminantMale(BullAgeAtPurchase, Sex.Male, 0, breedParams)
                                     {
                                         Location = grazeStore,
                                         Breed = this.PredictedHerdBreed,
@@ -405,7 +418,6 @@ namespace Models.CLEM.Activities
                                         BreedingSire = true,
                                         Gender = Sex.Male,
                                         ID = 0, // Next unique ide will be assigned when added
-                                        PreviousWeight = 450,
                                         SaleFlag = HerdChangeReason.SirePurchase
                                     };
 

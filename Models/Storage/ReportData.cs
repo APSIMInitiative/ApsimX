@@ -71,7 +71,11 @@
             else if (value.GetType() == typeof(DateTime) || value.GetType() == typeof(string) || !value.GetType().IsClass)
             {
                 // Scalar
-                var newColumnName = AddColumnToTable(row.Table, name, value.GetType());
+                Type dataType = value.GetType();
+                if (dataType.IsEnum)
+                    dataType = typeof(string);
+
+                var newColumnName = AddColumnToTable(row.Table, name, dataType);
                 row[newColumnName] = value;
             }
             else if (value.GetType().GetInterface("IList") != null)
@@ -80,8 +84,13 @@
                 IList array = value as IList;
                 for (int arrayIndex = 0; arrayIndex < array.Count; arrayIndex++)
                 {
+                    int startIndex = 0;
                     string heading = name;
-                    heading += "(" + (arrayIndex + 1).ToString() + ")";
+                    string arraySpecification = StringUtilities.SplitOffBracketedValue(ref heading, '(', ')');
+                    if (arraySpecification != string.Empty)
+                        startIndex = Convert.ToInt32(arraySpecification) - 1;
+
+                    heading += "(" + (startIndex + arrayIndex + 1).ToString() + ")";
 
                     object arrayElement = array[arrayIndex];
                     FlattenValueIntoRow(heading, units, arrayElement, row);  // recursion                }

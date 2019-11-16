@@ -22,11 +22,11 @@ namespace Models.PMF.Phen
         Phenology Phenology = null;
 
         /// <summary>The photoperiod</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction Photoperiod = null;
 
         /// <summary>The Photoperiod sensitivity factor</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PhotoSens = null;
         
         /// <summary>The start stage for effects</summary>

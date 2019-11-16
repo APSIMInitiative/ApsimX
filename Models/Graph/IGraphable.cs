@@ -50,7 +50,12 @@
         /// <summary>
         /// A stacked area series - a line series with the area between the line and the x-axis filled with colour.
         /// </summary>
-        StackedArea
+        StackedArea,
+
+        /// <summary>
+        /// A box and whisker plot
+        /// </summary>
+        Box
     }
 
     /// <summary>An enumeration for the different types of markers</summary>

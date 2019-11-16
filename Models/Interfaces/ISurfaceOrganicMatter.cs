@@ -14,11 +14,6 @@ namespace Models.Interfaces
         /// <summary>Fraction of ground covered by all surface OMs</summary>
         double Cover { get; }
 
-        /// <summary>
-        /// List of residue layers dimensions that are passed to microclimate for arbitrating interception of radiation and rainfall
-        /// </summary>
-        List<ICanopy> ResidueLayers { get; }
-
         /// <summary>Adds material to the surface organic matter pool.</summary>
         /// <param name="biomass">The amount of biomass added (kg/ha).</param>
         /// <param name="N">The amount of N added (ppm).</param>
