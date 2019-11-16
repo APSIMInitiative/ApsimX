@@ -27214,7 +27214,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This trial was conducted on a silt loam soil in Fayetteville Arkansas, USA, in years 2001, 2002 and 2003. The factor studied were seven soybean maturity groups (from mg 00 to mg 6) and in some year multiple varieties within a maturity group. Crops were irrigated. No N fertilization was applied. This region has no shallow water tables. Phenology data were collected at different growth stages and were used in this work. Weather and soil data for the site were estimated from public sources. For additional information for this trial we refer to:\n\nEdwards JT, Purcell LC, 2005. Soybean yield and biomass responses to increasing plant population among diverse maturity groups: I. Agronomic characteristics. Crop Science 45: 1770–1777. \n\n",
+                  "Text": "This trial ([EdwardsAndPurcell_2005]) was conducted on a silt loam soil in Fayetteville Arkansas, USA, in years 2001, 2002 and 2003. The factor studied were seven soybean maturity groups (from mg 00 to mg 6) and in some year multiple varieties within a maturity group. Crops were irrigated. No N fertilization was applied. This region has no shallow water tables. Phenology data were collected at different growth stages and were used in this work. Weather and soil data for the site were estimated from public sources. For additional information for this trial we refer to:\n\n\n",
                   "Name": "Arkansas data description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -30281,7 +30281,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This trial conducted in West Lafayette Indiana, USA, in years 2006 and 2007. The factors studied were six planting dates x three varieties (from mg 2.6 to mg 3.7). No irrigation or fertilization applied. Phenology, gravimetric soil moisture at three depth (manual soil cores), pod numbers, seed size, grain yield, protein and oil data were collected. Weather and soil data for the site were estimated from public sources. For additional information about this trial we refer to  \n\nRobinson AP, Conley SP, Volenec JJ, Santini JB, 2009. Analysis of high yielding, early-planted soybean in Indiana. Agronomy J 101: 131–139. \n",
+                  "Text": "This trial ([Robinsonetal_2009]) conducted in West Lafayette Indiana, USA, in years 2006 and 2007. The factors studied were six planting dates x three varieties (from mg 2.6 to mg 3.7). No irrigation or fertilization applied. Phenology, gravimetric soil moisture at three depth (manual soil cores), pod numbers, seed size, grain yield, protein and oil data were collected. Weather and soil data for the site were estimated from public sources. ",
                   "Name": "Indiana data description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -33340,7 +33340,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This trial was conducted in Stoneville Mississippi USA, in years 1998 to 2002. The factors studied were planting dates (ranged from early March to early July) and varieties (from mg 3.4 to mg 5.6). Crops were irrigated. Phenological measurements were obtained in the field following the V/R staging system. For more info about this trial we refer to  \nZhang L, Zhang J, Kyei-Boahen S, 2004. Developing phenological prediction tables for soybean. Online. Crop Management doi:10.1094/CM-2004-1025-01-RS. \n",
+                  "Text": "This trial ([Zhangetal_2004]) was conducted in Stoneville Mississippi USA, in years 1998 to 2002. The factors studied were planting dates (ranged from early March to early July) and varieties (from mg 3.4 to mg 5.6). Crops were irrigated. Phenological measurements were obtained in the field following the V/R staging system. \n",
                   "Name": "Mississippi data description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -35491,7 +35491,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This trial was conducted on a deep silt loam soil in Lincoln Nebraska USA, in years 2006 and 2007. The factors studied were different crop histories (normal N applied to corn-soy rotation and high N applied to the rotation) and 4 N fertilization treatments to the soybean crop (zero N, 180 kg N/ha at planting, 180 kg N/ha as split between preplanting and V6 leaf stage, and 180 kg N/ha at R5 stage). Crops were irrigated. Row spacing was 76 cm, plant density about 31 pl/m2 and planting date around late april to early May. The following measurements were taken: initial soil nitrate, destructive biomass samples six times during the season (size 0.46 m2 per plot) per year and per treatment, biomass partitioning, dry weight and N concentrations of each tissue (Dumas method in Rapid N Cube; Elementer, Germany), fallen leaves, phenology, and N-fixation during the growing season using the ureide method. Local weather data and public soil data were used to drive the simulations. For more info about this trial we refer to \n \nSalvagiotti F, Specht JE, Cassman KG, Walters DT, Weis A, Dobermann A, 2009. Growth and N fixation in high yielding soybean: impact if N fertilization. Agronomy J 101: 958–970, doi:10.2134/agronj2008.0173x\n",
+                  "Text": "This trial ([Salvagiotti_et_al_2009])was conducted on a deep silt loam soil in Lincoln Nebraska USA, in years 2006 and 2007. The factors studied were different crop histories (normal N applied to corn-soy rotation and high N applied to the rotation) and 4 N fertilization treatments to the soybean crop (zero N, 180 kg N/ha at planting, 180 kg N/ha as split between preplanting and V6 leaf stage, and 180 kg N/ha at R5 stage). Crops were irrigated. Row spacing was 76 cm, plant density about 31 pl/m2 and planting date around late april to early May. The following measurements were taken: initial soil nitrate, destructive biomass samples six times during the season (size 0.46 m2 per plot) per year and per treatment, biomass partitioning, dry weight and N concentrations of each tissue (Dumas method in Rapid N Cube; Elementer, Germany), fallen leaves, phenology, and N-fixation during the growing season using the ureide method. Local weather data and public soil data were used to drive the simulations. \n \n",
                   "Name": "Nebraska data description",
                   "Children": [],
                   "IncludeInDocumentation": true,
