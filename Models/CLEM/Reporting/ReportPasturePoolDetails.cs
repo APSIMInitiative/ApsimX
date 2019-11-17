@@ -123,7 +123,7 @@ namespace Models.CLEM.Reporting
             this.FindVariableMembers();
 
             // Subscribe to events.
-            if (EventNames == null)
+            if (EventNames == null || EventNames.Count() == 0)
             {
                 events.Subscribe("[Clock].CLEMHerdSummary", DoOutputEvent);
             }
