@@ -674,8 +674,18 @@
 
                         if (descriptionName != null)
                         {
-                            viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
-                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
+                            if (model.GetType().Namespace.Contains("CLEM"))
+                            {
+                                viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
+                                presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
+                            }
+                            else
+                            {
+                                ShowInRightHandPanel(model,
+                                                     newView: new ViewBase(view as ViewBase, "ApsimNG.Resources.Glade.AddModelView.glade"),
+                                                     presenter: new ViewWithDescriptionPresenter());
+                                return;
+                            }
                         }
 
                         if (viewName == null && presenterName == null)
