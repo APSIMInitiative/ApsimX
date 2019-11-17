@@ -74,6 +74,14 @@ namespace Models.CLEM.Resources
         public List<HumanFoodStorePool> Pools = new List<HumanFoodStorePool>();
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public HumanFoodStoreType()
+        {
+            base.SetDefaults();
+        }
+
+        /// <summary>
         /// Amount (kg)
         /// </summary>
         [XmlIgnore]
