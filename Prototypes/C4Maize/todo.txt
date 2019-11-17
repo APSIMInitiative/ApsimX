@@ -26,4 +26,9 @@ Need to double check that these aren't used:
 - fix leaf metabolic ndemand calc (stage lookup)												- done
 - marry sorghum/maize Culm.CalcPotentialArea leafNoEffective calculations						- done
 - LAI is incorrect in leaf ndemand calcs on day 55												- done
-- rue/te (and thus dltDM) are both incorrect on day 55											- 
+- rue/te (and thus dltDM) are both incorrect on day 55											- done
+- diffusion day 59 <- leaf ndemand <- dltSlai													- done
+- diffusion day 60 <- leaf ndemand <- dltSlai <- accumTT										- done
+- diffusion day 65 <- root/leaf ndemand
+  - leaf ndemand <-
+  - root ndemand <- root dmGreen <- 
