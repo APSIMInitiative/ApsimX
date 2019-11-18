@@ -6,7 +6,6 @@
     using Models.Core;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
-    using Models.Soils;
     using System;
     using System.Collections.Generic;
     using System.IO;
