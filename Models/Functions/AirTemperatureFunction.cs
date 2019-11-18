@@ -9,6 +9,10 @@ namespace Models.Functions
     /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
     /// </summary>
     [Serializable]
+    [Description("A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures\n\n" +
+        "Eight interpolations of the air temperature are calculated using a three-hour correction factor." +
+        "For each air three-hour air temperature, a value is calculated.  The eight three-hour estimates" +
+        "are then averaged to obtain the daily value.")]
     public class AirTemperatureFunction : Model, IFunction, ICustomDocumentation
     {
 

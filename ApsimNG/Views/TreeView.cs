@@ -181,7 +181,7 @@ namespace UserInterface.Views
             if (path.Prev() && treemodel.GetIter(out prevnode, path))
                 treemodel.MoveBefore(node, prevnode);
 
-            treeview1.ScrollToCell(path, treeview1.Columns[0], false, 0, 0);
+            treeview1.ScrollToCell(path, null, false, 0, 0);
         }
 
         /// <summary>Moves the specified node down 1 position.</summary>
@@ -195,7 +195,7 @@ namespace UserInterface.Views
             if (treemodel.GetIter(out nextnode, path))
                 treemodel.MoveAfter(node, nextnode);
 
-            treeview1.ScrollToCell(path, treeview1.Columns[0], false, 0, 0);
+            treeview1.ScrollToCell(path, null, false, 0, 0);
         }
 
         /// <summary>Renames the specified node path.</summary>

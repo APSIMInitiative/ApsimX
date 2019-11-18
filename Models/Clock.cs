@@ -366,9 +366,6 @@
                 if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
                     EndOfWeek.Invoke(this, args);
 
-                if (Today == EndDate && EndOfSimulation != null)
-                    EndOfSimulation.Invoke(this, args);
-
                 if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
                     EndOfYear.Invoke(this, args);
 
@@ -433,6 +430,10 @@
                 Today = Today.AddDays(1);
             }
             Today = EndDate;
+            
+            if (EndOfSimulation != null)
+                EndOfSimulation.Invoke(this, args);
+
             Summary.WriteMessage(this, "Simulation terminated normally");
         }
     }

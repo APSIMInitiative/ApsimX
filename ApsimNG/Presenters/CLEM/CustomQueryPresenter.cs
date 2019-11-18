@@ -54,7 +54,10 @@ namespace ApsimNG.Presenters.CLEM
                 this.view.Sql = query.Sql;
                 this.view.Filename = query.Filename;
                 this.view.Tablename = query.Tablename;
-                OnRunQuery(this, EventArgs.Empty);
+                if (query.Enabled)
+                {
+                    OnRunQuery(this, EventArgs.Empty);
+                }
             }
         }
 

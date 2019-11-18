@@ -1,4 +1,10 @@
 // -----------------------------------------------------------------------
+// <copyright file="stock_padd.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+
+// -----------------------------------------------------------------------
 // GrazPlan animal model paddock and forage objects
 // -----------------------------------------------------------------------
 
@@ -796,7 +802,7 @@ namespace Models.GrazPlan
                 throw new Exception("Stock: Unit (" + units + ") not recognised");
 
             if (forage != null)
-                forage.SetAvailForage(GrazType.scaleGrazingInputs(grazingInput, scaleInput));
+                forage.SetAvailForage(GrazType.ScaleGrazingInputs(grazingInput, scaleInput));
             else
                 throw new Exception("Stock: Forage not recognised");
         }
@@ -839,7 +845,7 @@ namespace Models.GrazPlan
                         result.TotalGreen += (greenPropn * biomass.Live.Wt);   // g/m^2
                         result.TotalDead += biomass.Dead.Wt;
 
-                        dmd = ((biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt));    // storage and metab are 100% dmd
+                        dmd = (biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt);    // storage and metab are 100% dmd
                         dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
                         totalDMD += dmd;
                         totalN += (greenPropn * biomass.Live.N) + biomass.Dead.N;
@@ -915,7 +921,7 @@ namespace Models.GrazPlan
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
                         double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
-                        double prpnToRemove = propnRemoved * propnOfPlantDM / (1.0 - propnOfPlantDM);
+                        double prpnToRemove = propnRemoved * propnOfPlantDM;
                         prpnToRemove = Math.Min(prpnToRemove, 1.0);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnToRemove;
