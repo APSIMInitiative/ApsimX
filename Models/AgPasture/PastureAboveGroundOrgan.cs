@@ -9,7 +9,7 @@
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan : Model, IRemovableBiomass
+    public class PastureAboveGroundOrgan : Model, IOrganDamage
     {
         /// <summary>The collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]

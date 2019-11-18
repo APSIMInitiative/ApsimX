@@ -734,7 +734,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the crop, pasture component
         /// </summary>
-        public object ForageObj { get; set; }
+        public IPlantDamage ForageObj { get; set; }
 
         /// <summary>
         /// Update the forage data for this crop/agpasture object
@@ -830,7 +830,7 @@ namespace Models.GrazPlan
             }
 
             // calculate the total live and dead biomass
-            foreach (IRemovableBiomass biomass in Apsim.Children((IModel)forageObj, typeof(IRemovableBiomass)))
+            foreach (IOrganDamage biomass in Apsim.Children((IModel)forageObj, typeof(IOrganDamage)))
             {
                 if (biomass.IsAboveGround)
                 {
@@ -902,7 +902,7 @@ namespace Models.GrazPlan
 
                 // calculations of proportions each organ of the total plant removed (in the native units)
                 double totalDM = 0;
-                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                foreach (IOrganDamage organ in Apsim.Children((IModel)this.ForageObj, typeof(IOrganDamage)))
                 {
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
@@ -910,7 +910,7 @@ namespace Models.GrazPlan
                     }
                 }
 
-                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                foreach (IOrganDamage organ in Apsim.Children((IModel)this.ForageObj, typeof(IOrganDamage)))
                 {
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
@@ -1038,7 +1038,7 @@ namespace Models.GrazPlan
         /// <param name="hostID">Component ID</param>
         /// <param name="driverID">Driver ID</param>
         /// <param name="forageObj">The forage object</param>
-        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, object forageObj)
+        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, IPlantDamage forageObj)
         {
             ForageProvider forageProvider;
 

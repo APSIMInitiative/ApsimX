@@ -4234,7 +4234,7 @@ namespace Models.GrazPlan
                     PaddockInfo thePadd = this.stockModel.Paddocks.ByObj(zone);
 
                     // find all the child crop, pasture components that have removable biomass
-                    foreach (Model crop in Apsim.FindAll(zone, typeof(IPlant)))
+                    foreach (IPlantDamage crop in Apsim.FindAll(zone, typeof(IPlantDamage)))
                     {
                         this.stockModel.ForagesAll.AddProvider(thePadd, zone.Name, zone.Name + "." + crop.Name, 0, 0, crop);
                     }
@@ -4676,7 +4676,7 @@ namespace Models.GrazPlan
                     {
                         if (forageProvider.ForageObj != null)
                         {
-                            foreach (IRemovableBiomass biomass in Apsim.Children((IModel)forageProvider.ForageObj, typeof(IRemovableBiomass)))
+                            foreach (IOrganDamage biomass in forageProvider.ForageObj.Organs)
                             {
                                 if (biomass.IsAboveGround)
                                 {

@@ -1,17 +1,21 @@
 namespace Models.PMF.Interfaces
 {
     /// <summary>
-    /// Interface used by code (e.g. STOCK) to remove biomass from an organ.
+    /// Interface used by models (e.g. STOCK, pests and diseases) to access an organ's properties to calculate damage.
+    /// The actual damage is done through the plant damage interface.
     /// </summary>
-    public interface IRemovableBiomass
+    public interface IOrganDamage
     {
-        /// <summary>Gets the live biomass</summary>
+        /// <summary>Name of the organ.</summary>
+        string Name { get; }
+
+        /// <summary>Gets the live biomass of the organ.</summary>
         Biomass Live { get; }
 
-        /// <summary>Gets the dead biomass</summary>
+        /// <summary>Gets the dead biomass of the organ.</summary>
         Biomass Dead { get; }
 
-        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        /// <summary>Gets a value indicating whether the organ is above ground or not.</summary>
         bool IsAboveGround { get; }
 
         /// <summary>

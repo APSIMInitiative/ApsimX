@@ -354,7 +354,7 @@
                 OrganBiomassRemovalType biomassRemoval = null;
                 if (removalData != null)
                     biomassRemoval = removalData.GetFractionsForOrgan(organ.Name);
-                (organ as IRemovableBiomass).RemoveBiomass(biomassRemoveType, biomassRemoval);
+                (organ as IOrganDamage).RemoveBiomass(biomassRemoveType, biomassRemoval);
             }
 
             // Reset the phenology if SetPhenologyStage specified.
