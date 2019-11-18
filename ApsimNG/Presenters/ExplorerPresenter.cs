@@ -6,6 +6,7 @@
     using Models.Core;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
+    using Models.Soils;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -313,6 +314,15 @@
         {
             this.ApsimXFile.ExplorerWidth = this.TreeWidth;
             this.ApsimXFile.Write(this.ApsimXFile.FileName);
+        }
+
+        /// <summary>Select a node in the view.</summary>
+        /// <param name="nodePath">Node to be selected.</param>
+        public void SelectNode(IModel node)
+        {
+            SelectNode(Apsim.FullPath(node));
+            this.HideRightHandPanel();
+            this.ShowRightHandPanel();
         }
 
         /// <summary>Select a node in the view.</summary>
