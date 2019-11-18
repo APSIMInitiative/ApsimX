@@ -1317,31 +1317,30 @@ namespace Models.GrazPlan
         ///   separated list of functionally identical breeds. In this case the       
         ///   parameter set for the first member of the group is returned.            
         /// </summary>
-        /// <param name="sBreedName"></param>
+        /// <param name="breedName">The breed name</param>
         /// <returns></returns>
-        public AnimalParamSet Match(string sBreedName)
+        public AnimalParamSet Match(string breedName)
         {
-            if (sBreedName.IndexOf(',') >= 0)
-                sBreedName = sBreedName.Remove(sBreedName.IndexOf(','), sBreedName.Length - sBreedName.IndexOf(','));
+            if (breedName.IndexOf(',') >= 0)
+                breedName = breedName.Remove(breedName.IndexOf(','), breedName.Length - breedName.IndexOf(','));
 
-            return (AnimalParamSet)GetNode(sBreedName);
+            return (AnimalParamSet)GetNode(breedName);
         }
 
         /// <summary>
         /// Returns the number of breeds of a given animal type
         /// </summary>
-        /// <param name="aAnimal"></param>
+        /// <param name="animalType">The animal type</param>
         /// <returns></returns>
-        public int iBreedCount(GrazType.AnimalType aAnimal)
+        public int BreedCount(GrazType.AnimalType animalType)
         {
             AnimalParamSet breedSet;
-            int Idx;
-
+            
             int result = 0;
-            for (Idx = 0; Idx <= LeafCount(true) - 1; Idx++)                                     // Current locale only                      
+            for (int idx = 0; idx <= LeafCount(true) - 1; idx++)                                     // Current locale only                      
             {
-                breedSet = (AnimalParamSet)GetLeaf(Idx, true);
-                if (breedSet.Animal == aAnimal)
+                breedSet = (AnimalParamSet)GetLeaf(idx, true);
+                if (breedSet.Animal == animalType)
                     result++;
             }
 
@@ -1351,29 +1350,29 @@ namespace Models.GrazPlan
         /// <summary>
         /// Iterates through breeds of a given animal type and returns the breed name
         /// </summary>
-        /// <param name="aAnimal"></param>
-        /// <param name="iBreed"></param>
+        /// <param name="animalType">The animal type</param>
+        /// <param name="breedIdx">The breed index 0-n</param>
         /// <returns></returns>
-        public string sBreedName(GrazType.AnimalType aAnimal, int iBreed)
+        public string BreedName(GrazType.AnimalType animalType, int breedIdx)
         {
             AnimalParamSet breedSet;
-            int iCount;
-            int iFound;
-            int Idx;
+            int count;
+            int found;
+            int idx;
 
-            iCount = LeafCount(true);                                             // Current locale only                      
-            iFound = -1;
-            Idx = 0;
+            count = LeafCount(true);                                             // Current locale only                      
+            found = -1;
+            idx = 0;
             breedSet = null;
-            while ((Idx < iCount) && (iFound < iBreed))
+            while ((idx < count) && (found < breedIdx))
             {
-                breedSet = (AnimalParamSet)GetLeaf(Idx, true);
-                if (breedSet.Animal == aAnimal)
-                    iFound++;
-                Idx++;
+                breedSet = (AnimalParamSet)GetLeaf(idx, true);
+                if (breedSet.Animal == animalType)
+                    found++;
+                idx++;
             }
 
-            if (iFound == iBreed)
+            if (found == breedIdx)
                 return breedSet.Name;
             else
                 return "";
@@ -1383,38 +1382,38 @@ namespace Models.GrazPlan
         /// Populates a string list with the names of "breed groups", i.e. sets of    
         /// parameter sets that are identical in all respects save their names.       
         /// </summary>
-        /// <param name="aAnimal"></param>
-        /// <param name="aList"></param>
-        public void getBreedGroups(GrazType.AnimalType aAnimal, List<string> aList)
+        /// <param name="animalType">The animal type</param>
+        /// <param name="breedList">The list of breeds found that are the same</param>
+        public void GetBreedGroups(GrazType.AnimalType animalType, List<string> breedList)
         {
-            bool bSameFound;
-            int Idx, Jdx;
+            bool sameFound;
+            int idx, jdx;
 
-            aList.Clear();                                                              // Start by forming a list of all breeds.   
-            for (Idx = 0; Idx <= iBreedCount(aAnimal) - 1; Idx++)
-                aList.Add(sBreedName(aAnimal, Idx));
+            breedList.Clear();                                                              // Start by forming a list of all breeds.   
+            for (idx = 0; idx <= BreedCount(animalType) - 1; idx++)
+                breedList.Add(BreedName(animalType, idx));
 
-            for (Idx = aList.Count - 1; Idx >= 1; Idx--)
+            for (idx = breedList.Count - 1; idx >= 1; idx--)
             {
-                bSameFound = false;
-                for (Jdx = Idx - 1; Jdx >= 0; Jdx--)
-                    if (!bSameFound)
+                sameFound = false;
+                for (jdx = idx - 1; jdx >= 0; jdx--)
+                    if (!sameFound)
                     {
-                        bSameFound = Match(aList[Idx]).bFunctionallySame(Match(aList[Jdx]));
-                        if (bSameFound)
+                        sameFound = Match(breedList[idx]).bFunctionallySame(Match(breedList[jdx]));
+                        if (sameFound)
                         {
-                            aList[Jdx] = aList[Jdx] + ", " + aList[Idx];
-                            aList.RemoveAt(Idx);
+                            breedList[jdx] = breedList[jdx] + ", " + breedList[idx];
+                            breedList.RemoveAt(idx);
                         }
                     }
             }
         }
 
         /// <summary>
-        /// 
+        /// Count of parents
         /// </summary>
-        /// <returns></returns>
-        public int iParentageCount()
+        /// <returns>The count of parents</returns>
+        public int ParentageCount()
         {
             int result;
 
@@ -1429,29 +1428,29 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Parent breed at the index
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public string sParentageBreed(int Idx)
+        /// <param name="parentIdx">The index of the parent</param>
+        /// <returns>The parent breed</returns>
+        public string ParentageBreed(int parentIdx)
         {
-            if ((FParentage.Length == 0) && (Idx == 0))
+            if ((FParentage.Length == 0) && (parentIdx == 0))
                 return Name;
             else
-                return FParentage[Idx].sBaseBreed;
+                return FParentage[parentIdx].sBaseBreed;
         }
 
         /// <summary>
-        /// 
+        /// The proportion of the parent
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public double fParentagePropn(int Idx)
+        /// <param name="parentIdx">The index of the parent</param>
+        /// <returns>The proportion</returns>
+        public double ParentagePropn(int parentIdx)
         {
-            if ((FParentage.Length == 0) && (Idx == 0))
+            if ((FParentage.Length == 0) && (parentIdx == 0))
                 return 1.0;
             else
-                return FParentage[Idx].fPropn;
+                return FParentage[parentIdx].fPropn;
         }
         /// <summary>
         /// Breed standard reference weight
