@@ -353,7 +353,7 @@ namespace UserInterface.Views
                     theGenoType.DamBreed = cbxDamBreed.SelectedValue;
                     theGenoType.SireBreed = cbxSireBreed.SelectedValue;
                 }
-                else if (cbxDamBreed.SelectedValue.ToLower() == theGenoType.Name.ToLower())
+                else if (cbxDamBreed.SelectedValue != null && (cbxDamBreed.SelectedValue.ToLower() == theGenoType.Name.ToLower()))
                 {
                     theGenoType.DamBreed = string.Empty;
                     theGenoType.SireBreed = string.Empty;
@@ -407,21 +407,28 @@ namespace UserInterface.Views
             {
                 ParseCurrGenotype();
 
-                newAnimal = GrazType.AnimalType.Sheep;
+                // Find the first genotype that is not in the inits yet
+                if (currentGenotype >= 0)
+                    newAnimal = genotypeAnimals[currentGenotype];
+                else
+                    newAnimal = GrazType.AnimalType.Sheep;
                 newBreedIndex = 0;
                 found = false;
-                while ((newBreedIndex < paramSet.iBreedCount(newAnimal)) && !found)
+                while ((newBreedIndex < paramSet.BreedCount(newAnimal)) && !found)
                 {
-                    newBreed = paramSet.sBreedName(GrazType.AnimalType.Sheep, newBreedIndex);
+                    newBreed = paramSet.BreedName(newAnimal, newBreedIndex);
 
                     found = true;
                     for (index = 0; index < genotypeInits.Length; index++)
                     {
                         found = (found && (newBreed.ToLower() != genotypeInits[index].Name.ToLower()));
                     }
-                    if (!found && (newAnimal == GrazType.AnimalType.Sheep) && (newBreedIndex == paramSet.iBreedCount(newAnimal)))
+                    if (!found && (newBreedIndex == paramSet.BreedCount(newAnimal) - 1))
                     {
-                        newAnimal = GrazType.AnimalType.Cattle;
+                        if (newAnimal == GrazType.AnimalType.Sheep)
+                            newAnimal = GrazType.AnimalType.Cattle;
+                        else
+                            newAnimal = GrazType.AnimalType.Sheep;
                         newBreedIndex = 0;
                     }
                     else
@@ -440,14 +447,14 @@ namespace UserInterface.Views
                     Array.Resize(ref genotypeInits, genotypeInits.Length + 1);
                     genotypeInits[genotypeInits.Length - 1] = new StockGeno();
                     genotypeInits[genotypeInits.Length - 1].Conception = new double[4];
+
+                    SetGenotypeDefaults(genotypeInits.Length - 1, newBreed);
+                    genoList.AppendValues(newBreed);
+                    SelectedGenoIndex = genotypeInits.Length - 1;
+                    ClickGenotypeList(null, null);
+
+                    EnableButtons();
                 }
-
-                SetGenotypeDefaults(genotypeInits.Length - 1, newBreed);
-                genoList.AppendValues(newBreed);
-                SelectedGenoIndex = genotypeInits.Length - 1;
-                ClickGenotypeList(null, null);
-
-                EnableButtons();
             }
         }
 
@@ -487,7 +494,9 @@ namespace UserInterface.Views
                 FillCurrGenotype();
                 edtGenotypeName.Text = newGenoName;
                 //ChangeGenotypeName(sender, e);          // ensure trigger updates on the Animals tab also
-                filling = true;            SetItem(genoList, currentGenotype, newGenoName); filling = false;
+                filling = true;
+                SetItem(genoList, currentGenotype, newGenoName);
+                filling = false;
             }
         }
 
@@ -649,7 +658,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Selected index for the treeview
+        /// Gets or sets the selected index for the treeview
         /// </summary>
         private int SelectedGenoIndex
         {
@@ -682,34 +691,37 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ClickAnimal(object sender, EventArgs e)
         {
-            GrazType.AnimalType currAnimal;
-
-            if (rbtnSheep.Active)
-                currAnimal = GrazType.AnimalType.Sheep;
-            else
-                currAnimal = GrazType.AnimalType.Cattle;
-
-            genotypeAnimals[currentGenotype] = currAnimal;
-
-            List<string> names = new List<string>();
-
-            int count = this.paramSet.iBreedCount(currAnimal);
-            string[] namesArray = new string[count];
-            for (int i = 0; i < count; i++)
+            if (((Gtk.RadioButton)sender).Active)
             {
-                namesArray[i] = paramSet.sBreedName(currAnimal, i);
+                GrazType.AnimalType currAnimal;
+
+                if (rbtnSheep.Active)
+                    currAnimal = GrazType.AnimalType.Sheep;
+                else
+                    currAnimal = GrazType.AnimalType.Cattle;
+
+                genotypeAnimals[currentGenotype] = currAnimal;
+
+                List<string> names = new List<string>();
+
+                int count = this.paramSet.BreedCount(currAnimal);
+                string[] namesArray = new string[count];
+                for (int i = 0; i < count; i++)
+                {
+                    namesArray[i] = paramSet.BreedName(currAnimal, i);
+                }
+
+                cbxDamBreed.Changed -= ChangeBreed;
+
+                cbxDamBreed.Values = namesArray;
+                cbxDamBreed.SelectedIndex = 0;
+                cbxSireBreed.Values = namesArray;
+                cbxSireBreed.SelectedIndex = 0;
+
+                cbxDamBreed.Changed += ChangeBreed;
+
+                ChangeBreed(null, null);            //Force default SRW values etc
             }
-
-            cbxDamBreed.Changed -= ChangeBreed;
-
-            cbxDamBreed.Values = namesArray;
-            cbxDamBreed.SelectedIndex = 0;
-            cbxSireBreed.Values = namesArray;
-            cbxSireBreed.SelectedIndex = 0;
-
-            cbxDamBreed.Changed += ChangeBreed;
-
-            ChangeBreed(null, null);            //Force default SRW values etc 
         }
 
         /// <summary>
