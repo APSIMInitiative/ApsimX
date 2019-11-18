@@ -12,7 +12,15 @@ namespace Models.LifeCycle
 
     /// <summary>
     /// # [Name]
-    /// A LifeCycle that contains LifeStages. 
+    /// A LifeCycle that contains LifeStages.
+    /// 
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|ChildStages       |List of LifeStage |  |List of child LifeStages       |
+    ///|CurrentLifeStage  |LifeStage         |  |Current LifeStage begin processed |
+    ///|InitialPopulation |double[]          |  |Initial population for each LifeStage |
+    ///|TotalPopulation   |double            |  |Total population of all the cohorts in this LifeCycle |
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -38,8 +46,7 @@ namespace Models.LifeCycle
         /// Default constructor
         /// </summary>
         public LifeCycle()
-        {
-            
+        {   
         }
 
         /// <summary>
@@ -47,6 +54,12 @@ namespace Models.LifeCycle
         /// </summary>
         [Description("Initial population at each LifeStage")]
         public double[] InitialPopulation { get; set; }
+
+        /// <summary>
+        /// Turn on the logging of organism movements
+        /// </summary>
+        [Description("Enable logging of migration and deaths for LifeStages")]
+        public bool LogSummary { get; set; }
 
         /// <summary>
         /// Total population of all the cohorts in this lifecycle
@@ -87,6 +100,7 @@ namespace Models.LifeCycle
                 {
                     Cohort newCohort = stage.NewCohort();
                     newCohort.Count = InitialPopulation[i];
+                    mySummary.WriteMessage(this, "LifeStage " + stage.Name + " starting with " + newCohort.Count.ToString());
                 }
                 else
                 {
@@ -108,6 +122,13 @@ namespace Models.LifeCycle
             {
                 CurrentLifeStage = stage;
                 stage.Process();
+
+                if (LogSummary && (stage.Mortality > 0))
+                    mySummary.WriteMessage(this, string.Format("{0} deaths in LifeStage {1}", stage.Mortality, stage.Name));
+
+                if (LogSummary && (stage.Migrants > 0))
+                    mySummary.WriteMessage(this, string.Format("{0} migrants from {1}", stage.Migrants, stage.Name));
+
             }
         }
     }
