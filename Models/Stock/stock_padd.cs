@@ -746,7 +746,7 @@ namespace Models.GrazPlan
         /// Update the forage data for this crop/agpasture object
         /// </summary>
         /// <param name="forageObj">The crop/pasture object</param>
-        public void UpdateForages(object forageObj)
+        public void UpdateForages(IPlantDamage forageObj)
         {
             // ensure this forage is in the list
             // the forage key in this case is component name
@@ -813,7 +813,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
         /// <returns>The grazing inputs</returns>
-        private GrazType.GrazingInputs Crop2GrazingInputs(object forageObj)
+        private GrazType.GrazingInputs Crop2GrazingInputs(IPlantDamage forageObj)
         {
             GrazType.GrazingInputs result = new GrazType.GrazingInputs();
             GrazType.zeroGrazingInputs(ref result);
@@ -836,7 +836,7 @@ namespace Models.GrazPlan
             }
 
             // calculate the total live and dead biomass
-            foreach (IOrganDamage biomass in Apsim.Children((IModel)forageObj, typeof(IOrganDamage)))
+            foreach (IOrganDamage biomass in forageObj.Organs)
             {
                 if (biomass.IsAboveGround)
                 {
@@ -908,7 +908,7 @@ namespace Models.GrazPlan
 
                 // calculations of proportions each organ of the total plant removed (in the native units)
                 double totalDM = 0;
-                foreach (IOrganDamage organ in Apsim.Children((IModel)this.ForageObj, typeof(IOrganDamage)))
+                foreach (IOrganDamage organ in ForageObj.Organs)
                 {
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
@@ -916,7 +916,7 @@ namespace Models.GrazPlan
                     }
                 }
 
-                foreach (IOrganDamage organ in Apsim.Children((IModel)this.ForageObj, typeof(IOrganDamage)))
+                foreach (IOrganDamage organ in ForageObj.Organs)
                 {
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
@@ -926,7 +926,7 @@ namespace Models.GrazPlan
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnToRemove;
                         removal.FractionLiveToRemove = prpnToRemove;
-                        organ.RemoveBiomass("Graze", removal);
+                        ForageObj.RemoveBiomass(organ.Name, "Graze", removal);
                     }
                 }
                 

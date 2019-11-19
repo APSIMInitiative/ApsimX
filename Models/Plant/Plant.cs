@@ -8,6 +8,7 @@
     using Models.PMF.Phen;
     using Models.PMF.Struct;
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Data;
     using System.Xml.Serialization;
@@ -19,7 +20,7 @@
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation
+    public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation, IPlantDamage
     {
         #region Class links
         /// <summary>The summary</summary>
@@ -194,6 +195,15 @@
         /// <remarks>USed to clean up data the day after an EndCrop, enabling some reporting.</remarks>
         public int DaysAfterEnding { get; set; }
 
+        /// <summary>A list of organs that can be damaged.</summary>
+        List<IOrganDamage> IPlantDamage.Organs { get { return Organs.Cast<IOrganDamage>().ToList(); } }
+
+        /// <summary>Leaf area index.</summary>
+        public double LAI => throw new NotImplementedException();
+
+        /// <summary>Amount of assimilate available to be damaged.</summary>
+        public double AssimilateAvailable => throw new NotImplementedException();
+
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
 
@@ -354,7 +364,7 @@
                 OrganBiomassRemovalType biomassRemoval = null;
                 if (removalData != null)
                     biomassRemoval = removalData.GetFractionsForOrgan(organ.Name);
-                (organ as IOrganDamage).RemoveBiomass(biomassRemoveType, biomassRemoval);
+                organ.RemoveBiomass(biomassRemoveType, biomassRemoval);
             }
 
             // Reset the phenology if SetPhenologyStage specified.
@@ -427,6 +437,56 @@
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
             }
+        }
+
+        /// <summary>
+        /// Remove biomass from an organ.
+        /// </summary>
+        /// <param name="organName">Name of organ.</param>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove.</param>
+        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            var organ = Organs.FirstOrDefault(o => o.Name.Equals(organName, StringComparison.InvariantCultureIgnoreCase));
+            if (organ == null)
+                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
+            organ.RemoveBiomass(biomassRemoveType, biomassToRemove);
+        }
+
+        /// <summary>
+        /// Set the plant leaf area index.
+        /// </summary>
+        /// <param name="deltaLAI">Delta LAI.</param>
+        public void ReduceCanopy(double deltaLAI)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Set the plant root length density.
+        /// </summary>
+        /// <param name="deltaRLD">New root length density.</param>
+        public void ReduceRootLengthDensity(double deltaRLD)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Remove an amount of assimilate from the plant.
+        /// </summary>
+        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
+        public void RemoveAssimilate(double deltaAssimilate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Reduce the plant population.
+        /// </summary>
+        /// <param name="newPlantPopulation">The new plant population.</param>
+        public void ReducePopulation(double newPlantPopulation)
+        {
+            throw new NotImplementedException();
         }
     }
 }

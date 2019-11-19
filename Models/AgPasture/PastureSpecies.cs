@@ -11,6 +11,7 @@
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
     using Models.Functions;
+    using Models.PMF.Interfaces;
 
     /// <summary>
     /// # [Name]
@@ -20,7 +21,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake
+    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IPlantDamage
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -3129,6 +3130,23 @@
             get { return stolons.Tissue[2].Nconc; }
         }
 
+        /// <summary>A list of organs that can be damaged.</summary>
+        public List<IOrganDamage> Organs
+        {
+            get
+            {
+                var organsThatCanBeDamaged = new List<IOrganDamage>() { leaves, stems, stolons };
+                return organsThatCanBeDamaged;
+            }
+        }
+
+
+        /// <summary>Plant population.</summary>
+        public double Population => throw new NotImplementedException();
+
+        /// <summary>Amount of assimilate available to be damaged.</summary>
+        public double AssimilateAvailable => throw new NotImplementedException();
+
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #endregion  --------------------------------------------------------------------------------------------------------
@@ -5503,6 +5521,56 @@
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Remove biomass from an organ.
+        /// </summary>
+        /// <param name="organName">Name of organ.</param>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove.</param>
+        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            var organ = Organs.Find(o => o.Name == organName);
+            if (organ == null)
+                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
+            (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
+        }
+
+        /// <summary>
+        /// Set the plant leaf area index.
+        /// </summary>
+        /// <param name="deltaLAI">Delta LAI.</param>
+        public void ReduceCanopy(double deltaLAI)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Set the plant root length density.
+        /// </summary>
+        /// <param name="deltaRLD">New root length density.</param>
+        public void ReduceRootLengthDensity(double deltaRLD)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Remove an amount of assimilate from the plant.
+        /// </summary>
+        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
+        public void RemoveAssimilate(double deltaAssimilate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Reduce the plant population.
+        /// </summary>
+        /// <param name="newPlantPopulation">The new plant population.</param>
+        public void ReducePopulation(double newPlantPopulation)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
