@@ -45,7 +45,7 @@
         public ICanopy Canopy = null;
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]
-        public Leaf Leaf = null;
+        public ICanopy Leaf = null;
         /// <summary>The root</summary>
         [Link(IsOptional = true)]
         public Root Root = null;
@@ -470,6 +470,12 @@
             if (organ == null)
                 throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
             organ.RemoveBiomass(biomassRemoveType, biomassToRemove);
+
+            // Also need to reduce LAI
+            var totalFractionToRemove = biomassToRemove.FractionLiveToRemove + biomassToRemove.FractionLiveToResidue;
+            var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
+            var lai = leaf.LAI;
+            ReduceCanopy(lai * totalFractionToRemove);
         }
 
         /// <summary>
@@ -478,7 +484,10 @@
         /// <param name="deltaLAI">Delta LAI.</param>
         public void ReduceCanopy(double deltaLAI)
         {
-            throw new NotImplementedException();
+            var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
+            var lai = leaf.LAI;
+            if (lai > 0)
+                leaf.LAI = lai - deltaLAI;
         }
 
         /// <summary>
