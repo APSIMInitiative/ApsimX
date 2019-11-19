@@ -133,7 +133,7 @@ namespace UserInterface.Views
             store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
             Type[] types = new Type[columnTitles.Length];
-            tree = new Gtk.TreeView() { CanFocus = true, RubberBanding = true, Name = "custom_treeview" };
+            tree = new Gtk.TreeView() { CanFocus = true, RubberBanding = true };
             tree.Selection.Mode = SelectionMode.Multiple;
 
             for (int i = 0; i < columnTitles.Length; i++)
@@ -172,10 +172,10 @@ namespace UserInterface.Views
 
 
             // change the colour of every other row - makes it easier to read
-            string style = "style \"custom-treestyle\"{ GtkTreeView::odd-row-color = \"#ECF2FD\" GtkTreeView::even-row-color = \"#FFFFFF\" GtkTreeView::allow-rules = 1 } widget \"*custom_treeview*\" style \"custom-treestyle\"";
-            //tree.CanFocus = true;
-            tree.RulesHint = true;
-            Rc.ParseString(style);
+            //string style = "style \"custom-treestyle\"{ GtkTreeView::odd-row-color = \"#ECF2FD\" GtkTreeView::even-row-color = \"#FFFFFF\" GtkTreeView::allow-rules = 1 } widget \"*custom_treeview*\" style \"custom-treestyle\"";
+            ////tree.CanFocus = true;
+            //tree.RulesHint = true;
+            //Rc.ParseString(style);
 
 
             // the tree holds the sorted, filtered data

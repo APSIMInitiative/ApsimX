@@ -477,8 +477,9 @@ namespace UserInterface.Presenters
 
             bool restart = fetchJobs.IsBusy;
             // cancel the fetch jobs worker
-            if (restart) fetchJobs.CancelAsync();
-            //while (FetchJobs.IsBusy);
+            if (restart)
+                fetchJobs.CancelAsync();
+
             view.HideLoadingProgressBar();
 
 
@@ -508,7 +509,8 @@ namespace UserInterface.Presenters
                     if (containerRef.Exists()) containerRef.Delete();
 
                     var job = GetJob(id);
-                    if (job != null) batchCli.JobOperations.DeleteJob(id);
+                    if (job != null)
+                        batchCli.JobOperations.DeleteJob(id);
 
                     // remove the job from the locally stored list of jobs
                     jobList.RemoveAt(jobList.IndexOf(GetJob(id)));
@@ -525,7 +527,14 @@ namespace UserInterface.Presenters
             try
             {
                 if (restart)
+                {
+                    if (fetchJobs.IsBusy)
+                    {
+                        fetchJobs.CancelAsync();
+                    }
+
                     fetchJobs.RunWorkerAsync();
+                }
             }
             catch
             {
@@ -550,8 +559,11 @@ namespace UserInterface.Presenters
                 // update the list of jobs. this will take a bit of time                
                 var newJobs = ListJobs();
 
-                if (fetchJobs.CancellationPending) return;
-                if (newJobs == null) return;
+                if (fetchJobs.CancellationPending)
+                    return;
+
+                if (newJobs == null)
+                    return;
 
                 if (newJobs.Count > 0)
                 {
@@ -559,7 +571,8 @@ namespace UserInterface.Presenters
                     if (newJobs.Count() != jobList.Count())
                     {
                         jobList = newJobs;
-                        if (UpdateDisplay() == 1) return;
+                        if (UpdateDisplay() == 1)
+                            return;
                     }
                     else
                     {
@@ -568,7 +581,9 @@ namespace UserInterface.Presenters
                             if (!IsEqual(newJobs[i], jobList[i]))
                             {
                                 jobList = newJobs;
-                                if (UpdateDisplay() == 1) return;
+                                if (UpdateDisplay() == 1)
+                                    return;
+
                                 break;
                             }
                         }
@@ -657,7 +672,8 @@ namespace UserInterface.Presenters
 
             foreach (var cloudJob in cloudJobs)
             {
-                if (fetchJobs.CancellationPending) return null;
+                if (fetchJobs.CancellationPending)
+                    return null;
                 try
                 {
                     view.JobLoadProgress = 100.0 * i / length;

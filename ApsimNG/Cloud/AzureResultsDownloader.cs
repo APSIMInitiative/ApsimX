@@ -218,7 +218,8 @@ namespace ApsimNG.Cloud
                 // delete temp directory if it already exists and create a new one in its place
                 try
                 {
-                    if (Directory.Exists(tempPath)) Directory.Delete(tempPath, true);
+                    if (Directory.Exists(tempPath))
+                        Directory.Delete(tempPath, true);
                     Directory.CreateDirectory(tempPath);
                 }
                 catch (Exception err)

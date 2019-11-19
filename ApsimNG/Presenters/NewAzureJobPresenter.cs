@@ -225,7 +225,8 @@ namespace UserInterface.Presenters
                 view.Status = "Zipping APSIM";
                 
                 tmpZip = Path.Combine(Path.GetTempPath(), "Apsim-tmp-X-" + Environment.UserName.ToLower() + ".zip");
-                if (File.Exists(tmpZip)) File.Delete(tmpZip);
+                if (File.Exists(tmpZip))
+                    File.Delete(tmpZip);
 
                 if (CreateApsimXZip(jp.ApplicationPackagePath, tmpZip) > 0)
                 {
@@ -267,7 +268,7 @@ namespace UserInterface.Presenters
                 {
                     // Store a config file into the job directory that has the e-mail config
 
-                    string tmpConfig = Path.Combine(Path.GetTempPath(), settingsFileName);
+                    string tmpConfig = Path.Combine(Path.GetTempPath(), "settings.txt");
                     using (StreamWriter file = new StreamWriter(tmpConfig))
                     {
                         file.WriteLine("EmailRecipient=" + jp.Recipient);
@@ -298,7 +299,8 @@ namespace UserInterface.Presenters
             // generate model files
 
             view.Status = "Generating model files";
-            if (!Directory.Exists(jp.ModelPath)) Directory.CreateDirectory(jp.ModelPath);
+            if (!Directory.Exists(jp.ModelPath))
+                Directory.CreateDirectory(jp.ModelPath);
 
             try
             {
@@ -314,7 +316,7 @@ namespace UserInterface.Presenters
                     string sourceFile = child.FullFileName;
                     string destFile = Path.Combine(jp.ModelPath, child.FileName);
                     if (!File.Exists(destFile))
-                        File.Copy(sourceFile, destFile); ;
+                        File.Copy(sourceFile, destFile);
                 }
                 // Generate .apsimx files, and if any errors are encountered, abort the job submission process.
                 if (!presenter.GenerateApsimXFiles(model, jp.ModelPath))
@@ -348,7 +350,7 @@ namespace UserInterface.Presenters
             if (File.Exists(tmpZip)) File.Delete(tmpZip);
             if (!jp.SaveModelFiles)
             {                
-                if (Directory.Exists(jp.ModelPath)) Directory.Delete(jp.ModelPath);
+                if (Directory.Exists(jp.ModelPath)) Directory.Delete(jp.ModelPath); // doesn't work
             }
             
             view.Status = "Submitting Job";
@@ -572,9 +574,10 @@ namespace UserInterface.Presenters
 
             var md5 = GetFileMd5(filePath);
             // if blob exists and md5 matches, there is no need to upload the file
-            if (blobRef.Exists() && string.Equals(md5, blobRef.Properties.ContentMD5, StringComparison.InvariantCultureIgnoreCase)) return;
+            if (blobRef.Exists() && string.Equals(md5, blobRef.Properties.ContentMD5, StringComparison.InvariantCultureIgnoreCase))
+                return;
             blobRef.Properties.ContentMD5 = md5;
-            blobRef.UploadFromFileAsync(filePath);
+            blobRef.UploadFromFile(filePath);
         }
 
         /// <summary>
@@ -607,10 +610,11 @@ namespace UserInterface.Presenters
                 {
                     using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
                     {
-                        ZipArchiveEntry f;
-                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Bin", "APSIM.Shared.dll"), "APSIM.Shared.dll");
-                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Bin", "Models.exe"), "Models.exe");
-                        f = archive.CreateEntryFromFile(Path.Combine(srcPath, "Bin", "sqlite3.dll"), "sqlite3.dll");
+                        string bin = Path.Combine(srcPath, "Bin");
+                        string[] extensions = new string[] { "*.dll", "*.exe" };
+                        foreach (string extension in extensions)
+                            foreach (string fileName in Directory.EnumerateFiles(bin, extension))
+                                archive.CreateEntryFromFile(fileName, Path.GetFileName(fileName));
                     }
                 }
                 return 0;
