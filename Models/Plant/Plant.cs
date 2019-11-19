@@ -199,7 +199,26 @@
         List<IOrganDamage> IPlantDamage.Organs { get { return Organs.Cast<IOrganDamage>().ToList(); } }
 
         /// <summary>Leaf area index.</summary>
-        public double LAI => throw new NotImplementedException();
+        public double LAI
+        { 
+            get
+            {
+                var leaf = Organs.FirstOrDefault(o => o is Leaf) as Leaf;
+                if (leaf != null)
+                    return leaf.LAI;
+
+                var simpleLeaf = Organs.FirstOrDefault(o => o is SimpleLeaf) as SimpleLeaf;
+                if (simpleLeaf != null)
+                    return simpleLeaf.LAI;
+
+                var perennialLeaf = Organs.FirstOrDefault(o => o is PerennialLeaf) as PerennialLeaf;
+                if (perennialLeaf != null)
+                    return perennialLeaf.LAI;
+
+                return 0;
+            }
+        }
+
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
         public double AssimilateAvailable => throw new NotImplementedException();
