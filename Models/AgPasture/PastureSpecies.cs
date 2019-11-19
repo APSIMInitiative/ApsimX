@@ -4514,7 +4514,7 @@
                 double glfFactor = 1.0 - ShootRootGlfFactor * (1.0 - Math.Pow(glfMin, 1.0 / ShootRootGlfFactor));
 
                 // get the current shoot/root ratio (partition will try to make this value closer to targetSR)
-                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, BelowGroundLiveWt, 1000000.0);
+                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, BelowGroundLiveWt, double.MaxValue);
 
                 // get the factor for the reproductive season of perennials (increases shoot allocation during spring)
                 double reproFac = 1.0;
@@ -4525,7 +4525,7 @@
                 double targetSR = TargetShootRootRatio * reproFac;
 
                 // update today's shoot:root partition
-                double growthSR = targetSR * glfFactor * targetSR / currentSR;
+                double growthSR = MathUtilities.Divide(targetSR * glfFactor * targetSR, currentSR, double.MaxValue - 1.5);
 
                 // compute fraction to shoot
                 fractionToShoot = growthSR / (1.0 + growthSR);
