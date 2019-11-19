@@ -265,6 +265,7 @@
     <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
     <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
     <Compile Include="Lifecycle\PlantMortality.cs" />
+    <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
     <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
@@ -359,7 +360,6 @@
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="Irrigation\IIrrigation.cs" />
-    <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
     <Compile Include="Interfaces\ISoil.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
