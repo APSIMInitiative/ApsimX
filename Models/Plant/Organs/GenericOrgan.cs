@@ -16,7 +16,7 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
+    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001; 
