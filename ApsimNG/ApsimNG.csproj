@@ -226,7 +226,6 @@
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
     <Compile Include="Interfaces\IPropertyTreeView.cs" />
     <Compile Include="Interfaces\ITernaryGraphView.cs" />
-    <Compile Include="Presenters\ViewWithDescriptionPresenter.cs" />
     <Compile Include="Presenters\BiomassRemovalPresenter.cs" />
     <Compile Include="Presenters\CLEM\ActivityLedgerGridPresenter.cs" />
     <Compile Include="Presenters\CLEM\CLEMFileCropPresenter.cs" />

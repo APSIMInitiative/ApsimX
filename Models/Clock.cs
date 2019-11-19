@@ -11,6 +11,7 @@
     /// The clock model
     /// </summary>
     [Serializable]
+    [Description("<h1>Start date and end date are important parameters.</h1>")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
