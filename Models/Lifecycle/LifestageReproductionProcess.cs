@@ -15,6 +15,13 @@ namespace Models.LifeCycle
     /// # [Name]
     /// A Reproduction process within a Lifestage.
     /// Reproduction process that creates new numbers for a new cohort in the linked lifestage
+    /// 
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|TransferTo            |string  |  |The name of the LifeStage to transfer cohorts to     |
+    ///|FecundityFunctionName |string  |  |The name of the fecundity function |
+    ///|ProgenyFunctonName    |string  |  |The name of the progeny function |
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -26,7 +33,7 @@ namespace Models.LifeCycle
         private IFunction FecundityFunc = null;
 
         /// <summary>
-        /// 
+        /// The name of the LifeStage to transfer cohorts to 
         /// </summary>
         [Description("Transfer to Lifestage")]
         public string TransferTo { get; set; }

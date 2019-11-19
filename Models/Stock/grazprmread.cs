@@ -1,26 +1,32 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Xml;
-using CMPServices;
+// -----------------------------------------------------------------------
+// <copyright file="grazprmread.cs" company="CSIRO">
+//      CSIRO Agriculture & Food
+// </copyright>
+// -----------------------------------------------------------------------
 
-//Classes for I/O of the generic parameter set class, ParameterSet.           
+// Classes for I/O of the generic parameter set class, ParameterSet.           
 
 namespace Models.GrazPlan
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Xml;
+    using APSIM.Shared.Utilities;
+    using CMPServices;
+
     /// <summary>
     /// Class that wraps the XML param reader
     /// </summary>
-    static public class GlobalParameterFactory
+    public static class GlobalParameterFactory
     {
-        static private ParameterXMLFactory _GParamFactory = null;
+        private static ParameterXMLFactory _GParamFactory = null;
 
         /// <summary>
         /// Returns a ptr to the _GParamFactory. ParamFactory is loaded on demand only.
         /// </summary>
-        static public ParameterXMLFactory ParamXMLFactory()
+        /// <returns>The parameter XML factory object</returns>
+        public static ParameterXMLFactory ParamXMLFactory()
         {
             if (_GParamFactory == null)
                 _GParamFactory = new ParameterXMLFactory();
@@ -55,84 +61,91 @@ namespace Models.GrazPlan
         /// <summary>
         /// Type real-single
         /// </summary>
-        protected const TTypedValue.TBaseType ptyReal = TTypedValue.TBaseType.ITYPE_SINGLE;
+        protected const TTypedValue.TBaseType TYPEREAL = TTypedValue.TBaseType.ITYPE_SINGLE;
+
         /// <summary>
         /// Type integer
         /// </summary>
-        protected const TTypedValue.TBaseType ptyInt = TTypedValue.TBaseType.ITYPE_INT4;
+        protected const TTypedValue.TBaseType TYPEINT = TTypedValue.TBaseType.ITYPE_INT4;
+
         /// <summary>
         /// Type Boolean
         /// </summary>
-        protected const TTypedValue.TBaseType ptyBool = TTypedValue.TBaseType.ITYPE_BOOL;
+        protected const TTypedValue.TBaseType TYPEBOOL = TTypedValue.TBaseType.ITYPE_BOOL;
+
         /// <summary>
         /// Type string
         /// </summary>
-        protected const TTypedValue.TBaseType ptyText = TTypedValue.TBaseType.ITYPE_STR;
+        protected const TTypedValue.TBaseType TYPETEXT = TTypedValue.TBaseType.ITYPE_STR;
 
         /// <summary>
         /// Parses a &lt;parameters&gt; or &lt;set&gt; element in an XML parameter document          
         /// </summary>
-        /// <param name="Parser"></param>
-        /// <param name="aNode"></param>
-        /// <param name="Params"></param>
-        /// <param name="bModify"></param>
-        private void readParamNode(XMLParser Parser, XmlNode aNode, ref ParameterSet Params, bool bModify)
+        /// <param name="parser">The XML parser</param>
+        /// <param name="xmlNode">The XML node</param>
+        /// <param name="parameters">The parameter set</param>
+        /// <param name="modify">Do modify</param>
+        private void ReadParamNode(XMLParser parser, XmlNode xmlNode, ref ParameterSet parameters, bool modify)
         {
             XmlNode childNode;
             ParameterSet newParams;
-            string sTag,
-            sValues,
-            sChildName,
-            sLang,
-            sDummy;
+            string tag,
+            values,
+            childName,
+            lang,
+            dummy;
 
             try
             {
-                Params.sName = Parser.getAttrValue(aNode, "name");                        // Name and version information. The     
-                Params.sEnglishName = Params.sName;
-                if (Params.NodeIsRoot())                                                     //   version is passed to child sets   
-                    Params.sVersion = Parser.getAttrValue(aNode, "version");               //   during creation                   
+                parameters.Name = parser.GetAttrValue(xmlNode, "name");                     // Name and version information. The version is passed to child sets during creation
+                parameters.EnglishName = parameters.Name;
+                if (parameters.NodeIsRoot())
+                    parameters.Version = parser.GetAttrValue(xmlNode, "version");                                  
 
-                childNode = Parser.firstElementChild(aNode, "translate");                 // See if tbere's a translation of the name matching our current language setting 
+                childNode = parser.FirstElementChild(xmlNode, "translate");                 // See if tbere's a translation of the name matching our current language setting 
                 while (childNode != null)
                 {
-                    sLang = Parser.getAttrValue(childNode, "lang");
-                    sDummy = Parser.getText(childNode);
-                    Params.addTranslation(sLang, sDummy);
-                    childNode = Parser.nextElementSibling(childNode, "translate");
+                    lang = parser.GetAttrValue(childNode, "lang");
+                    dummy = parser.GetText(childNode);
+                    parameters.AddTranslation(lang, dummy);
+                    childNode = parser.NextElementSibling(childNode, "translate");
                 }
 
-                if (!bModify)                                                           // If we are not modifying an existing   
-                    while (Params.ChildCount() > 0)                                           //   parameter set, then clear any old   
-                        Params.DeleteChild(Params.ChildCount() - 1);                              //   child parameter sets               
+                if (!modify)
+                {
+                    // If we are not modifying an existing parameter set, then clear any old child parameter sets    
+                    while (parameters.ChildCount() > 0)                                           
+                        parameters.DeleteChild(parameters.ChildCount() - 1);                                             
+                }
 
-                sValues = Parser.getAttrValue(aNode, "locales").Trim();                     // Populate the locale list              
-                Params.SetLocaleText(sValues);
+                values = parser.GetAttrValue(xmlNode, "locales").Trim();                   // Populate the locale list              
+                parameters.SetLocaleText(values);
 
-                childNode = Parser.firstElementChild(aNode, "par");                       // Parse the <par> elements              
+                childNode = parser.FirstElementChild(xmlNode, "par");                       // Parse the <par> elements              
                 while (childNode != null)
                 {
-                    sTag = Parser.getAttrValue(childNode, "name");
-                    sValues = Parser.getText(childNode);
-                    readParamValues(ref Params, sTag, sValues, bModify);
-                    childNode = Parser.nextElementSibling(childNode, "par");
+                    tag = parser.GetAttrValue(childNode, "name");
+                    values = parser.GetText(childNode);
+                    this.ReadParamValues(ref parameters, tag, values, modify);
+                    childNode = parser.NextElementSibling(childNode, "par");
                 }
-                Params.deriveParams();
+                parameters.DeriveParams();
 
-                childNode = Parser.firstElementChild(aNode, "set");                       // Create child parameter sets from the  
-                while (childNode != null)                                                   //   <set> elements                     
+                childNode = parser.FirstElementChild(xmlNode, "set");                       // Create child parameter sets from the <set> elements  
+                while (childNode != null)                                                                        
                 {
-                    if (!bModify)
-                        newParams = Params.AddChild();
+                    if (!modify)
+                        newParams = parameters.AddChild();
                     else
-                    {                                                                      // If we are modifying an existing      
-                        sChildName = Parser.getAttrValue(childNode, "name");                  //  parameter set, then locate the child 
-                        newParams = Params.GetChild(sChildName);                              //   set that we are about to parse      
+                    {
+                        // If we are modifying an existing parameter set, then locate the child set that we are about to parse    
+                        childName = parser.GetAttrValue(childNode, "name");                   
+                        newParams = parameters.GetChild(childName);                                    
                         if (newParams == null)
-                            newParams = Params.AddChild();
+                            newParams = parameters.AddChild();
                     }
-                    readParamNode(Parser, childNode, ref newParams, bModify);
-                    childNode = Parser.nextElementSibling(childNode, "set");
+                    this.ReadParamNode(parser, childNode, ref newParams, modify);
+                    childNode = parser.NextElementSibling(childNode, "set");
                 }
             }
             catch (Exception e)
@@ -144,34 +157,39 @@ namespace Models.GrazPlan
         /// <summary>
         /// Parses the contents of a &lt;par&gt; element in an XML parameter document.         
         /// </summary>
-        /// <param name="Params"></param>
-        /// <param name="sTag"></param>
-        /// <param name="sValues"></param>
-        /// <param name="bPropagate"></param>
-        private void readParamValues(ref ParameterSet Params, string sTag, string sValues, bool bPropagate)
+        /// <param name="parameters">The parameter set</param>
+        /// <param name="tagName">The tag name</param>
+        /// <param name="values">The value string</param>
+        /// <param name="propagate">Do propagate</param>
+        private void ReadParamValues(ref ParameterSet parameters, string tagName, string values, bool propagate)
         {
-            ParameterDefinition Definition;
-            string sValue;
-            int Idx;
+            ParameterDefinition paramDefinition;
+            string value;
+            
+            values = values.Trim();
 
-            sValues = sValues.Trim();
-
-            if ((sTag != "") && (sValues != ""))
+            if ((tagName != string.Empty) && (values != string.Empty))
             {
-                Definition = Params.GetDefinition(sTag);
-                if ((Definition == null) || (Definition.iDimension() > 1))
-                    throw new Exception("Invalid tag when reading parameters: " + sTag);
+                paramDefinition = parameters.GetDefinition(tagName);
+                if ((paramDefinition == null) || (paramDefinition.Dimension() > 1))
+                    throw new Exception("Invalid tag when reading parameters: " + tagName);
 
-                if (Definition.bIsScalar())                                                // Reference to a single value           
-                    assignParameter(ref Params, sTag, sValues, bPropagate);
+                if (paramDefinition.IsScalar())
+                {
+                    // Reference to a single value           
+                    this.AssignParameter(ref parameters, tagName, values, propagate);
+                }
                 else
-                {                                                                      // Reference to a list of values         
-                    for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)
+                {
+                    // Reference to a list of values         
+                    for (int idx = 0; idx <= paramDefinition.Count - 1; idx++)
                     {
-                        sValue = stripValue(ref sValues);
-                        if (sValue != "")                                                  // Null string denotes "leave value at   
-                            assignParameter(ref Params, sTag + Definition.item(Idx).sPartName,             //   default"                    
-                                             sValue, bPropagate);
+                        value = this.StripValue(ref values);
+                        if (value != string.Empty)
+                        {
+                            // Null string denotes "leave value at default"    
+                            this.AssignParameter(ref parameters, tagName + paramDefinition.Item(idx).PartName, value, propagate);
+                        }
                     }
                 }
             }
@@ -181,21 +199,19 @@ namespace Models.GrazPlan
         /// Sets the value of a parameter in a set, and optionally propagates the value  
         /// to descendant parameter sets                                                 
         /// </summary>
-        /// <param name="Params"></param>
-        /// <param name="sTag"></param>
-        /// <param name="sValue"></param>
-        /// <param name="bPropagate"></param>
-        private void assignParameter(ref ParameterSet Params, string sTag, string sValue, bool bPropagate)
+        /// <param name="parameters">The parameter set</param>
+        /// <param name="tagName">The tag name</param>
+        /// <param name="value">The string value</param>
+        /// <param name="propagate">Do propagate</param>
+        private void AssignParameter(ref ParameterSet parameters, string tagName, string value, bool propagate)
         {
-            int Idx;
-
-            Params.SetParam(sTag, sValue);
-            if (bPropagate)
+            parameters.SetParam(tagName, value);
+            if (propagate)
             {
-                for (Idx = 0; Idx <= Params.ChildCount() - 1; Idx++)
+                for (int idx = 0; idx <= parameters.ChildCount() - 1; idx++)
                 {
-                    ParameterSet child = Params.GetChild(Idx);
-                    assignParameter(ref child, sTag, sValue, true);
+                    ParameterSet child = parameters.GetChild(idx);
+                    this.AssignParameter(ref child, tagName, value, true);
                 }
             }
         }
@@ -203,66 +219,66 @@ namespace Models.GrazPlan
         /// <summary>
         /// Reads a string from a comma-separated list                                   
         /// </summary>
-        /// <param name="sValues"></param>
-        /// <returns></returns>
-        private string stripValue(ref string sValues)
+        /// <param name="valueStrs">String of values</param>
+        /// <returns>The first item from the list</returns>
+        private string StripValue(ref string valueStrs)
         {
-            int iPosn;
-            string result = "";
+            int posIdx;
+            string result = string.Empty;
 
-            iPosn = sValues.IndexOf(',');
-            if (iPosn < 0)
+            posIdx = valueStrs.IndexOf(',');
+            if (posIdx < 0)
             {
-                result = sValues.Trim();
-                sValues = "";
+                result = valueStrs.Trim();
+                valueStrs = string.Empty;
             }
             else
             {
-                result = sValues.Substring(0, iPosn).Trim();
-                sValues = sValues.Remove(0, iPosn + 1);
+                result = valueStrs.Substring(0, posIdx).Trim();
+                valueStrs = valueStrs.Remove(0, posIdx + 1);
             }
             return result;
         }
 
         /// <summary>
-        /// 
+        /// Read the parameter set from an XML string
         /// </summary>
-        /// <param name="sText"></param>
-        /// <param name="Params"></param>
-        /// <param name="bModify"></param>
-        public void readFromXML(string sText, ref ParameterSet Params, bool bModify)
+        /// <param name="text">The XML text containing the parameters</param>
+        /// <param name="parameters">The parameter set</param>
+        /// <param name="modify">Do modify</param>
+        public void ReadFromXML(string text, ref ParameterSet parameters, bool modify)
         {
-            XMLParser Parser;
+            XMLParser parser;
 
-            Parser = new XMLParser(sText);
-            readParamNode(Parser, Parser.rootNode(), ref Params, bModify);
+            parser = new XMLParser(text);
+            this.ReadParamNode(parser, parser.RootNode(), ref parameters, modify);
         }
 
         /// <summary>
-        /// 
+        /// Check for a difference
         /// </summary>
-        /// <param name="subSet"></param>
-        /// <param name="Definition"></param>
-        /// <returns></returns>
-        private bool bDiffers(ParameterSet subSet, ParameterDefinition Definition)
+        /// <param name="subSet">The parameter subset</param>
+        /// <param name="paramDefinition">The parameter definition</param>
+        /// <returns>True if there is a difference</returns>
+        private bool Differs(ParameterSet subSet, ParameterDefinition paramDefinition)
         {
             bool result;
 
-            if (!Definition.ValueIsDefined())
+            if (!paramDefinition.ValueIsDefined())
                 result = false;
-            else if ((subSet.Parent == null) || (!subSet.Parent.IsDefined(Definition.sFullName)))
+            else if ((subSet.Parent == null) || (!subSet.Parent.IsDefined(paramDefinition.FullName)))
                 result = true;
             else
             {
-                switch (Definition.paramType)
+                switch (paramDefinition.ParamType)
                 {
-                    case ptyReal: result = (subSet.fParam(Definition.sFullName) != subSet.Parent.fParam(Definition.sFullName));
+                    case TYPEREAL: result = subSet.ParamReal(paramDefinition.FullName) != subSet.Parent.ParamReal(paramDefinition.FullName);
                         break;
-                    case ptyInt: result = (subSet.iParam(Definition.sFullName) != subSet.Parent.iParam(Definition.sFullName));
+                    case TYPEINT: result = subSet.ParamInt(paramDefinition.FullName) != subSet.Parent.ParamInt(paramDefinition.FullName);
                         break;
-                    case ptyBool: result = (subSet.bParam(Definition.sFullName) != subSet.Parent.bParam(Definition.sFullName));
+                    case TYPEBOOL: result = subSet.ParamBool(paramDefinition.FullName) != subSet.Parent.ParamBool(paramDefinition.FullName);
                         break;
-                    case ptyText: result = (subSet.sParam(Definition.sFullName) != subSet.Parent.sParam(Definition.sFullName));
+                    case TYPETEXT: result = subSet.ParamStr(paramDefinition.FullName) != subSet.Parent.ParamStr(paramDefinition.FullName);
                         break;
                     default: result = false;
                         break;
@@ -271,105 +287,117 @@ namespace Models.GrazPlan
             return result;
         }
 
-        private void writeParameters(ParameterSet subSet, ParameterDefinition Definition, List<string> Strings, int iIndent)
+        /// <summary>
+        /// Write parameters out
+        /// </summary>
+        /// <param name="subSet">Parameter subset</param>
+        /// <param name="paramDefinition">The parameter definition</param>
+        /// <param name="strings">List of string values</param>
+        /// <param name="indent">The indent to use</param>
+        private void WriteParameters(ParameterSet subSet, ParameterDefinition paramDefinition, List<string> strings, int indent)
         {
-            int iDiffCount;
-            string sLine;
-            int Idx;
+            int diffCount;
+            string lineStr;
+            int idx;
 
-            if (Definition.iDimension() > 1)                                         // Multi-dimensional array of            
-                for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)                                  //   parameters - recurse                
-                    writeParameters(subSet, Definition.item(Idx), Strings, iIndent);
-
-            else if (Definition.bIsScalar() && bDiffers(subSet, Definition))      // Single parameter value                
+            if (paramDefinition.Dimension() > 1)
             {
-                sLine = new string(' ', iIndent)
-                       + "<par name=\"" + Definition.sFullName + "\">"
-                       + subSet.sParam(Definition.sFullName)
-                       + "</par>";
-                Strings.Add(sLine);
+                // Multi-dimensional array of parameters - recurse           
+                for (idx = 0; idx <= paramDefinition.Count - 1; idx++)                                                  
+                    this.WriteParameters(subSet, paramDefinition.Item(idx), strings, indent);
             }
-            else                                                                     // List of parameter values (one-        
-            {                                                                    //   dimensional)                        
-                iDiffCount = 0;
-                for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)
-                    if (bDiffers(subSet, Definition.item(Idx)))
-                        iDiffCount++;
+            else if (paramDefinition.IsScalar() && this.Differs(subSet, paramDefinition))
+            {
+                // Single parameter value
+                lineStr = new string(' ', indent)
+                       + "<par name=\"" + paramDefinition.FullName + "\">"
+                       + subSet.ParamStr(paramDefinition.FullName)
+                       + "</par>";
+                strings.Add(lineStr);
+            }
+            else
+            {
+                // List of parameter values (one-dimensional)                        
+                diffCount = 0;
+                for (idx = 0; idx <= paramDefinition.Count - 1; idx++)
+                    if (this.Differs(subSet, paramDefinition.Item(idx)))
+                        diffCount++;
 
-                if (iDiffCount > 1)                                                // More than one difference - write      
-                {                                                                  //   the differing values in a list      
-                    sLine = new string(' ', iIndent)
-                             + "<par name=\"" + Definition.sFullName + "\">";
-                    for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)
+                if (diffCount > 1)
+                {
+                    // More than one difference - write the differing values in a list      
+                    lineStr = new string(' ', indent)
+                             + "<par name=\"" + paramDefinition.FullName + "\">";
+                    for (idx = 0; idx <= paramDefinition.Count - 1; idx++)
                     {
-                        if (Idx > 0)
-                            sLine += ',';
-                        if (bDiffers(subSet, Definition.item(Idx)))
-                            sLine += subSet.sParam(Definition.item(Idx).sFullName);
+                        if (idx > 0)
+                            lineStr += ',';
+                        if (this.Differs(subSet, paramDefinition.Item(idx)))
+                            lineStr += subSet.ParamStr(paramDefinition.Item(idx).FullName);
                     }
-                    sLine += "</par>";
-                    Strings.Add(sLine);
+                    lineStr += "</par>";
+                    strings.Add(lineStr);
                 }
-                else if (iDiffCount == 1)                                           // Only one parameter is different -     
-                    for (Idx = 0; Idx <= Definition.iCount - 1; Idx++)                               //  write it as a scalar                
-                        if (bDiffers(subSet, Definition.item(Idx)))
-                            writeParameters(subSet, Definition.item(Idx), Strings, iIndent);
+                else if (diffCount == 1)
+                {
+                    // Only one parameter is different - write it as a scalar    
+                    for (idx = 0; idx <= paramDefinition.Count - 1; idx++)
+                        if (this.Differs(subSet, paramDefinition.Item(idx)))
+                            this.WriteParameters(subSet, paramDefinition.Item(idx), strings, indent);
+                }
             }
         }
 
         /// <summary>
-        /// 
+        /// Write the parameter set
         /// </summary>
-        /// <param name="subSet"></param>
-        /// <param name="Strings"></param>
-        /// <param name="sElem"></param>
-        /// <param name="iIndent"></param>
-        private void writeParamSet(ParameterSet subSet,
-                                   List<string> Strings,
-                                   string sElem,
-                                   int iIndent)
+        /// <param name="subSet">The parameter subset</param>
+        /// <param name="strings">List of strings</param>
+        /// <param name="elem">XML element name</param>
+        /// <param name="indent">The XML indentation</param>
+        private void WriteParamSet(ParameterSet subSet, List<string> strings, string elem, int indent)
         {
-            string sLine;
-            int Idx;
+            string lineStr;
+            int idx;
 
             if (!subSet.NodeIsRoot())
-                Strings.Add("");
+                strings.Add(string.Empty);
 
-            sLine = new string(' ', iIndent) + "<" + sElem + " name=\"" + subSet.sEnglishName + "\"";
+            lineStr = new string(' ', indent) + "<" + elem + " name=\"" + subSet.EnglishName + "\"";
             if (subSet.NodeIsRoot())
-                sLine += " version=\"" + subSet.sVersion + "\">";
+                lineStr += " version=\"" + subSet.Version + "\">";
             else
             {
-                if (subSet.iLocaleCount() > 0)
+                if (subSet.LocaleCount() > 0)
                 {
-                    sLine += " locales=\"" + subSet.getLocale(0);
-                    for (Idx = 1; Idx <= subSet.iLocaleCount() - 1; Idx++)
-                        sLine += ";" + subSet.getLocale(Idx);
-                    sLine += "\"";
+                    lineStr += " locales=\"" + subSet.GetLocale(0);
+                    for (idx = 1; idx <= subSet.LocaleCount() - 1; idx++)
+                        lineStr += ";" + subSet.GetLocale(idx);
+                    lineStr += "\"";
                 }
-                sLine += ">";
+                lineStr += ">";
             }
-            Strings.Add(sLine);
+            strings.Add(lineStr);
 
-            if (subSet.iTranslationCount() > 0)
-                for (Idx = 0; Idx <= subSet.iTranslationCount() - 1; Idx++)
+            if (subSet.TranslationCount() > 0)
+                for (idx = 0; idx <= subSet.TranslationCount() - 1; idx++)
                 {
-                    sLine = new string(' ', iIndent + 2) + "<translate lang=\"" +
-                             subSet.getTranslation(Idx).sLang + "\">" +
-                             TTypedValue.escapeText(subSet.getTranslation(Idx).sText) + "</translate>";
-                    Strings.Add(sLine);
+                    lineStr = new string(' ', indent + 2) + "<translate lang=\"" +
+                             subSet.GetTranslation(idx).Lang + "\">" +
+                             TTypedValue.EscapeText(subSet.GetTranslation(idx).Text) + "</translate>";
+                    strings.Add(lineStr);
                 }
 
-            for (Idx = 0; Idx <= subSet.DefinitionCount() - 1; Idx++)
-                writeParameters(subSet, subSet.GetDefinition(Idx), Strings, iIndent + 2);
-            for (Idx = 0; Idx <= subSet.ChildCount() - 1; Idx++)
-                writeParamSet(subSet.GetChild(Idx), Strings, "set", iIndent + 2);
+            for (idx = 0; idx <= subSet.DefinitionCount() - 1; idx++)
+                this.WriteParameters(subSet, subSet.GetDefinition(idx), strings, indent + 2);
+            for (idx = 0; idx <= subSet.ChildCount() - 1; idx++)
+                this.WriteParamSet(subSet.GetChild(idx), strings, "set", indent + 2);
 
-            sLine = new string(' ', iIndent) + "</" + sElem + ">";
+            lineStr = new string(' ', indent) + "</" + elem + ">";
             if (!subSet.NodeIsRoot() && (subSet.ChildCount() > 0))
-                sLine += "<!-- " + subSet.sEnglishName + " -->";
+                lineStr += "<!-- " + subSet.EnglishName + " -->";
 
-            Strings.Add(sLine);
+            strings.Add(lineStr);
         }
 
         /// <summary>
@@ -377,66 +405,73 @@ namespace Models.GrazPlan
         /// 1. Attempt to read a base parameter set from a resource called sPrmID in the 
         ///    current module.                                                           
         /// </summary>
-        /// <param name="sPrmID"></param>
-        /// <param name="Params"></param>
-        public void readDefaults(string sPrmID, ref ParameterSet Params)
+        /// <param name="prmID">The parameter ID string</param>
+        /// <param name="parameters">The parameter set</param>
+        public void ReadDefaults(string prmID, ref ParameterSet parameters)
         {
-            readFromResource(sPrmID, ref Params, false);
-            Params.sCurrLocale = GrazLocale.sDefaultLocale();
+            this.ReadFromResource(prmID, ref parameters, false);
+            parameters.CurrLocale = GrazLocale.DefaultLocale();
         }
 
         /// <summary>
         /// Read from internal resource
         /// </summary>
-        /// <param name="sResID"></param>
-        /// <param name="Params"></param>
-        /// <param name="bModify"></param>
-        public void readFromResource(string sResID, ref ParameterSet Params, bool bModify)
+        /// <param name="resID">The resource ID string</param>
+        /// <param name="parameters">The parameter set</param>
+        /// <param name="modify">Do modify</param>
+        public void ReadFromResource(string resID, ref ParameterSet parameters, bool modify)
         {
-            string paramStr = Properties.Resources.ResourceManager.GetString(sResID);
-            readFromXML(paramStr, ref Params, bModify);
+            string paramStr = ReflectionUtilities.GetResourceAsString(resID);
+            this.ReadFromXML(paramStr, ref parameters, modify);
         }
 
-        private void readFromStream(StreamReader Stream, ParameterSet Params, bool bModify)
+        /// <summary>
+        /// The parameters from a stream
+        /// </summary>
+        /// <param name="readerStream">The input stream</param>
+        /// <param name="parameters">The parameter set</param>
+        /// <param name="modify">Do modify</param>
+        private void ReadFromStream(StreamReader readerStream, ParameterSet parameters, bool modify)
         {
-            string sParamStr;
+            string paramStr;
 
-            sParamStr = Stream.ReadToEnd();
-            readFromXML(sParamStr, ref Params, bModify);
+            paramStr = readerStream.ReadToEnd();
+            this.ReadFromXML(paramStr, ref parameters, modify);
         }
 
         /// <summary>
         /// Read the parameters from a file
         /// </summary>
-        /// <param name="sFileName"></param>
-        /// <param name="Params"></param>
-        /// <param name="bModify"></param>
-        public void readFromFile(string sFileName, ParameterSet Params, bool bModify)
+        /// <param name="fileName">The parameter file</param>
+        /// <param name="parameters">The parameter set</param>
+        /// <param name="modify">Do modify</param>
+        public void ReadFromFile(string fileName, ParameterSet parameters, bool modify)
         {
-            StreamReader fStream = null;
+            StreamReader readerStream = null;
             try
             {
-                fStream = new StreamReader(sFileName);
-                readFromStream(fStream, Params, bModify);
+                readerStream = new StreamReader(fileName);
+                this.ReadFromStream(readerStream, parameters, modify);
             }
             catch (Exception e)
             {
-                if (fStream != null)
-                    fStream = null;
-                throw new Exception("Cannot load parameter data from \"" + sFileName + "\" \n\n" + e.Message);
+                if (readerStream != null)
+                    readerStream = null;
+                throw new Exception("Cannot load parameter data from \"" + fileName + "\" \n\n" + e.Message);
             }
         }
+
         /// <summary>
         /// Parameter set as XML
         /// </summary>
-        /// <param name="Params"></param>
-        /// <returns></returns>
-        public string sParamXML(ParameterSet Params)
+        /// <param name="parameters">The parameter set</param>
+        /// <returns>The values separated by CR</returns>
+        public string ParamXML(ParameterSet parameters)
         {
-            List<string> Strings = new List<string>();
+            List<string> strings = new List<string>();
 
-            writeParamSet(Params, Strings, "parameters", 0);
-            return string.Join("\n", Strings.ToArray());
+            this.WriteParamSet(parameters, strings, "parameters", 0);
+            return string.Join("\n", strings.ToArray());
         }
     }
 }

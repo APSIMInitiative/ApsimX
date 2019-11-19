@@ -61,7 +61,6 @@ namespace Models.CLEM.Activities
             if (!ManagedPastureName.StartsWith("Not specified"))
             {
                 pastureName = ManagedPastureName.Split('.')[1];
-                //Pasture = Resources.GetResourceItem(this, pastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             }
 
             if (PerformAtStartOfSimulation)
@@ -72,13 +71,13 @@ namespace Models.CLEM.Activities
 
         private void Muster()
         {
+            Status = ActivityStatus.NotNeeded;
             foreach (Ruminant ind in this.CurrentHerd(false))
             {
                 // set new location ID
                 if(ind.Location != pastureName)
                 {
                     this.Status = ActivityStatus.Success;
-                    //this.SetStatusSuccess();
                 }
 
                 ind.Location = pastureName;
@@ -167,13 +166,16 @@ namespace Models.CLEM.Activities
         public override void DoActivity()
         {
             // check if labour provided or PartialResources allowed
-            Status = ActivityStatus.Ignored;
             if (this.TimingOK)
             {
                 if ((this.Status == ActivityStatus.Success || this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
                 {
                     Muster();
                 }
+            }
+            else
+            {
+                Status = ActivityStatus.Ignored;
             }
         }
 

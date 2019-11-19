@@ -143,10 +143,10 @@
         {
             get
             {
-                if (this.reader != null)
-                    return this.reader.FirstDate;
-                else
+                if (this.reader == null && !this.OpenDataFile())
                     return new DateTime(0);
+
+                return this.reader.FirstDate;
             }
         }
 
@@ -157,10 +157,10 @@
         {
             get
             {
-                if (this.reader != null)
-                    return this.reader.LastDate;
-                else
+                if (this.reader == null && !this.OpenDataFile())
                     return new DateTime(0);
+
+                return this.reader.LastDate;
             }
         }
 
@@ -221,7 +221,14 @@
         [Units("d")]
         [XmlIgnore]
         public int DaysSinceWinterSolstice { get; set; }
-        
+
+        /// <summary>
+        /// Maximum clear sky radiation (MJ/m2)
+        /// </summary>
+        [Units("MJ/M2")]
+        [XmlIgnore]
+        public double Qmax { get; set; }
+
         /// <summary>
         /// Gets or sets the rainfall (mm)
         /// </summary>
@@ -295,10 +302,10 @@
         {
             get
             {
-                if (this.reader == null || this.reader.Constant("Latitude") == null)
+                if (this.reader == null && !this.OpenDataFile())
                     return 0;
-                else
-                    return this.reader.ConstantAsDouble("Latitude");
+
+                return this.reader.ConstantAsDouble("Latitude");
             }
         }
 
@@ -402,6 +409,11 @@
             this.dayLengthIndex = 0;
             this.CO2 = 350;
             this.AirPressure = 1010;
+            if (reader != null)
+            {
+                reader.Close();
+                reader = null;
+            }
         }
 
         /// <summary>
@@ -523,6 +535,8 @@
             if (clock.Today.DayOfYear == WinterSolsticeDOY)
                 DaysSinceWinterSolstice = 0;
             else DaysSinceWinterSolstice += 1;
+
+            Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
         }
 
         /// <summary>

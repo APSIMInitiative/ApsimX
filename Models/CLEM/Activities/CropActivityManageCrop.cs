@@ -102,33 +102,30 @@ namespace Models.CLEM.Activities
             if (UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
-                Area = LinkedLandItem.AreaAvailable;
             }
-            else
+
+            ResourceRequestList = new List<ResourceRequest>
             {
-                ResourceRequestList = new List<ResourceRequest>
+                new ResourceRequest()
                 {
-                    new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                        ResourceType = typeof(Land),
-                        ResourceTypeName = LandItemNameToUse.Split('.').Last(),
-                        ActivityModel = this,
-                        Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
-                        FilterDetails = null
-                    }
-                };
-
-                CheckResources(ResourceRequestList, Guid.NewGuid());
-                gotLandRequested = TakeResources(ResourceRequestList, false);
-
-                //Now the Land has been allocated we have an Area 
-                if (gotLandRequested)
-                {
-                    //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
-                    Area = ResourceRequestList.FirstOrDefault().Provided;
+                    AllowTransmutation = false,
+                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                    ResourceType = typeof(Land),
+                    ResourceTypeName = LandItemNameToUse.Split('.').Last(),
+                    ActivityModel = this,
+                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    FilterDetails = null
                 }
+            };
+
+            CheckResources(ResourceRequestList, Guid.NewGuid());
+            gotLandRequested = TakeResources(ResourceRequestList, false);
+
+            //Now the Land has been allocated we have an Area 
+            if (gotLandRequested)
+            {
+                //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
+                Area = ResourceRequestList.FirstOrDefault().Provided;
             }
 
             // set and enable first crop in the list for rotational cropping.
@@ -329,7 +326,10 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 0)
+            {
+                html += "\n</div>";
+            }
             return html;
         }
 
@@ -340,12 +340,22 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
-            if (rotation)
+
+            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() == 0)
             {
-                html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+                html += "\n<div class=\"errorbanner clearfix\">";
+                html += "<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>";
+                html += "</div>";
             }
-            html += "\n<div class=\"croprotationborder\">";
+            else
+            {
+                bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
+                if (rotation)
+                {
+                    html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+                }
+                html += "\n<div class=\"croprotationborder\">";
+            }
             return html;
         }
     }

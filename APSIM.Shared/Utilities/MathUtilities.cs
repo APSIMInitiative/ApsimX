@@ -290,8 +290,7 @@ namespace APSIM.Shared.Utilities
             int result = 0;
             if (values != null)
                 foreach (var value in values)
-                    if (!double.IsNaN(value))
-                        result += value;
+                    result += value;
             return result;
         }
 
@@ -1059,8 +1058,14 @@ namespace APSIM.Shared.Utilities
             double Minimum = 9999999;
             foreach (object Value in Values)
             {
-                if (Value != null && !double.IsNaN((double)Value))
-                    Minimum = System.Math.Min((double)Value, Minimum);
+                double value;
+                if (Value is double)
+                    value = (double)Value;
+                else
+                    value = Convert.ToDouble(Value);
+
+                if (Value != null && !double.IsNaN(value))
+                    Minimum = Math.Min(value, Minimum);
             }
             if (Minimum == 9999999)
                 return double.NaN;
@@ -1077,8 +1082,17 @@ namespace APSIM.Shared.Utilities
             double Maximum = -9999999;
             foreach (object Value in Values)
             {
-                if (Value != null && !double.IsNaN((double)Value))
-                    Maximum = System.Math.Max((double)Value, Maximum);
+                if (Value == null)
+                    continue;
+
+                double value;
+                if (Value is double)
+                    value = (double)Value;
+                else
+                    value = Convert.ToDouble(Value);
+
+                if (!double.IsNaN(value))
+                    Maximum = Math.Max(value, Maximum);
             }
             if (Maximum == -9999999)
                 return double.NaN;

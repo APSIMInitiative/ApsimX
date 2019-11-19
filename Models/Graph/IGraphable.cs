@@ -15,7 +15,8 @@
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
-        void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions);
+        /// <param name="simulationFilter">(Optional) only show data for these simulations.</param>
+        void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions, List<string> simulationFilter = null);
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
         /// <param name="annotations">A list of annotations to add to.</param>
@@ -49,7 +50,12 @@
         /// <summary>
         /// A stacked area series - a line series with the area between the line and the x-axis filled with colour.
         /// </summary>
-        StackedArea
+        StackedArea,
+
+        /// <summary>
+        /// A box and whisker plot
+        /// </summary>
+        Box
     }
 
     /// <summary>An enumeration for the different types of markers</summary>

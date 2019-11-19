@@ -287,6 +287,8 @@ namespace Models.CLEM.Resources
                         return 1;
                     case HerdChangeReason.InitialHerd:
                         return 1;
+                    case HerdChangeReason.MarkedSale:
+                        return -1;
                     default:
                         return 0;
                 }
@@ -486,6 +488,7 @@ namespace Models.CLEM.Resources
                 this.Weight = setWeight;
             }
 
+            this.PreviousWeight = this.Weight;
             this.Number = 1;
             this.Wool = 0;
             this.Cashmere = 0;

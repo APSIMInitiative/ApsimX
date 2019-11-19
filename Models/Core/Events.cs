@@ -75,7 +75,8 @@
                 throw new Exception("Cannot find event: " + eventName + " in model: " + componentName);
 
             // Subscribe to the event.
-            componentEvent.AddEventHandler(component, handler);
+            Delegate target = Delegate.CreateDelegate(componentEvent.EventHandlerType, handler.Target, handler.Method);
+            componentEvent.AddEventHandler(component, target);
         }
 
         /// <summary>
@@ -102,7 +103,8 @@
                 throw new Exception("Cannot find event: " + eventName + " in model: " + componentName);
 
             // Unsubscribe to the event.
-            componentEvent.RemoveEventHandler(component, handler);
+            Delegate target = Delegate.CreateDelegate(componentEvent.EventHandlerType, handler.Target, handler.Method);
+            componentEvent.RemoveEventHandler(component, target);
         }
 
         /// <summary>

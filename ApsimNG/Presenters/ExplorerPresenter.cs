@@ -91,6 +91,11 @@
             }
         }
 
+        /// <summary>
+        /// Gets the current right hand view.
+        /// </summary>
+        public ViewBase CurrentRightHandView { get; private set; }
+
         /// <summary>Gets the path of the current selected node in the tree.</summary>
         /// <value>The current node path.</value>
         public string CurrentNodePath
@@ -130,8 +135,13 @@
             this.view.Tree.AllowDrop += this.OnAllowDrop;
             this.view.Tree.Droped += this.OnDrop;
             this.view.Tree.Renamed += this.OnRename;
-            
+
             Refresh();
+
+            ApsimFileMetadata file = Configuration.Settings.GetMruFile(ApsimXFile.FileName);
+            if (file != null && file.ExpandedNodes != null)
+                this.view.Tree.ExpandNodes(file.ExpandedNodes);
+
             this.PopulateMainMenu();
         }
 
@@ -146,6 +156,16 @@
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
+            try
+            {
+                if (File.Exists(ApsimXFile.FileName))
+                    Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
+            }
+            catch
+            {
+                // Don't rethrow - this is not a critical operation.
+            }
+
             this.view.Tree.SelectedNodeChanged -= this.OnNodeSelected;
             this.view.Tree.DragStarted -= this.OnDragStart;
             this.view.Tree.AllowDrop -= this.OnAllowDrop;
@@ -180,7 +200,7 @@
 
                     if (!File.Exists(this.ApsimXFile.FileName))
                     {
-                        choice = MainPresenter.AskQuestion("The original file '" + this.ApsimXFile.FileName + 
+                        choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) + 
                             "' no longer exists.\n \nClick \"Yes\" to save to this location or \"No\" to discard your work.");
                     }
                     else
@@ -199,7 +219,7 @@
 
                         if (string.Compare(newSim, origSim) != 0)
                         {
-                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + this.ApsimXFile.FileName + " ?");
+                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
                         }
                     }
 
@@ -244,7 +264,7 @@
                 if (this.ApsimXFile.FileName != null)
                 {
                     this.ApsimXFile.Write(this.ApsimXFile.FileName);
-                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", ApsimXFile.FileName), Simulation.MessageType.Information);
+                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
                     return true;
                 }
             }
@@ -274,7 +294,7 @@
 
                     this.ApsimXFile.Write(newFileName);
                     MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
-                    Utility.Configuration.Settings.AddMruFile(newFileName);
+                    Configuration.Settings.AddMruFile(new ApsimFileMetadata(newFileName, view.Tree.GetExpandedNodes()));
                     MainPresenter.UpdateMRUDisplay();
                     MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", newFileName), Simulation.MessageType.Information);
                     return true;
@@ -296,12 +316,31 @@
         }
 
         /// <summary>Select a node in the view.</summary>
+        /// <param name="nodePath">Node to be selected.</param>
+        public void SelectNode(IModel node)
+        {
+            SelectNode(Apsim.FullPath(node));
+            this.HideRightHandPanel();
+            this.ShowRightHandPanel();
+        }
+
+        /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
         public void SelectNode(string nodePath)
         {
             this.view.Tree.SelectedNode = nodePath;
             this.HideRightHandPanel();
             this.ShowRightHandPanel();
+        }
+
+        internal void CollapseChildren(string path)
+        {
+            view.Tree.CollapseChildren(path);
+        }
+
+        internal void ExpandChildren(string path)
+        {
+            view.Tree.ExpandChildren(path);
         }
 
         /// <summary>
@@ -398,7 +437,21 @@
         /// <param name="parentPath">Path to the parent</param>
         public void Add(string st, string parentPath)
         {
-            AddModelCommand command = new AddModelCommand(parentPath, st, view, this);
+            IModel model = FileFormat.ReadFromString<IModel>(st, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+            AddModelCommand command = new AddModelCommand(parentPath, model, view, this);
+            CommandHistory.Add(command, true);
+        }
+
+        /// <summary>
+        /// Adds a model to a parent model.
+        /// </summary>
+        /// <param name="child">The string representation (JSON or XML) of a model.</param>
+        /// <param name="parentPath">Path to the parent</param>
+        public void Add(IModel child, string parentPath)
+        {
+            AddModelCommand command = new AddModelCommand(parentPath, child, view, this);
             CommandHistory.Add(command, true);
         }
 
@@ -659,16 +712,38 @@
         /// <param name="presenterName">The presenter name.</param>
         public void ShowInRightHandPanel(object model, string viewName, string presenterName)
         {
+            ShowInRightHandPanel(model,
+                                 newView: (ViewBase) Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null),
+                                 presenter: Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter);
+        }
+
+        /// <summary>Show a view in the right hand panel.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="viewName">The view name.</param>
+        /// <param name="presenterName">The presenter name.</param>
+        public void ShowInRightHandPanel(object model, string gladeResourceName, IPresenter presenter)
+        {
+            ShowInRightHandPanel(model,
+                                 newView: new ViewBase(view as ViewBase, gladeResourceName),
+                                 presenter: presenter);
+        }
+
+        /// <summary>Show a view in the right hand panel.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="newView">The view.</param>
+        /// <param name="presenter">The presenter.</param>
+        public void ShowInRightHandPanel(object model, ViewBase newView, IPresenter presenter)
+        {
             try
             {
-                object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
-                this.currentRightHandPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter;
+                this.currentRightHandPresenter = presenter;
                 if (newView != null && this.currentRightHandPresenter != null)
                 {
                     // Resolve links in presenter.
                     ApsimXFile.Links.Resolve(currentRightHandPresenter);
                     this.view.AddRightHandView(newView);
                     this.currentRightHandPresenter.Attach(model, newView, this);
+                    this.CurrentRightHandView = newView as ViewBase;
                 }
             }
             catch (Exception err)
@@ -951,37 +1026,7 @@
             TreeViewNode description = new TreeViewNode();
             description.Name = model.Name;
 
-            // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find 
-            // an image with the same name as the model.
-            // Otherwise, we attempt to find an icon with the same name as the model's type.
-            // e.g. A Graph called Biomass should use an icon called Graph.png
-            // e.g. A Plant called Wheat should use an icon called Wheat.png
-
-            if (model is ModelCollectionFromResource)
-                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
-            else
-            {
-                string modelNamespace = model.GetType().FullName.Split('.')[1] + ".";
-                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + model.GetType().Name + ".png";
-
-                if (!MainView.MasterView.HasResource(description.ResourceNameForImage))
-                {
-                    description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
-                }
-
-            }
-           
-
-            //Check to see if you can find the image in the resource for this project.
-            ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(description.ResourceNameForImage);
-            if (info == null)
-            {
-                // Try the opposite.
-                if (model is ModelCollectionFromResource)
-                    description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.GetType().Name + ".png";
-                else
-                    description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + model.Name + ".png";
-            }
+            description.ResourceNameForImage = GetIconResourceName(model.GetType(), model.Name);
 
             description.ToolTip = model.GetType().Name;
 
@@ -1002,6 +1047,47 @@
             description.Colour = colour;
             */
             return description;
+        }
+
+        /// <summary>
+        /// Find a resource name of an icon for the specified model.
+        /// </summary>
+        /// <param name="modelType">The model type.</param>
+        /// <param name="modelName">The model name.</param>
+        public static string GetIconResourceName(Type modelType, string modelName)
+        {
+            // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find 
+            // an image with the same name as the model.
+            // Otherwise, we attempt to find an icon with the same name as the model's type.
+            // e.g. A Graph called Biomass should use an icon called Graph.png
+            // e.g. A Plant called Wheat should use an icon called Wheat.png
+
+            string resourceNameForImage;
+            if (modelType.GetInterface("ModelCollectionFromResource") != null && modelName != null)
+                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
+            else
+            {
+                string modelNamespace = modelType.FullName.Split('.')[1] + ".";
+                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
+
+                if (!MainView.MasterView.HasResource(resourceNameForImage))
+                {
+                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+                }
+            }
+
+            // Check to see if you can find the image in the resource for this project.
+            ManifestResourceInfo info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
+            if (info == null)
+            {
+                // Try the opposite.
+                if (modelType.GetInterface("ModelCollectionFromResource") != null && modelName != null)
+                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+                else
+                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
+            }
+
+            return resourceNameForImage;
         }
 
         #endregion

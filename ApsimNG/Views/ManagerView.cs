@@ -3,7 +3,7 @@ using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    interface IManagerView
+    public interface IManagerView
     {
         /// <summary>
         /// Provides access to the properties grid.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.Batch;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 
 namespace ApsimNG.Cloud
 {
@@ -45,7 +45,7 @@ namespace ApsimNG.Cloud
                     SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(2),
                     Permissions = SharedAccessBlobPermissions.Read,
                 });
-                yield return new ResourceFile(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
+                yield return ResourceFile.FromUrl(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
             }
         }
     }

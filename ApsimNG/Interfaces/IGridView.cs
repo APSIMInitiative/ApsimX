@@ -44,7 +44,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Occurs when user clicks a button on the cell.
         /// </summary>
-        event EventHandler<GridCellsChangedArgs> ButtonClick;
+        event EventHandler<GridCellChangedArgs> ButtonClick;
 
         /// <summary>
         /// Invoked when the user needs context items for the intellisense.

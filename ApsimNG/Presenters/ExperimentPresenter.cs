@@ -53,7 +53,7 @@
             view.ExportToCSVAction.Clicked += OnExportCsv;
             view.ImportFromCSVAction.Clicked += OnImportCsv;
             view.RunAPSIMAction.Clicked += OnRunSims;
-            view.MaximumNumSimulations.Changed += OnSetMaxNumSims;
+            view.MaximumNumSimulations.Leave += OnSetMaxNumSims;
 
             // Give the view the default maximum number of simulations to display.
             view.MaximumNumSimulations.Value = DefaultMaxSims.ToString();
@@ -74,7 +74,7 @@
             view.ExportToCSVAction.Clicked -= OnExportCsv;
             view.ImportFromCSVAction.Clicked -= OnImportCsv;
             view.RunAPSIMAction.Clicked -= OnRunSims;
-            view.MaximumNumSimulations.Changed -= OnSetMaxNumSims;
+            view.MaximumNumSimulations.Leave -= OnSetMaxNumSims;
         }
 
         /// <summary>Populate the view.</summary>

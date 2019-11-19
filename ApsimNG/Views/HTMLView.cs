@@ -772,6 +772,11 @@ namespace UserInterface.Views
         private MemoView memo;
 
         /// <summary>
+        /// In edit mode
+        /// </summary>
+        private bool editing = false;
+
+        /// <summary>
         /// Used when exporting a map (e.g. autodocs).
         /// </summary>
         protected Gtk.Window popupWindow = null;
@@ -805,15 +810,17 @@ namespace UserInterface.Views
             memo = new MemoView(this);
             hbox1.PackStart(memo.MainWidget, true, true, 0);
             vpaned1.PositionSet = true;
-            vpaned1.Position = 200;
+            vpaned1.Position = 0;
             hbox1.Visible = false;
             hbox1.NoShowAll = true;
             memo.ReadOnly = false;
             memo.WordWrap = true;
             memo.MemoChange += this.TextUpdate;
+            memo.StartEdit += this.ToggleEditing;
             vpaned1.ShowAll();
             frame1.ExposeEvent += OnWidgetExpose;
             hbox1.Realized += Hbox1_Realized;
+            hbox1.SizeAllocated += Hbox1_SizeAllocated;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -903,6 +910,7 @@ namespace UserInterface.Views
                 (keyPressObject as HtmlElement).KeyPress -= OnKeyPress;
             frame1.ExposeEvent -= OnWidgetExpose;
             hbox1.Realized -= Hbox1_Realized;
+            hbox1.SizeAllocated -= Hbox1_SizeAllocated;
             if ((browser as TWWebBrowserIE) != null)
             {
                 if (vbox2.Toplevel is Window)
@@ -916,6 +924,7 @@ namespace UserInterface.Views
             {
                 popupWindow.Destroy();
             }
+            memo.StartEdit -= this.ToggleEditing;
             memo.MainWidget.Destroy();
             memo = null;
             mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -928,7 +937,20 @@ namespace UserInterface.Views
 
         private void Hbox1_Realized(object sender, EventArgs e)
         {
-            vpaned1.Position = vpaned1.Parent.Allocation.Height / 2;
+            vpaned1.Position = 30; 
+            memo.LabelText = "Edit text";
+        }
+
+        /// <summary>
+        /// When the hbox changes size ensure that the panel below follows correctly
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Hbox1_SizeAllocated(object sender, EventArgs e)
+        {
+             
+            if (!this.editing)
+                vpaned1.Position = memo.HeaderHeight();
         }
 
         private void Frame1_Unrealized(object sender, EventArgs e)
@@ -1087,6 +1109,20 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Used to show or hide the editor panel. Used by the memo editing link label.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ToggleEditing(object sender, EventArgs e)
+        {
+            if (editing)
+                vpaned1.Position = memo.HeaderHeight();
+            else
+                vpaned1.Position = (int)Math.Floor(vpaned1.Parent.Allocation.Height / 1.3);
+            editing = !editing;
+        }
+
+        /// <summary>
         /// Checks the src attribute for all images in the HTML, and attempts to
         /// find a resource of the same name. If the resource exists, it is
         /// written to a temporary file and the image's src is changed to point
@@ -1124,7 +1160,7 @@ namespace UserInterface.Views
         /// <param name="e">Event argument.</param>
         private void OnHelpClick(object sender, EventArgs e)
         {
-            Process.Start("https://www.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
+            Process.Start("https://apsimdev.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
         }
     }
 }

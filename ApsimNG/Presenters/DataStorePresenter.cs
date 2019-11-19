@@ -13,6 +13,7 @@ namespace UserInterface.Presenters
     using Models.Core.Run;
     using Models.Storage;
     using System.Globalization;
+    using System.Collections.Generic;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
@@ -36,6 +37,9 @@ namespace UserInterface.Presenters
 
         /// <summary>Gets or sets the simulation filter. When specified, will only show simulation data.</summary>
         public Simulation SimulationFilter { get; set; }
+
+        /// <summary>When specified will only show data from a given zone.</summary>
+        public Zone ZoneFilter { get; set; }
 
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
@@ -63,10 +67,10 @@ namespace UserInterface.Presenters
             this.view.FileName.Value = dataStore.FileName;
 
             this.view.TableList.Changed += this.OnTableSelected;
-            this.view.ColumnFilter.Changed += OnColumnFilterChanged;
+            this.view.ColumnFilter.Leave += OnColumnFilterChanged;
             this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
-            this.view.RowFilter.Changed += OnColumnFilterChanged;
-            this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
+            this.view.RowFilter.Leave += OnColumnFilterChanged;
+            this.view.MaximumNumberRecords.Leave += OnMaximumNumberRecordsChanged;
             this.view.FileNameChanged += OnFileNameChanged;
             PopulateGrid();
         }
@@ -77,9 +81,9 @@ namespace UserInterface.Presenters
             (view.MaximumNumberRecords as EditView).EndEdit();
             (view.FileName as EditView).EndEdit();
             view.TableList.Changed -= OnTableSelected;
-            view.ColumnFilter.Changed -= OnColumnFilterChanged;
-            view.RowFilter.Changed -= OnColumnFilterChanged;
-            view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
+            view.ColumnFilter.Leave -= OnColumnFilterChanged;
+            view.RowFilter.Leave -= OnColumnFilterChanged;
+            view.MaximumNumberRecords.Leave -= OnMaximumNumberRecordsChanged;
             view.FileNameChanged -= OnFileNameChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
@@ -176,28 +180,15 @@ namespace UserInterface.Presenters
                 {
                     int start = 0;
                     int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
-                    if (ExperimentFilter != null)
-                    {
-                        var names = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
-                        string filter = "S.[Name] IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
-                        if (!string.IsNullOrEmpty(view.RowFilter.Value))
-                            filter += " AND " + view.RowFilter.Value;
-                        data = dataStore.Reader.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
-                    }
-                    else if (SimulationFilter != null)
-                    {
-                        data = dataStore.Reader.GetData(
-                                                 simulationName: SimulationFilter.Name,
-                                                 tableName: view.TableList.SelectedValue,
-                                                 from: start, 
-                                                 count: count);
-                    }
-                    else
-                    {
-                        data = dataStore.Reader.GetData(
-                                                tableName: view.TableList.SelectedValue,
-                                                count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
-                    }
+
+                    // Note that the filter contains the zone filter and experiment filter but not simulation filter.
+                    string filter = GetFilter();
+
+                    data = dataStore.Reader.GetData(tableName: view.TableList.SelectedValue,
+                                                    simulationName: SimulationFilter?.Name,
+                                                    filter: filter,
+                                                    from: start,
+                                                    count: count);
                 }
                 catch (Exception e)
                 {
@@ -210,6 +201,41 @@ namespace UserInterface.Presenters
             }
 
             return data;
+        }
+
+        private string GetFilter()
+        {
+            string filter = view.RowFilter.Value;
+
+            if (ExperimentFilter != null)
+            {
+                // fixme: this makes some serious assumptions about how the query is generated in the data store layer...
+                IEnumerable<string> names = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
+                string exptFilter = "S.[Name] IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
+                filter = AppendToFilter(filter, exptFilter);
+            }
+
+            if (ZoneFilter != null)
+            {
+                // More assumptions about column names
+                string zoneFilter = $"T.[Zone] = '{ZoneFilter.Name}'";
+                filter = AppendToFilter(filter, zoneFilter);
+            }
+
+            return filter;
+        }
+
+        /// <summary>
+        /// Appends a clause to the filter.
+        /// </summary>
+        /// <param name="filter">Existing filter to append to.</param>
+        /// <param name="value">Value to append to the filter.</param>
+        private string AppendToFilter(string filter, string value)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+                return value;
+
+            return $"{filter} AND {value}";
         }
 
         /// <summary>The selected table has changed.</summary>

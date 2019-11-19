@@ -84,15 +84,19 @@ namespace Models.Graph
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
-        public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions)
+        /// <param name="simulationFilter">(Optional) simulation name filter.</param>
+        public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions, List<string> simulationFilter = null)
         {
             if (definitions != null && definitions.Count > 0)
             {
                 // Try to find a definition that has the correct simulation name.
                 foreach (var definition in definitions)
                 {
-                    var simulationNameDescriptor = definition.Descriptors?.Find(desc => desc.Name == "SimulationName");
-                    if (simulationNameDescriptor != null && simulationNameDescriptor.Value == SimulationName)
+                    var simulationNameDescriptor = definition.Descriptors?.Find(desc => desc.Name == "SimulationName")?.Value;
+                    if (simulationFilter != null && simulationFilter.Count > 0)
+                        simulationNameDescriptor = simulationFilter[0];
+
+                    if (simulationNameDescriptor != null && simulationNameDescriptor== SimulationName)
                         data = definition.Data;
                 }
 

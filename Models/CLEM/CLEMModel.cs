@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
 using System;
@@ -36,7 +37,7 @@ namespace Models.CLEM
         /// Warning log for this CLEM model
         /// </summary>
         [XmlIgnore]
-        public WarningLog Warnings = new WarningLog();
+        public WarningLog Warnings = new WarningLog(50);
 
         /// <summary>
         /// Allows unique id of activity to be set 
@@ -71,15 +72,19 @@ namespace Models.CLEM
                         System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
                         try
                         {
-                            //Is it an array?
-                            if (property.PropertyType.IsArray)
+                            object result = property.GetValue(this, null);
+                            if (result is null)
                             {
-                                property.SetValue(this, dv.Value, null);
-                            }
-                            else
-                            {
-                                //Use set value for.. not arrays
-                                property.SetValue(this, dv.Value, null);
+                                //Is it an array?
+                                if (property.PropertyType.IsArray)
+                                {
+                                    property.SetValue(this, dv.Value, null);
+                                }
+                                else
+                                {
+                                    //Use set value for.. not arrays
+                                    property.SetValue(this, dv.Value, null);
+                                }
                             }
                         }
                         catch (Exception ex)
@@ -90,6 +95,16 @@ namespace Models.CLEM
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines if this component has a valid parent based on parent attributes
+        /// </summary>
+        /// <returns></returns>
+        public bool ValidParent()
+        {
+            var parents = ReflectionUtilities.GetAttributes(this.GetType(), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList();
+            return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() > 0);
         }
 
         /// <summary>
@@ -279,6 +294,13 @@ namespace Models.CLEM
                     html += "</div>";
                 }
             }
+            if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+            {
+                if (this.Children.Count() == 0)
+                {
+                    html += "\n<div class=\"activityentry\">Empty</div>";
+                }
+            }
             return html;
         }
 
@@ -305,7 +327,7 @@ namespace Models.CLEM
                 switch ((this as CLEMActivityBase).OnPartialResourcesAvailableAction)
                 {
                     case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                        html += " tooltip = \"Error and Stop on insifficient resources\">Stop";
+                        html += " tooltip = \"Error and Stop on insufficient resources\">Stop";
                         break;
                     case OnPartialResourcesAvailableActionTypes.SkipActivity:
                         html += ">Skip";

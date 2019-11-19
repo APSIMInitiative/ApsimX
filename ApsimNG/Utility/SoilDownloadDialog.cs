@@ -270,8 +270,7 @@
                 }
                 else if (dest is Zone)
                 {
-                    string modelStr = FileFormat.WriteToString(newSoil);
-                    AddModelCommand command = new AddModelCommand(replaceNode, modelStr, owningView, explorerPresenter);
+                    AddModelCommand command = new AddModelCommand(replaceNode, newSoil, owningView, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
                 MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,

@@ -326,47 +326,81 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Convert the specified 'stringValue' into an object of the specified 'type'
+        /// using the invariant culture. Will throw if cannot convert type.
+        /// </summary>
+        public static object StringToObject(Type dataType, string newValue)
+        {
+            return StringToObject(dataType, newValue, CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
         /// Convert the specified 'stringValue' into an object of the specified 'type'.
         /// Will throw if cannot convert type.
         /// </summary>
-        public static object StringToObject(Type type, string stringValue)
+        public static object StringToObject(Type dataType, string newValue, IFormatProvider format)
         {
-            if (type.IsArray)
+            if (string.IsNullOrWhiteSpace(newValue))
             {
-                string[] stringValues = stringValue.ToString().Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (type == typeof(double[]))
-                    return MathUtilities.StringsToDoubles(stringValues);
-                else if (type == typeof(int[]))
-                    return MathUtilities.StringsToDoubles(stringValues);
-                else if (type == typeof(string[]))
-                    return stringValues;
-                else if (type == typeof(DateTime))
-                    return stringValues.Select(d => DateTime.Parse(d, CultureInfo.InvariantCulture));
+                // Empty string. Get the default value for this property type.
+                if (dataType.IsValueType)
+                {
+                    if (dataType == typeof(double))
+                        return double.NaN;
+
+                    if (dataType == typeof(float))
+                        return float.NaN;
+
+                    // Property is not nullable (could be int, bool, struct, etc).
+                    // Return default value for this type.
+                    return Activator.CreateInstance(dataType);
+                }
                 else
-                    throw new Exception("Cannot convert '" + stringValue + "' into an object of type '" + type.ToString() + "'");
+                    // Property is nullable so return null.
+                    return null;
             }
-            else if (type == typeof(double))
-                return Convert.ToDouble(stringValue, CultureInfo.InvariantCulture);
-            else if (type == typeof(float))
-                return Convert.ToSingle(stringValue, CultureInfo.InvariantCulture);
-            else if (type == typeof(int))
-                return Convert.ToInt32(stringValue, CultureInfo.InvariantCulture);
-            else if (type == typeof(DateTime))
-                return Convert.ToDateTime(stringValue, CultureInfo.InvariantCulture);
-            else if (type == typeof(string))
-                return stringValue;
-            else if (type == typeof(bool))
-                return Boolean.Parse(stringValue);
-            else if (type.IsEnum)
-                return Enum.Parse(type, stringValue, true);
-            else
-                return null;
+
+            if (dataType.IsArray)
+            {
+                // Arrays do not implement IConvertible, so we cannot just split the string on
+                // the commas and parse the string array into Convert.ChangeType. Instead, we
+                // must convert each element of the array individually.
+                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s, format)).ToArray();
+
+                // An object array is not good enough. We need an array with correct element type.
+                Array result = Array.CreateInstance(dataType.GetElementType(), arr.Length);
+                Array.Copy(arr, result, arr.Length);
+                return result;
+            }
+
+            // Do we really want enums to be case-insensitive?
+            if (dataType.IsEnum)
+                return Enum.Parse(dataType, newValue, true);
+
+            // Convert.ChangeType() doesn't seem to work properly on nullable types.
+            Type underlyingType = Nullable.GetUnderlyingType(dataType);
+            if (underlyingType != null)
+                dataType = underlyingType;
+
+            return Convert.ChangeType(newValue, dataType, format);
+        }
+
+        /// <summary>
+        /// Convert the specified 'obj' into a string using the
+        /// invariant culture.
+        /// </summary>
+        /// <param name="obj">Object to be converted.</param>
+        public static string ObjectToString(object obj)
+        {
+            return ObjectToString(obj, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
         /// Convert the specified 'obj' into a string.
         /// </summary>
-        public static string ObjectToString(object obj)
+        /// <param name="obj">Object to be converted.</param>
+        /// <param name="format">Culture to use for the conversion.</param>
+        public static string ObjectToString(object obj, IFormatProvider format)
         {
             if (obj.GetType().IsArray)
             {
@@ -376,18 +410,12 @@ namespace APSIM.Shared.Utilities
                 {
                     if (j > 0)
                         stringValue += ",";
-                    stringValue += arr.GetValue(j).ToString();
+                    stringValue += ObjectToString(arr.GetValue(j));
                 }
                 return stringValue;
             }
-            else if (obj.GetType() == typeof(DateTime))
-            {
-                return ((DateTime) obj).ToString("yyyy-MM-dd");
-            }
             else
-            {
-                return Convert.ToString(obj, CultureInfo.InvariantCulture);
-            }
+                return Convert.ToString(obj, format);
         }
 
         /// <summary>
@@ -496,14 +524,15 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public static string GetResourceAsString(string resourceName)
         {
-            string result;
+            string result = null;
             var assembly = Assembly.GetCallingAssembly();
             assembly.GetManifestResourceStream(resourceName);
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                result = reader.ReadToEnd();
-            }
+                if (stream != null)
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        result = reader.ReadToEnd();
+                    }
 
             return result;
         }

@@ -11,6 +11,9 @@ namespace UserInterface.Views
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>
         bool IsChecked { get; set; }
+
+        /// <summary>Gets or sets whether the checkbox can be changed by the user.</summary>
+        bool IsSensitive { get; set; }
     }
 
 
@@ -48,6 +51,19 @@ namespace UserInterface.Views
             set
             {
                 checkbutton1.Active = value;
+            }
+        }
+
+        /// <summary>Gets or sets whether the checkbox can be changed by the user.</summary>
+        public bool IsSensitive
+        {
+            get
+            {
+                return checkbutton1.Sensitive;
+            }
+            set
+            {
+                checkbutton1.Sensitive = value;
             }
         }
 
