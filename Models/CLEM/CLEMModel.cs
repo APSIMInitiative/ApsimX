@@ -37,7 +37,7 @@ namespace Models.CLEM
         /// Warning log for this CLEM model
         /// </summary>
         [XmlIgnore]
-        public WarningLog Warnings = new WarningLog();
+        public WarningLog Warnings = new WarningLog(50);
 
         /// <summary>
         /// Allows unique id of activity to be set 

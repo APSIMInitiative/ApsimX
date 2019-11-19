@@ -117,7 +117,8 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>    <Reference Include="OxyPlot.GtkSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
+    </Reference>
+    <Reference Include="OxyPlot.GtkSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Bin\OxyPlot.GtkSharp.dll</HintPath>
     </Reference>
@@ -133,6 +134,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApsimNG\Presenters\ProfileGridTests.cs" />
     <Compile Include="ApsimNG\UITestsMain.cs" />
     <Compile Include="ApsimNG\Utilities\GtkUtilities.cs" />
     <Compile Include="ApsimNG\Utilities\UITestUtilities.cs" />
@@ -223,6 +225,7 @@
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion63 after.json" />
     <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\BasicSimulation.apsimx" />
     <EmbeddedResource Include="BasicFile.apsimx" />
+    <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\NullSample.apsimx" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
     <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
@@ -372,9 +375,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion59 before.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ApsimNG\Presenters\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

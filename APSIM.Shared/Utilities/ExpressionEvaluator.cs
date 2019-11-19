@@ -763,7 +763,7 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Log(((Symbol)args[0]).m_value, 2);
+                        result.m_value = System.Math.Log(((Symbol)args[0]).m_value);
                     }
                     else
                     {
