@@ -102,7 +102,14 @@
         [Units("m^2/m^2")]
         public double LAI
         {
-            get { return LAIGreen; }
+            get 
+            { 
+                return LAIGreen; 
+            }
+            set
+            {
+                LAIGreen = value;
+            }
         }
 
         /// <summary>Gets the total LAI, live + dead (m^2/m^2).</summary>
@@ -2628,6 +2635,7 @@
         public double LAIGreen
         {
             get { return greenLAI; }
+            set { greenLAI = value; }
         }
 
         /// <summary>Gets the leaf area index of dead tissues (m^2/m^2).</summary>

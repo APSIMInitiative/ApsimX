@@ -51,6 +51,7 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
+        private const int MM2ToM2 = 1000000; // Conversion of mm2 to m2
 
         /// <summary>Growth Respiration</summary>
         /// [Units("CO_2")]
@@ -126,11 +127,25 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int MM2ToM2 = 1000000; // Conversion of mm2 to m2
                 foreach (LeafCohort L in Leaves)
                     if (Double.IsNaN(L.LiveArea))
                         throw new Exception("LiveArea of leaf cohort " + L.Name + " is Nan");
                 return Leaves.Sum(x => x.LiveArea) / MM2ToM2;
+            }
+            set
+            {
+                var totalLiveArea = Leaves.Sum(x => x.LiveArea);
+                if (totalLiveArea > 0)
+                {
+                    var delta = totalLiveArea - (value * MM2ToM2);    // mm2
+                    var prop = delta / totalLiveArea;
+                    foreach (var L in Leaves)
+                    {
+                        var amountToRemove = L.LiveArea * prop;
+                        L.LiveArea -= amountToRemove;
+                        L.DeadArea += amountToRemove;
+                    }
+                }
             }
         }
 
