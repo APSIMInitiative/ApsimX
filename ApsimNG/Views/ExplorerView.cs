@@ -99,7 +99,7 @@ namespace UserInterface.Views
                 if (descriptionView == null)
                 {
                     descriptionView = new HTMLView(this);
-                    rightHandView.PackStart(descriptionView.MainWidget, true, true, 0);
+                    rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
                 }
                 descriptionView.SetContents(description, false);
             }
