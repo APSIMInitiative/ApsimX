@@ -261,6 +261,10 @@
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
     <Compile Include="Graph\SeriesDefinition.cs" />
+    <Compile Include="Lifecycle\PlantAssimilateConsumption.cs" />
+    <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
+    <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
+    <Compile Include="Lifecycle\PlantMortality.cs" />
     <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
