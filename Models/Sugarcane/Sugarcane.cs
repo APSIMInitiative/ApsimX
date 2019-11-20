@@ -374,7 +374,19 @@ namespace Models
         /// <summary>
         /// Gets the LAI (m^2/m^2)
         /// </summary>
-        public double LAI { get { return lai; } }
+        public double LAI 
+        { 
+            get 
+            { 
+                return lai; 
+            } 
+            set 
+            {
+                var delta = g_lai - value;
+                g_lai -= delta;
+                g_slai += delta; 
+            } 
+        }
 
         /// <summary>
         /// Gets the maximum LAI (m^2/m^2)

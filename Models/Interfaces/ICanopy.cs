@@ -16,7 +16,7 @@
         double R50 { get; }
 
         /// <summary>Gets the LAI (m^2/m^2)</summary>
-        double LAI { get; }
+        double LAI { get; set; }
 
         /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
         double LAITotal { get; }

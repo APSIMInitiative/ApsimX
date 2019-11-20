@@ -93,9 +93,7 @@
                 else if (edit)
                     EditFile(fileName, recurse);
                 else if (mergeDBFiles)
-                {
-                    DBMerger.MergeFiles(fileName, Path.Combine(Path.GetDirectoryName(fileName), "merged.db"));
-                }
+                    DBMerger.MergeFiles(fileName, recurse, Path.Combine(Path.GetDirectoryName(fileName), "merged.db"));
                 else
                 {
                     // Run simulations

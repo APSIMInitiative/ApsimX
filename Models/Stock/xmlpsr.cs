@@ -1,68 +1,75 @@
-using System;
-using System.Xml;
+// -----------------------------------------------------------------------
+// <copyright file="xmlpsr.cs" company="CSIRO">
+//      Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace CMPServices
 {
-    ///=========================================================================
+    using System.Xml;
+
     /// <summary>
     /// The XMLParser class is a wrapper around a DOM parser. It is used as the
     /// parent class for other specialised parser types. This class makes it easy to 
     /// access features of the DOM parser.
     /// </summary>
-    ///=========================================================================
     public class XMLParser
     {
+        /// <summary>
+        /// The main DOM
+        /// </summary>
         private XmlDocument doc;
+
         /// <summary>
         /// Always points to the root node.
         /// </summary>
         protected XmlNode topElement;
+
         /// <summary>
         /// Always points to current node after using firstChild() or nextSibling().
         /// </summary>
         protected XmlNode currNode;
+
         /// <summary>
         /// Tests if this an element node in the parser tree with a specific name.
         /// </summary>
         /// <param name="domNode">The node to test.</param>
         /// <param name="elementName">The name of the element node.</param>
         /// <returns>True if this is and element node with this name.</returns>
-        protected virtual bool isElement(XmlNode domNode, String elementName)
+        protected virtual bool IsElement(XmlNode domNode, string elementName)
         {
             if ((domNode.NodeType == XmlNodeType.Element) && (domNode.Name == elementName))
                 return true;
             else
                 return false;
         }
-        //======================================================================
+
         /// <summary>
         /// Construct this parser with an XML string.
         /// </summary>
         /// <param name="xml">XML document.</param>
-        //======================================================================
-        public XMLParser(String xml)
+        public XMLParser(string xml)
         {
-            doc = new XmlDocument();
+            this.doc = new XmlDocument();
+
             // Don't let the MSXML parser collapse white space
-            doc.PreserveWhitespace = true;
-            doc.LoadXml(xml);
-            topElement = doc.DocumentElement;
-            currNode = null;
+            this.doc.PreserveWhitespace = true;
+            this.doc.LoadXml(xml);
+            this.topElement = this.doc.DocumentElement;
+            this.currNode = null;
         }
-        //======================================================================
+
         /// <summary>
         /// Construct this parser using the node from another document parser.
         /// </summary>
         /// <param name="domNode">The node.</param>
-        //======================================================================
         public XMLParser(XmlNode domNode)
         {
-            doc = domNode.OwnerDocument;
-            topElement = domNode;
-            currNode = null;
+            this.doc = domNode.OwnerDocument;
+            this.topElement = domNode;
+            this.currNode = null;
         }
 
-        //=======================================================================
         /// <summary>
         /// Get the value of a DOM node. The result depends on what type of node it is. <see cref="XmlNode">See XmlNode Class</see>
         /// </summary>
@@ -84,51 +91,46 @@ namespace CMPServices
         /// ...(source MS doco)
         /// </returns>
         /// <seealso cref="XmlNode">XmlNode Class</seealso>
-        // N.Herrmann Sep 2003
-        //=======================================================================
-        public String getNodeValue(XmlNode domNode)
+        /// N.Herrmann Sep 2003
+        public string GetNodeValue(XmlNode domNode)
         {
-            String buf = "";
+            string buf = string.Empty;
             if (domNode != null)
                 buf = domNode.Value;
             return buf;
         }
-        //=======================================================================
+
         /// <summary>
-        /// 
+        /// Get the inner XML for the node
         /// </summary>
-        /// <param name="domNode"></param>
-        /// <returns></returns>
-        //=======================================================================
-        public String InnerXml(XmlNode domNode)
+        /// <param name="domNode">The XML node</param>
+        /// <returns>The inner XML string</returns>
+        public string InnerXml(XmlNode domNode)
         {
             return domNode.InnerXml;
         }
-        //=======================================================================
+
         /// <summary>
         /// Determine the type of node.
         /// </summary>
         /// <param name="domNode">The node to query.</param>
         /// <returns>The type of the node.</returns>
-        // N.Herrmann May 2003
-        //=======================================================================
-        public XmlNodeType getNodeType(XmlNode domNode)
+        public XmlNodeType GetNodeType(XmlNode domNode)
         {
             XmlNodeType nodeType = XmlNodeType.None;
             if (domNode != null)
                 nodeType = domNode.NodeType;
             return nodeType;
         }
-        //======================================================================
+
         /// <summary>
         /// Get the text of an Element node.
         /// </summary>
         /// <param name="domNode">The node to query.</param>
         /// <returns>The value of the element node.</returns>
-        //======================================================================
-        public String getText(XmlNode domNode)
+        public string GetText(XmlNode domNode)
         {
-            String text = "";
+            string text = string.Empty;
 
             if ((domNode != null) && domNode.HasChildNodes)
             {
@@ -139,28 +141,26 @@ namespace CMPServices
             }
             return text;
         }
-        //======================================================================
+
         /// <summary>
         /// Returns the node's tag and all XML within the node.
         /// </summary>
         /// <param name="domNode">The node to query.</param>
         /// <returns>The section of the XML document including the node's tag.</returns>
-        //======================================================================
-        public String docToString(XmlNode domNode)
+        public string DocToString(XmlNode domNode)
         {
             return domNode.OuterXml;
         }
-        //======================================================================
+
         /// <summary>
         /// Get the text from the value of the attribute.
         /// </summary>
         /// <param name="domNode">The element node containing the attribute node.</param>
         /// <param name="attr">The name of the attribute.</param>
         /// <returns>The value of the attribute node.</returns>
-        //======================================================================
-        public String getAttrValue(XmlNode domNode, String attr)
+        public string GetAttrValue(XmlNode domNode, string attr)
         {
-            String attrValue = "";
+            string attrValue = string.Empty;
 
             if ((domNode != null) /*&& (domNode.HasChildNodes)*/ )
             {
@@ -177,109 +177,100 @@ namespace CMPServices
             }
             return attrValue;
         }
-        //======================================================================
+
         /// <summary>
         /// Find the first child node of the specified node. Sets currNode.
         /// </summary>
         /// <param name="domNode">The node containing the child.</param>
         /// <returns>The child node.</returns>
-        //======================================================================
-        public XmlNode firstChild(XmlNode domNode)
+        public XmlNode FirstChild(XmlNode domNode)
         {
             if (domNode != null)
-                currNode = domNode.FirstChild;
+                this.currNode = domNode.FirstChild;
             else
-                currNode = null;
+                this.currNode = null;
 
-            return currNode;
+            return this.currNode;
         }
-        //======================================================================
+
         /// <summary>
         /// Find the next sibling to the currNode. Sets currNode.
         /// </summary>
         /// <param name="domNode">The node containing the child.</param>
         /// <returns>The child node after currNode.</returns>
-        //======================================================================
-        public XmlNode nextSibling(XmlNode domNode)
+        public XmlNode NextSibling(XmlNode domNode)
         {
-            if ((domNode != null) && (domNode != topElement))
-                currNode = domNode.NextSibling;
+            if ((domNode != null) && (domNode != this.topElement))
+                this.currNode = domNode.NextSibling;
             else
-                currNode = null;
+                this.currNode = null;
 
-            return currNode;
+            return this.currNode;
         }
-        //======================================================================
+
         /// <summary>
         /// Find the first child node that is an element node of specified name.
         /// Sets currNode.
         /// </summary>
         /// <param name="rootNode">The node.</param>
         /// <param name="elementName">The name of the element node.</param>
-        /// <returns></returns>
-        //======================================================================
-        public XmlNode firstElementChild(XmlNode rootNode, String elementName)
+        /// <returns>The XML node</returns>
+        public XmlNode FirstElementChild(XmlNode rootNode, string elementName)
         {
             XmlNode childNode;
 
-            childNode = firstChild(rootNode);
-            while ((childNode != null) && (!isElement(childNode, elementName)))
+            childNode = this.FirstChild(rootNode);
+            while ((childNode != null) && (!this.IsElement(childNode, elementName)))
             {
-                childNode = nextSibling(childNode);
+                childNode = this.NextSibling(childNode);
             }
 
-            return currNode;
+            return this.currNode;
         }
-        //======================================================================
+
         /// <summary>
         /// Find the next sibling element node to currNode. Sets currNode.
         /// </summary>
         /// <param name="startNode">The node to start from.</param>
         /// <param name="elementName">The name of the element node.</param>
-        /// <returns></returns>
-
-        //======================================================================
-        public XmlNode nextElementSibling(XmlNode startNode, String elementName)
+        /// <returns>The sibling XML node</returns>
+        public XmlNode NextElementSibling(XmlNode startNode, string elementName)
         {
             XmlNode childNode;
 
-            childNode = nextSibling(startNode);
-            while ((childNode != null) && (!isElement(childNode, elementName)))
+            childNode = this.NextSibling(startNode);
+            while ((childNode != null) && (!this.IsElement(childNode, elementName)))
             {
-                childNode = nextSibling(childNode);
+                childNode = this.NextSibling(childNode);
             }
-            return currNode;
+            return this.currNode;
         }
-        //======================================================================
+
         /// <summary>
         /// Get the node referenced by currNode.
         /// </summary>
         /// <returns>Ref to currNode.</returns>
-        //======================================================================
-        public XmlNode currentNode()
+        public XmlNode CurrentNode()
         {
-            return currNode;
+            return this.currNode;
         }
-        //======================================================================
+
         /// <summary>
         /// Get the topmost node in the document.
         /// </summary>
         /// <returns>Ref to topElement field.</returns>
-        //======================================================================
-        public XmlNode rootNode()
+        public XmlNode RootNode()
         {
-            return topElement;
+            return this.topElement;
         }
-        //======================================================================
+
         /// <summary>
         /// Set the topmost node in the document.
         /// </summary>
         /// <param name="anode">The node to be referenced by topElement field.</param>
-        //======================================================================
-        public void setTopNode(XmlNode anode)
+        public void SetTopNode(XmlNode anode)
         {
-            topElement = anode;
+            this.topElement = anode;
         }
     }
-
 }
