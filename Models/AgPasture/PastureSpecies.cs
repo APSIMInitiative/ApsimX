@@ -153,7 +153,7 @@
         }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
-        //[Description("The depth of the canopy")]
+        //[Description("The width of the canopy")]
         [Units("mm")]
         public double Width
         {
@@ -195,18 +195,30 @@
                     InterceptedRadn += canopyLayer.amount;
 
                 // (RCichota, May-2017) Made intercepted radiation equal to solar radiation and implemented the variable 'effective cover'.
-                // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate passes the value of  total intercepted
-                //  radiation (over all canopy). We here assume that solar radiation is the best value for AgPasture (agrees with Ecomod).
-                // The 'effective cover' is computed using an 'effective light extinction coefficient' which is based on the value for intercepted
-                //  radiation supplied by MicroClimate. This is the light extinction coefficient that result in the same total intercepted radiation,
-                //  but using solar radiation on top of canopy (this value is only used in the calcualtion of photosynthesis).
-                // TODO: this approach may have to be amended when multi-layer canopies are used (the thought behind the approach here is that
-                //  things like shading (which would reduce Radn on top of canopy) are irrelevant).
+                // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate only passes the value of total
+                //  intercepted radiation (over all canopy). Here it is assumed/defined that solar radiation is indeed the best value for
+                //  AgPasture to use in its photosynthesis (agrees with the implementation in Ecomod).
+                // The 'effective cover' is computed using an 'effective light extinction coefficient', which is obtained based on the 
+                //  value for intercepted radiation supplied by MicroClimate. This is the light extinction coefficient that result in the
+                //  same total intercepted radiation, but using solar radiation on top of canopy.
+                //  (note that this value is only used in the calculation of photosynthesis).
+                // TODO: this approach may have to be amended when multi-layer canopies are used (the thought behind the approach here
+                //  is that things like shading (which would reduce Radn on top of canopy) are irrelevant).
                 RadiationTopOfCanopy = myMetData.Radn;
-                double myEffectiveLightExtinctionCoefficient = -Math.Log(1.0 - InterceptedRadn / myMetData.Radn) / greenLAI;
                 effectiveGreenCover = 0.0;
+                if (RadiationTopOfCanopy > 0.0)
+                {
+                    double AuxVar = 0.0;
+                    if (InterceptedRadn < RadiationTopOfCanopy)
+                        AuxVar = Math.Log(1.0 - InterceptedRadn / RadiationTopOfCanopy);
+                    double myEffectiveLightExtinctionCoefficient = MathUtilities.Divide(-AuxVar, greenLAI, 0.0);
+                    if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
+                        effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
+                }
+                /*double myEffectiveLightExtinctionCoefficient = -Math.Log(1.0 - InterceptedRadn / RadiationTopOfCanopy) / greenLAI;
                 if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
                     effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
+                    */
             }
         }
 
@@ -3732,7 +3744,7 @@
 
             // get the limitation factor due to soil N deficiency
             double glfNit = 1.0;
-            if (dGrowthAfterWaterLimitations > Epsilon)
+            /*if (dGrowthAfterWaterLimitations > Epsilon)
             {
                 if (dNewGrowthN > Epsilon)
                 {
@@ -3746,6 +3758,13 @@
                     glfNSupply = 0.0;
                     glfNit = 0.0;
                 }
+            }*/
+            if (dNewGrowthN > Epsilon)
+            {
+                glfNSupply = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
+
+                // adjust the glfN
+                glfNit = Math.Pow(glfNSupply, NDillutionCoefficient);
             }
             else
                 glfNSupply = 1.0;
