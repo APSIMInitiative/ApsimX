@@ -3732,12 +3732,20 @@
 
             // get the limitation factor due to soil N deficiency
             double glfNit = 1.0;
-            if (dNewGrowthN > Epsilon)
+            if (dGrowthAfterWaterLimitations > Epsilon)
             {
-                glfNSupply = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
+                if (dNewGrowthN > Epsilon)
+                {
+                    glfNSupply = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
 
-                // adjust the glfN
-                glfNit = Math.Pow(glfNSupply, NDillutionCoefficient);
+                    // adjust the glfN
+                    glfNit = Math.Pow(glfNSupply, NDillutionCoefficient);
+                }
+                else
+                {
+                    glfNSupply = 0.0;
+                    glfNit = 0.0;
+                }
             }
             else
                 glfNSupply = 1.0;
