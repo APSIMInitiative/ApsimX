@@ -4567,16 +4567,21 @@
                 targetFLeaf = FractionLeafMinimum + (FractionLeafMaximum - FractionLeafMinimum) / (1.0 + fLeafAux);
             }
 
-            // get current leaf:stem ratio
-            double currentLS = leaves.DMLive / (stems.DMLive + stolons.DMLive);
+            if (leaves.DMLive > 0.0)
+            {
+                // get current leaf:stem ratio
+                double currentLS = MathUtilities.Divide(leaves.DMLive, stems.DMLive + stolons.DMLive, double.MaxValue);
 
-            // get today's target leaf:stem ratio
-            double targetLS = targetFLeaf / (1 - targetFLeaf);
+                // get today's target leaf:stem ratio
+                double targetLS = targetFLeaf / (1.0 - targetFLeaf);
 
-            // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
-            double newLS = targetLS * targetLS / currentLS;
+                // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
+                double newLS = MathUtilities.Divide(targetLS * targetLS, currentLS, double.MaxValue - 1.5);
 
-            fractionToLeaf = newLS / (1 + newLS);
+                fractionToLeaf = newLS / (1.0 + newLS);
+            }
+            else
+                fractionToLeaf = FractionLeafMaximum;
         }
 
         /// <summary>Computes the variations in root depth.</summary>
