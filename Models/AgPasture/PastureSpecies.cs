@@ -283,7 +283,7 @@
 
             // Incorporate all root mass to soil fresh organic matter
             foreach (PastureBelowGroundOrgan root in roots)
-                root.DoDetachBiomass(root.DMTotal, root.NTotal);
+                root.Tissue[0].DetachBiomass(root.DMTotal, root.NTotal);
 
             // zero all variables
             RefreshVariables();
@@ -3661,7 +3661,7 @@
 
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
                     DoAddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
-                    roots[0].DoDetachBiomass(detachedRootDM, detachedRootN);
+                    roots[0].Tissue[0].DetachBiomass(detachedRootDM, detachedRootN);
                     //foreach (PastureBelowGroundOrgan root in rootZones)
                     //    root.DoDetachBiomass(root.DMDetached, root.NDetached);
                     // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -5542,7 +5542,10 @@
             var organ = Organs.Find(o => o.Name == organName);
             if (organ == null)
                 throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
-            (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
+            if (organ is PastureAboveGroundOrgan)
+                (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassToRemove);
+            else if (organ is PastureBelowGroundOrgan)
+                (organ as PastureBelowGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
         }
 
         /// <summary>
@@ -5551,7 +5554,11 @@
         /// <param name="deltaLAI">Delta LAI.</param>
         public void ReduceCanopy(double deltaLAI)
         {
-            throw new NotImplementedException();
+            if (LAI > 0)
+            {
+                var prop = deltaLAI / LAI;
+                leaves.RemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToRemove = prop * leaves.DMLive });
+            }
         }
 
         /// <summary>
