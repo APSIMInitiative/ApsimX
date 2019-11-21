@@ -246,6 +246,10 @@ namespace UserInterface.Views
 
                 rbtnSheep.Active = (theAnimal == GrazType.AnimalType.Sheep);
                 rbtnCattle.Active = (theAnimal == GrazType.AnimalType.Cattle);
+                if (rbtnSheep.Active)
+                    rbtnSheep.Click();
+                else
+                    rbtnCattle.Click();
 
                 cbxGeneration.SelectedIndex = Math.Max(0, Math.Min(theGenoType.Generation, cbxGeneration.Values.Length - 1));
                 ChangeGeneration(null, null);

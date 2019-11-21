@@ -509,20 +509,6 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double GreenDietZero { get; set; }
         /// <summary>
-        /// Coefficient to adjust intake for herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeTropicalQuality { get; set; }
-        /// <summary>
-        /// Coefficient to adjust intake for tropical herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for tropical herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeCoefficientQuality { get; set; }
-        /// <summary>
         /// Coefficient to adjust intake for herbage biomass
         /// </summary>
         [Category("Advanced", "Diet")]

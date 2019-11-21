@@ -128,6 +128,8 @@
         public event EventHandler DoInitialSummary;
         /// <summary>Occurs when [do management].</summary>
         public event EventHandler DoManagement;
+        /// <summary>Occurs when [do PestDisease damage]</summary>
+        public event EventHandler DoPestDiseaseDamage;
         /// <summary>Occurs when [do energy arbitration].</summary>
         public event EventHandler DoEnergyArbitration;                                //MicroClimate
         /// <summary>Occurs when [do soil water movement].</summary>
@@ -305,6 +307,9 @@
 
                 if (DoManagement != null)
                     DoManagement.Invoke(this, args);
+
+                if (DoPestDiseaseDamage != null)
+                    DoPestDiseaseDamage.Invoke(this, args);
 
                 if (DoEnergyArbitration != null)
                     DoEnergyArbitration.Invoke(this, args);
