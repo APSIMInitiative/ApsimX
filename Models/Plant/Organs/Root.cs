@@ -1027,7 +1027,7 @@
         {
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, amountToRemove, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
             needToRecalculateLiveDead = true;
-            if (biomassRemoveType != "Harvest")
+            if (biomassRemoveType != null && biomassRemoveType != "Harvest")
                 IsKLModiferDueToDamageActive = true;
         }
 
