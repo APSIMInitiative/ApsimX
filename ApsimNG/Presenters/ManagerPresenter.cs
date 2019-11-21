@@ -73,9 +73,12 @@ namespace UserInterface.Presenters
             scriptModel = manager.Children.FirstOrDefault();
 
             // See if manager script has a description attribute on it's class.
-            DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(scriptModel.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
-            if (descriptionName != null)
-                explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
+            if (scriptModel != null)
+            {
+                DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(scriptModel.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (descriptionName != null)
+                    explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
+            }
 
             propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
             managerView.Editor.Mode = EditorType.ManagerScript;
