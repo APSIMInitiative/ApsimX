@@ -24,9 +24,9 @@ namespace UserInterface.Views
     /// </summary>
     public class ExplorerView : ViewBase, IExplorerView
     {
-        private Viewport rightHandView;
-        private MenuView popup;
+        private VBox rightHandView;
         private Gtk.TreeView treeviewWidget;
+        private HTMLView descriptionView;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
@@ -38,11 +38,14 @@ namespace UserInterface.Views
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
             treeviewWidget.Realized += OnLoaded;
             Tree = new TreeView(owner, treeviewWidget);
-            popup = new MenuView();
-            rightHandView = (Viewport)builder.GetObject("RightHandView");
-            rightHandView.ShadowType = ShadowType.EtchedOut;
+            rightHandView = (VBox)builder.GetObject("vbox2");
+            //rightHandView.ShadowType = ShadowType.EtchedOut;
+
             mainWidget.Destroyed += OnDestroyed;
         }
+
+        /// <summary>The current right hand view.</summary>
+        public ViewBase CurrentRightHandView { get; private set; }
 
         /// <summary>The tree on the left side of the explorer view</summary>
         public ITreeView Tree { get; private set; }
@@ -54,18 +57,51 @@ namespace UserInterface.Views
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
         /// </summary>
         /// <param name="control">The control to add.</param>
+        /// <param name="description">Descriptive text to show at top of view.</param>
         public void AddRightHandView(object control)
         {
-            foreach (Widget child in rightHandView.Children)
+            // Remove existing right hand view.
+            foreach (var child in rightHandView.Children)
             {
-                rightHandView.Remove(child);
-                child.Destroy();
+                if (child != descriptionView?.MainWidget)
+                {
+                    rightHandView.Remove(child);
+                    child.Destroy();
+                }
             }
+
             ViewBase view = control as ViewBase;
             if (view != null)
             {
-                rightHandView.Add(view.MainWidget);
+                CurrentRightHandView = view;
+                rightHandView.PackEnd(view.MainWidget, true, true, 0);
                 rightHandView.ShowAll();
+            }
+        }
+
+        /// <summary>
+        /// Add a description to the right hand view.
+        /// </summary>
+        /// <param name="description">The description to show.</param>
+        public void AddDescriptionToRightHandView(string description)
+        {
+            if (description == null)
+            {
+                if (descriptionView != null)
+                {
+                    rightHandView.Remove(descriptionView.MainWidget);
+                    descriptionView.MainWidget.Destroy();
+                }
+                descriptionView = null;
+            }
+            else
+            {
+                if (descriptionView == null)
+                {
+                    descriptionView = new HTMLView(this);
+                    rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
+                }
+                descriptionView.SetContents(description, false);
             }
         }
 
@@ -75,7 +111,7 @@ namespace UserInterface.Views
             // Create a Bitmap and draw the panel
             int width;
             int height;
-            Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
+            Gdk.Window panelWindow = CurrentRightHandView.MainWidget.GdkWindow;
             panelWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
             byte[] buffer = screenshot.SaveToBuffer("png");
@@ -119,7 +155,6 @@ namespace UserInterface.Views
                 }
             }
             ToolStrip.Destroy();
-            popup.Destroy();
             mainWidget.Destroyed -= OnDestroyed;
             owner = null;
         }

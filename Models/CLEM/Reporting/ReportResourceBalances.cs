@@ -26,7 +26,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/reporting/resourcebalances.htm")]
+    [HelpUri(@"Content/Features/Reporting/ResourceBalances.htm")]
     public class ReportResourceBalances: Models.Report.Report
     {
         [Link]
@@ -66,9 +66,8 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
+            
             List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
-
             if (VariableNames.Where(a => a.Contains("[Clock].Today")).Count() == 0)
             {
                 variableNames.Add("[Clock].Today as Date");
@@ -121,6 +120,10 @@ namespace Models.CLEM.Reporting
                                                 break;
                                         }
                                         variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + "." + amountStr + " as " + item.Name);
+                                        if(item.GetType().Name == "RuminantType")
+                                        {
+                                            variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + ".AmountAE as TotalAE");
+                                        }
                                     }
                                 }
                             }
@@ -128,10 +131,13 @@ namespace Models.CLEM.Reporting
                     }
                 }
             }
-            base.VariableNames = variableNames.ToArray();
+            VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
 
-            if (EventNames[0] == "")
+            if (EventNames.Length == 0 || EventNames[0] == "")
             {
                 events.Subscribe("[Clock].CLEMEndOfTimeStep", DoOutputEvent);
             }
@@ -262,8 +268,12 @@ namespace Models.CLEM.Reporting
             if (simulation.Descriptors != null)
             {
                 foreach (var descriptor in simulation.Descriptors)
+                {
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                    {
                         this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                    }
+                }
             }
         }
     }

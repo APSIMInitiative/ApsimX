@@ -1,12 +1,13 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 54,
+  "Version": 57,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -20,7 +21,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "#CLEM Cropping Examples\nNOTE: These are fictional examples showing how to set up cropping simulations.  Yield data is dummy data.\n\n##Single Cropping Example\n - Maize is grown on half of the Field \n - The Maize is sold\n\n##Mixed Cropping Example\n - Tomatoes and Cumcumber are grown together on 0.8 hectares of land at the same time\n - The Tomatoes are processed into tomato paste\n - The tomato paste is sold\n\n##Rotation Cropping Example\n - A rotation between Sorghum and wheat is performed\n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n",
+          "Text": "#CLEM Cropping Examples\nNOTE: These are fictional examples showing how to set up cropping simulations.  Yield data is dummy data.\n\n##Single Cropping Example\n - Maize is grown on half of the Field \n - The Maize is sold\n\n##Mixed Cropping Example\n - Tomatoes and Cumcumber are grown together on 0.8 hectares of land at the same time\n - The Tomatoes are processed into tomato paste\n - The tomato paste is sold\n\n##Rotation Cropping Example\n - A rotation between Sorghum and wheat is performed\n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n#Help\nThe CLEM help system provides a model overview, user guide (how to) and a full description of every CLEM component, as well as in depth discussions on modelling various farm systems and what components to use. The Help documentation can be accessed by clicking the Help button beside the component name in the right hand information pane after selecting any CLEM component from your simulation tree or at [CLEM Help online](http://www.apsim.info/CLEM/Content/Home.htm).",
           "Name": "Cropping examples description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -29,6 +30,7 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
           "Name": "Single and Mixed Cropping",
           "Children": [
             {
@@ -102,11 +104,10 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.LandType, Models",
-                          "Units": null,
                           "LandArea": 2.0,
                           "PortionBuildings": 0.0,
                           "ProportionOfTotalArea": 1.0,
-                          "SoilType": 4,
+                          "SoilType": "4",
                           "Name": "Field",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -130,7 +131,6 @@
                           "WithdrawalLimit": 0.0,
                           "InterestRateCharged": 0.0,
                           "InterestRatePaid": 0.0,
-                          "Units": null,
                           "Name": "General account",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -153,7 +153,6 @@
                           "Gender": 0,
                           "Individuals": 1,
                           "Hired": false,
-                          "Units": null,
                           "Name": "Male",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -166,7 +165,6 @@
                           "Gender": 1,
                           "Individuals": 1,
                           "Hired": false,
-                          "Units": null,
                           "Name": "Female",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -211,8 +209,8 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.ProductStoreType, Models",
-                          "StartingAmount": 0.0,
                           "Units": "kg",
+                          "StartingAmount": 0.0,
                           "Name": "Maize",
                           "Children": [
                             {
@@ -233,8 +231,8 @@
                         },
                         {
                           "$type": "Models.CLEM.Resources.ProductStoreType, Models",
-                          "StartingAmount": 0.0,
                           "Units": "kg",
+                          "StartingAmount": 0.0,
                           "Name": "Tomatoes",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -243,8 +241,8 @@
                         },
                         {
                           "$type": "Models.CLEM.Resources.ProductStoreType, Models",
-                          "StartingAmount": 0.0,
                           "Units": "kg",
+                          "StartingAmount": 0.0,
                           "Name": "TomatoPaste",
                           "Children": [
                             {
@@ -265,8 +263,8 @@
                         },
                         {
                           "$type": "Models.CLEM.Resources.ProductStoreType, Models",
-                          "StartingAmount": 0.0,
                           "Units": null,
+                          "StartingAmount": 0.0,
                           "Name": "Cucumbers",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -692,8 +690,6 @@
                   "Children": [
                     {
                       "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": null,
                       "EventNames": null,
                       "Name": "ReportActivitiesPerformed",
@@ -712,8 +708,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "ProductStore"
                       ],
@@ -726,8 +720,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "Finances"
                       ],
@@ -740,8 +732,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "Labour"
                       ],
@@ -754,8 +744,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "[Clock].Today as Date",
                         "Labour",
@@ -773,8 +761,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceShortfalls, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "Finances",
                         "Labour",
@@ -1376,6 +1362,7 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
           "Name": "Rotation cropping",
           "Children": [
             {
@@ -1439,11 +1426,10 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.LandType, Models",
-                          "Units": null,
                           "LandArea": 80.0,
                           "PortionBuildings": 0.0,
                           "ProportionOfTotalArea": 1.0,
-                          "SoilType": 1,
+                          "SoilType": "1",
                           "Name": "Padd1",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1467,7 +1453,6 @@
                           "WithdrawalLimit": 0.0,
                           "InterestRateCharged": 0.0,
                           "InterestRatePaid": 0.0,
-                          "Units": null,
                           "Name": "General account",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1490,7 +1475,6 @@
                           "Gender": 0,
                           "Individuals": 1,
                           "Hired": false,
-                          "Units": null,
                           "Name": "Male",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1538,8 +1522,8 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.ProductStoreType, Models",
-                          "StartingAmount": 0.0,
                           "Units": "kg",
+                          "StartingAmount": 0.0,
                           "Name": "Wheat",
                           "Children": [
                             {
@@ -1560,8 +1544,8 @@
                         },
                         {
                           "$type": "Models.CLEM.Resources.ProductStoreType, Models",
-                          "StartingAmount": 0.0,
                           "Units": "kg",
+                          "StartingAmount": 0.0,
                           "Name": "Sorghum",
                           "Children": [
                             {
@@ -2252,8 +2236,6 @@
                   "Children": [
                     {
                       "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": null,
                       "EventNames": null,
                       "Name": "ReportActivitiesPerformed",
@@ -2264,8 +2246,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "[Clock].Today",
                         "Labour",
@@ -2283,8 +2263,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceShortfalls, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "[Clock].Today as Date",
                         "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
@@ -2304,8 +2282,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "Labour"
                       ],
@@ -2318,8 +2294,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "Finances"
                       ],
@@ -2332,8 +2306,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "ProductStore"
                       ],

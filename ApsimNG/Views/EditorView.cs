@@ -15,6 +15,32 @@ namespace UserInterface.Views
     using Utility;
     using Presenters;
     using Cairo;
+    using System.Globalization;
+    using Mono.TextEditor.Highlighting;
+
+    /// <summary>
+    /// What sort of text is this editor displaying?
+    /// This is used to determine syntax highlighting rules.
+    /// We could potentially add more options here in future if, say,
+    /// we were to implement a python manager component.
+    /// </summary>
+    public enum EditorType
+    {
+        /// <summary>
+        /// C# manager script.
+        /// </summary>
+        ManagerScript,
+
+        /// <summary>
+        /// Report.
+        /// </summary>
+        Report,
+
+        /// <summary>
+        /// Anything else - this will disable syntax highlighting.
+        /// </summary>
+        Other
+    };
 
     /// <summary>
     /// This is IEditorView interface
@@ -52,6 +78,11 @@ namespace UserInterface.Views
         string[] Lines { get; set; }
 
         /// <summary>
+        /// Controls syntax highlighting mode.
+        /// </summary>
+        EditorType Mode { get; set; }
+
+        /// <summary>
         /// Gets or sets the characters that bring up the intellisense context menu.
         /// </summary>
         string IntelliSenseChars { get; set; }
@@ -66,11 +97,6 @@ namespace UserInterface.Views
         /// </summary>
         System.Drawing.Rectangle Location { get; set; }
         
-        /// <summary>
-        /// Indicates whether we are editing a script, rather than "ordinary" text.
-        /// </summary>
-        bool ScriptMode { get; set; }
-
         /// <summary>
         /// Add a separator line to the context menu
         /// </summary>
@@ -196,8 +222,28 @@ namespace UserInterface.Views
             set
             {
                 textEditor.Text = value;
-                if (ScriptMode)
+                if (Mode == EditorType.ManagerScript)
                     textEditor.Document.MimeType = "text/x-csharp";
+                else if (Mode == EditorType.Report)
+                {
+                    if (SyntaxModeService.GetSyntaxMode(textEditor.Document, "text/x-apsimreport") == null)
+                        LoadReportSyntaxMode();
+                    textEditor.Document.MimeType = "text/x-apsimreport";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Performs a one-time registration of the report syntax highlighting rules.
+        /// This will only run once, the first time the user clicks on a report node.
+        /// </summary>
+        private void LoadReportSyntaxMode()
+        {
+            string resource = "ApsimNG.Resources.SyntaxHighlighting.Report.xml";
+            using (System.IO.Stream s = GetType().Assembly.GetManifestResourceStream(resource))
+            {
+                ProtoTypeSyntaxModeProvider p = new ProtoTypeSyntaxModeProvider(SyntaxMode.Read(s));
+                SyntaxModeService.InstallSyntaxMode("text/x-apsimreport", p);
             }
         }
 
@@ -229,15 +275,15 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Controls the syntax highlighting scheme.
+        /// </summary>
+        public EditorType Mode { get; set; }
+
+        /// <summary>
         /// Gets or sets the characters that bring up the intellisense context menu.
         /// </summary>
         public string IntelliSenseChars { get; set; }
-
-        /// <summary>
-        /// Indicates whether we are editing a script, rather than "ordinary" text.
-        /// </summary>
-        public bool ScriptMode { get; set; }
-
+        
         /// <summary>
         /// Gets the current line number
         /// </summary>
@@ -262,7 +308,7 @@ namespace UserInterface.Views
             get
             {
                 DocumentLocation loc = textEditor.Caret.Location;
-                return new System.Drawing.Rectangle(loc.Column, loc.Line, Convert.ToInt32(scroller.Hadjustment.Value), Convert.ToInt32(scroller.Vadjustment.Value));
+                return new System.Drawing.Rectangle(loc.Column, loc.Line, Convert.ToInt32(scroller.Hadjustment.Value, CultureInfo.InvariantCulture), Convert.ToInt32(scroller.Vadjustment.Value, CultureInfo.InvariantCulture));
             }
 
             set
@@ -587,9 +633,40 @@ namespace UserInterface.Views
         {
             if (string.IsNullOrEmpty(completionOption))
                 return;
-            textEditor.InsertAtCaret(completionOption);
+
+            // If no trigger word provided, insert at caret.
+            if (string.IsNullOrEmpty(triggerWord))
+            {
+                int offset = Offset + completionOption.Length;
+                textEditor.InsertAtCaret(completionOption);
+                textEditor.Caret.Offset = offset;
+                return;
+            }
+
+            // If trigger word is entire text, replace the entire text.
+            if (textEditor.Text == triggerWord)
+            {
+                textEditor.Text = completionOption;
+                textEditor.Caret.Offset = completionOption.Length;
+                return;
+            }
+
+            // Overwrite the last occurrence of this word before the caret.
+            int index = textEditor.GetTextBetween(0, Offset).LastIndexOf(triggerWord);
+            if (index < 0)
+                // If text does not contain trigger word, isnert at caret.
+                textEditor.InsertAtCaret(completionOption);
+
+            string textBeforeTriggerWord = textEditor.Text.Substring(0, index);
+
+            string textAfterTriggerWord = "";
+            if (textEditor.Text.Length > index + triggerWord.Length)
+                textAfterTriggerWord = textEditor.Text.Substring(index + triggerWord.Length);
+
+            textEditor.Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
+            textEditor.Caret.Offset = index + completionOption.Length;
         }
-        
+
         /// <summary>
         /// Insert the currently selected completion item into the text box.
         /// </summary>

@@ -33,10 +33,10 @@ namespace Models.CLEM.Resources
         //%runoff
         //methane
         //soilC
-        //TreeC
-        //Burnkg
-        //methaneFire
-        //N2OOFire
+        //TreeC 
+        //Burnkg - will be in burn pasture activity
+        //methaneFire - created by burn pasture activity
+        //N2OOFire - created by burn pasture activity
 
         /// <summary>
         /// Average monthly stocking rate (Adult Equivalents/square km)

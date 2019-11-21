@@ -27,6 +27,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(WaterType))]
     [Description("This component defines the pricing of a resource type")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/ResourcePricing.htm")]
     public class ResourcePricing : CLEMModel
     {
         /// <summary>

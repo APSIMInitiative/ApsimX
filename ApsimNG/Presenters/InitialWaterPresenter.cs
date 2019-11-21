@@ -10,6 +10,7 @@ namespace UserInterface.Presenters
     using Models.Graph;
     using Models.Soils;
     using Commands;
+    using System.Globalization;
 
     /// <summary>
     /// The presenter class for populating an InitialWater view with an InitialWater model.
@@ -72,6 +73,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            graphPresenter.Detach();
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
             this.DisconnectViewEvents();
             this.initialWater.Parent.Children.Remove(this.graph);
@@ -83,7 +85,7 @@ namespace UserInterface.Presenters
         private void PopulateView()
         {
             DisconnectViewEvents();
-            initialWaterView.PercentFull = Convert.ToInt32(initialWater.FractionFull * 100);
+            initialWaterView.PercentFull = Convert.ToInt32(initialWater.FractionFull * 100, CultureInfo.InvariantCulture);
             initialWaterView.PAW = (int)Math.Round(initialWater.PAW);
             if (double.IsNaN(initialWater.DepthWetSoil))
             {

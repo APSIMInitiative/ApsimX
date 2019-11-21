@@ -153,6 +153,7 @@ namespace UserInterface.Commands
             section.Add(version);
             // Convert all models in file to tags.
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
+            // No need to resolve links here - they will be resolved in each simulation individually.
             foreach (IModel child in explorerPresenter.ApsimXFile.Children)
             {
                 AutoDocumentation.DocumentModel(child, tags, headingLevel:1, indent:0);
@@ -301,7 +302,7 @@ namespace UserInterface.Commands
 
                           "APSIM is freely available for non-commercial purposes. Non-commercial use of APSIM means public-good research & development and educational activities. " +
                           "It includes the support of policy development and/or implementation by, or on behalf of, government bodies and industry-good work where the research outcomes " +
-                          "are to be made publicly available. For more information visit <a href=\"https://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
+                          "are to be made publicly available. For more information visit <a href=\"https://apsimdev.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
 
             tags.Add(new AutoDocumentation.Heading("APSIM Description", 1));
             tags.Add(new AutoDocumentation.Paragraph(text, 0));
@@ -388,20 +389,16 @@ namespace UserInterface.Commands
             graph.Height = 250;
 
             // Create a line series.
-            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null,
+            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null,
                                      Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
                                      System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
                                      Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
 
+            graph.ForegroundColour = OxyPlot.OxyColors.Black;
+            graph.BackColor = OxyPlot.OxyColors.White;
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
             graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
-            graph.ForegroundColour = OxyPlot.OxyColors.Black;
-            graph.BackColor = OxyPlot.OxyColors.White;
-            /*
-            graph.ForegroundColour = Configuration.Settings.DarkTheme ? OxyPlot.OxyColors.White : OxyPlot.OxyColors.Black;
-            graph.BackColor = Configuration.Settings.DarkTheme ? OxyPlot.OxyColors.Black : OxyPlot.OxyColors.White;
-            */
             graph.FontSize = 10;
             graph.Refresh();
 
@@ -676,7 +673,7 @@ namespace UserInterface.Commands
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     if (viewName != null && presenterName != null)
                     {
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { null }, null, null) as ViewBase;
+                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { ViewBase.MasterView }, null, null) as ViewBase;
                         IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
                         if (view != null && presenter != null)
@@ -684,13 +681,13 @@ namespace UserInterface.Commands
                             explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
-                            Gtk.Window popupWin;
+                            Gtk.Window popupWin = null;
                             if (view is MapView)
                             {
-                                popupWin = (view as MapView).GetPopupWin();
-                                popupWin.SetSizeRequest(515, 500);
+                                popupWin = (view as MapView)?.GetPopupWin();
+                                popupWin?.SetSizeRequest(515, 500);
                             }
-                            else
+                            if (popupWin == null)
                             {
                                 popupWin = new Gtk.Window(Gtk.WindowType.Popup);
                                 popupWin.SetSizeRequest(800, 800);

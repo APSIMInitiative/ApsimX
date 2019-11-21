@@ -678,10 +678,24 @@
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Plant>
+      <Name>FodderBeet</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ResourceName>FodderBeet</ResourceName>
+      <CropType>FodderBeet</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
+    </Plant>
+    <Plant>
       <Name>Plantain</Name>
       <IncludeInDocumentation>true</IncludeInDocumentation>
       <ResourceName>Plantain</ResourceName>
       <CropType>Plantain</CropType>
+      <SowingDate>0001-01-01T00:00:00</SowingDate>
+    </Plant>
+    <Plant>
+      <Name>WhiteClover</Name>
+      <IncludeInDocumentation>true</IncludeInDocumentation>
+      <ResourceName>WhiteClover</ResourceName>
+      <CropType>WhiteClover</CropType>
       <SowingDate>0001-01-01T00:00:00</SowingDate>
     </Plant>
     <Plant>

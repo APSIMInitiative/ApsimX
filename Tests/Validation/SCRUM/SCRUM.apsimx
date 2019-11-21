@@ -10403,7 +10403,7 @@ namespace Models
           <MarkerSize>Normal</MarkerSize>
           <Line>None</Line>
           <LineThickness>Normal</LineThickness>
-          <TableName>observed</TableName>
+          <TableName>Observed</TableName>
           <XFieldName>Clock.Today</XFieldName>
           <YFieldName>Maize.AboveGround.Wt</YFieldName>
           <ShowInLegend>true</ShowInLegend>
@@ -11190,7 +11190,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>observed</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Maize.Stem.Live.Wt</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -11390,7 +11390,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>observed</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Maize.Leaf.LAI</YFieldName>
             <ShowInLegend>true</ShowInLegend>
@@ -11455,7 +11455,7 @@ namespace Models
             <MarkerSize>Normal</MarkerSize>
             <Line>None</Line>
             <LineThickness>Normal</LineThickness>
-            <TableName>observed</TableName>
+            <TableName>Observed</TableName>
             <XFieldName>Clock.Today</XFieldName>
             <YFieldName>Maize.Leaf.CoverTotal</YFieldName>
             <ShowInLegend>true</ShowInLegend>

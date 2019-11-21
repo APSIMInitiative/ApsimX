@@ -53,7 +53,7 @@ namespace UserInterface.Presenters
 
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
-                "body {font-family: sans-serif, Arial, Helvetica; max-width:1000px; }" +
+                "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
                 "th,td {padding:5px; }" +
                 "th,td {border: 1px dotted Black; }" +
                 "table {border: 0px none #009999; border-collapse: collapse; }" +
@@ -77,6 +77,18 @@ namespace UserInterface.Presenters
                 "\n</style>\n</head>\n<body>";
 
             // Start building table
+
+            // apply theme based settings
+            if (!Utility.Configuration.Settings.DarkTheme)
+            {
+                // light theme
+                htmlString = htmlString.Replace("[FontColor]", "#000000");
+            }
+            else
+            {
+                // dark theme
+                htmlString = htmlString.Replace("[FontColor]", "#E5E5E5");
+            }
 
             // get CLEM Zone
             IModel clem = model as IModel;

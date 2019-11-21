@@ -50,6 +50,9 @@ namespace Models.PMF
         [Units("mm")]
         public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
 
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width { get { return 0; } }
+
         /// <summary>Gets  FRGR.</summary>
         [Units("0-1")]
         public double FRGR { get { return 1; } }
@@ -92,11 +95,11 @@ namespace Models.PMF
         Soils.Soil Soil = null;
 
         /// <summary>NO3 solute.</summary>
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NO3 = null;
 
         /// <summary>NH4 solute.</summary>
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NH4 = null;
 
         /// <summary>
@@ -205,7 +208,7 @@ namespace Models.PMF
             SoilCrop soilCrop = Soil.Crop(this.Name) as SoilCrop;
 
             for (int j = 0; j < Soil.LL15mm.Length; j++)
-                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL(this.Name)[j] * (MyZone.Water[j] - Soil.LL15mm[j]));
+                PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (MyZone.Water[j] - Soil.LL15mm[j]));
 
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
             
@@ -240,10 +243,11 @@ namespace Models.PMF
             NO3Uptake = new double[MyZone.NO3N.Length];
             NH4Uptake = new double[MyZone.NH4N.Length];
 
+            var soilCrop = Soil.Crop(Name);
             for (int j = 0; j < Soil.LL15mm.Length; j++)
             {
-                PotNO3Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL(this.Name)[j] * MyZone.NO3N[j]);
-                PotNH4Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * Soil.KL(this.Name)[j] * MyZone.NH4N[j]);
+                PotNO3Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NO3N[j]);
+                PotNH4Uptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * MyZone.NH4N[j]);
             }
             double TotPotNUptake = MathUtilities.Sum(PotNO3Uptake) + MathUtilities.Sum(PotNH4Uptake);
 

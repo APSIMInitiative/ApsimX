@@ -1,6 +1,7 @@
 ﻿
 namespace UnitTests
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
@@ -19,10 +20,10 @@ namespace UnitTests
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        public static void EnsureJobRanGreen(object sender, JobCompleteArgs args)
+        public static void EnsureJobRanGreen(object sender, JobCompleteArguments args)
         {
-            if (args.exceptionThrowByJob != null)
-                throw new Exception(string.Format("Exception was thrown when running via {0}, when we expected no error to be thrown.", sender.GetType().Name), args.exceptionThrowByJob);
+            if (args.ExceptionThrowByJob != null)
+                throw new Exception(string.Format("Exception was thrown when running via {0}, when we expected no error to be thrown.", sender.GetType().Name), args.ExceptionThrowByJob);
         }
 
         /// <summary>Call an event in a model</summary>
@@ -72,7 +73,7 @@ namespace UnitTests
                     sql += fieldName;
                 }
             }
-            sql += " FROM " + tableName;
+            sql += " FROM [" + tableName + "]";
             var orderByFieldNames = new List<string>();
             if (database.GetColumnNames(tableName).Contains("CheckpointID"))
                 orderByFieldNames.Add("[CheckpointID]");
@@ -99,6 +100,34 @@ namespace UnitTests
             StringWriter writer = new StringWriter();
             DataTableUtilities.DataTableToText(data, 0, ",", true, writer);
             return writer.ToString();
+        }
+
+        /// <summary>
+        /// Runs models.exe on the given sims and passes along the given command line arguments.
+        /// Returns StdOut of Models.exe.
+        /// </summary>
+        /// <param name="sims">Simulations to be run.</param>
+        /// <param name="arguments">Command line arguments to be passed to Models.exe.</param>
+        public static string RunModels(Simulations sims, string arguments)
+        {
+            sims.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
+            sims.Write(sims.FileName);
+            string pathToModels = typeof(IModel).Assembly.Location;
+            return RunModels(sims.FileName + " " + arguments);
+        }
+
+        public static string RunModels(string arguments)
+        {
+            string pathToModels = typeof(IModel).Assembly.Location;
+
+            ProcessUtilities.ProcessWithRedirectedOutput proc = new ProcessUtilities.ProcessWithRedirectedOutput();
+            proc.Start(pathToModels, arguments, Path.GetTempPath(), true);
+            proc.WaitForExit();
+
+            if (proc.ExitCode != 0)
+                throw new Exception(proc.StdOut);
+
+            return proc.StdOut;
         }
 
         /// <summary>
@@ -145,6 +174,7 @@ namespace UnitTests
                 }
             };
             Apsim.ParentAllChildren(sims);
+            sims.Write(sims.FileName);
             return sims;
         }
     }

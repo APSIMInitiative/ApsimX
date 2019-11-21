@@ -28,7 +28,7 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            double[] initialppm = soil.Cl;
+            double[] initialppm = soil.Initial.CL;
             if (initialppm == null)
                 initialppm = new double[soil.Thickness.Length];
             kgha = soil.ppm2kgha(initialppm);

@@ -9,6 +9,7 @@ using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using Models.CLEM.Activities;
 
 namespace Models.CLEM.Resources
 {
@@ -21,11 +22,12 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all labour types (people) for the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/labour/labour.htm")]
+    [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
     public class Labour: ResourceBaseWithTransactions, IValidatableObject
     {
         private List<string> WarningsMultipleEntry = new List<string>();
         private List<string> WarningsNotFound = new List<string>();
+        private LabourAERelationship adultEquivalentRelationship = null;
 
         /// <summary>
         /// Get the Clock.
@@ -69,10 +71,29 @@ namespace Models.CLEM.Resources
             // locate resources
             availabilityList = Apsim.Children(this, typeof(LabourAvailabilityList)).Cast<LabourAvailabilityList>().FirstOrDefault();
 
+            // locate AE relationship
+            adultEquivalentRelationship = Apsim.Children(this, typeof(LabourAERelationship)).Cast<LabourAERelationship>().FirstOrDefault();
+
             if (Clock.Today.Day != 1)
             {
                 OnStartOfMonth(this, null);
             }
+        }
+
+        /// <summary>
+        /// A method to calculate the total dietary intake by metric
+        /// </summary>
+        /// <param name="metric">Metric to use</param>
+        /// <param name="includeLabour">Include hired labour in calculations</param>
+        /// <returns></returns>
+        public double GetDietaryValue(string metric, bool includeLabour)
+        {
+            double value = 0;
+            foreach (LabourType ind in Items.Where(a => includeLabour | (a.Hired == false)))
+            {
+                value += ind.GetDietDetails(metric);
+            }
+            return value;
         }
 
         /// <summary>
@@ -83,10 +104,16 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (availabilityList == null && Apsim.Children(this, typeof(LabourType)).Count > 0)
+
+            // Add warning if no individuals defined
+            if (Apsim.Children(this, typeof(LabourType)).Count > 0 && Apsim.Children(this, typeof(LabourType)).Cast<LabourType>().Sum(a => a.Individuals) == 0)
             {
-                string[] memberNames = new string[] { "Labour.AvailabilityList" };
-                results.Add(new ValidationResult("A labour availability list is required under the labour resource for this simulation.", memberNames));
+                string warningString = "No individuals have been set in any [r=LabourType]\nAdd individuals or consider removing or disabling [r=Labour]";
+                if (!WarningsNotFound.Contains(warningString))
+                {
+                    WarningsNotFound.Add(warningString);
+                    Summary.WriteWarning(this, warningString);
+                }
             }
             return results;
         }
@@ -108,10 +135,10 @@ namespace Models.CLEM.Resources
                     {
                         Gender = labourChildModel.Gender,
                         Individuals = 1,
+                        Parent = this,
                         InitialAge = labourChildModel.InitialAge,
                         AgeInMonths = labourChildModel.InitialAge * 12,
                         LabourAvailability = labourChildModel.LabourAvailability,
-                        Parent = this,
                         Name = labourChildModel.Name + ((labourChildModel.Individuals > 1)?"_"+(i+1).ToString():""),
                         Hired = labourChildModel.Hired
                     };
@@ -149,11 +176,14 @@ namespace Models.CLEM.Resources
         [EventSubscribe("StartOfMonth")]
         private void OnStartOfMonth(object sender, EventArgs e)
         {
-            int currentmonth = Clock.Today.Month;
             foreach (LabourType item in Items)
             {
                 item.AvailabilityLimiter = 1.0;
                 CheckAssignLabourAvailability(item);
+                if (item.DietaryComponentList != null)
+                {
+                    item.DietaryComponentList.Clear();
+                }
             }
 
             // A LabourActivityPayHired may take place after this in CLEMStartOfTimeStep to limit availability
@@ -175,6 +205,11 @@ namespace Models.CLEM.Resources
 
         private void CheckAssignLabourAvailability(LabourType labour)
         {
+            if(availabilityList == null)
+            {
+
+            }
+
             List<LabourType> checkList = new List<LabourType>() { labour };
             if (labour.LabourAvailability != null)
             {
@@ -224,6 +259,47 @@ namespace Models.CLEM.Resources
 
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculate the AE of an individual based on provided relationship
+        /// </summary>
+        /// <returns>value</returns>
+        public double? CalculateAE(double ageInMonths)
+        {
+            if (adultEquivalentRelationship != null)
+            {
+                return adultEquivalentRelationship.SolveY(ageInMonths, true);
+            }
+            else
+            {
+                // no AE relationship provided.
+                //string warningString = "No Adult Equivalent (AE) relationship is provided for [r="+this.Name+"]\nEach individual present is assumed to be an AE\nAdd a [Relationship] below [r=Labour] to define AE as a function of age in months";
+                //if (!WarningsNotFound.Contains(warningString))
+                //{
+                //    WarningsNotFound.Add(warningString);
+                //    Summary.WriteWarning(this, warningString);
+                //}
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Calculate the number of Adult Equivalents on the farm
+        /// </summary>
+        /// <param name="includeHired">Include hired labour in the calculation</param>
+        /// <returns></returns>
+        public double AdultEquivalents(bool includeHired)
+        {
+            double ae = 0;
+            foreach (LabourType person in Items)
+            {
+                if (!person.Hired | (includeHired))
+                {
+                    ae += CalculateAE(person.AgeInMonths)??1;
+                }
+            }
+            return ae;
         }
 
         /// <summary>

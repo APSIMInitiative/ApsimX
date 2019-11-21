@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace Models.Soils.SoilWaterBackend
             /// <summary>
             /// The summary
             /// </summary>
-        public Summary Summary;
+        public ISummary Summary;
         /// <summary>
         /// The thismodel
         /// </summary>
@@ -131,27 +132,6 @@ namespace Models.Soils.SoilWaterBackend
 
 
         #region Module Constants (from SIM file but it gets from INI file)
-
-
-        /// <summary>
-        /// The min_crit_temp
-        /// </summary>
-        public double min_crit_temp;             //! temperature below which eeq decreases (oC)
-
-
-
-        /// <summary>
-        /// The max_crit_temp
-        /// </summary>
-        public double max_crit_temp;             //! temperature above which eeq increases (oC)
-
-
-
-        /// <summary>
-        /// The max_albedo
-        /// </summary>
-        public double max_albedo;                //! maximum bare ground soil albedo (0-1)
-
 
 
         /// <summary>
@@ -269,6 +249,10 @@ namespace Models.Soils.SoilWaterBackend
     public class CanopyData
         {
 
+        /// <summary>
+        /// This passes the potential infiltration into the SoilWaterSurface.  Not the best place for it but will get thinks moving
+        /// </summary>
+        public double PotentialInfiltration { get; set; }
 
         //GET CROP VARIABLES
             /// <summary>

@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
+using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -23,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking based on predicted seasonal outlooks. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantpredictivestockingenso.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStockingENSO.htm")]
     public class RuminantActivityPredictiveStockingENSO: CLEMActivityBase
     {
         [Link]
@@ -172,8 +173,8 @@ namespace Models.CLEM.Activities
                         for (int i = 1; i < items.Count(); i++)
                         {
                             ForecastSequence.Add(
-                                new DateTime(Convert.ToInt16(items[0]), Convert.ToInt16(i), 1),
-                                Convert.ToDouble(items[i])
+                                new DateTime(Convert.ToInt16(items[0]), Convert.ToInt16(i, CultureInfo.InvariantCulture), 1),
+                                Convert.ToDouble(items[i], CultureInfo.InvariantCulture)
                                 );
                         }
                     }
@@ -345,7 +346,7 @@ namespace Models.CLEM.Activities
             }
 
             // remove wet breeders with no calf
-            // currently ignore pregant
+            // currently ignore pregnant
             // is lactating with no calves are sold.
 
             // TODO manage calves from sold wet breeders. eg move to yards
@@ -388,7 +389,7 @@ namespace Models.CLEM.Activities
                 double weight = exampleRuminant.StandardReferenceWeight - ((1 - exampleRuminant.BreedParams.SRWBirth) * exampleRuminant.StandardReferenceWeight) * Math.Exp(-(exampleRuminant.BreedParams.AgeGrowthRateCoefficient * (exampleRuminant.Age * 30.4)) / (Math.Pow(exampleRuminant.StandardReferenceWeight, exampleRuminant.BreedParams.SRWGrowthScalar)));
                 double numberToBuy = aEtoBuy * Math.Pow(weight, 0.75) / Math.Pow(exampleRuminant.BreedParams.BaseAnimalEquivalent, 0.75); // convert to AE
 
-                for (int i = 0; i < Convert.ToInt32(numberToBuy); i++)
+                for (int i = 0; i < Convert.ToInt32(numberToBuy, CultureInfo.InvariantCulture); i++)
                 {
                     Resources.RuminantHerd().PurchaseIndividuals.Add(new RuminantMale(192, Sex.Male, weight, exampleRuminant.BreedParams)
                     {

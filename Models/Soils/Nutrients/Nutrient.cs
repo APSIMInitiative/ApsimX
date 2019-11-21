@@ -54,7 +54,7 @@
         /// Summary file Link
         /// </summary>
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         /// <summary>The surface organic matter</summary>
         [Link]
@@ -64,17 +64,17 @@
         [Link]
         private Soil Soil = null;
 
-        [ChildLinkByName]
-        NutrientPool FOMCellulose = null;
-        [ChildLinkByName]
-        NutrientPool FOMCarbohydrate = null;
-        [ChildLinkByName]
-        NutrientPool FOMLignin = null;
-        [ChildLinkByName]
-        NutrientPool SurfaceResidue = null;
-        [ScopedLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
+        INutrientPool FOMCellulose = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        INutrientPool FOMCarbohydrate = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        INutrientPool FOMLignin = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        INutrientPool SurfaceResidue = null;
+        [Link(ByName = true)]
         private ISolute NO3 = null;
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NH4 = null;
 
         // Carbon content of FOM

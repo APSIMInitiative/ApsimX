@@ -7,6 +7,7 @@ using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Resources
 {
@@ -18,13 +19,20 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminanttype.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         [Link]
         private ResourcesHolder Resources = null;
+
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get {return "NA"; }  }
 
         /// <summary>
         /// Breed
@@ -70,8 +78,8 @@ namespace Models.CLEM.Resources
         /// <returns>boolean</returns>
         public bool PricingAvailable() {  return (PriceList != null); }
 
-        private List<string> WarningsMultipleEntry = new List<string>();
-        private List<string> WarningsNotFound = new List<string>();
+        private readonly List<string> WarningsMultipleEntry = new List<string>();
+        private readonly List<string> WarningsNotFound = new List<string>();
 
         /// <summary>
         /// Get value of a specific individual
@@ -92,7 +100,12 @@ namespace Models.CLEM.Resources
                     }
                 }
                 // no price match found.
-                Summary.WriteWarning(this, "No "+purchaseStyle.ToString()+" price entry was found for indiviudal [" + ind.ID + "] with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight + "])");
+                string warning = "No " + purchaseStyle.ToString() + " price entry was found for an indiviudal with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight.ToString("##0") + "])";
+                if (!Warnings.Exists(warning))
+                {
+                    Warnings.Add(warning);
+                    Summary.WriteWarning(this, warning);
+                }
             }
             return 0;
         }
@@ -151,7 +164,7 @@ namespace Models.CLEM.Resources
                     }
                     else
                     {
-                        Summary.WriteWarning(this, "\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for ["+ind.Breed+"]");
+                        warningString += "\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
                     }
                     if (!WarningsNotFound.Contains(criteria))
                     {
@@ -252,6 +265,42 @@ namespace Models.CLEM.Resources
                 }
                 return 0;
             }
+        }
+
+        /// <summary>
+        /// Current number of individuals of this herd.
+        /// </summary>
+        public double AmountAE
+        {
+            get
+            {
+                if (Resources.RuminantHerd().Herd != null)
+                {
+                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
+                }
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Returns the most recent conception status
+        /// </summary>
+        [XmlIgnore]
+        public ConceptionStatusChangedEventArgs LastConceptionStatus { get; set; }
+
+        /// <summary>
+        /// The conception status of a female changed for advanced reporting
+        /// </summary>
+        public event EventHandler ConceptionStatusChanged;
+
+        /// <summary>
+        /// Conception status changed 
+        /// </summary>
+        /// <param name="e"></param>
+        public void OnConceptionStatusChanged(ConceptionStatusChangedEventArgs e)
+        {
+            LastConceptionStatus = e;
+            ConceptionStatusChanged?.Invoke(this, e);
         }
 
         #region Grow Activity
@@ -403,14 +452,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
-        /// Intake coefficient in relation to Live Weight
+        /// Intake coefficient in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
         [Description("Intake coefficient in relation to Live Weight")]
         [Required, GreaterThanValue(0)]
         public double IntakeCoefficient { get; set; }
         /// <summary>
-        /// Intake intercept In relation to SRW
+        /// Intake intercept in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
         [Description("Intake intercept in relation to SRW")]
@@ -460,20 +509,6 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double GreenDietZero { get; set; }
         /// <summary>
-        /// Coefficient to adjust intake for herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeTropicalQuality { get; set; }
-        /// <summary>
-        /// Coefficient to adjust intake for tropical herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for tropical herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeCoefficientQuality { get; set; }
-        /// <summary>
         /// Coefficient to adjust intake for herbage biomass
         /// </summary>
         [Category("Advanced", "Diet")]
@@ -483,7 +518,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Enforce strict feeding limits
         /// </summary>
-        [Category("Advanced", "Diet")]
+        [Category("Basic", "Diet")]
         [Description("Enforce strict feeding limits")]
         [Required]
         public bool StrictFeedingLimits { get; set; }
@@ -680,6 +715,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MilkPeakDay { get; set; }
         /// <summary>
+        /// Proportion offspring born male
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0.5)]
+        [Category("Advanced", "Breeding")]
+        [Description("Proportion of offspring male")]
+        [Required, Proportion]
+        public double ProportionOffspringMale { get; set; }
+        /// <summary>
         /// Inter-parturition interval intercept of PW (months)
         /// </summary>
         [Category("Advanced", "Breeding")]
@@ -707,6 +750,14 @@ namespace Models.CLEM.Resources
         [Description("Minimum age for 1st mating (months)")]
         [Required, GreaterThanValue(0)]
         public double MinimumAge1stMating { get; set; }
+        /// <summary>
+        /// Maximum age for mating (months)
+        /// </summary>
+        [Category("Basic", "Breeding")]
+        [Description("Maximum female age for mating")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(120)]
+        public double MaximumAgeMating { get; set; }
         /// <summary>
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>
@@ -750,13 +801,6 @@ namespace Models.CLEM.Resources
         [Description("Mortality rate from conception to birth (proportion)")]
         [Required, Proportion]
         public double PrenatalMortality { get; set; }
-        /// <summary>
-        /// Maximum conception rate from uncontrolled breeding 
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Maximum conception rate from uncontrolled breeding")]
-        [Required, Proportion]
-        public double MaximumConceptionUncontrolledBreeding { get; set; }
 
         #endregion
 

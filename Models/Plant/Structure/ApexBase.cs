@@ -76,7 +76,7 @@
         [Link]
         private Structure structure = null;
 
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private IFunction stemSenescenceAge = null;
 
         /// <summary>The apex group.</summary>
@@ -239,11 +239,11 @@
                         double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
                         apexGroupSize[i] -= remove;
                         remainingRemoveApex -= remove;
-                        if (remainingRemoveApex <= 0.0)
+                        if (remainingRemoveApex <= 0.00001)
                             break;
                     }
 
-                    if (remainingRemoveApex > 0.0)
+                    if (remainingRemoveApex > 0.00001)
                         throw new Exception("There are not enough apex to remove from plant.");
                 }
                 if (phenology.Stage > 4 && !SenescenceByAge)

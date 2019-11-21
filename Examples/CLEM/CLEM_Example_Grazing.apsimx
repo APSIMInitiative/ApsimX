@@ -1,12 +1,13 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 382,
-  "Version": 54,
+  "Version": 57,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -20,7 +21,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "##CLEM Grazing simulation example\n###Grazing 10 Ruminants on Native Pasture and Feeding Hay \n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.",
+          "Text": "#CLEM Grazing simulation example\n##Grazing 10 Ruminants on native pasture and feeding hay \n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n#Help\nThe CLEM help system provides a model overview, user guide (how to) and a full description of every CLEM component, as well as in depth discussions on modelling various farm systems and what components to use. The Help documentation can be accessed by clicking the Help button beside the component name in the right hand information pane after selecting any CLEM component from your simulation tree or at [CLEM Help online](http://www.apsim.info/CLEM/Content/Home.htm).",
           "Name": "Grazing example description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -29,6 +30,7 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
           "Name": "Grazing",
           "Children": [
             {
@@ -95,8 +97,7 @@
                           "LandArea": 250.0,
                           "PortionBuildings": 0.0,
                           "ProportionOfTotalArea": 1.0,
-                          "SoilType": 2,
-                          "Units": null,
+                          "SoilType": "2",
                           "Name": "Paddock1",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -120,7 +121,6 @@
                           "WithdrawalLimit": 0.0,
                           "InterestRateCharged": 7.5,
                           "InterestRatePaid": 2.0,
-                          "Units": null,
                           "Name": "General account",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -197,23 +197,24 @@
                           "MilkPeakYield": 20.0,
                           "MilkOffsetDay": 4.0,
                           "MilkPeakDay": 45.0,
+                          "ProportionOffspringMale": 0.5,
                           "InterParturitionIntervalIntercept": 10.847,
                           "InterParturitionIntervalCoefficient": -0.7994,
                           "GestationLength": 9.0,
                           "MinimumAge1stMating": 24.0,
+                          "MaximumAgeMating": 120.0,
                           "MinimumSize1stMating": 0.5,
                           "MinimumDaysBirthToConception": 61.0,
                           "MultipleBirthRate": null,
                           "CriticalCowWeight": 0.5,
                           "MaximumMaleMatingsPerDay": 30.0,
                           "PrenatalMortality": 0.079,
-                          "MaximumConceptionUncontrolledBreeding": 0.7,
                           "MethaneProductionCoefficient": 20.7,
-                          "Units": null,
                           "Name": "Bos indicus",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
+                              "WeightWarningOccurred": false,
                               "Name": "Initial cohorts",
                               "Children": [
                                 {
@@ -537,6 +538,7 @@
                               "ConceptionRateCoefficent": -14.247,
                               "ConceptionRateIntercept": 5.182,
                               "ConceptionRateAsymptote": 90.0,
+                              "MaximumConceptionUncontrolledBreeding": 0.0,
                               "Name": "RuminantConceptionCurve",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -559,6 +561,7 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.GrazeFoodStoreType, Models",
+                          "Units": null,
                           "NToDMDCoefficient": 11.03,
                           "NToDMDIntercept": 41.4,
                           "NToDMDCrudeProteinDenominator": 0.0,
@@ -571,7 +574,6 @@
                           "CarryoverDetachRate": 0.12,
                           "IntakeTropicalQualityCoefficient": 0.16,
                           "IntakeQualityCoefficient": 1.7,
-                          "Units": null,
                           "Name": "NativePasture",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -589,10 +591,10 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.AnimalFoodStoreType, Models",
+                          "Units": "kg",
                           "DMD": 49.0,
                           "Nitrogen": 3.4,
                           "StartingAmount": 100.0,
-                          "Units": "kg",
                           "Name": "Hay",
                           "Children": [
                             {
@@ -794,6 +796,7 @@
                           "NumberOfBreederPurchaseAgeClasses": 1,
                           "MaximumSiresKept": 1.0,
                           "MaximumBullAge": 96.0,
+						  "BullAgeAtPurchase": 48.0,
                           "AllowSireReplacement": false,
                           "MaximumSiresPerPurchase": 1,
                           "FillBreedingMalesAtStartup": false,
@@ -871,8 +874,6 @@
                   "Children": [
                     {
                       "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": null,
                       "EventNames": null,
                       "Name": "ReportActivitiesPerformed",
@@ -883,8 +884,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "[Clock].Today",
                         "Land",
@@ -903,8 +902,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceShortfalls, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "[Clock].Today as Date",
                         "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
@@ -924,8 +921,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "GrazeFoodStore"
                       ],
@@ -938,8 +933,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "AnimalFoodStore"
                       ],
@@ -952,8 +945,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "Finances"
                       ],
@@ -966,8 +957,6 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "Ruminants"
                       ],
@@ -980,8 +969,6 @@
                     },
                     {
                       "$type": "Models.Report.Report, Models",
-                      "ExperimentFactorNames": null,
-                      "ExperimentFactorValues": null,
                       "VariableNames": [
                         "[Clock].Today",
                         "[Activities].SummariseHerd.ReportDetails.Breed as Breed",

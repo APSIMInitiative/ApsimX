@@ -8,6 +8,7 @@ namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using StdUnits;
 
@@ -297,6 +298,16 @@ namespace Models.GrazPlan
     public class SingleGenotypeInits
     {
         /// <summary>
+        /// Gets or sets the death rates
+        /// </summary>
+        public double[] DeathRate = new double[2];
+
+        /// <summary>
+        /// Conception rates
+        /// </summary>
+        public double[] Conceptions = new double[4];    // array[1..3]
+
+        /// <summary>
         /// Gets or sets the genotype name
         /// </summary>
         public string GenotypeName { get; set; }
@@ -340,16 +351,6 @@ namespace Models.GrazPlan
         /// Gets or sets the peak milk production
         /// </summary>
         public double PeakMilk { get; set; }
-
-        /// <summary>
-        /// Gets or sets the death rates
-        /// </summary>
-        public double[] DeathRate = new double[2];      
-        
-        /// <summary>
-        /// Conception rates
-        /// </summary>
-        public double[] Conceptions = new double[4];    // array[1..3]
     }
 
     /// <summary>
@@ -592,10 +593,11 @@ namespace Models.GrazPlan
         public static AnimalParamSet MakeParamSet(string constFileName)
         {
             AnimalParamSet result = new AnimalParamSet((AnimalParamSet)null);
-            result.CopyAll(GlobalAnimalParams.AnimalParamsGlb());
+            GlobalAnimalParams animalParams = new GlobalAnimalParams();
+            result.CopyAll(animalParams.AnimalParamsGlb());
             if (constFileName != string.Empty)
-                GlobalParameterFactory.ParamXMLFactory().readFromFile(constFileName, result, true);
-            result.sCurrLocale = GrazLocale.sDefaultLocale();
+                GlobalParameterFactory.ParamXMLFactory().ReadFromFile(constFileName, result, true);
+            result.CurrLocale = GrazLocale.DefaultLocale();
 
             return result;
         }
@@ -943,7 +945,7 @@ namespace Models.GrazPlan
         /// <param name="posIdx">Position in stock list</param>
         /// <param name="startTime">Start time</param>
         /// <param name="deltaTime">Time adjustment</param>
-        /// <param name="feedSuppFirst"></param>
+        /// <param name="feedSuppFirst">Feed supplement first</param>
         private void ComputeGrazing(int posIdx, double startTime, double deltaTime, bool feedSuppFirst)
         {
             this.At(posIdx).Grazing(deltaTime, (startTime == 0.0), feedSuppFirst, ref this.stock[posIdx].PastIntakeRate[0], ref this.stock[posIdx].SuppIntakeRate[0]);
@@ -1479,7 +1481,7 @@ namespace Models.GrazPlan
             else
             {
                 idx = 0;
-                while ((idx < this.genotypeParams.Length) && (genoName.ToLower() != this.genotypeParams[idx].sName.ToLower()))
+                while ((idx < this.genotypeParams.Length) && (genoName.ToLower() != this.genotypeParams[idx].Name.ToLower()))
                     idx++;
 
                 if (idx < this.genotypeParams.Length)
@@ -1703,7 +1705,7 @@ namespace Models.GrazPlan
         /// <param name="paddName">Paddock name</param>
         /// <param name="suppKG">The amount of supplement</param>
         /// <param name="supplement">The supplement to use</param>
-        /// <param name="feedSuppFirst"></param>
+        /// <param name="feedSuppFirst">Feed supplement first</param>
         public void PlaceSuppInPadd(string paddName, double suppKG, FoodSupplement supplement, bool feedSuppFirst)
         {
             PaddockInfo thePadd;
@@ -1925,52 +1927,52 @@ namespace Models.GrazPlan
         /// <param name="srcExcretion">The excretion data</param>
         private void AddExcretions(ref ExcretionInfo destExcretion, ExcretionInfo srcExcretion)
         {
-            if (srcExcretion.dDefaecations > 0.0)
+            if (srcExcretion.Defaecations > 0.0)
             {
-                destExcretion.dDefaecationVolume = this.WeightedMean(
-                                                                    destExcretion.dDefaecationVolume, 
-                                                                    srcExcretion.dDefaecationVolume,
-                                                                    destExcretion.dDefaecations, 
-                                                                    srcExcretion.dDefaecations);
-                destExcretion.dDefaecationArea = this.WeightedMean( 
-                                                                    destExcretion.dDefaecationArea, 
-                                                                    srcExcretion.dDefaecationArea,
-                                                                    destExcretion.dDefaecations, 
-                                                                    srcExcretion.dDefaecations);
-                destExcretion.dDefaecationEccentricity = this.WeightedMean(
-                                                                            destExcretion.dDefaecationEccentricity, 
-                                                                            srcExcretion.dDefaecationEccentricity,
-                                                                            destExcretion.dDefaecations, 
-                                                                            srcExcretion.dDefaecations);
-                destExcretion.dFaecalNO3Propn = this.WeightedMean(
-                                                                    destExcretion.dFaecalNO3Propn, 
-                                                                    srcExcretion.dFaecalNO3Propn,
+                destExcretion.DefaecationVolume = this.WeightedMean(
+                                                                    destExcretion.DefaecationVolume, 
+                                                                    srcExcretion.DefaecationVolume,
+                                                                    destExcretion.Defaecations, 
+                                                                    srcExcretion.Defaecations);
+                destExcretion.DefaecationArea = this.WeightedMean( 
+                                                                    destExcretion.DefaecationArea, 
+                                                                    srcExcretion.DefaecationArea,
+                                                                    destExcretion.Defaecations, 
+                                                                    srcExcretion.Defaecations);
+                destExcretion.DefaecationEccentricity = this.WeightedMean(
+                                                                            destExcretion.DefaecationEccentricity, 
+                                                                            srcExcretion.DefaecationEccentricity,
+                                                                            destExcretion.Defaecations, 
+                                                                            srcExcretion.Defaecations);
+                destExcretion.FaecalNO3Propn = this.WeightedMean(
+                                                                    destExcretion.FaecalNO3Propn, 
+                                                                    srcExcretion.FaecalNO3Propn,
                                                                     destExcretion.InOrgFaeces.Nu[(int)GrazType.TOMElement.n], 
                                                                     srcExcretion.InOrgFaeces.Nu[(int)GrazType.TOMElement.n]);
-                destExcretion.dDefaecations = destExcretion.dDefaecations + srcExcretion.dDefaecations;
+                destExcretion.Defaecations = destExcretion.Defaecations + srcExcretion.Defaecations;
 
                 destExcretion.OrgFaeces = this.AddDMPool(destExcretion.OrgFaeces, srcExcretion.OrgFaeces);
                 destExcretion.InOrgFaeces = this.AddDMPool(destExcretion.InOrgFaeces, srcExcretion.InOrgFaeces);
             }
 
-            if (srcExcretion.dUrinations > 0.0)
+            if (srcExcretion.Urinations > 0.0)
             {
-                destExcretion.dUrinationVolume = this.WeightedMean(
-                                                                    destExcretion.dUrinationVolume, 
-                                                                    srcExcretion.dUrinationVolume,
-                                                                    destExcretion.dUrinations, 
-                                                                    srcExcretion.dUrinations);
-                destExcretion.dUrinationArea = this.WeightedMean(
-                                                                    destExcretion.dUrinationArea, 
-                                                                    srcExcretion.dUrinationArea,
-                                                                    destExcretion.dUrinations, 
-                                                                    srcExcretion.dUrinations);
+                destExcretion.UrinationVolume = this.WeightedMean(
+                                                                    destExcretion.UrinationVolume, 
+                                                                    srcExcretion.UrinationVolume,
+                                                                    destExcretion.Urinations, 
+                                                                    srcExcretion.Urinations);
+                destExcretion.UrinationArea = this.WeightedMean(
+                                                                    destExcretion.UrinationArea, 
+                                                                    srcExcretion.UrinationArea,
+                                                                    destExcretion.Urinations, 
+                                                                    srcExcretion.Urinations);
                 destExcretion.dUrinationEccentricity = this.WeightedMean(
                                                                             destExcretion.dUrinationEccentricity, 
                                                                             srcExcretion.dUrinationEccentricity,
-                                                                            destExcretion.dUrinations, 
-                                                                            srcExcretion.dUrinations);
-                destExcretion.dUrinations = destExcretion.dUrinations + srcExcretion.dUrinations;
+                                                                            destExcretion.Urinations, 
+                                                                            srcExcretion.Urinations);
+                destExcretion.Urinations = destExcretion.Urinations + srcExcretion.Urinations;
 
                 destExcretion.Urine = this.AddDMPool(destExcretion.Urine, srcExcretion.Urine);
             }
@@ -2067,7 +2069,7 @@ namespace Models.GrazPlan
         /// default birth weight.                                                   
         /// </summary>
         /// <param name="srw">Standard reference weight</param>
-        /// <param name="bw"></param>
+        /// <param name="bw">Birth weight</param>
         /// <param name="ageDays">Age in days</param>
         /// <param name="parameters">Breed parameter set</param>
         /// <returns>The maximum normal weight kg</returns>
@@ -2129,9 +2131,24 @@ namespace Models.GrazPlan
         /// </summary>
         internal class AgeInfo
         {
+            /// <summary>
+            /// Proportion
+            /// </summary>
             public double Propn;
+
+            /// <summary>
+            /// Proportion pregnant
+            /// </summary>
             public double[] PropnPreg = new double[4];
+
+            /// <summary>
+            /// Proportion lactating
+            /// </summary>
             public double[] PropnLact = new double[4];
+
+            /// <summary>
+            /// The animal numbers preg and lactating
+            /// </summary>
             public int[,] Numbers = new int[4, 4];
 
             /// <summary>
@@ -2223,7 +2240,7 @@ namespace Models.GrazPlan
                 if (mainGenotype.Animal == GrazType.AnimalType.Cattle)
                     daysSinceShearing = 0;
                 else if (this.IsGiven(cohortsInfo.MeanGFW) && (cohortsInfo.FleeceDays == 0))
-                    daysSinceShearing = Convert.ToInt32(Math.Truncate(365.25 * cohortsInfo.MeanGFW / mainGenotype.PotentialGFW));
+                    daysSinceShearing = Convert.ToInt32(Math.Truncate(365.25 * cohortsInfo.MeanGFW / mainGenotype.PotentialGFW), CultureInfo.InvariantCulture);
                 else
                     daysSinceShearing = cohortsInfo.FleeceDays;
 
@@ -2235,7 +2252,7 @@ namespace Models.GrazPlan
                     else
                         ageInfoList[cohortIdx].Propn = (1.0 - survival) * Math.Pow(survival, cohortIdx - cohortsInfo.MinYears)
                                                         / (1.0 - Math.Pow(survival, numCohorts));
-                    ageInfoList[cohortIdx].AgeDays = Convert.ToInt32(Math.Truncate(365.25 * cohortIdx) + cohortsInfo.AgeOffsetDays);
+                    ageInfoList[cohortIdx].AgeDays = Convert.ToInt32(Math.Truncate(365.25 * cohortIdx) + cohortsInfo.AgeOffsetDays, CultureInfo.InvariantCulture);
 
                     // Normal weight for age
                     ageInfoList[cohortIdx].NormalBaseWt = this.GrowthCurve(ageInfoList[cohortIdx].AgeDays, cohortsInfo.ReproClass, mainGenotype);
@@ -2281,7 +2298,7 @@ namespace Models.GrazPlan
                 totalAnimals = 0;
                 for (cohortIdx = cohortsInfo.MinYears; cohortIdx <= cohortsInfo.MaxYears; cohortIdx++)
                 {
-                    ageInfoList[cohortIdx].Numbers[0, 0] = Convert.ToInt32(Math.Truncate(ageInfoList[cohortIdx].Propn * cohortsInfo.Number));
+                    ageInfoList[cohortIdx].Numbers[0, 0] = Convert.ToInt32(Math.Truncate(ageInfoList[cohortIdx].Propn * cohortsInfo.Number), CultureInfo.InvariantCulture);
                     totalAnimals += ageInfoList[cohortIdx].Numbers[0, 0];
                 }
                 for (cohortIdx = cohortsInfo.MinYears; cohortIdx <= cohortsInfo.MaxYears; cohortIdx++)
@@ -2336,12 +2353,14 @@ namespace Models.GrazPlan
                         for (cohortIdx = cohortsInfo.MinYears; cohortIdx <= cohortsInfo.MaxYears; cohortIdx++)
                         {
                             pregRate = this.GetOffspringRates(
-                                                        mainGenotype, latitude, mateDOY,
+                                                        mainGenotype, 
+                                                        latitude, 
+                                                        mateDOY,
                                                         ageInfoList[cohortIdx].AgeAtMating,
                                                         ageInfoList[cohortIdx].SizeAtMating,
                                                         condition);
                             for (preg = 1; preg <= 3; preg++)
-                                shiftNumber[preg] = Convert.ToInt32(Math.Round(pregRate[preg] * ageInfoList[cohortIdx].Numbers[0, 0]));
+                                shiftNumber[preg] = Convert.ToInt32(Math.Round(pregRate[preg] * ageInfoList[cohortIdx].Numbers[0, 0]), CultureInfo.InvariantCulture);
                             for (preg = 1; preg <= 3; preg++)
                             {
                                 ageInfoList[cohortIdx].Numbers[preg, 0] += shiftNumber[preg];
@@ -2442,7 +2461,7 @@ namespace Models.GrazPlan
                             for (preg = 0; preg <= 3; preg++)
                             {
                                 for (lact = 1; lact <= 3; lact++)
-                                    shiftNumber[lact] = Convert.ToInt32(Math.Round(lactRate[lact] * ageInfoList[cohortIdx].Numbers[preg, 0]));
+                                    shiftNumber[lact] = Convert.ToInt32(Math.Round(lactRate[lact] * ageInfoList[cohortIdx].Numbers[preg, 0]), CultureInfo.InvariantCulture);
                                 for (lact = 1; lact <= 3; lact++)
                                 {
                                     ageInfoList[cohortIdx].Numbers[preg, lact] += shiftNumber[lact];
@@ -2766,7 +2785,7 @@ namespace Models.GrazPlan
                     {
                         numToCastrate = Math.Min(number, this.At(idx).Young.MaleNo);
                         if (numToCastrate < this.At(idx).Young.MaleNo)
-                            this.Split(idx, Convert.ToInt32(Math.Round((double)number / numToCastrate * this.At(idx).NoAnimals)));  // TODO: check this conversion
+                            this.Split(idx, Convert.ToInt32(Math.Round((double)number / numToCastrate * this.At(idx).NoAnimals), CultureInfo.InvariantCulture));  // TODO: check this conversion
                         this.At(idx).Young.Castrate();
                         number = number - numToCastrate;
                     }
@@ -2816,9 +2835,9 @@ namespace Models.GrazPlan
                             {
                                 // If there are more lambs/calves present than are to be weaned, split the excess off                       
                                 if (weanMales && weanFemales)                                                               
-                                    mothersToWean = Convert.ToInt32(Math.Round((double)numToWean / this.At(idx).NoOffspring));   
+                                    mothersToWean = Convert.ToInt32(Math.Round((double)numToWean / this.At(idx).NoOffspring), CultureInfo.InvariantCulture);
                                 else                                                                                        
-                                    mothersToWean = Convert.ToInt32(Math.Round(numToWean / (this.At(idx).NoOffspring / 2.0)));
+                                    mothersToWean = Convert.ToInt32(Math.Round(numToWean / (this.At(idx).NoOffspring / 2.0)), CultureInfo.InvariantCulture);
                                 if (mothersToWean < this.At(idx).NoAnimals)
                                     this.Split(idx, mothersToWean);
                             }
@@ -2942,7 +2961,7 @@ namespace Models.GrazPlan
                 splitSD = (splitWt - liveWt) / (varRatio * liveWt);                 // NB SplitWt is a live weight value     
 
                 removePropn = StdMath.CumNormal(splitSD);                           // Normal distribution of weights assumed
-                numToRemove = Convert.ToInt32(Math.Round(numAnimals * removePropn));
+                numToRemove = Convert.ToInt32(Math.Round(numAnimals * removePropn), CultureInfo.InvariantCulture);
 
                 if (numToRemove > 0)
                 {
@@ -2972,8 +2991,11 @@ namespace Models.GrazPlan
                         diffs.FleeceWt = diffRatio * srcGroup.FleeceCutWeight;              // assumed genetic!                    
                     }                       
 
-                    this.Add(srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF),     // Now we have computed Diffs, we split  
-                         this.GetPaddInfo(groupIdx), this.GetTag(groupIdx), this.GetPriority(groupIdx));   // up the animals                      
+                    this.Add(
+                         srcGroup.Split(numToRemove, false, diffs, srcGroup.NODIFF),     // Now we have computed Diffs, we split  
+                         this.GetPaddInfo(groupIdx), 
+                         this.GetTag(groupIdx), 
+                         this.GetPriority(groupIdx));   // up the animals                      
                 } 
             }
         }
@@ -3226,7 +3248,7 @@ namespace Models.GrazPlan
         /// for this component.
         /// </summary>
         /// <param name="currentDay">Todays date</param>
-        /// <param name="latitude">Latitude</param>
+        /// <param name="latitude">The Latitude</param>
         public void ManageInternalInit(int currentDay, double latitude)
         {
             int i;
@@ -3407,15 +3429,16 @@ namespace Models.GrazPlan
         /// <returns>True if the keyword is found</returns>
         private bool ParseRepro(string keyword, ref GrazType.ReproType repro)
         {
-            ReproRecord[] SexKeywords = new ReproRecord[8] {
-                        new ReproRecord(name : "ram",    repro : GrazType.ReproType.Male),
-                        new ReproRecord(name : "crypto",  repro : GrazType.ReproType.Male),
-                        new ReproRecord(name : "wether", repro : GrazType.ReproType.Castrated),
-                        new ReproRecord(name : "ewe",    repro : GrazType.ReproType.Empty),
-                        new ReproRecord(name : "bull",   repro : GrazType.ReproType.Male),
-                        new ReproRecord(name : "steer",  repro : GrazType.ReproType.Castrated),
-                        new ReproRecord(name : "heifer", repro : GrazType.ReproType.Empty),
-                        new ReproRecord(name : "cow",    repro : GrazType.ReproType.Empty)
+            ReproRecord[] sexKeywords = new ReproRecord[8] 
+            {
+                        new ReproRecord(name: "ram",    repro: GrazType.ReproType.Male),
+                        new ReproRecord(name: "crypto", repro: GrazType.ReproType.Male),
+                        new ReproRecord(name: "wether", repro: GrazType.ReproType.Castrated),
+                        new ReproRecord(name: "ewe",    repro: GrazType.ReproType.Empty),
+                        new ReproRecord(name: "bull",   repro: GrazType.ReproType.Male),
+                        new ReproRecord(name: "steer",  repro: GrazType.ReproType.Castrated),
+                        new ReproRecord(name: "heifer", repro: GrazType.ReproType.Empty),
+                        new ReproRecord(name: "cow",    repro: GrazType.ReproType.Empty)
             };
 
             int idx;
@@ -3425,10 +3448,10 @@ namespace Models.GrazPlan
             if ((keyword != string.Empty) && (keyword[keyword.Length - 1] == 's'))                 // Plurals are allowed                   
                 keyword = keyword.Substring(0, keyword.Length - 1);
             idx = 0;
-            while ((idx <= 7) && (keyword != SexKeywords[idx].Name))
+            while ((idx <= 7) && (keyword != sexKeywords[idx].Name))
                 idx++;
             if (idx <= 7)
-                repro = SexKeywords[idx].Repro;
+                repro = sexKeywords[idx].Repro;
             else
                 repro = GrazType.ReproType.Castrated;
             if ((idx > 7) && (keyword.Length > 0))
@@ -3452,7 +3475,7 @@ namespace Models.GrazPlan
                 this.ParseRepro(sheepValue.Sex.ToLower(), ref animalInit.Sex);
             else
                 animalInit.Sex = GrazType.ReproType.Castrated;
-            animalInit.AgeDays = Convert.ToInt32(sheepValue.Age);
+            animalInit.AgeDays = Convert.ToInt32(sheepValue.Age, CultureInfo.InvariantCulture);
             animalInit.Weight = sheepValue.Weight;
             animalInit.MaxPrevWt = sheepValue.MaxPrevWt;
             animalInit.FleeceWt = sheepValue.FleeceWt;
@@ -3493,7 +3516,7 @@ namespace Models.GrazPlan
                 this.ParseRepro(cattleValue.Sex.ToLower(), ref animalInit.Sex);
             else
                 animalInit.Sex = GrazType.ReproType.Castrated;
-            animalInit.AgeDays = Convert.ToInt32(cattleValue.Age);
+            animalInit.AgeDays = Convert.ToInt32(cattleValue.Age, CultureInfo.InvariantCulture);
             animalInit.Weight = cattleValue.Weight;
             animalInit.MaxPrevWt = cattleValue.MaxPrevWt;
             animalInit.MatedTo = cattleValue.MatedTo;
@@ -3797,7 +3820,7 @@ namespace Models.GrazPlan
                                                     this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].DamBreed, genoIdx),
                                                     this.FindGenotype(mainParams, genoInits, genoInits[genoIdx].SireBreed, genoIdx));
 
-            result.sName = genoInits[genoIdx].GenotypeName;
+            result.Name = genoInits[genoIdx].GenotypeName;
 
             if (this.IsGiven(genoInits[genoIdx].SRW))
                 result.BreedSRW = genoInits[genoIdx].SRW;
@@ -3882,7 +3905,7 @@ namespace Models.GrazPlan
                     purchaseInfo.Number = Math.Max(0, stockInfo.Number);
                     if (!this.ParseRepro(stockInfo.Sex, ref purchaseInfo.Repro))
                         throw new Exception("Event BUY does not support sex='" + stockInfo.Sex + "'");
-                    purchaseInfo.AgeDays = Convert.ToInt32(Math.Round(MONTH2DAY * stockInfo.Age));  // Age in months                
+                    purchaseInfo.AgeDays = Convert.ToInt32(Math.Round(MONTH2DAY * stockInfo.Age), CultureInfo.InvariantCulture);  // Age in months
                     purchaseInfo.LiveWt = stockInfo.Weight;
                     purchaseInfo.GFW = stockInfo.FleeceWt;
                     purchaseInfo.CondScore = stockInfo.CondScore;
@@ -3975,13 +3998,13 @@ namespace Models.GrazPlan
                         tagNo = stockInfo.OtherTag;
 
                         if (strParam == "age")
-                            model.SplitAge(param1, Convert.ToInt32(Math.Round(value)));
+                            model.SplitAge(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
                         else if (strParam == "weight")
                             model.SplitWeight(param1, value);
                         else if (strParam == "young")
                             model.SplitYoung(param1);
                         else if (strParam == "number")
-                            model.Split(param1, Convert.ToInt32(Math.Round(value)));
+                            model.Split(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
                         else
                             throw new Exception("Stock: invalid keyword (" + strParam + ") in \"split\" event");
                         if ((tagNo > 0) && (model.Count() > numGroups))     // if a tag for any new group is given
@@ -4007,7 +4030,7 @@ namespace Models.GrazPlan
                     else if (strParam == "young")
                         model.SplitYoung(param1);
                     else if (strParam == "number")
-                        model.Split(param1, Convert.ToInt32(Math.Round(value)));
+                        model.Split(param1, Convert.ToInt32(Math.Round(value), CultureInfo.InvariantCulture));
                     else
                         throw new Exception("Stock: invalid keyword (" + strParam + ") in \"split\" event");
                     if ((tagNo > 0) && (model.Count() > numGroups))     // if a tag for the new group is given

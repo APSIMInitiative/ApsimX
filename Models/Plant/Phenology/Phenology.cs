@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
@@ -7,6 +7,7 @@ using System.IO;
 using System.Data;
 using System.Linq;
 using Models.PMF.Struct;
+using System.Globalization;
 
 namespace Models.PMF.Phen
 {
@@ -25,7 +26,7 @@ namespace Models.PMF.Phen
         private Plant plant = null;
 
         /// <summary>The thermal time</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction thermalTime = null;
 
         [Link(IsOptional = true)]
@@ -129,7 +130,7 @@ namespace Models.PMF.Phen
         }
 
         /// <summary>A temporary flag for sorghum to reset the thermal time at change of phase.</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction SorghumFlag  = null;
 
         ///6. Public methods
@@ -187,7 +188,7 @@ namespace Models.PMF.Phen
             if (newStage > phases.Count()+1)
                 throw new Exception(this + " Trying to set to non-existant stage");
 
-            currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage)) - 1;
+            currentPhaseIndex = Convert.ToInt32(Math.Floor(newStage), CultureInfo.InvariantCulture) - 1;
 
             if (newStage < Stage) 
             {
@@ -201,7 +202,7 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase))
+                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase))
                         { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
@@ -326,23 +327,34 @@ namespace Models.PMF.Phen
         }
 
 
-        ///7. Private methods
-        /// -----------------------------------------------------------------------------------------------------------
+        // 7. Private methods
+        // -----------------------------------------------------------------------------------------------------------
+        //
 
+        /// <summary>
+        /// Refreshes the list of phases.
+        /// </summary>
+        private void RefreshPhases()
+        {
+            if (phases == null)
+                phases = new List<IPhase>();
+            else
+                phases.Clear();
+
+            foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
+                phases.Add(phase);
+        }
         /// <summary>Called when model has been created.</summary>
         public override void OnCreated()
         {
-            if (phases.Count() == 0) //Need this test to ensure the phases are colated only once
-                foreach (IPhase phase in Apsim.Children(this, typeof(IPhase)))
-                {
-                    phases.Add(phase);
-                }
+            RefreshPhases();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnCommencing(object sender, EventArgs e)
         {
+            RefreshPhases();
             Clear();
         }
 
@@ -373,7 +385,7 @@ namespace Models.PMF.Phen
                 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage))
+                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage)|| (CurrentPhase is DAWSPhase))
                     {
                          Emerged = true;
                     }
@@ -390,7 +402,15 @@ namespace Models.PMF.Phen
 
                     if(SorghumFlag != null && CurrentPhase is EmergingPhase)
                     {
-                        propOfDayToUse = 0.0;
+                        // void accumulate(...)
+                        double dltPhase = 1.0 + Stage % 1.0;
+                        double newStage = Math.Floor(Stage) + dltPhase;
+                        double dltStage = newStage - Stage;
+                        double pIndex = Stage;
+                        double dltIndex = dltStage;
+                        double indexDevel = pIndex - Math.Floor(pIndex) + dltIndex;
+                        double portionInOld = 1 - APSIM.Shared.Utilities.MathUtilities.Divide(indexDevel - 1, dltIndex, 0);
+                        propOfDayToUse = 1 - portionInOld;
                     }
                     incrementPhase = CurrentPhase.DoTimeStep(ref propOfDayToUse);
                 }
@@ -401,11 +421,8 @@ namespace Models.PMF.Phen
 
                 Stage = (currentPhaseIndex + 1) + resetSorghumStage * CurrentPhase.FractionComplete;
 
-               if (plant != null)
-                    if (plant.IsAlive && PostPhenology != null)
+                if (plant != null && plant.IsAlive && PostPhenology != null)
                         PostPhenology.Invoke(this, new EventArgs());
-
-                
             }
         }
 
@@ -413,7 +430,8 @@ namespace Models.PMF.Phen
         [EventSubscribe("Harvesting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
-                //Jump phenology to the end
+            //Jump phenology to the end
+             if(this.Parent.Name != "SimpleFruitTree") //Unless you are a perennial fruit tree.  There must be a better way of doing this
                 SetToStage((double)(phases.Count));
         }
 

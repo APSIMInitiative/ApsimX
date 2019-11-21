@@ -52,6 +52,10 @@ namespace Models.CLEM
         /// </summary>
         Born,
         /// <summary>
+        /// Individual sold as marked for sale
+        /// </summary>
+        MarkedSale,
+        /// <summary>
         /// Trade individual sold weight/age
         /// </summary>
         TradeSale,
@@ -283,6 +287,21 @@ namespace Models.CLEM
         /// Feed proportion of remaining amount required
         /// </summary>
         ProportionOfRemainingIntakeRequired
+    }
+
+    /// <summary>
+    /// Ruminant feeding styles
+    /// </summary>
+    public enum LabourFeedActivityTypes
+    {
+        /// <summary>
+        /// Feed specified amount daily to each individual
+        /// </summary>
+        SpecifiedDailyAmountPerIndividual,
+        /// <summary>
+        /// Feed specified amount daily per AE
+        /// </summary>
+        SpecifiedDailyAmountPerAE,
     }
 
     /// <summary>

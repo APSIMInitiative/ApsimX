@@ -20,6 +20,7 @@
     using ICSharpCode.NRefactory.TypeSystem;
     using APSIM.Shared.Utilities;
     using Models.Storage;
+    using System.Threading;
 
     /// <summary>
     /// Responsible for handling intellisense operations.
@@ -68,6 +69,16 @@
         /// Stores the last used coordinates for the intellisense popup.
         /// </summary>
         private Point recentLocation;
+
+        /// <summary>
+        /// Speeds up initialisation of all future intellisense objects.
+        /// Only needs to be called once, when the application starts.
+        /// </summary>
+        public static void Init()
+        {
+            Thread initThread = new Thread(CSharpCompletion.Init);
+            initThread.Start();
+        }
 
         /// <summary>
         /// Constructor. Requires a reference to the view holding the text editor.
@@ -165,6 +176,26 @@
         }
 
         /// <summary>
+        /// Gets a list of all events which are published by models in
+        /// the current simulations tree.
+        /// </summary>
+        /// <param name="model"></param>
+        public List<NeedContextItemsArgs.ContextItem> GetEvents(IModel model)
+        {
+            var events = new List<NeedContextItemsArgs.ContextItem>();
+
+            List<IModel> allModels = Apsim.ChildrenRecursively(Apsim.Parent(model, typeof(Simulations)));
+            foreach (var publisher in Events.Publisher.FindAll(allModels))
+            {
+                string description = NeedContextItemsArgs.GetDescription(publisher.EventInfo);
+                Type eventType = publisher.EventInfo.EventHandlerType;
+                events.Add(NeedContextItemsArgs.ContextItem.NewEvent(publisher.Name, description, eventType));
+            }
+
+            return events;
+        }
+
+        /// <summary>
         /// Generates completion options for a report. This should also work for the property presenter.
         /// </summary>
         /// <param name="code">Source code.</param>
@@ -197,6 +228,7 @@
             }
 
             List<NeedContextItemsArgs.ContextItem> results = NeedContextItemsArgs.ExamineModelForContextItemsV2(model as Model, objectName, properties, methods, events);
+
             view.Populate(results);
             return results.Any();
         }

@@ -94,7 +94,7 @@ namespace Models.CLEM.Activities
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
                     current = current.Parent as IModel;
                 }
                 return (result == 0);
@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
             IModel current = this as IModel;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.Check(date) ? 0 : 1);
+                result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.Check(date) ? 0 : 1);
                 current = current.Parent as IModel;
             }
             return (result == 0);
@@ -137,7 +137,7 @@ namespace Models.CLEM.Activities
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Count();
+                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Count();
                     current = current.Parent as IModel;
                 }
                 return (result != 0);
@@ -228,21 +228,27 @@ namespace Models.CLEM.Activities
         /// </summary>
         protected void ResourcesForAllActivityInitialisation()
         {
-            // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-            GetResourcesRequiredForInitialisation();
+            if (this.Enabled)
+            {
+                // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
+                GetResourcesRequiredForInitialisation();
 
-            // get resources required for all dynamically created CLEMActivityBase activities
-            if (ActivityList != null)
-            {
-                foreach (CLEMActivityBase activity in ActivityList)
+                // get resources required for all dynamically created CLEMActivityBase activities
+                if (ActivityList != null)
                 {
-                    activity.GetResourcesForAllActivityInitialisation();
+                    foreach (CLEMActivityBase activity in ActivityList)
+                    {
+                        activity.GetResourcesForAllActivityInitialisation();
+                    }
                 }
-            }
-            // get resources required for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-            {
-                activity.GetResourcesForAllActivityInitialisation();
+                // get resources required for all children of type CLEMActivityBase
+                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+                {
+                    if (activity.Enabled)
+                    {
+                        activity.GetResourcesForAllActivityInitialisation();
+                    }
+                }
             }
         }
 
@@ -252,24 +258,27 @@ namespace Models.CLEM.Activities
         /// </summary>
         public virtual void GetResourcesForAllActivities(CLEMModel model)
         {
-            if (this.TimingOK)
+            if (this.Enabled)
             {
-                ResourcesForAllActivities(model);
-            }
-            else
-            {
-                this.Status = ActivityStatus.Ignored;
-                if (ActivityList != null)
+                if (this.TimingOK)
                 {
-                    foreach (CLEMActivityBase activity in ActivityList)
+                    ResourcesForAllActivities(model);
+                }
+                else
+                {
+                    this.Status = ActivityStatus.Ignored;
+                    if (ActivityList != null)
+                    {
+                        foreach (CLEMActivityBase activity in ActivityList)
+                        {
+                            activity.Status = ActivityStatus.Ignored;
+                        }
+                    }
+                    // get resources required for all children of type CLEMActivityBase
+                    foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
                     {
                         activity.Status = ActivityStatus.Ignored;
                     }
-                }
-                // get resources required for all children of type CLEMActivityBase
-                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-                {
-                    activity.Status = ActivityStatus.Ignored;
                 }
             }
         }
@@ -321,7 +330,7 @@ namespace Models.CLEM.Activities
             ResourceRequestList = GetResourcesNeededForinitialisation();
 
             CheckResources(ResourceRequestList, Guid.NewGuid());
-            bool tookRequestedResources = TakeResources(ResourceRequestList, false);
+            TakeResources(ResourceRequestList, false);
 
             ResourceRequestList = null;
         }
@@ -365,7 +374,6 @@ namespace Models.CLEM.Activities
 
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                // if reportErrorAndStop or SkipActivity do not perform Activity
                 if (tookRequestedResources || (ResourceRequestList.Count == 0))
                 {
                     DoActivity();

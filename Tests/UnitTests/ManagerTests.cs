@@ -1,16 +1,16 @@
 ﻿using System;
 using Models;
 using Models.Core;
-using Models.Core.Runners;
 using APSIM.Shared.Utilities;
 using NUnit.Framework;
-using System.Collections.Generic;
-using Models.Core.ApsimFile;
-using Models.Storage;
-using System.IO;
-
 namespace UnitTests
 {
+    using System.Collections.Generic;
+    using Models.Core.ApsimFile;
+    using Models.Storage;
+    using System.IO;
+    using APSIM.Shared.JobRunning;
+
     /// <summary>
     /// Unit Tests for manager scripts.
     /// </summary>
@@ -23,15 +23,26 @@ namespace UnitTests
         [Test]
         public void TestManagerWithError()
         {
-            List<Exception> errors = null;
-            Simulations sims = sims = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString("UnitTests.ManagerTestsFaultyManager.apsimx"), out errors);
-            DataStore storage = Apsim.Find(sims, typeof(DataStore)) as DataStore;
-            sims.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
-            
-            IJobManager jobManager = Runner.ForSimulations(sims, sims, false);
-            IJobRunner jobRunner = new JobRunnerSync();
-            jobRunner.JobCompleted += EnsureJobRanRed;
-            jobRunner.Run(jobManager, true);
+            var simulation = new Simulation()
+            {
+                Name = "Sim",
+                FileName = Path.GetTempFileName(),
+                Children = new List<Model>()
+                {
+                    new Clock()
+                    {
+                        StartDate = new DateTime(2019, 1, 1),
+                        EndDate = new DateTime(2019, 1, 2)
+                    },
+                    new MockSummary(),
+                    new Manager()
+                    {
+                        Code = "asdf"
+                    }
+                }
+            };
+
+            Assert.Throws<Exception>(() => simulation.Run());
         }
 
         /// <summary>
@@ -60,9 +71,9 @@ namespace UnitTests
             Assert.That(errors[0].ToString().Contains("Error thrown from manager script's OnCreated()"), "Encountered an error while opening OnCreatedError.apsimx, but it appears to be the wrong error: {0}.", errors[0].ToString());
         }
 
-        private void EnsureJobRanRed(object sender, JobCompleteArgs args)
+        private void EnsureJobRanRed(object sender, JobCompleteArguments args)
         {
-            Assert.NotNull(args.exceptionThrowByJob, "Simulation with a faulty manager script has run green.");
+            Assert.NotNull(args.ExceptionThrowByJob, "Simulation with a faulty manager script has run green.");
         }
     }
 }

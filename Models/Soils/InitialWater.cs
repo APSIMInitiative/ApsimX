@@ -1,15 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWater.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Soils
+﻿namespace Models.Soils
 {
     using System;
     using System.Collections.Generic;
     using Models.Core;
     using System.Xml.Serialization;
     using APSIM.Shared.Utilities;
+    using System.Linq;
 
     /// <summary>
     /// Represents the simulation initial water status. There are multiple ways
@@ -175,8 +171,9 @@ namespace Models.Soils
                 }
                 else
                 {
-                    ll = Soil.LL(this.RelativeTo);
-                    xf = Soil.XF(this.RelativeTo);
+                    var soilCrop = Soil.Crop(RelativeTo);
+                    ll = soilCrop.LL;
+                    xf = soilCrop.XF;
                 }
 
                 // Get the soil water values for each layer.
@@ -224,12 +221,12 @@ namespace Models.Soils
         /// </summary>
         public double[] PAWCCrop(string CropName)
         {
-            SoilCrop soilCrop = Apsim.Find(Soil, CropName) as SoilCrop;
+            var soilCrop = Soil.Crop(CropName);
             if (soilCrop != null)
                 return Soil.CalcPAWC(Soil.Thickness,
-                                     Soil.LL(CropName),
+                                     soilCrop.LL,
                                      Soil.DUL,
-                                     Soil.XF(CropName));
+                                     soilCrop.XF);
             else
                 return new double[0];
         }
@@ -250,7 +247,7 @@ namespace Models.Soils
             {
                 List<string> crops = new List<string>();
                 crops.Add("LL15");
-                crops.AddRange(this.Soil.CropNames);
+                crops.AddRange(this.Soil.Crops.Select(crop => crop.Name));
                 return crops.ToArray();
             }
         }

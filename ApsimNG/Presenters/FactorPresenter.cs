@@ -45,7 +45,7 @@
             intellisense = new IntellisensePresenter(factorView as ViewBase);
             this.factorView.Specification.Value = factor.Specification;
 
-            this.factorView.Specification.Changed += this.OnTextHasChangedByUser;
+            this.factorView.Specification.Leave += this.OnTextHasChangedByUser;
             this.factorView.Specification.IntellisenseItemsNeeded += this.OnContextItemsNeeded;
             this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -56,9 +56,10 @@
         /// </summary>
         public void Detach()
         {
+            OnTextHasChangedByUser(this, new EventArgs());
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
-            factorView.Specification.Changed -= this.OnTextHasChangedByUser;
+            factorView.Specification.Leave -= this.OnTextHasChangedByUser;
             factorView.Specification.IntellisenseItemsNeeded -= this.OnContextItemsNeeded;
             presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
@@ -70,7 +71,7 @@
         /// <param name="e">Event arguments</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            if (e.ObjectName == string.Empty)
+            if (string.IsNullOrEmpty(e.ObjectName))
             {
                 e.ObjectName = ".";
             }
@@ -124,9 +125,12 @@
         {
             try
             {
-                presenter.CommandHistory.ModelChanged -= OnModelChanged;
-                presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specification", factorView.Specification.Value));
-                presenter.CommandHistory.ModelChanged += OnModelChanged;
+                if (factor.Specification != factorView.Specification.Value)
+                {
+                    presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                    presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specification", factorView.Specification.Value));
+                    presenter.CommandHistory.ModelChanged += OnModelChanged;
+                }
             }
             catch (Exception err)
             {

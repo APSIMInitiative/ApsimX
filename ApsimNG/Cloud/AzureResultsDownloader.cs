@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.WindowsAzure.Storage;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage;
 using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Common;
 using System.IO;
@@ -15,7 +15,7 @@ using UserInterface.Presenters;
 using System.Text.RegularExpressions;
 using System.Data;
 using System.Data.SQLite;
-
+using System.Globalization;
 
 namespace ApsimNG.Cloud
 {
@@ -167,11 +167,11 @@ namespace ApsimNG.Cloud
             name = jobName;
             StorageCredentials storageCredentials = StorageCredentials.FromConfiguration();
             BatchCredentials batchCredentials = BatchCredentials.FromConfiguration();
-            storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
+            storageAccount = new CloudStorageAccount(new Microsoft.Azure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
             var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
             batchClient = BatchClient.Open(sharedCredentials);
             blobClient = storageAccount.CreateCloudBlobClient();
-            blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);        
+            blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.Azure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);        
         }
 
         /// <summary>
@@ -579,7 +579,7 @@ namespace ApsimNG.Cloud
                 (
                     delegate (Match m)
                     {
-                        return string.Format("{0:0}", (DateTime.Parse(m.Value) - new DateTime(1900, 1, 1)).TotalDays + 2);
+                        return string.Format("{0:0}", (DateTime.Parse(m.Value) - new DateTime(1900, 1, 1)).TotalDays + 2, CultureInfo.InvariantCulture);
                     }
                 )
             );

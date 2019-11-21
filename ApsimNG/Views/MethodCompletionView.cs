@@ -102,11 +102,15 @@
             container.PackStart(bottomRow, false, false, 0);
 
             mainWindow.Add(container);
-            Window masterWindow = owner.MainWidget.Toplevel as Window;
             mainWindow.Resizable = false;
-            masterWindow.KeyPressEvent += OnKeyPress;
-            masterWindow.FocusOutEvent += OnFocusOut;
-            masterWindow.ButtonPressEvent += OnFocusOut;
+            mainWindow.Destroyed += OnDestroyed;
+            Window masterWindow = (MasterView as ViewBase).MainWidget.Toplevel as Window;
+            if (masterWindow != null)
+            {
+                masterWindow.KeyPressEvent += OnKeyPress;
+                masterWindow.FocusOutEvent += OnFocusOut;
+                masterWindow.ButtonPressEvent += OnFocusOut;
+            }
             Visible = false;
         }
 
@@ -190,6 +194,30 @@
                     mainWindow.Move(value.X, value.Y);
                     mainWindow.Resize(mainWindow.WidthRequest, mainWindow.HeightRequest);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Invoked when this view is destroyed. Detaches event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnDestroyed(object sender, EventArgs e)
+        {
+            try
+            {
+                Window masterWindow = (MasterView as ViewBase)?.MainWidget?.Toplevel as Window;
+                if (masterWindow != null)
+                {
+                    masterWindow.KeyPressEvent -= OnKeyPress;
+                    masterWindow.FocusOutEvent -= OnFocusOut;
+                    masterWindow.ButtonPressEvent -= OnFocusOut;
+                }
+                mainWindow.Destroyed -= OnDestroyed;
+            }
+            catch
+            {
+                // Swallow exceptions
             }
         }
 

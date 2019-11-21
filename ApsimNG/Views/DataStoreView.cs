@@ -89,7 +89,7 @@ namespace UserInterface.Views
             vbox1.ReorderChild(hbox1, 2);
 
             fileName = new EditView(this);
-            fileName.Changed += OnFileNameChanged;
+            fileName.Leave += OnFileNameChanged;
             chooseFile = new Button("...");
             chooseFile.Clicked += OnChooseFile;
             HBox fileNameContainer = new HBox();
@@ -116,7 +116,7 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            fileName.Changed -= OnFileNameChanged;
+            fileName.Leave -= OnFileNameChanged;
             gridView.Dispose();
             gridView = null;
             dropDownView1.MainWidget.Destroy();
@@ -142,8 +142,12 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnChooseFile(object sender, EventArgs e)
         {
-            FileName.Value = AskUserForFileName("Choose a file name", Utility.FileDialog.FileActionType.Save, "SQLite Database (*.db) | *.db | All Files (*.*) | *.*");
-            FileNameChanged?.Invoke(FileName, EventArgs.Empty);
+            string newFileName = AskUserForFileName("Choose a file name", Utility.FileDialog.FileActionType.Save, "SQLite Database (*.db)|*.db|All Files (*.*)|*.*");
+            if (!string.IsNullOrEmpty(newFileName))
+            {
+                FileName.Value = newFileName;
+                FileNameChanged?.Invoke(FileName, EventArgs.Empty);
+            }
         }
 
         /// <summary>

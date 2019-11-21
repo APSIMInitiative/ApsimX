@@ -1,5 +1,6 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
@@ -40,7 +41,7 @@
                     tables.Add(dataToWrite.TableName, table);
                 }
 
-                var query = new InsertQuery(dataToWrite.TableName);
+                var query = new InsertQuery(dataToWrite);
 
                 // Make sure the table has the correct columns.
                 table.EnsureTableExistsAndHasRequiredColumns(dataToWrite);

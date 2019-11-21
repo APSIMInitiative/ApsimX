@@ -58,7 +58,7 @@
               "Parameters": [],
               "Name": "Manager",
               "IncludeInDocumentation": true,
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],

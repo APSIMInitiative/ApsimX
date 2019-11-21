@@ -54,7 +54,8 @@ namespace Models.Graph
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
-        public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions)
+        /// <param name="simulationsFilter">Unused simulation names filter.</param>
+        public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions, List<string> simulationsFilter = null)
         {
             stats.Clear();
             equationColours.Clear();
@@ -64,10 +65,10 @@ namespace Models.Graph
             List<double> y = new List<double>();
             foreach (SeriesDefinition definition in definitions)
             {
-                if (definition.x is double[] && definition.y is double[])
+                if (definition.X is double[] && definition.Y is double[])
                 {
-                    x.AddRange(definition.x as IEnumerable<double>);
-                    y.AddRange(definition.y as IEnumerable<double>);
+                    x.AddRange(definition.X as IEnumerable<double>);
+                    y.AddRange(definition.Y as IEnumerable<double>);
                 }
             }
 
@@ -77,10 +78,10 @@ namespace Models.Graph
                 int numDefinitions = definitions.Count;
                 for (int i = 0; i < numDefinitions; i++)
                 {
-                    if (definitions[i].x is double[] && definitions[i].y is double[])
+                    if (definitions[i].X is double[] && definitions[i].Y is double[])
                     {
-                        PutRegressionLineOnGraph(definitions, definitions[i].x, definitions[i].y, definitions[i].colour, null);
-                        equationColours.Add(definitions[i].colour);
+                        PutRegressionLineOnGraph(definitions, definitions[i].X, definitions[i].Y, definitions[i].Colour, null);
+                        equationColours.Add(definitions[i].Colour);
                     }
                 }
             }
@@ -93,6 +94,14 @@ namespace Models.Graph
 
             if (showOneToOne)
                 Put1To1LineOnGraph(definitions, x, y);
+        }
+        
+        /// <summary>Return a list of extra fields that the definition should read.</summary>
+        /// <param name="seriesDefinition">The calling series definition.</param>
+        /// <returns>A list of fields - never null.</returns>
+        public IEnumerable<string> GetExtraFieldsToRead(SeriesDefinition seriesDefinition)
+        {
+            return new string[0];
         }
 
         /// <summary>Puts the regression line and 1:1 line on graph.</summary>
@@ -115,17 +124,10 @@ namespace Models.Graph
                 double lowestAxisScale = Math.Min(minimumX, minimumY);
                 double largestAxisScale = Math.Max(maximumX, maximumY);
 
-                SeriesDefinition regressionDefinition = new SeriesDefinition();
-                regressionDefinition.title = title;
-                regressionDefinition.colour = colour;
-                regressionDefinition.line = LineType.Solid;
-                regressionDefinition.marker = MarkerType.None;
-                regressionDefinition.showInLegend = true;
-                regressionDefinition.type = SeriesType.Scatter;
-                regressionDefinition.xAxis = Axis.AxisType.Bottom;
-                regressionDefinition.yAxis = Axis.AxisType.Left;
-                regressionDefinition.x = new double[] { minimumX, maximumX };
-                regressionDefinition.y = new double[] { stat.Slope * minimumX + stat.Intercept, stat.Slope * maximumX + stat.Intercept };
+                var regressionDefinition = new SeriesDefinition
+                    (title, colour,
+                     new double[] { minimumX, maximumX },
+                     new double[] { stat.Slope * minimumX + stat.Intercept, stat.Slope * maximumX + stat.Intercept });
                 definitions.Add(regressionDefinition);
             }
         }
@@ -143,17 +145,11 @@ namespace Models.Graph
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
 
-            SeriesDefinition oneToOne = new SeriesDefinition();
-            oneToOne.title = "1:1 line";
-            oneToOne.colour = Color.Empty;
-            oneToOne.line = LineType.Dot;
-            oneToOne.marker = MarkerType.None;
-            oneToOne.showInLegend = true;
-            oneToOne.type = SeriesType.Scatter;
-            oneToOne.xAxis = Axis.AxisType.Bottom;
-            oneToOne.yAxis = Axis.AxisType.Left;
-            oneToOne.x = new double[] { lowestAxisScale, largestAxisScale };
-            oneToOne.y = new double[] { lowestAxisScale, largestAxisScale };
+            var oneToOne = new SeriesDefinition
+                ("1:1 line", Color.Empty,
+                new double[] { lowestAxisScale, largestAxisScale },
+                new double[] { lowestAxisScale, largestAxisScale },
+                LineType.Dot, MarkerType.None);
             definitions.Add(oneToOne);
         }
 

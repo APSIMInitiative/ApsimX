@@ -12,6 +12,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -24,11 +25,14 @@
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.DualGridView")]
-    [PresenterName("UserInterface.Presenters.TablePresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
     public class Sobol : Model, ISimulationDescriptionGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
@@ -42,6 +46,7 @@
         public DataTable X2 { get; set; }
 
         /// <summary>The number of paths to run</summary>
+        [Description("Number of paths:")]
         public int NumPaths { get; set; } = 1000;
 
         /// <summary>
@@ -88,7 +93,7 @@
                 constantRow["Value"] = NumPaths;
                 constant.Rows.Add(constantRow);
 
-                tables.Add(constant);
+                //tables.Add(constant);
 
                 // Add a parameter table
                 DataTable table = new DataTable();
@@ -112,10 +117,8 @@
             }
             set
             {
-                NumPaths = Convert.ToInt32(value[0].Rows[0][1]);
-
                 Parameters.Clear();
-                foreach (DataRow row in value[1].Rows)
+                foreach (DataRow row in value[0].Rows)
                 {
                     Parameter param = new Parameter();
                     if (!Convert.IsDBNull(row["Name"]))
@@ -123,9 +126,9 @@
                     if (!Convert.IsDBNull(row["Path"]))
                         param.Path = row["Path"].ToString();
                     if (!Convert.IsDBNull(row["LowerBound"]))
-                        param.LowerBound = Convert.ToDouble(row["LowerBound"]);
+                        param.LowerBound = Convert.ToDouble(row["LowerBound"], CultureInfo.InvariantCulture);
                     if (!Convert.IsDBNull(row["UpperBound"]))
-                        param.UpperBound = Convert.ToDouble(row["UpperBound"]);
+                        param.UpperBound = Convert.ToDouble(row["UpperBound"], CultureInfo.InvariantCulture);
                     if (param.Name != null || param.Path != null)
                         Parameters.Add(param);
                 }
@@ -164,13 +167,16 @@
         }
 
         /// <summary>
-        /// Invoked when a run is done.
+        /// Invoked when a run is beginning.
         /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments.</param>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun()
+        private void OnBeginRun(object sender, EventArgs e)
         {
-            allCombinations.Clear();
-            ParameterValues.Clear();
+            R r = new R();
+            r.InstallPackage("boot");
+            r.InstallPackage("sensitivity");
         }
 
         /// <summary>
@@ -185,8 +191,9 @@
                 {
                     // Write a script to get random numbers from R.
                     string script = string.Format
-                        ("library('boot')" + Environment.NewLine +
-                         "library('sensitivity')" + Environment.NewLine +
+                        ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+                        $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                         $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                          "n <- {0}" + Environment.NewLine +
                          "nparams <- {1}" + Environment.NewLine +
                          "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
@@ -237,7 +244,7 @@
                     var factors = new List<CompositeFactor>();
                     for (int p = 0; p < Parameters.Count; p++)
                     {
-                        object value = Convert.ToDouble(parameterRow[p]);
+                        object value = Convert.ToDouble(parameterRow[p], CultureInfo.InvariantCulture);
                         var f = new CompositeFactor(Parameters[p].Name, Parameters[p].Path, value);
                         factors.Add(f);
                     }
@@ -260,9 +267,8 @@
             }
         }
 
-        /// <summary>Main run method for performing our post simulation calculations</summary>
-        /// <param name="dataStore">The data store.</param>
-        public void Run(IDataStore dataStore)
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void Run()
         {
             DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
@@ -316,8 +322,9 @@
                         DataTableUtilities.DataTableToText(X2, 0, ",", true, writer, excelFriendly: false, decimalFormatString: "F6");
 
                     string script = string.Format(
-                         "library('boot')" + Environment.NewLine +
-                         "library('sensitivity')" + Environment.NewLine +
+                         $".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+                         $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                         $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                          "params <- c({0})" + Environment.NewLine +
                          "n <- {1}" + Environment.NewLine +
                          "nparams <- {2}" + Environment.NewLine +
@@ -329,12 +336,16 @@
                          "{{" + Environment.NewLine +
                          "  sa$y <- variableValues[[columnName]]" + Environment.NewLine +
                          "  tell(sa)" + Environment.NewLine +
-                         "  colnames(sa$T) <- paste(columnName, colnames(sa$T), sep=\".\")" + Environment.NewLine +
+                         "  sa$S$Parameter <- params" + Environment.NewLine +
                          "  sa$T$Parameter <- params" + Environment.NewLine +
+                         "  sa$S$ColumnName <- columnName" + Environment.NewLine +
+                         "  sa$T$ColumnName <- columnName" + Environment.NewLine +
+                         "  sa$S$Indices <- \"FirstOrder\"" + Environment.NewLine +
+                         "  sa$T$Indices <- \"Total\"" + Environment.NewLine +
                          "  if (!exists(\"allData\"))" + Environment.NewLine +
-                         "    allData <- sa$T" + Environment.NewLine +
+                         "    allData <- rbind(sa$S, sa$T)" + Environment.NewLine +
                          "  else" + Environment.NewLine +
-                         "    allData <- merge(allData, sa$T)" + Environment.NewLine +
+                         "    allData <- rbind(allData, sa$S, sa$T)" + Environment.NewLine +
                          "}}" + Environment.NewLine +
                          "write.table(allData, sep=\",\", row.names=FALSE)" + Environment.NewLine
                         ,
@@ -389,10 +400,8 @@
             string rFileName = GetTempFileName("sobolscript", ".r");
             File.WriteAllText(rFileName, script);
             R r = new R();
-            Console.WriteLine(r.GetPackage("boot"));
-            Console.WriteLine(r.GetPackage("sensitivity"));
 
-            string result = r.Run(rFileName, "");
+            string result = r.Run(rFileName);
             string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");
             if (!File.Exists(tempFile))
                 File.Create(tempFile).Close();
@@ -433,8 +442,9 @@
         private string GetSobolRScript()
         {
             string script = string.Format
-                ("library('boot')" + Environment.NewLine + 
-                 "library('sensitivity')" + Environment.NewLine +
+                ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+                 $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                 $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                  "n <- {0}" + Environment.NewLine +
                  "nparams <- {1}" + Environment.NewLine +
                  "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +

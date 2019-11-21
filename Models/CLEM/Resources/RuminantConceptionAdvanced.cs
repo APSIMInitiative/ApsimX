@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminantadvancedconception.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminant/RuminantAdvancedConception.htm")]
     public class RuminantConceptionAdvanced: CLEMModel, IConceptionModel
     {
         /// <summary>
@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public RuminantConceptionAdvanced()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
         }
 
         /// <summary>
@@ -71,22 +71,7 @@ namespace Models.CLEM.Resources
         {
             double rate = 0;
 
-            bool isConceptionReady = false;
-            if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
-            {
-                isConceptionReady = true;
-            }
-            else
-            {
-                double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow((female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
-                // calculate inter-parturition interval
-                currentIPI = Math.Max(currentIPI, female.BreedParams.GestationLength * 30.4 + female.BreedParams.MinimumDaysBirthToConception); // 2nd param was 61
-                double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
-                isConceptionReady = (female.Age >= ageNextConception);
-            }
-
-            // if first mating and of age or suffcient time since last birth/conception
-            if (isConceptionReady)
+            if (female.StandardReferenceWeight > 0)
             {
                 // generalised curve
                 switch (female.NumberOfBirths)
@@ -128,9 +113,8 @@ namespace Models.CLEM.Resources
                         break;
                 }
             }
+            rate = Math.Max(0, Math.Min(rate, 100));
             return rate / 100;
         }
-
-
     }
 }

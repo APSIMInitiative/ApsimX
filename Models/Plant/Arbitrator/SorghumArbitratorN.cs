@@ -3,6 +3,7 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,12 @@ namespace Models.PMF
     [Serializable]
     public class SorghumArbitratorN : Model, IArbitrationMethod, ICustomDocumentation
     {
+        /// <summary>
+        /// Daily NSupply.
+        /// </summary>
+        [JsonIgnore]
+        public double NSupply { get; set; }
+
         /// <summary>Relatives the allocation.</summary>
         /// <param name="Organs">The organs.</param>
         /// <param name="TotalSupply">The total supply.</param>
@@ -26,6 +33,7 @@ namespace Models.PMF
         public void DoAllocation(IArbitration[] Organs, double TotalSupply, ref double TotalAllocated, BiomassArbitrationType BAT)
         {
             double NotAllocated = TotalSupply; // / 0.1; //g/m^2
+            NSupply = TotalSupply; // reporting variable
             //allocate structural first - will be a different order to biomass so need to hard code the order until an interface is created
             //roots
             //stem
@@ -41,20 +49,32 @@ namespace Models.PMF
 
             var grainDemand = BAT.StructuralDemand[grainIndex] + BAT.MetabolicDemand[grainIndex];
             var rootDemand = BAT.StructuralDemand[rootIndex] + BAT.MetabolicDemand[rootIndex];
-            var stemDemand = BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex];
-            var rachisDemand = BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex];
-            var leafMetabolicDemand = BAT.MetabolicDemand[leafIndex];
-            var leafStructuralDemand = BAT.StructuralDemand[leafIndex];
+            //var stemDemand = BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex];
+            //var rachisDemand = BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex];
+            //var leafMetabolicDemand = BAT.MetabolicDemand[leafIndex];
+            //var leafStructuralDemand = BAT.StructuralDemand[leafIndex];
 
             //calc leaf demand separately - old sorghum doesn't quite fit
             var leaf = Organs[leafIndex] as SorghumLeaf;
             var leafAdjustment = leaf.calculateClassicDemandDelta();
 
-            var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
-            if (totalPlantNDemand > 0.0)
-                BAT.SupplyDemandRatioN = Math.Min((BAT.TotalUptakeSupply) / totalPlantNDemand, 1.0);
+            //var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
 
+            // dh - Old apsim calls organ->calcNDemand() to get demands. This is equivalent to metabolic NDemand in new apsim.
+            //      Root and grain had no separation of structural/metabolic N in old apsim. New apsim is similar, except it's all in
+            //      structural demand, so we need to remember to take that into account as well.
+            double totalDemand = BAT.TotalMetabolicDemand + BAT.StructuralDemand[rootIndex] + BAT.StructuralDemand[grainIndex];
+            double plantNDemand = Math.Max(0, totalDemand - grainDemand); // to replicate calcNDemand in old sorghum 
+            if (MathUtilities.IsPositive(plantNDemand))
+            {
+                BAT.SupplyDemandRatioN = MathUtilities.Divide(BAT.TotalUptakeSupply, plantNDemand, 0);
+                BAT.SupplyDemandRatioN = Math.Min(BAT.SupplyDemandRatioN, 1);
+                // BAT.SupplyDemandRatioN = Math.Max(BAT.SupplyDemandRatioN, 0); // ?
+            }
+            
+            // todo - what if root demand exceeds supply?
             double rootAllocation = BAT.SupplyDemandRatioN * BAT.StructuralDemand[rootIndex];
+            rootAllocation = Math.Min(rootAllocation, NotAllocated);
             BAT.StructuralAllocation[rootIndex] += rootAllocation;
             NotAllocated -= (rootAllocation);
             TotalAllocated += (rootAllocation);
@@ -63,42 +83,45 @@ namespace Models.PMF
             AllocateStructural(rachisIndex, ref TotalAllocated, ref NotAllocated, BAT);
             AllocateStructural(leafIndex, ref TotalAllocated, ref NotAllocated, BAT);
 
-            var nDemand = totalPlantNDemand - rootDemand;
+            // Structural allocation is subtracted from metabolic demand in old apsim.
+            BAT.MetabolicDemand[leafIndex] = Math.Max(0, BAT.MetabolicDemand[leafIndex] - BAT.StructuralAllocation[leafIndex]);
+            BAT.MetabolicDemand[rachisIndex] = Math.Max(0, BAT.MetabolicDemand[rachisIndex] - BAT.StructuralAllocation[rachisIndex]);
+            BAT.MetabolicDemand[stemIndex] = Math.Max(0, BAT.MetabolicDemand[stemIndex] - BAT.StructuralAllocation[stemIndex]);
 
-            var leafAlloc = CalcPoportionalAllocation(NotAllocated, BAT.MetabolicDemand[leafIndex], nDemand);
+            double leafDemand = BAT.MetabolicDemand[leafIndex];
+            double rachisDemand = BAT.MetabolicDemand[rachisIndex];
+            double stemDemand = BAT.MetabolicDemand[stemIndex];
+
+            double totalMetabolicDemand = leafDemand + rachisDemand + stemDemand;
+
+            double leafProportion = MathUtilities.Bound(MathUtilities.Divide(leafDemand, totalMetabolicDemand, 0), 0, 1);
+            double rachisProportion = MathUtilities.Bound(MathUtilities.Divide(rachisDemand, totalMetabolicDemand, 0), 0, 1);
+            double stemProportion = MathUtilities.Bound(MathUtilities.Divide(stemDemand, totalMetabolicDemand, 0), 0, 1);
+
+            double leafAlloc = NotAllocated * leafProportion;
+            leafAlloc = Math.Min(leafAlloc, leafDemand);
+
+            double rachisAlloc = NotAllocated * rachisProportion;
+            rachisAlloc = Math.Min(rachisAlloc, rachisDemand);
+
+            double stemAlloc = NotAllocated - leafAlloc - rachisAlloc;
+
             AllocateMetabolic(leafIndex, leafAlloc, BAT);
-
-            var rachisAlloc = NotAllocated * MathUtilities.Divide(BAT.StructuralDemand[rachisIndex] + BAT.MetabolicDemand[rachisIndex], nDemand, 0.0);
             AllocateMetabolic(rachisIndex, rachisAlloc, BAT);
-
-            var stemAlloc = NotAllocated * MathUtilities.Divide(BAT.StructuralDemand[stemIndex] + BAT.MetabolicDemand[stemIndex], nDemand, 0.0);
             AllocateMetabolic(stemIndex, stemAlloc, BAT);
 
-            if(!MathUtilities.FloatsAreEqual(leafAlloc+rachisAlloc+stemAlloc, NotAllocated))
+            if(!MathUtilities.FloatsAreEqual(leafAlloc+rachisAlloc+stemAlloc, NotAllocated, 0.0001))
             {
                 //this is to check that nDemand is equal to old sorghum N demand calc
                 throw new Exception("Proportional allocation of Metabolic N doesn't balance");
             }
             TotalAllocated += NotAllocated;
         }
-        /// <summary>
-        /// Calculating the amount of N to allocate to an organ using its proportion to totalDemand
-        /// </summary>
-        /// <param name="notAllocated">Amount of N that has not been allocated in g/m^2</param>
-        /// <param name="organDemand">N demand for the organ as calculated in old Sorghum in g/m^2</param>
-        /// <param name="totalDemand">Total N demand for Leaf, Stem and Rachis as calculated in old Sorghum in g/m^2</param>
-        private double CalcPoportionalAllocation(double notAllocated, double organDemand, double totalDemand)
-        {
-            if(organDemand < 0 || totalDemand < 0)
-            {
-                throw new Exception("Imvalid demand property");
-            }
-            return notAllocated * MathUtilities.Divide(organDemand, totalDemand, 0.0);
-        }
+
         private void AllocateStructural(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT)
         {
             double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[i] - BAT.StructuralAllocation[i]); //N needed to get to Minimum N conc and satisfy structural and metabolic N demands
-            if ((StructuralRequirement) > 0.0)
+            if (MathUtilities.IsPositive(StructuralRequirement))
             {
                 double StructuralAllocation = Math.Min(StructuralRequirement, NotAllocated);
                 BAT.StructuralAllocation[i] += StructuralAllocation;
@@ -106,27 +129,32 @@ namespace Models.PMF
                 TotalAllocated += (StructuralAllocation);
             }
         }
+
         private void AllocateMetabolic(int i, double allocation, BiomassArbitrationType BAT)
         {
             double MetabolicRequirement = Math.Max(0.0, BAT.MetabolicDemand[i] - BAT.MetabolicAllocation[i]);
-            if (allocation > 0.0)
+            if (MathUtilities.IsPositive(allocation))
             {
                 //double MetabolicAllocation = Math.Max(0.0, NotAllocated * MathUtilities.Divide(BAT.MetabolicDemand[i], nTotalDemand, 0));
                 //double Allocation = Math.Max(0.0, allocatation * MathUtilities.Divide(organDemand, nTotalDemand, 0));
                 double MetabolicAllocation = Math.Min(MetabolicRequirement, allocation);
 
                 //to stop it from givig it too much metabolic - push the flowover from metabolic into storage
-                BAT.MetabolicAllocation[i] += MetabolicAllocation; 
+                BAT.MetabolicAllocation[i] += MetabolicAllocation;
 
                 //do storage if there is any leftover
                 double storageAllocation = allocation - MetabolicAllocation;
                 BAT.StorageAllocation[i] += storageAllocation;
+
+                if (storageAllocation > BAT.StorageDemand[i])
+                    BAT.StorageDemand[i] += storageAllocation;
             }
         }
+
         private void AllocateStorage(int i, ref double TotalAllocated, ref double NotAllocated, BiomassArbitrationType BAT)
         {
             double StorageRequirement = Math.Max(0.0, BAT.StorageDemand[i] - BAT.StorageAllocation[i]); //N needed to take organ up to maximum N concentration, Structural, Metabolic and Luxury N demands
-            if (StorageRequirement > 0.0)
+            if (MathUtilities.IsPositive(StorageRequirement))
             {
                 double StorageAllocation = Math.Min(NotAllocated * MathUtilities.Divide(BAT.StorageDemand[i], BAT.TotalStorageDemand, 0), StorageRequirement);
                 BAT.StorageAllocation[i] += Math.Max(0, StorageAllocation);
@@ -136,51 +164,110 @@ namespace Models.PMF
 
         }
 
-
         /// <summary>Relatives the allocation.</summary>
         /// <param name="Organs">The organs.</param>
-        /// <param name="BAT">The bat.</param>
-        public void DoRetranslocation(IArbitration[] Organs, BiomassArbitrationType BAT)
+        /// <param name="N">The N bat.</param>
+        /// <param name="dm">The DM BAT.</param>
+        public void DoRetranslocation(IArbitration[] Organs, BiomassArbitrationType N, BiomassArbitrationType dm)
         {
-            double NotAllocated = BAT.TotalRetranslocationSupply;
+            double NotAllocated = N.TotalRetranslocationSupply;
             //var rootIndex = 1;
             var leafIndex = 2;
             var rachisIndex = 3;
             var stemIndex = 4;
             var grainIndex = 0;
 
-            var stemDemand = BAT.StructuralDemand[stemIndex];
-            var rachisDemand = BAT.StructuralDemand[rachisIndex];
-            var leafDemand = BAT.StructuralDemand[leafIndex];
+            var stemDemand = N.StructuralDemand[stemIndex];
+            var rachisDemand = N.StructuralDemand[rachisIndex];
+            var leafDemand = N.StructuralDemand[leafIndex];
 
-            var forStem = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, stemIndex, BAT);
-            var forRachis = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, rachisIndex, BAT);
-            var forLeaffromStem = AllocateStructuralFromOrgan(stemIndex, leafIndex, BAT);
-            var forLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, leafIndex, BAT);
+            var forStem = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, stemIndex, N);
+            var forRachis = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, rachisIndex, N);
+            var forLeaffromStem = AllocateStructuralFromStem(stemIndex, leafIndex, N, dm, Organs[stemIndex] as GenericOrgan);
+            var forLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, leafIndex, N);
 
-            AllocateStructuralFromOrgan(rachisIndex, grainIndex, BAT);
-            AllocateStructuralFromOrgan(stemIndex, grainIndex, BAT);
-            AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, grainIndex, BAT);
+            // Retranslocate to grain
+            double fromRachis = AllocateStructuralFromRachis(rachisIndex, grainIndex, N, dm, Organs[rachisIndex] as GenericOrgan);
+            double fromStem = AllocateStructuralFromStem(stemIndex, grainIndex, N, dm, Organs[stemIndex] as GenericOrgan);
+            double fromLeaf = AllocateStructuralFromLeaf(Organs[leafIndex] as SorghumLeaf, leafIndex, grainIndex, N);
         }
 
         /// <summary>Relatives the allocation.</summary>
         /// <param name="iSupply">The organs.</param>
         /// <param name="iSink">The organs.</param>
-        /// <param name="BAT">The organs.</param>
-        public double AllocateStructuralFromOrgan(int iSupply, int iSink, BiomassArbitrationType BAT)
+        /// <param name="n">The organs.</param>
+        /// <param name="dm">The dm BAT.</param>
+        /// <param name="source">The organ which N will be taken from.</param>
+        public double AllocateStructuralFromRachis(int iSupply, int iSink, BiomassArbitrationType n, BiomassArbitrationType dm, GenericOrgan source)
         {
-            var tmp1 = BAT.StructuralDemand[iSink];
-            var tmp2 = BAT.StructuralAllocation[iSink];
-            var tmpcheck = BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink];
-
-            double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink]);
-            if ((StructuralRequirement) > 0.0)
+            double StructuralRequirement = Math.Max(0.0, n.StructuralDemand[iSink] - n.StructuralAllocation[iSink]);
+            if (MathUtilities.IsPositive(StructuralRequirement))
             {
                 //only allocate as much structural as demanded - cyclical process so allow for any amounts already allocated to Retranslocation
-                double StructuralAllocation = Math.Min(StructuralRequirement, BAT.RetranslocationSupply[iSupply] - BAT.Retranslocation[iSupply]);
-                BAT.StructuralAllocation[iSink] += StructuralAllocation;
-                BAT.Retranslocation[iSupply] += StructuralAllocation;
+                double StructuralAllocation = Math.Min(StructuralRequirement, n.RetranslocationSupply[iSupply] - n.Retranslocation[iSupply]);
+
+                double dmGreen = source.Live.Wt;
+                double dltDmGreen = dm.StructuralAllocation[iSupply] + dm.MetabolicAllocation[iSupply];
+                double dltNGreen = n.StructuralAllocation[iSupply] + n.MetabolicAllocation[iSupply];
+                double nConc = MathUtilities.Divide(source.Live.N, dmGreen + dltDmGreen, 0);
+                // dh - no point multiplying both numbers by 100 as we do in old apsim.
+                if (nConc < source.MinNconc)
+                    return 0;
+
+                n.StructuralAllocation[iSink] += StructuralAllocation;
+                n.Retranslocation[iSupply] += StructuralAllocation;
                 return StructuralAllocation;
+            }
+            return 0.0;
+        }
+
+        /// <summary>Relatives the allocation.</summary>
+        /// <param name="iSupply">The organs.</param>
+        /// <param name="iSink">The organs.</param>
+        /// <param name="n">The organs.</param>
+        /// <param name="dm">The dm BAT.</param>
+        /// <param name="source">The organ which N will be taken from.</param>
+        public double AllocateStructuralFromStem(int iSupply, int iSink, BiomassArbitrationType n, BiomassArbitrationType dm, GenericOrgan source)
+        {
+            double StructuralRequirement = Math.Max(0.0, n.StructuralDemand[iSink] - n.StructuralAllocation[iSink]);
+            if (MathUtilities.IsPositive(StructuralRequirement))
+            {
+                //only allocate as much structural as demanded - cyclical process so allow for any amounts already allocated to Retranslocation
+                double nAvailable = Math.Min(StructuralRequirement, n.RetranslocationSupply[iSupply] - n.Retranslocation[iSupply]);
+                double nProvided = 0;
+                double dmGreen = source.Live.Wt;
+                double dltDmGreen = dm.StructuralAllocation[iSupply] + dm.MetabolicAllocation[iSupply];
+                double dltNGreen = n.StructuralAllocation[iSupply] + n.MetabolicAllocation[iSupply] + n.StorageAllocation[iSupply];
+
+                // dh - no point multiplying both numbers by 100 as we do in old apsim.
+                // dh - need to make this check before providing any N.
+                double nConc = MathUtilities.Divide(source.Live.N, dmGreen + dltDmGreen, 0);
+                if (nConc < source.CritNconc)
+                    return 0;
+
+                if (dltNGreen > StructuralRequirement)
+                {
+                    n.StructuralAllocation[iSink] += StructuralRequirement;
+                    n.Retranslocation[iSupply] += StructuralRequirement;
+                    return StructuralRequirement;
+                }
+                else
+                {
+                    StructuralRequirement -= dltNGreen;
+                    nProvided = dltNGreen;
+                }
+
+                double availableN = n.RetranslocationSupply[iSupply] - n.Retranslocation[iSupply];
+
+                // cannot take below structural N
+                double structN = (dmGreen + dltDmGreen) * source.CritNconc;
+                nAvailable = Math.Min(nAvailable, source.Live.N - structN);
+                nAvailable = Math.Max(nAvailable, 0);
+                nProvided += Math.Min(StructuralRequirement, nAvailable);
+
+                n.StructuralAllocation[iSink] += nProvided;
+                n.Retranslocation[iSupply] += nProvided;
+                return nProvided;
             }
             return 0.0;
         }
@@ -192,20 +279,16 @@ namespace Models.PMF
         /// <param name="BAT">The organs.</param>
         public double AllocateStructuralFromLeaf(SorghumLeaf leaf, int iSupply, int iSink, BiomassArbitrationType BAT)
         {
-            //leaf called
             double StructuralRequirement = Math.Max(0.0, BAT.StructuralDemand[iSink] - BAT.StructuralAllocation[iSink]);
-            if ((StructuralRequirement) > 0.0)
+            if (MathUtilities.IsPositive(StructuralRequirement))
             {
-                double currentRetranslocatedN = leaf.DltRetranslocatedN; //-ve number
-
-                double providedN = leaf.provideNRetranslocation(BAT, StructuralRequirement);
+                bool forLeaf = iSupply == iSink;
+                double providedN = leaf.provideNRetranslocation(BAT, StructuralRequirement, forLeaf);
                 BAT.StructuralAllocation[iSink] += providedN;
 
-                double afterRetranslocatedN = leaf.DltRetranslocatedN;
-                //Leaf keeps track of retranslocation - the return value can include DltLAI which is not techncally retraslocated
-                //Let leaf handle the updating
+                // Leaf's dltRetranslocatedN is negative (as in old apsim).
+                BAT.Retranslocation[iSupply] = Math.Abs(leaf.DltRetranslocatedN);
 
-                BAT.Retranslocation[iSupply] += Math.Abs(afterRetranslocatedN - currentRetranslocatedN);
                 return providedN;
             }
             return 0.0;

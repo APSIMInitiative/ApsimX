@@ -27,10 +27,10 @@ namespace Models.Functions
 
 
         /// <summary>The pre event value</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PreEventValue = null;
         /// <summary>The post event value</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PostEventValue = null;
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -55,8 +55,14 @@ namespace Models.Functions
                 _Value = PreEventValue.Value();
         }
 
-        /// <summary>Gets the value.</summary>
-        public double Value(int arrayIndex = -1)
+        /// <summary>Called when crop is being harvested.</summary>
+        [EventSubscribe("Cutting")]
+        private void OnHarvesting(object sender, EventArgs e)
+        {
+            _Value = PreEventValue.Value();
+        }
+            /// <summary>Gets the value.</summary>
+            public double Value(int arrayIndex = -1)
         {
             return _Value;
         }

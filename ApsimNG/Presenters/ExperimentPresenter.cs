@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using Views;
@@ -31,7 +32,7 @@
         private const int DefaultMaxSims = 50;
 
         /// <summary>The list of columns that we will hide from user.</summary>
-        private string[] hiddenColumns = new string[] { "Experiment", "Zone" };
+        private string[] hiddenColumns = new string[] { "Experiment", "Zone", "FolderName" };
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
@@ -52,7 +53,7 @@
             view.ExportToCSVAction.Clicked += OnExportCsv;
             view.ImportFromCSVAction.Clicked += OnImportCsv;
             view.RunAPSIMAction.Clicked += OnRunSims;
-            view.MaximumNumSimulations.Changed += OnSetMaxNumSims;
+            view.MaximumNumSimulations.Leave += OnSetMaxNumSims;
 
             // Give the view the default maximum number of simulations to display.
             view.MaximumNumSimulations.Value = DefaultMaxSims.ToString();
@@ -73,7 +74,7 @@
             view.ExportToCSVAction.Clicked -= OnExportCsv;
             view.ImportFromCSVAction.Clicked -= OnImportCsv;
             view.RunAPSIMAction.Clicked -= OnRunSims;
-            view.MaximumNumSimulations.Changed -= OnSetMaxNumSims;
+            view.MaximumNumSimulations.Leave -= OnSetMaxNumSims;
         }
 
         /// <summary>Populate the view.</summary>
@@ -85,15 +86,17 @@
             {
                 // Using the first simulation description, create a column in the table
                 // for each descriptor.
-                foreach (var descriptor in simulationDescriptions[0].Descriptors)
-                {
-                    if (!hiddenColumns.Contains(descriptor.Name))
-                        table.Columns.Add(descriptor.Name, typeof(string));
-                }
+                foreach (var simulationDescription in simulationDescriptions)
+                    foreach (var descriptor in simulationDescription.Descriptors)
+                    {
+                        if (!hiddenColumns.Contains(descriptor.Name) &&
+                            !table.Columns.Contains(descriptor.Name))
+                            table.Columns.Add(descriptor.Name, typeof(string));
+                    }
             }
 
             // Add all simulations to table up to the maximum number of sims to display.
-            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value);
+            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value, CultureInfo.InvariantCulture);
             var cellRenderDetails = new List<CellRendererDescription>();
             for (int i = 0; i < Math.Min(simulationDescriptions.Count, maximumNumberOfSimulations); i++)
             {
@@ -129,7 +132,7 @@
         /// <summary>Get a list of all simulation descriptions (even disabled ones).</summary>
         private void GetAllSimulationDescriptionsFromExperiment()
         {
-            var savedDisabledSimulationNames = experiment.DisabledSimNames;
+            List<string> savedDisabledSimulationNames = experiment.DisabledSimNames;
             experiment.DisabledSimNames = null;
             simulationDescriptions = experiment.GenerateSimulationDescriptions();
             experiment.DisabledSimNames = savedDisabledSimulationNames;
@@ -244,9 +247,9 @@
                 var selectedSimulations = GetSelectedSimulationNamesFromView();
 
                 // Before running the simulations, disable all simulations except for those which are selected.
-                RunCommand runner = new RunCommand(experiment, explorerPresenter, false);
-                runner.SimulationNamesToRun = selectedSimulations;
-                runner.Do(explorerPresenter.CommandHistory);
+                var runner = new Runner(experiment, simulationNamesToRun: selectedSimulations, wait: false);
+                RunCommand runCmd = new RunCommand(experiment.Name, runner, explorerPresenter);
+                runCmd.Do(explorerPresenter.CommandHistory);
             }
             catch (Exception e)
             {

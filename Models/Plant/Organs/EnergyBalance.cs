@@ -1,21 +1,16 @@
-namespace Models.PMF.Organs
+﻿namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Interfaces;
     using Models.Functions;
+    using Models.Interfaces;
     using Models.PMF.Interfaces;
-    using Models.PMF.Library;
     using System;
-    using System.Collections.Generic;
     using System.Xml.Serialization;
-    using Models.PMF.Phen;
-    using Models.PMF.Struct;
 
     /// <summary>
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation
     /// </summary>
-   [Serializable]
+    [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GenericOrgan))]
@@ -34,39 +29,39 @@ namespace Models.PMF.Organs
         private Plant parentPlant = null;
 
         /// <summary>The parent organ</summary>
-        [ParentLink]
+        [Link(Type = LinkType.Ancestor)]
         private GenericOrgan parentOrgan= null;
  
         /// <summary>The FRGR function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction FRGRFunction = null;  
 
         /// <summary>The effect of CO2 on stomatal conductance</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction StomatalConductanceCO2Modifier = null;
 
         /// <summary>The cover function</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction CoverFunction = null;
 
         /// <summary>The lai function</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction GAIFunction = null;
    
         /// <summary>The extinction coefficient function</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction ExtinctionCoefficientFunction = null;
     
         /// <summary>The height function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction HeightFunction = null;
      
         /// <summary>TThe depth of canopy which organ resides in</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction DepthFunction = null;
       
         /// <summary>The lai dead function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction GAIDeadFunction = null;
 
 
@@ -142,7 +137,11 @@ namespace Models.PMF.Organs
         [Units("mm")]
         [XmlIgnore]
         public double Depth { get; set; }
-    
+
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width { get { return 0; } }
+
+
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
         [XmlIgnore]
@@ -158,7 +157,6 @@ namespace Models.PMF.Organs
             set
             {
                 _PotentialEP = value;
-                MicroClimatePresent = true;
             }
         }
 
@@ -170,11 +168,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water allocation.</summary>
         [XmlIgnore]
         public double WaterAllocation { get; set; }
-        /// <summary>
-        /// Flag to test if Microclimate is present
-        /// </summary>
-        [XmlIgnore]
-        public bool MicroClimatePresent { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         [XmlIgnore]
@@ -213,16 +206,11 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (MicroClimatePresent)
-                {
-                    double TotalRadn = 0;
-                    if (LightProfile != null)
-                        for (int i = 0; i < LightProfile.Length; i++)
-                        TotalRadn += LightProfile[i].amount;
-                    return TotalRadn;
-                }
-                else
-                    return CoverGreen * MetData.Radn;
+                 double TotalRadn = 0;
+                 if (LightProfile != null)
+                     for (int i = 0; i < LightProfile.Length; i++)
+                     TotalRadn += LightProfile[i].amount;
+                 return TotalRadn;
             }
         }
 
@@ -251,8 +239,6 @@ namespace Models.PMF.Organs
             // save current state
             if (parentPlant.IsEmerged)
              {
-                if (MicroClimatePresent == false)
-                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
                 FRGR = FRGRFunction.Value();
                 if (CoverFunction == null && ExtinctionCoefficientFunction == null)
@@ -294,10 +280,7 @@ namespace Models.PMF.Organs
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
             if (data.Plant == parentPlant)
-            {
                 Clear();
-                MicroClimatePresent = false;
-            }
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -306,7 +289,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantEnding")]
         protected void OnPlantEnding(object sender, EventArgs e)
         {
-  
             Clear();
         }
 

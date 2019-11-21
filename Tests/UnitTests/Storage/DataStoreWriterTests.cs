@@ -64,6 +64,7 @@
             {
                 CheckpointName = "Current",
                 SimulationName = "Sim1",
+                FolderName = "Folder1",
                 TableName = "Report",
                 ColumnNames = new string[] { "Col1", "Col2" },
                 ColumnUnits = new string[] {   null,    "g" }
@@ -76,6 +77,7 @@
             {
                 CheckpointName = "Current",
                 SimulationName = "Sim2",
+                FolderName = "Folder2",
                 TableName = "Report",
                 ColumnNames = new string[] { "Col1", "Col3" },
                 ColumnUnits = new string[] {   null, "kg/ha" }
@@ -91,8 +93,8 @@
 
             Assert.AreEqual(Utilities.TableToString(database, "_Simulations"),
                "ID,Name,FolderName\r\n" +
-               " 1,Sim1,          \r\n" +
-               " 2,Sim2,          \r\n");
+               " 1,Sim1,   Folder1\r\n" +
+               " 2,Sim2,   Folder2\r\n");
 
             Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints"),
                "ID,   Name,Version,Date\r\n" +
@@ -144,7 +146,7 @@
             writer.WriteTable(data2);
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM Report ORDER BY Col"),
+            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM [Report] ORDER BY [Col]"),
                            "CheckpointID,SimulationID,Col\r\n" +
                            "           1,           1,  3\r\n");
         }

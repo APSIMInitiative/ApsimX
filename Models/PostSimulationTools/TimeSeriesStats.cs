@@ -7,6 +7,7 @@
     using APSIM.Shared.Utilities;
     using Storage;
     using Models.Core.Run;
+    using System.Threading;
 
     /// <summary>
     /// # [Name]
@@ -18,6 +19,9 @@
     [Serializable]
     public class TimeSeriesStats : Model, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// Gets or sets the name of the predicted/observed table name.
         /// </summary>
@@ -25,11 +29,8 @@
         [Display(Type = DisplayType.TableName)]
         public string TableName { get; set; }
 
-        /// <summary>
-        /// The main run method called to fill tables in the specified DataStore.
-        /// </summary>
-        /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(IDataStore dataStore)
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void Run()
         {
             DataTable statsData = new DataTable();
             statsData.Columns.Add("SimulationName", typeof(string));

@@ -7,11 +7,11 @@ draft: false
 
 Once you're ready to share your commits with the wider APSIM community and have them merged into the master repository, you will need to push your commits to your forked remote repository (e.g. hol353). Doing a push won't impact on other developers and won't cause Jenkins to run the test suite. Pushing will allow other developers to pull from your branch on your repository so it is a good way to share what you are doing with others.
 
-To list your remote repositories, use ````git remote````. To check the URL of a remote repository, use ````git remote get-url <remote>````, where \<remote\> is the name of a remote repository. 
+To list your remote repositories, use ```git remote```. To view remote URLs as well, use ```git remote -v```. 
 
 **You should never push to the main APSIM repository** (located at https://github.com/APSIMInitiative/ApsimX/).
 
-To push your current branch to a remote repository, use ````git push <remote>````, where \<remote\> is the name of your remote repository.
+To push your current branch to a remote repository, use ```git push <remote>```, where \<remote\> is the name of your remote repository. If you have not pushed your current branch before, you will need to create a remote branch: ```git push -u <remote> <branch_name>```.
 
 For more details, see ````git help push````.
 

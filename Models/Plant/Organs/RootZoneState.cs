@@ -3,6 +3,9 @@ using Models.Core;
 using System;
 using Models.Functions;
 using Models.Interfaces;
+using System.Linq;
+using Models.Soils.Standardiser;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -101,6 +104,9 @@ namespace Models.PMF.Organs
         /// <summary>Record the Water level before </summary>
         public double[] StartWater { get; set; }
 
+        /// <summary>Record the Water Supply before </summary>
+        public double[] Supply { get; set; }
+
         /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
         public double[] MassFlow { get;  set; }
 
@@ -152,7 +158,7 @@ namespace Models.PMF.Organs
             //distribute root biomass evenly through root depth
             double[] fromLayer = new double[1] { depth };
             double[] fromMass = new double[1] { initialDM };
-            double[] toMass = soil.Map(fromMass, fromLayer, soil.Thickness, Soil.MapType.Mass, 0.0);
+            double[] toMass = Layers.MapMass(fromMass, fromLayer, soil.Thickness);
 
             for (int layer = 0; layer < soil.Thickness.Length; layer++)
             {
@@ -204,8 +210,7 @@ namespace Models.PMF.Organs
         public void GrowRootDepth()
         {
             // Do Root Front Advance
-            int RootLayer = Soil.LayerIndexOfDepth(Depth, soil.Thickness);
-            double[] xf = soil.XF(plant.Name);
+            int RootLayer = soil.LayerIndexOfDepth(Depth);
 
             //sorghum calc
             var rootDepthWaterStress = 1.0;
@@ -213,42 +218,40 @@ namespace Models.PMF.Organs
             {
                 //calc StressFactorLookup   
                 var extractable = soil.SoilWater.ESW[RootLayer];
-
                 var llDep = soil.LL15[RootLayer] * soil.Thickness[RootLayer];
                 var capacity = soil.DULmm[RootLayer] - llDep;
 
-                var ratio = 0.0;
-                if(capacity > 0.0)
-                    ratio = extractable / capacity;
-
-                root.SWAvailabilityRatio = ratio;
+                root.SWAvailabilityRatio = MathUtilities.Divide(extractable, capacity, 10);
+                if (MathUtilities.FloatsAreEqual(extractable, 0))
+                    root.SWAvailabilityRatio = 0; // :(
                 rootDepthWaterStress = root.RootDepthStressFactor.Value();
             }
 
-            //SoilCrop crop = soil.Crop(plant.Name) as SoilCrop;
+            double MaxDepth;
+            double[] xf = null;
             if (soil.Weirdo == null)
             {
+                var soilCrop = soil.Crop(plant.Name);
+                xf = soilCrop.XF;
                 var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
                 var dltRoot = rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
                 Depth = Depth + rootFrontVelocity.Value(RootLayer) * xf[RootLayer] * rootDepthWaterStress;
-            }
-            else
-                Depth = Depth + rootFrontVelocity.Value(RootLayer);
-
-            // Limit root depth for impeded layers
-            double MaxDepth = 0;
-            for (int i = 0; i < soil.Thickness.Length; i++)
-            {
-                if (soil.Weirdo == null)
+                MaxDepth = 0;
+                // Limit root depth for impeded layers
+                for (int i = 0; i < soil.Thickness.Length; i++)
                 {
                     if (xf[i] > 0)
                         MaxDepth += soil.Thickness[i];
                     else
                         break;
                 }
-                else
-                    MaxDepth += soil.Thickness[i];
             }
+            else
+            {
+                Depth = Depth + rootFrontVelocity.Value(RootLayer);
+                MaxDepth = soil.Thickness.Sum();
+            }
+
             // Limit root depth for the crop specific maximum depth
             MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
             Depth = Math.Min(Depth, MaxDepth);
@@ -271,12 +274,12 @@ namespace Models.PMF.Organs
             double[] RAw = new double[soil.Thickness.Length];
             for (int layer = 0; layer < soil.Thickness.Length; layer++)
             {
-                if (layer <= Soil.LayerIndexOfDepth(Depth, soil.Thickness))
+                if (layer <= soil.LayerIndexOfDepth(Depth))
                     if (LayerLive[layer].Wt > 0)
                     {
                         RAw[layer] = - WaterUptake[layer] / LayerLive[layer].Wt
                                    * soil.Thickness[layer]
-                                   * Soil.ProportionThroughLayer(layer, Depth, soil.Thickness);
+                                   * soil.ProportionThroughLayer(layer, Depth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
                     }
                     else if (layer > 0)

@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
 
@@ -14,7 +15,7 @@
     public class DataStoreReader : IStorageReader
     {
         /// <summary>A database connection</summary>
-        private IDatabaseConnection connection = null;
+        public IDatabaseConnection Connection { get; private set; } = null;
 
         /// <summary>A list of field names for each table.</summary>
         private Dictionary<string, List<string>> tables = new Dictionary<string, List<string>>();
@@ -35,7 +36,7 @@
         {
             get
             {
-                var data = connection.ExecuteQuery("select Name from _Simulations");
+                var data = Connection.ExecuteQuery("select Name from [_Simulations]");
                 return DataTableUtilities.GetColumnAsStrings(data, "Name").ToList();
             }
         }
@@ -63,7 +64,7 @@
         /// <param name="database">The database connection to read from.</param>
         public void SetConnection(IDatabaseConnection database)
         {
-            connection = database;
+            Connection = database;
             Refresh();
         }
 
@@ -75,7 +76,7 @@
         /// <returns>The units (with surrounding parentheses), or null if not available</returns>
         public string Units(string tableName, string columnHeading)
         {
-            if (units.Table != null)
+            if (units.Table != null && units.Table.Rows.Count > 0)
             {
                 units.RowFilter = string.Format("TableName='{0}' AND ColumnHeading='{1}'",
                                                 tableName, columnHeading);
@@ -93,7 +94,7 @@
         /// <returns>Can return an empty list but never null.</returns>
         public List<string> ColumnNames(string tableName)
         {
-            return connection.GetColumnNames(tableName);
+            return Connection.GetColumnNames(tableName);
         }
 
         /// <summary>Return a list of column names with string data type for a table. Never returns null.</summary>
@@ -101,12 +102,39 @@
         /// <returns>Can return an empty list but never null.</returns>
         public List<string> StringColumnNames(string tableName)
         {
-            return connection.GetStringColumnNames(tableName);
+            return Connection.GetStringColumnNames(tableName);
         }
 
+        /// <summary>
+        /// Gets a "brief" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="fullColumnName">The "full" name of the column</param>
+        /// <returns>The "brief" name of the column</returns>
+        public string BriefColumnName(string tablename, string fullColumnName)
+        {
+            if (Connection is Firebird)
+                return (Connection as Firebird).GetShortColumnName(tablename, fullColumnName);
+            else
+                return fullColumnName;
+        }
+
+        /// <summary>
+        /// Gets the "full" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="queryColumnName"></param>
+        /// <returns>The "full" name of the column</returns>
+        public string FullColumnName(string tablename, string queryColumnName)
+        {
+            if (Connection is Firebird)
+                return (Connection as Firebird).GetLongColumnName(tablename, queryColumnName);
+            else
+                return queryColumnName;
+        }
 
         /// <summary>Returns a list of table names</summary>
-        public List<string> TableNames { get { return connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }
+        public List<string> TableNames { get { return Connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }
 
         /// <summary>Refresh this instance to reflect the database connection.</summary>
         public void Refresh()
@@ -116,24 +144,24 @@
             tables.Clear();
 
             // Read in simulation ids.
-            if (connection.TableExists("_Simulations"))
+            if (Connection.TableExists("_Simulations"))
             {
-                var data = connection.ExecuteQuery("SELECT * FROM _Simulations");
+                var data = Connection.ExecuteQuery("SELECT * FROM [_Simulations]");
                 foreach (DataRow row in data.Rows)
-                    simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                    simulationIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture));
             }
 
             // Read in checkpoint ids.
-            if (connection.TableExists("_Checkpoints"))
+            if (Connection.TableExists("_Checkpoints"))
             {
-                var data = connection.ExecuteQuery("SELECT * FROM _Checkpoints");
+                var data = Connection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
-                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture));
             }
 
             // For each table in the database, read in field names.
-            foreach (var tableName in connection.GetTableNames())
-                tables.Add(tableName, connection.GetTableColumns(tableName));
+            foreach (var tableName in Connection.GetTableNames())
+                tables.Add(tableName, Connection.GetTableColumns(tableName));
 
             // Get the units table.
             units = new DataView(GetData("_Units"));
@@ -151,16 +179,18 @@
         /// <param name="from">Optional start index. Only used when 'count' specified. The record number to offset.</param>
         /// <param name="count">Optional number of records to return or all if 0.</param>
         /// <param name="orderBy">Optional column name to order by</param>
+        /// <param name="distinct">Only return distinct values for field?</param>
         /// <returns></returns>
         public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null,
                                  string filter = null,
                                  int from = 0, int count = 0,
-                                 string orderBy = null)
+                                 string orderBy = null,
+                                 bool distinct = false)
         {
-            if (!connection.TableExists(tableName))
+            if (!Connection.TableExists(tableName))
                 return null;
 
-            var fieldNamesInTable = connection.GetColumnNames(tableName);
+            var fieldNamesInTable = Connection.GetColumnNames(tableName);
 
             if (fieldNamesInTable == null || fieldNamesInTable.Count == 0)
                 return null;
@@ -177,10 +207,36 @@
                 fieldList = fieldNames.ToList();
 
             bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null;
+            bool hasCheckpointName = fieldNamesInTable.Contains("CheckpointID") || fieldNamesInTable.Contains("CheckpointName") || checkpointName != null;
 
-            sql.Append("SELECT C.[Name] AS CheckpointName, C.[ID] AS CheckpointID");
+            sql.Append("SELECT ");
+
+            if (distinct)
+                sql.Append(" DISTINCT ");
+
+            if (count > 0 && Connection is Firebird)
+            {
+                sql.Append("FIRST ");
+                sql.Append(count);
+                sql.Append(" SKIP ");
+                sql.Append(from);
+                sql.Append(" ");
+            }
+
+            bool firstField = true;
+            if (hasCheckpointName)
+            {
+                sql.Append("C.[Name] AS [CheckpointName], C.[ID] AS [CheckpointID]");
+                firstField = false;
+            }
+
             if (hasSimulationName)
-                sql.Append(", S.[Name] AS SimulationName, S.[ID] AS SimulationID");
+            {
+                if (!firstField)
+                    sql.Append(", ");
+                sql.Append("S.[Name] AS [SimulationName], S.[ID] AS [SimulationID]");
+                firstField = false;
+            }
 
             fieldList.Remove("CheckpointID");
             fieldList.Remove("SimulationName");
@@ -190,48 +246,99 @@
             {
                 if (fieldNamesInTable.Contains(fieldName))
                 {
-                    sql.Append(",T.");
+                    if (!firstField)
+                        sql.Append(", ");
+                    firstField = false;
+                    sql.Append("T.");
                     sql.Append("[");
-                    sql.Append(fieldName);
+                    if (!(Connection is Firebird) || tableName.StartsWith("_")
+                      || fieldName.Equals("SimulationID", StringComparison.OrdinalIgnoreCase)
+                      || fieldName.Equals("SimulationName", StringComparison.OrdinalIgnoreCase)
+                      || fieldName.Equals("CheckpointID", StringComparison.OrdinalIgnoreCase)
+                      || fieldName.Equals("CheckpointName", StringComparison.OrdinalIgnoreCase))
+                        sql.Append(fieldName);
+                    else
+                        sql.Append("COL_" + (Connection as Firebird).GetColumnNumber(tableName, fieldName).ToString());
                     sql.Append(']');
                     if (fieldName == "Clock.Today")
                         hasToday = true;
                 }
             }
 
+            bool firstFrom = true;
             // Write FROM clause
-            sql.Append(" FROM [_Checkpoints] C");
+            sql.Append(" FROM ");
+            if (hasCheckpointName)
+            {
+                sql.Append("[_Checkpoints] C");
+                firstFrom = false;
+            }
             if (hasSimulationName)
-                sql.Append(", [_Simulations] S");
-            sql.Append(", [" + tableName);
+            {
+                if (!firstFrom)
+                    sql.Append(", ");
+                sql.Append("[_Simulations] S");
+                firstFrom = false;
+            }
+            if (!firstFrom)
+                sql.Append(", ");
+            sql.Append("[" + tableName);
             sql.Append("] T ");
 
-            // Write WHERE clause
-            sql.Append("WHERE [CheckpointID] = C.[ID]");
-            if (hasSimulationName)
+            if (hasCheckpointName || hasSimulationName || !string.IsNullOrWhiteSpace(filter))
             {
-                sql.Append(" AND [SimulationID] = S.[ID]");
-                if (simulationName != null)
+                bool firstWhere = true;
+                // Write WHERE clause
+                sql.Append("WHERE ");
+                if (hasCheckpointName)
                 {
-                    sql.Append(" AND S.[Name] = '");
-                    sql.Append(simulationName);
-                    sql.Append('\'');
+                    sql.Append("T.[CheckpointID] = C.[ID]");
+                    // Write checkpoint name
+                    if (checkpointName == null)
+                        sql.Append(" AND C.[Name] = 'Current'");
+                    else
+                        sql.Append(" AND C.[Name] = '" + checkpointName + "'");
+                    firstWhere = false;
+                }
+                if (hasSimulationName)
+                {
+                    if (!firstWhere)
+                        sql.Append(" AND ");
+                    sql.Append("T.[SimulationID] = S.[ID]");
+                    if (simulationName != null)
+                    {
+                        sql.Append(" AND S.[Name] = '");
+                        sql.Append(simulationName);
+                        sql.Append('\'');
+                    }
+                    firstWhere = false;
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter))
+                {
+                    string copyFilter = filter;
+                    // For Firebird, we need to convert column names to their short form to perform the query
+                    if (Connection is Firebird)
+                    {
+                        List<string> output = copyFilter.Split('[', ']').Where((item, index) => index % 2 != 0).ToList();
+                        foreach (string field in output)
+                        {
+                            string shortName = (Connection as Firebird).GetShortColumnName(tableName, field);
+                            if (!string.IsNullOrEmpty(shortName))
+                            {
+                                copyFilter = copyFilter.Replace("[" + field + "]", "[" + shortName + "]");
+                            }
+                        }
+                    }
+
+                    if (!firstWhere)
+                        sql.Append(" AND ");
+                    firstWhere = false;
+                    sql.Append("(");
+                    sql.Append(copyFilter);
+                    sql.Append(")");
                 }
             }
-
-            // Write checkpoint name
-            if (checkpointName == null)
-                sql.Append(" AND C.[Name] = 'Current'");
-            else
-                sql.Append(" AND C.[Name] = '" + checkpointName + "'");
-
-            if (filter != null)
-            {
-                sql.Append(" AND (");
-                sql.Append(filter);
-                sql.Append(")");
-            }
-
             // Write ORDER BY clause
             if (orderBy == null)
             {
@@ -239,7 +346,12 @@
                 {
                     sql.Append(" ORDER BY S.[ID]");
                     if (hasToday)
-                        sql.Append(", T.[Clock.Today]");
+                    {
+                        if (Connection is Firebird)
+                            sql.Append(", T.[COL_" + (Connection as Firebird).GetColumnNumber(tableName, "Clock.Today").ToString() + "]");
+                        else
+                            sql.Append(", T.[Clock.Today]");
+                    }
                 }
             }
             else
@@ -247,32 +359,50 @@
                 sql.Append(" ORDER BY " + orderBy);
             }
 
-            // Write LIMIT/OFFSET clause
-            if (count > 0)
-            {
-                sql.Append(" LIMIT ");
-                sql.Append(count);
-                sql.Append(" OFFSET ");
-                sql.Append(from);
-            }
+            if (Connection is SQLite)
+                // Write LIMIT/OFFSET clause
+                if (count > 0)
+                {
+                    sql.Append(" LIMIT ");
+                    sql.Append(count);
+                    sql.Append(" OFFSET ");
+                    sql.Append(from);
+                }
 
             // It appears that the a where clause that has 'SimulationName in ('xxx, 'yyy') is
             // case sensitive despite having COLLATE NOCASE in the 'CREATE TABLE _Simulations'
             // statement. I don't know why this is. The replace below seems to fix the problem.
+            if (Connection is SQLite)
+                sql = sql.Replace("SimulationName IN ", "SimulationName COLLATE NOCASE IN ");
+            else if (Connection is Firebird)
+                sql = sql.Replace("SimulationName ", "S.[Name] ");
             var st = sql.ToString();
-            //if (!useFirebird)
-                st = st.Replace("SimulationName IN ", "SimulationName COLLATE NOCASE IN ");
-            return connection.ExecuteQuery(st);
+            DataTable result = Connection.ExecuteQuery(st);
+            // For Firebird, we need to recover the full names of the data columns
+            if (Connection is Firebird && !tableName.StartsWith("_"))
+            {
+                foreach (DataColumn dataCol in result.Columns)
+                {
+                    if (dataCol.ColumnName.StartsWith("COL_"))
+                    {
+                        int colNo;
+                        if (Int32.TryParse(dataCol.ColumnName.Substring(4), out colNo))
+                        {
+                            dataCol.ColumnName = (Connection as Firebird).GetLongColumnName(tableName, colNo);
+                        }
+                    }
+                }
+            }
+            return result;
         }
 
-        /// <summary>Return all data from the specified simulation and table name.</summary>
         /// <param name="sql">The SQL.</param>
         /// <returns></returns>
         public DataTable GetDataUsingSql(string sql)
         {
             try
             {
-                return connection.ExecuteQuery(sql);
+                return Connection.ExecuteQuery(sql);
             }
             catch (Exception)
             {

@@ -85,8 +85,8 @@ namespace Models.Functions
         /// <exception cref="System.Exception">Cannot find variable:  + sym.m_name +  in function:  + RelativeTo.Name</exception>
         private static void FillVariableNames(ExpressionEvaluator fn, Model RelativeTo, int arrayIndex)
         {
-            ArrayList varUnfilled = fn.Variables;
-            ArrayList varFilled = new ArrayList();
+            List<Symbol> varUnfilled = fn.Variables;
+            List<Symbol> varFilled = new List<Symbol>();
             Symbol symFilled;
             foreach (Symbol sym in varUnfilled)
             {

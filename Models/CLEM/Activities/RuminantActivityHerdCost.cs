@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity will arange payment of a ruminant herd expense such as dips and drenches based on the current herd filtering.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantherdcost.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantHerdCost.htm")]
     public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IValidatableObject
     {
         /// <summary>
@@ -242,7 +242,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Pay ";
-            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ";
+            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ";
             html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ";
             if (AccountName == null || AccountName == "")
             {

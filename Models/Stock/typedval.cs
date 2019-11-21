@@ -1,94 +1,32 @@
-using System;
-using System.Text;
-using System.Xml;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+// -----------------------------------------------------------------------
+// <copyright file="typedval.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace CMPServices
 {
-    //============================================================================
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Runtime.InteropServices;
+    using System.Text;
+    using System.Xml;
+
     /// <summary>
     /// The main class that is used as the base class for structured types such as SDML and DDML values.
     /// </summary>
-    //============================================================================
-    abstract public class TTypedValue
+    public abstract class TTypedValue
     {
-        /// <summary>
-        /// Count of scalar types available in a TTypedValue.
-        /// </summary>
-        public const int NUMSCALARTYPES = 9;
-
-        //============================================================================
-        /// <summary>
-        /// The type of the TTypedValue expressed as a simple int.
-        /// See <see cref="baseType">baseType()</see>
-        /// See <see cref="sTYPECODES"/>
-        /// </summary>
-        public enum TBaseType
-        {
-            /// <summary>
-            /// Not a type.
-            /// </summary>
-            ITYPE_EMPTY = 0,
-            /// <summary>
-            /// Single byte integer.
-            /// </summary>
-            ITYPE_INT1,
-            /// <summary>
-            /// Two byte integer.
-            /// </summary>
-            ITYPE_INT2,
-            /// <summary>
-            /// Four byte signed integer.
-            /// </summary>
-            ITYPE_INT4,
-            /// <summary>
-            /// Eight byte signed integer.
-            /// </summary>
-            ITYPE_INT8,
-            /// <summary>
-            /// Single precision float. 4 bytes.
-            /// </summary>
-            ITYPE_SINGLE,
-            /// <summary>
-            /// Double precision float. 8 bytes.
-            /// </summary>
-            ITYPE_DOUBLE,
-            /// <summary>
-            /// Character.
-            /// </summary>
-            ITYPE_CHAR,
-            /// <summary>
-            /// Boolean.
-            /// </summary>
-            ITYPE_BOOL,
-            /// <summary>
-            /// Two byte char.
-            /// </summary>
-            ITYPE_WCHAR,
-            /// <summary>
-            /// Character string.
-            /// </summary>
-            ITYPE_STR,
-            /// <summary>
-            /// Two byte char string.
-            /// </summary>
-            ITYPE_WSTR,
-            /// <summary>
-            /// Defined type such as a record.
-            /// </summary>
-            ITYPE_DEF
-        };
-
-        //============================================================================
         /// <summary>
         /// Byte size of a four byte integer.
         /// </summary>
-        public const uint INTSIZE = 4;   //size of Int32
+        public const uint INTSIZE = 4;   // size of Int32
+        
         /// <summary>
         /// Byte sizes for the field types TBaseType.ITYPE_INT1 To TBaseType.ITYPE_WCHAR
         /// </summary>
-        public static uint[] typeSize = { 0, 1, 2, 4, 8, 4, 8, 1, 1, 2, 0 };
+        public static uint[] TypeSize = { 0, 1, 2, 4, 8, 4, 8, 1, 1, 2, 0 };
 
         /// <summary>
         /// Lookup table of type name strings. 
@@ -109,54 +47,66 @@ namespace CMPServices
         /// string dblString = sTYPECODES[TBaseType.ITYPE_DOUBLE];
         /// </code>
         /// </example>
-        public static String[] sTYPECODES = {"",           // Zero entry is unused
-                           "integer1", //1
-                           "integer2", //2
-                           "integer4", //3
-                           "integer8", //4
-                           "single",   //5
-                           "double",   //6
-                           "char",     //7
-                           "boolean",  //8
-                           "wchar",    //9
-                           "string",   //10
-                           "wstring",  //11
-                           "defined"}; //12
+        public static string[] sTYPECODES = 
+        {
+                            string.Empty,           // Zero entry is unused
+                           "integer1", // 1
+                           "integer2", // 2
+                           "integer4", // 3
+                           "integer8", // 4
+                           "single",   // 5
+                           "double",   // 6
+                           "char",     // 7
+                           "boolean",  // 8
+                           "wchar",    // 9
+                           "string",   // 10
+                           "wstring",  // 11
+                           "defined"   // 12
+        };
+        
         /// <summary>
         /// The text name of a string type. "string"
         /// </summary>
-        public static String STYPE_STR = sTYPECODES[(int)TBaseType.ITYPE_STR];
+        public static string STYPE_STR = sTYPECODES[(int)TBaseType.ITYPE_STR];
+        
         /// <summary>
         /// The text name of a boolean type. "boolean"
         /// </summary>
-        public static String STYPE_BOOL = sTYPECODES[(int)TBaseType.ITYPE_BOOL];
+        public static string STYPE_BOOL = sTYPECODES[(int)TBaseType.ITYPE_BOOL];
+        
         /// <summary>
         /// The text name of a double type. "double"
         /// </summary>
-        public static String STYPE_DOUBLE = sTYPECODES[(int)TBaseType.ITYPE_DOUBLE];
+        public static string STYPE_DOUBLE = sTYPECODES[(int)TBaseType.ITYPE_DOUBLE];
+        
         /// <summary>
         /// The text name of an integer 4 type. "integer4"
         /// </summary>
-        public static String STYPE_INT4 = sTYPECODES[(int)TBaseType.ITYPE_INT4];
+        public static string STYPE_INT4 = sTYPECODES[(int)TBaseType.ITYPE_INT4];
+        
         /// <summary>
         /// The text name of a defined type. "defined"
         /// </summary>
-        public static String STYPE_DEF = sTYPECODES[(int)TBaseType.ITYPE_DEF];
+        public static string STYPE_DEF = sTYPECODES[(int)TBaseType.ITYPE_DEF];
+        
         /// <summary>
         /// Return value from TTypedValue.isSameType()
         /// </summary>
         /// <seealso cref="TTypedValue">TTypedValue Class</seealso>
         public const int ctSAME = 0;
+        
         /// <summary>
         /// Return value from TTypedValue.isSameType()
         /// </summary>
         /// <seealso cref="TTypedValue">TTypedValue Class</seealso>
         public const int ctCOMP = 1;
+        
         /// <summary>
         /// Return value from TTypedValue.isSameType()
         /// </summary>
         /// <seealso cref="TTypedValue">TTypedValue Class</seealso>
         public const int ctDODGY = 2;
+        
         /// <summary>
         /// Return value from TTypedValue.isSameType(). 
         /// </summary>
@@ -164,126 +114,192 @@ namespace CMPServices
         public const int ctBAD = -1;
 
         /// <summary>
-        /// Contains two unit fields. Used in the array of matching units.
-        /// </summary>
-        private struct unit
-        {
-            public String unit1;
-            public String unit2;
-            public unit(String u1, String u2)
-            {
-                unit1 = u1;
-                unit2 = u2;
-            }
-        };
-        //============================================================================
-        /// <summary>
         /// "cc/cc","mm/mm" are matching units.
         /// </summary>
-        //============================================================================
-        private static unit match1 = new unit("g/cm^3", "Mg/m^3");
-        //============================================================================
+        private static Unit match1 = new Unit("g/cm^3", "Mg/m^3");
+        
         /// <summary>
         /// "m^3/m^3", "mm/mm" are matching units.
         /// </summary>
-        //============================================================================
-        private static unit match2 = new unit("m^3/m^3", "mm/mm");
-        //============================================================================
+        private static Unit match2 = new Unit("m^3/m^3", "mm/mm");
+        
         /// <summary>
         /// "ppm" and "mg/kg" are allowed to match, although "ppm" is invalid
         /// This is a concession to APSIM
         /// </summary>
-        //============================================================================
-        private static unit match3 = new unit("ppm", "mg/kg");
-        //============================================================================
+        private static Unit match3 = new Unit("ppm", "mg/kg");
+
         /// <summary>
         /// "g/cc", "Mg/m^3" are matching units, although "cc" is invalid
         /// This is a concession to APSIM
         /// </summary>
-        //============================================================================
-        private static unit match4 = new unit("g/cc", "Mg/m^3");
-        //============================================================================
+        private static Unit match4 = new Unit("g/cc", "Mg/m^3");
+        
         /// <summary>
         /// "0-1" and "-" match,  as both are dimensionless
         /// </summary>
-        //============================================================================
-        private static unit match5 = new unit("0-1", "-");
-        //============================================================================
+        private static Unit match5 = new Unit("0-1", "-");
+        
         /// <summary>
         /// "0-1" and "mm/mm" match, as both are effectively dimensionless
         /// </summary>
-        //============================================================================
-        private static unit match6 = new unit("0-1", "mm/mm");
-        //============================================================================
+        private static Unit match6 = new Unit("0-1", "mm/mm");
+        
         /// <summary>
         /// "cm^3/cm^3" and "mm/mm" match, as both are effectively dimensionless
         /// </summary>
-        //============================================================================
-        private static unit match7 = new unit("cm^3/cm^3", "mm/mm");
-        //============================================================================
+        private static Unit match7 = new Unit("cm^3/cm^3", "mm/mm");
+        
         /// <summary>
         /// "0-1" and "m^3/m^3" match, as both are effectively dimensionless
         /// </summary>
-        //============================================================================
-        private static unit match8 = new unit("0-1", "m^3/m^3");
-        //============================================================================
+        private static Unit match8 = new Unit("0-1", "m^3/m^3");
+        
         /// <summary>
         /// "0-1" and "m^2/m^2" match, as both are effectively dimensionless
         /// </summary>
-        //============================================================================
-        private static unit match9 = new unit("0-1", "m^2/m^2");
-        //============================================================================
-        /// <summary>
-        /// Array of the matching units- match1, match2,...
-        /// </summary>
-        //============================================================================
-        private static unit[] UNITMATCHES = { match1, match2, match3, match4, match5, match6, match7, match8, match9 };
-
-        private TTypedValue childTemplate;      //!<used to keep a pointer to the last element after setElementCount(0)
+        private static Unit match9 = new Unit("0-1", "m^2/m^2");
+                
+        private TTypedValue childTemplate;      // !<used to keep a pointer to the last element after setElementCount(0)
+        
         /// <summary>
         /// Name of the typed value.
         /// </summary>
-        protected String FName;
+        protected string FName;
+        
         /// <summary>
         /// Unit of the typed value.
         /// </summary>
-        protected String FUnit;
+        protected string FUnit;
+        
         /// <summary>
         /// Store the base type as an integer.
         /// </summary>
         protected TBaseType FBaseType;
+        
         /// <summary>
         /// True if a scalar.
         /// </summary>
-        protected Boolean FIsScalar;
+        protected bool FIsScalar;
+        
         /// <summary>
         /// True if an array.
         /// </summary>
-        protected Boolean FIsArray;
+        protected bool FIsArray;
+        
         /// <summary>
         /// True if a record.
         /// </summary>
-        protected Boolean FIsRecord;
+        protected bool FIsRecord;
+        
         /// <summary>
         /// Block of bytes containing field/element values
         /// </summary>
-        protected Byte[] FData;
+        protected byte[] FData;
+        
         /// <summary>
         /// Size in bytes of the memory block holding the value data
         /// </summary>
-        protected UInt32 FDataSize;
+        protected uint FDataSize;
+        
         /// <summary>
         /// List of TTypedValues that are fld or elem children
         /// </summary>
         protected List<TTypedValue> FMembers;
+        
         /// <summary>
         /// Each typed value uses a parser at creation
         /// </summary>
         protected SDMLParser parser;
 
-        System.Text.ASCIIEncoding ascii;
+        /// <summary>
+        /// Encoding object
+        /// </summary>
+        private System.Text.ASCIIEncoding ascii;
 
-        //======================================================================
+        /// <summary>
+        /// Count of scalar types available in a TTypedValue.
+        /// </summary>
+        public const int NUMSCALARTYPES = 9;
+
+        /// <summary>
+        /// The type of the TTypedValue expressed as a simple int.
+        /// See <see cref="BaseType">baseType()</see>
+        /// See <see cref="sTYPECODES"/>
+        /// </summary>
+        public enum TBaseType
+        {
+            /// <summary>
+            /// Not a type.
+            /// </summary>
+            ITYPE_EMPTY = 0,
+
+            /// <summary>
+            /// Single byte integer.
+            /// </summary>
+            ITYPE_INT1,
+
+            /// <summary>
+            /// Two byte integer.
+            /// </summary>
+            ITYPE_INT2,
+
+            /// <summary>
+            /// Four byte signed integer.
+            /// </summary>
+            ITYPE_INT4,
+
+            /// <summary>
+            /// Eight byte signed integer.
+            /// </summary>
+            ITYPE_INT8,
+
+            /// <summary>
+            /// Single precision float. 4 bytes.
+            /// </summary>
+            ITYPE_SINGLE,
+
+            /// <summary>
+            /// Double precision float. 8 bytes.
+            /// </summary>
+            ITYPE_DOUBLE,
+
+            /// <summary>
+            /// Character type.
+            /// </summary>
+            ITYPE_CHAR,
+
+            /// <summary>
+            /// Boolean type.
+            /// </summary>
+            ITYPE_BOOL,
+
+            /// <summary>
+            /// Two byte char.
+            /// </summary>
+            ITYPE_WCHAR,
+
+            /// <summary>
+            /// Character string.
+            /// </summary>
+            ITYPE_STR,
+
+            /// <summary>
+            /// Two byte char string.
+            /// </summary>
+            ITYPE_WSTR,
+
+            /// <summary>
+            /// Defined type such as a record.
+            /// </summary>
+            ITYPE_DEF
+        }
+
+        /// <summary>
+        /// Array of the matching units- match1, match2,...
+        /// </summary>
+        private static Unit[] UNITMATCHES = { match1, match2, match3, match4, match5, match6, match7, match8, match9 };
+        
         /// <summary>
         /// Get the integer value of the dimension bytes. Used for arrays
         /// and strings 
@@ -291,8 +307,7 @@ namespace CMPServices
         /// <param name="data">The block of byte data.</param>
         /// <param name="startIndex">Start at this index. 0 -> x</param>
         /// <returns>Returns the dimension of the array/string</returns>
-        //======================================================================
-        static protected uint getDimension(Byte[] data, uint startIndex)
+        protected static uint GetDimension(byte[] data, uint startIndex)
         {
             return (uint)(data[startIndex] + (data[startIndex + 1] << 8) + (data[startIndex + 2] << 16) + (data[startIndex + 3] << 24));
         }
@@ -300,19 +315,22 @@ namespace CMPServices
         /// <summary>
         /// Finds children nodes in the xml doc.
         /// </summary>
-        abstract protected void getFldElemList();
+        protected abstract void GetFldElemList();
+        
         /// <summary>
         /// Add a new member.
         /// </summary>
-        /// <param name="bluePrintValue"></param>
-        abstract public void newMember(TTypedValue bluePrintValue);
+        /// <param name="bluePrintValue">The typedvalue to clone</param>
+        public abstract void NewMember(TTypedValue bluePrintValue);
+        
         /// <summary>
         /// Add a scalar value.
         /// </summary>
-        /// <param name="sName">Name</param>
-        /// <param name="aType">Type</param>
-        /// <returns></returns>
-        abstract public TTypedValue addScalar(String sName, TBaseType aType);
+        /// <param name="scalarName">Name of the scalar</param>
+        /// <param name="scalarType">Type of the scalar</param>
+        /// <returns>The new scalar</returns>
+        public abstract TTypedValue AddScalar(string scalarName, TBaseType scalarType);
+        
         /// <summary>
         /// Writes a field as a string
         /// </summary>
@@ -320,7 +338,8 @@ namespace CMPServices
         /// <param name="indent">Indentation 0-n</param>
         /// <param name="tab">Number of spaces in each tab</param>
         /// <returns>The XML for the typed value.</returns>
-        abstract protected String writeFieldInfo(TTypedValue attrInfo, int indent, int tab);
+        protected abstract string WriteFieldInfo(TTypedValue attrInfo, int indent, int tab);
+        
         /// <summary>
         /// Text representation of a TTypedValue.
         /// </summary>
@@ -328,35 +347,33 @@ namespace CMPServices
         /// <param name="startIndent">Indent from here.</param>
         /// <param name="tab">Number of spaces in each tab</param>
         /// <returns>The XML.</returns>
-        abstract public String getText(TTypedValue value, int startIndent, int tab);
+        public abstract string GetText(TTypedValue value, int startIndent, int tab);
 
-        //======================================================================
         /// <summary>
         /// Constructs a typed value using an XML description.
         /// </summary>
-        /// <param name="sXML">XML text description.</param>
-        /// <param name="sBaseType">Set the base type of this object. See <see cref="sTYPECODES"/></param>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        public TTypedValue(String sXML, String sBaseType)
+        /// <param name="xmlStr">XML text description.</param>
+        /// <param name="baseTypeStr">Set the base type of this object. See <see cref="sTYPECODES"/></param>
+        /// N.Herrmann Apr 2002
+        public TTypedValue(string xmlStr, string baseTypeStr)
         {
-            ascii = new System.Text.ASCIIEncoding();
+            this.ascii = new System.Text.ASCIIEncoding();
 
-            FMembers = new List<TTypedValue>();
-            //set the kind of this typed value
-            setBaseType(sBaseType);
+            this.FMembers = new List<TTypedValue>();
 
-            parser = null;
-            FData = null;
-            FDataSize = 0;
-            childTemplate = null;
-            FUnit = "";
+            // set the kind of this typed value
+            this.SetBaseType(baseTypeStr);
 
-            //Called in the derived classes because it calls virtual functions
-            //buildType(szXML);
+            this.parser = null;
+            this.FData = null;
+            this.FDataSize = 0;
+            this.childTemplate = null;
+            this.FUnit = string.Empty;
+
+            // Called in the derived classes because it calls virtual functions
+            // buildType(szXML);
         }
 
-        //============================================================================
         /// <summary>
         /// Construct this object using the parser already created in the parent. Also
         /// use the dom node, baseNode to be the root node of the document for this
@@ -364,333 +381,319 @@ namespace CMPServices
         /// </summary>
         /// <param name="parentParser">Pointer to the parents parser.</param>
         /// <param name="baseNode">DOM node to use as the root node.</param>
-        /// <param name="sBaseType">Used to set the base type.  See <see cref="sTYPECODES"/></param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public TTypedValue(SDMLParser parentParser, XmlNode baseNode, String sBaseType)
+        /// <param name="baseTypeStr">Used to set the base type.  See <see cref="sTYPECODES"/></param>
+        /// N.Herrmann Apr 2002
+        public TTypedValue(SDMLParser parentParser, XmlNode baseNode, string baseTypeStr)
         {
-            ascii = new System.Text.ASCIIEncoding();
+            this.ascii = new System.Text.ASCIIEncoding();
 
-            FMembers = new List<TTypedValue>();
-            //set the kind of this typed value
-            setBaseType(sBaseType);
+            this.FMembers = new List<TTypedValue>();
 
-            parser = null;
-            FData = null;
-            FDataSize = 0;
-            childTemplate = null;
-            FUnit = "";
+            // set the kind of this typed value
+            this.SetBaseType(baseTypeStr);
 
-            //Called in the derived classes because it calls virtual functions
-            //buildType(parentParser, baseNode);
+            this.parser = null;
+            this.FData = null;
+            this.FDataSize = 0;
+            this.childTemplate = null;
+            this.FUnit = string.Empty;
+
+            // Called in the derived classes because it calls virtual functions
+            // buildType(parentParser, baseNode);
         }
 
-        //============================================================================
         /// <summary>
         /// Creates a scalar of this aBaseType with sName.
         /// </summary>
-        /// <param name="sName">Name of the scalar.</param>
-        /// <param name="aBaseType">Base type of this scalar.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public TTypedValue(String sName, TBaseType aBaseType)
+        /// <param name="scalarName">Name of the scalar.</param>
+        /// <param name="scalarBaseType">Base type of this scalar.</param>
+        /// N.Herrmann Apr 2002
+        public TTypedValue(string scalarName, TBaseType scalarBaseType)
         {
-            ascii = new System.Text.ASCIIEncoding();
+            this.ascii = new System.Text.ASCIIEncoding();
 
-            FMembers = new List<TTypedValue>();
-            //set the kind of this typed value
-            FBaseType = aBaseType;
-            //Called in the derived classes because it calls virtual functions
-            //constructScalar(szName, iBaseType);  //create a scalar type of TTypedValue
-            parser = null;
-            childTemplate = null;
-            FUnit = "";
+            this.FMembers = new List<TTypedValue>();
+
+            // set the kind of this typed value
+            this.FBaseType = scalarBaseType;
+
+            // Called in the derived classes because it calls virtual functions
+            // constructScalar(szName, iBaseType);  //create a scalar type of TTypedValue
+            this.parser = null;
+            this.childTemplate = null;
+            this.FUnit = string.Empty;
         }
 
-        //============================================================================
         /// <summary>
         /// Creates a one dimensional array of scalar items.
         /// </summary>
-        /// <param name="sArrayName">Name of this array.</param>
-        /// <param name="aBaseType">Set the base type of this array.</param>
-        /// <param name="iNoElements">Create it with this number of elements.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public TTypedValue(String sArrayName, TBaseType aBaseType, int iNoElements)
+        /// <param name="arrayName">Name of this array.</param>
+        /// <param name="arrayBaseType">Set the base type of this array.</param>
+        /// <param name="numElements">Create it with this number of elements.</param>
+        /// N.Herrmann Apr 2002
+        public TTypedValue(string arrayName, TBaseType arrayBaseType, int numElements)
         {
-            ascii = new System.Text.ASCIIEncoding();
+            this.ascii = new System.Text.ASCIIEncoding();
 
-            FMembers = new List<TTypedValue>();
-            //set the kind of this typed value
-            FBaseType = aBaseType;
+            this.FMembers = new List<TTypedValue>();
 
-            parser = null;
-            FData = null;
-            FDataSize = 0;
-            childTemplate = null;
+            // set the kind of this typed value
+            this.FBaseType = arrayBaseType;
 
-            Name = sArrayName;
-            FUnit = "";
-            FIsScalar = false;
-            FIsArray = true;
-            FIsRecord = false;
+            this.parser = null;
+            this.FData = null;
+            this.FDataSize = 0;
+            this.childTemplate = null;
 
-            //Called in the derived classes because they call virtual functions
-            //addScalar("", iBaseType);     //calls suitable virtual function
-            //setElementCount(iNoElements);
+            this.Name = arrayName;
+            this.FUnit = string.Empty;
+            this.FIsScalar = false;
+            this.FIsArray = true;
+            this.FIsRecord = false;
 
+            // Called in the derived classes because they call virtual functions
+            // addScalar("", iBaseType);     //calls suitable virtual function
+            // setElementCount(iNoElements);
         }
-        //============================================================================
+        
         /// <summary>
         /// Creates a 1-dimensional array of arbitrary type
         /// baseValue is used as a blue print only.
         /// </summary>
         /// <param name="arrayName">Name of the array.</param>
         /// <param name="baseValue">Blue print typed value.</param>
-        /// <param name="noElements">Number of elements for the array.</param>
-        //============================================================================
-        public TTypedValue(String arrayName, TTypedValue baseValue, int noElements)
+        /// <param name="numElements">Number of elements for the array.</param>
+        public TTypedValue(string arrayName, TTypedValue baseValue, int numElements)
         {
-            ascii = new System.Text.ASCIIEncoding();
+            this.ascii = new System.Text.ASCIIEncoding();
 
-            FMembers = new List<TTypedValue>();
-            //set the kind of this typed value
-            FBaseType = baseValue.FBaseType;
+            this.FMembers = new List<TTypedValue>();
 
-            parser = null;
-            FData = null;
-            FDataSize = 0;
-            childTemplate = null;
-            FUnit = "";
+            // set the kind of this typed value
+            this.FBaseType = baseValue.FBaseType;
+
+            this.parser = null;
+            this.FData = null;
+            this.FDataSize = 0;
+            this.childTemplate = null;
+            this.FUnit = string.Empty;
         }
 
-        //============================================================================
         /// <summary>
         /// Copy constructor. This constructor makes a copy of the source's structure.
         /// For specialised child classes, this constructor should be overriden.
         /// </summary>
         /// <param name="typedValue">Use this typed value as the source.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
+        /// N.Herrmann Apr 2002
         public TTypedValue(TTypedValue typedValue)
         {
-            ascii = new System.Text.ASCIIEncoding();
+            this.ascii = new System.Text.ASCIIEncoding();
 
-            FMembers = new List<TTypedValue>();
-            //set the kind of this typed value
-            FBaseType = typedValue.FBaseType;
+            this.FMembers = new List<TTypedValue>();
 
-            FData = null;
-            FDataSize = 0;
-            parser = null; //won't be using a parser here
-            childTemplate = null;
-            FUnit = "";
+            // set the kind of this typed value
+            this.FBaseType = typedValue.FBaseType;
 
-            //Called in the derived classes because it calls virtual functions
-            //initTypeCopy(typedValue)
+            this.FData = null;
+            this.FDataSize = 0;
+            this.parser = null; // won't be using a parser here
+            this.childTemplate = null;
+            this.FUnit = string.Empty;
+
+            // Called in the derived classes because it calls virtual functions
+            // initTypeCopy(typedValue)
         }
-        //============================================================================
+        
         /// <summary>
         /// Finds the array item or field corresponding to the given index.
         /// </summary>
         /// <param name="index">Index of the member of this typed value. 1 -> x</param>
         /// <returns>The typed value.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
+        /// N.Herrmann Apr 2002
         public TTypedValue member(uint index)
         {
-            return item(index);
+            return this.Item(index);
         }
-        //============================================================================
+        
         /// <summary>
         /// Finds the record field corresponding to the given name.
         /// </summary>
-        /// <param name="sName">Name of the field to find.</param>
+        /// <param name="fieldName">Name of the field to find.</param>
         /// <returns>The typed value found.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public TTypedValue member(String sName)
+        /// N.Herrmann Apr 2002
+        public TTypedValue member(string fieldName)
         {
-            TTypedValue nMember = null;
+            TTypedValue foundMember = null;
             TTypedValue _item;
 
-            if (!FIsRecord)
-                throw (new TypeMisMatchException("Cannot access named members for scalar or array"));
+            if (!this.FIsRecord)
+                throw new TypeMisMatchException("Cannot access named members for scalar or array");
 
             uint i = 1;
-            while ((nMember == null) && (i <= FMembers.Count))
+            while ((foundMember == null) && (i <= this.FMembers.Count))
             {
-                _item = item(i);
-                if (_item.Name.Equals(sName, StringComparison.OrdinalIgnoreCase))
-                    nMember = _item;
+                _item = this.Item(i);
+                if (_item.Name.Equals(fieldName, StringComparison.OrdinalIgnoreCase))
+                    foundMember = _item;
                 else
                     i++;
             }
-            return nMember;
+            return foundMember;
         }
 
-        //============================================================================
         /// <summary>
         /// Searches an array of records and attempts to match a specified field with
         /// a value. When a case insensitive match is found then return the array item.
         /// </summary>
-        /// <param name="sMemberName">The field name of the record</param>
-        /// <param name="sValue">The string value of the field</param>
+        /// <param name="memberName">The field name of the record</param>
+        /// <param name="value">The string value of the field</param>
         /// <returns>The record item from the array of records</returns>
-        // N.Herrmann Jan 2016
-        //============================================================================
-        public TTypedValue findItemByMemberValue(String sMemberName, String sValue)
+        //// N.Herrmann Jan 2016
+        public TTypedValue FindItemByMemberValue(string memberName, string value)
         {
-            TTypedValue nMember = null;
+            TTypedValue foundMember = null;
             TTypedValue _item;
 
-            if (FIsArray)
+            if (this.FIsArray)
             {
-                if ((FMembers.Count > 0) && (FMembers[0].hasField(sMemberName)))
+                if ((this.FMembers.Count > 0) && this.FMembers[0].HasField(memberName))
                 {
                     int i = 0;
-                    while ((nMember == null) && (i <= FMembers.Count - 1))
+                    while ((foundMember == null) && (i <= this.FMembers.Count - 1))
                     {
-                        _item = FMembers[i]; 
-                        if (String.Compare(_item.member(sMemberName).asStr(), sValue, StringComparison.OrdinalIgnoreCase) == 0)
-                            nMember = _item;
+                        _item = this.FMembers[i]; 
+                        if (string.Compare(_item.member(memberName).AsStr(), value, StringComparison.OrdinalIgnoreCase) == 0)
+                            foundMember = _item;
                         else
                             i++;
                     }
                 }
             }
 
-            return nMember;
+            return foundMember;
         }
 
-        //Common code for the constructors
-        //Some of these functions call virtual functions, so they are called
-        //in the derived classes.
-        //======================================================================
+        // Common code for the constructors
+        // Some of these functions call virtual functions, so they are called
+        // in the derived classes.
+        
         /// <summary>
         /// Sets the FBaseType class type.
         /// </summary>
-        /// <param name="sBaseType">The base type string. See <see cref="sTYPECODES"/></param>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        protected void setBaseType(String sBaseType)
+        /// <param name="baseTypeStr">The base type string. See <see cref="sTYPECODES"/></param>
+        /// N.Herrmann Apr 2002
+        protected void SetBaseType(string baseTypeStr)
         {
-            if (sBaseType != null && (sBaseType.Length > 0))
+            if (baseTypeStr != null && (baseTypeStr.Length > 0))
             {
-                FBaseType = TBaseType.ITYPE_DEF;
-                while ((FBaseType > TBaseType.ITYPE_EMPTY) && (sBaseType != sTYPECODES[(int)FBaseType]))
-                    FBaseType--;
+                this.FBaseType = TBaseType.ITYPE_DEF;
+                while ((this.FBaseType > TBaseType.ITYPE_EMPTY) && (baseTypeStr != sTYPECODES[(int)this.FBaseType]))
+                    this.FBaseType--;
             }
             else
-                FBaseType = TBaseType.ITYPE_EMPTY;
+                this.FBaseType = TBaseType.ITYPE_EMPTY;
         }
 
-        //======================================================================
         /// <summary>
         /// Do the parsing of this type. If it is a structured type, then it will
         /// attempt to find all the children. Called during the construction process.
         /// </summary>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        protected void parseType()
+        /// N.Herrmann Apr 2002
+        protected void ParseType()
         {
-            if (FIsScalar)       //decide here if this is a scalar and whether to get fields
-                createScalar();
+            if (this.FIsScalar)                                     // decide here if this is a scalar and whether to get fields
+                this.CreateScalar();
             else
-                getFldElemList(); //get the fields/elements
+                this.GetFldElemList();                              // get the fields/elements
 
-            if ((FBaseType == TBaseType.ITYPE_EMPTY) && FIsArray)
+            if ((this.FBaseType == TBaseType.ITYPE_EMPTY) && this.FIsArray)
             {
-                FBaseType = findArrayType(this); //retrieve base type from a child
+                this.FBaseType = this.FindArrayType(this);               // retrieve base type from a child
             }
-            else if ((FBaseType == TBaseType.ITYPE_DEF) && !FIsArray)
+            else if ((this.FBaseType == TBaseType.ITYPE_DEF) && !this.FIsArray)
             {
-                FIsRecord = true;
+                this.FIsRecord = true;
             }
         }
 
-        //======================================================================
         /// <summary>
         /// Loads the description of this typed value from the parsed xml text.
         /// Assume that parser.getDescription() has been called.
         /// </summary>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        protected void getDescription()
+        /// N.Herrmann Apr 2002
+        protected void GetDescription()
         {
-            FName = parser.Name;
-            FUnit = parser.Units;
-            if (FBaseType == TBaseType.ITYPE_EMPTY)
+            this.FName = this.parser.Name;
+            this.FUnit = this.parser.Units;
+            if (this.FBaseType == TBaseType.ITYPE_EMPTY)
             {
-                FBaseType = TBaseType.ITYPE_DEF;
-                if (parser.Kind.Length > 0)
+                this.FBaseType = TBaseType.ITYPE_DEF;
+                if (this.parser.Kind.Length > 0)
                 {
-                    while ((FBaseType > TBaseType.ITYPE_EMPTY) && (parser.Kind != sTYPECODES[(int)FBaseType]))
-                        FBaseType--;
+                    while ((this.FBaseType > TBaseType.ITYPE_EMPTY) && (this.parser.Kind != sTYPECODES[(int)this.FBaseType]))
+                        this.FBaseType--;
                 }
             }
 
-            FIsScalar = parser.IsScalar;
-            FIsArray = parser.IsArray;
-            FIsRecord = parser.IsRecord;
-
+            this.FIsScalar = this.parser.IsScalar;
+            this.FIsArray = this.parser.IsArray;
+            this.FIsRecord = this.parser.IsRecord;
         }
-        //======================================================================
+        
         /// <summary>
         /// Contains common code used by the constructors to set the field values of this
         /// type when it is a scalar.
         /// </summary>
-        /// <param name="sName">Name of the scalar.</param>
-        /// <param name="aBaseType">The type for this scalar.</param>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        protected void constructScalar(String sName, TBaseType aBaseType)
+        /// <param name="scalarName">Name of the scalar.</param>
+        /// <param name="baseType">The type for this scalar.</param>
+        /// N.Herrmann Apr 2002
+        protected void ConstructScalar(string scalarName, TBaseType baseType)
         {
-            FBaseType = aBaseType;
-            FData = null;
-            //   FDataSize = 0;
+            this.FBaseType = baseType;
+            this.FData = null;
+            //// FDataSize = 0;
 
-            Name = sName;
-            FIsScalar = true;
-            FIsArray = false;
-            FIsRecord = false;
-            setUnits("");
+            this.Name = scalarName;
+            this.FIsScalar = true;
+            this.FIsArray = false;
+            this.FIsRecord = false;
+            this.SetUnits(string.Empty);
 
-            createScalar();              //allocates memory and initialises
+            this.CreateScalar();              // allocates memory and initialises
         }
-        //======================================================================
+        
         /// <summary>
         /// Allocates memory for this scalar and sets it's initial value.
         /// </summary>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        protected virtual void createScalar()
+        /// N.Herrmann Apr 2002
+        protected virtual void CreateScalar()
         {
-            FDataSize = 0;
+            this.FDataSize = 0;
 
-            //allocate memory for this type
-            if ((FBaseType >= TBaseType.ITYPE_INT1) && (FBaseType <= TBaseType.ITYPE_WSTR))
+            // allocate memory for this type
+            if ((this.FBaseType >= TBaseType.ITYPE_INT1) && (this.FBaseType <= TBaseType.ITYPE_WSTR))
             {
-                if ((FBaseType == TBaseType.ITYPE_STR) || (FBaseType == TBaseType.ITYPE_WSTR))
+                if ((this.FBaseType == TBaseType.ITYPE_STR) || (this.FBaseType == TBaseType.ITYPE_WSTR))
                 {
-                    FDataSize = INTSIZE;         //strings have a header to specify the length
-                    //create the header so it is always available
-                    FData = new Byte[FDataSize];
-                    FData[0] = 0;  //no characters yet
-                    FData[1] = 0;
-                    FData[2] = 0;
-                    FData[3] = 0;
+                    this.FDataSize = INTSIZE;         // strings have a header to specify the length
+                    // create the header so it is always available
+                    this.FData = new byte[this.FDataSize];
+                    this.FData[0] = 0;  // no characters yet
+                    this.FData[1] = 0;
+                    this.FData[2] = 0;
+                    this.FData[3] = 0;
                 }
                 else
                 {
-                    FDataSize = typeSize[(int)FBaseType];
-                    FData = new Byte[FDataSize];
-                    setValue(0);                  //init this scalar to 0
+                    this.FDataSize = TypeSize[(int)this.FBaseType];
+                    this.FData = new byte[this.FDataSize];
+                    this.SetValue(0);                  // init this scalar to 0
                 }
             }
-            //strings will use their own memory allocation routines to add characters
+
+            // strings will use their own memory allocation routines to add characters
         }
-        //============================================================================
+        
         /// <summary>
         /// The value returned by count() depends on the type of the value, as follows:
         /// <para>For a <b>record</b>, it is the number of members in the record</para>
@@ -698,277 +701,298 @@ namespace CMPServices
         /// <para>For a simple <b>scalar</b>, it is zero</para>
         /// </summary>
         /// <returns>The count of elements.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public uint count()
+        /// N.Herrmann Apr 2002
+        public uint Count()
         {
             uint icount;
 
-            if (FIsScalar && ((FBaseType == TBaseType.ITYPE_STR) || (FBaseType == TBaseType.ITYPE_WSTR)))   //String - return the string length
-                icount = getDimension(FData, 0);
-            else if (FIsRecord || FIsArray)              //Collection - return number of elements
-                icount = (uint)FMembers.Count;
-            else                                         //Simple scalar
+            if (this.FIsScalar && ((this.FBaseType == TBaseType.ITYPE_STR) || (this.FBaseType == TBaseType.ITYPE_WSTR)))   // String - return the string length
+                icount = GetDimension(this.FData, 0);
+            else if (this.FIsRecord || this.FIsArray)               // Collection - return number of elements
+                icount = (uint)this.FMembers.Count;
+            else                                                    // Simple scalar
                 icount = 0;
 
             return icount;
         }
 
-        //======================================================================
         /// <summary>
         /// Finds the type of this array object by recursing into the lower dimesions
         /// if needed.
         /// </summary>
         /// <param name="typedValue">The typed value to interogate.</param>
         /// <returns>The base type for this variable.  </returns>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        protected TBaseType findArrayType(TTypedValue typedValue)
+        /// N.Herrmann Apr 2002
+        protected TBaseType FindArrayType(TTypedValue typedValue)
         {
             TTypedValue value;
             TBaseType baseType;
 
-            baseType = TBaseType.ITYPE_EMPTY; //default
+            baseType = TBaseType.ITYPE_EMPTY;                       // default
 
-            value = typedValue.item(1);  //first element
+            value = typedValue.Item(1);                             // first element
             if (value != null)
             {
-                baseType = value.baseType();
+                baseType = value.BaseType();
                 if (baseType == TBaseType.ITYPE_EMPTY)
-                    baseType = findArrayType(value);
+                    baseType = this.FindArrayType(value);
             }
             return baseType;
         }
-        //======================================================================
+        
         /// <summary>
         /// Set the units of the array elements
         /// </summary>
-        /// <param name="sUnits">The units string.</param>
-        //======================================================================
-        public void setUnits(String sUnits)
+        /// <param name="unitStr">The units string.</param>
+        public void SetUnits(string unitStr)
         {
-            if ((FBaseType >= TBaseType.ITYPE_INT1) && (FBaseType <= TBaseType.ITYPE_DOUBLE))
-            {   //if number type
-                if (FIsScalar || FIsArray)
-                    FUnit = sUnits;
-                uint iCount = count();
-                if (FIsArray && (iCount > 0))
-                {            //if has array elements
-                    for (uint i = 1; i < iCount; i++)
-                        member(i).setUnits(sUnits);
+            if ((this.FBaseType >= TBaseType.ITYPE_INT1) && (this.FBaseType <= TBaseType.ITYPE_DOUBLE))
+            {   // if number type
+                if (this.FIsScalar || this.FIsArray)
+                    this.FUnit = unitStr;
+                uint itemCount = this.Count();
+                if (this.FIsArray && (itemCount > 0))
+                {            // if has array elements
+                    for (uint i = 1; i < itemCount; i++)
+                        this.member(i).SetUnits(unitStr);
                 }
                 else
-                    if (FIsArray && (iCount == 0) && (member(0) != null))         //else set the 0 element
-                        member(0).setUnits(sUnits);
+                    if (this.FIsArray && (itemCount == 0) && (this.member(0) != null))         // else set the 0 element
+                        this.member(0).SetUnits(unitStr);
             }
         }
-        //======================================================================
+        
         /// <summary>
         /// Get the base type of the typed value. See <see cref="TBaseType"/>
         /// </summary>
         /// <returns>The base type.</returns>
-        //======================================================================
-        public TBaseType baseType()
+        public TBaseType BaseType()
         {
-            return FBaseType;
+            return this.FBaseType;
         }
-        //======================================================================
+
         /// <summary>
-        /// Name of the typed value.
+        /// Contains two unit fields. Used in the array of matching units.
         /// </summary>
-        //======================================================================
-        public String Name
+        private struct Unit
         {
-            get { return FName; }
-            set { FName = value; }
+            /// <summary>
+            /// First unit
+            /// </summary>
+            public string Unit1;
+
+            /// <summary>
+            /// Second unit
+            /// </summary>
+            public string Unit2;
+
+            /// <summary>
+            /// Construct a unit class
+            /// </summary>
+            /// <param name="u1">Unit one</param>
+            /// <param name="u2">Unit two</param>
+            public Unit(string u1, string u2)
+            {
+                this.Unit1 = u1;
+                this.Unit2 = u2;
+            }
         }
-        //======================================================================
+        
+        /// <summary>
+        /// Gets or sets the name of the typed value.
+        /// </summary>
+        public string Name
+        {
+            get { return this.FName; }
+            set { this.FName = value; }
+        }
+        
         /// <summary>
         /// Get the units string.
         /// </summary>
-        public String units()
+        /// <returns>Unit string</returns>
+        public string Units()
         {
-            return FUnit;
+            return this.FUnit;
         }
-        //======================================================================
+        
         /// <summary>
         /// True is this is a scalar.
         /// </summary>
-        public Boolean isScalar()
+        /// <returns>True if scalar</returns>
+        public bool IsScalar()
         {
-            return FIsScalar;
+            return this.FIsScalar;
         }
-        //======================================================================
+        
         /// <summary>
         /// True if this is an array.
         /// </summary>
-        public Boolean isArray()
+        /// <returns>True if an array</returns>
+        public bool IsArray()
         {
-            return FIsArray;
+            return this.FIsArray;
         }
-        //======================================================================
+        
         /// <summary>
         /// True if this is a record.
         /// </summary>
-        public Boolean isRecord()
+        /// <returns>True if record</returns>
+        public bool IsRecord()
         {
-            return FIsRecord;
+            return this.FIsRecord;
         }
-        //======================================================================  
+        
         /// <summary>
         /// Tests if this is a character type of scalar.
         /// </summary>
         /// <returns>True if this is a scalar of a non number type (text).</returns>
-        //======================================================================
-        public bool isTextType()
+        public bool IsTextType()
         {
             bool isText = false;
-            if (isScalar())
+            if (this.IsScalar())
             {
-                if ((baseType() == TBaseType.ITYPE_STR) ||        //if char types
-                        (baseType() == TBaseType.ITYPE_WCHAR) ||
-                        (baseType() == TBaseType.ITYPE_WSTR) ||
-                        (baseType() == TBaseType.ITYPE_CHAR))
+                if ((this.BaseType() == TBaseType.ITYPE_STR) ||        // if char types
+                        (this.BaseType() == TBaseType.ITYPE_WCHAR) ||
+                        (this.BaseType() == TBaseType.ITYPE_WSTR) ||
+                        (this.BaseType() == TBaseType.ITYPE_CHAR))
                     isText = true;
             }
             return isText;
         }
-        //======================================================================
+        
         /// <summary>
         /// Set the values in the array.
         /// </summary>
         /// <param name="values">Array of scalar values.</param>
         /// <returns>True if this is successful: This is an array of scalars and each
         /// item has been set.</returns>
-        //======================================================================
-        public Boolean setValue(Double[] values)
+        public bool SetValue(double[] values)
         {
-            Boolean result = false;
-            if (FIsArray && (FBaseType != TBaseType.ITYPE_DEF) && (values != null))
+            bool result = false;
+            if (this.FIsArray && (this.FBaseType != TBaseType.ITYPE_DEF) && (values != null))
             {
                 result = true;
-                setElementCount((uint)values.Length);
+                this.SetElementCount((uint)values.Length);
                 for (uint i = 0; i < values.Length; i++)
-                    result = result && item(i + 1).setValue(values[i]);
+                    result = result && this.Item(i + 1).SetValue(values[i]);
             }
             return result;
         }
-        //======================================================================
+        
         /// <summary>
         /// Set the values in the array.
         /// </summary>
         /// <param name="values">Array of scalar values.</param>
         /// <returns>True if this is successful: This is an array of scalars and each
         /// item has been set.</returns>
-        //======================================================================
-        public Boolean setValue(int[] values)
+        public bool SetValue(int[] values)
         {
-            Boolean result = false;
-            if (FIsArray && (FBaseType != TBaseType.ITYPE_DEF) && (values != null))
+            bool result = false;
+            if (this.FIsArray && (this.FBaseType != TBaseType.ITYPE_DEF) && (values != null))
             {
                 result = true;
-                setElementCount((uint)values.Length);
+                this.SetElementCount((uint)values.Length);
                 for (uint i = 0; i < values.Length; i++)
-                    result = result && item(i + 1).setValue(values[i]);
+                    result = result && this.Item(i + 1).SetValue(values[i]);
             }
             return result;
         }
-        //======================================================================
+        
         /// <summary>
         /// Set the values in the array.
         /// </summary>
         /// <param name="values">Array of scalar values.</param>
         /// <returns>True if this is successful: This is an array of scalars and each
         /// item has been set.</returns>
-        //======================================================================
-        public Boolean setValue(Single[] values)
+        public bool SetValue(float[] values)
         {
-            Boolean result = false;
-            if (FIsArray && (FBaseType != TBaseType.ITYPE_DEF) && (values != null))
+            bool result = false;
+            if (this.FIsArray && (this.FBaseType != TBaseType.ITYPE_DEF) && (values != null))
             {
                 result = true;
-                setElementCount((uint)values.Length);
+                this.SetElementCount((uint)values.Length);
                 for (uint i = 0; i < values.Length; i++)
-                    result = result && item(i + 1).setValue(values[i]);
+                    result = result && this.Item(i + 1).SetValue(values[i]);
             }
             return result;
         }
-        //======================================================================
+        
         /// <summary>
         /// Set the values in the array.
         /// </summary>
         /// <param name="values">Array of scalar values.</param>
         /// <returns>True if this is successful: This is an array of scalars and each
         /// item has been set.</returns>
-        //======================================================================
-        public Boolean setValue(Boolean[] values)
+        public bool SetValue(bool[] values)
         {
-            Boolean result = false;
-            if (FIsArray && (FBaseType != TBaseType.ITYPE_DEF) && (values != null))
+            bool result = false;
+            if (this.FIsArray && (this.FBaseType != TBaseType.ITYPE_DEF) && (values != null))
             {
                 result = true;
-                setElementCount((uint)values.Length);
+                this.SetElementCount((uint)values.Length);
                 for (uint i = 0; i < values.Length; i++)
-                    result = result && item(i + 1).setValue(values[i]);
+                    result = result && this.Item(i + 1).SetValue(values[i]);
             }
             return result;
         }
-        //======================================================================
+        
         /// <summary>
         /// Set the values in the array.
         /// </summary>
         /// <param name="values">Array of scalar values.</param>
         /// <returns>True if this is successful: This is an array of scalars and each
         /// item has been set.</returns>
-        //======================================================================
-        public Boolean setValue(String[] values)
+        public bool SetValue(string[] values)
         {
-            Boolean result = false;
-            if (FIsArray && (FBaseType == TBaseType.ITYPE_STR) && (values != null))
+            bool result = false;
+            if (this.FIsArray && (this.FBaseType == TBaseType.ITYPE_STR) && (values != null))
             {
                 result = true;
-                setElementCount((uint)values.Length);
+                this.SetElementCount((uint)values.Length);
                 for (uint i = 0; i < values.Length; i++)
-                    result = result && item(i + 1).setValue(values[i]);
+                    result = result && this.Item(i + 1).SetValue(values[i]);
             }
             return result;
         }
-        //======================================================================
+        
         /// <summary>
         /// Sets the value for this scalar.
         /// </summary>
         /// <param name="value">The value to set this scalar to.</param>
         /// <returns>True if successful.</returns>
-        //======================================================================
-        public Boolean setValue(Double value)
+        public bool SetValue(double value)
         {
-            Boolean result = false;
+            bool result = false;
 
-            if (FIsScalar)
+            if (this.FIsScalar)
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
                     case TBaseType.ITYPE_INT4:
                     case TBaseType.ITYPE_INT8:
                         {
-                            Int64 iValue;
+                            long intValue;
                             if (value < 0)
-                                iValue = (Int64)Math.Ceiling(value);
+                                intValue = (long)Math.Ceiling(value);
                             else
-                                iValue = (Int64)Math.Floor(value);
-                            setValue(iValue);
-                        } break;
+                                intValue = (long)Math.Floor(value);
+                            this.SetValue(intValue);
+                        }
+                        break;
                     case TBaseType.ITYPE_SINGLE:
-                        { //4 byte
-                            if (value <= Single.MaxValue)
-                                FData = BitConverter.GetBytes(Convert.ToSingle(value));
-                        } break;
+                        { // 4 byte
+                            if (value <= float.MaxValue)
+                                this.FData = BitConverter.GetBytes(Convert.ToSingle(value, CultureInfo.InvariantCulture));
+                        }
+                        break;
                     case TBaseType.ITYPE_DOUBLE:
                         {
-                            FData = BitConverter.GetBytes(value);
-                        } break;
+                            this.FData = BitConverter.GetBytes(value);
+                        }
+                        break;
                 }
                 result = true;
             }
@@ -976,56 +1000,60 @@ namespace CMPServices
             return result;
         }
 
-        //======================================================================
         /// <summary>
         /// Sets the value for this scalar.
         /// </summary>
         /// <param name="value">The value to set this scalar to.</param>
         /// <returns>True if successful.</returns>
-        //======================================================================
-        public Boolean setValue(Int64 value)
+        public bool SetValue(long value)
         {
             bool result = false;
 
-            if (FIsScalar)
+            if (this.FIsScalar)
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
                     case TBaseType.ITYPE_INT1:
                         {
-                            if (value <= SByte.MaxValue)
-                                FData[0] = (BitConverter.GetBytes(value))[0];
+                            if (value <= sbyte.MaxValue)
+                                this.FData[0] = BitConverter.GetBytes(value)[0];
                             else
                                 return false;
-                        } break;
+                        }
+                        break;
                     case TBaseType.ITYPE_INT2:
                         {
-                            if (value <= Int16.MaxValue)
+                            if (value <= short.MaxValue)
                             {
-                                FData[0] = BitConverter.GetBytes(value)[0];
-                                FData[1] = BitConverter.GetBytes(value)[1];
+                                this.FData[0] = BitConverter.GetBytes(value)[0];
+                                this.FData[1] = BitConverter.GetBytes(value)[1];
                             }
                             else
                                 return false;
-                        } break;
+                        }
+                        break;
                     case TBaseType.ITYPE_INT4:
                         {
-                            if (value <= Int32.MaxValue)
+                            if (value <= int.MaxValue)
                             {
-                                FData[0] = BitConverter.GetBytes(value)[0];
-                                FData[1] = BitConverter.GetBytes(value)[1];
-                                FData[2] = BitConverter.GetBytes(value)[2];
-                                FData[3] = BitConverter.GetBytes(value)[3];
+                                this.FData[0] = BitConverter.GetBytes(value)[0];
+                                this.FData[1] = BitConverter.GetBytes(value)[1];
+                                this.FData[2] = BitConverter.GetBytes(value)[2];
+                                this.FData[3] = BitConverter.GetBytes(value)[3];
                             }
                             else
                                 return false;
-                        } break;
+                        }
+                        break;
                     case TBaseType.ITYPE_INT8:
                         {
-                            FData = BitConverter.GetBytes(value);
-                        } break;
-                    case TBaseType.ITYPE_SINGLE: setValue((Double)value); break;
-                    case TBaseType.ITYPE_DOUBLE: setValue((Double)value); break;
+                            this.FData = BitConverter.GetBytes(value);
+                        }
+                        break;
+                    case TBaseType.ITYPE_SINGLE: this.SetValue((double)value);
+                        break;
+                    case TBaseType.ITYPE_DOUBLE: this.SetValue((double)value);
+                        break;
                 }
                 result = true;
             }
@@ -1033,46 +1061,42 @@ namespace CMPServices
             return result;
         }
 
-        //======================================================================
         /// <summary>
         /// Sets the value for this scalar.
         /// </summary>
         /// <param name="value">The value to set this scalar to.</param>
         /// <returns>True if successful.</returns>
-        //======================================================================
-        public Boolean setValue(float value)
+        public bool SetValue(float value)
         {
-            return setValue((Double)value);
+            return this.SetValue((double)value);
         }
 
-        //======================================================================
         /// <summary>
         /// Sets the value for this scalar.
         /// </summary>
         /// <param name="value">The value to set this scalar to.</param>
         /// <returns>True if successful.</returns>
-        //======================================================================
-        public Boolean setValue(int value)
+        public bool SetValue(int value)
         {
-            return setValue((Int64)value);
+            return this.SetValue((long)value);
         }
 
-        //======================================================================
         /// <summary>
         /// Sets the value for this scalar.
         /// </summary>
         /// <param name="value">The value to set this scalar to.</param>
         /// <returns>True if successful.</returns>
-        //======================================================================
-        public Boolean setValue(bool value)
+        public bool SetValue(bool value)
         {
             bool result = false;
 
-            if (FIsScalar)
+            if (this.FIsScalar)
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
-                    case TBaseType.ITYPE_BOOL: FData = BitConverter.GetBytes(value); break;
+                    case TBaseType.ITYPE_BOOL:
+                        this.FData = BitConverter.GetBytes(value);
+                        break;
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
                     case TBaseType.ITYPE_INT4:
@@ -1080,16 +1104,19 @@ namespace CMPServices
                     case TBaseType.ITYPE_SINGLE:
                     case TBaseType.ITYPE_DOUBLE:
                         {
-                            if (value) setValue(1); else setValue(0);
-                        } break;
+                            if (value) this.SetValue(1);
+                            else this.SetValue(0);
+                        }
+                        break;
                     case TBaseType.ITYPE_STR:
                     case TBaseType.ITYPE_WSTR:
                         {
                             if (value)
-                                setValue("true");
+                                this.SetValue("true");
                             else
-                                setValue("false");
-                        } break;
+                                this.SetValue("false");
+                        }
+                        break;
                 }
                 result = true;
             }
@@ -1097,116 +1124,129 @@ namespace CMPServices
             return result;
         }
 
-        //======================================================================
         /// <summary>
         /// Sets the value for this scalar.
         /// </summary>
         /// <param name="value">The value to set this scalar to.</param>
         /// <returns>True if successful.</returns>
-        //======================================================================
-        public Boolean setValue(String value)
+        public bool SetValue(string value)
         {
             bool result = false;
 
-            if (FIsScalar)
+            if (this.FIsScalar)
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
                     case TBaseType.ITYPE_BOOL:
                         {
-                            if ((value.Length > 0) && (Char.ToLower(value[0]) == 't'))
-                                setValue(true);
-                            else setValue(false);
-                        } break;
+                            if ((value.Length > 0) && (char.ToLower(value[0]) == 't'))
+                                this.SetValue(true);
+                            else this.SetValue(false);
+                        }
+                        break;
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
                     case TBaseType.ITYPE_INT4:
                     case TBaseType.ITYPE_INT8: 
                         if (value.Length > 0)
-                            setValue(Convert.ToInt64(value)); break;
+                            this.SetValue(Convert.ToInt64(value, CultureInfo.InvariantCulture));
+                        break;
                     case TBaseType.ITYPE_SINGLE:
                     case TBaseType.ITYPE_DOUBLE:
                         {
                             if (value.Length > 0)
-                                setValue(Convert.ToDouble(value, 
-                                                          System.Globalization.CultureInfo.InvariantCulture));
+                                this.SetValue(Convert.ToDouble(value, CultureInfo.InvariantCulture));
                             else
-                                setValue(0);
-                        } break;
+                                this.SetValue(0);
+                        }
+                        break;
                     case TBaseType.ITYPE_CHAR:
-                    case TBaseType.ITYPE_WCHAR: setValue(value[0]); break;
+                    case TBaseType.ITYPE_WCHAR:
+                        this.SetValue(value[0]);
+                        break;
                     case TBaseType.ITYPE_STR:
-                        {    //single byte characters
+                        {    
+                            // single byte characters
                             uint byteCount = (uint)value.Length;
-                            FDataSize = INTSIZE + byteCount;
-                            FData = new Byte[FDataSize];
-                            FData[0] = (Byte)((uint)value.Length);
-                            FData[1] = (Byte)(((uint)value.Length) >> 8);
-                            FData[2] = (Byte)(((uint)value.Length) >> 16);
-                            FData[3] = (Byte)(((uint)value.Length) >> 24);
+                            this.FDataSize = INTSIZE + byteCount;
+                            this.FData = new byte[this.FDataSize];
+                            this.FData[0] = (byte)((uint)value.Length);
+                            this.FData[1] = (byte)(((uint)value.Length) >> 8);
+                            this.FData[2] = (byte)(((uint)value.Length) >> 16);
+                            this.FData[3] = (byte)(((uint)value.Length) >> 24);
 
-                            ascii.GetBytes(value, 0, value.Length, FData, 4); //copy the unicode chars to single bytes
-                        } break;
+                            this.ascii.GetBytes(value, 0, value.Length, this.FData, 4); // copy the unicode chars to single bytes
+                        }
+                        break;
                     case TBaseType.ITYPE_WSTR:
-                        {    //double byte unicode characters
+                        {    
+                            // double byte unicode characters
                             System.Text.UnicodeEncoding uni = new System.Text.UnicodeEncoding();
                             uint byteCount = (uint)uni.GetByteCount(value);
-                            FDataSize = INTSIZE + byteCount;
-                            FData = new Byte[FDataSize];
-                            FData[0] = (Byte)((uint)value.Length);
-                            FData[1] = (Byte)(((uint)value.Length) >> 8);
-                            FData[2] = (Byte)(((uint)value.Length) >> 16);
-                            FData[3] = (Byte)(((uint)value.Length) >> 24);
+                            this.FDataSize = INTSIZE + byteCount;
+                            this.FData = new byte[this.FDataSize];
+                            this.FData[0] = (byte)((uint)value.Length);
+                            this.FData[1] = (byte)(((uint)value.Length) >> 8);
+                            this.FData[2] = (byte)(((uint)value.Length) >> 16);
+                            this.FData[3] = (byte)(((uint)value.Length) >> 24);
 
-                            uni.GetBytes(value, 0, value.Length, FData, 4); //copy the unicode chars to double bytes
-                        } break;
+                            uni.GetBytes(value, 0, value.Length, this.FData, 4); // copy the unicode chars to double bytes
+                        }
+                        break;
                 }
                 result = true;
             }
 
             return result;
-
         }
 
-        //======================================================================
         /// <summary>
         /// Sets the value for this scalar.
         /// </summary>
         /// <param name="value">The value to set this scalar to.</param>
         /// <returns>True if successful.</returns>
-        //======================================================================
-        public Boolean setValue(Char value)
+        public bool SetValue(char value)
         {
             bool result = false;
 
-            if (FIsScalar)
+            if (this.FIsScalar)
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
-                    case TBaseType.ITYPE_BOOL: setValue(value.ToString()); break;
+                    case TBaseType.ITYPE_BOOL:
+                        this.SetValue(value.ToString());
+                        break;
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
                     case TBaseType.ITYPE_INT4:
-                    case TBaseType.ITYPE_INT8: setValue(Convert.ToInt64(value)); break;
+                    case TBaseType.ITYPE_INT8: this.SetValue(Convert.ToInt64(value, CultureInfo.InvariantCulture));
+                        break;
                     case TBaseType.ITYPE_SINGLE:
-                    case TBaseType.ITYPE_DOUBLE: setValue(Convert.ToDouble(value, 
-                                                                           System.Globalization.CultureInfo.InvariantCulture)); break;
+                    case TBaseType.ITYPE_DOUBLE:
+                        this.SetValue(Convert.ToDouble(value, CultureInfo.InvariantCulture));
+                        break;
                     case TBaseType.ITYPE_CHAR:
-                        { //single byte char
-                            FData = ascii.GetBytes(value.ToString());
-                        } break;
+                        {
+                            // single byte char
+                            this.FData = this.ascii.GetBytes(value.ToString());
+                        }
+                        break;
                     case TBaseType.ITYPE_WCHAR:
-                        { //double byte unicode char
-                            FData = BitConverter.GetBytes(value);
-                        } break;
+                        {
+                            // double byte unicode char
+                            this.FData = BitConverter.GetBytes(value);
+                        }
+                        break;
                     case TBaseType.ITYPE_STR:
-                    case TBaseType.ITYPE_WSTR: setValue(value.ToString()); break;
+                    case TBaseType.ITYPE_WSTR:
+                        this.SetValue(value.ToString());
+                        break;
                 }
                 result = true;
             }
             return result;
         }
-        //======================================================================
+        
         /// <summary>
         /// Assignment from a TTypedValue that need not be of identical type, but must   
         /// be type-compatible.
@@ -1215,733 +1255,771 @@ namespace CMPServices
         /// </summary>
         /// <param name="srcValue">The source typed value.</param>
         /// <returns>True is the value can be set.</returns>
-        //======================================================================
-        public Boolean setValue(TTypedValue srcValue)
+        public bool SetValue(TTypedValue srcValue)
         {
             bool result = false;
-            bool bCompatible;
+            bool isCompatible;
 
             if (srcValue != null)
             {
-                bCompatible = ((FIsScalar == srcValue.isScalar()) && (FIsArray == srcValue.isArray()));
-                if (FBaseType == TBaseType.ITYPE_DEF)
+                isCompatible = ((this.FIsScalar == srcValue.IsScalar()) && (this.FIsArray == srcValue.IsArray()));
+                if (this.FBaseType == TBaseType.ITYPE_DEF)
                 {
-                    bCompatible = (bCompatible && (srcValue.baseType() == TBaseType.ITYPE_DEF));
+                    isCompatible = (isCompatible && (srcValue.BaseType() == TBaseType.ITYPE_DEF));
                 }      
-                if (!bCompatible)
+                if (!isCompatible)
                 {
-                    String error = String.Format("Incompatible assignment from {0} to {1}\nCannot convert {2} to {3}", Name, srcValue.Name, srcValue.baseType().ToString(), FBaseType.ToString());
-                    throw (new TypeMisMatchException(error));
+                    string error = string.Format("Incompatible assignment from {0} to {1}\nCannot convert {2} to {3}", this.Name, srcValue.Name, srcValue.BaseType().ToString(), this.FBaseType.ToString());
+                    throw new TypeMisMatchException(error);
                 }
-                if (FIsScalar)
+                if (this.FIsScalar)
                 {
                     try
                     {
-                        switch (FBaseType)
+                        switch (this.FBaseType)
                         {
                             case TBaseType.ITYPE_INT1:
                             case TBaseType.ITYPE_INT2:
                             case TBaseType.ITYPE_INT4:
                                 {
-                                    result = setValue(srcValue.asInt());
+                                    result = this.SetValue(srcValue.AsInt());
                                     break;
                                 }
                             case TBaseType.ITYPE_INT8:
-                                result = setValue(Convert.ToInt64(srcValue.asDouble()));
+                                result = this.SetValue(Convert.ToInt64(srcValue.AsDouble(), CultureInfo.InvariantCulture));
                                 break;
                             case TBaseType.ITYPE_DOUBLE:
                                 {
-                                    result = setValue(srcValue.asDouble());
+                                    result = this.SetValue(srcValue.AsDouble());
                                     break;
                                 }
                             case TBaseType.ITYPE_SINGLE:
                                 {
-                                    result = setValue(srcValue.asSingle());
+                                    result = this.SetValue(srcValue.AsSingle());
                                     break;
                                 }
                             case TBaseType.ITYPE_BOOL:
                                 {
-                                    result = setValue(srcValue.asBool());
+                                    result = this.SetValue(srcValue.AsBool());
                                     break;
                                 }
                             default:
                                 {
-                                    result = setValue(srcValue.asStr());
+                                    result = this.SetValue(srcValue.AsStr());
                                     break;
                                 }
                         }
                     }
                     catch
                     {
-                        throw (new Exception("setValue() cannot convert " + srcValue.asStr() + " to " + FBaseType.ToString())); 
+                        throw new Exception("setValue() cannot convert " + srcValue.AsStr() + " to " + this.FBaseType.ToString()); 
                     }
                 }
                 else
                 {
-                    if (FIsArray)
+                    if (this.FIsArray)
                     {
-                        setElementCount(srcValue.count());
+                        this.SetElementCount(srcValue.Count());
                     }
-                    uint iCount = count();
-                    for (uint Idx = 1; Idx <= iCount; Idx++)
+                    uint itemCount = this.Count();
+                    for (uint idx = 1; idx <= itemCount; idx++)
                     {
-                        result = item(Idx).setValue(srcValue.item(Idx));
+                        result = this.Item(idx).SetValue(srcValue.Item(idx));
                     }
                 }
             }
             return result;
         }
-        //======================================================================
+        
         /// <summary>
         /// Uses the xml text to build the type. Called by the descendant constructor.
         /// </summary>
-        /// <param name="sXML">XML text description.</param>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        protected void buildType(String sXML)
+        /// <param name="xmlStr">XML text description.</param>
+        /// N.Herrmann Apr 2002
+        protected void BuildType(string xmlStr)
         {
-            parser = new SDMLParser(sXML);    //create a parser, also reads description fields
-            getDescription();                  //set the description fields from the parser
+            this.parser = new SDMLParser(xmlStr);    // create a parser, also reads description fields
+            this.GetDescription();                  // set the description fields from the parser
 
-            parseType();                       //do the parsing of this type 
+            this.ParseType();                       // do the parsing of this type 
         }
-        //======================================================================
+        
         /// <summary>
         /// Uses the parents parser and the base node for this this type to build the
         /// type. Called by the descendant constructor.
         /// </summary>
         /// <param name="parentParser">Pointer to the parents parser.</param>
         /// <param name="baseNode">DOM Node to use as the root node.</param>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        protected void buildType(SDMLParser parentParser, XmlNode baseNode)
+        /// N.Herrmann Apr 2002
+        protected void BuildType(SDMLParser parentParser, XmlNode baseNode)
         {
             XmlNode parentsNode;
 
-            parser = parentParser;              //use the parent's parser
-            parentsNode = parentParser.rootNode(); //store
+            this.parser = parentParser;              // use the parent's parser
+            parentsNode = parentParser.RootNode(); // store
 
-            parser.setTopNode(baseNode);
-            parser.getDescription();            //gets the values from the dom into the parser fields
-            getDescription();                   //set the description fields from the parser
-            parseType();                        //do the parsing of this type 
+            this.parser.SetTopNode(baseNode);
+            this.parser.getDescription();            // gets the values from the dom into the parser fields
+            this.GetDescription();                   // set the description fields from the parser
+            this.ParseType();                        // do the parsing of this type 
 
-            parser = null;                      //has only been borrowed
-            parentParser.setTopNode(parentsNode);   //restore the topElement of the parser
+            this.parser = null;                      // has only been borrowed
+            parentParser.SetTopNode(parentsNode);   // restore the topElement of the parser
         }
-        //======================================================================
+        
         /// <summary>
         /// Finds the array item or field corresponding to the given index.
         /// </summary>
         /// <param name="index">Index of the member of this typed value. 1 -> x</param>
         /// <returns>The typed value. null if not found.</returns>
-        // N.Herrmann Apr 2002
-        //======================================================================
-        public TTypedValue item(uint index)
+        /// N.Herrmann Apr 2002
+        public TTypedValue Item(uint index)
         {
             TTypedValue result;
 
             result = null;
-            if (FIsScalar && (index == 1))                       // Item(1) for a scalar is the scalar itself
+            if (this.FIsScalar && (index == 1))                     // Item(1) for a scalar is the scalar itself
                 result = this;
-            else if ((index <= FMembers.Count) && (index > 0))                 // records and arrays
-                result = FMembers[(int)index - 1];       // N.B. 1-offset indexing
-            else if (FIsArray && (index == 0))
-                if (childTemplate != null)
-                    result = childTemplate;
-                else if (FMembers.Count > 0)
-                    result = FMembers[0];
+            else if ((index <= this.FMembers.Count) && (index > 0)) // records and arrays
+                result = this.FMembers[(int)index - 1];             // N.B. 1-offset indexing
+            else if (this.FIsArray && (index == 0))
+                if (this.childTemplate != null)
+                    result = this.childTemplate;
+                else if (this.FMembers.Count > 0)
+                    result = this.FMembers[0];
 
             return result;
         }
-        //==============================================================================
+        
         /// <summary>
         /// Delete an element from an array. Assumes that 'index' is the natural order
         /// of the items in the FMembers list.
         /// </summary>
         /// <param name="index">Array index 1->x</param>
-        /// <returns></returns>
-        // N.Herrmann Feb 2003
-        //==============================================================================
-        public void deleteElement(int index)
+        /// N.Herrmann Feb 2003
+        public void DeleteElement(int index)
         {
-            if (FIsArray)
+            if (this.FIsArray)
             {
-                if ((FMembers.Count > 0) && (FMembers.Count >= index))
+                if ((this.FMembers.Count > 0) && (this.FMembers.Count >= index))
                 {
-                    //delete some elements (newsize>=0)
-                    if (FMembers.Count == 1)
-                        childTemplate = FMembers[index - 1]; //store the last element locally for cloning later
-                    FMembers.RemoveAt(index - 1);   //delete it from the list
+                    // delete some elements (newsize>=0)
+                    if (this.FMembers.Count == 1)
+                        this.childTemplate = this.FMembers[index - 1];   // store the last element locally for cloning later
+                    this.FMembers.RemoveAt(index - 1);              // delete it from the list
                 }
             }
         }
-        //============================================================================
+        
         /// <summary>
         /// For arrays, this will adjust the size of the FMembers list.
         /// </summary>
         /// <param name="dim">New dimension of this array.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public void setElementCount(uint dim)
+        /// N.Herrmann Apr 2002
+        public void SetElementCount(uint dim)
         {
-            if (FIsArray)
+            if (this.FIsArray)
             {
-                if (dim > FMembers.Count)
+                if (dim > this.FMembers.Count)
                 {
-                    //add some more elements
-                    while (dim > FMembers.Count)
+                    // add some more elements
+                    while (dim > this.FMembers.Count)
                     {
-                        //add a copy of the first element (structure)
-                        if (FMembers.Count > 0)
-                        {  //if there is an element to clone
-                            newMember(item(1));      //Clones (copy constructor) the element structure
+                        // add a copy of the first element (structure)
+                        if (this.FMembers.Count > 0)
+                        {  // if there is an element to clone
+                            this.NewMember(this.Item(1));           // Clones (copy constructor) the element structure
                         }
                         else
                         {
-                            if (childTemplate != null)
-                            {    //if previously stored an item that was removed when setElementCount(0)
-                                addMember(childTemplate);
-                                childTemplate = null; //now belongs to the list
+                            if (this.childTemplate != null)
+                            {    // if previously stored an item that was removed when setElementCount(0)
+                                this.AddMember(this.childTemplate);
+                                this.childTemplate = null;          // now belongs to the list
                             }
                             else
-                                addScalar("", FBaseType); //else determine what type the first element should be (must be a scalar)
+                                this.AddScalar(string.Empty, this.FBaseType); // else determine what type the first element should be (must be a scalar)
                         }
                     }
                 }
-                else if (dim < FMembers.Count)
+                else if (dim < this.FMembers.Count)
                 {
-                    while ((dim < FMembers.Count) && (FMembers.Count > 0))
+                    while ((dim < this.FMembers.Count) && (this.FMembers.Count > 0))
                     {
-                        //delete some elements (newsize>=0)
-                        deleteElement(FMembers.Count);  //1 based
+                        // delete some elements (newsize>=0)
+                        this.DeleteElement(this.FMembers.Count);    // 1 based
                     }
                 }
             }
             else
-                throw (new TypeMisMatchException("Cannot add or remove an array member to a non-array type."));
+                throw new TypeMisMatchException("Cannot add or remove an array member to a non-array type.");
         }
-        //============================================================================
+        
         /// <summary>
         /// Only allowed to add members to records and arrays.
         /// </summary>
         /// <param name="newMember">The new member to add to this structure.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public void addMember(TTypedValue newMember)
+        /// N.Herrmann Apr 2002
+        public void AddMember(TTypedValue newMember)
         {
-            if (((FIsArray || FIsRecord)) && (newMember != null))
+            if ((this.FIsArray || this.FIsRecord) && (newMember != null))
             {
-                if (FIsArray && ((FBaseType >= TBaseType.ITYPE_INT1) && (FBaseType <= TBaseType.ITYPE_DOUBLE))) //if number type
-                    newMember.setUnits(FUnit);
-                FMembers.Add(newMember);
+                if (this.FIsArray && ((this.FBaseType >= TBaseType.ITYPE_INT1) && (this.FBaseType <= TBaseType.ITYPE_DOUBLE))) // if number type
+                    newMember.SetUnits(this.FUnit);
+                this.FMembers.Add(newMember);
             }
         }
 
-        //============================================================================
         /// <summary>
         /// The new member to add to this structure.
         /// </summary>
         /// <param name="typedValue">Typed value to copy.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        protected void initTypeCopy(TTypedValue typedValue)
+        /// N.Herrmann Apr 2002
+        protected void InitTypeCopy(TTypedValue typedValue)
         {
             uint i;
 
-            Name = typedValue.Name;
-            FBaseType = typedValue.baseType();
-            FIsScalar = typedValue.isScalar();
-            FIsArray = typedValue.isArray();
-            FIsRecord = typedValue.isRecord();
-            setUnits(typedValue.units());
+            this.Name = typedValue.Name;
+            this.FBaseType = typedValue.BaseType();
+            this.FIsScalar = typedValue.IsScalar();
+            this.FIsArray = typedValue.IsArray();
+            this.FIsRecord = typedValue.IsRecord();
+            this.SetUnits(typedValue.Units());
 
-            if (FIsScalar)
+            if (this.FIsScalar)
             {
-                createScalar();
-                switch (FBaseType)
-                {                                           //For scalars, copy the value data.
-                    case TBaseType.ITYPE_INT1:                                            //Data pertaining to arrays and records
-                    case TBaseType.ITYPE_INT2:                                            //   is ultimately stored in their
-                    case TBaseType.ITYPE_INT4:                                            //   constituent scalars
-                    case TBaseType.ITYPE_INT8: setValue(typedValue.asInt()); break;
-                    case TBaseType.ITYPE_SINGLE: setValue(typedValue.asSingle()); break;
-                    case TBaseType.ITYPE_DOUBLE: setValue(typedValue.asDouble()); break;
-                    case TBaseType.ITYPE_BOOL: setValue(typedValue.asBool()); break;
+                this.CreateScalar();
+                switch (this.FBaseType)
+                {                                                                         // For scalars, copy the value data.
+                    case TBaseType.ITYPE_INT1:                                            // Data pertaining to arrays and records
+                    case TBaseType.ITYPE_INT2:                                            // is ultimately stored in their
+                    case TBaseType.ITYPE_INT4:                                            // constituent scalars
+                    case TBaseType.ITYPE_INT8: this.SetValue(typedValue.AsInt());
+                        break;
+                    case TBaseType.ITYPE_SINGLE: this.SetValue(typedValue.AsSingle());
+                        break;
+                    case TBaseType.ITYPE_DOUBLE: this.SetValue(typedValue.AsDouble());
+                        break;
+                    case TBaseType.ITYPE_BOOL: this.SetValue(typedValue.AsBool());
+                        break;
                     case TBaseType.ITYPE_CHAR:
-                    case TBaseType.ITYPE_WCHAR: setValue(typedValue.asChar()); break;
+                    case TBaseType.ITYPE_WCHAR: this.SetValue(typedValue.AsChar());
+                        break;
                     case TBaseType.ITYPE_STR:
-                    case TBaseType.ITYPE_WSTR: setValue(typedValue.asStr()); break;
+                    case TBaseType.ITYPE_WSTR: this.SetValue(typedValue.AsStr());
+                        break;
                 }
             }
-            else if (FIsArray || FIsRecord)
+            else if (this.FIsArray || this.FIsRecord)
             {
-                uint iCount = typedValue.count();
-                if (FIsArray && (iCount == 0))
+                uint itemCount = typedValue.Count();
+                if (this.FIsArray && (itemCount == 0))
                 {
-                    if (typedValue.item(0) != null)
-                        newMember(typedValue.item(0));
-                    setElementCount(0);
+                    if (typedValue.Item(0) != null)
+                        this.NewMember(typedValue.Item(0));
+                    this.SetElementCount(0);
                 }
                 else
-                    for (i = 1; i <= iCount; i++)
-                        newMember(typedValue.item(i)); //clones and adds this typed value
+                    for (i = 1; i <= itemCount; i++)
+                        this.NewMember(typedValue.Item(i)); // clones and adds this typed value
             }
         }
-        //============================================================================
+        
         /// <summary>
         /// Retrieves the TTypedValue as an integer.
         /// Will also read shorter types of numbers and return them as integers.
         /// On error an exception is thrown.
         /// </summary>
         /// <returns>An integet value.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public int asInteger()
+        /// N.Herrmann Apr 2002
+        public int AsInteger()
         {
-            return asInt();
+            return this.AsInt();
         }
-        //============================================================================
+        
         /// <summary>
         /// Return an array of integers.
         /// </summary>
         /// <returns>Returns and array of zero length if this is not array of scalars
         /// with at least one element.</returns>
-        //============================================================================
-        public int[] asIntArray()
+        public int[] AsIntArray()
         {
-            uint iCount = count();
+            uint itemCount = this.Count();
             int[] data = new int[0];
-            if (FIsArray && (iCount > 0) )
+            if (this.FIsArray && (itemCount > 0))
             {
-                data = new int[iCount];
-                if (item(1).isScalar())
+                data = new int[itemCount];
+                if (this.Item(1).IsScalar())
                 {
-                    for (uint i = 1; i <= iCount; i++)
+                    for (uint i = 1; i <= itemCount; i++)
                     {
-                        data[i-1] = item(i).asInt();
+                        data[i - 1] = this.Item(i).AsInt();
                     }
                 }
             }
             return data;
         }
-        //============================================================================
+        
         /// <summary>
         /// Retrieves the TTypedValue as an integer.
         /// Will also read shorter types of numbers and return them as integers.
         /// On error an exception is thrown.
         /// </summary>
-        /// <returns></returns>
-        //============================================================================
-        public int asInt32()
+        /// <returns>The integer value</returns>
+        public int AsInt32()
         {
-            return asInt();
+            return this.AsInt();
         }
-        //============================================================================
+        
         /// <summary>
         /// Return an array of integers.
         /// </summary>
         /// <returns>Returns and array of zero length if this is not array of scalars
         /// with at least one element.</returns>
-        //============================================================================
-        public int[] asInt32Array()
+        public int[] AsInt32Array()
         {
-            return asIntArray();
+            return this.AsIntArray();
         }
-        //============================================================================
+        
         /// <summary>
         /// Retrieves the TTypedValue as an integer.
         /// Will also read shorter types of numbers and return them as integers.
         /// On error an exception is thrown.
         /// </summary>
         /// <returns>An integet value.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public int asInt()
+        /// N.Herrmann Apr 2002
+        public int AsInt()
         {
-            String errorMsg = "";
+            string errorMsg = string.Empty;
             int value = 0;
 
-            if (FIsScalar && (FData != null))
+            if (this.FIsScalar && (this.FData != null))
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
-                    case TBaseType.ITYPE_INT4: value = BitConverter.ToInt32(FData, 0); break;
-                    case TBaseType.ITYPE_INT1: value = FData[0]; break;
-                    case TBaseType.ITYPE_INT2: value = BitConverter.ToInt16(FData, 0); break;
-                    //??                 case TBaseType.ITYPE_INT8: value = BitConverter.ToInt32(FData); break;
-                    case TBaseType.ITYPE_BOOL: { if (asBool()) value = 1; else value = 0; } break;
+                    case TBaseType.ITYPE_INT4: value = BitConverter.ToInt32(this.FData, 0);
+                        break;
+                    case TBaseType.ITYPE_INT1: value = this.FData[0];
+                        break;
+                    case TBaseType.ITYPE_INT2: value = BitConverter.ToInt16(this.FData, 0);
+                        break;
+                    ////?? case TBaseType.ITYPE_INT8: value = BitConverter.ToInt32(FData); break;
+                    case TBaseType.ITYPE_BOOL:
+                        {
+                            if (this.AsBool())
+                                value = 1;
+                            else
+                                value = 0;
+                        }
+                        break;
                     case TBaseType.ITYPE_DOUBLE:
                     case TBaseType.ITYPE_SINGLE:
                     case TBaseType.ITYPE_STR:
                     case TBaseType.ITYPE_WSTR:
-                        value = Convert.ToInt32(Math.Floor(asDouble() + 0.5)); break;
+                        value = Convert.ToInt32(Math.Floor(this.AsDouble() + 0.5), CultureInfo.InvariantCulture);
+                        break;
 
                     default:
                         {
-                            errorMsg = "Cannot convert " + sTYPECODES[(int)FBaseType] + " TTypedValue to an integer value.";
-                            throw (new TypeMisMatchException(errorMsg));
+                            errorMsg = "Cannot convert " + sTYPECODES[(int)this.FBaseType] + " TTypedValue to an integer value.";
+                            throw new TypeMisMatchException(errorMsg);
                         }
                 }
             }
             else
             {
-                errorMsg = "Cannot retrieve " + sTYPECODES[(int)FBaseType] + " TTypedValue as an integer value.";
-                throw (new TypeMisMatchException(errorMsg));
+                errorMsg = "Cannot retrieve " + sTYPECODES[(int)this.FBaseType] + " TTypedValue as an integer value.";
+                throw new TypeMisMatchException(errorMsg);
             }
 
             return value;
         }
-        //============================================================================
+        
         /// <summary>
         /// Return an array of Singles.
         /// </summary>
         /// <returns>Returns and array of zero length if this is not array of scalars
         /// with at least one element.</returns>
-        //============================================================================
-        public float[] asSingleArray()
+        public float[] AsSingleArray()
         {
-            uint iCount = count();
+            uint itemCount = this.Count();
             float[] data = new float[0];
-            if (FIsArray && (iCount > 0))
+            if (this.FIsArray && (itemCount > 0))
             {
-                data = new float[iCount];
-                if (item(1).isScalar())
+                data = new float[itemCount];
+                if (this.Item(1).IsScalar())
                 {
-                    for (uint i = 1; i <= iCount; i++)
+                    for (uint i = 1; i <= itemCount; i++)
                     {
-                        data[i - 1] = item(i).asSingle();
+                        data[i - 1] = this.Item(i).AsSingle();
                     }
                 }
             }
             return data;
         }
-        //============================================================================
+        
         /// <summary>
         /// The value of this scalar as a float.
         /// </summary>
         /// <returns>Floating point value.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public float asSingle()
+        /// N.Herrmann Apr 2002
+        public float AsSingle()
         {
-            String errorMsg = "";
+            string errorMsg = string.Empty;
             float value = 0.0f;
 
-            if (FIsScalar && (FData != null))
+            if (this.FIsScalar && (this.FData != null))
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
-                    case TBaseType.ITYPE_DOUBLE: value = Convert.ToSingle(asDouble());    break;
-                    case TBaseType.ITYPE_SINGLE: value = BitConverter.ToSingle(FData, 0); break;
+                    case TBaseType.ITYPE_DOUBLE: value = Convert.ToSingle(this.AsDouble(), CultureInfo.InvariantCulture);
+                        break;
+                    case TBaseType.ITYPE_SINGLE: value = BitConverter.ToSingle(this.FData, 0);
+                        break;
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
                     case TBaseType.ITYPE_INT4:
-                    case TBaseType.ITYPE_INT8: value = asInt(); break;
-                    case TBaseType.ITYPE_BOOL: { if (asBool()) value = 1; else value = 0; } break;
+                    case TBaseType.ITYPE_INT8: value = this.AsInt();
+                        break;
+                    case TBaseType.ITYPE_BOOL:
+                        {
+                            if (this.AsBool())
+                                value = 1;
+                            else
+                                value = 0;
+                        }
+                        break;
                     case TBaseType.ITYPE_STR:
                         {
-                            String buf;
-                            buf = asStr();
+                            string buf;
+                            buf = this.AsStr();
                             if (buf.Length < 1)
                                 buf = "0";
-                            value = Convert.ToSingle(buf);
+                            value = Convert.ToSingle(buf, CultureInfo.InvariantCulture);
                         }
                         break;
                     default:
                         {
-                            errorMsg = "Cannot convert " + sTYPECODES[(int)FBaseType] + " TTypedValue to a float value.";
-                            throw (new TypeMisMatchException(errorMsg));
+                            errorMsg = "Cannot convert " + sTYPECODES[(int)this.FBaseType] + " TTypedValue to a float value.";
+                            throw new TypeMisMatchException(errorMsg);
                         }
                 }
             }
             else
             {
-                errorMsg = "Cannot retrieve " + sTYPECODES[(int)FBaseType] + " TTypedValue as a float value.";
-                throw (new TypeMisMatchException(errorMsg));
+                errorMsg = "Cannot retrieve " + sTYPECODES[(int)this.FBaseType] + " TTypedValue as a float value.";
+                throw new TypeMisMatchException(errorMsg);
             }
 
             return value;
         }
-        //============================================================================
+        
         /// <summary>
         /// Return an array of Doubles.
         /// </summary>
         /// <returns>Returns and array of zero length if this is not array of scalars
         /// with at least one element.</returns>
-        //============================================================================
-        public double[] asDoubleArray()
+        public double[] AsDoubleArray()
         {
-            uint iCount = count();
+            uint itemCount = this.Count();
             double[] data = new double[0];
-            if (FIsArray && (iCount > 0))
+            if (this.FIsArray && (itemCount > 0))
             {
-                data = new double[iCount];
-                if (item(1).isScalar())
+                data = new double[itemCount];
+                if (this.Item(1).IsScalar())
                 {
-                    for (uint i = 1; i <= iCount; i++)
+                    for (uint i = 1; i <= itemCount; i++)
                     {
-                        data[i - 1] = item(i).asDouble();
+                        data[i - 1] = this.Item(i).AsDouble();
                     }
                 }
             }
             return data;
         }
-        //============================================================================
+        
         /// <summary>
         /// The value of this scalar as a double.
         /// </summary>
         /// <returns>Double precision value.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public double asDouble()
+        /// N.Herrmann Apr 2002
+        public double AsDouble()
         {
-            String errorMsg = "";
+            string errorMsg = string.Empty;
             double value = 0.0;
 
-            if (FIsScalar && (FData != null))
+            if (this.FIsScalar && (this.FData != null))
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
-                    case TBaseType.ITYPE_DOUBLE: value = BitConverter.ToDouble(FData, 0); break;
-                    case TBaseType.ITYPE_SINGLE: value = asSingle(); break;
+                    case TBaseType.ITYPE_DOUBLE: value = BitConverter.ToDouble(this.FData, 0);
+                        break;
+                    case TBaseType.ITYPE_SINGLE: value = this.AsSingle();
+                        break;
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
                     case TBaseType.ITYPE_INT4:
-                    case TBaseType.ITYPE_INT8: value = asInt(); break;
-                    case TBaseType.ITYPE_BOOL: { if (asBool()) value = 1; else value = 0; } break;
+                    case TBaseType.ITYPE_INT8: value = this.AsInt();
+                        break;
+                    case TBaseType.ITYPE_BOOL:
+                        {
+                            if (this.AsBool())
+                                value = 1;
+                            else
+                                value = 0;
+                        }
+                        break;
                     case TBaseType.ITYPE_STR:
                         {
                             string buf;
-                            buf = asStr();
+                            buf = this.AsStr();
                             if (buf.Length < 1)
                                 buf = "0";
-                            value = Convert.ToDouble(buf, 
-                                                     System.Globalization.CultureInfo.InvariantCulture);
+                            value = Convert.ToDouble(buf, System.Globalization.CultureInfo.InvariantCulture);
                         }
                         break;
                     default:
                         {
-                            errorMsg = "Cannot convert " + sTYPECODES[(int)FBaseType] + " TTypedValue to a double.";
-                            throw (new TypeMisMatchException(errorMsg));
+                            errorMsg = "Cannot convert " + sTYPECODES[(int)this.FBaseType] + " TTypedValue to a double.";
+                            throw new TypeMisMatchException(errorMsg);
                         }
                 }
             }
             else
             {
-                errorMsg = "Cannot retrieve " + sTYPECODES[(int)FBaseType] + " TTypedValue as a double.";
-                throw (new TypeMisMatchException(errorMsg));
+                errorMsg = "Cannot retrieve " + sTYPECODES[(int)this.FBaseType] + " TTypedValue as a double.";
+                throw new TypeMisMatchException(errorMsg);
             }
             return value;
         }
-        //============================================================================
+        
         /// <summary>
         /// Return an array of Booleans.
         /// </summary>
         /// <returns>Returns and array of zero length if this is not array of scalars
         /// with at least one element.</returns>
-        //============================================================================
-        public Boolean[] asBoolArray()
+        public bool[] AsBoolArray()
         {
-            uint iCount = count();
-            Boolean[] data = new Boolean[0];
-            if (FIsArray && (iCount > 0))
+            uint itemCount = this.Count();
+            bool[] data = new bool[0];
+            if (this.FIsArray && (itemCount > 0))
             {
-                data = new Boolean[iCount];
-                if (item(1).isScalar())
+                data = new bool[itemCount];
+                if (this.Item(1).IsScalar())
                 {
-                    for (uint i = 1; i <= iCount; i++)
+                    for (uint i = 1; i <= itemCount; i++)
                     {
-                        data[i - 1] = item(i).asBool();
+                        data[i - 1] = this.Item(i).AsBool();
                     }
                 }
             }
             return data;
         }
-        //============================================================================
+        
         /// <summary>
         /// Return an array of Booleans.
         /// </summary>
         /// <returns>Returns and array of zero length if this is not array of scalars
         /// with at least one element.</returns>
-        //============================================================================
-        public Boolean[] asBooleanArray()
+        public bool[] AsBooleanArray()
         {
-            return asBoolArray();
+            return this.AsBoolArray();
         }
-        //============================================================================
+        
         /// <summary>
         /// Returns false if value is 0. Returns true if anything else.
         /// Reads other interger values and interprets them.
         /// On error an exception is thrown.
         /// </summary>
         /// <returns>Value as true or false.</returns>
-        //============================================================================
-        public Boolean asBoolean()
+        public bool AsBoolean()
         {
-            return asBool();
+            return this.AsBool();
         }
-        //============================================================================
+        
         /// <summary>
         /// Returns false if value is 0. Returns true if anything else.
         /// Reads other interger values and interprets them.
         /// On error an exception is thrown.
         /// </summary>
         /// <returns>Value as true or false.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public Boolean asBool()
+        /// N.Herrmann Apr 2002
+        public bool AsBool()
         {
-            String errorMsg;
-            Boolean value = false;
+            string errorMsg;
+            bool value = false;
 
-            if (FIsScalar && (FData != null))
+            if (this.FIsScalar && (this.FData != null))
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
-                    case TBaseType.ITYPE_BOOL: value = BitConverter.ToBoolean(FData, 0); break;
+                    case TBaseType.ITYPE_BOOL: value = BitConverter.ToBoolean(this.FData, 0);
+                        break;
                     case TBaseType.ITYPE_INT1:
                     case TBaseType.ITYPE_INT2:
                     case TBaseType.ITYPE_INT4:
-                    case TBaseType.ITYPE_INT8: { if (asInt() == 0) value = false; else value = true; } break;
+                    case TBaseType.ITYPE_INT8:
+                        {
+                            if (this.AsInt() == 0)
+                                value = false;
+                            else
+                                value = true;
+                        }
+                        break;
                     case TBaseType.ITYPE_CHAR:
-                    case TBaseType.ITYPE_WCHAR: { if (asStr().ToLower() == "t") value = true; } break;
+                    case TBaseType.ITYPE_WCHAR:
+                        {
+                            if (this.AsStr().ToLower() == "t")
+                                value = true;
+                        }
+                        break;
                     case TBaseType.ITYPE_WSTR: 
-                    case TBaseType.ITYPE_STR: { if (Char.ToLower(asStr()[0]) == 't') value = true; } break;
+                    case TBaseType.ITYPE_STR:
+                        {
+                            if (char.ToLower(this.AsStr()[0]) == 't')
+                                value = true;
+                        }
+                        break;
                     default:
                         {
-                            errorMsg = "Cannot convert " + sTYPECODES[(int)FBaseType] + " TTypedValue to a boolean value.";
-                            throw (new TypeMisMatchException(errorMsg));
+                            errorMsg = "Cannot convert " + sTYPECODES[(int)this.FBaseType] + " TTypedValue to a boolean value.";
+                            throw new TypeMisMatchException(errorMsg);
                         }
                 }
             }
             else
             {
-                errorMsg = "Cannot retrieve " + sTYPECODES[(int)FBaseType] + " TTypedValue as a boolean value.";
-                throw (new TypeMisMatchException(errorMsg));
+                errorMsg = "Cannot retrieve " + sTYPECODES[(int)this.FBaseType] + " TTypedValue as a boolean value.";
+                throw new TypeMisMatchException(errorMsg);
             }
             return value;
         }
-        //============================================================================
+        
         /// <summary>
         /// Returns the character. On error an exception is thrown.
         /// <para>Conversions: Bool -> 'true'/'false', String -> asStr()[0] .</para>
         /// </summary>
         /// <returns>Character value.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public Char asChar()
+        /// N.Herrmann Apr 2002
+        public char AsChar()
         {
-            String errorMsg = "";
-            Char value = '\0';
+            string errorMsg = string.Empty;
+            char value = '\0';
 
-            if (FIsScalar && (FData != null))
+            if (this.FIsScalar && (this.FData != null))
             {
-                switch (FBaseType)
+                switch (this.FBaseType)
                 {
-                    case TBaseType.ITYPE_BOOL: { if (asBool()) value = 'T'; else value = 'F'; } break;
+                    case TBaseType.ITYPE_BOOL:
+                        {
+                            if (this.AsBool())
+                                value = 'T';
+                            else
+                                value = 'F';
+                        }
+                        break;
                     case TBaseType.ITYPE_CHAR:
-                    case TBaseType.ITYPE_WCHAR: value = BitConverter.ToChar(FData, 0); break;
+                    case TBaseType.ITYPE_WCHAR: value = BitConverter.ToChar(this.FData, 0);
+                        break;
                     case TBaseType.ITYPE_WSTR:
-                    case TBaseType.ITYPE_STR: value = asStr()[0]; break;
+                    case TBaseType.ITYPE_STR: value = this.AsStr()[0];
+                        break;
                     default:
                         {
-                            errorMsg = "Cannot convert " + sTYPECODES[(int)FBaseType] + " TTypedValue to a character value.";
-                            throw (new TypeMisMatchException(errorMsg));
+                            errorMsg = "Cannot convert " + sTYPECODES[(int)this.FBaseType] + " TTypedValue to a character value.";
+                            throw new TypeMisMatchException(errorMsg);
                         }
                 }
             }
             else
             {
-                errorMsg = "Cannot retrieve " + sTYPECODES[(int)FBaseType] + " TTypedValue as a boolean value.";
-                throw (new TypeMisMatchException(errorMsg));
+                errorMsg = "Cannot retrieve " + sTYPECODES[(int)this.FBaseType] + " TTypedValue as a boolean value.";
+                throw new TypeMisMatchException(errorMsg);
             }
             return value;
         }
-        //============================================================================
+        
         /// <summary>
         /// Return an array of Booleans.
         /// </summary>
         /// <returns>Returns and array of zero length if this is not array of scalars
         /// with at least one element.</returns>
-        //============================================================================
-        public String[] asStringArray()
+        public string[] AsStringArray()
         {
-            uint iCount = count();
-            String[] data = new String[0];
-            if (FIsArray && (iCount > 0))
+            uint itemCount = this.Count();
+            string[] data = new string[0];
+            if (this.FIsArray && (itemCount > 0))
             {
-                data = new String[iCount];
-                if (item(1).isScalar())
+                data = new string[itemCount];
+                if (this.Item(1).IsScalar())
                 {
-                    for (uint i = 1; i <= iCount; i++)
+                    for (uint i = 1; i <= itemCount; i++)
                     {
-                        data[i - 1] = item(i).asStr();
+                        data[i - 1] = this.Item(i).AsStr();
                     }
                 }
             }
             return data;
         }
-        //============================================================================
-        /// <summary>
-        /// Gets the text value for this scalar typed value from the data block.
-        /// </summary>
-        /// <returns>The value as a string.</returns>
-        //============================================================================
-        public String asString()
-        {
-            return asStr();
-        }
-        //============================================================================
-        /// <summary>
-        /// Gets the text value for this scalar typed value from the data block.
-        /// </summary>
-        /// <returns>The value as a string.</returns>
-        //============================================================================
-        public String asStr()
-        {
-            uint varSize;    //number of characters (not bytes)
-            String buf = "";
 
-            if (FIsScalar && (FData != null))
-            {      //char strings (str) are scalars
-                if (FBaseType == TBaseType.ITYPE_STR)
+        /// <summary>
+        /// Gets the text value for this scalar typed value from the data block.
+        /// </summary>
+        /// <returns>The value as a string.</returns>
+        public string AsString()
+        {
+            return this.AsStr();
+        }
+        
+        /// <summary>
+        /// Gets the text value for this scalar typed value from the data block.
+        /// </summary>
+        /// <returns>The value as a string.</returns>
+        public string AsStr()
+        {
+            uint varSize;    // number of characters (not bytes)
+            string buf = string.Empty;
+
+            if (this.FIsScalar && (this.FData != null))
+            {      
+                // char strings (str) are scalars
+                if (this.FBaseType == TBaseType.ITYPE_STR)
                 {
-                    //should be able to get the data from the data block
-                    varSize = getDimension(FData, 0);
-                    buf = ascii.GetString(FData, 4, (int)varSize);
+                    // should be able to get the data from the data block
+                    varSize = GetDimension(this.FData, 0);
+                    buf = this.ascii.GetString(this.FData, 4, (int)varSize);
                 }
-                if (FBaseType == TBaseType.ITYPE_WSTR)
+                if (this.FBaseType == TBaseType.ITYPE_WSTR)
                 {
-                    //Wide strings have x * 2 bytes
-                    varSize = getDimension(FData, 0);
+                    // Wide strings have x * 2 bytes
+                    varSize = GetDimension(this.FData, 0);
                     System.Text.UnicodeEncoding uni = new System.Text.UnicodeEncoding();
-                    buf = uni.GetString(FData, 4, (int)varSize * 2);
+                    buf = uni.GetString(this.FData, 4, (int)varSize * 2);
                 }
-                else if ((FBaseType == TBaseType.ITYPE_CHAR ||
-                              FBaseType == TBaseType.ITYPE_WCHAR))
-                    buf = asChar().ToString();
-                else if ((FBaseType == TBaseType.ITYPE_DOUBLE) || //if the field is a double I can still return a string representation
-                    (FBaseType == TBaseType.ITYPE_SINGLE))
+                else if ((this.FBaseType == TBaseType.ITYPE_CHAR) || (this.FBaseType == TBaseType.ITYPE_WCHAR))
+                    buf = this.AsChar().ToString();
+                else if ((this.FBaseType == TBaseType.ITYPE_DOUBLE) || // if the field is a double I can still return a string representation
+                    (this.FBaseType == TBaseType.ITYPE_SINGLE))
                 {
-                    buf = asDouble().ToString("G8");
+                    buf = this.AsDouble().ToString("G8");
                 }
-                else if ((FBaseType == TBaseType.ITYPE_INT1) ||   //if the field is an int I can still return a string representation
-                      (FBaseType == TBaseType.ITYPE_INT2) ||
-                      (FBaseType == TBaseType.ITYPE_INT4) ||
-                      (FBaseType == TBaseType.ITYPE_INT8))
+                else if ((this.FBaseType == TBaseType.ITYPE_INT1) ||   // if the field is an int I can still return a string representation
+                      (this.FBaseType == TBaseType.ITYPE_INT2) ||
+                      (this.FBaseType == TBaseType.ITYPE_INT4) ||
+                      (this.FBaseType == TBaseType.ITYPE_INT8))
                 {
-                    buf = asInt().ToString();
+                    buf = this.AsInt().ToString();
                 }
-                else if (FBaseType == TBaseType.ITYPE_BOOL)
+                else if (this.FBaseType == TBaseType.ITYPE_BOOL)
                 {
-                    if (asBool()) buf = "true"; else buf = "false";
+                    if (this.AsBool())
+                        buf = "true";
+                    else
+                        buf = "false";
                 }
             }
             return buf;
         }
 
-        //============================================================================
         /// <summary>
         /// Gets the text value for this scalar typed value from the data block.
         /// This representation is intended primarily for use in writing log files.
@@ -1949,117 +2027,117 @@ namespace CMPServices
         /// <returns>The formatted output as a string. <para>If this is a scalar then the result will 
         /// be same as asStr().</para><para>An array will be [1,2,3,4,5].</para><para>Records will be
         /// [fieldname1: asStr(), fieldname2: asStr()]</para></returns>
-        //============================================================================
-        public String asText()
+        public string AsText()
         {
-            if (FIsScalar)
+            if (this.FIsScalar)
             {
-                return asStr();
+                return this.AsStr();
             }
             else
             {
                 StringBuilder buf = new StringBuilder("[");
                 uint i;
-                uint iCount = count();
-                for (i = 1; i <= iCount; i++)
+                uint itemCount = this.Count();
+                for (i = 1; i <= itemCount; i++)
                 {
                     if (i > 1) buf.Append(", ");
-                    if (isRecord())
+                    if (this.IsRecord())
                     {
-                        buf.Append(member(i).Name);
+                        buf.Append(this.member(i).Name);
                         buf.Append(": ");
                     }
-                    buf.Append(member(i).asText());
+                    buf.Append(this.member(i).AsText());
                 }
                 buf.Append("]");
                 return buf.ToString();
             }
         }
 
-        //============================================================================
         /// <summary>
         /// Returns the string value of this typed value as an escaped text string.
         /// </summary>
         /// <returns>String value escaped.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public String asEscapedString()
+        /// N.Herrmann Apr 2002
+        public string AsEscapedString()
         {
-            return escapeText(asStr());
+            return EscapeText(this.AsStr());
         }
-        //============================================================================
+        
         /// <summary>
         /// Escapes the special characters for storing as xml.
         /// </summary>
         /// <param name="text">The character string to escape.</param>
         /// <returns>The escaped string.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        static public String escapeText(String text)
+        /// N.Herrmann Apr 2002
+        public static string EscapeText(string text)
         {
             int index;
             
-            StringBuilder sbuf = new StringBuilder("");
+            StringBuilder sbuf = new StringBuilder(string.Empty);
             for (index = 0; index < text.Length; index++)
             {
                 switch (text[index])
                 {
-                    case '&': sbuf.Append("&#38;"); break;
-                    case '<': sbuf.Append("&#60;"); break;
-                    case '>': sbuf.Append("&#62;"); break;
-                    case '"': sbuf.Append("&#34;"); break;
-                    case '\'': sbuf.Append("&#39;"); break;
+                    case '&': sbuf.Append("&#38;");
+                        break;
+                    case '<': sbuf.Append("&#60;");
+                        break;
+                    case '>': sbuf.Append("&#62;");
+                        break;
+                    case '"': sbuf.Append("&#34;");
+                        break;
+                    case '\'': sbuf.Append("&#39;");
+                        break;
                     default:
                         {
                             // If it is none of the special characters, just copy it
                             sbuf.Append(text[index]);
-                        } break;
+                        }
+                        break;
                 }
             }
 
             return sbuf.ToString();
         }
-        //============================================================================
+        
         /// <summary>
         /// The type of this value as a character string.
         /// </summary>
         /// <returns>Type string.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public String typeName()
+        /// N.Herrmann Apr 2002
+        public string TypeName()
         {
-            return sTYPECODES[(int)FBaseType];
+            return sTYPECODES[(int)this.FBaseType];
         }
-        //============================================================================
+        
         /// <summary>
         /// The size of this type in bytes. For an array it includes the
         /// 4 byte header of each dimension.
         /// </summary>
         /// <returns>Integer value of the size.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public uint sizeBytes()
+        /// N.Herrmann Apr 2002
+        public uint SizeBytes()
         {
             int i;
-            uint iSize = 0;
+            uint typeSize = 0;
 
-            if (FIsScalar)
+            if (this.FIsScalar)
             {
-                iSize = FDataSize;
+                typeSize = this.FDataSize;
             }
             else
             {
-                for (i = 0; i < FMembers.Count; i++)
+                for (i = 0; i < this.FMembers.Count; i++)
                 {
-                    iSize = iSize + FMembers[i].sizeBytes();
+                    typeSize = typeSize + this.FMembers[i].SizeBytes();
                 }
-                if (FIsArray)
-                    iSize = iSize + INTSIZE;
+                if (this.FIsArray)
+                    typeSize = typeSize + INTSIZE;
             }
 
-            return iSize;
+            return typeSize;
         }
-        //============================================================================
+        
         /// <summary>
         /// Recursive routine for checking whether two types are (a) identical,
         /// (b) different but compatible, (c) incompatible.
@@ -2069,84 +2147,84 @@ namespace CMPServices
         /// </summary>
         /// <param name="srcValue">The TTypedValue to compare with.</param>
         /// <returns>Returns: 0 - exact match, 1 - compatible, -1 - cannot match</returns>
-        //============================================================================
-        public int canAssignFrom(TTypedValue srcValue)
+        public int CanAssignFrom(TTypedValue srcValue)
         {
             int result = ctBAD;
-            uint Idx;
+            uint idx;
 
-            if (srcValue.isScalar())
+            if (srcValue.IsScalar())
             {
-                if (!FIsScalar)
+                if (!this.FIsScalar)
                     result = ctBAD;
-                else if (srcValue.baseType() == FBaseType)
+                else if (srcValue.BaseType() == this.FBaseType)
                     result = ctSAME;
-                else if ((srcValue.baseType() <= TBaseType.ITYPE_INT8) && (srcValue.baseType() >= TBaseType.ITYPE_INT1) &&
-                         (FBaseType <= TBaseType.ITYPE_INT8) && (FBaseType >= TBaseType.ITYPE_INT1))
-                    result = ctCOMP;  //both integers
-                else if ((FBaseType >= TBaseType.ITYPE_SINGLE) && (FBaseType <= TBaseType.ITYPE_DOUBLE) &&           //These conditions are not transitive                        
-                         (srcValue.baseType() >= TBaseType.ITYPE_INT1) && (srcValue.baseType() <= TBaseType.ITYPE_DOUBLE))
-                    result = ctCOMP;  //can match an int/single source to single/double destination
-                else if ((srcValue.baseType() == TBaseType.ITYPE_CHAR) &&
-                    ((FBaseType == TBaseType.ITYPE_WCHAR) ||
-                    (FBaseType == TBaseType.ITYPE_STR) ||
-                    (FBaseType == TBaseType.ITYPE_WSTR)))
+                else if ((srcValue.BaseType() <= TBaseType.ITYPE_INT8) && (srcValue.BaseType() >= TBaseType.ITYPE_INT1) &&
+                         (this.FBaseType <= TBaseType.ITYPE_INT8) && (this.FBaseType >= TBaseType.ITYPE_INT1))
+                    result = ctCOMP;  // both integers
+                else if ((this.FBaseType >= TBaseType.ITYPE_SINGLE) && (this.FBaseType <= TBaseType.ITYPE_DOUBLE) &&           // These conditions are not transitive                        
+                         (srcValue.BaseType() >= TBaseType.ITYPE_INT1) && (srcValue.BaseType() <= TBaseType.ITYPE_DOUBLE))
+                    result = ctCOMP;  // can match an int/single source to single/double destination
+                else if ((srcValue.BaseType() == TBaseType.ITYPE_CHAR) &&
+                    ((this.FBaseType == TBaseType.ITYPE_WCHAR) ||
+                    (this.FBaseType == TBaseType.ITYPE_STR) ||
+                    (this.FBaseType == TBaseType.ITYPE_WSTR)))
                     result = ctCOMP;
-                else if ((srcValue.baseType() == TBaseType.ITYPE_WCHAR) && (FBaseType == TBaseType.ITYPE_WSTR))
+                else if ((srcValue.BaseType() == TBaseType.ITYPE_WCHAR) && (this.FBaseType == TBaseType.ITYPE_WSTR))
                     result = ctCOMP;
-                else if ((srcValue.baseType() == TBaseType.ITYPE_STR) && (FBaseType == TBaseType.ITYPE_WSTR))
+                else if ((srcValue.BaseType() == TBaseType.ITYPE_STR) && (this.FBaseType == TBaseType.ITYPE_WSTR))
                     result = ctCOMP;
-                // A sop to the old APSIM manager, which sends out all request-set values as strings
-                else if ((srcValue.baseType() == TBaseType.ITYPE_STR) || (FBaseType == TBaseType.ITYPE_WSTR))
+                //// A sop to the old APSIM manager, which sends out all request-set values as strings
+                else if ((srcValue.BaseType() == TBaseType.ITYPE_STR) || (this.FBaseType == TBaseType.ITYPE_WSTR))
                     result = ctDODGY;
                 else
                     result = ctBAD;
 
-                if ((FBaseType >= TBaseType.ITYPE_INT1) && (FBaseType <= TBaseType.ITYPE_DOUBLE) &&
-                      (!unitsMatch(units(), srcValue.units())))
+                if ((this.FBaseType >= TBaseType.ITYPE_INT1) && (this.FBaseType <= TBaseType.ITYPE_DOUBLE) &&
+                      (!UnitsMatch(this.Units(), srcValue.Units())))
                     result = ctBAD;
             }
-            else if (srcValue.isArray())
-            {   //an array
-                if (!FIsArray)
+            else if (srcValue.IsArray())
+            {   
+                // an array
+                if (!this.FIsArray)
                     result = ctBAD;
                 else
                 {
-                    if (count() == 0)
-                        setElementCount(1);  //addElement();
-                    if (srcValue.count() == 0)
-                        srcValue.setElementCount(1); //addElement();
-                    result = member(1).canAssignFrom(srcValue.member(1));
+                    if (this.Count() == 0)
+                        this.SetElementCount(1);          // addElement();
+                    if (srcValue.Count() == 0)
+                        srcValue.SetElementCount(1);        // addElement();
+                    result = this.member(1).CanAssignFrom(srcValue.member(1));
                 }
             }
             else
-            {   //a record
-                if (!isRecord())
+            {   
+                // a record
+                if (!this.IsRecord())
                     result = ctBAD;
                 else
                 {
-                    uint iCount = count();
+                    uint recCount = this.Count();
                     result = ctCOMP;                                                        // First, test for identity
-                    if (iCount == srcValue.count())
+                    if (recCount == srcValue.Count())
                     {
                         result = ctSAME;
-                        for (Idx = 1; Idx <= iCount; Idx++)
+                        for (idx = 1; idx <= recCount; idx++)
                         {
-                            if ((member(Idx).Name.ToLower() != srcValue.member(Idx).Name.ToLower()) ||
-                                  (member(Idx).canAssignFrom(srcValue.member(Idx)) != ctSAME))
+                            if ((this.member(idx).Name.ToLower() != srcValue.member(idx).Name.ToLower()) ||
+                                  (this.member(idx).CanAssignFrom(srcValue.member(idx)) != ctSAME))
                                 result = ctCOMP;
                         }
                     }
 
-
                     if (result == ctCOMP)
-                    {                                                //If not same, test for compatibility
-                        String elemName;
-                        for (Idx = 1; Idx <= srcValue.count(); Idx++)
+                    {                                                           // If not same, test for compatibility
+                        string elemName;
+                        for (idx = 1; idx <= srcValue.Count(); idx++)
                         {
-                            elemName = srcValue.member(Idx).Name;                 //field name
-                            if (!hasField(elemName) ||
-                                  (member(elemName).canAssignFrom(srcValue.member(Idx)) == ctBAD))
+                            elemName = srcValue.member(idx).Name;               // field name
+                            if (!this.HasField(elemName) ||
+                                  (this.member(elemName).CanAssignFrom(srcValue.member(idx)) == ctBAD))
                                 result = ctBAD;
                         }
                     }
@@ -2154,42 +2232,40 @@ namespace CMPServices
             }
 
             return result;
-
         }
 
-        //============================================================================
         /// <summary>
         /// Returns TRUE i.f.f. the two unit strings have the same dimension and
         /// identical scale.
         /// </summary>
-        /// <param name="sUnitA">Unit name one.</param>
-        /// <param name="sUnitB">Unit name two.</param>
+        /// <param name="unitA">Unit name one.</param>
+        /// <param name="unitB">Unit name two.</param>
         /// <returns>True if matched.</returns>
-        // N.B. this is a temporary implementation.
-        // A.Moore
-        //============================================================================
-        static protected Boolean unitsMatch(String sUnitA, String sUnitB)
+        /// N.B. this is a temporary implementation.
+        /// A.Moore
+        protected static bool UnitsMatch(string unitA, string unitB)
         {
             int i;
-            Boolean result = false;
+            bool result = false;
 
             // APSIM has historically sometimes encased units in parentheses
             // Get rid of these before proceding
-            String sUnit1 = stripOuterParens(ref sUnitA);
-            String sUnit2 = stripOuterParens(ref sUnitB);
+            string unit1 = StripOuterParens(ref unitA);
+            string unit2 = StripOuterParens(ref unitB);
 
-            if (sUnit1 == sUnit2)
+            if (unit1 == unit2)
                 result = true;
-            else if ((sUnit1.Length == 0) || (sUnit2.Length == 0))       //The null string matches any unit
+            else if ((unit1.Length == 0) || (unit2.Length == 0))       // The null string matches any unit
                 result = true;
             else
-            {    //Search the lookup table of matching units
+            {    
+                // Search the lookup table of matching units
                 i = 0;
                 while (!result && (i < UNITMATCHES.Length))
                 {
-                    if ((sUnit1 == UNITMATCHES[i].unit1) && (sUnit2 == UNITMATCHES[i].unit2))
+                    if ((unit1 == UNITMATCHES[i].Unit1) && (unit2 == UNITMATCHES[i].Unit2))
                         result = true;
-                    else if ((sUnit1 == UNITMATCHES[i].unit2) && (sUnit2 == UNITMATCHES[i].unit1))
+                    else if ((unit1 == UNITMATCHES[i].Unit2) && (unit2 == UNITMATCHES[i].Unit1))
                         result = true;
                     else
                         i++;
@@ -2198,7 +2274,12 @@ namespace CMPServices
             return result;
         }
 
-        static private String stripOuterParens(ref String text)
+        /// <summary>
+        /// Strip the outer parenthisis
+        /// </summary>
+        /// <param name="text">Input text</param>
+        /// <returns>The text with no ( )</returns>
+        private static string StripOuterParens(ref string text)
         {
             if (text.Length > 2 && text[0] == '(' && text[text.Length - 1] == ')')
                 return text.Substring(1, text.Length - 2);
@@ -2206,54 +2287,50 @@ namespace CMPServices
                 return text;
         }
 
-
-        //============================================================================
         /// <summary>
         /// Tests for identity of two TTypedValue objects.
         /// </summary>
         /// <param name="otherValue">Typed value to test against this one.</param>
         /// <returns>True if it matches in type, size, and structure.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public Boolean equals(TTypedValue otherValue)
+        /// N.Herrmann Apr 2002
+        public bool Equals(TTypedValue otherValue)
         {
             uint i;
-            Boolean bEqual = false;
+            bool isEqual = false;
 
             if ((otherValue != null) &&
-               (FBaseType == otherValue.baseType()) &&
-               (FIsArray == otherValue.isArray()) &&
-               (FIsRecord == otherValue.isRecord()) &&
-               (count() == otherValue.count()) &&
-               (FDataSize == otherValue.sizeBytes()))
-                bEqual = true;
+               (this.FBaseType == otherValue.BaseType()) &&
+               (this.FIsArray == otherValue.IsArray()) &&
+               (this.FIsRecord == otherValue.IsRecord()) &&
+               (this.Count() == otherValue.Count()) &&
+               (this.FDataSize == otherValue.SizeBytes()))
+                isEqual = true;
 
-            if (bEqual)
+            if (isEqual)
             {
-                if (FIsScalar)
-                    bEqual = bEqual && (asStr() == otherValue.asStr());    //str comparison of the scalar (needs refinement)
+                if (this.FIsScalar)
+                    isEqual = isEqual && (this.AsStr() == otherValue.AsStr());    // str comparison of the scalar (needs refinement)
             }
             else
             {
-                for (i = 1; i <= count(); i++)
-                    bEqual = bEqual && item(i).equals(otherValue.item(i));
+                for (i = 1; i <= this.Count(); i++)
+                    isEqual = isEqual && this.Item(i).Equals(otherValue.Item(i));
             }
-            return bEqual;
+            return isEqual;
         }
-        //============================================================================
+        
         /// <summary>
-        /// 
+        /// Check if the field exists
         /// </summary>
-        /// <param name="sName">Name of the field to find.</param>
+        /// <param name="fieldName">Name of the field to find.</param>
         /// <returns>Returns TRUE if the value is a record and it has the nominated field.</returns>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public Boolean hasField(String sName)
+        /// N.Herrmann Apr 2002
+        public bool HasField(string fieldName)
         {
-            Boolean result = false;
+            bool result = false;
             try
             {
-                if (member(sName) != null)
+                if (this.member(fieldName) != null)
                     result = true;
             }
             catch
@@ -2263,35 +2340,35 @@ namespace CMPServices
             return result;
         }
 
-        //============================================================================
         /// <summary>
         /// Copies the data from a data block into this scalar.
         /// </summary>
         /// <param name="newData">The data block to copy into this scalar.</param>
         /// <param name="startIndex">Start at this index in the byte array.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public Boolean copyDataBlock(Byte[] newData, uint startIndex)
+        /// <returns>True if success</returns>
+        /// N.Herrmann Apr 2002
+        public bool CopyDataBlock(byte[] newData, uint startIndex)
         {
-            Boolean copyOK = true;
+            bool copyOK = true;
 
-            if ((FBaseType >= TBaseType.ITYPE_EMPTY) && (FBaseType <= TBaseType.ITYPE_WCHAR))
-                FDataSize = typeSize[(int)FBaseType];
-            else if (FBaseType == TBaseType.ITYPE_STR)
+            if ((this.FBaseType >= TBaseType.ITYPE_EMPTY) && (this.FBaseType <= TBaseType.ITYPE_WCHAR))
+                this.FDataSize = TypeSize[(int)this.FBaseType];
+            else if (this.FBaseType == TBaseType.ITYPE_STR)
             {
-                uint noChars = getDimension(newData, startIndex);
-                FDataSize = INTSIZE + noChars;
+                uint noChars = GetDimension(newData, startIndex);
+                this.FDataSize = INTSIZE + noChars;
             }
-            else if (FBaseType == TBaseType.ITYPE_WSTR)
+            else if (this.FBaseType == TBaseType.ITYPE_WSTR)
             {
-                uint noChars = getDimension(newData, startIndex);
-                FDataSize = INTSIZE + 2 * noChars;//size in bytes
+                uint noChars = GetDimension(newData, startIndex);
+                this.FDataSize = INTSIZE + (2 * noChars);          // size in bytes
             }
 
-            if ((startIndex + FDataSize) <= newData.Length) //if there are enough bytes to copy
+            if ((startIndex + this.FDataSize) <= newData.Length) 
             {
-                FData = new Byte[FDataSize];
-                Array.Copy(newData, startIndex, FData, 0, FDataSize);
+                // if there are enough bytes to copy
+                this.FData = new byte[this.FDataSize];
+                Array.Copy(newData, startIndex, this.FData, 0, this.FDataSize);
             }
             else
             {
@@ -2299,283 +2376,277 @@ namespace CMPServices
             }
             return copyOK;
         }
-        //============================================================================
+        
         /// <summary>
         /// Gets the datablock containing all the values from this TTypedValue.
         /// Assumes that memory has already been allocated for the data to be copied
         /// into.
         /// </summary>
         /// <param name="data">Location to copy data to.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public void getData(ref Byte[] data)
+        /// N.Herrmann Apr 2002
+        public void GetData(ref byte[] data)
         {
-            Byte[] tmpPtr;
-            uint iStart = 0;
+            byte[] tmpPtr;
+            uint startIdx = 0;
 
-            tmpPtr = data;    //store the pointer position because it gets shifted
-            copyData(data, ref iStart);   //do the copy
-            data = tmpPtr;    //restore the pointer to the start of the memory block
+            tmpPtr = data;                  // store the pointer position because it gets shifted
+            this.CopyData(data, ref startIdx);     // do the copy
+            data = tmpPtr;                  // restore the pointer to the start of the memory block
         }
-        //============================================================================
+        
         /// <summary>
         /// Copies the data from a block of memory owned by someone else.
         /// Overrides setData() and assumes startIndex = 0.
         /// </summary>
         /// <param name="newData">The new data to copy into this typed value.</param>
-        /// <param name="iNewSize">The size of the source typed value.</param>
-        //============================================================================
-        public void setData(Byte[] newData, int iNewSize)
+        /// <param name="newSize">The size of the source typed value.</param>
+        public void SetData(byte[] newData, int newSize)
         {
-            setData(newData, iNewSize, 0);
+            this.SetData(newData, newSize, 0);
         }
-        //============================================================================
+        
         /// <summary>
         /// Copies the data from a block of memory owned by someone else.
         /// </summary>
         /// <param name="newData">The new data to copy into this typed value.</param>
-        /// <param name="iNewSize">The size of the source typed value.</param>
+        /// <param name="newSize">The size of the source typed value.</param>
         /// <param name="startIndex">Start at this index in the byte array.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public Boolean setData(Byte[] newData, int iNewSize, uint startIndex)
+        /// <returns>True if the function succeeds</returns>
+        /// N.Herrmann Apr 2002
+        public bool SetData(byte[] newData, int newSize, uint startIndex)
         {
             uint dim;
             int i;
             int bytesRemain;
             TTypedValue value;
             uint childSize;
-            Boolean success = true;
+            bool success = true;
 
             bytesRemain = 0;
-            if ((iNewSize > 0) && (newData != null))
-            {         //if the incoming block has data
-                if (FIsScalar)
+            if ((newSize > 0) && (newData != null))
+            {         
+                // if the incoming block has data
+                if (this.FIsScalar)
                 {
-                    success = copyDataBlock(newData, startIndex); //copies scalars (including strings)
+                    success = this.CopyDataBlock(newData, startIndex); // copies scalars (including strings)
                 }
                 else
                 {
-                    bytesRemain = iNewSize;      //keep count of bytes
-                    if (FIsArray)
+                    bytesRemain = newSize;      // keep count of bytes
+                    if (this.FIsArray)
                     {
-                        //get the DIM=x value from the datablock
-                        dim = getDimension(newData, startIndex);
-                        if (dim != count())
-                            setElementCount(dim);   //create or delete child elements
-                        bytesRemain = iNewSize - (int)INTSIZE;
+                        // get the DIM=x value from the datablock
+                        dim = GetDimension(newData, startIndex);
+                        if (dim != this.Count())
+                            this.SetElementCount(dim);   // create or delete child elements
+                        bytesRemain = newSize - (int)INTSIZE;
                         startIndex += INTSIZE;
                     }
-                    //now copy the children. All children exist now
-                    //go through each child and set the data block
+
+                    // now copy the children. All children exist now
+                    // go through each child and set the data block
                     i = 0;
-                    while (success && (i < FMembers.Count))
-                    {             //for each field
-                        value = FMembers[i];
-                        success = value.setData(newData, bytesRemain, startIndex);             //store the datablock
+                    while (success && (i < this.FMembers.Count))
+                    {             
+                        // for each field
+                        value = this.FMembers[i];
+                        success = value.SetData(newData, bytesRemain, startIndex);      // store the datablock
                         if (success)
                         {
-                            childSize = value.sizeBytes();
+                            childSize = value.SizeBytes();
                             bytesRemain = bytesRemain - (int)childSize;
-                            startIndex += childSize;                      //inc ptr along this dataBlock
+                            startIndex += childSize;                                    // inc ptr along this dataBlock
                         }
                         i++;
                     }
-                    //store the size in bytes for this type
-                    //FDataSize = (uint)(iNewSize - Math.Max(0, bytesRemain));   //bytesRemain should = 0
+
+                    // store the size in bytes for this type
+                    // FDataSize = (uint)(iNewSize - Math.Max(0, bytesRemain));   //bytesRemain should = 0
                 }
             }
-            else if (FIsArray)
+            else if (this.FIsArray)
             {
-                setElementCount(0);
+                this.SetElementCount(0);
             }
-            //   if bytesRemain <> 0 then
-            //      raise Exception.Create( 'Input data inconsistent with type of value in setData()' + Name );
+            ////   if bytesRemain <> 0 then
+            ////      raise Exception.Create( 'Input data inconsistent with type of value in setData()' + Name );
 
             return success;
         }
-
-
-        //============================================================================
+        
         /// <summary>
         /// Copies the FData of this type and any children into the memory already
         /// allocated. Called recursively to fill with data from the children.
         /// </summary>
         /// <param name="dataPtr">The location to copy to.</param>
         /// <param name="startIndex">Start at this index in the byte array.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public void copyData(Byte[] dataPtr, ref uint startIndex)
+        /// N.Herrmann Apr 2002
+        public void CopyData(byte[] dataPtr, ref uint startIndex)
         {
             uint idx;
 
-            if (FIsScalar)
-            {  //scalars (and strings) are one block of data at this point
-                Array.Copy(FData, 0, dataPtr, startIndex, FDataSize);
-                startIndex += FDataSize;                         //move along so other scalars can follow
+            if (this.FIsScalar)
+            {  
+                // scalars (and strings) are one block of data at this point
+                Array.Copy(this.FData, 0, dataPtr, startIndex, this.FDataSize);
+                startIndex += this.FDataSize;                         // move along so other scalars can follow
             }
             else
             {
-                uint dim = count(); //store the array dimension
-                if (FIsArray)
-                {   //arrays have a dimension header and then the data blocks following
-                    dataPtr[startIndex] = (Byte)dim;
-                    dataPtr[startIndex + 1] = (Byte)(dim >> 8);
-                    dataPtr[startIndex + 2] = (Byte)(dim >> 16);
-                    dataPtr[startIndex + 3] = (Byte)(dim >> 24);
-                    startIndex += INTSIZE;       //move along so the array items follow
+                uint dim = this.Count(); // store the array dimension
+                if (this.FIsArray)
+                {   
+                    // arrays have a dimension header and then the data blocks following
+                    dataPtr[startIndex] = (byte)dim;
+                    dataPtr[startIndex + 1] = (byte)(dim >> 8);
+                    dataPtr[startIndex + 2] = (byte)(dim >> 16);
+                    dataPtr[startIndex + 3] = (byte)(dim >> 24);
+                    startIndex += INTSIZE;          // move along so the array items follow
                 }
-                if (FIsRecord || FIsArray)      //if this is a value that has children
+                if (this.FIsRecord || this.FIsArray)          
                 {
-                    for (idx = 1; idx <= dim; idx++)     //for each member/element
-                        item(idx).copyData(dataPtr, ref startIndex);       //var dataPtr. Ptr get moved along with each copy.
+                    // if this is a value that has children
+                    for (idx = 1; idx <= dim; idx++)                            // for each member/element
+                        this.Item(idx).CopyData(dataPtr, ref startIndex);       // var dataPtr. Ptr get moved along with each copy.
                 }
             }
         }
-
-        //============================================================================
+        
         /// <summary>
         /// Copies data from one type to this type using the getData() setData() pair.
         /// Assumes that the source and destination are exactly compatible. Arrays will be
         /// resized as required.
         /// </summary>
         /// <param name="srcValue">The source value.</param>
-        // adapted from A. Moore 2002
-        //============================================================================
-        public void copyFrom(TTypedValue srcValue)
+        /// adapted from A. Moore 2002
+        public void CopyFrom(TTypedValue srcValue)
         {
-            if ((srcValue != null))
+            if (srcValue != null)
             {
-                uint iSize = srcValue.sizeBytes();
-                if (iSize > 0)
+                uint sizeBytes = srcValue.SizeBytes();
+                if (sizeBytes > 0)
                 {
-                    Byte[] data = new Byte[iSize];
-                    srcValue.getData(ref data);
-                    setData(data, (int)iSize, 0);
+                    byte[] data = new byte[sizeBytes];
+                    srcValue.GetData(ref data);
+                    this.SetData(data, (int)sizeBytes, 0);
                 }
             }
         }
-
-
-        //============================================================================
+        
         /// <summary>
         /// Copies the data from a data block into this scalar.
         /// Overloaded version, taking data from an IntPtr
         /// </summary>
         /// <param name="newData">The data block to copy into this scalar.</param>
         /// <param name="startIndex">Start at this index in the byte array.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public void copyDataBlock(IntPtr newData, uint startIndex)
+        /// N.Herrmann Apr 2002
+        public void CopyDataBlock(IntPtr newData, uint startIndex)
         {
-            if ((FBaseType >= TBaseType.ITYPE_EMPTY) && (FBaseType <= TBaseType.ITYPE_WCHAR))
-                FDataSize = typeSize[(int)FBaseType];
-            else if (FBaseType == TBaseType.ITYPE_STR)
+            if ((this.FBaseType >= TBaseType.ITYPE_EMPTY) && (this.FBaseType <= TBaseType.ITYPE_WCHAR))
+                this.FDataSize = TypeSize[(int)this.FBaseType];
+            else if (this.FBaseType == TBaseType.ITYPE_STR)
             {
                 uint noChars = (uint)Marshal.ReadInt32(newData, (int)startIndex);
-                FDataSize = INTSIZE + noChars;
+                this.FDataSize = INTSIZE + noChars;
             }
-            else if (FBaseType == TBaseType.ITYPE_WSTR)
+            else if (this.FBaseType == TBaseType.ITYPE_WSTR)
             {
                 uint noChars = (uint)Marshal.ReadInt32(newData, (int)startIndex);
-                FDataSize = INTSIZE + 2 * noChars;//size in bytes
+                this.FDataSize = INTSIZE + (2 * noChars); // size in bytes
             }
 
-            FData = new Byte[FDataSize];
-            for (int i = 0; i < FDataSize; i++)
-                FData[i] = Marshal.ReadByte(newData, (int)startIndex + i);
+            this.FData = new byte[this.FDataSize];
+            for (int i = 0; i < this.FDataSize; i++)
+                this.FData[i] = Marshal.ReadByte(newData, (int)startIndex + i);
         }
 
-        //============================================================================
         /// <summary>
         /// Copies the data from a block of memory owned by someone else.
         /// Overloaded version, taking data from an IntPtr
         /// </summary>
         /// <param name="newData">The new data to copy into this typed value.</param>
         /// <param name="startIndex">Start at this index in the byte array.</param>
-        // N.Herrmann Apr 2002
-        //============================================================================
-        public void setData(IntPtr newData, uint startIndex)
+        /// N.Herrmann Apr 2002
+        public void SetData(IntPtr newData, uint startIndex)
         {
             uint dim;
             int i;
             TTypedValue value;
             uint childSize;
 
-            if (!newData.Equals(IntPtr.Zero)) {                   //if the incoming block has data
-                if (FIsScalar) {
-                    copyDataBlock(newData, startIndex);    //copies scalars (including strings)
+            if (!newData.Equals(IntPtr.Zero))
+            {                   
+                // if the incoming block has data
+                if (this.FIsScalar)
+                {
+                    this.CopyDataBlock(newData, startIndex);                            // copies scalars (including strings)
                 }
-                else {
-                    if (FIsArray) {
-                        dim = (uint) Marshal.ReadInt32(newData, (int)startIndex);      //get the DIM=x value from the datablock
-                        if (dim != count())
-                            setElementCount(dim);   //create or delete child elements
+                else
+                {
+                    if (this.FIsArray)
+                    {
+                        dim = (uint)Marshal.ReadInt32(newData, (int)startIndex);       // get the DIM=x value from the datablock
+                        if (dim != this.Count())
+                            this.SetElementCount(dim);                                  // create or delete child elements
                         startIndex += INTSIZE;
                     }
-                    //now copy the children. All children exist now
-                    //go through each child and set the data block
-                    for (i = 0; i < FMembers.Count; i++) {      //for each field
-                        value = FMembers[i];
-                        value.setData(newData, startIndex);                      //store the datablock
-                        childSize = value.sizeBytes();
-                        startIndex += childSize;                    //inc ptr along this dataBlock
+
+                    // now copy the children. All children exist now
+                    // go through each child and set the data block
+                    for (i = 0; i < this.FMembers.Count; i++)
+                    {      
+                        // for each field
+                        value = this.FMembers[i];
+                        value.SetData(newData, startIndex);         // store the datablock
+                        childSize = value.SizeBytes();
+                        startIndex += childSize;                    // inc ptr along this dataBlock
                     }
                 }
             }
-            else if (FIsArray) {
-                setElementCount(0);
+            else if (this.FIsArray)
+            {
+                this.SetElementCount(0);
             }
         }
-
     }
 
-    //============================================================================
     /// <summary>
     /// Thrown when a type mismatch occurs. 
     /// For example: attempting to access an array in the manner of a scalar.
     /// </summary>
-    //============================================================================
     [Serializable] 
     public class TypeMisMatchException : ApplicationException
     {
-        //============================================================================
         /// <summary>
         /// Create an exception that specifies a type mis match
         /// </summary>
-        /// <param name="message"></param>
-        //============================================================================
+        /// <param name="message">Exception message</param>
         public TypeMisMatchException(string message)
             : base(message)
         {
         }
-        //============================================================================
+        
         /// <summary>
         /// Constructor that will show details of the two types causing the problem.
         /// </summary>
         /// <param name="first">First TTypedValue.</param>
         /// <param name="second">Second TTypedValue.</param>
-        //============================================================================
         public TypeMisMatchException(TTypedValue first, TTypedValue second)
-            : base("Type mismatch exception: " + first.typeName() + " does not match " + second.typeName())
+            : base("Type mismatch exception: " + first.TypeName() + " does not match " + second.TypeName())
         {
-
         }
     }
-    //============================================================================
+    
     /// <summary>
     /// Thrown when an array item is out of range.
     /// </summary>
-    //============================================================================
     [Serializable]
     public class ArrayIndexException : ApplicationException
     {
-        //============================================================================
         /// <summary>
-        /// Constructor.
+        /// Default Constructor
         /// </summary>
         /// <param name="message">Exception message.</param>
-        //============================================================================
         public ArrayIndexException(string message)
             : base(message)
         {

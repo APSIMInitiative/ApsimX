@@ -1,22 +1,19 @@
-// -----------------------------------------------------------------------
-// <copyright file="IOrgan.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
+using Models.Core;
+
 namespace Models.PMF.Interfaces
 {
     /// <summary>
     /// Organ interface
     /// </summary>
-    public interface IOrgan
+    public interface IOrgan : IModel
     {
+
         /// <summary>
-        /// The Name of the organ.
+        /// Biomass removal logic for this organ.
         /// </summary>
-        string Name { get; set; }
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove</param>
+        void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove);
+
     }
 }
-
-
-
-   

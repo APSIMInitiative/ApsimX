@@ -11,6 +11,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Xml.Serialization;
@@ -22,11 +23,14 @@
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.DualGridView")]
-    [PresenterName("UserInterface.Presenters.TablePresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
     public class Morris : Model, ISimulationDescriptionGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>A list of factors that we are to run</summary>
         private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
@@ -34,12 +38,15 @@
         public DataTable ParameterValues { get; set; }
 
         /// <summary>The number of paths to run</summary>
+        [Description("Number of paths:")]
         public int NumPaths { get; set; } = 200;
 
         /// <summary>The number of intervals</summary>
+        [Description("Number of intervals:")]
         public int NumIntervals { get; set; } = 20;
 
         /// <summary>The jump parameter</summary>
+        [Description("Jump:")]
         public int Jump { get; set; } = 10;
 
         /// <summary>
@@ -50,13 +57,29 @@
         /// </remarks>
         public List<Parameter> Parameters { get; set; }
 
+        /// <summary>Name of table in DataStore to read from.</summary>
+        /// <remarks>
+        /// Needs to be public so that it gets written to .apsimx file
+        /// </remarks>
+        [Description("Name of table to read from:")]
+        [Display(Type=DisplayType.TableName)]
+        public string TableName { get; set; } = "Report";
+
+        /// <summary>The name of the variable to use to aggregiate each Morris analysis.</summary>
+        /// <remarks>
+        /// Needs to be public so that it gets written to .apsimx file
+        /// </remarks>
+        [Description("Name of variable in table for aggregation:")]
+        [Display(Type = DisplayType.FieldName)]
+        public string AggregationVariableName { get; set; } = "Clock.Today.Year";
+
         /// <summary>
-        /// List of years
+        /// List of aggregation values
         /// </summary>
         /// <remarks>
         /// Needs to be public so that it gets written to .apsimx file
         /// </remarks>
-        public int[] Years { get; set; }
+        public string[] AggregationValues { get; set; }
 
         /// <summary>
         /// This ID is used to identify temp files used by this Morris method.
@@ -85,27 +108,6 @@
             {
                 List<DataTable> tables = new List<DataTable>();
 
-                // Add a constant table.
-                DataTable constant = new DataTable();
-                constant.Columns.Add("Property", typeof(string));
-                constant.Columns.Add("Value", typeof(int));
-                DataRow constantRow = constant.NewRow();
-                constantRow["Property"] = "Number of paths:";
-                constantRow["Value"] = NumPaths;
-                constant.Rows.Add(constantRow);
-
-                constantRow = constant.NewRow();
-                constantRow["Property"] = "Number of intervals:";
-                constantRow["Value"] = NumIntervals;
-                constant.Rows.Add(constantRow);
-
-                constantRow = constant.NewRow();
-                constantRow["Property"] = "Jump:";
-                constantRow["Value"] = Jump;
-                constant.Rows.Add(constantRow);
-
-                tables.Add(constant);
-
                 // Add a parameter table
                 DataTable table = new DataTable();
                 table.Columns.Add("Name", typeof(string));
@@ -128,12 +130,8 @@
             }
             set
             {
-                NumPaths = Convert.ToInt32(value[0].Rows[0][1]);
-                NumIntervals = Convert.ToInt32(value[0].Rows[1][1]);
-                Jump = Convert.ToInt32(value[0].Rows[2][1]);
-
                 Parameters.Clear();
-                foreach (DataRow row in value[1].Rows)
+                foreach (DataRow row in value[0].Rows)
                 {
                     Parameter param = new Parameter();
                     if (!Convert.IsDBNull(row["Name"]))
@@ -141,9 +139,9 @@
                     if (!Convert.IsDBNull(row["Path"]))
                         param.Path = row["Path"].ToString();
                     if (!Convert.IsDBNull(row["LowerBound"]))
-                        param.LowerBound = Convert.ToDouble(row["LowerBound"]);
+                        param.LowerBound = Convert.ToDouble(row["LowerBound"], CultureInfo.InvariantCulture);
                     if (!Convert.IsDBNull(row["UpperBound"]))
-                        param.UpperBound = Convert.ToDouble(row["UpperBound"]);
+                        param.UpperBound = Convert.ToDouble(row["UpperBound"], CultureInfo.InvariantCulture);
                     if (param.Name != null || param.Path != null)
                         Parameters.Add(param);
                 }
@@ -186,13 +184,15 @@
         }
 
         /// <summary>
-        /// Invoked when a run is done.
+        /// Invoked when a run is beginning.
         /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments.</param>
         [EventSubscribe("BeginRun")]
-        private void OnBeginRun()
+        private void OnBeginRun(object sender, EventArgs e)
         {
-            allCombinations.Clear();
-            ParameterValues = null;
+            R r = new R();
+            r.InstallPackage("sensitivity");
         }
 
         /// <summary>
@@ -213,7 +213,7 @@
                     var factors = new List<CompositeFactor>();
                     foreach (Parameter param in Parameters)
                     {
-                        object value = Convert.ToDouble(parameterRow[param.Name]);
+                        object value = Convert.ToDouble(parameterRow[param.Name], CultureInfo.InvariantCulture);
                         CompositeFactor f = new CompositeFactor(param.Name, param.Path, value);
                         factors.Add(f);
                     }
@@ -237,40 +237,39 @@
         }
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
-        /// <param name="dataStore">The data store.</param>
-        public void Run(IDataStore dataStore)
+        public void Run()
         {
-            DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
+            DataTable predictedData = dataStore.Reader.GetData(TableName, filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {
 
-                // Determine how many years we have per simulation
+                // Determine how many aggregation values we have per simulation
                 DataView view = new DataView(predictedData);
                 view.RowFilter = "SimulationName='" + Name + "Simulation1'";
-                Years = DataTableUtilities.GetColumnAsIntegers(view, "Clock.Today.Year");
+                AggregationValues = DataTableUtilities.GetColumnAsStrings(view, AggregationVariableName);
 
                 // Create a table of all predicted values
                 DataTable predictedValues = new DataTable();
 
                 List<string> descriptiveColumnNames = new List<string>();
                 List<string> variableNames = new List<string>();
-                foreach (double year in Years)
+                foreach (string aggregationValue in AggregationValues)
                 {
-                    view.RowFilter = "Clock.Today.Year=" + year;
+                    view.RowFilter = AggregationVariableName + "=" + aggregationValue;
 
                     foreach (DataColumn predictedColumn in view.Table.Columns)
                     {
                         if (predictedColumn.DataType == typeof(double))
                         {
-                            double[] valuesForYear = DataTableUtilities.GetColumnAsDoubles(view, predictedColumn.ColumnName);
-                            if (valuesForYear.Distinct().Count() == 1)
+                            double[] values = DataTableUtilities.GetColumnAsDoubles(view, predictedColumn.ColumnName);
+                            if (values.Distinct().Count() == 1)
                             {
                                 if (!descriptiveColumnNames.Contains(predictedColumn.ColumnName))
                                     descriptiveColumnNames.Add(predictedColumn.ColumnName);
                             }
                             else
                             {
-                                DataTableUtilities.AddColumn(predictedValues, predictedColumn.ColumnName + year, valuesForYear);
+                                DataTableUtilities.AddColumn(predictedValues, predictedColumn.ColumnName + "_" + aggregationValue, values);
                                 if (!variableNames.Contains(predictedColumn.ColumnName))
                                     variableNames.Add(predictedColumn.ColumnName);
                             }
@@ -291,7 +290,7 @@
                 // - 26.113599477728, 0.0113851992409871, 0.0113996200126667,57.9689677010766,"FallowEvaporation1996",3
                 // - 33.284199334316, 0.0323193916349732, -0.334388853704853,60.5376820772641,"FallowEvaporation1996",4
                 DataView eeView = new DataView(eeDataRaw);
-                IndexedDataTable eeTableKey = new IndexedDataTable(new string[] { "Parameter", "Year" });
+                IndexedDataTable eeTableKey = new IndexedDataTable(new string[] { "Parameter", AggregationVariableName });
 
                 // Create a path variable. 
                 var pathValues = Enumerable.Range(1, NumPaths).ToArray();
@@ -303,10 +302,10 @@
                         eeView.RowFilter = "variable = '" + column.ColumnName + "'";
                         if (eeView.Count != NumPaths)
                             throw new Exception("Found only " + eeView.Count + " paths for variable " + column.ColumnName + " in ee table");
-                        int year = Convert.ToInt32(column.ColumnName.Substring(column.ColumnName.Length - 4));
-                        string variableName = column.ColumnName.Substring(0, column.ColumnName.Length - 4);
+                        string aggregationValue = StringUtilities.GetAfter(column.ColumnName, "_");
+                        string variableName = StringUtilities.RemoveAfter(column.ColumnName, '_');
 
-                        eeTableKey.SetIndex(new object[] { parameter.Name, year });
+                        eeTableKey.SetIndex(new object[] { parameter.Name, aggregationValue });
 
                         List<double> values = DataTableUtilities.GetColumnAsDoubles(eeView, parameter.Name).ToList();
                         for (int i = 0; i < values.Count; i++)
@@ -331,21 +330,21 @@
                 // 8.09850688306722, 8.09852589447407, 15.1988107373113, "FASW","FallowRunoff1996"
                 // 18.6196168461051, 18.6196168461051, 15.1496277765849, "CN2","FallowRunoff1996"
                 // -7.12794888887507, 7.12794888887507, 5.54014788597839, "Cona","FallowRunoff1996"
-                IndexedDataTable tableKey = new IndexedDataTable(new string[2] { "Parameter", "Year" });
+                IndexedDataTable tableKey = new IndexedDataTable(new string[2] { "Parameter", AggregationVariableName });
 
                 foreach (DataRow row in statsDataRaw.Rows)
                 {
                     string variable = row["variable"].ToString();
-                    int year = Convert.ToInt32(variable.Substring(variable.Length - 4));
-                    variable = variable.Substring(0, variable.Length - 4);
-                    tableKey.SetIndex(new object[] { row["param"], year });
+                    string aggregationValue = StringUtilities.GetAfter(variable, "_");
+                    variable = StringUtilities.RemoveAfter(variable, '_');
+                    tableKey.SetIndex(new object[] { row["param"], aggregationValue });
 
                     tableKey.Set(variable + ".Mu", row["mu"]);
                     tableKey.Set(variable + ".MuStar", row["mustar"]);
                     tableKey.Set(variable + ".Sigma", row["sigma"]);
 
                     // Need to bring in the descriptive values.
-                    view.RowFilter = "Clock.Today.Year=" + year;
+                    view.RowFilter = AggregationVariableName + "=" + aggregationValue;
                     foreach (var descriptiveColumnName in descriptiveColumnNames)
                     {
                         var values = DataTableUtilities.GetColumnAsStrings(view, descriptiveColumnName);
@@ -371,7 +370,6 @@
             script += "write.table(apsimMorris$X, row.names = F, col.names = T, sep = \",\")" + Environment.NewLine;
             File.WriteAllText(rFileName, script);
             R r = new R();
-            Console.WriteLine(r.GetPackage("sensitivity"));
             return r.RunToTable(rFileName);
         }
 
@@ -433,7 +431,6 @@
 
             // Run R
             R r = new R();
-            Console.WriteLine(r.GetPackage("sensitivity"));
             r.RunToTable(rFileName);
 
             eeDataRaw = ApsimTextFile.ToTable(eeFileName);
@@ -449,7 +446,8 @@
             string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
             string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
             string script = string.Format
-            ("library('sensitivity')" + Environment.NewLine +
+            ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+            $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
             "params <- c({0})" + Environment.NewLine +
             "apsimMorris<-morris(model=NULL" + Environment.NewLine +
             " ,params #string vector of parameter names" + Environment.NewLine +

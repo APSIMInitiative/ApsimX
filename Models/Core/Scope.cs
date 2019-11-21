@@ -1,13 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Scope.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Linq;
 
     /// <summary>
     /// Implements APSIMs scoping rules.
@@ -74,7 +70,7 @@ namespace Models.Core
         /// Returns null if non found.
         /// </summary>
         /// <param name="relativeTo">The model to use as a base.</param>
-        private static IModel FindScopedParentModel(IModel relativeTo)
+        public static IModel FindScopedParentModel(IModel relativeTo)
         {
             do
             {
@@ -87,6 +83,16 @@ namespace Models.Core
             while (relativeTo != null);
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns true iff model x is in scope of model y.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public bool InScopeOf(IModel x, IModel y)
+        {
+            return FindAll(y).Contains(x);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-namespace Models.PMF.Organs
+﻿namespace Models.PMF.Organs
 {
     using APSIM.Shared.Utilities;
     using Core;
@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
+    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001; 
@@ -30,105 +30,105 @@ namespace Models.PMF.Organs
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The senescence rate function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         public IFunction SenescenceRate = null;
 
         /// <summary>The detachment rate function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction detachmentRateFunction = null;
 
         /// <summary>The N retranslocation factor</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         public IFunction NRetranslocationFactor = null;
 
         /// <summary>The N reallocation factor</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         protected IFunction nReallocationFactor = null;
 
         // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child, ByName = true)]
         //private IFunction nitrogenDemandSwitch = null;
 
         /// <summary>The DM retranslocation factor</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
-        private IFunction dmRetranslocationFactor = null;
+        public IFunction DMRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
 
         /// <summary>The DM demand function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>The N demand function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2")]
         private IFunction initialWtFunction = null;
 
         /// <summary>The initial N Concentration</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("g/m2")]
         private IFunction initialNConcFunction = null;
 
         /// <summary>The maximum N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction maximumNConc = null;
 
         /// <summary>The minimum N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction minimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction criticalNConc = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
 
         /// <summary>Dry matter conversion efficiency</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
-        private IFunction dmConversionEfficiency = null;
+        public IFunction DMConversionEfficiency = null;
 
         /// <summary>The cost for remobilisation</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("")]
         private IFunction remobilisationCost = null;
 
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
-        [Link]
-        IFunction CarbonConcentration = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction CarbonConcentration = null;
 
         /// <summary>The photosynthesis</summary>
         /// [Units("g/m2")]
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction Photosynthesis = null;
 
         /// <summary>The RetranslocationMethod</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IRetranslocateMethod RetranslocateNitrogen = null;
 
         /// <summary>The live biomass state at start of the computation round</summary>
@@ -193,7 +193,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Growth Respiration</summary>
         [XmlIgnore]
-        public double GrowthRespiration { get; private set; }
+        public double GrowthRespiration { get; set; }
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
@@ -246,18 +246,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
-            if (RetranslocateNitrogen != null)
-            {
-                return RetranslocateNitrogen.CalculateBiomass(this);
-            }
-            else
-            {
-                double availableDM = Math.Max(0.0, StartLive.StorageWt - DMSupply.Reallocation) * dmRetranslocationFactor.Value();
-                if (availableDM < -BiomassToleranceValue)
-                    throw new Exception("Negative DM retranslocation value computed for " + Name);
-
-                return availableDM;
-            }
+            return RetranslocateNitrogen.CalculateBiomass(this);
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>
@@ -288,16 +277,9 @@ namespace Models.PMF.Organs
             if (NSupply.Reallocation < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
-            if (RetranslocateNitrogen != null)
-            {
-                NSupply.Retranslocation = RetranslocateNitrogen.Calculate(this);
-            }
-            else
-            {
-                NSupply.Retranslocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value());
-                if (NSupply.Retranslocation < -BiomassToleranceValue)
-                    throw new Exception("Negative N retranslocation value computed for " + Name);
-            }
+            NSupply.Retranslocation = RetranslocateNitrogen.Calculate(this);
+            if (NSupply.Retranslocation < -BiomassToleranceValue)
+                throw new Exception("Negative N retranslocation value computed for " + Name);
 
 
             NSupply.Fixation = 0;
@@ -308,11 +290,11 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         protected virtual void SetDMDemand(object sender, EventArgs e)
         {
-            if (dmConversionEfficiency.Value() > 0.0)
+            if (DMConversionEfficiency.Value() > 0.0)
             {
-                DMDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
-                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
-                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / dmConversionEfficiency.Value());
+                DMDemand.Structural = (dmDemands.Structural.Value() / DMConversionEfficiency.Value() + remobilisationCost.Value());
+                DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / DMConversionEfficiency.Value()) ;
+                DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / DMConversionEfficiency.Value()) ;
             }
             else
             { // Conversion efficiency is zero!!!!
@@ -350,43 +332,21 @@ namespace Models.PMF.Organs
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
             // CO2 (44/12).
-            double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
+            double growthRespFactor = ((1.0 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
 
             GrowthRespiration = 0.0;
             // allocate structural DM
-            Allocated.StructuralWt = Math.Min(dryMatter.Structural * dmConversionEfficiency.Value(), DMDemand.Structural);
+            Allocated.StructuralWt = Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), DMDemand.Structural);
             Live.StructuralWt += Allocated.StructuralWt;
             GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
 
 
             // allocate non structural DM
-            if ((dryMatter.Storage * dmConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
+            if ((dryMatter.Storage * DMConversionEfficiency.Value() - DMDemand.Storage) > BiomassToleranceValue)
                 throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
             // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
 
-            if (RetranslocateNitrogen != null)
-            {
-                RetranslocateNitrogen.AllocateBiomass(this, dryMatter);
-            }
-            else
-            {
-                // Check retranslocation
-                if (dryMatter.Retranslocation - StartLive.StorageWt > BiomassToleranceValue)
-                    throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
-
-                double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
-                if (diffWt > 0)
-                {
-                    diffWt *= dmConversionEfficiency.Value();
-                    GrowthRespiration += diffWt * growthRespFactor;
-                }
-                Allocated.StorageWt = diffWt;
-                Live.StorageWt += diffWt;
-                // allocate metabolic DM
-                Allocated.MetabolicWt = dryMatter.Metabolic * dmConversionEfficiency.Value();
-                GrowthRespiration += Allocated.MetabolicWt * growthRespFactor;
-                Live.MetabolicWt += Allocated.MetabolicWt;
-            }
+            RetranslocateNitrogen.AllocateBiomass(this, dryMatter);
         }
 
         /// <summary>Sets the n allocation.</summary>
@@ -401,30 +361,34 @@ namespace Models.PMF.Organs
             Allocated.StorageN += nitrogen.Storage;
             Allocated.MetabolicN += nitrogen.Metabolic;
 
-            if(RetranslocateNitrogen != null)
-            {
-                RetranslocateNitrogen.Allocate(this, nitrogen);
-            }
-            else
-            {
-                // Retranslocation
-                if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, StartLive.StorageN + StartLive.MetabolicN - NSupply.Retranslocation))
-                    throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
-                double StorageNRetranslocation = Math.Min(nitrogen.Retranslocation, StartLive.StorageN * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value());
-
-                Live.StorageN -= StorageNRetranslocation;
-                Live.MetabolicN -= (nitrogen.Retranslocation - StorageNRetranslocation);
-                Allocated.StorageN -= nitrogen.Retranslocation;
-                Allocated.MetabolicN -= (nitrogen.Retranslocation - StorageNRetranslocation);
-            }
+            RetranslocateNitrogen.Allocate(this, nitrogen);
 
             // Reallocation
+            double senescedFrac = SenescenceRate.Value();
+            if (StartLive.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
+                senescedFrac = 1.0;  // remaining amount too small, senesce all
+
+            if (senescedFrac > 0 && StartLive.Wt>0 && Name=="Shell")
+            { }
+
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, StartLive.StorageN + StartLive.MetabolicN))
                 throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double StorageNReallocation = Math.Min(nitrogen.Reallocation, StartLive.StorageN * SenescenceRate.Value() * nReallocationFactor.Value());
+            double StorageNReallocation = Math.Min(nitrogen.Reallocation, StartLive.StorageN * senescedFrac * nReallocationFactor.Value());
             Live.StorageN -= StorageNReallocation;
             Live.MetabolicN -= (nitrogen.Reallocation - StorageNReallocation);
             Allocated.StorageN -= nitrogen.Reallocation;
+
+            // now move the remaining senescing material to the dead pool
+            Biomass Loss = new Biomass();
+            Loss.StructuralN = StartLive.StructuralN * senescedFrac;
+            Loss.StorageN = StartLive.StorageN * senescedFrac - StorageNReallocation;
+            Loss.MetabolicN = StartLive.MetabolicN * senescedFrac - (nitrogen.Reallocation - StorageNReallocation);
+            Loss.StructuralWt = StartLive.StructuralWt * senescedFrac;
+            Loss.MetabolicWt = StartLive.MetabolicWt * senescedFrac;
+            Loss.StorageWt = StartLive.StorageWt * senescedFrac;
+            Live.Subtract(Loss);
+            Dead.Add(Loss);
+            Senesced.Add(Loss);
         }
 
         /// <summary>Remove maintenance respiration from live component of organs.</summary>
@@ -523,7 +487,7 @@ namespace Models.PMF.Organs
         {
             // save current state
             if (parentPlant.IsEmerged)
-                StartLive = Live;
+                StartLive = ReflectionUtilities.Clone(Live) as Biomass;
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -534,15 +498,6 @@ namespace Models.PMF.Organs
         {
             if (parentPlant.IsAlive)
             {
-                // Do senescence
-                double senescedFrac = SenescenceRate.Value();
-                if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
-                    senescedFrac = 1.0;  // remaining amount too small, senesce all
-                Biomass Loss = Live * senescedFrac;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
-                Senesced.Add(Loss);
-
                 // Do detachment
                 double detachedFrac = detachmentRateFunction.Value();
                 if (Dead.Wt * (1.0 - detachedFrac) < BiomassToleranceValue)

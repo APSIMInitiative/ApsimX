@@ -13,7 +13,7 @@
   </Axis>
   <Series>
     <Name>Available water</Name>
-    <Type>Area</Type>
+    <Type>Region</Type>
     <Title>Available water</Title>
     <ShowInLegend>true</ShowInLegend>
     <XAxis>Top</XAxis>

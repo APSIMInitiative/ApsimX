@@ -54,25 +54,32 @@ namespace Models.Core
 
             this.Object = model;
             this.property = property;
+            this.lowerArraySpecifier = 0;
+            this.upperArraySpecifier = 0;
+
             if (arraySpecifier != null)
             {
                 // Can be either a number or a range e.g. 1:3
                 int posColon = arraySpecifier.IndexOf(':');
                 if (posColon == -1)
                 {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier);
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier, CultureInfo.InvariantCulture);
                     this.upperArraySpecifier = this.lowerArraySpecifier;
                 }
                 else
                 {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon));
-                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
+                    string start = arraySpecifier.Substring(0, posColon);
+                    if (!string.IsNullOrEmpty(start))
+                        lowerArraySpecifier = Convert.ToInt32(start, CultureInfo.InvariantCulture);
+                    else
+                        lowerArraySpecifier = -1;
+
+                    string end = arraySpecifier.Substring(posColon + 1);
+                    if (!string.IsNullOrEmpty(end))
+                        upperArraySpecifier = Convert.ToInt32(end, CultureInfo.InvariantCulture);
+                    else
+                        upperArraySpecifier = -1;
                 }
-            }
-            else
-            {
-                this.lowerArraySpecifier = 0;
-                this.upperArraySpecifier = 0;
             }
         }
 
@@ -116,9 +123,9 @@ namespace Models.Core
                     return null;
                 }
 
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    string cropName = (this.Object as ISoilCrop).Name;
+                    string cropName = (this.Object as SoilCrop).Name;
                     if (cropName.EndsWith("Soil"))
                         cropName = cropName.Replace("Soil", "");
                     return cropName + " " + descriptionAttribute.ToString();
@@ -355,7 +362,9 @@ namespace Models.Core
 
                 object obj = null;
                 obj = this.property.GetValue(this.Object, null);
-                if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
+                if ((lowerArraySpecifier != 0 || upperArraySpecifier != 0)
+                    && obj != null 
+                    && obj is IList)
                 {
                     IList array = obj as IList;
                     if (array.Count == 0)
@@ -374,15 +383,21 @@ namespace Models.Core
                             throw new Exception("Unknown type of array");
                     }
 
-                    int numElements = this.upperArraySpecifier - this.lowerArraySpecifier + 1;
+                    int startIndex = lowerArraySpecifier;
+                    if (startIndex == -1)
+                        startIndex = 1;
+
+                    int endIndex = upperArraySpecifier;
+                    if (endIndex == -1)
+                        endIndex = array.Count;
+
+                    int numElements = endIndex - startIndex + 1;
                     Array values = Array.CreateInstance(elementType, numElements);
-                    for (int i = this.lowerArraySpecifier; i <= this.upperArraySpecifier; i++)
+                    for (int i = startIndex; i <= endIndex; i++)
                     {
-                        int index = i - this.lowerArraySpecifier;
+                        int index = i - startIndex;
                         if (i < 1 || i > array.Count)
-                        {
                             throw new Exception("Array index out of bounds while getting variable: " + this.Name);
-                        }
 
                         values.SetValue(array[i - 1], index);
                     }
@@ -597,9 +612,9 @@ namespace Models.Core
         {
             get
             {
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    ISoilCrop soilCrop = this.Object as ISoilCrop;
+                    SoilCrop soilCrop = this.Object as SoilCrop;
                     if (soilCrop.Name.EndsWith("Soil"))
                         return soilCrop.Name.Substring(0, soilCrop.Name.Length - 4);
                     return soilCrop.Name;
@@ -695,7 +710,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(bool))
                 {
-                    this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
+                    this.property.SetValue(this.Object, Convert.ToBoolean(value, CultureInfo.InvariantCulture), null);
                 }
                 else if (this.DataType == typeof(DateTime))
                 {

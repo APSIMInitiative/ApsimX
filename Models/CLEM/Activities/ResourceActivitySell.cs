@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the sale of a specified resource.")]
+    [HelpUri(@"Content/Features/activities/All resources/SellResource.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivitySell: CLEMActivityBase
     {
@@ -108,7 +109,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded = 0;
+            double daysNeeded;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
@@ -153,11 +154,13 @@ namespace Models.CLEM.Activities
             if(units>0)
             {
                 // remove resource
-                ResourceRequest purchaseRequest = new ResourceRequest();
-                purchaseRequest.ActivityModel = this;
-                purchaseRequest.Required = units*price.PacketSize;
-                purchaseRequest.AllowTransmutation = false;
-                purchaseRequest.Reason = "Sell "+(resourceToSell as Model).Name;
+                ResourceRequest purchaseRequest = new ResourceRequest
+                {
+                    ActivityModel = this,
+                    Required = units * price.PacketSize,
+                    AllowTransmutation = false,
+                    Reason = "Sell " + (resourceToSell as Model).Name
+                };
                 resourceToSell.Remove(purchaseRequest);
 
                 // transfer money earned

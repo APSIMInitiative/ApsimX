@@ -56,7 +56,7 @@ namespace UnitTests
 
         public DataTable GetDataUsingSql(string sql) { throw new System.NotImplementedException(); }
 
-        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string orderBy = null)
+        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string orderBy = null, bool distinct = false)
         {
             string rowFilter = null;
             if (checkpointName != null)
@@ -87,13 +87,39 @@ namespace UnitTests
                 foreach (DataColumn column in data.Columns)
                 {
                     if (!fieldNames.Contains(column.ColumnName) &&
-                        column.ColumnName != "CheckpointName")
+                        column.ColumnName != "CheckpointName" &&
+                        column.ColumnName != "SimulationName" &&
+                        column.ColumnName != "SimulationID")
                         dataCopy.Columns.Remove(column.ColumnName);
                 }
 
+                // Add in a simulation name column if it doesn't exist.
+                if (dataCopy.Columns.Contains("SimulationID") && !dataCopy.Columns.Contains("SimulationName"))
+                {
+                    dataCopy.Columns.Add("SimulationName", typeof(string));
+                    foreach (DataRow row in dataCopy.Rows)
+                    {
+                        row["SimulationName"] = "Sim" + row["SimulationID"].ToString();
+                    }
+                }
+
+
                 var view = new DataView(dataCopy);
                 view.RowFilter = rowFilter;
-                return view.ToTable();
+
+                if (distinct)
+                {
+                    var column = dataCopy.Columns[fieldNames.First()];
+                    var columnName = column.ColumnName;
+                    var columnType = column.DataType;
+                    var values = DataTableUtilities.GetColumnAsStrings(view, columnName).Distinct().ToArray();
+                    var data = new DataTable();
+                    //data.Columns.Add(columnName, columnType);
+                    DataTableUtilities.AddColumn(data, columnName, values);
+                    return data;
+                }
+                else
+                    return view.ToTable();
             }
         }
 
@@ -101,6 +127,29 @@ namespace UnitTests
         {
             throw new System.NotImplementedException();
         }
+
+        /// <summary>
+        /// Gets a "brief" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="fullColumnName">The "full" name of the column</param>
+        /// <returns>The "brief" name of the column</returns>
+        public string BriefColumnName(string tablename, string fullColumnName)
+        {
+            return fullColumnName;
+        }
+
+        /// <summary>
+        /// Gets the "full" column name for a column
+        /// </summary>
+        /// <param name="tablename"></param>
+        /// <param name="queryColumnName"></param>
+        /// <returns>The "full" name of the column</returns>
+        public string FullColumnName(string tablename, string queryColumnName)
+        {
+            return queryColumnName;
+        }
+
 
         public void Refresh()
         {

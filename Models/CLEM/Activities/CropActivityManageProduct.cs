@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [Description("This activity is used within a crop management activity to obtain production values from the crop file.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
-    [HelpUri(@"content/features/activities/crop/managecropproduct.htm")]
+    [HelpUri(@"Content/Features/Activities/Crop/ManageCropProduct.htm")]
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
     {
         [Link]
@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Model for the crop input file
         /// </summary>
-        private FileCrop fileCrop;
+        private IFileCrop fileCrop;
 
         /// <summary>
         /// Parent of this Model that gets the land for growing this crop.
@@ -132,6 +132,8 @@ namespace Models.CLEM.Activities
         public int FirstTimeStepOfRotation { get; set; }
 
         private ActivityCutAndCarryLimiter limiter;
+
+        private string addReason = "Harvest";
 
         /// <summary>
         /// Constructor
@@ -173,16 +175,17 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = Apsim.ChildrenRecursively(Simulation).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as FileCrop;
+            fileCrop = Apsim.ChildrenRecursively(Simulation).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
             {
-                throw new ApsimXException(this, String.Format("Unable to locate model for crop input file [x={0}] referred to in [a={1}]", this.ModelNameFileCrop, this.Name));
+                throw new ApsimXException(this, String.Format("Unable to locate model for crop input file [x={0}] referred to in [a={1}]", this.ModelNameFileCrop??"Unknown", this.Name));
             }
 
             LinkedResourceItem = Resources.GetResourceItem(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
             if((LinkedResourceItem as Model).Parent.GetType() == typeof(GrazeFoodStore))
             {
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = (Parent as IPastureManager);
+                addReason = "Growth";
             }
 
             // look up tree until we find a parent to allow nested crop products for rotate vs mixed cropping/products
@@ -335,8 +338,9 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            double daysNeeded = 0;
-            double numberUnits = 0;
+
+            double daysNeeded;
+            double numberUnits;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
@@ -420,26 +424,61 @@ namespace Models.CLEM.Activities
 
                         if (AmountHarvested > 0)
                         {
-                            //if Npct column was not in the file 
+                            double percentN = 0;
+                            // if no nitrogen provided form file
                             if (double.IsNaN(NextHarvest.Npct))
+                            {
+                                if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+                                {
+                                    // grazed pasture with no N read assumes the green biomass N content
+                                    percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
+                                }
+                            }
+                            else
+                            {
+                                percentN =  NextHarvest.Npct;
+                            }
+
+                            if (percentN == 0)
                             {
                                 //Add without adding any new nitrogen.
                                 //The nitrogen value for this feed item in the store remains the same.
-                                LinkedResourceItem.Add(AmountHarvested, this, "Harvest");
+                                LinkedResourceItem.Add(AmountHarvested, this, addReason);
                             }
                             else
                             {
                                 FoodResourcePacket packet = new FoodResourcePacket()
                                 {
                                     Amount = AmountHarvested,
-                                    PercentN = NextHarvest.Npct
+                                    PercentN = percentN
                                 };
                                 if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
                                 {
                                     packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
                                 }
-                                LinkedResourceItem.Add(packet, this, "Harvest");
+                                LinkedResourceItem.Add(packet, this, addReason);
                             }
+
+                            ////if Npct column was not in the file 
+                            //if (double.IsNaN(NextHarvest.Npct))
+                            //{
+                            //    //Add without adding any new nitrogen.
+                            //    //The nitrogen value for this feed item in the store remains the same.
+                            //    LinkedResourceItem.Add(AmountHarvested, this, addReason);
+                            //}
+                            //else
+                            //{
+                            //    FoodResourcePacket packet = new FoodResourcePacket()
+                            //    {
+                            //        Amount = AmountHarvested,
+                            //        PercentN = NextHarvest.Npct
+                            //    };
+                            //    if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+                            //    {
+                            //        packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
+                            //    }
+                            //    LinkedResourceItem.Add(packet, this, addReason);
+                            //}
                             SetStatusSuccess();
                         }
                         else

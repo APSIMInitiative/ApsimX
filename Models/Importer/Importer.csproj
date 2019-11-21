@@ -82,8 +82,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\APSIM.Shared\APSIM.Shared.csproj">
-      <Project>{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}</Project>
+    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
+      <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
       <Name>APSIM.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Models.csproj">

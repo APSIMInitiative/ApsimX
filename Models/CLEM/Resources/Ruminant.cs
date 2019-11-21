@@ -107,6 +107,12 @@ namespace Models.CLEM.Resources
             set
             {
                 weight = value;
+
+                // if highweight has not been defined set to initial weight
+                if (HighWeight == 0)
+                {
+                    HighWeight = weight;
+                }
                 HighWeight = Math.Max(HighWeight, weight);
             }
         }
@@ -216,6 +222,12 @@ namespace Models.CLEM.Resources
         public double PotentialIntake { get; set; }
 
         /// <summary>
+        /// Current monthly metabolic intake after crude protein adjustment
+        /// </summary>
+        /// <units>kg/month</units>
+        public double MetabolicIntake { get; set; }
+
+        /// <summary>
         /// Number in this class (1 if individual model)
         /// </summary>
         public double Number { get; set; }
@@ -275,6 +287,8 @@ namespace Models.CLEM.Resources
                         return 1;
                     case HerdChangeReason.InitialHerd:
                         return 1;
+                    case HerdChangeReason.MarkedSale:
+                        return -1;
                     default:
                         return 0;
                 }
@@ -407,7 +421,8 @@ namespace Models.CLEM.Resources
                     if (this.Location == this.Mother.Location)
                     {
                         // distribute milk between offspring
-                        milk = this.Mother.MilkProduction / this.Mother.CarryingCount;
+                        int offspring = (this.Mother.SucklingOffspringList.Count <= 1) ? 1 : this.Mother.SucklingOffspringList.Count;
+                        milk = this.Mother.MilkProduction / offspring;
                     }
                 }
                 return milk;
@@ -463,17 +478,17 @@ namespace Models.CLEM.Resources
             this.Gender = setGender;
             this.BreedParams = setParams;
 
-            if (weight <= 0)
+            if (setWeight <= 0)
             {
                 // use normalised weight
-                weight = NormalisedAnimalWeight;
-
+                this.Weight = NormalisedAnimalWeight;
             }
             else
             {
                 this.Weight = setWeight;
             }
 
+            this.PreviousWeight = this.Weight;
             this.Number = 1;
             this.Wool = 0;
             this.Cashmere = 0;

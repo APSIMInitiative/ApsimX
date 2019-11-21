@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This component holds all Labour Price Entries that define the value of individuals.")]
     [Version(1, 0, 1, "Initial release")]
-    [HelpUri(@"content/features/resources/ruminants/animalpricing.htm")]
+    [HelpUri(@"Content/Features/Resources/Labour/LabourPricing.htm")]
     public class LabourPricing : CLEMModel, IValidatableObject
     {
         /// <summary>
@@ -92,7 +92,6 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "</table>";
-            html += "\n</div>";
             return html;
         }
 
@@ -109,38 +108,5 @@ namespace Models.CLEM.Resources
             }
             return html;
         }
-
-        ///// <summary>
-        ///// Provides the closing html tags for object
-        ///// </summary>
-        ///// <returns></returns>
-        //public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        //{
-        //    string html = "";
-        //    if (Apsim.Children(this, typeof(LabourPriceGroup)).Count() >= 1)
-        //    {
-        //        html += "</table></div>";
-        //    }
-        //    return html;
-        //}
-
-        ///// <summary>
-        ///// Provides the closing html tags for object
-        ///// </summary>
-        ///// <returns></returns>
-        //public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        //{
-        //    string html = "";
-        //    if (Apsim.Children(this, typeof(LabourPriceGroup)).Count() >= 1)
-        //    {
-        //        html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th></tr>";
-        //    }
-        //    else
-        //    {
-        //        html += "<span class=\"errorlink\">No Labour Price Groups defined!</span>";
-        //    }
-        //    return html;
-        //}
-
     }
 }

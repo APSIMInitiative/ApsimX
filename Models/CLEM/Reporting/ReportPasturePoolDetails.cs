@@ -12,6 +12,7 @@ using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using Models.Core.Run;
 using Models.Storage;
+using System.Globalization;
 
 namespace Models.CLEM.Reporting
 {
@@ -26,7 +27,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/reporting/pasturepooldetails.htm")]
+    [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
     public class ReportPasturePoolDetails: Models.Report.Report
     {
         [Link]
@@ -68,8 +69,8 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
+            IModel zone = Apsim.Parent(this, typeof(Zone));
             List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
             if (VariableNames != null)
             {
                 for (int i = 0; i < this.VariableNames.Length; i++)
@@ -99,7 +100,7 @@ namespace Models.CLEM.Reporting
                                 {
                                     // add amounts
                                     variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Amount as Total amount");
-                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KgPerHa as Total kgPerHa");
+                                    variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".KilogramsPerHa as Total kgPerHa");
                                 }
                             }
                             else
@@ -109,12 +110,20 @@ namespace Models.CLEM.Reporting
                         }
                     }
                 }
+                // check if clock.today was included.
+                if(!variableNames.Contains("[Clock].Today"))
+                {
+                    variableNames.Insert(0, "[Clock].Today");
+                }
             }
-            base.VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = variableNames.ToArray();
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
 
             // Subscribe to events.
-            if (EventNames == null)
+            if (EventNames == null || EventNames.Count() == 0)
             {
                 events.Subscribe("[Clock].CLEMHerdSummary", DoOutputEvent);
             }
@@ -134,7 +143,9 @@ namespace Models.CLEM.Reporting
         private void OnCompleted(object sender, EventArgs e)
         {
             if (dataToWriteToDb != null)
+            {
                 storage.Writer.WriteTable(dataToWriteToDb);
+            }
             dataToWriteToDb = null;
         }
 
@@ -148,7 +159,7 @@ namespace Models.CLEM.Reporting
                 if (columns[i].Name.Contains("-"))
                 {
                     string[] values = columns[i].Name.Split('-');
-                    double value = grazeStore.GetValueByPoolAge(Convert.ToInt32(values[1]), values[2]);
+                    double value = grazeStore.GetValueByPoolAge(Convert.ToInt32(values[1], CultureInfo.InvariantCulture), values[2]);
                     if (value != 0)
                     {
                         valuesToWrite[i] = Math.Round(value, 2);
@@ -160,8 +171,9 @@ namespace Models.CLEM.Reporting
                     valuesToWrite[i] = columns[i].GetValue();
                 }
             }
-			
-			if (dataToWriteToDb == null)
+
+            if (dataToWriteToDb == null)
+            {
                 dataToWriteToDb = new ReportData()
                 {
                     SimulationName = simulation.Name,
@@ -169,7 +181,8 @@ namespace Models.CLEM.Reporting
                     ColumnNames = columns.Select(c => c.Name).ToList(),
                     ColumnUnits = columns.Select(c => c.Units).ToList()
                 };
-				
+            }
+
             // Add row to our table that will be written to the db file
             dataToWriteToDb.Rows.Add(valuesToWrite.ToList());
 
@@ -257,8 +270,12 @@ namespace Models.CLEM.Reporting
             if (simulation.Descriptors != null)
             {
                 foreach (var descriptor in simulation.Descriptors)
+                {
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                    {
                         this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                    }
+                }
             }
         }
 

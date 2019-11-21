@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
 using System;
@@ -33,6 +34,12 @@ namespace Models.CLEM
         public string SelectedTab { get; set; }
 
         /// <summary>
+        /// Warning log for this CLEM model
+        /// </summary>
+        [XmlIgnore]
+        public WarningLog Warnings = new WarningLog(50);
+
+        /// <summary>
         /// Allows unique id of activity to be set 
         /// </summary>
         /// <param name="id"></param>
@@ -65,15 +72,19 @@ namespace Models.CLEM
                         System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
                         try
                         {
-                            //Is it an array?
-                            if (property.PropertyType.IsArray)
+                            object result = property.GetValue(this, null);
+                            if (result is null)
                             {
-                                property.SetValue(this, dv.Value, null);
-                            }
-                            else
-                            {
-                                //Use set value for.. not arrays
-                                property.SetValue(this, dv.Value, null);
+                                //Is it an array?
+                                if (property.PropertyType.IsArray)
+                                {
+                                    property.SetValue(this, dv.Value, null);
+                                }
+                                else
+                                {
+                                    //Use set value for.. not arrays
+                                    property.SetValue(this, dv.Value, null);
+                                }
                             }
                         }
                         catch (Exception ex)
@@ -84,6 +95,16 @@ namespace Models.CLEM
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines if this component has a valid parent based on parent attributes
+        /// </summary>
+        /// <returns></returns>
+        public bool ValidParent()
+        {
+            var parents = ReflectionUtilities.GetAttributes(this.GetType(), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList();
+            return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() > 0);
         }
 
         /// <summary>
@@ -151,6 +172,7 @@ namespace Models.CLEM
         {
             string overall = "activity";
             string extra = "";
+            double opacity = 1;
 
             if(this.ModelSummaryStyle == HTMLSummaryStyle.Default)
             {
@@ -204,15 +226,37 @@ namespace Models.CLEM
                     break;
             }
 
+            if(!this.Enabled)
+            {
+                if(this.Parent.Enabled)
+                {
+                    opacity = 0.4;
+                }
+            }
+
             string html = "";
             html += "\n<div class=\"holder"+ ((extra == "") ? "main" : "sub") + " " + overall  +"\">";
             html += "\n<div class=\"clearfix "+overall+"banner"+extra+"\">" + this.ModelSummaryNameTypeHeader() + "</div>";
-            html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\">";
+            html += "\n<div class=\""+overall+"content"+  ((extra!="")? extra: "")+"\" style=\"opacity: "+opacity.ToString()+";\">";
 
-            if(this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
-            {
-                // add units when completed
-            }
+            //if(this.GetType().IsSubclassOf(typeof(CLEMResourceTypeBase)))
+            //{
+            //    // add units when completed
+            //    string units = (this as IResourceType).Units;
+            //    if (units != "NA")
+            //    {
+            //        html += "\n<div class=\"activityentry\">This resource is measured in  ";
+            //        if (units == null || units == "")
+            //        {
+            //            html += "<span class=\"errorlink\">Not specified</span>";
+            //        }
+            //        else
+            //        {
+            //            html += "<span class=\"setvalue\">" + units + "</span>";
+            //        }
+            //        html += "</div>";
+            //    }
+            //}
             return html;
         }
 
@@ -231,7 +275,33 @@ namespace Models.CLEM
         /// <returns></returns>
         public virtual string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            if (this.GetType().IsSubclassOf(typeof(CLEMResourceTypeBase)))
+            {
+                // add units when completed
+                string units = (this as IResourceType).Units;
+                if (units != "NA")
+                {
+                    html += "\n<div class=\"activityentry\">This resource is measured in  ";
+                    if (units == null || units == "")
+                    {
+                        html += "<span class=\"errorlink\">Not specified</span>";
+                    }
+                    else
+                    {
+                        html += "<span class=\"setvalue\">" + units + "</span>";
+                    }
+                    html += "</div>";
+                }
+            }
+            if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
+            {
+                if (this.Children.Count() == 0)
+                {
+                    html += "\n<div class=\"activityentry\">Empty</div>";
+                }
+            }
+            return html;
         }
 
         /// <summary>
@@ -250,14 +320,14 @@ namespace Models.CLEM
         public string ModelSummaryNameTypeHeader()
         {
             string html = "";
-            html += "<div class=\"namediv\">" + this.Name + "</div>";
+            html += "<div class=\"namediv\">" + this.Name +  ((!this.Enabled)?" - DISABLED!":"")+ "</div>";
             if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
             {
                 html += "<div class=\"partialdiv\"";
                 switch ((this as CLEMActivityBase).OnPartialResourcesAvailableAction)
                 {
                     case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                        html += " tooltip = \"Error and Stop on insifficient resources\">Stop";
+                        html += " tooltip = \"Error and Stop on insufficient resources\">Stop";
                         break;
                     case OnPartialResourcesAvailableActionTypes.SkipActivity:
                         html += ">Skip";

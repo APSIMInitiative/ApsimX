@@ -199,25 +199,17 @@
         /// <returns>The clone of the model</returns>
         public static IModel Clone(IModel model)
         {
-            lock (model)
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new MemoryStream();
+            using (stream)
             {
-                // Get rid of our parent temporarily as we don't want to serialise that.
-                IModel parent = model.Parent;
-                model.Parent = null;
+                formatter.Serialize(stream, model);
 
-                IFormatter formatter = new BinaryFormatter();
-                Stream stream = new MemoryStream();
-                using (stream)
-                {
-                    formatter.Serialize(stream, model);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    IModel returnObject = (IModel)formatter.Deserialize(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                IModel newModel =  (IModel)formatter.Deserialize(stream);
 
-                    // Reinstate parent
-                    model.Parent = parent;
-
-                    return returnObject;
-                }
+                ParentAllChildren(newModel);
+                return newModel;
             }
         }
 
@@ -385,6 +377,18 @@
         }
 
         /// <summary>
+        /// Parent all children of 'model' and call 'OnCreated' in each child.
+        /// </summary>
+        /// <param name="model">The model to parent</param>
+        public static void InitialiseModel(IModel model)
+        {
+            ParentAllChildren(model);
+            model.OnCreated();
+            foreach (var child in Apsim.ChildrenRecursively(model))
+                child.OnCreated();
+        }
+
+        /// <summary>
         /// Parent all children of 'model'.
         /// </summary>
         /// <param name="model">The model to parent</param>
@@ -484,6 +488,7 @@
 
             if (parent.GetType() == typeof(Folder) ||
                 parent.GetType() == typeof(Factor) ||
+                parent.GetType() == typeof(CompositeFactor) ||
                 parent.GetType() == typeof(Replacements))
                 return true;
 
@@ -509,17 +514,65 @@
         /// <summary>Get a list of allowable child models for the specified parent.</summary>
         /// <param name="parent">The parent model.</param>
         /// <returns>A list of allowable child models.</returns>
-        public static List<Type> GetAllowableChildModels(object parent)
+        public static IEnumerable<ModelDescription> GetAllowableChildModels(object parent)
         {
-            List<Type> allowableModels = new List<Type>();
+            var allowableModels = new SortedSet<ModelDescription>();
+
+            // Add in all types that implement the IModel interface.
             foreach (Type t in ReflectionUtilities.GetTypesThatHaveInterface(typeof(IModel)))
+                allowableModels.Add(new ModelDescription(t));
+
+            // Add in resources.
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            foreach (var resourceName in thisAssembly.GetManifestResourceNames())
             {
-                bool isAllowable = IsChildAllowable(parent, t);
-                if (isAllowable && allowableModels.Find(m => m.Name == t.Name) == null)
-                    allowableModels.Add(t);
+                if (resourceName.Contains(".json"))
+                {
+                    // Get the full model type name from the resource.
+                    string modelTypeFullName = null;
+                    var resStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+                    using (StreamReader reader = new StreamReader(resStream))
+                    {
+                        // Need to get the second '$type' line from the resource. The 
+                        // first is assumed to be 
+                        //    "$type": "Models.Core.Simulations, Models"
+                        // The second is assumed to be the model we're looking for.
+                        int count = 0;
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (line.Contains("\"$type\""))
+                            {
+                                count++;
+                                if (count == 2)
+                                {
+                                    modelTypeFullName = StringUtilities.SplitOffAfterDelimiter(ref line, ":");
+                                    modelTypeFullName = modelTypeFullName.Replace("\"", "");
+                                    modelTypeFullName = modelTypeFullName.Replace(", Models,", "");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    if (modelTypeFullName != null)
+                    {
+                        // Assume the resource name is the model name.
+                        var resourceNameWithoutExtension = resourceName.Replace(".json", "");
+                        var resourceWords = resourceNameWithoutExtension.Split(".".ToCharArray()).ToList();
+                        var modelName = resourceWords.Last();
+
+                        var modelType = thisAssembly.ExportedTypes.FirstOrDefault(t => t.FullName == modelTypeFullName);
+                        if (modelType != null)
+                            allowableModels.Add(new ModelDescription(modelType, modelName, resourceName));
+                    }
+                }
             }
 
-            allowableModels.Sort(new ReflectionUtilities.TypeComparer());
+            // Remove models that cannot be added to parent.
+            allowableModels.RemoveWhere(t => !IsChildAllowable(parent, t.ModelType));
+            
+            //allowableModels.Sort(new ReflectionUtilities.TypeComparer());
             return allowableModels;
         }
 
@@ -538,6 +591,7 @@
             allowableFunctions.Sort(new ReflectionUtilities.TypeComparer());
             return allowableFunctions;
         }
+
         /// <summary>
         /// Gets the locater model for the specified model.
         /// </summary>
@@ -557,5 +611,42 @@
             }
         }
 
+        /// <summary>Encapsulates a model that can be added to another model.</summary>
+        public class ModelDescription : IComparable<ModelDescription>
+        {
+            /// <summary>Name of resource.</summary>
+            private readonly string resourceString;
+
+            /// <summary>Constructor.</summary>
+            public ModelDescription(Type t) 
+            { 
+                ModelType = t;
+                ModelName = ModelType.Name;
+            }
+
+            /// <summary>Constructor.</summary>
+            public ModelDescription(Type t, string name, string resourceName) 
+            { 
+                ModelType = t;
+                ModelName = name;
+                resourceString = resourceName; 
+            }
+
+            /// <summary>Type of model.</summary>
+            public Type ModelType { get; }
+
+            /// <summary>Name of model.</summary>
+            public string ModelName { get; }
+
+            /// <summary>Comparison method.</summary>
+            /// <param name="other">The other instance to compare this one to.</param>
+            public int CompareTo(ModelDescription other)
+            {
+                int comparison = ModelType.FullName.CompareTo(other.ModelType.FullName);
+                if (comparison == 0)
+                    comparison = ModelName.CompareTo(other.ModelName);
+                return comparison;
+            }
+        }
     }
 }

@@ -80,6 +80,11 @@
         public DataStore(string fileNameToUse)
         {
             FileName = fileNameToUse;
+            SQLite database = new SQLite();
+            database.OpenDatabase(fileName, true);
+            connection = database;
+            dbReader.SetConnection(connection);
+            dbWriter.SetConnection(connection);
         }
 
         /// <summary>Constructor</summary>
@@ -170,13 +175,21 @@
         /// </summary>
         public void UpdateFileName()
         {
+            string extension = useFirebird ? ".fdb" : ".db";
+
             Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            if (simulations == null || simulations.FileName == null)
-                FileName = ":memory:";
-            else if (useFirebird)
-                FileName = Path.ChangeExtension(simulations.FileName, ".fdb");
+
+            // If we have been cloned prior to a run, then we won't be able to locate
+            // the simulations object. In this situation we can fallback to using the
+            // parent simulation's filename (which should be the same anyway).
+            Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+
+            if (simulations != null && simulations.FileName != null)
+                FileName = Path.ChangeExtension(simulations.FileName, extension);
+            else if (simulation != null && simulation.FileName != null)
+                FileName = Path.ChangeExtension(simulation.FileName, extension);
             else
-                FileName = Path.ChangeExtension(simulations.FileName, ".db");
+                FileName = ":memory:";
         }
 
         /// <summary>Open the database.</summary>
@@ -192,8 +205,25 @@
 
             connection.OpenDatabase(FileName, readOnly: false);
 
-            dbReader.SetConnection(connection);
-            dbWriter.SetConnection(connection);
+            Exception caughtException = null;
+            try
+            {
+                dbReader.SetConnection(connection);
+            }
+            catch (Exception e)
+            {
+                caughtException = e;
+            }
+            try
+            {
+                dbWriter.SetConnection(connection);
+            }
+            catch (Exception e)
+            {
+                caughtException = e;
+            }
+            if (caughtException != null)
+                throw caughtException;
         }
 
         /// <summary>Close the database.</summary>

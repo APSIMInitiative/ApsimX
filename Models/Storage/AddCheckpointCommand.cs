@@ -1,9 +1,10 @@
 ﻿namespace Models.Storage
 {
-    using APSIM.Shared.Utilities;
+    using APSIM.Shared.JobRunning;
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Reflection;
     using System.Threading;
@@ -32,11 +33,11 @@
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken)
         {
-            var checkpointData = new DataView(writer.Connection.ExecuteQuery("SELECT * FROM _Checkpoints"));
+            var checkpointData = new DataView(writer.Connection.ExecuteQuery("SELECT * FROM [_Checkpoints]"));
             checkpointData.RowFilter = "Name='Current'";
             if (checkpointData.Count == 1)
             {
-                int currentCheckId = Convert.ToInt32(checkpointData[0]["ID"]);
+                int currentCheckId = Convert.ToInt32(checkpointData[0]["ID"], CultureInfo.InvariantCulture);
 
                 // Get the current version and the date time now to write to the checkpoint table.
                 string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -44,17 +45,17 @@
 
                 // If checkpoint already exists then delete old one.
                 int newCheckId;
-                checkpointData.RowFilter = string.Format("Name='{0}'", newCheckpointName);
+                checkpointData.RowFilter = string.Format("[Name]='{0}'", newCheckpointName);
                 if (checkpointData.Count == 1)
                 {
                     // Yes checkpoint already exists - delete old data.
-                    newCheckId = Convert.ToInt32(checkpointData[0]["ID"]);
+                    newCheckId = Convert.ToInt32(checkpointData[0]["ID"], CultureInfo.InvariantCulture);
                     foreach (var tableName in writer.Connection.GetTableNames())
                     {
                         List<string> columnNames = writer.Connection.GetColumnNames(tableName);
                         if (columnNames.Contains("CheckpointID"))
                         {
-                            var deleteSql = string.Format("DELETE FROM {0} WHERE CheckpointID={1}",
+                            var deleteSql = string.Format("DELETE FROM [{0}] WHERE [CheckpointID]={1}",
                                                     tableName, newCheckId);
                             writer.Connection.ExecuteNonQuery(deleteSql);
                         }
@@ -62,9 +63,9 @@
 
                     // Update row in checkpoints table.
                     var sql = string.Format("UPDATE [_Checkpoints] " +
-                                            "SET Version='{0}' " +
-                                            "SET Date='{1}') " +
-                                            "WHERE ID={2}",
+                                            "SET [Version]='{0}' " +
+                                            "SET [Date]='{1}') " +
+                                            "WHERE [ID]={2}",
                                             version, now, newCheckId);
                 }
                 else
@@ -91,10 +92,10 @@
                             csvFieldNames += "[" + columnName + "]";
                         }
 
-                        var sql = string.Format("INSERT INTO [{0}] (CheckpointID,{1})" +
+                        var sql = string.Format("INSERT INTO [{0}] ([CheckpointID],{1})" +
                                                 " SELECT {2},{1}" +
-                                                " FROM {0}" +
-                                                " WHERE CheckpointID = {3}",
+                                                " FROM [{0}]" +
+                                                " WHERE [CheckpointID] = {3}",
                                                 tableName, csvFieldNames, newCheckId, currentCheckId);
                         writer.Connection.ExecuteNonQuery(sql);
                     }

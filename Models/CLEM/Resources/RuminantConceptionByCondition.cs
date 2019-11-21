@@ -18,21 +18,21 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminantadvancedconception.htm")]
-    public class RuminantConceptionByCondition: CLEMModel, IConceptionModel
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantConceptionCondition.htm")]
+    public class RuminantConceptionByCondition : CLEMModel, IConceptionModel
     {
         /// <summary>
         /// constructor
         /// </summary>
         public RuminantConceptionByCondition()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
         }
 
         /// <summary>
         /// Condition cutoff for conception
         /// </summary>
-        [Description("Condition (wt/normalised wt) below which no conception")]
+        [Description("Condition index (wt/normalised wt) below which no conception")]
         [Required, GreaterThanValue(0)]
         public double ConditionCutOff { get; set; }
 
@@ -45,14 +45,14 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "<div class=\"activityentry\">";
-            html += "Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\nNo breeding females will conceove if this ration is below ";
-            if(ConditionCutOff==0)
+            html += "Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\nNo breeding females will concieve if this ratio is below ";
+            if (ConditionCutOff == 0)
             {
-                html += "<span class=\"errorlink\">No set<\\span>";
+                html += "<span class=\"errorlink\">No set</span>";
             }
             else
             {
-                html += "<span class=\"setvalue\">"+ConditionCutOff.ToString("0.0##")+"<\\span>";
+                html += "<span class=\"setvalue\">" + ConditionCutOff.ToString("0.0##") + "</span>";
             }
             html += "</div>";
             return html;
@@ -65,27 +65,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double ConceptionRate(RuminantFemale female)
         {
-            bool isConceptionReady = false;
-            if (female.Age >= female.BreedParams.MinimumAge1stMating && female.NumberOfBirths == 0)
-            {
-                isConceptionReady = true;
-            }
-            else
-            {
-                double currentIPI = female.BreedParams.InterParturitionIntervalIntercept * Math.Pow((female.Weight / female.StandardReferenceWeight), female.BreedParams.InterParturitionIntervalCoefficient) * 30.64;
-                // calculate inter-parturition interval
-                currentIPI = Math.Max(currentIPI, female.BreedParams.GestationLength * 30.4 + female.BreedParams.MinimumDaysBirthToConception); // 2nd param was 61
-                double ageNextConception = female.AgeAtLastConception + (currentIPI / 30.4);
-                isConceptionReady = (female.Age >= ageNextConception);
-            }
-
-            // if first mating and of age or suffcient time since last birth/conception
-            if (isConceptionReady)
-            {
-                return (female.RelativeCondition >= ConditionCutOff) ? 1 : 0; 
-            }
-            return 0;
+            return (female.RelativeCondition >= ConditionCutOff) ? 1 : 0;
         }
     }
-
 }

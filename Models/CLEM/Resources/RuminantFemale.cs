@@ -121,9 +121,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(SuccessfulPregnancy)
+                if (IsPregnant)
                 {
-                    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength && this.AgeAtLastConception > this.AgeAtLastBirth;
+                    return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength;
                 }
                 else
                 {
@@ -137,13 +137,14 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void UpdateBirthDetails()
         {
-            if (SuccessfulPregnancy)
+            if (CarryingCount > 0)
             {
                 NumberOfBirths++;
                 NumberOfOffspring += CarryingCount;
                 NumberOfBirthsThisTimestep = CarryingCount;
             }
             AgeAtLastBirth = this.Age;
+            CarryingCount = 0;
             MilkingPerformed = false;
         }
 
@@ -154,7 +155,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (this.Age < this.AgeAtLastConception + this.BreedParams.GestationLength && this.SuccessfulPregnancy);
+                return (CarryingCount > 0);
             }
         }
 
@@ -171,8 +172,18 @@ namespace Models.CLEM.Resources
             CarryingCount--;
             if(CarryingCount <= 0)
             {
-                SuccessfulPregnancy = false;
                 AgeAtLastBirth = this.Age;
+            }
+        }
+
+        /// <summary>
+        /// Number of breeding moths in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
+        /// </summary>
+        public bool SuccessfulPregnancy
+        {
+            get
+            {
+                return this.AgeAtLastBirth - this.AgeAtLastConception == this.BreedParams.GestationLength;
             }
         }
 
@@ -190,7 +201,6 @@ namespace Models.CLEM.Resources
             CarryingCount = number;
             WeightAtConception = this.Weight;
             AgeAtLastConception = this.Age + ageOffsett;
-            SuccessfulPregnancy = true;
             NumberOfConceptions++;
         }
 
@@ -206,12 +216,14 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                // Had birth after last conception
-                // Time since birth < milking days
-                // Last pregnancy was successful
-                // Mother has suckling offspring OR
-                // Cow has been milked since weaning.
-                return (this.AgeAtLastBirth > this.AgeAtLastConception & (this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & SuccessfulPregnancy & (this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed));
+                //(a)Has at least one suckling offspring(i.e.unweaned offspring)
+                //Or
+                //(b) Is being milked
+                //and
+                //(c) Less than Milking days since last birth
+                // removed the previous SuccessfulPregnancy and BirthAge > ConceptionAge to allow new ability to conceive while lactating.
+                // ToDo:  Add & this.SuccessfulPregnancy to avoid lactation after failed pregnancy
+                return ((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & (this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed));
             }            
         }
 
@@ -298,16 +310,10 @@ namespace Models.CLEM.Resources
         public List<Ruminant> SucklingOffspringList { get; set; }
 
         /// <summary>
-        /// Used to track successful preganacy
-        /// </summary>
-        public bool SuccessfulPregnancy { get; set; }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public RuminantFemale(double setAge, Sex setGender, double setWeight, RuminantType setParams) : base(setAge, setGender, setWeight, setParams)
         {
-            SuccessfulPregnancy = false;
             SucklingOffspringList = new List<Ruminant>();
         }
     }

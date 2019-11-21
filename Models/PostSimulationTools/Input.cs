@@ -4,6 +4,7 @@
     using Models.Core;
     using Models.Core.Run;
     using Models.Storage;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -24,7 +25,7 @@
     [ViewName("UserInterface.Views.InputView")]
     [PresenterName("UserInterface.Presenters.InputPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
-    public class Input : Model, IRunnable, IReferenceExternalFiles
+    public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         /// <summary>
         /// The DataStore.
@@ -46,10 +47,9 @@
         {
             get
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null && simulations.FileName != null && this.FileName != null)
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
-                return null;
+                if (storage == null)
+                    return PathUtilities.GetAbsolutePath(this.FileName, (Apsim.Parent(this, typeof(Simulations)) as Simulations).FileName);
+                return PathUtilities.GetAbsolutePath(this.FileName, storage.FileName);
             }
 
             set
@@ -66,30 +66,9 @@
         }
 
         /// <summary>
-        /// Gets the parent simulation or null if not found
-        /// </summary>
-        private IStorageWriter StorageWriter
-        {
-            get
-            {
-                // The JobRunnerAsync will not resolve links, so we need to
-                // go looking for the data store ourselves. This is an ugly
-                // hack, no doubt about it, but this infrastructure is about to
-                // be changed/refactored anyway, so hopefully this won't stay
-                // here for too long.
-                if (storage == null)
-                    storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
-                if (storage == null)
-                    throw new Exception("Cannot find a datastore");
-                return storage.Writer;
-            }
-        }
-
-        /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        /// <param name="cancelToken">The cancel token.</param>
-        public void Run(CancellationTokenSource cancelToken)
+        public void Run()
         {
             string fullFileName = FullFileName;
             if (fullFileName != null)
@@ -100,7 +79,7 @@
                 if (data != null)
                 {
                     data.TableName = this.Name;
-                    StorageWriter.WriteTable(data);
+                    storage.Writer.WriteTable(data);
                 }
             }
         }
@@ -108,6 +87,8 @@
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// </summary>
+        [JsonIgnore]
+        [NonSerialized]
         public string ErrorMessage = string.Empty;
 
         /// <summary>

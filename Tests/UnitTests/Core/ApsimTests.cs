@@ -53,7 +53,7 @@
         [Test]
         public void FullPathTest()
         {
-            Zone zone2 = this.simulation.Children[4] as Zone;
+            Zone zone2 = this.simulation.Children[5] as Zone;
             Graph graph = zone2.Children[0] as Graph;
             Soil soil = zone2.Children[1] as Soil;
             
@@ -71,14 +71,15 @@
             Assert.AreEqual(this.simulations.Children.Count, 4);
             Assert.AreEqual(this.simulations.Children[0].Name, "Test");
 
-            Assert.AreEqual(this.simulation.Children.Count, 5);
+            Assert.AreEqual(this.simulation.Children.Count, 6);
             Assert.AreEqual(this.simulation.Children[0].Name, "Weather");
-            Assert.AreEqual(this.simulation.Children[1].Name, "Clock");
-            Assert.AreEqual(this.simulation.Children[2].Name, "Summary");
-            Assert.AreEqual(this.simulation.Children[3].Name, "Field1");
-            Assert.AreEqual(this.simulation.Children[4].Name, "Field2");
+            Assert.AreEqual(this.simulation.Children[1].Name, "MicroClimate");
+            Assert.AreEqual(this.simulation.Children[2].Name, "Clock");
+            Assert.AreEqual(this.simulation.Children[3].Name, "Summary");
+            Assert.AreEqual(this.simulation.Children[4].Name, "Field1");
+            Assert.AreEqual(this.simulation.Children[5].Name, "Field2");
 
-            Zone zone = this.simulation.Children[3] as Zone;
+            Zone zone = this.simulation.Children[4] as Zone;
             Assert.AreEqual(zone.Children.Count, 1);
             Assert.AreEqual(zone.Children[0].Name, "Field1Report");
         }
@@ -89,7 +90,7 @@
         [Test]
         public void ParentTest()
         {
-            Zone zone2 = this.simulation.Children[4] as Zone;
+            Zone zone2 = this.simulation.Children[5] as Zone;
             Graph graph = zone2.Children[0] as Graph;
             
             Assert.NotNull(Apsim.Parent(this.simulation, typeof(Simulations)));
@@ -123,11 +124,11 @@
         [Test]
         public void GetTest()
         {
-            Zone zone2 = this.simulation.Children[4] as Zone;
+            Zone zone2 = this.simulation.Children[5] as Zone;
             Graph graph = zone2.Children[0] as Graph;
             Soil soil = zone2.Children[1] as Soil;
 
-            Zone field1 = this.simulation.Children[3] as Zone;
+            Zone field1 = this.simulation.Children[4] as Zone;
             
             // Make sure we can get a link to a local model from Field1
             Assert.AreEqual((simulation.Get("Field1.Field1Report") as IModel).Name, "Field1Report");
@@ -156,7 +157,7 @@
             
             // Test the in scope capability of get.
             Assert.AreEqual(simulation.Get("[Graph1].Name"), "Graph1");
-            Assert.AreEqual(simulation.Get("[Soil].Water.Name"), "Water");
+            Assert.AreEqual(simulation.Get("[Soil].Physical.Name"), "Physical");
         }
         
         /// <summary>
@@ -169,10 +170,10 @@
             this.simulation.Set("[Weather].Rain", 111.0);
             Assert.AreEqual(this.simulation.Get("[Weather].Rain"), 111.0);
 
-            double[] thicknessBefore = (double[])Apsim.Get(simulation, "[Water].Thickness");
+            double[] thicknessBefore = (double[])Apsim.Get(simulation, "[Physical].Thickness");
             Assert.AreEqual(6, thicknessBefore.Length); // If APITest.xml is modified, this test will fail and must be updated.
-            Apsim.Set(simulation, "[Water].Thickness[1]", "20");
-            double[] thicknessAfter = (double[])Apsim.Get(simulation, "[Water].Thickness");
+            Apsim.Set(simulation, "[Physical].Thickness[1]", "20");
+            double[] thicknessAfter = (double[])Apsim.Get(simulation, "[Physical].Thickness");
 
             Assert.AreEqual(thicknessBefore.Length, thicknessAfter.Length);
             Assert.AreEqual(20, thicknessAfter[0]);
@@ -208,7 +209,7 @@
         {
             IModel clock = Apsim.Child(simulation, typeof(Clock));
             List<IModel> allSiblings = Apsim.Siblings(clock);
-            Assert.AreEqual(allSiblings.Count, 4);
+            Assert.AreEqual(allSiblings.Count, 5);
         }
 
         /// <summary>
@@ -218,15 +219,15 @@
         public void MoveUpDown()
         {
             CommandHistory commandHistory = new CommandHistory();
-            Model modelToMove = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
+            Model modelToMove = Apsim.Get(simulations, "APS14.Factors.Permutation.NRate") as Model;
 
             MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, null);
             moveCommand.Do(commandHistory);
 
             Model modelToMove2 = Apsim.Get(simulations, "APS14.Factors.NRate") as Model;
 
-            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Name, "NRate");
-            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children.Count, 4);
+            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children[0].Name, "NRate");
+            Assert.AreEqual(simulations.Children[2].Children[0].Children[0].Children[0].Children.Count, 4);
         }
 
        

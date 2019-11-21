@@ -2,7 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Core.Runners;
+    using Models.Core.Run;
     using Models.Storage;
     using NUnit.Framework;
     using System;
@@ -120,7 +120,7 @@
             CreateTable(database);
 
             DataStoreReader reader = new DataStoreReader(database);
-            var data = reader.GetDataUsingSql("SELECT Col1 FROM Report");
+            var data = reader.GetDataUsingSql("SELECT [Col1] FROM [Report]");
 
             Assert.AreEqual(Utilities.TableToString(data),
                                            "      Col1\r\n" +
@@ -207,9 +207,8 @@
             string[] checkpointNamesBeforeRun = storage.Reader.CheckpointNames.ToArray();
 
             // Run the simulation
-            IJobManager jobManager = new RunOrganiser(sims, sim, false);
-            IJobRunner jobRunner = new JobRunnerAsync();
-            jobRunner.Run(jobManager, wait: true);
+            var runner = new Runner(sims);
+            runner.Run();
             string[] checkpointNamesAfterRun = storage.Reader.CheckpointNames.ToArray();
 
             Assert.AreNotEqual(checkpointNamesBeforeRun, checkpointNamesAfterRun, "Storage reader failed to update checkpoint names after simulation was run.");

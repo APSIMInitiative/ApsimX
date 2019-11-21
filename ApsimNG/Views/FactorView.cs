@@ -1,6 +1,5 @@
 ﻿namespace UserInterface.Views
 {
-    using global::UserInterface.Interfaces;
     using Gtk;
     using System;
 
@@ -18,7 +17,6 @@
         public FactorView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.FactorView.glade");
-            builder.Autoconnect(this);
             mainWidget = (VBox)builder.GetObject("vbox");
             mainWidget.Destroyed += OnMainWidgetDestroyed;
 

@@ -122,6 +122,10 @@ namespace Models.PMF.Organs
         /// <summary>The luxary n conc</summary>
         private double LuxaryNConc;
 
+        /// <summary>The summary</summary>
+        [Link]
+        private ISummary Summary = null;
+
         /// <summary>The structural fraction</summary>
         [XmlIgnore]
         public double StructuralFraction;
@@ -744,7 +748,6 @@ namespace Models.PMF.Organs
             IsAppeared = true;
 
             MaxArea = leafCohortParameters.MaxArea.Value() * CellDivisionStressFactor;
-            //Reduce potential leaf area due to the effects of stress prior to appearance on cell number 
             GrowthDuration = leafCohortParameters.GrowthDuration.Value() * cohortParams.FinalFraction;
             LagDuration = leafCohortParameters.LagDuration.Value();
             SenescenceDuration = leafCohortParameters.SenescenceDuration.Value();
@@ -757,8 +760,26 @@ namespace Models.PMF.Organs
             MinimumNConc = leafCohortParameters.MinimumNConc.Value();
             StorageFraction = leafCohortParameters.StorageFraction.Value();
             InitialNConc = leafCohortParameters.InitialNConc.Value();
+
+            if (MathUtilities.FloatsAreEqual(MaxArea, 0))
+                throw new Exception("LeafCohortParameters.MaxArea is zero. This is invalid due to the equation:  Age = Area / MaxArea * GrowthDuration");
+            if (MathUtilities.FloatsAreEqual(MaxArea, 0))
+                throw new Exception("LeafCohortParameters.SpecificLeafAreaMax+LeafCohortParameters.SpecificLeafAreaMin cannot be zero.");
+            if (MathUtilities.FloatsAreEqual(StructuralFraction, 1))
+                throw new Exception("LeafCohortParameters.StructuralFraction cannot have a value of 1.");
+            if (MathUtilities.FloatsAreEqual(StructuralFraction, 0))
+                throw new Exception("LeafCohortParameters.StructuralFraction cannot have a value of 0.");
+
             if (Area > 0) //Only set age for cohorts that have an area specified in the xml.
+            {
+                if (Area > MaxArea)
+                {
+                    Summary.WriteWarning(this, "Initial area is more than max area for cohort " + Rank.ToString() + ".");
+                    Area = MaxArea;
+                }
+
                 Age = Area / MaxArea * GrowthDuration;
+            }
             //FIXME.  The size function is not linear so this does not give an exact starting age.  Should re-arange the the size function to return age for a given area to initialise age on appearance.
             LiveArea = Area * CohortPopulation;
             Live.StructuralWt = LiveArea / ((SpecificLeafAreaMax + SpecificLeafAreaMin) / 2) * StructuralFraction;
@@ -790,6 +811,7 @@ namespace Models.PMF.Organs
             //Reduce leaf Population in Cohort due to plant mortality
             double startPopulation = CohortPopulation;
 
+            
             if (Structure.ProportionPlantMortality > 0)
                 CohortPopulation -= CohortPopulation * Structure.ProportionPlantMortality;
 
@@ -798,7 +820,7 @@ namespace Models.PMF.Organs
                 //Ensure we there are some branches.
                 CohortPopulation -= Math.Min(Structure.ProportionBranchMortality * (CohortPopulation - Structure.MainStemPopn), CohortPopulation - Plant.Population);
 
-            double propnStemMortality = (startPopulation - CohortPopulation) / startPopulation;
+            double propnStemMortality = MathUtilities.Divide(startPopulation - CohortPopulation, startPopulation, 0);
 
             //Calculate Accumulated Stress Factor for reducing potential leaf size
             if (IsNotAppeared)

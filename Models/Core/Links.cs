@@ -24,7 +24,7 @@ namespace Models.Core
         /// <param name="linkableServices">A collection of services that can be linked to</param>
         public Links(IEnumerable<object> linkableServices = null)
         {
-            if (linkableServices != null)
+            if (linkableServices != null && linkableServices.Count() > 0)
                 services = linkableServices.ToList();
             else
                 services = new List<object>();
@@ -38,15 +38,20 @@ namespace Models.Core
         /// <param name="allLinks">Unresolve all links or just the non child links?</param>
         public void Resolve(IModel rootNode, bool allLinks, bool recurse = true)
         {
+            var scope = new ScopingRules();
+
             if (recurse)
             {
                 List<IModel> allModels = new List<IModel>() { rootNode };
                 allModels.AddRange(Apsim.ChildrenRecursively(rootNode));
                 foreach (IModel modelNode in allModels)
-                    ResolveInternal(modelNode);
+                {
+                    if (modelNode.Enabled)
+                        ResolveInternal(modelNode, scope);
+                }
             }
             else
-                ResolveInternal(rootNode);
+                ResolveInternal(rootNode, scope);
         }
 
         /// <summary>
@@ -103,7 +108,8 @@ namespace Models.Core
         /// Internal [link] resolution algorithm.
         /// </summary>
         /// <param name="obj"></param>
-        private void ResolveInternal(object obj)
+        /// <param name="scope">The scoping rules to use to resolve links.</param>
+        private void ResolveInternal(object obj, ScopingRules scope)
         {
             foreach (IVariable field in GetAllDeclarations(GetModel(obj),
                                                      GetModel(obj).GetType(),
@@ -130,24 +136,25 @@ namespace Models.Core
                     }
                     if (matches.Count == 0)
                     {
-                        if (link is ParentLinkAttribute)
+                        if (link.Type == LinkType.Ancestor)
                         {
                             matches = new List<object>();
                             matches.Add(GetParent(obj, fieldType));
                         }
-                        else if (link is LinkByPathAttribute)
+                        else if (link.Type == LinkType.Path)
                         {
-                            object match = Apsim.Get(obj as IModel, (link as LinkByPathAttribute).Path);
+                            var locater = new Locater();
+                            object match = locater.Get(link.Path, obj as Model);
                             if (match != null)
                                 matches.Add(match);
                         }
-                        else if (link.IsScoped(field))
-                            matches = Apsim.FindAll(obj as IModel).Cast<object>().ToList();
+                        else if (link.Type == LinkType.Scoped)
+                            matches = scope.FindAll(obj as IModel).Cast<object>().ToList();
                         else
                             matches = GetChildren(obj);
                     }
                     matches.RemoveAll(match => !fieldType.IsAssignableFrom(GetModel(match).GetType()));
-                    if (link.UseNameToMatch(field))
+                    if (link.ByName)
                         matches.RemoveAll(match => !StringUtilities.StringsAreEqual(GetName(match), field.Name));
                     if (field.DataType.IsArray)
                     {
@@ -170,7 +177,7 @@ namespace Models.Core
                         if (!link.IsOptional)
                             throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                     }
-                    else if (matches.Count >= 2 && !link.IsScoped(field))
+                    else if (matches.Count >= 2 && link.Type != LinkType.Scoped)
                         throw new Exception(string.Format(": Found {0} matches for link {1} in model {2} !", matches.Count, field.Name, GetFullName(obj)));
                     else
                         field.Value = GetModel(matches[0]);

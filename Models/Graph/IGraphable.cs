@@ -15,11 +15,17 @@
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
-        void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions);
+        /// <param name="simulationFilter">(Optional) only show data for these simulations.</param>
+        void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions, List<string> simulationFilter = null);
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
         /// <param name="annotations">A list of annotations to add to.</param>
         void GetAnnotationsToPutOnGraph(List<Annotation> annotations);
+
+        /// <summary>Return a list of extra fields that the definition should read.</summary>
+        /// <param name="seriesDefinition">The calling series definition.</param>
+        /// <returns>A list of fields - never null.</returns>
+        IEnumerable<string> GetExtraFieldsToRead(SeriesDefinition seriesDefinition);
     }
 
     /// <summary>An enumeration for the different types of graph series</summary>
@@ -31,8 +37,25 @@
         /// <summary>A scatter series</summary>
         Scatter,
 
-        /// <summary>An area series</summary>
-        Area 
+        /// <summary>
+        /// A region series - two series with the area between them filled with colour.
+        /// </summary>
+        Region,
+
+        /// <summary>
+        /// An area series - a line series with the area between the line and the x-axis filled with colour.
+        /// </summary>
+        Area,
+
+        /// <summary>
+        /// A stacked area series - a line series with the area between the line and the x-axis filled with colour.
+        /// </summary>
+        StackedArea,
+
+        /// <summary>
+        /// A box and whisker plot
+        /// </summary>
+        Box
     }
 
     /// <summary>An enumeration for the different types of markers</summary>
@@ -112,86 +135,6 @@
 
         /// <summary>Thin line thickess</summary>
         Thin
-    }
-
-    /// <summary>
-    /// A class for defining a graph series. A list of these is given to graph when graph is drawing itself.
-    /// </summary>
-    public class SeriesDefinition
-    {
-        /// <summary>A list of simulation names.</summary>
-        public string[] SimulationNames = null;
-
-        /// <summary>Series definition filter.</summary>
-        public string Filter = null;
-
-        /// <summary>Gets the series type</summary>
-        public SeriesType type;
-
-        /// <summary>Gets the marker to show</summary>
-        public MarkerType marker;
-
-        /// <summary>Gets the line type to show</summary>
-        public LineType line;
-
-        /// <summary>Gets the marker size</summary>
-        public MarkerSizeType markerSize;
-
-        /// <summary>Gets the line thickness</summary>
-        public LineThicknessType lineThickness;
-
-        /// <summary>Gets the colour.</summary>
-        public Color colour;
-
-        /// <summary>Gets the associated x axis</summary>
-        public Axis.AxisType xAxis = Axis.AxisType.Bottom;
-
-        /// <summary>Gets the associated y axis</summary>
-        public Axis.AxisType yAxis = Axis.AxisType.Left;
-
-        /// <summary>Gets the x field name.</summary>
-        public string xFieldName;
-
-        /// <summary>Gets the t field name.</summary>
-        public string yFieldName;
-
-        /// <summary>
-        /// Units of measurement for X
-        /// </summary>
-        public string xFieldUnits;
-
-        /// <summary>
-        /// Units of measurement for Y
-        /// </summary>
-        public string yFieldUnits;
-
-        /// <summary>Gets a value indicating whether this series should be shown in the level.</summary>
-        public bool showInLegend;
-
-        /// <summary>Gets the title of the series</summary>
-        public string title;
-
-        /// <summary>Gets the dataview</summary>
-        [XmlIgnore]
-        public DataTable data;
-
-        /// <summary>Gets the x values</summary>
-        public IEnumerable x;
-
-        /// <summary>Gets the y values</summary>
-        public IEnumerable y;
-
-        /// <summary>Gets the x2 values</summary>
-        public IEnumerable x2;
-
-        /// <summary>Gets the y2 values</summary>
-        public IEnumerable y2;
-
-        /// <summary>The simulation names for each point.</summary>
-        public IEnumerable<string> simulationNamesForEachPoint;
-
-        /// <summary>Gets the error values</summary>
-        public IEnumerable error;
     }
 
     /// <summary>Base interface for all annotations</summary>

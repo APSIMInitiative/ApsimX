@@ -26,7 +26,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/reporting/resourceshortfalls.htm")]
+    [HelpUri(@"Content/Features/Reporting/ResourceShortfalls.htm")]
     public class ReportResourceShortfalls: Models.Report.Report
     {
         /// <summary>The columns to write to the data store.</summary>
@@ -63,18 +63,22 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
-            variableNames.Add("[Clock].Today as Date");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.Reason as Reason");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.Required as Required");
-            variableNames.Add("[Activities].LastShortfallResourceRequest.Available as Available");
+            List<string> variableNames = new List<string>
+            {
+                "[Clock].Today as Date",
+                "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
+                "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
+                "[Activities].LastShortfallResourceRequest.Reason as Reason",
+                "[Activities].LastShortfallResourceRequest.Required as Required",
+                "[Activities].LastShortfallResourceRequest.Available as Available"
+            };
 
             EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };
 
-            base.VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = variableNames.ToArray();
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
 
             // Subscribe to events.

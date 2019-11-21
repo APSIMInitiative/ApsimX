@@ -15,6 +15,12 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStorePool : IFeedType
     {
         /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
+        /// <summary>
         /// Dry Matter (%)
         /// </summary>
         [Description("Dry Matter (%)")]
@@ -47,12 +53,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [XmlIgnore]
         public int Age { get; set; }
-
-        /// <summary>
-        /// Current pool grazing limit based on ruminant eating pool
-        /// </summary>
-        [XmlIgnore]
-        public double Limit { get; set; }
 
         /// <summary>
         /// Amount to set at start (kg)
@@ -119,6 +119,7 @@ namespace Models.CLEM.Resources
                     Nitrogen = ((Nitrogen * Amount) + (pool.Nitrogen * pool.Amount)) / (Amount + pool.Amount);
                 }
                 amount += pool.Amount;
+                Growth += pool.Amount;
             }
         }
 
@@ -132,7 +133,7 @@ namespace Models.CLEM.Resources
         {
             removeAmount = Math.Min(this.amount, removeAmount);
             this.Consumed += removeAmount;
-            this.amount = this.amount - removeAmount;
+            this.amount -= removeAmount;
 
             return removeAmount;
         }
@@ -152,7 +153,7 @@ namespace Models.CLEM.Resources
         /// <param name="newAmount"></param>
         public void Set(double newAmount)
         {
-            this.amount = newAmount;
+            this.amount = Math.Max(0,newAmount);
         }
 
         /// <summary>

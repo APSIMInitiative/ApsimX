@@ -1,0 +1,135 @@
+<folder version="37" creator="Apsim 7.10-r4158" name="simulations">
+  <factorial name="Factorials">
+    <active>0</active>
+    <settings />
+  </factorial>
+  <simulation name="Double Crop Maize-wheat (silage)">
+    
+        <manager2 name="FertiliseOnFixedDates">
+          <ui>
+            <category type="category" description="Fertiliser will be applied on the date(s) below" />
+            <SameDays type="yesno" description="Apply fertiliser on the same day(s) each year? (yes/no) - if &quot;no&quot; then must include the year of application below">yes</SameDays>
+            <FertDatesStr type="text" description="Dates for one or more fertiliser applications (dd-mmm or dd-mmm-yyyy) as a list with a space between dates">1-dec 7-jan 1-feb 21-feb</FertDatesStr>
+            <category type="category" description="Test for the mineral N in the soil and don't apply the fertiliser if greater than X kgN/ha is stored in the soil above a depth of Y mm" />
+            <UseSoilN type="yesno" description="Use a critical soil mineral N to prevent application above a threshold? (yes/no)">no</UseSoilN>
+            <FertAmtCriteria type="text" description="Don't add fertiliser if N in the soil to the depth below exceeds (kg/ha) ">50</FertAmtCriteria>
+            <FertDepthCriteria type="text" description="Depth to which the amount of N in the soil should be calculated (mm)">75</FertDepthCriteria>
+            <category type="category" description="Fertiliser application details" />
+            <FertDepth type="text" description="Depth at which to apply the fertiliser (mm)">30</FertDepth>
+            <FertAmt type="text" description="Annual fertiliser addition (kg N /ha) - assumes an even split between applications (if more than one application date)">222</FertAmt>
+            <FertType type="list" listvalues="no3_n,nh4_n,nh4no3,urea_n,urea_no3,urea,nh4so4_n,rock_p,banded_p,broadcast_p" description="Fertiliser type - select from the list">urea_n</FertType>
+          </ui>
+          <text>Imports System
+Imports ModelFramework
+
+Public Class Script 
+   &lt;Link()&gt; Dim MyPaddock As Paddock
+   &lt;Link()&gt; Dim Fert As Fertiliser
+
+   'Parameters - user inputs from the Properties tab
+   &lt;Param&gt; Private FertDatesStr() As String     'The array of fertiliser "dates" as a atring array of dd-mmm's 
+   &lt;Param&gt; Private SameDays As String           'Yes/No as to whether the fertiliser should be applied every year - if no then will only be on the dd-mmm-yyyy in FertDates
+   &lt;Param&gt; Private UseSoilN As String           'Yes/No as to whether to use the soil mineral N stored to further control the fertiliser application
+   &lt;Param&gt; Private FertAmtCriteria As Single    'Don't apply fertiliser if the N stored in the soil is greater than this.  Disregard the test if the value is -ve
+   &lt;Param&gt; Private FertDepthCriteria As Single  'Depth in the soil to calculate the N storage
+   &lt;Param&gt; Private FertDepth As Single          'Depth in the soil that the fertilser will be applied
+   &lt;Param&gt; Private FertAmt As Single            'Total annual application - needs to be split up between the various application dates listed
+   &lt;Param&gt; Private FertType As String           'Type of fertliser to apply
+
+   'Inputs - got by this Manager from elsewhere in APSIM
+   &lt;Input&gt; Private Today As DateTime            'Today's date from APSIM 
+   &lt;Input&gt; Private dlayer As Single()           'Array of soil layer thicknesses - for calculation of mineral N in the soil
+   &lt;Input&gt; Private no3 As Single()              'Array of nitrate-N (kg N /ha) for each soil layer - for calculation of mineral N in the soil
+   &lt;Input&gt; Private nh4 As Single()              'Array of ammonium-N (kg N /ha) for each soil layer - for calculation of mineral N in the soil
+   &lt;Input&gt; Private urea As Single()             'Array of urea-N (kg N /ha) for each soil layer - for calculation of mineral N in the soil
+
+   'Outputs - calculated by this Manager and available to be output by the user
+   &lt;Output&gt; Private Add_fert As Boolean         'Test to see if Today is a day that fertiliser should be added
+   &lt;Output&gt; Private FertCriteriaOK As Boolean   'Test to see if the criteria related to the amount of mineral N in the soil is satisfied
+   &lt;Output&gt; Private CumSoilN As Single          'Mineral-N stored in the soil to a depth of FertDepthCriteria
+
+   'Other variables that are calculated but not needed for outputs
+   Private FertDates As Date()                  'Array to hold the application dates once converted to dates from the string
+   Private LayerWeights As Single()             'Weigthing of each layer for FertAmtCriteria calculation
+
+
+   &lt;EventHandler()&gt; Public Sub OnInit2()
+      '"OnInit2" is an event handler gets called once at the start of the simulation 
+
+      'Get the right length for the array of dates and then convert the strings of dd-mmm into proper dates - VB will assume the current year if it is not already supplied
+      ReDim FertDates(FertDatesStr.length - 1)
+      For i As Integer = 0 To FertDatesStr.Length - 1
+         FertDates(i) = Date.Parse(FertDatesStr(i))
+      Next
+
+      'Calculate the application amount per application (user input was the total annaul application)
+      FertAmt = FertAmt / FertDatesStr.length
+
+   End Sub
+
+   &lt;EventHandler()&gt; Public Sub OnPrepare()
+      '"OnPrepare" is an event handler gets called once at the start of every day (before Prepare and Post) 
+
+      'By default no fertiliser added today
+      'Run through all the dates and see if any of the dd-mmm's match those for Today, if so then will add fertiliser provided that other criteria are met
+      'If the use has selected "no" to applying on the same dates each year then also test for the current year
+      Add_Fert = False                                                                     
+      For i As Integer = 0 To FertDates.length - 1
+         If SameDays.ToLower = "yes" Then
+            If (FertDates(i).Day = Today.Day) And (FertDates(i).Month = Today.Month) Then
+               Add_Fert = True
+            End If         
+         Else
+            If (FertDates(i).Day = Today.Day) And (FertDates(i).Month = Today.Month) And (FertDates(i).Year = Today.Year) Then
+               Add_Fert = True
+            End If         
+         End If
+      Next
+
+      'If the user has decided not to user a soil minerla N criteria then FertCriteriaOK is always true
+      If UseSoilN.ToLower = "no" Then
+         FertCriteriaOK = True
+      Else
+         CumSoilN = 0.0
+         FertCriteriaOK = False
+
+         'Set the number of elements in the LayerWeights array to equal the number of soil layers - do this here because erosion can change the layering
+         'Then move through the array and assign a LayerWeighting from 0 to 1 quantifying what proportion of the soil and mineral N in this layer is above FertDepthCriteria
+         ReDim LayerWeights(dlayer.length - 1)                
+         Dim CumDepth As Single = 0.0
+         For i As Integer = 0 To dlayer.Length - 1     
+            CumDepth += dlayer(i)                      
+            If CumDepth &lt;= FertDepthCriteria Then
+               LayerWeights(i) = 1.0                   
+            ElseIf (CumDepth - dlayer(i)) &lt;= FertDepthCriteria Then
+               LayerWeights(i) = (FertDepthCriteria - (CumDepth - dlayer(i))) / dlayer(i)
+            Else
+               LayerWeights(i) = 0.0
+            End If
+         Next
+
+         'Add up the no3, nh4 and urea (all already in kg N /ha) in each layer and multiply by the layer weighting to get the total mineral N to the set depth
+         For i As Integer = 0 To dlayer.Length - 1     
+            CumSoilN += (no3(i) + nh4(i) + urea(i)) * LayerWeights(i)                         
+         Next
+
+         'If there is less mineral N in the soil than FertAmtCriteria then it is OK to add fertiliser
+         If CumSoilN &lt;= FertAmtCriteria Then
+            FertCriteriaOK = True                             
+         End If
+      End If
+
+      'Only add the fertiliser if both conditions are true
+      '"Fert.Apply" send the command to apply the specified amount of fertiliser at the specified depth of the specified type of fertiliser
+      If Add_Fert And FertCriteriaOK Then
+         Fert.Apply(FertAmt, FertDepth, FertType)
+      End If
+
+   End Sub
+
+End Class
+   </text>
+        </manager2>
+        
+  </simulation>
+</folder>

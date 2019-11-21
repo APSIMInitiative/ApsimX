@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -22,7 +22,7 @@ namespace Models.Functions
         private bool YsAreAllTheSame = false;
 
         /// <summary>Gets the xy pairs.</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private XYPairs XYPairs = null;
 
         [Link]
@@ -36,6 +36,12 @@ namespace Models.Functions
 
         /// <summary>Constructor</summary>
         public LinearInterpolationFunction() { }
+
+        /// <summary>Constructor</summary>
+        public LinearInterpolationFunction(double[] x, double[] y) 
+        {
+            XYPairs = new XYPairs() { X = x, Y = y };
+        }
 
         /// <summary>Constructor</summary>
         /// <param name="xproperty">x property</param>

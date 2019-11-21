@@ -25,6 +25,8 @@
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
+    [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
+    [ValidParent(ParentType = typeof(Factorial.Factor))]
     public class Manager : Model, IOptionallySerialiseChildren
     {
         private static bool haveTrappedAssemblyResolveEvent = false;
@@ -123,7 +125,7 @@
             if (Children.Count == 1)
                 GetParametersFromScriptModel(Children[0]);
 
-            if (isCreated && Code != null && (Code != CompiledCode || Children.Count == 0))
+            if (Enabled && isCreated && Code != null && (Code != CompiledCode || Children.Count == 0))
             {
                 try
                 {
@@ -152,7 +154,7 @@
                 catch (Exception err)
                 {
                     CompiledCode = null;
-                    throw new Exception("Unable to compile \"" + Name + "\"", err);
+                    throw new Exception("Unable to compile \"" + Name + "\"" + ". Full path: " + Apsim.FullPath(this), err);
                 }
             }
         }
@@ -220,7 +222,7 @@
                         if (property != null)
                         {
                             object value;
-                            if (parameter.Value.StartsWith("."))
+                            if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
                                 value = Apsim.Get(this, parameter.Value);
                             else if (property.PropertyType == typeof(IPlant))
                                 value = Apsim.Find(this, parameter.Value);
@@ -261,7 +263,7 @@
                     if (value == null)
                         value = "";
                     else if (value is IModel)
-                        value = Apsim.FullPath(value as IModel);
+                        value = "[" + (value as IModel).Name + "]";
                     Parameters.Add(new KeyValuePair<string, string>
                                         (property.Name, 
                                          ReflectionUtilities.ObjectToString(value)));
@@ -279,7 +281,7 @@
         /// Compile the specified 'code' into an executable assembly. If 'assemblyFileName'
         /// is null then compile to an in-memory assembly.
         /// </summary>
-        public static Assembly CompileTextToAssembly(string code, string assemblyFileName)
+        public static Assembly CompileTextToAssembly(string code, string assemblyFileName, params string[] referencedAssemblies)
         {
             // See if we've already compiled this code. If so then return the assembly.
             if (AssemblyCache.ContainsKey(code))
@@ -332,6 +334,7 @@
                         Params.ReferencedAssemblies.Add(typeof(MathNet.Numerics.Fit).Assembly.Location); // MathNet.Numerics
                         Params.ReferencedAssemblies.Add(typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location); // APSIM.Shared.dll
                         Params.ReferencedAssemblies.Add(typeof(IModel).Assembly.Location); // Models.exe
+                        Params.ReferencedAssemblies.AddRange(referencedAssemblies);
 
                         if (!Params.ReferencedAssemblies.Contains(Assembly.GetCallingAssembly().Location))
                             Params.ReferencedAssemblies.Add(Assembly.GetCallingAssembly().Location);

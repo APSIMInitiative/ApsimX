@@ -83,7 +83,7 @@
                 var vs = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
                 if (vs.Count() > 0)
                 {
-                    VersionAttribute verAtt = vs.ToList<Attribute>().Last() as VersionAttribute;
+                    VersionAttribute verAtt = vs.ToList<Attribute>().Cast<VersionAttribute>().OrderBy(a => a.ToString()).Last() as VersionAttribute;
                     if (verAtt != null)
                     {
                         string v = "Version ";
@@ -126,7 +126,7 @@
                     this.view.AddLowerView(newView);
 
                     // Resolve links in presenter.
-                    this.explorerPresenter.ApsimXFile.Links.Resolve(currentLowerPresenter);
+                    explorerPresenter.ApsimXFile.Links.Resolve(currentLowerPresenter);
                     this.currentLowerPresenter.Attach(model, newView, explorerPresenter);
                 }
             }

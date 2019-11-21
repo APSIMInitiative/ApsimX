@@ -25,6 +25,9 @@
     [ValidParent(ParentType = typeof(Folder))]
     public class FactorialAnova : Model, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// List of analysis outputs
         /// </summary>
@@ -116,10 +119,9 @@
         }
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
-        /// <param name="dataStore">The data store.</param>
-        public void Run(IDataStore dataStore)
+        public void Run()
         {
-            string sql = "SELECT * FROM Report";
+            string sql = "SELECT * FROM [Report]";
             DataTable predictedData = dataStore.Reader.GetDataUsingSql(sql);
             if (predictedData != null)
             {

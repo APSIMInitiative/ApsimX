@@ -134,7 +134,7 @@ namespace Models.Core.ApsimFile
                 try
                 {
                     double area = Convert.ToDouble(areaString,
-                                                   System.Globalization.CultureInfo.InvariantCulture);
+                                                   CultureInfo.InvariantCulture);
                     if (area <= 0)
                         XmlUtilities.SetValue(zoneNode, "Area", "1");
                 }
@@ -630,10 +630,13 @@ namespace Models.Core.ApsimFile
 
                         foreach (string tableName in tableNames)
                         {
-                            List<string> columnNames = connection.GetColumnNames(tableName);
-                            if (columnNames.Contains("SimulationID") && !columnNames.Contains("CheckpointID"))
+                            if (!tableName.EndsWith("Index"))
                             {
-                                connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
+                                List<string> columnNames = connection.GetColumnNames(tableName);
+                                if (columnNames.Contains("SimulationID") && !columnNames.Contains("CheckpointID"))
+                                {
+                                    connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
+                                }
                             }
                         }
 
@@ -665,7 +668,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
-                string replacePattern = @"Convert.ToDouble(zone.Get(${variable}))";
+                string replacePattern = @"Convert.ToDouble(zone.Get(${variable}), System.Globalization.CultureInfo.InvariantCulture)";
                 string[] variableNames = new string[] { "ExpandedCohortNo", "AppearedCohortNo", "GreenCohortNo", "SenescingCohortNo" };
                 foreach (string variableName in variableNames)
                 {
@@ -783,7 +786,7 @@ namespace Models.Core.ApsimFile
                     string value = XmlUtilities.Value(series, "FactorIndexToVaryColours");
                     if (value != string.Empty)
                     {
-                        int index = Convert.ToInt32(value);
+                        int index = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                         if (index > -1 && index < uniqueFactorNames.Count())
                             XmlUtilities.SetValue(series, "FactorToVaryColours", uniqueFactorNames[index]);
                         XmlUtilities.DeleteValue(series, "FactorIndexToVaryColours");
@@ -792,7 +795,7 @@ namespace Models.Core.ApsimFile
                     value = XmlUtilities.Value(series, "FactorIndexToVaryMarkers");
                     if (value != string.Empty)
                     {
-                        int index = Convert.ToInt32(value);
+                        int index = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                         if (index > -1 && index < uniqueFactorNames.Count())
                             XmlUtilities.SetValue(series, "FactorToVaryMarkers", uniqueFactorNames[index]);
                         XmlUtilities.DeleteValue(series, "FactorIndexToVaryMarkers");
@@ -801,7 +804,7 @@ namespace Models.Core.ApsimFile
                     value = XmlUtilities.Value(series, "FactorIndexToVaryLines");
                     if (value != string.Empty)
                     {
-                        int index = Convert.ToInt32(value);
+                        int index = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                         if (index > -1 && index < uniqueFactorNames.Count())
                             XmlUtilities.SetValue(series, "FactorToVaryLines", uniqueFactorNames[index]);
                         XmlUtilities.DeleteValue(series, "FactorIndexToVaryLines");

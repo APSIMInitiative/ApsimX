@@ -3,24 +3,27 @@
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
 
     /// <summary>Encapsulates an insert query for a table.</summary>
     class InsertQuery
     {
         /// <summary>Cache of queries.</summary>
-        private List<Tuple<int, IntPtr>> queryCache = new List<Tuple<int, IntPtr>>();
+        private List<Tuple<int, object>> queryCache = new List<Tuple<int, object>>();
 
-        /// <summary>Name of table that this query belongs to.</summary>
-        public string TableName { get; private set; }
+        /// <summary>
+        /// The datatable associated with this query.
+        /// </summary>
+        private DataTable dataTable;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="tableNameForQuery">Name of table.</param>
-        public InsertQuery(string tableNameForQuery)
+        /// <param name="table">A DataTable object.</param>
+        public InsertQuery(DataTable table)
         {
-            TableName = tableNameForQuery;
+            this.dataTable = table;
         }
 
         /// <summary>
@@ -29,42 +32,33 @@
         /// <param name="database">The database to write to.</param>
         /// <param name="columnNames">The column names relating to the values.</param>
         /// <param name="rowValues">The values making up the row to write.</param>
-        public void ExecuteQuery(IDatabaseConnection database, 
+        public void ExecuteQuery(IDatabaseConnection database,
                                  IEnumerable<string> columnNames,
                                  IEnumerable<object> rowValues)
         {
-            if (database is SQLite)
-            {
-                var sqlite = database as SQLite;
-                var queryHandle = GetPreparedQuery(sqlite, columnNames);
-                sqlite.BindParametersAndRunQuery(queryHandle, rowValues);
-            }
-            else
-            {
-                List<object[]> values = new List<object[]>() { rowValues.ToArray() };
-                database.InsertRows(TableName, columnNames.ToList(), values);
-            }
+            var queryHandle = GetPreparedQuery(database);
+            database.RunBindableQuery(queryHandle, rowValues);
         }
 
         /// <summary>Get a prepared query for the specified column names.</summary>
-        /// <param name="sqlite">The database to write to.</param>
-        /// <param name="columnNames">The column names to get the query for.</param>
-        public IntPtr GetPreparedQuery(SQLite sqlite, IEnumerable<string> columnNames)
+        /// <param name="database">The database to write to.</param>
+        public object GetPreparedQuery(IDatabaseConnection database)
         {
+            // Get a list of column names.
+            var columnNames = dataTable.Columns.Cast<DataColumn>().Select(col => col.ColumnName);
+
             int key = columnNames.Aggregate(0, (current, item) => current + item.GetHashCode());
 
             var foundQuery = queryCache.Find(q => q.Item1 == key);
             if (foundQuery == null)
             {
-                IntPtr queryHandle = IntPtr.Zero;
-                var sql = sqlite.CreateInsertSQL(TableName, columnNames);
-                queryHandle = sqlite.Prepare(sql);
-                queryCache.Add(new Tuple<int, IntPtr>(key, queryHandle));
+                object queryHandle = database.PrepareBindableInsertQuery(dataTable);
+                queryCache.Add(new Tuple<int, object>(key, queryHandle));
 
                 // Ensure the number of prepared queries doesn't exceed 5.
                 if (queryCache.Count > 5)
                 {
-                    sqlite.Finalize(queryCache[0].Item2);
+                    database.FinalizeBindableQuery(queryCache[0].Item2);
                     queryCache.RemoveAt(0);
                 }
                 return queryHandle;
@@ -76,8 +70,7 @@
         internal void Close(IDatabaseConnection database)
         {
             foreach (var query in queryCache)
-                if (database is SQLite)
-                    (database as SQLite).Finalize(query.Item2);
+                database.FinalizeBindableQuery(query.Item2);
             queryCache.Clear();
         }
     }

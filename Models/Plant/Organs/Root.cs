@@ -1,4 +1,4 @@
-namespace Models.PMF.Organs
+﻿namespace Models.PMF.Organs
 {
     using APSIM.Shared.Utilities;
     using Library;
@@ -63,7 +63,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IRemovableBiomass
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         private double BiomassToleranceValue = 0.0000000001;
@@ -77,128 +77,128 @@ namespace Models.PMF.Organs
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The DM demand function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>Link to the KNO3 link</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction kno3 = null;
 
         /// <summary>Link to the KNH4 link</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction knh4 = null;
 
         /// <summary>Soil water factor for N Uptake</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nUptakeSWFactor = null;
 
         /// <summary>Gets or sets the initial biomass dry matter weight</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/plant")]
         private IFunction initialDM = null;
 
         /// <summary>Gets or sets the specific root length</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("m/g")]
         private IFunction specificRootLength = null;
 
         /// <summary>The nitrogen demand switch</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nitrogenDemandSwitch = null;
 
         /// <summary>The N demand function</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The nitrogen root calc switch</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private IFunction NitrogenRootCalcSwitch = null;
 
         /// <summary>The nitrogen root calc switch</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction RootFrontCalcSwitch = null;
 
         /// <summary>The N retranslocation factor</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("/d")]
         private IFunction nRetranslocationFactor = null;
 
         /// <summary>The N reallocation factor</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("/d")]
         private IFunction nReallocationFactor = null;
 
         /// <summary>The DM retranslocation factor</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("/d")]
         private IFunction dmRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
 
         /// <summary>The biomass senescence rate</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction senescenceRate = null;
 
         /// <summary>The root front velocity</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("mm/d")]
         private IFunction rootFrontVelocity = null;
 
         /// <summary>The maximum N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction maximumNConc = null;
 
         /// <summary>The minimum N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction minimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("g/g")]
         private IFunction criticalNConc = null;
 
         /// <summary>The maximum daily N uptake</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("kg N/ha")]
         private IFunction maxDailyNUptake = null;
 
         /// <summary>The kl modifier</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("0-1")]
         private IFunction klModifier = null;
 
         /// <summary>The Maximum Root Depth</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("mm")]
         private IFunction maximumRootDepth = null;
         
         /// <summary>Dry matter efficiency function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction dmConversionEfficiency = null;
         
         /// <summary>Carbon concentration</summary>
         [Units("-")]
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction carbonConcentration = null;
 
         /// <summary>The cost for remobilisation</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction remobilisationCost = null;
 
         /// <summary>The proportion of biomass respired each day</summary> 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
 
@@ -395,7 +395,10 @@ namespace Models.PMF.Organs
                         double[] pawc = Z.soil.PAWC;
                         Biomass[] layerLiveForZone = Z.LayerLive;
                         for (int i = 0; i < Z.LayerLive.Length; i++)
-                            MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(2 * paw[i] / pawc[i], 0, 1);
+                            if (pawc[i] > 0)
+                            {
+                                MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(2 * paw[i] / pawc[i], 0, 1);
+                            }
                     }
 
                 return MeanWTF;
@@ -539,12 +542,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMDemand")]
         private void SetDMDemand(object sender, EventArgs e)
         {
-            if (parentPlant.SowingData?.Depth < PlantZone.Depth)
+            if (parentPlant.SowingData?.Depth <= PlantZone.Depth)
             {
                 if (dmConversionEfficiency.Value() > 0.0)
                 {
-                    DMDemand.Structural = dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value();
-                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
+                    DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
+                    DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value()) ;
                     DMDemand.Metabolic = 0;
                 }
                 else
@@ -722,7 +725,7 @@ namespace Models.PMF.Organs
                     if (myZone.Diffusion == null || myZone.Diffusion.Length != myZone.soil.Thickness.Length)
                         myZone.Diffusion = new double[myZone.soil.Thickness.Length];
 
-                    var currentLayer = Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness);
+                    var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
                     for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         var swdep = water[layer]; //mm
@@ -740,7 +743,7 @@ namespace Models.PMF.Organs
 
                         if (layer == currentLayer)
                         {
-                            var proportion = Soil.ProportionThroughLayer(currentLayer, myZone.Depth, myZone.soil.Thickness);
+                            var proportion = myZone.soil.ProportionThroughLayer(currentLayer, myZone.Depth);
                             no3Diffusion *= proportion;
                         }
 
@@ -850,47 +853,45 @@ namespace Models.PMF.Organs
                 return new double[myZone.soil.Thickness.Length]; //With Weirdo, water extraction is not done through the arbitrator because the time step is different.
             else
             {
+                var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
+                var soilCrop = myZone.soil.Crop(parentPlant.Name);
                 if (RootFrontCalcSwitch?.Value() >= 1.0)
                 {
-                    double[] kl = myZone.soil.KL(parentPlant.Name);
-                    double[] ll = myZone.soil.LL(parentPlant.Name);
-                    var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
+                    double[] kl = soilCrop.KL;
+                    double[] ll = soilCrop.LL;
 
                     double[] lldep = new double[myZone.soil.Thickness.Length];
                     double[] available = new double[myZone.soil.Thickness.Length];
 
                     double[] supply = new double[myZone.soil.Thickness.Length];
-                    LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
-                    for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
+                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
+                    for (int layer = 0; layer <= currentLayer; layer++)
                     {
                         lldep[layer] = ll[layer] * myZone.soil.Thickness[layer];
                         available[layer] = Math.Max(zone.Water[layer] - lldep[layer], 0.0);
                         if (currentLayer == layer)
                         {
-                            var layerproportion = Soil.ProportionThroughLayer(layer, myZone.Depth, myZone.soil.Thickness);
+                            var layerproportion = myZone.soil.ProportionThroughLayer(layer, myZone.Depth);
                             available[layer] *= layerproportion;
                         }
 
-                        if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
-                        {
-                            supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
-                                available[layer] * rootProportionInLayer(layer, myZone));
-                        }
+                        var proportionThroughLayer = rootProportionInLayer(layer, myZone);
+                        var klMod = klModifier.Value(layer);
+                        supply[layer] = Math.Max(0.0, kl[layer] * klMod * available[layer] * proportionThroughLayer);
                     }
-                    if (MathUtilities.Sum(supply) < 0.0)
-                        return supply;
+
                     return supply;
                 }
                 else
                 {
-                    double[] kl = myZone.soil.KL(parentPlant.Name);
-                    double[] ll = myZone.soil.LL(parentPlant.Name);
+                    double[] kl = soilCrop.KL;
+                    double[] ll = soilCrop.LL;
 
                     double[] supply = new double[myZone.soil.Thickness.Length];
-                    LayerMidPointDepth = Soil.ToMidPoints(myZone.soil.Thickness);
+                    LayerMidPointDepth = myZone.soil.DepthMidPoints;
                     for (int layer = 0; layer < myZone.soil.Thickness.Length; layer++)
                     {
-                        if (layer <= Soil.LayerIndexOfDepth(myZone.Depth, myZone.soil.Thickness))
+                        if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
                         {
                             supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
                             (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * rootProportionInLayer(layer, myZone));
@@ -928,7 +929,7 @@ namespace Models.PMF.Organs
                 return Math.Max(0.0, MathUtilities.Divide(rootArea, soilArea, 0.0));
             }
                 
-            return Soil.ProportionThroughLayer(layer, zone.Depth, zone.soil.Thickness);
+            return zone.soil.ProportionThroughLayer(layer, zone.Depth);
         }
 
         //------------------------------------------------------------------------------------------------
@@ -941,23 +942,23 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Link to the KNO3 link</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction RootDepthStressFactor = null;
 
         /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction MaxNUptakeRate = null;
 
         /// <summary>Maximum Nitrogen Uptake Rate</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction NSupplyFraction = null;
 
         /// <summary>Used to calc maximim diffusion rate</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction DltThermalTime = null;
 
         /// <summary>Used to calc maximim diffusion rate</summary>
-        [ChildLinkByName(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction MaxDiffusion = null;
 
         /// <summary>The kgha2gsm</summary>
@@ -1083,15 +1084,17 @@ namespace Models.PMF.Organs
         /// <summary>Computes root total water supply.</summary>
         public double TotalExtractableWater()
         {
-            double[] LL = PlantZone.soil.LL(parentPlant.Name);
-            double[] KL = PlantZone.soil.KL(parentPlant.Name);
+            var soilCrop = PlantZone.soil.Crop(parentPlant.Name);
+
+            double[] LL = soilCrop.LL;
+            double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.soil.Water;
             double[] DZ = PlantZone.soil.Thickness;
 
             double supply = 0;
             for (int layer = 0; layer < LL.Length; layer++)
             {
-                if (layer <= Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness))
+                if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
                     supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
                         rootProportionInLayer(layer, PlantZone));
             }
@@ -1102,15 +1105,17 @@ namespace Models.PMF.Organs
         /// <summary>It adds an extra layer proportion calc to extractableWater calc.</summary>
         public double PlantAvailableWaterSupply()
         {
-            double[] LL = PlantZone.soil.LL(parentPlant.Name);
-            double[] KL = PlantZone.soil.KL(parentPlant.Name);
+            var soilCrop = PlantZone.soil.Crop(parentPlant.Name);
+
+            double[] LL = soilCrop.LL;
+            double[] KL = soilCrop.KL;
             double[] SWmm = PlantZone.soil.Water;
             double[] DZ = PlantZone.soil.Thickness;
             double[] available = new double[PlantZone.soil.Thickness.Length];
             double[] supply = new double[PlantZone.soil.Thickness.Length];
 
-            var currentLayer = Soil.LayerIndexOfDepth(Depth, PlantZone.soil.Thickness);
-            var layertop = MathUtilities.Sum(PlantZone.soil.Thickness, 0, currentLayer-1);
+            var currentLayer = PlantZone.soil.LayerIndexOfDepth(Depth);
+            var layertop = MathUtilities.Sum(PlantZone.soil.Thickness, 0, Math.Max(0, currentLayer - 1));
             var layerBottom = MathUtilities.Sum(PlantZone.soil.Thickness, 0, currentLayer);
             var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
 
@@ -1238,7 +1243,7 @@ namespace Models.PMF.Organs
             Soil soil = Apsim.Find(this, typeof(Soil)) as Soil;
             if (soil == null)
                 throw new Exception("Cannot find soil");
-            if (soil.Crop(parentPlant.Name) == null && soil.Weirdo == null)
+            if (soil.Weirdo == null && soil.Crop(parentPlant.Name) == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
 
             PlantZone = new ZoneState(parentPlant, this, soil, 0, initialDM.Value(), parentPlant.Population, maximumNConc.Value(),
@@ -1312,9 +1317,53 @@ namespace Models.PMF.Organs
 
 
                     Biomass Loss = Live * senescedFrac;
-                    Live.Subtract(Loss);
-                    Dead.Add(Loss);
+                    //Live.Subtract(Loss);
+                    //Dead.Add(Loss);
                     Senesced.Add(Loss);
+
+                    var currentLayer = PlantZone.soil.LayerIndexOfDepth(PlantZone.Depth);
+                    int layer = currentLayer;
+                    double dmSenesced = Live.StructuralWt * senescedFrac; //sorghum only uses structural // same as Loss.StructuralWt
+                    double senNConc = Live.N / Live.StructuralWt;
+                    double nSenesced = dmSenesced * senNConc; // = Live.N * senescedFrac
+
+                    while (layer >= 0 && (MathUtilities.IsPositive(dmSenesced) || MathUtilities.IsPositive(nSenesced)))
+                    {
+                        if (MathUtilities.IsPositive(dmSenesced))
+                        {
+                            if (PlantZone.LayerLive[layer].StructuralWt >= dmSenesced)
+                            {
+                                PlantZone.LayerLive[layer].StructuralWt -= dmSenesced;
+                                PlantZone.LayerDead[layer].StructuralWt += dmSenesced;
+                                dmSenesced = 0.0;
+                            }
+                            else
+                            {
+                                dmSenesced -= PlantZone.LayerLive[layer].StructuralWt;
+                                PlantZone.LayerDead[layer].StructuralWt += PlantZone.LayerLive[layer].StructuralWt;
+                                PlantZone.LayerLive[layer].StructuralWt = 0.0;
+                            }
+                        }
+                        if(MathUtilities.IsPositive(nSenesced))
+                        { 
+                            if (PlantZone.LayerLive[layer].N >= nSenesced)
+                            {
+                                PlantZone.LayerLive[layer].StructuralN -= nSenesced;
+                                PlantZone.LayerDead[layer].StructuralN += nSenesced;
+                                nSenesced = 0.0;
+                            }
+                            else
+                            {
+                                nSenesced -= PlantZone.LayerLive[layer].StructuralN;
+                                PlantZone.LayerDead[layer].StructuralN += PlantZone.LayerLive[layer].StructuralN;
+                                PlantZone.LayerLive[layer].StructuralN = 0.0;
+                            }
+                        }
+                        --layer;
+                    }
+                    if (MathUtilities.IsPositive(dmSenesced) || MathUtilities.IsPositive(nSenesced))
+                        throw new Exception("Error in Root senescence calc");
+                    needToRecalculateLiveDead = true;
                 }
                 else
                 {

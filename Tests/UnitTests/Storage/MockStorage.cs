@@ -7,10 +7,12 @@ using System.Data;
 namespace UnitTests.Storage
 {
     [Serializable]
-    internal class MockStorage : Model, IDataStore, IStorageWriter
+    internal class MockStorage : Model, IDataStore, IStorageWriter, IStorageReader
     {
         internal List<string> columnNames = new List<string>();
         internal List<Row> rows = new List<Row>();
+
+        internal List<DataTable> tables = new List<DataTable>();
 
         public string[] SimulationNames
         {
@@ -38,18 +40,37 @@ namespace UnitTests.Storage
 
         string IDataStore.FileName { get; }
 
-        public IStorageReader Reader => throw new NotImplementedException();
+        public IStorageReader Reader { get { return this; } }
 
         public IStorageWriter Writer { get { return this; } }
+
+        public List<string> CheckpointNames => throw new NotImplementedException();
+
+        List<string> IStorageReader.SimulationNames => throw new NotImplementedException();
+
+        List<string> IStorageReader.TableNames => throw new NotImplementedException();
 
         [Serializable]
         internal class Row
         {
-            public IEnumerable<object> values;
+            public IList<object> values;
         }
 
         public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string groupBy = null)
         {
+            return null;
+        }
+
+        public T[] Get<T>(string columnName)
+        {
+            int columnIndex = columnNames.IndexOf(columnName);
+            if (columnIndex != -1)
+            {
+                var values = new T[rows.Count];
+                for (int i = 0; i != rows.Count; i++)
+                    values[i] = (T) rows[i].values[columnIndex];
+                return values;
+            }
             return null;
         }
 
@@ -60,6 +81,7 @@ namespace UnitTests.Storage
 
         public void WriteTable(DataTable table)
         {
+            tables.Add(table);
         }
 
         public void DeleteDataInTable(string tableName)
@@ -67,11 +89,6 @@ namespace UnitTests.Storage
         }
 
         public DataTable RunQuery(string sql)
-        {
-            return null;
-        }
-
-        public IEnumerable<string> ColumnNames(string tableName)
         {
             return null;
         }
@@ -92,7 +109,7 @@ namespace UnitTests.Storage
         {
         }
 
-        public int GetSimulationID(string simulationName)
+        public int GetSimulationID(string simulationName, string folderName)
         {
             return 0;
         }
@@ -172,7 +189,7 @@ namespace UnitTests.Storage
             this.columnNames.Clear();
             this.columnNames.AddRange(data.ColumnNames);
             foreach (var dataRow in data.Rows)
-                rows.Add(new Row() { values = APSIM.Shared.Utilities.ReflectionUtilities.Clone(dataRow) as IEnumerable<object> });
+                rows.Add(new Row() { values = APSIM.Shared.Utilities.ReflectionUtilities.Clone(dataRow) as IList<object> });
 
         }
 
@@ -189,6 +206,50 @@ namespace UnitTests.Storage
         public void Close()
         {
             throw new NotImplementedException();
+        }
+
+        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string orderBy = null, bool distinct = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public DataTable GetDataUsingSql(string sql)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Units(string tableName, string columnHeading)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<string> ColumnNames(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<string> StringColumnNames(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string BriefColumnName(string tablename, string fullColumnName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string FullColumnName(string tablename, string queryColumnName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetSimulationID(string simulationName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Refresh()
+        {
         }
     }
 }

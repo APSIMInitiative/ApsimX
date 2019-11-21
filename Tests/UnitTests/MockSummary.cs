@@ -11,6 +11,11 @@ namespace UnitTests
     {
         public static List<string> messages = new List<string>();
 
+        public MockSummary()
+        {
+            messages.Clear();
+        }
+
         /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>

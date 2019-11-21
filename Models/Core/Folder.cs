@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Factorial;
-using Models.PMF.Interfaces;
-using Models.Graph;
-using System.Data;
-
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using Models.Core.Run;
+    using Models.Factorial;
+    using Models.Graph;
+    using Models.PMF.Interfaces;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+
     /// <summary>
     /// A folder model
     /// </summary>
@@ -34,6 +34,7 @@ namespace Models.Core
         {
             ShowPageOfGraphs = true;
         }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -82,14 +83,14 @@ namespace Models.Core
                     }
                     int pageNumber = 1;
                     int i = 0;
-                    List<IModel> children = Apsim.Children(this, typeof(Graph.Graph));
+                    List<IModel> children = Apsim.Children(this, typeof(Graph));
                     while (i < children.Count)
                     {
                         GraphPage page = new GraphPage();
                         page.name = Name + pageNumber;
                         for (int j = i; j < i + 6 && j < children.Count; j++)
                             if (children[j].IncludeInDocumentation)
-                                page.graphs.Add(children[j] as Graph.Graph);
+                                page.graphs.Add(children[j] as Graph);
                         if (page.graphs.Count > 0)
                             tags.Add(page);
                         i += 6;
@@ -98,7 +99,7 @@ namespace Models.Core
 
                     // Document everything else other than graphs
                     foreach (IModel model in Children)
-                        if (!(model is Graph.Graph) && !(model is Memo))
+                        if (!(model is Graph) && !(model is Memo))
                             AutoDocumentation.DocumentModel(model, tags, headingLevel + 1, indent);
                 }
                 else

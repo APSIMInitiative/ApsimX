@@ -1,16 +1,11 @@
 ﻿namespace UnitTests.Graph
 {
     using APSIM.Shared.Utilities;
-    using Models;
     using Models.Core;
-    using Models.Core.Run;
-    using Models.Factorial;
     using Models.Graph;
     using Models.Storage;
     using NUnit.Framework;
-    using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using static UnitTests.Graph.MockSimulationDescriptionGenerator;
 
@@ -52,26 +47,25 @@
             series.GetSeriesToPutOnGraph(reader, definitions);
 
             Assert.AreEqual(definitions.Count, 1);
-            Assert.AreEqual(definitions[0].xFieldName, "Col1");
-            Assert.AreEqual(definitions[0].yFieldName, "Col2");
-            Assert.AreEqual(definitions[0].colour, series.Colour);
-            Assert.IsNull(definitions[0].error);
-            Assert.IsNull(definitions[0].Filter);
-            Assert.AreEqual(definitions[0].line, LineType.Solid);
-            Assert.AreEqual(definitions[0].lineThickness, LineThicknessType.Normal);
-            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[0].markerSize, MarkerSizeType.Normal);
-            Assert.AreEqual(definitions[0].showInLegend, false);
-            Assert.AreEqual(definitions[0].title, "Sim1");
-            Assert.AreEqual(definitions[0].type, SeriesType.Bar);
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 1, 2, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new int[] { 10, 10, 20, 20 });
-            Assert.IsNull(definitions[0].x2);
-            Assert.IsNull(definitions[0].y2);
-            Assert.AreEqual(definitions[0].xAxis, Axis.AxisType.Bottom);
-            Assert.AreEqual(definitions[0].yAxis, Axis.AxisType.Left);
-            Assert.AreEqual(definitions[0].xFieldUnits, "()");
-            Assert.AreEqual(definitions[0].yFieldUnits, "(g)");
+            Assert.AreEqual(definitions[0].XFieldName, "Col1");
+            Assert.AreEqual(definitions[0].YFieldName, "Col2");
+            Assert.AreEqual(definitions[0].Colour, series.Colour);
+            Assert.IsNull(definitions[0].Error);
+            Assert.AreEqual(definitions[0].Line, LineType.Solid);
+            Assert.AreEqual(definitions[0].LineThickness, LineThicknessType.Normal);
+            Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].MarkerSize, MarkerSizeType.Normal);
+            Assert.AreEqual(definitions[0].ShowInLegend, false);
+            Assert.AreEqual(definitions[0].Title, "Series");
+            Assert.AreEqual(definitions[0].Type, SeriesType.Bar);
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 1, 2, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new int[] { 10, 10, 20, 20 });
+            Assert.IsNull(definitions[0].X2);
+            Assert.IsNull(definitions[0].Y2);
+            Assert.AreEqual(definitions[0].XAxis, Axis.AxisType.Bottom);
+            Assert.AreEqual(definitions[0].YAxis, Axis.AxisType.Left);
+            Assert.AreEqual(definitions[0].XFieldUnits, "()");
+            Assert.AreEqual(definitions[0].YFieldUnits, "(g)");
         }
 
         /// <summary>Create two series definitions due to a single 'VaryBy' grouping.</summary>
@@ -120,33 +114,32 @@
             Assert.AreEqual(definitions.Count, 2);
             foreach (var definition in definitions)
             {
-                Assert.AreEqual(definitions[0].xFieldName, "Col1");
-                Assert.AreEqual(definitions[0].yFieldName, "Col2");
-                Assert.IsNull(definitions[0].error);
-                Assert.IsNull(definitions[0].Filter);
-                Assert.AreEqual(definitions[0].line, LineType.Solid);
-                Assert.AreEqual(definitions[0].lineThickness, LineThicknessType.Normal);
-                Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
-                Assert.AreEqual(definitions[0].markerSize, MarkerSizeType.Normal);
-                Assert.AreEqual(definitions[0].showInLegend, false);
-                Assert.AreEqual(definitions[0].type, SeriesType.Bar);
-                Assert.IsNull(definitions[0].x2);
-                Assert.IsNull(definitions[0].y2);
-                Assert.AreEqual(definitions[0].xAxis, Axis.AxisType.Bottom);
-                Assert.AreEqual(definitions[0].yAxis, Axis.AxisType.Left);
-                Assert.AreEqual(definitions[0].xFieldUnits, "()");
-                Assert.AreEqual(definitions[0].yFieldUnits, "(g)");
+                Assert.AreEqual(definitions[0].XFieldName, "Col1");
+                Assert.AreEqual(definitions[0].YFieldName, "Col2");
+                Assert.IsNull(definitions[0].Error);
+                Assert.AreEqual(definitions[0].Line, LineType.Solid);
+                Assert.AreEqual(definitions[0].LineThickness, LineThicknessType.Normal);
+                Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+                Assert.AreEqual(definitions[0].MarkerSize, MarkerSizeType.Normal);
+                Assert.AreEqual(definitions[0].ShowInLegend, false);
+                Assert.AreEqual(definitions[0].Type, SeriesType.Bar);
+                Assert.IsNull(definitions[0].X2);
+                Assert.IsNull(definitions[0].Y2);
+                Assert.AreEqual(definitions[0].XAxis, Axis.AxisType.Bottom);
+                Assert.AreEqual(definitions[0].YAxis, Axis.AxisType.Left);
+                Assert.AreEqual(definitions[0].XFieldUnits, "()");
+                Assert.AreEqual(definitions[0].YFieldUnits, "(g)");
             }
 
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].title, "Exp1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 1 });
-            Assert.AreEqual(definitions[0].y as double[], new int[] { 10, 10 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Title, "Exp1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 1 });
+            Assert.AreEqual(definitions[0].Y as double[], new int[] { 10, 10 });
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[1].title, "Exp2");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 2, 2 });
-            Assert.AreEqual(definitions[1].y as double[], new int[] { 20, 20 });
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].Title, "Exp2");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 2, 2 });
+            Assert.AreEqual(definitions[1].Y as double[], new int[] { 20, 20 });
         }
 
         /// <summary>Create four series definitions due to a two 'VaryBy' groupings.</summary>
@@ -203,46 +196,45 @@
             Assert.AreEqual(definitions.Count, 4);
             foreach (var definition in definitions)
             {
-                Assert.AreEqual(definitions[0].xFieldName, "Col1");
-                Assert.AreEqual(definitions[0].yFieldName, "Col2");
-                Assert.IsNull(definitions[0].error);
-                Assert.IsNull(definitions[0].Filter);
-                Assert.AreEqual(definitions[0].lineThickness, LineThicknessType.Normal);
-                Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
-                Assert.AreEqual(definitions[0].markerSize, MarkerSizeType.Normal);
-                Assert.AreEqual(definitions[0].showInLegend, false);
-                Assert.AreEqual(definitions[0].type, SeriesType.Bar);
-                Assert.IsNull(definitions[0].x2);
-                Assert.IsNull(definitions[0].y2);
-                Assert.AreEqual(definitions[0].xAxis, Axis.AxisType.Bottom);
-                Assert.AreEqual(definitions[0].yAxis, Axis.AxisType.Left);
-                Assert.AreEqual(definitions[0].xFieldUnits, "()");
-                Assert.AreEqual(definitions[0].yFieldUnits, "(g)");
+                Assert.AreEqual(definitions[0].XFieldName, "Col1");
+                Assert.AreEqual(definitions[0].YFieldName, "Col2");
+                Assert.IsNull(definitions[0].Error);
+                Assert.AreEqual(definitions[0].LineThickness, LineThicknessType.Normal);
+                Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+                Assert.AreEqual(definitions[0].MarkerSize, MarkerSizeType.Normal);
+                Assert.AreEqual(definitions[0].ShowInLegend, false);
+                Assert.AreEqual(definitions[0].Type, SeriesType.Bar);
+                Assert.IsNull(definitions[0].X2);
+                Assert.IsNull(definitions[0].Y2);
+                Assert.AreEqual(definitions[0].XAxis, Axis.AxisType.Bottom);
+                Assert.AreEqual(definitions[0].YAxis, Axis.AxisType.Left);
+                Assert.AreEqual(definitions[0].XFieldUnits, "()");
+                Assert.AreEqual(definitions[0].YFieldUnits, "(g)");
             }
 
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].line, LineType.Solid);
-            Assert.AreEqual(definitions[0].title, "Dry0");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new int[] { 10, 20 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Line, LineType.Solid);
+            Assert.AreEqual(definitions[0].Title, "Dry0");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new int[] { 10, 20 });
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[1].line, LineType.Dash);
-            Assert.AreEqual(definitions[1].title, "Dry10");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[1].y as double[], new int[] { 30, 40 });
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[1].Line, LineType.Dash);
+            Assert.AreEqual(definitions[1].Title, "Dry10");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].Y as double[], new int[] { 30, 40 });
 
-            Assert.AreEqual(definitions[2].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[2].line, LineType.Solid);
-            Assert.AreEqual(definitions[2].title, "Wet0");
-            Assert.AreEqual(definitions[2].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[2].y as double[], new int[] { 50, 60 });
+            Assert.AreEqual(definitions[2].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[2].Line, LineType.Solid);
+            Assert.AreEqual(definitions[2].Title, "Wet0");
+            Assert.AreEqual(definitions[2].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[2].Y as double[], new int[] { 50, 60 });
 
-            Assert.AreEqual(definitions[3].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[3].line, LineType.Dash);
-            Assert.AreEqual(definitions[3].title, "Wet10");
-            Assert.AreEqual(definitions[3].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[3].y as double[], new int[] { 70, 80 });
+            Assert.AreEqual(definitions[3].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[3].Line, LineType.Dash);
+            Assert.AreEqual(definitions[3].Title, "Wet10");
+            Assert.AreEqual(definitions[3].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[3].Y as double[], new int[] { 70, 80 });
 
         }
 
@@ -311,61 +303,61 @@
 
             Assert.AreEqual(definitions.Count, 8);
 
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].line, LineType.Solid);
-            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[0].title, "Dry0Early");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new int[] { 10, 20 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Line, LineType.Solid);
+            Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].Title, "Dry0Early");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new int[] { 10, 20 });
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[1].line, LineType.Dash);
-            Assert.AreEqual(definitions[1].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[1].title, "Dry20Early");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[1].y as double[], new int[] { 30, 40 });
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[1].Line, LineType.Dash);
+            Assert.AreEqual(definitions[1].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[1].Title, "Dry20Early");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].Y as double[], new int[] { 30, 40 });
 
-            Assert.AreEqual(definitions[2].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[2].line, LineType.Solid);
-            Assert.AreEqual(definitions[2].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[2].title, "Wet0Early");
-            Assert.AreEqual(definitions[2].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[2].y as double[], new int[] { 50, 60 });
+            Assert.AreEqual(definitions[2].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[2].Line, LineType.Solid);
+            Assert.AreEqual(definitions[2].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[2].Title, "Wet0Early");
+            Assert.AreEqual(definitions[2].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[2].Y as double[], new int[] { 50, 60 });
 
-            Assert.AreEqual(definitions[3].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[3].line, LineType.Dash);
-            Assert.AreEqual(definitions[3].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[3].title, "Wet20Early");
-            Assert.AreEqual(definitions[3].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[3].y as double[], new int[] { 70, 80 });
+            Assert.AreEqual(definitions[3].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[3].Line, LineType.Dash);
+            Assert.AreEqual(definitions[3].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[3].Title, "Wet20Early");
+            Assert.AreEqual(definitions[3].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[3].Y as double[], new int[] { 70, 80 });
 
-            Assert.AreEqual(definitions[4].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[4].line, LineType.Solid);
-            Assert.AreEqual(definitions[4].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[4].title, "Dry0Late");
-            Assert.AreEqual(definitions[4].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[4].y as double[], new int[] { 90, 100 });
+            Assert.AreEqual(definitions[4].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[4].Line, LineType.Solid);
+            Assert.AreEqual(definitions[4].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[4].Title, "Dry0Late");
+            Assert.AreEqual(definitions[4].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[4].Y as double[], new int[] { 90, 100 });
 
-            Assert.AreEqual(definitions[5].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[5].line, LineType.Dash);
-            Assert.AreEqual(definitions[5].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[5].title, "Dry20Late");
-            Assert.AreEqual(definitions[5].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[5].y as double[], new int[] { 110, 120 });
+            Assert.AreEqual(definitions[5].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[5].Line, LineType.Dash);
+            Assert.AreEqual(definitions[5].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[5].Title, "Dry20Late");
+            Assert.AreEqual(definitions[5].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[5].Y as double[], new int[] { 110, 120 });
 
-            Assert.AreEqual(definitions[6].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[6].line, LineType.Solid);
-            Assert.AreEqual(definitions[6].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[6].title, "Wet0Late");
-            Assert.AreEqual(definitions[6].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[6].y as double[], new int[] { 130, 140 });
+            Assert.AreEqual(definitions[6].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[6].Line, LineType.Solid);
+            Assert.AreEqual(definitions[6].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[6].Title, "Wet0Late");
+            Assert.AreEqual(definitions[6].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[6].Y as double[], new int[] { 130, 140 });
 
-            Assert.AreEqual(definitions[7].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[7].line, LineType.Dash);
-            Assert.AreEqual(definitions[7].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[7].title, "Wet20Late");
-            Assert.AreEqual(definitions[7].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[7].y as double[], new int[] { 150, 160 });
+            Assert.AreEqual(definitions[7].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[7].Line, LineType.Dash);
+            Assert.AreEqual(definitions[7].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[7].Title, "Wet20Late");
+            Assert.AreEqual(definitions[7].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[7].Y as double[], new int[] { 150, 160 });
         }
 
         /// <summary>
@@ -447,67 +439,67 @@
 
             Assert.AreEqual(definitions.Count, 12);
 
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[0].line, LineType.Solid);
-            Assert.AreEqual(definitions[0].title, "A");
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].Line, LineType.Solid);
+            Assert.AreEqual(definitions[0].Title, "A");
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[1].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[1].line, LineType.Solid);
-            Assert.AreEqual(definitions[1].title, "B");
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[1].Line, LineType.Solid);
+            Assert.AreEqual(definitions[1].Title, "B");
 
-            Assert.AreEqual(definitions[2].colour, ColourUtilities.Colours[2]);
-            Assert.AreEqual(definitions[2].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[2].line, LineType.Solid);
-            Assert.AreEqual(definitions[2].title, "C");
+            Assert.AreEqual(definitions[2].Colour, ColourUtilities.Colours[2]);
+            Assert.AreEqual(definitions[2].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[2].Line, LineType.Solid);
+            Assert.AreEqual(definitions[2].Title, "C");
 
-            Assert.AreEqual(definitions[3].colour, ColourUtilities.Colours[3]);
-            Assert.AreEqual(definitions[3].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[3].line, LineType.Solid);
-            Assert.AreEqual(definitions[3].title, "D");
+            Assert.AreEqual(definitions[3].Colour, ColourUtilities.Colours[3]);
+            Assert.AreEqual(definitions[3].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[3].Line, LineType.Solid);
+            Assert.AreEqual(definitions[3].Title, "D");
 
-            Assert.AreEqual(definitions[4].colour, ColourUtilities.Colours[4]);
-            Assert.AreEqual(definitions[4].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[4].line, LineType.Solid);
-            Assert.AreEqual(definitions[4].title, "E");
+            Assert.AreEqual(definitions[4].Colour, ColourUtilities.Colours[4]);
+            Assert.AreEqual(definitions[4].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[4].Line, LineType.Solid);
+            Assert.AreEqual(definitions[4].Title, "E");
 
-            Assert.AreEqual(definitions[5].colour, ColourUtilities.Colours[5]);
-            Assert.AreEqual(definitions[5].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[5].line, LineType.Solid);
-            Assert.AreEqual(definitions[5].title, "F");
+            Assert.AreEqual(definitions[5].Colour, ColourUtilities.Colours[5]);
+            Assert.AreEqual(definitions[5].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[5].Line, LineType.Solid);
+            Assert.AreEqual(definitions[5].Title, "F");
 
-            Assert.AreEqual(definitions[6].colour, ColourUtilities.Colours[6]);
-            Assert.AreEqual(definitions[6].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[6].line, LineType.Solid);
-            Assert.AreEqual(definitions[6].title, "G");
+            Assert.AreEqual(definitions[6].Colour, ColourUtilities.Colours[6]);
+            Assert.AreEqual(definitions[6].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[6].Line, LineType.Solid);
+            Assert.AreEqual(definitions[6].Title, "G");
 
-            Assert.AreEqual(definitions[7].colour, ColourUtilities.Colours[7]);
-            Assert.AreEqual(definitions[7].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[7].line, LineType.Solid);
-            Assert.AreEqual(definitions[7].title, "H");
+            Assert.AreEqual(definitions[7].Colour, ColourUtilities.Colours[7]);
+            Assert.AreEqual(definitions[7].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[7].Line, LineType.Solid);
+            Assert.AreEqual(definitions[7].Title, "H");
 
             // Run out of colours, go back to first colour but increment markertype.
 
-            Assert.AreEqual(definitions[8].colour, ColourUtilities.Colours[0]); 
-            Assert.AreEqual(definitions[8].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[8].line, LineType.Solid);
-            Assert.AreEqual(definitions[8].title, "I");
+            Assert.AreEqual(definitions[8].Colour, ColourUtilities.Colours[0]); 
+            Assert.AreEqual(definitions[8].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[8].Line, LineType.Solid);
+            Assert.AreEqual(definitions[8].Title, "I");
 
-            Assert.AreEqual(definitions[9].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[9].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[9].title, "J");
-            Assert.AreEqual(definitions[9].line, LineType.Solid);
+            Assert.AreEqual(definitions[9].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[9].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[9].Title, "J");
+            Assert.AreEqual(definitions[9].Line, LineType.Solid);
 
-            Assert.AreEqual(definitions[10].colour, ColourUtilities.Colours[2]);
-            Assert.AreEqual(definitions[10].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[10].line, LineType.Solid);
-            Assert.AreEqual(definitions[10].title, "K");
+            Assert.AreEqual(definitions[10].Colour, ColourUtilities.Colours[2]);
+            Assert.AreEqual(definitions[10].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[10].Line, LineType.Solid);
+            Assert.AreEqual(definitions[10].Title, "K");
 
-            Assert.AreEqual(definitions[11].colour, ColourUtilities.Colours[3]);
-            Assert.AreEqual(definitions[11].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[11].line, LineType.Solid);
-            Assert.AreEqual(definitions[11].title, "L");
+            Assert.AreEqual(definitions[11].Colour, ColourUtilities.Colours[3]);
+            Assert.AreEqual(definitions[11].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[11].Line, LineType.Solid);
+            Assert.AreEqual(definitions[11].Title, "L");
 
         }
 
@@ -555,20 +547,24 @@
             series.GetSeriesToPutOnGraph(reader, definitions);
 
             Assert.AreEqual(definitions.Count, 3);
-            Assert.AreEqual(definitions[0].title, "Sim1");
-            Assert.AreEqual(definitions[0].type, SeriesType.Bar);
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2, 3, 4 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 1.0, 1.5, 2.0, 2.5 });
+            Assert.AreEqual(definitions[0].Title, "Series");
+            Assert.AreEqual(definitions[0].Type, SeriesType.Bar);
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2, 3, 4 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 1.0, 1.5, 2.0, 2.5 });
 
-            Assert.AreEqual(definitions[1].title, "Regression line");
-            Assert.AreEqual(definitions[1].type, SeriesType.Scatter);
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 4 });
-            Assert.AreEqual(definitions[1].y as double[], new double[] { 1, 2.5 });
+            Assert.AreEqual(definitions[1].Title, "Regression line");
+            Assert.AreEqual(definitions[1].Type, SeriesType.Scatter);
+            Assert.AreEqual(definitions[1].LineThickness, LineThicknessType.Normal);
+            Assert.AreEqual(definitions[1].MarkerSize, MarkerSizeType.Normal);
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 1, 4 });
+            Assert.AreEqual(definitions[1].Y as double[], new double[] { 1, 2.5 });
 
-            Assert.AreEqual(definitions[2].title, "1:1 line");
-            Assert.AreEqual(definitions[2].type, SeriesType.Scatter);
-            Assert.AreEqual(definitions[2].x as double[], new double[] { 1, 4 });
-            Assert.AreEqual(definitions[2].y as double[], new double[] { 1, 4 });
+            Assert.AreEqual(definitions[2].Title, "1:1 line");
+            Assert.AreEqual(definitions[2].Type, SeriesType.Scatter);
+            Assert.AreEqual(definitions[2].LineThickness, LineThicknessType.Normal);
+            Assert.AreEqual(definitions[2].MarkerSize, MarkerSizeType.Normal);
+            Assert.AreEqual(definitions[2].X as double[], new double[] { 1, 4 });
+            Assert.AreEqual(definitions[2].Y as double[], new double[] { 1, 4 });
 
         }
 
@@ -626,19 +622,19 @@
             var definitions = new List<SeriesDefinition>();
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].title, "Series1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 1, 2, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 10, 20, 20 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Title, "Series1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 1, 2, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 10, 10, 20, 20 });
 
 
             var series2 = folder.Children[1].Children[1] as Series;
             var definitions2 = new List<SeriesDefinition>();
             series2.GetSeriesToPutOnGraph(reader, definitions2);
-            Assert.AreEqual(definitions2[0].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions2[0].title, "Series2");
-            Assert.AreEqual(definitions2[0].x as double[], new double[] { 1, 1, 2, 2 });
-            Assert.AreEqual(definitions2[0].y as double[], new double[] { 50, 50, 60, 60 });
+            Assert.AreEqual(definitions2[0].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions2[0].Title, "Series2");
+            Assert.AreEqual(definitions2[0].X as double[], new double[] { 1, 1, 2, 2 });
+            Assert.AreEqual(definitions2[0].Y as double[], new double[] { 50, 50, 60, 60 });
         }
 
         /// <summary>Create a single xy series definition with a 'Vary By Simulation' grouping.</summary>
@@ -688,15 +684,15 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 2);
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].title, "Sim1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Title, "Sim1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 10, 20 });
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[1].title, "Sim2");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 1,  2 });
-            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].Title, "Sim2");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 1,  2 });
+            Assert.AreEqual(definitions[1].Y as double[], new double[] { 30, 40 });
 
         }
 
@@ -752,29 +748,29 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 4);
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[0].title, "Sim1Zone1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].Title, "Sim1Zone1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 10, 20 });
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[1].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[1].title, "Sim1Zone2");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[1].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[1].Title, "Sim1Zone2");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].Y as double[], new double[] { 30, 40 });
 
-            Assert.AreEqual(definitions[2].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[2].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[2].title, "Sim2Zone1");
-            Assert.AreEqual(definitions[2].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[2].y as double[], new double[] { 50, 60 });
+            Assert.AreEqual(definitions[2].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[2].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[2].Title, "Sim2Zone1");
+            Assert.AreEqual(definitions[2].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[2].Y as double[], new double[] { 50, 60 });
 
-            Assert.AreEqual(definitions[3].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[3].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[3].title, "Sim2Zone2");
-            Assert.AreEqual(definitions[3].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[3].y as double[], new double[] { 70, 80 });
+            Assert.AreEqual(definitions[3].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[3].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[3].Title, "Sim2Zone2");
+            Assert.AreEqual(definitions[3].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[3].Y as double[], new double[] { 70, 80 });
         }
 
         /// <summary>Create a xy series definition with a 'Vary By' that doesn't exist in the data table.</summary>
@@ -826,15 +822,15 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 2);
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].title, "Exp1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Title, "Exp1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 10, 20 });
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[1].title, "Exp2");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].Title, "Exp2");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].Y as double[], new double[] { 30, 40 });
         }
 
         /// <summary>Create a xy series definition with a 'Vary By' that is a text field of the data table.</summary>
@@ -873,16 +869,16 @@
             Apsim.ParentAllChildren(folder);
 
             string data =
-                " SimulationName  ABC  DEF Col1  Col2\r\n" +
-                "             ()   ()   ()   ()   (g)\r\n" +
-                "           Sim1    A    d    1    10\r\n" +
-                "           Sim1    A    d    2    20\r\n" +
-                "           Sim1    A    e    1    30\r\n" +
-                "           Sim1    A    e    2    40\r\n" +
-                "           Sim2    B    d    1    50\r\n" +
-                "           Sim2    B    d    2    60\r\n" +
-                "           Sim2    B    e    1    70\r\n" +
-                "           Sim2    B    e    2    80\r\n";
+                "  ABC  DEF Col1  Col2\r\n" +
+                "   ()   ()   ()   (g)\r\n" +
+                "    A    d    1    10\r\n" +
+                "    A    d    2    20\r\n" +
+                "    A    e    1    30\r\n" +
+                "    A    e    2    40\r\n" +
+                "    B    d    1    50\r\n" +
+                "    B    d    2    60\r\n" +
+                "    B    e    1    70\r\n" +
+                "    B    e    2    80\r\n";
 
             var reader = new TextStorageReader(data);
 
@@ -895,29 +891,29 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 4);
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[0].title, "Ad");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].Title, "Ad");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 10, 20 });
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[1].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[1].title, "Ae");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[1].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[1].Title, "Ae");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].Y as double[], new double[] { 30, 40 });
 
-            Assert.AreEqual(definitions[2].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[2].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[2].title, "Bd");
-            Assert.AreEqual(definitions[2].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[2].y as double[], new double[] { 50, 60 });
+            Assert.AreEqual(definitions[2].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[2].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[2].Title, "Bd");
+            Assert.AreEqual(definitions[2].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[2].Y as double[], new double[] { 50, 60 });
 
-            Assert.AreEqual(definitions[3].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[3].marker, MarkerType.FilledDiamond);
-            Assert.AreEqual(definitions[3].title, "Be");
-            Assert.AreEqual(definitions[3].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[3].y as double[], new double[] { 70, 80 });
+            Assert.AreEqual(definitions[3].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[3].Marker, MarkerType.FilledDiamond);
+            Assert.AreEqual(definitions[3].Title, "Be");
+            Assert.AreEqual(definitions[3].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[3].Y as double[], new double[] { 70, 80 });
         }
 
         /// <summary>Create xy series definitions with a filter.</summary>
@@ -966,8 +962,56 @@
 
             Assert.AreEqual(definitions.Count, 1);
 
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 1 });
-            Assert.AreEqual(definitions[0].y as double[], new int[] { 10, 10 });
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 1 });
+            Assert.AreEqual(definitions[0].Y as double[], new int[] { 10, 10 });
+        }
+
+        /// <summary>Create xy series definitions with a filter.</summary>
+        [Test]
+        public void SeriesWithFilter2()
+        {
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<Model>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1"),
+                        new Description("Sim2", "SimulationName", "Sim2")
+                    }),
+                    new Series()
+                    {
+                        Name = "Series",
+                        TableName = "Report",
+                        XFieldName = "Col1",
+                        YFieldName = "Col2",
+                        FactorToVaryColours = "SimulationName",
+                        Filter = "A='a'"
+                    },
+                }
+            };
+            Apsim.ParentAllChildren(folder);
+
+            string data =
+                "CheckpointName    SimulationID     Exp   A  Col1  Col2\r\n" +
+                "            ()              ()      ()  ()    ()   (g)\r\n" +
+                "       Current               1    Exp1   a     1    10\r\n" +
+                "       Current               1    Exp1   a     1    10\r\n" +
+                "       Current               2    Exp2   b     2    20\r\n" +
+                "       Current               2    Exp2   b     2    20\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series = folder.Children[1] as Series;
+
+            var definitions = new List<SeriesDefinition>();
+            series.GetSeriesToPutOnGraph(reader, definitions);
+
+            Assert.AreEqual(definitions.Count, 1);
+
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 1 });
+            Assert.AreEqual(definitions[0].Y as double[], new int[] { 10, 10 });
         }
 
         /// <summary>
@@ -1045,15 +1089,15 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 2);
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].title, "Sim1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Title, "Sim1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 10, 20 });
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[1].title, "Sim2");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[1].y as double[], new double[] { 30, 40 });
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].Title, "Sim2");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[1].Y as double[], new double[] { 30, 40 });
 
         }
 
@@ -1125,9 +1169,9 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 1);
-            Assert.AreEqual(definitions[0].title, "Sim1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+            Assert.AreEqual(definitions[0].Title, "Series1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 10, 20 });
         }
 
         /// <summary>
@@ -1198,9 +1242,9 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 1);
-            Assert.AreEqual(definitions[0].title, "a");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 10, 20 });
+            Assert.AreEqual(definitions[0].Title, "a");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 10, 20 });
         }
 
         /// <summary>Create xy series definitions from predicted/observed table.</summary>
@@ -1253,17 +1297,17 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 2);
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[0].title, "Exp1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 1, 5 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].Title, "Exp1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 1, 5 });
 
-            Assert.AreEqual(definitions[1].colour, ColourUtilities.Colours[1]);
-            Assert.AreEqual(definitions[1].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[1].title, "Exp2");
-            Assert.AreEqual(definitions[1].x as double[], new double[] { 3, 4 });
-            Assert.AreEqual(definitions[1].y as double[], new double[] { 8, 6 });
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[1].Title, "Exp2");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 3, 4 });
+            Assert.AreEqual(definitions[1].Y as double[], new double[] { 8, 6 });
         }
 
         /// <summary>Create xy series definitions from predicted/observed table.</summary>
@@ -1315,11 +1359,78 @@
 
             series1.GetSeriesToPutOnGraph(reader, definitions);
             Assert.AreEqual(definitions.Count, 1);
-            Assert.AreEqual(definitions[0].colour, ColourUtilities.Colours[0]);
-            Assert.AreEqual(definitions[0].marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[0].title, "Exp1");
-            Assert.AreEqual(definitions[0].x as double[], new double[] { 1, 2 });
-            Assert.AreEqual(definitions[0].y as double[], new double[] { 1, 5 });
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].Title, "Exp1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 1, 5 });
+        }
+
+        /// <summary>Create xy series definitions from predicted/observed table with error bars.</summary>
+        [Test]
+        public void SeriesWithErrorBars()
+        {
+            var folder = new Folder()
+            {
+                Name = "Folder",
+                Children = new List<Model>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1", "Experiment", "Exp1"),
+                        new Description("Sim2", "SimulationName", "Sim2", "Experiment", "Exp1"),
+                        new Description("Sim3", "SimulationName", "Sim3", "Experiment", "Exp2"),
+                        new Description("Sim4", "SimulationName", "Sim4", "Experiment", "Exp2")
+                    }),
+                    new Graph()
+                    {
+                        Children = new List<Model>()
+                        {
+                            new Series()
+                            {
+                                Name = "Series1",
+                                TableName = "Report",
+                                XFieldName = "Predicted.Grain.Wt",
+                                YFieldName = "Observed.Grain.Wt",
+                                FactorToVaryColours = "Experiment",
+                                FactorToVaryMarkers = "Experiment"
+                            }
+                        }
+                    }
+                }
+            };
+            Apsim.ParentAllChildren(folder);
+
+            string data =
+                "CheckpointName  SimulationName Predicted.Grain.Wt  Observed.Grain.Wt  Observed.Grain.WtError\r\n" +
+                "            ()              ()                 ()                 ()                      ()\r\n" +
+                "       Current            Sim1                  1                  1                     0.1\r\n" +
+                "       Current            Sim2                  2                  5                     0.5\r\n" +
+                "       Current            Sim3                  3                  8                     0.8\r\n" +
+                "       Current            Sim4                  4                  6                     0.6\r\n";
+
+            var reader = new TextStorageReader(data);
+
+            var series1 = folder.Children[1].Children[0] as Series;
+            var definitions = new List<SeriesDefinition>();
+
+            series1.GetSeriesToPutOnGraph(reader, definitions);
+            Assert.AreEqual(definitions.Count, 2);
+            Assert.AreEqual(definitions[0].Colour, ColourUtilities.Colours[0]);
+            Assert.AreEqual(definitions[0].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[0].Title, "Exp1");
+            Assert.AreEqual(definitions[0].X as double[], new double[] { 1, 2 });
+            Assert.AreEqual(definitions[0].Y as double[], new double[] { 1, 5 });
+            Assert.AreEqual(definitions[0].Error.ToList()[0], 0.1, 0.000001);
+            Assert.AreEqual(definitions[0].Error.ToList()[1], 0.5, 0.000001);
+
+            Assert.AreEqual(definitions[1].Colour, ColourUtilities.Colours[1]);
+            Assert.AreEqual(definitions[1].Marker, MarkerType.FilledCircle);
+            Assert.AreEqual(definitions[1].Title, "Exp2");
+            Assert.AreEqual(definitions[1].X as double[], new double[] { 3, 4 });
+            Assert.AreEqual(definitions[1].Y as double[], new double[] { 8, 6 });
+            Assert.AreEqual(definitions[1].Error.ToList()[0], 0.8, 0.000001);
+            Assert.AreEqual(definitions[1].Error.ToList()[1], 0.6, 0.000001);
         }
 
         /// <summary>Create some test data and return a storage reader. </summary>

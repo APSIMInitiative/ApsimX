@@ -39,9 +39,6 @@ namespace UserInterface.Presenters
         /// <summary>The parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>The graph presenter</summary>
-        private GraphPresenter graphPresenter;
-
         /// <summary>
         /// The intellisense.
         /// </summary>
@@ -62,9 +59,16 @@ namespace UserInterface.Presenters
             Graph parentGraph = Apsim.Parent(series, typeof(Graph)) as Graph;
             if (parentGraph != null)
             {
-                graphPresenter = new GraphPresenter();
-                explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
-                graphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
+                try
+                {
+                    GraphPresenter = new GraphPresenter();
+                    explorerPresenter.ApsimXFile.Links.Resolve(GraphPresenter);
+                    GraphPresenter.Attach(parentGraph, seriesView.GraphView, explorerPresenter);
+                }
+                catch (Exception err)
+                {
+                    explorerPresenter.MainPresenter.ShowError(err);
+                }
             }
 
             try
@@ -84,13 +88,14 @@ namespace UserInterface.Presenters
         {
             seriesView.EndEdit();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
-            if (graphPresenter != null)
-            {
-                graphPresenter.Detach();
-            }
+            GraphPresenter?.Detach();
+            intellisense.Cleanup();
 
             DisconnectViewEvents();
         }
+
+        /// <summary>The graph presenter</summary>
+        public GraphPresenter GraphPresenter;
 
         /// <summary>Connect all view events.</summary>
         private void ConnectViewEvents()
@@ -113,7 +118,7 @@ namespace UserInterface.Presenters
             seriesView.IncludeSeriesNameInLegend.Changed += OnIncludeSeriesNameInLegendChanged;
             seriesView.YCumulative.Changed += OnCumulativeYChanged;
             seriesView.XCumulative.Changed += OnCumulativeXChanged;
-            seriesView.Filter.Changed += OnFilterChanged;
+            seriesView.Filter.Leave += OnFilterChanged;
             seriesView.Filter.IntellisenseItemsNeeded += OnIntellisenseItemsNeeded;
         }
 
@@ -125,8 +130,8 @@ namespace UserInterface.Presenters
             seriesView.SeriesType.Changed -= OnSeriesTypeChanged;
             seriesView.LineType.Changed -= OnLineTypeChanged;
             seriesView.MarkerType.Changed -= OnMarkerTypeChanged;
-            seriesView.LineThickness.Changed += OnLineThicknessChanged;
-            seriesView.MarkerSize.Changed += OnMarkerSizeChanged;
+            seriesView.LineThickness.Changed -= OnLineThicknessChanged;
+            seriesView.MarkerSize.Changed -= OnMarkerSizeChanged;
             seriesView.Colour.Changed -= OnColourChanged;
             seriesView.XOnTop.Changed -= OnXOnTopChanged;
             seriesView.YOnRight.Changed -= OnYOnRightChanged;
@@ -138,8 +143,8 @@ namespace UserInterface.Presenters
             seriesView.IncludeSeriesNameInLegend.Changed -= OnIncludeSeriesNameInLegendChanged;
             seriesView.YCumulative.Changed -= OnCumulativeYChanged;
             seriesView.XCumulative.Changed -= OnCumulativeXChanged;
-            seriesView.Filter.Changed -= OnFilterChanged;
-            seriesView.Filter.IntellisenseItemsNeeded += OnIntellisenseItemsNeeded;
+            seriesView.Filter.Leave -= OnFilterChanged;
+            seriesView.Filter.IntellisenseItemsNeeded -= OnIntellisenseItemsNeeded;
         }
 
         /// <summary>Set the value of the graph models property</summary>
@@ -203,10 +208,15 @@ namespace UserInterface.Presenters
         {
             SeriesType seriesType = (SeriesType)Enum.Parse(typeof(SeriesType), this.seriesView.SeriesType.SelectedValue);
             this.SetModelProperty("Type", seriesType);
-            
+
             // This doesn't quite work yet. If the previous series was a scatter plot, there is no x2, y2 to work with
             // and things go a bit awry.
             // this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
+
+            // If the series is a box plot, then we want to disable certain unused controls
+            // such as x variable, marker type, etc. These also need to be
+            // re-enabled if we change series type.
+            DisableUnusedControls();
         }
 
         /// <summary>Series line type has been changed by the user.</summary>
@@ -534,7 +544,7 @@ namespace UserInterface.Presenters
 
             // Populate data source drop down.
             List<string> dataSources = storage.Reader.TableNames.ToList();
-            if (!dataSources.Contains(series.TableName))
+            if (!dataSources.Contains(series.TableName) && !string.IsNullOrEmpty(series.TableName))
             {
                 dataSources.Add(series.TableName);
                 warnings.Add(string.Format("WARNING: {0}: Selected Data Source '{1}' does not exist in the datastore. Have the simulations been run?", Apsim.FullPath(series), series.TableName));
@@ -549,11 +559,25 @@ namespace UserInterface.Presenters
             // Populate filter textbox.
             this.seriesView.Filter.Value = series.Filter;
 
-            this.seriesView.ShowX2Y2(series.Type == SeriesType.Area);
+            this.seriesView.ShowX2Y2(series.Type == SeriesType.Region);
+
+            DisableUnusedControls();
 
             explorerPresenter.MainPresenter.ClearStatusPanel();
             if (warnings != null && warnings.Count > 0)
                 explorerPresenter.MainPresenter.ShowMessage(warnings, Simulation.MessageType.Warning);
+        }
+
+        private void DisableUnusedControls()
+        {
+            // Box plots ignore x variable, markertype, marker size,
+            // so don't make these controls editable if the series is a box plot.
+            bool isBoxPlot = series.Type == SeriesType.Box;
+            this.seriesView.X.IsSensitive = !isBoxPlot;
+            seriesView.MarkerSize.IsSensitive = !isBoxPlot;
+            seriesView.MarkerType.IsSensitive = !isBoxPlot;
+            seriesView.XCumulative.IsSensitive = !isBoxPlot;
+            seriesView.XOnTop.IsSensitive = !isBoxPlot;
         }
 
         /// <summary>Populate the line drop down.</summary>

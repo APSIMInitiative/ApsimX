@@ -1,9 +1,11 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.Threading;
 
     /// <summary>Encapsulates a command to empty the database as much as possible.</summary>
@@ -22,19 +24,22 @@
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken)
         {
+            if (database == null)
+                return;
+
             if (database.TableExists("_Checkpoints"))
             {
-                var checkpointData = new DataView(database.ExecuteQuery("SELECT * FROM _Checkpoints"));
+                var checkpointData = new DataView(database.ExecuteQuery("SELECT * FROM [_Checkpoints]"));
                 checkpointData.RowFilter = "Name='Current'";
                 if (checkpointData.Count == 1)
                 {
-                    int checkId = Convert.ToInt32(checkpointData[0]["ID"]);
+                    int checkId = Convert.ToInt32(checkpointData[0]["ID"], CultureInfo.InvariantCulture);
 
                     // Delete current data from all tables.
                     foreach (string tableName in database.GetTableNames())
                     {
-                        if (!tableName.StartsWith("_"))
-                            database.ExecuteNonQuery(string.Format("DELETE FROM {0} WHERE CheckpointID={1}", tableName, checkId));
+                        if (!tableName.StartsWith("_") && database.TableExists(tableName))
+                            database.ExecuteNonQuery(string.Format("DELETE FROM [{0}] WHERE [CheckpointID]={1}", tableName, checkId));
                     }
                 }
             }
@@ -45,7 +50,7 @@
                 foreach (string tableName in database.GetTableNames())
                 {
                     if (!tableName.StartsWith("_"))
-                        database.ExecuteNonQuery(string.Format("DELETE FROM {0}", tableName));
+                        database.ExecuteNonQuery(string.Format("DELETE FROM [{0}]", tableName));
                 }
             }
 
@@ -56,8 +61,7 @@
             {
                 if (!tableName.StartsWith("_"))
                 {
-                    var data = database.ExecuteQuery(string.Format("SELECT * FROM {0} LIMIT 1", tableName));
-                    if (data.Rows.Count == 0)
+                    if (database.TableIsEmpty(tableName))
                         tableNamesToDelete.Add(tableName);
                     else
                         allTablesEmpty = false;
@@ -69,8 +73,7 @@
                 tableNamesToDelete = database.GetTableNames();
 
             foreach (string tableName in tableNamesToDelete)
-                database.ExecuteNonQuery(string.Format("DROP TABLE {0}", tableName));
-            database.ExecuteNonQuery("VACUUM");
+                database.DropTable(tableName);
         }
     }
 }

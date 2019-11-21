@@ -18,9 +18,15 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Finance))]
     [Description("This resource represents a finance type (e.g. General bank account).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/finance/financetype.htm")]
+    [HelpUri(@"Content/Features/Resources/Finance/FinanceType.htm")]
     public class FinanceType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units")]
+        public string Units { get { return (Parent as Finance).CurrencyName; } }
+
         /// <summary>
         /// Opening balance
         /// </summary>
@@ -144,12 +150,13 @@ namespace Models.CLEM.Resources
                 addAmount = Math.Round(addAmount, 2, MidpointRounding.ToEven);
                 amount += addAmount;
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Gain = addAmount;
-                details.Activity = activity.Name;
-                details.ActivityType = activity.GetType().Name;
-                details.Reason = reason;
-                details.ResourceType = this.Name;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    Gain = addAmount,
+                    Activity = activity,
+                    Reason = reason,
+                    ResourceType = this
+                };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -168,8 +175,15 @@ namespace Models.CLEM.Resources
             }
 
             double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
+            
+            // more than positive balance can be taken if withdrawal limit set to false
+            if(this.EnforceWithdrawalLimit)
+            {
+                amountRemoved = Math.Min(amountRemoved, FundsAvailable);
+            }
+
             // avoid taking too much
-            amountRemoved = Math.Min(this.Amount, amountRemoved);
+            //amountRemoved = Math.Min(this.Amount, amountRemoved);
             if (amountRemoved == 0)
             {
                 return;
@@ -178,12 +192,13 @@ namespace Models.CLEM.Resources
             this.amount -= amountRemoved;
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = amountRemoved;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this,
+                Loss = amountRemoved,
+                Activity = request.ActivityModel,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

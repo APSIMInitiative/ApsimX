@@ -93,6 +93,7 @@
 
             mainWindow = new Window("File Converter");
             mainWindow.TransientFor = owner.MainWidget.Toplevel as Window;
+            mainWindow.WindowPosition = WindowPosition.Center;
             mainWindow.Add(controlsContainer);
             mainWindow.DeleteEvent += OnDelete;
             mainWindow.Destroyed += OnClose;
@@ -217,8 +218,8 @@
                 //string fileName = MasterView.AskUserForOpenFileName("*.xml|*.xml", Utility.Configuration.Settings.PreviousFolder, false);
                 IFileDialog dialog = new FileDialog();
                 dialog.Action = FileDialog.FileActionType.Open;
-                dialog.FileType = "XML Files (*.xml) | *.xml";
-                dialog.Prompt = "Choose XML files.";
+                dialog.FileType = "JSON Files (*.json) | *.json|XML Files (*.xml) | *.xml";
+                dialog.Prompt = "Choose files";
                 string[] files = dialog.GetFiles();
                 if (files != null && files.Any(f => !string.IsNullOrEmpty(f)))
                     Files = files;

@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Defines the labour required for an Activity where details are provided by the Activity")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/labour/labourrequirementsimple.htm")]
+    [HelpUri(@"Content/Features/Activities/Labour/LabourRequirementSimple.htm")]
     public class LabourRequirementSimple: LabourRequirement
     {
         /// <summary>

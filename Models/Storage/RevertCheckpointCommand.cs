@@ -1,5 +1,6 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
@@ -28,12 +29,12 @@
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken)
         {
-            int currentID = writer.Connection.ExecuteQueryReturnInt("SELECT ID FROM _Checkpoints WHERE Name='Current'");
+            int currentID = writer.Connection.ExecuteQueryReturnInt("SELECT ID FROM [_Checkpoints] WHERE [Name]='Current'");
             if (currentID != -1)
             {
                 if (writer.Connection.TableExists("_CheckpointFiles"))
                 {
-                    var filesData = writer.Connection.ExecuteQuery("SELECT * FROM _CheckpointFiles WHERE CheckpointID=" + checkpointIDToRevertTo);
+                    var filesData = writer.Connection.ExecuteQuery("SELECT * FROM [_CheckpointFiles] WHERE [CheckpointID]=" + checkpointIDToRevertTo);
                     // Revert all files.
                     foreach (DataRow row in filesData.Rows)
                         File.WriteAllBytes(row["FileName"] as string, row["Contents"] as byte[]);
@@ -60,10 +61,10 @@
                                                             "] WHERE CheckpointID = " + currentID);
 
                         // Copy checkpoint values to current values.
-                        writer.Connection.ExecuteNonQuery("INSERT INTO [" + tableName + "] (" + "CheckpointID," + csvFieldNames + ")" +
+                        writer.Connection.ExecuteNonQuery("INSERT INTO [" + tableName + "] (" + "[CheckpointID]," + csvFieldNames + ")" +
                                                             " SELECT " + currentID + "," + csvFieldNames +
                                                             " FROM [" + tableName +
-                                                            "] WHERE CheckpointID = " + checkpointIDToRevertTo);
+                                                            "] WHERE [CheckpointID] = " + checkpointIDToRevertTo);
                     }
                 }
             }

@@ -19,9 +19,16 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GreenhouseGases))]
     [Description("This resource represents a greenhouse gas (e.g. CO2).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/greenhouse gases/greenhousegastype.htm")]
+    [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGasType.htm")]
     public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [XmlIgnore]
+        [Description("Units (nominal)")]
+        public string Units { get { return "kg"; } }
+
         /// <summary>
         /// Starting amount
         /// </summary>
@@ -35,20 +42,6 @@ namespace Models.CLEM.Resources
         public double Amount { get { return amount; } }
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
-
-        /// <summary>
-        /// Global warming potential
-        /// </summary>
-        [Description("Global warming potential")]
-        [Required, GreaterThanEqualValue(0)]
-        public double GlobalWarmingPotential { get; set; }
-
-        /// <summary>
-        /// CO2 equivalents
-        /// </summary>
-        [XmlIgnore]
-        public double CO2Equivalents { get { return Amount * GlobalWarmingPotential; } }
-
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -102,13 +95,13 @@ namespace Models.CLEM.Resources
             {
                 amount += addAmount;
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Gain = addAmount;
-                details.GainStandardised = addAmount * GlobalWarmingPotential;
-                details.Activity = activity.Name;
-                details.ActivityType = activity.GetType().Name;
-                details.Reason = reason;
-                details.ResourceType = this.Name;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    Gain = addAmount,
+                    Activity = activity,
+                    Reason = reason,
+                    ResourceType = this
+                };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -131,13 +124,13 @@ namespace Models.CLEM.Resources
             this.amount -= amountRemoved;
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = amountRemoved;
-            details.LossStandardised = amountRemoved * GlobalWarmingPotential;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this,
+                Loss = amountRemoved,
+                Activity = request.ActivityModel,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -162,11 +155,12 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span>";
-            html += "</div>";
-            html += "One unit of this is equivalent to <span class=\"setvalue\">" + this.GlobalWarmingPotential.ToString("0.#####") + "</span> CO<sub>2</sub>";
-            html += "</div>";
+            if (StartingAmount > 0)
+            {
+                html += "<div class=\"activityentry\">";
+                html += "There is a starting amount of <span class=\"setvalue\">" + this.StartingAmount.ToString("0.#") + "</span>";
+                html += "</div>";
+            }
             return html;
         }
 

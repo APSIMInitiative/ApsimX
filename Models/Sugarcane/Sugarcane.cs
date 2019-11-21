@@ -374,7 +374,19 @@ namespace Models
         /// <summary>
         /// Gets the LAI (m^2/m^2)
         /// </summary>
-        public double LAI { get { return lai; } }
+        public double LAI 
+        { 
+            get 
+            { 
+                return lai; 
+            } 
+            set 
+            {
+                var delta = g_lai - value;
+                g_lai -= delta;
+                g_slai += delta; 
+            } 
+        }
 
         /// <summary>
         /// Gets the maximum LAI (m^2/m^2)
@@ -400,6 +412,10 @@ namespace Models
         /// Gets the canopy depth (mm)
         /// </summary>
         public double Depth { get { return height; } }
+
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width { get { return 0; } }
+
 
         /// <summary>
         /// Gets  FRGR.
@@ -462,11 +478,11 @@ namespace Models
         private ISummary Summary = null;
 
         /// <summary>Link to NO3 solute.</summary>
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NO3 = null;
         
         /// <summary>Link to NH4 solute.</summary>
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NH4 = null;
 
         #endregion
@@ -13241,8 +13257,7 @@ namespace Models
 
             //!       sugar_sw_supply
 
-            ISoilCrop ISugarcane = Soil.Crop("Sugarcane");
-            SoilCrop Sugarcane = (SoilCrop)ISugarcane; //don't need to use As keyword because Soil.Crop() will throw the exception if not found
+            SoilCrop Sugarcane = Soil.Crop("Sugarcane");
 
             xf = Sugarcane.XF;
             ll = Sugarcane.LL;

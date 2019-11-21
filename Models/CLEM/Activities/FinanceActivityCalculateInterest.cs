@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity peforms monthly interest transactions.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/finances/calculateinterest.htm")]
+    [HelpUri(@"Content/Features/Activities/Finances/CalculateInterest.htm")]
     public class FinanceActivityCalculateInterest : CLEMActivityBase
     {
         /// <summary>
@@ -62,11 +62,13 @@ namespace Models.CLEM.Activities
                         double interest = Math.Round(Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
                         if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
                         {
-                            ResourceRequest interestRequest = new ResourceRequest();
-                            interestRequest.ActivityModel = this;
-                            interestRequest.Required = interest;
-                            interestRequest.AllowTransmutation = false;
-                            interestRequest.Reason = "Pay interest charged";
+                            ResourceRequest interestRequest = new ResourceRequest
+                            {
+                                ActivityModel = this,
+                                Required = interest,
+                                AllowTransmutation = false,
+                                Reason = "Pay interest charged"
+                            };
                             accnt.Remove(interestRequest);
     
                             // report status
@@ -208,11 +210,11 @@ namespace Models.CLEM.Activities
                     {
                         if (accnt.InterestRateCharged > 0)
                         {
-                            html += "\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%].</div>";
+                            html += "\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>";
                         }
                         else
                         {
-                            html += "\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%].</div>";
+                            html += "\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>";
                         }
                     }
                 }

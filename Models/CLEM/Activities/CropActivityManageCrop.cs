@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [Description("This activity manages a crop by assigning land to be used for child activities.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
-    [HelpUri(@"content/features/activities/crop/managecrop.htm")]
+    [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         [Link]
@@ -85,7 +85,7 @@ namespace Models.CLEM.Activities
             if(this.Children.OfType<CropActivityManageProduct>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Collect product activity" };
-                results.Add(new ValidationResult("At least one [a=CropActivityCollectProduct] activity must be present under this manage crop activity", memberNames));
+                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
             }
             return results;
         }
@@ -96,28 +96,28 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // locate Land Type resource for this forage.
-            LinkedLandItem = Resources.GetResourceItem(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+            if (LandItemNameToUse != null && LandItemNameToUse != "")
+            {
+                // locate Land Type resource for this forage.
+                LinkedLandItem = Resources.GetResourceItem(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
 
-            if (UseAreaAvailable)
-            {
-                LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
-                Area = LinkedLandItem.AreaAvailable;
-            }
-            else
-            {
+                if (UseAreaAvailable)
+                {
+                    LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
+                }
+
                 ResourceRequestList = new List<ResourceRequest>
                 {
-                    new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                        ResourceType = typeof(Land),
-                        ResourceTypeName = LandItemNameToUse.Split('.').Last(),
-                        ActivityModel = this,
-                        Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
-                        FilterDetails = null
-                    }
+                new ResourceRequest()
+                {
+                    AllowTransmutation = false,
+                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                    ResourceType = typeof(Land),
+                    ResourceTypeName = LandItemNameToUse.Split('.').Last(),
+                    ActivityModel = this,
+                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    FilterDetails = null
+                }
                 };
 
                 CheckResources(ResourceRequestList, Guid.NewGuid());
@@ -129,8 +129,8 @@ namespace Models.CLEM.Activities
                     //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
                     Area = ResourceRequestList.FirstOrDefault().Provided;
                 }
-            }
 
+            }
             // set and enable first crop in the list for rotational cropping.
             int i = 0;
             foreach (var item in this.Children.OfType<CropActivityManageProduct>())
@@ -286,9 +286,13 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">This crop uses ";
 
             Land parentLand = null;
+            IModel clemParent = Apsim.Parent(this, typeof(ZoneCLEM));
             if(LandItemNameToUse != null && LandItemNameToUse != "")
             {
-                parentLand = Apsim.Find(this, LandItemNameToUse.Split('.')[0]) as Land;
+                if (clemParent != null && clemParent.Enabled)
+                {
+                    parentLand = Apsim.Find(clemParent, LandItemNameToUse.Split('.')[0]) as Land;
+                }
             }
 
             if(UseAreaAvailable)
@@ -325,7 +329,10 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 0)
+            {
+                html += "\n</div>";
+            }
             return html;
         }
 
@@ -336,12 +343,22 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
-            if (rotation)
+
+            if (Apsim.Children(this, typeof(CropActivityManageProduct)).Count() == 0)
             {
-                html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+                html += "\n<div class=\"errorbanner clearfix\">";
+                html += "<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>";
+                html += "</div>";
             }
-            html += "\n<div class=\"croprotationborder\">";
+            else
+            {
+                bool rotation = Apsim.Children(this, typeof(CropActivityManageProduct)).Count() > 1;
+                if (rotation)
+                {
+                    html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+                }
+                html += "\n<div class=\"croprotationborder\">";
+            }
             return html;
         }
     }

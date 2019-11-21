@@ -1,13 +1,12 @@
-﻿using Models;
-using Models.Core;
-using Models.PMF;
-using Models.PMF.Organs;
-using Models.Soils;
-using NUnit.Framework;
-using System.Collections.Generic;
-
-namespace UnitTests.Core
+﻿namespace UnitTests.Core
 {
+    using Models;
+    using Models.Core;
+    using Models.PMF;
+    using Models.PMF.Organs;
+    using Models.Soils;
+    using NUnit.Framework;
+    using System.Collections.Generic;
 
     [TestFixture]
     class ScopeTests
@@ -17,7 +16,7 @@ namespace UnitTests.Core
         /// FindAll method tests.
         /// </summary>
         [Test]
-        public void Scope_EnsureFindAllWorks()
+        public void EnsureFindAllWorks()
         {
             var modelWithParentLink = new ModelWithParentLink();
 

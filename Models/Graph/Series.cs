@@ -26,6 +26,8 @@ namespace Models.Graph
     [Serializable]
     public class Series : Model, IGraphable
     {
+        private List<SimulationDescription> simulationDescriptions;
+
         /// <summary>Constructor for a series</summary>
         public Series()
         {
@@ -129,125 +131,182 @@ namespace Models.Graph
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="reader">A storage reader.</param>
-        public void GetSeriesToPutOnGraph(IStorageReader reader, List<SeriesDefinition> definitions)
+        /// <param name="simulationFilter"></param>
+        public void GetSeriesToPutOnGraph(IStorageReader reader, List<SeriesDefinition> definitions, List<string> simulationFilter = null)
         {
-            List<SeriesDefinition> ourDefinitions = new List<SeriesDefinition>();
+            List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
 
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
-                ourDefinitions.Add(CreateDefinition(Name, null, Colour, Marker, Line, null, reader));
+            {
+                seriesDefinitions.Add(new SeriesDefinition(this));
+                seriesDefinitions[0].ReadData(reader, simulationDescriptions);
+            }
             else
             {
-                var simulationDescriptions = FindSimulationDescriptions();
+                // TableName exists so get the vary by fields and the simulation descriptions.
+                var varyByFieldNames = GetVaryByFieldNames();
+                simulationDescriptions = FindSimulationDescriptions();
+                if (simulationFilter == null)
+                    simulationFilter = simulationDescriptions.Select(d => d.Name).Distinct().ToList();
 
-                // Get the data that is in scope.
-                DataTable baseData = GetDataInScope(reader, simulationDescriptions);
+                var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationFilter);
 
-                // Only keep the simulation descriptions that we are varying.
-                RemoveUnnessaryDescriptionsAndDescriptors(simulationDescriptions);
-
-                SplitDescriptionsWithSameDescriptors(simulationDescriptions);
-
-                var seriesDescriptions = ToSeriesDescriptions(simulationDescriptions);
-
-                // If the simulation descriptions list is empty then we aren't varying 
-                // by any field so create a simulation description for the whole dataset.
-                if (seriesDescriptions.Count == 0)
-                    seriesDescriptions = new List<SeriesDescription>() { new SeriesDescription() { SimulationNames = new List<string>() { Name } } };
-
-                // If there are vary by fields that aren't in descriptors of the 
-                // simulationdescriptions then add them.
-                EnsureVaryBysAreInDescriptors(FactorToVaryColours, seriesDescriptions, baseData);
-                EnsureVaryBysAreInDescriptors(FactorToVaryMarkers, seriesDescriptions, baseData);
-                EnsureVaryBysAreInDescriptors(FactorToVaryLines, seriesDescriptions, baseData);
-
-                // Get data for each simulation / zone object
-                if (baseData != null)
+                if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
                 {
-                    if (baseData.Rows.Count > 0)
-                        ourDefinitions = ConvertToSeriesDefinitions(seriesDescriptions, reader, baseData);
-                    else if (Apsim.Parent(this, typeof(Simulation)).Parent is Experiment)
-                        throw new Exception("Unable to find any data points - should this graph be directly under an experiment?");
+                    // No vary by fields. Just plot the whole table in a single
+                    // series with data that is in scope.
+                    seriesDefinitions = new List<SeriesDefinition>() { new SeriesDefinition(this, whereClauseForInScopeData, Filter) };
                 }
+                else
+                {
+                    // There are one or more vary by fields. Create series definitions
+                    // for each combination of vary by fields.
+                    seriesDefinitions = CreateDefinitionsUsingVaryBy(varyByFieldNames, simulationDescriptions, whereClauseForInScopeData);
+                }
+
+                // If we don't have any definitions then see if the vary by fields
+                // refer to string fields in the database table.
+                if (seriesDefinitions.Count == 0)
+                    seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, varyByFieldNames, whereClauseForInScopeData);
+
+                // Paint all definitions. 
+                var painter = GetSeriesPainter();
+                foreach (var seriesDefinition in seriesDefinitions)
+                    painter.Paint(seriesDefinition);
+
+                // Tell each series definition to read its data.
+                foreach (var seriesDefinition in seriesDefinitions)
+                    seriesDefinition.ReadData(reader, simulationDescriptions);
+
+                // Remove series that have no data.
+                seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
             }
 
             // We might have child models that want to add to our series definitions e.g. regression.
             foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
-                series.GetSeriesToPutOnGraph(reader, ourDefinitions);
+                series.GetSeriesToPutOnGraph(reader, seriesDefinitions);
 
-            // Remove series that have no data.
-            ourDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.x) || !MathUtilities.ValuesInArray(d.y));
+            definitions.AddRange(seriesDefinitions);
+        }
 
-            definitions.AddRange(ourDefinitions);
+        /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
+        /// <param name="annotations">A list of annotations to add to.</param>
+        public void GetAnnotationsToPutOnGraph(List<Annotation> annotations)
+        {
+            // We might have child models that wan't to add to the annotations e.g. regression.
+            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+                series.GetAnnotationsToPutOnGraph(annotations);
+        }
+
+        /// <summary>Return a list of extra fields that the definition should read.</summary>
+        /// <param name="seriesDefinition">The calling series definition.</param>
+        /// <returns>A list of fields - never null.</returns>
+        public IEnumerable<string> GetExtraFieldsToRead(SeriesDefinition seriesDefinition)
+        {
+            return new string[0];
         }
 
         /// <summary>
-        /// Convert the simulation descriptions into series descriptions.
+        /// Create series definitions assuming the vary by fields are text fields in the table.
         /// </summary>
-        /// <param name="simulationDescriptions">The simulation descriptions to convert.</param>
-        private List<SeriesDescription> ToSeriesDescriptions(List<SimulationDescription> simulationDescriptions)
+        /// <param name="reader">The reader to read from.</param>
+        /// <param name="varyByFieldNames">The vary by fields.</param>
+        /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
+        private List<SeriesDefinition> CreateDefinitionsFromFieldInTable(IStorageReader reader, List<string> varyByFieldNames, string whereClauseForInScopeData)
         {
-            var seriesDescriptions = new List<SeriesDescription>();
+            List<SeriesDefinition> definitions = new List<SeriesDefinition>();
 
+            var fieldsThatExist = reader.ColumnNames(TableName);
+            var varyByThatExistInTable = varyByFieldNames.Where(v => fieldsThatExist.Contains(v)).ToList();
+
+            var validValuesForEachVaryByField = new List<List<string>>();
+            foreach (var varyByFieldName in varyByThatExistInTable)
+            {
+                var data = reader.GetData(TableName, 
+                                            fieldNames: new string[] { varyByFieldName },
+                                            filter: whereClauseForInScopeData,
+                                            distinct: true);
+                var values = DataTableUtilities.GetColumnAsStrings(data, varyByFieldName).Distinct().ToList();
+                validValuesForEachVaryByField.Add(values);
+            }
+
+            foreach (var combination in MathUtilities.AllCombinationsOf(validValuesForEachVaryByField.ToArray(), reverse:true))
+            {
+                var descriptors = new List<SimulationDescription.Descriptor>();
+                for (int i = 0; i < combination.Count; i++)
+                    descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i], 
+                                                                         combination[i]));
+                definitions.Add(new SeriesDefinition(this, whereClauseForInScopeData, Filter, descriptors));
+            }
+
+            return definitions;
+        }
+
+        /// <summary>
+        /// Create an SQL WHERE clause for rows that are in scope.
+        /// </summary>
+        /// <param name="reader">The reader to read from.</param>
+        /// <param name="simulationFilter">The names of simulatiosn that are in scope.</param>
+        private string CreateInScopeWhereClause(IStorageReader reader, List<string> simulationFilter)
+        {
+            var fieldsThatExist = reader.ColumnNames(TableName);
+            if (fieldsThatExist.Contains("SimulationID") || fieldsThatExist.Contains("SimulationName"))
+            {
+                // Extract all the simulation names from all descriptions.
+                var simulationNames = simulationFilter.Distinct(); 
+
+                string whereClause =  "SimulationName IN (" +
+                                      StringUtilities.Build(simulationNames, ",", "'", "'") +
+                                      ")";
+                return whereClause;
+            }
+            else if (Filter != string.Empty)
+                return Filter;
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Create and return a list of series definitions for each group by field.
+        /// </summary>
+        /// <param name="varyByFieldNames">The vary by fields</param>
+        /// <param name="simulationDescriptions">The simulation descriptions that are in scope.</param>
+        /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
+        private List<SeriesDefinition> CreateDefinitionsUsingVaryBy(List<string> varyByFieldNames, 
+                                                                    List<SimulationDescription> simulationDescriptions,
+                                                                    string whereClauseForInScopeData)
+        {
+            SplitDescriptionsWithSameDescriptors(simulationDescriptions);
+
+            var definitions = new List<SeriesDefinition>();
             foreach (var simulationDescription in simulationDescriptions)
             {
-                var foundDescription = seriesDescriptions.Find(sd => Equals(sd.Descriptors, simulationDescription.Descriptors));
-                if (foundDescription == null)
-                    seriesDescriptions.Add(new SeriesDescription()
-                    {
-                        SimulationNames = new List<string> { simulationDescription.Name },
-                        Descriptors = simulationDescription.Descriptors
-                    });
-                else
-                    foundDescription.SimulationNames.Add(simulationDescription.Name);
-            }
-            return seriesDescriptions;
-        }
-
-        /// <summary>
-        /// Ensure the specified field name is in descriptors of the 
-        /// seriesdescription. If not then create a series description
-        /// for each valid value.
-        /// </summary>
-        /// <remarks>
-        /// This is to support vary by on a string field of the data table. Needed
-        /// by Morris 'Parameter' vary by.
-        /// </remarks>
-        /// <param name="varyByFieldName">The vary by field name to ensure is in the descriptors.</param>
-        /// <param name="seriesDescriptions"></param>
-        /// <param name="baseData"></param>
-        private void EnsureVaryBysAreInDescriptors(string varyByFieldName, List<SeriesDescription> seriesDescriptions, DataTable baseData)
-        {
-            if (varyByFieldName != null && varyByFieldName != "Graph series")
-            {
-                var newList = new List<SeriesDescription>();
-
-                foreach (var seriesDescription in seriesDescriptions)
+                // Determine the descriptors to pass to the new definition that will
+                // be created below. We only want to pass the 'vary by' descriptors.
+                var descriptorsForDefinition = new List<SimulationDescription.Descriptor>();
+                foreach (var descriptor in simulationDescription.Descriptors)
                 {
-                    var descriptor = seriesDescription.Descriptors.Find(d => d.Name == varyByFieldName);
-                    if (descriptor == null)
-                    {
-                        if (baseData.Columns.Contains(varyByFieldName))
-                        {
-                            // We need to create a simulation description for each valid value of
-                            // the descriptor.
-                            var validValues = DataTableUtilities.GetColumnAsStrings(baseData, varyByFieldName).Distinct();
-                            foreach (var value in validValues)
-                            {
-                                var newSimulationDescription = new SeriesDescription() { SimulationNames = seriesDescription.SimulationNames };
-                                newSimulationDescription.Descriptors.AddRange(seriesDescription.Descriptors);
-                                newSimulationDescription.Descriptors.Add(new SimulationDescription.Descriptor(varyByFieldName, value));
-                                newList.Add(newSimulationDescription);
-                            }
-                        }
-                    }
-                    else
-                        newList.Add(seriesDescription);
+                    if (varyByFieldNames.Contains(descriptor.Name))
+                        descriptorsForDefinition.Add(descriptor);
                 }
 
-                seriesDescriptions.Clear();
-                seriesDescriptions.AddRange(newList);
+                // Try and find a definition that has the same descriptors.
+                var foundDefinition = definitions.Find(d => SimulationDescription.Equals(d.Descriptors, descriptorsForDefinition));
+
+                // Only create a definition if there are descriptors and there isn't
+                // already a definition with the same descriptors.
+                if (descriptorsForDefinition.Count > 0 && foundDefinition == null)
+                {
+                    // Create the definition.
+                    definitions.Add(new SeriesDefinition(this,
+                                                         whereClauseForInScopeData,
+                                                         Filter,
+                                                         descriptorsForDefinition));
+                }
             }
+
+            return definitions;
         }
 
         /// <summary>
@@ -289,40 +348,9 @@ namespace Models.Graph
         }
 
         /// <summary>
-        /// If a simulation description doesn't have any descriptors that are being
-        /// varied then remove it.
-        /// </summary>
-        /// <param name="simulationDescriptions"></param>
-        private void RemoveUnnessaryDescriptionsAndDescriptors(List<SimulationDescription> simulationDescriptions)
-        {
-            var varyByFieldNames = GetVaryByFieldNames();
-            if (varyByFieldNames.Count > 0)
-            {
-                foreach (var simulationDescription in simulationDescriptions)
-                {
-                    // For this simulation description, determine which descriptors aren't 
-                    // being varied, add them to a removal list.
-                    var descriptorsToRemove = new List<SimulationDescription.Descriptor>();
-                    foreach (var descriptor in simulationDescription.Descriptors)
-                    {
-                        if (!varyByFieldNames.Contains(descriptor.Name))
-                            descriptorsToRemove.Add(descriptor);
-                    }
-
-                    // Remove all descriptors in the removal list.
-                    foreach (var descritorToRemove in descriptorsToRemove)
-                        simulationDescription.Descriptors.Remove(descritorToRemove);
-                }
-
-                // Remove all simulation descriptions that don't have any descriptors.
-                simulationDescriptions.RemoveAll(sd => sd.Descriptors.Count == 0);
-            }
-        }
-
-        /// <summary>
         /// Find and return a list of all simulation descriptions.
         /// </summary>
-        private List<SimulationDescription> FindSimulationDescriptions()
+        public List<SimulationDescription> FindSimulationDescriptions()
         {
             // Find a parent that heads the scope that we're going to graph
             IModel parent = FindParent();
@@ -376,366 +404,84 @@ namespace Models.Graph
             return obj;
         }
 
-        /// <summary>
-        /// Paint the visual elements (colour, line and marker) of all simulation / zone pairs.
-        /// </summary>
-        /// <param name="seriesDescriptions">The series descriptions to convert to series definitions.</param>
-        /// <param name="reader">Storage reader.</param>
-        /// <param name="baseData">Base data.</param>
-        private List<SeriesDefinition> ConvertToSeriesDefinitions(List<SeriesDescription> seriesDescriptions, IStorageReader reader, DataTable baseData)
+        /// <summary>Get series definition painter.</summary>
+        /// <returns>Painter. Never returns null.</returns>
+        private ISeriesDefinitionPainter GetSeriesPainter()
         {
-            // Create an appropriate painter object
-            SimulationZonePainter.IPainter painter;
+            ISeriesDefinitionPainter painter;
             if (FactorToVaryColours != null)
             {
                 if (FactorToVaryLines == FactorToVaryColours && FactorToVaryMarkers == FactorToVaryColours)
-                    painter = new SimulationZonePainter.SequentialPainter
-                        (FactorToVaryColours,
+                    painter = new SequentialPainter
+                        (this, FactorToVaryColours,
                          ColourUtilities.Colours.Length,
                          Enum.GetValues(typeof(MarkerType)).Length - 1, // minus 1 to avoid None type
                          Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
-                         VisualElements.SetColour,
-                         VisualElements.SetMarker,
-                         VisualElements.SetLineType);
+                         SeriesDefinition.SetColour,
+                         SeriesDefinition.SetMarker,
+                         SeriesDefinition.SetLineType);
                 else if (FactorToVaryLines == FactorToVaryColours)
-                    painter = new SimulationZonePainter.SequentialPainter
-                        (FactorToVaryColours,
+                    painter = new SequentialPainter
+                        (this, FactorToVaryColours,
                          ColourUtilities.Colours.Length, Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
-                         VisualElements.SetColour,
-                         VisualElements.SetLineType);
+                         SeriesDefinition.SetColour,
+                         SeriesDefinition.SetLineType);
                 else if (FactorToVaryMarkers == FactorToVaryColours)
-                    painter = new SimulationZonePainter.SequentialPainter
-                       (FactorToVaryColours,
+                    painter = new SequentialPainter
+                       (this, FactorToVaryColours,
                         ColourUtilities.Colours.Length,
                         Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
-                        VisualElements.SetColour,
-                        VisualElements.SetMarker);
+                        SeriesDefinition.SetColour,
+                        SeriesDefinition.SetMarker);
                 else if (FactorToVaryLines != null && FactorToVaryMarkers != null)
-                    painter = new SimulationZonePainter.MultiDescriptorPainter()
-                    {
-                        DescriptorName1 = FactorToVaryColours,
-                        DescriptorName2 = FactorToVaryLines,
-                        DescriptorName3 = FactorToVaryMarkers,
-                        MaximumIndex1 = ColourUtilities.Colours.Length,
-                        MaximumIndex2 = Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
-                        MaximumIndex3 = Enum.GetValues(typeof(MarkerType)).Length - 1, // minus 1 to avoid None type
-                        Setter1 = VisualElements.SetColour,
-                        Setter2 = VisualElements.SetLineType,
-                        Setter3 = VisualElements.SetMarker
-                    };
+                    painter = new MultiDescriptorPainter
+                       (FactorToVaryColours, FactorToVaryLines, FactorToVaryMarkers,
+                        ColourUtilities.Colours.Length,
+                        Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
+                        Enum.GetValues(typeof(MarkerType)).Length - 1, // minus 1 to avoid None type
+                        SeriesDefinition.SetColour,
+                        SeriesDefinition.SetLineType,
+                        SeriesDefinition.SetMarker);
 
                 else if (FactorToVaryLines != null)
-                    painter = new SimulationZonePainter.MultiDescriptorPainter()
-                    {
-                        DescriptorName1 = FactorToVaryColours,
-                        DescriptorName2 = FactorToVaryLines,
-                        MaximumIndex1 = ColourUtilities.Colours.Length,
-                        MaximumIndex2 = Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
-                        Setter1 = VisualElements.SetColour,
-                        Setter2 = VisualElements.SetLineType
-                    };
-                else if (FactorToVaryMarkers != null)
-                    painter = new SimulationZonePainter.MultiDescriptorPainter()
-                    {
-                        DescriptorName1 = FactorToVaryColours,
-                        DescriptorName2 = FactorToVaryMarkers,
-                        MaximumIndex1 = ColourUtilities.Colours.Length,
-                        MaximumIndex2 = Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
-                        Setter1 = VisualElements.SetColour,
-                        Setter2 = VisualElements.SetMarker
-                    };
-                else
-                    painter = new SimulationZonePainter.SequentialPainter
+                    painter = new MultiDescriptorPainter
                        (FactorToVaryColours,
+                        FactorToVaryLines,
                         ColourUtilities.Colours.Length,
-                        VisualElements.SetColour);
+                        Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
+                        SeriesDefinition.SetColour,
+                        SeriesDefinition.SetLineType);
+                else if (FactorToVaryMarkers != null)
+                    painter = new MultiDescriptorPainter
+                       (FactorToVaryColours,
+                        FactorToVaryMarkers,
+                        ColourUtilities.Colours.Length,
+                        Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
+                        SeriesDefinition.SetColour,
+                        SeriesDefinition.SetMarker);
+                else
+                    painter = new SequentialPainter
+                       (this, FactorToVaryColours,
+                        ColourUtilities.Colours.Length,
+                        SeriesDefinition.SetColour);
             }
             else if (FactorToVaryLines != null)
             {
-                painter = new SimulationZonePainter.SequentialPainter
-                   (FactorToVaryLines,
+                painter = new SequentialPainter
+                   (this, FactorToVaryLines,
                     Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type   
-                    VisualElements.SetLineType);
+                    SeriesDefinition.SetLineType);
             }
             else if (FactorToVaryMarkers != null)
             {
-                painter = new SimulationZonePainter.SequentialPainter
-                   (FactorToVaryMarkers,
+                painter = new SequentialPainter
+                   (this, FactorToVaryMarkers,
                     Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
-                    VisualElements.SetMarker);
+                    SeriesDefinition.SetMarker);
             }
             else
-                painter = new SimulationZonePainter.DefaultPainter() { Colour = Colour, LineType = Line, MarkerType = Marker };
-
-            List<SeriesDefinition> definitions = new List<SeriesDefinition>();
-            // Apply the painter to all simulation zone objects.
-            foreach (var seriesDescription in seriesDescriptions)
-            {
-                VisualElements visualElement = new VisualElements();
-                visualElement.colour = Colour;
-                visualElement.Line = Line;
-                visualElement.LineThickness = LineThickness;
-                visualElement.Marker = Marker;
-                visualElement.MarkerSize = MarkerSize;
-                painter.PaintSimulationZone(seriesDescription.Descriptors, visualElement, this);
-
-                SeriesDefinition seriesDefinition = new Models.Graph.SeriesDefinition();
-                seriesDefinition.type = Type;
-                seriesDefinition.marker = visualElement.Marker;
-                seriesDefinition.line = visualElement.Line;
-                seriesDefinition.markerSize = visualElement.MarkerSize;
-                seriesDefinition.lineThickness = visualElement.LineThickness;
-                seriesDefinition.colour = visualElement.colour;
-                seriesDefinition.xFieldName = XFieldName;
-                seriesDefinition.yFieldName = YFieldName;
-                seriesDefinition.xAxis = XAxis;
-                seriesDefinition.yAxis = YAxis;
-                seriesDefinition.xFieldUnits = reader.Units(TableName, XFieldName);
-                seriesDefinition.yFieldUnits = reader.Units(TableName, YFieldName);
-                seriesDefinition.showInLegend = ShowInLegend;
-                if (seriesDescription.Descriptors.Count == 0)
-                    seriesDefinition.title = Name;
-                else if (seriesDescription.Descriptors.Count == 1 && seriesDescription.Descriptors[0].Name == "Graph series")
-                    seriesDefinition.title = Name;
-                else
-                {
-                    seriesDescription.Descriptors.ForEach(f => seriesDefinition.title += f.Value);
-                    if (IncludeSeriesNameInLegend || seriesDefinition.title == "?")
-                    {
-                        seriesDefinition.title += ": " + Name;
-                    }
-                }
-
-                if (Checkpoint != "Current")
-                    seriesDefinition.title += " (" + Checkpoint + ")";
-                DataView data = new DataView(baseData);
-                try
-                {
-                    var fieldsThatExist = reader.ColumnNames(TableName);
-
-                    string rowFilter = null;
-
-                    foreach (var descriptor in seriesDescription.Descriptors)
-                    {
-                        if (fieldsThatExist.Contains(descriptor.Name))
-                        {
-                            if (rowFilter != null)
-                                rowFilter += " AND ";
-
-                            rowFilter += descriptor.Name + " = '" + descriptor.Value + "'";
-                        }
-                        else if (baseData.Columns.Contains("SimulationName"))
-                        {
-                            // Field doesn't exist. This typically happens in observed files that don't
-                            // have the descriptor columns. Instead use the simulation name to match.
-                            if (rowFilter != null)
-                                rowFilter += " AND ";
-
-                            rowFilter += "SimulationName IN (" +
-                                  StringUtilities.Build(seriesDescription.SimulationNames, ",", "'", "'") +
-                                  ")";
-                        }
-                    }
-
-                    data.RowFilter = rowFilter;
-                }
-                catch
-                {
-
-                }
-                if (data.Count > 0)
-                {
-                    seriesDefinition.data = data.ToTable();
-                    seriesDefinition.x = GetDataFromTable(seriesDefinition.data, XFieldName);
-                    seriesDefinition.y = GetDataFromTable(seriesDefinition.data, YFieldName);
-                    seriesDefinition.x2 = GetDataFromTable(seriesDefinition.data, X2FieldName);
-                    seriesDefinition.y2 = GetDataFromTable(seriesDefinition.data, Y2FieldName);
-                    seriesDefinition.error = GetErrorDataFromTable(seriesDefinition.data, YFieldName);
-                    if (Cumulative)
-                        seriesDefinition.y = MathUtilities.Cumulative(seriesDefinition.y as IEnumerable<double>);
-                    if (CumulativeX)
-                        seriesDefinition.x = MathUtilities.Cumulative(seriesDefinition.x as IEnumerable<double>);
-                }
-                definitions.Add(seriesDefinition);
-            }
-            return definitions;
-        }
-
-        /// <summary>Creates a series definition.</summary>
-        /// <param name="title">The title.</param>
-        /// <param name="filter">The filter. Can be null.</param>
-        /// <param name="colour">The colour.</param>
-        /// <param name="line">The line type.</param>
-        /// <param name="marker">The marker type.</param>
-        /// <param name="simulationNames">A list of simulations to include in data.</param>
-        /// <param name="storage">Storage reader.</param>
-        /// <returns>The newly created definition.</returns>
-        private SeriesDefinition CreateDefinition(string title, string filter, Color colour, MarkerType marker, LineType line, string[] simulationNames, IStorageReader storage)
-        {
-            SeriesDefinition definition = new SeriesDefinition();
-            definition.SimulationNames = simulationNames;
-            definition.Filter = filter;
-            definition.colour = colour;
-            definition.title = title;
-            if (IncludeSeriesNameInLegend)
-                definition.title += ": " + Name;
-            definition.line = line;
-            definition.marker = marker;
-            definition.lineThickness = LineThickness;
-            definition.markerSize = MarkerSize;
-            definition.showInLegend = ShowInLegend;
-            definition.type = Type;
-            definition.xAxis = XAxis;
-            definition.xFieldName = XFieldName;
-            definition.yAxis = YAxis;
-            definition.yFieldName = YFieldName;
-
-            // If the table name is null then use reflection to get data from other models.
-            if (TableName == null)
-            {
-                if (!String.IsNullOrEmpty(XFieldName))
-                    definition.x = GetDataFromModels(XFieldName);
-                if (!String.IsNullOrEmpty(YFieldName))
-                    definition.y = GetDataFromModels(YFieldName);
-                if (!String.IsNullOrEmpty(X2FieldName))
-                    definition.x2 = GetDataFromModels(X2FieldName);
-                if (!String.IsNullOrEmpty(Y2FieldName))
-                    definition.y2 = GetDataFromModels(Y2FieldName);
-            }
-            else
-            {
-                List<string> fieldNames = new List<string>();
-                if (!string.IsNullOrWhiteSpace(XFieldName))
-                    fieldNames.Add(XFieldName);
-                if (!string.IsNullOrWhiteSpace(YFieldName))
-                    fieldNames.Add(YFieldName);
-                if (!string.IsNullOrWhiteSpace(X2FieldName))
-                    fieldNames.Add(X2FieldName);
-                if (!string.IsNullOrWhiteSpace(Y2FieldName))
-                    fieldNames.Add(Y2FieldName);
-
-                DataTable data = storage.GetData(TableName, fieldNames: fieldNames, filter: Filter);
-
-                definition.x = GetDataFromTable(data, XFieldName);
-                definition.y = GetDataFromTable(data, YFieldName);
-                definition.x2 = GetDataFromTable(data, X2FieldName);
-                definition.y2 = GetDataFromTable(data, Y2FieldName);
-            }
-
-            return definition;
-        }
-
-        /// <summary>Gets a column of data from a table.</summary>
-        /// <param name="data">The table</param>
-        /// <param name="fieldName">Name of the field.</param>
-        /// <returns>The column of data.</returns>
-        private IEnumerable GetDataFromTable(DataTable data, string fieldName)
-        {
-            if (fieldName != null && data != null && data.Columns.Contains(fieldName))
-            {
-                if (data.Columns[fieldName].DataType == typeof(DateTime))
-                    return DataTableUtilities.GetColumnAsDates(data, fieldName);
-                else if (data.Columns[fieldName].DataType == typeof(string))
-                    return DataTableUtilities.GetColumnAsStrings(data, fieldName);
-                else
-                    return DataTableUtilities.GetColumnAsDoubles(data, fieldName);
-            }
-            return null;
-        }
-
-        /// <summary>Gets a column of error data from a table.</summary>
-        /// <param name="data">The table</param>
-        /// <param name="fieldName">Name of the field.</param>
-        /// <returns>The column of data.</returns>
-        private IEnumerable GetErrorDataFromTable(DataTable data, string fieldName)
-        {
-            string errorFieldName = fieldName + "Error";
-            if (fieldName != null && data != null && data.Columns.Contains(errorFieldName))
-            {
-                if (data.Columns[errorFieldName].DataType == typeof(double))
-                    return DataTableUtilities.GetColumnAsDoubles(data, errorFieldName);
-            }
-            return null;
-        }
-
-        /// <summary>Return data using reflection</summary>
-        /// <param name="fieldName">The field name to get data for.</param>
-        /// <returns>The return data or null if not found</returns>
-        private IEnumerable GetDataFromModels(string fieldName)
-        {
-            if (fieldName != null && fieldName.StartsWith("["))
-            {
-                int posCloseBracket = fieldName.IndexOf(']');
-                if (posCloseBracket == -1)
-                    throw new Exception("Invalid graph field name: " + fieldName);
-
-                string modelName = fieldName.Substring(1, posCloseBracket - 1);
-                string namePath = fieldName.Remove(0, posCloseBracket + 2);
-
-                IModel modelWithData = Apsim.Find(this, modelName) as IModel;
-                if (modelWithData == null)
-                {
-                    // Try by assuming the name is a type.
-                    Type t = ReflectionUtilities.GetTypeFromUnqualifiedName(modelName);
-                    if (t != null)
-                    {
-                        IModel parentOfGraph = this.Parent.Parent;
-                        if (t.IsAssignableFrom(parentOfGraph.GetType()))
-                            modelWithData = parentOfGraph;
-                        else
-                            modelWithData = Apsim.Find(parentOfGraph, t);
-                    }
-                }
-
-                if (modelWithData != null)
-                {
-                    // Use reflection to access a property.
-                    object obj = Apsim.Get(modelWithData, namePath);
-                    if (obj != null && obj.GetType().IsArray)
-                        return obj as Array;
-                }
-            }
-            else
-            {
-                return Apsim.Get(this, fieldName) as IEnumerable;
-            }
-
-            return null;
-        }
-
-        /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
-        /// <param name="annotations">A list of annotations to add to.</param>
-        public void GetAnnotationsToPutOnGraph(List<Annotation> annotations)
-        {
-            // We might have child models that wan't to add to the annotations e.g. regression.
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
-                series.GetAnnotationsToPutOnGraph(annotations);
-        }
-
-        /// <summary>
-        /// Get data that is in scope.
-        /// </summary>
-        /// <param name="reader">Storage service</param>
-        /// <param name="descriptions">The simulation descriptions convert to series.</param>
-        private DataTable GetDataInScope(IStorageReader reader, List<SimulationDescription> descriptions)
-        {
-            // Extract all the simulation names from all descriptions.
-            var simulationNames = descriptions.Select(d => d.Name).Distinct();
-
-            string filterToUse = "SimulationName IN (" +
-                                   StringUtilities.Build(simulationNames, ",", "'", "'") +
-                                   ")";
-            if (Filter != null && Filter != string.Empty)
-                filterToUse += " AND " + Filter;
-
-            // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
-            // GetData in this situation.
-            string checkpointName = null;
-            if (reader.ColumnNames(TableName).Contains("CheckpointID"))
-                checkpointName = Checkpoint;
-
-            // Go get the data.
-            return reader.GetData(tableName: TableName, checkpointName: checkpointName, filter: filterToUse);
+                painter = new DefaultPainter(Colour, Line, Marker);
+            return painter;
         }
 
         /// <summary>Return a list of field names that this series is varying.</summary>
@@ -750,250 +496,6 @@ namespace Models.Graph
                 groupByFieldNames.Add(FactorToVaryMarkers);
             groupByFieldNames = groupByFieldNames.Distinct().ToList();
             return groupByFieldNames;
-        }
-
-        /// <summary>Compare two list of descriptors for equality.</summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns>true if the are the same.</returns>
-        private bool Equals(List<SimulationDescription.Descriptor> x, List<SimulationDescription.Descriptor> y)
-        {
-            if (x.Count != y.Count)
-                return false;
-            for (int i = 0; i < x.Count; i++)
-            {
-                if (x[i].Name != y[i].Name ||
-                    x[i].Value != y[i].Value)
-                    return false;
-            }
-            return true;
-        }
-        /// <summary>
-        /// Encapsulates a single series, the simulation names that make up the series
-        /// and the associated descriptors.
-        /// </summary>
-        class SeriesDescription
-        {
-            /// <summary>Constructor.</summary>
-            public SeriesDescription()
-            {
-                SimulationNames = new List<string>();
-                Descriptors = new List<SimulationDescription.Descriptor>();
-            }
-
-            public List<string> SimulationNames { get; set; }
-            public List<SimulationDescription.Descriptor> Descriptors { get; set; }
-        }
-
-        /// <summary>
-        /// Represents the visual elements of a series.
-        /// </summary>
-        class VisualElements
-        {
-            /// <summary>Gets or set the colour</summary>
-            public Color colour { get; set; }
-
-            /// <summary>Gets or sets the marker size</summary>
-            public MarkerType Marker { get; set; }
-
-            /// <summary>Marker size.</summary>
-            public MarkerSizeType MarkerSize { get; set; }
-
-            /// <summary>Gets or sets the line type to show</summary>
-            public LineType Line { get; set; }
-
-            /// <summary>Gets or sets the line thickness</summary>
-            public LineThicknessType LineThickness { get; set; }
-
-            /// <summary>A static setter function for colour from an index</summary>
-            /// <param name="visualElement">The visual element to change</param>
-            /// <param name="index">The index</param>
-            public static void SetColour(VisualElements visualElement, int index)
-            {
-                visualElement.colour = ColourUtilities.Colours[index];
-            }
-
-            /// <summary>A static setter function for line type from an index</summary>
-            /// <param name="visualElement">The visual element to change</param>
-            /// <param name="index">The index</param>
-            public static void SetLineType(VisualElements visualElement, int index)
-            {
-                visualElement.Line = (LineType)Enum.GetValues(typeof(LineType)).GetValue(index);
-            }
-
-            /// <summary>A static setter function for marker from an index</summary>
-            /// <param name="visualElement">The visual element to change</param>
-            /// <param name="index">The index</param>
-            public static void SetMarker(VisualElements visualElement, int index)
-            {
-                visualElement.Marker = (MarkerType)Enum.GetValues(typeof(MarkerType)).GetValue(index);
-            }
-        }
-
-        /// <summary>
-        /// This class paints (sets visual elements) of a group of simulation zone objects.
-        /// </summary>
-        class SimulationZonePainter
-        {
-            /// <summary>A delegate setter function.</summary>
-            /// <param name="visualElement">The visual element to change</param>
-            /// <param name="index">The index</param>
-            public delegate void SetFunction(VisualElements visualElement, int index);
-
-            /// <summary>A painter interface for setting visual elements of a simulation/zone pair</summary>
-            public interface IPainter
-            {
-                void PaintSimulationZone(List<SimulationDescription.Descriptor> descriptors, VisualElements visualElement, Series series);
-            }
-
-            /// <summary>A default painter for setting a simulation / zone pair to default values.</summary>
-            public class DefaultPainter : IPainter
-            {
-                public Color Colour { get; set; }
-                public LineType LineType { get; set; }
-                public MarkerType MarkerType { get; set; }
-                public void PaintSimulationZone(List<SimulationDescription.Descriptor> descriptors, VisualElements visualElement, Series series)
-                {
-                    visualElement.colour = Colour;
-                    visualElement.Line = LineType;
-                    visualElement.Marker = MarkerType;
-                }
-            }
-
-            /// <summary>A painter for setting the visual element of a simulation description using consecutive values of up to three visual elements.</summary>
-            public class SequentialPainter : IPainter
-            {
-                private List<string> values = new List<string>();
-                private List<Tuple<int, int, int>> indexMatrix = new List<Tuple<int, int, int>>();
-                private string descriptorName;
-                private SetFunction setter1 { get; set; }
-                private SetFunction setter2 { get; set; }
-                private SetFunction setter3 { get; set; }
-
-                public SequentialPainter(string descriptorName,
-                                         int maximumIndex1,
-                                         SetFunction set1)
-                {
-                    this.descriptorName = descriptorName;
-                    for (int i = 0; i < maximumIndex1; i++)
-                        indexMatrix.Add(new Tuple<int, int, int>(i, -1, -1));
-                    setter1 = set1;
-                }
-
-                public SequentialPainter(string descriptorName,
-                                         int maximumIndex1, int maximumIndex2,
-                                         SetFunction set1, SetFunction set2)
-                {
-                    this.descriptorName = descriptorName;
-                    for (int j = 0; j < maximumIndex2; j++)
-                        for (int i = 0; i < maximumIndex1; i++)
-                            indexMatrix.Add(new Tuple<int, int, int>(i, j, -1));
-                    setter1 = set1;
-                    setter2 = set2;
-                }
-
-                public SequentialPainter(string descriptorName, 
-                                         int maximumIndex1, int maximumIndex2, int maximumIndex3,
-                                         SetFunction set1, SetFunction set2, SetFunction set3)
-                {
-                    this.descriptorName = descriptorName;
-                    for (int k = 0; k < maximumIndex3; k++)
-                        for (int j = 0; j < maximumIndex2; j++)
-                            for (int i = 0; i < maximumIndex1; i++)
-                                indexMatrix.Add(new Tuple<int, int, int>(i, j, k));
-                    setter1 = set1;
-                    setter2 = set2;
-                    setter3 = set3;
-                }
-
-                public void PaintSimulationZone(List<SimulationDescription.Descriptor> descriptors, VisualElements visualElement, Series series)
-                {
-                    int index;
-                    if (descriptorName == "Graph series")
-                    {
-                        index = series.Parent.Children.IndexOf(series);
-                    }
-                    else
-                    {
-                        var descriptor = descriptors.Find(d => d.Name == descriptorName);
-
-                        index = values.IndexOf(descriptor.Value);
-                        if (index == -1)
-                        {
-                            values.Add(descriptor.Value);
-                            index = values.Count - 1;
-                        }
-                    }
-                    if (index >= indexMatrix.Count)
-                        index = 0;
-                    setter1(visualElement, indexMatrix[index].Item1);
-                    setter2?.Invoke(visualElement, indexMatrix[index].Item2);
-                    setter3?.Invoke(visualElement, indexMatrix[index].Item3);
-                }
-            }
-
-            /// <summary>A painter for setting the visual element of a simulation description to values of two visual elements.</summary>
-            public class MultiDescriptorPainter : IPainter
-            {
-                private List<string> values1 = new List<string>();
-                private List<string> values2 = new List<string>();
-                private List<string> values3 = new List<string>();
-
-                public int MaximumIndex1 { get; set; }
-                public int MaximumIndex2 { get; set; }
-                public int MaximumIndex3 { get; set; }
-                public string DescriptorName1 { get; set; }
-                public string DescriptorName2 { get; set; }
-                public string DescriptorName3 { get; set; }
-                public SetFunction Setter1 { get; set; }
-                public SetFunction Setter2 { get; set; }
-                public SetFunction Setter3 { get; set; }
-
-                public void PaintSimulationZone(List<SimulationDescription.Descriptor> descriptors, VisualElements visualElement, Series series)
-                {
-                    var descriptor1 = descriptors.Find(d => d.Name == DescriptorName1);
-                    string descriptorValue1 = descriptor1.Value;
-
-                    int index1 = values1.IndexOf(descriptorValue1);
-                    if (index1 == -1)
-                    {
-                        values1.Add(descriptorValue1);
-                        index1 = values1.Count - 1;
-                    }
-                    index1 = index1 % MaximumIndex1;
-                    Setter1(visualElement, index1);
-
-                    var descriptor2 = descriptors.Find(d => d.Name == DescriptorName2);
-                    if (descriptor2 != null)
-                    {
-                        string descriptorValue2 = descriptor2.Value;
-
-                        int index2 = values2.IndexOf(descriptorValue2);
-                        if (index2 == -1)
-                        {
-                            values2.Add(descriptorValue2);
-                            index2 = values2.Count - 1;
-                        }
-                        index2 = index2 % MaximumIndex2;
-                        Setter2(visualElement, index2);
-                    }
-
-                    if (DescriptorName3 != null)
-                    {
-                        var descriptor3 = descriptors.Find(d => d.Name == DescriptorName3);
-                        var descriptorValue3 = descriptor3.Value;
-
-                        var index3 = values3.IndexOf(descriptorValue3);
-                        if (index3 == -1)
-                        {
-                            values3.Add(descriptorValue3);
-                            index3 = values3.Count - 1;
-                        }
-                        index3 = index3 % MaximumIndex3;
-                        Setter3(visualElement, index3);
-                    }
-                }
-            }
         }
     }
 }

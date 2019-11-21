@@ -107,5 +107,16 @@ namespace Models.Core
         /// Gets or sets the display type. 
         /// </summary>
         public DisplayType Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of a method which returns a list of valid values for this property.
+        /// Methods pointed to by this property can return any generic IEnumerable and must accept no arguments.
+        /// </summary>
+        public string Values { get; set; }
+
+        /// <summary>
+        /// Specifies a callback method that will be called by GUI to determine if this property is enabled.
+        /// </summary>
+        public string EnabledCallback { get; set; }
     }
 }

@@ -17,28 +17,24 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IOrgan))]
     public class RetranslocateNonStructural : Model, IRetranslocateMethod, ICustomDocumentation
     {
-        /// <summary>The calculation for N retranslocation function</summary>
-        [ChildLinkByName]
-        [Units("/d")]
-        public IFunction RetranslocateFunction = null;
-
-        /// <summary>The calculation for DM retranslocation function</summary>
-        [ChildLinkByName]
-        [Units("/d")]
-        public IFunction RetranslocateDMFunction = null;
-
         /// <summary>Allocate the retranslocated material</summary>
         /// <param name="organ"></param>
         public double Calculate(IOrgan organ)
         {
-            return RetranslocateFunction.Value();
+            GenericOrgan genOrgan = organ as GenericOrgan; // FIXME!
+            return Math.Max(0, (genOrgan.StartLive.StorageN + genOrgan.StartLive.MetabolicN) * (1 - genOrgan.SenescenceRate.Value()) * genOrgan.NRetranslocationFactor.Value());
         }
 
         /// <summary>Allocate the retranslocated material</summary>
         /// <param name="organ"></param>
         public double CalculateBiomass(IOrgan organ)
         {
-            return 0.0;
+            GenericOrgan genOrgan = organ as GenericOrgan; // FIXME!
+            double availableDM = Math.Max(0.0, genOrgan.StartLive.StorageWt - genOrgan.DMSupply.Reallocation) * genOrgan.DMRetranslocationFactor.Value();
+            if (MathUtilities.IsNegative(availableDM))
+                throw new Exception("Negative DM retranslocation value computed for " + Name);
+
+            return availableDM;
         }
 
         /// <summary>Allocate the retranslocated material</summary>
@@ -67,7 +63,33 @@ namespace Models.PMF
         /// <param name="biomass"></param>
         public void AllocateBiomass(IOrgan organ, BiomassAllocationType biomass)
         {
+            GenericOrgan genOrgan = organ as GenericOrgan;
 
+            // get DM lost by respiration (growth respiration)
+            // GrowthRespiration with unit CO2 
+            // GrowthRespiration is calculated as 
+            // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted 
+            // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into 
+            // CO2 (44/12).
+            // FIXME - this is also calculated in GenericOrgan. Seems redundant to calculate this twice.
+            double growthRespFactor = ((1.0 / genOrgan.DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * genOrgan.CarbonConcentration.Value()) * 44.0 / 12.0;
+
+            // Check retranslocation
+            if (MathUtilities.IsGreaterThan(biomass.Retranslocation, genOrgan.StartLive.StorageWt))
+                throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
+
+            double diffWt = biomass.Storage - biomass.Retranslocation;
+            if (diffWt > 0)
+            {
+                diffWt *= genOrgan.DMConversionEfficiency.Value();
+                genOrgan.GrowthRespiration += diffWt * growthRespFactor;
+            }
+            genOrgan.Allocated.StorageWt = diffWt;
+            genOrgan.Live.StorageWt += diffWt;
+            // allocate metabolic DM
+            genOrgan.Allocated.MetabolicWt = biomass.Metabolic * genOrgan.DMConversionEfficiency.Value();
+            genOrgan.GrowthRespiration += genOrgan.Allocated.MetabolicWt * growthRespFactor;
+            genOrgan.Live.MetabolicWt += genOrgan.Allocated.MetabolicWt;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

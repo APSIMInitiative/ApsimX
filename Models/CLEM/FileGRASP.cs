@@ -11,6 +11,7 @@ using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
+using System.Globalization;
 
 // -----------------------------------------------------------------------
 // <copyright file="FileGRASP.cs" company="APSIM Initiative">
@@ -28,13 +29,12 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.GridView")] //CLEMFileGRASPView
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileGRASPPresenter
-    [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model holds a GRASP data file for native pasture used in the CLEM simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/datareaders/graspdatareader.htm")]
+    [HelpUri(@"Content/Features/DataReaders/GRASPDataReader.htm")]
     public class FileGRASP : CLEMModel, IFileGRASP
     {
         /// <summary>
@@ -215,6 +215,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Pasture file name")]
+        [Models.Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage ="Pasture file name must be supplied.")]
         public string FileName { get; set; }
 
@@ -234,18 +235,6 @@ namespace Models.CLEM
                 else
                 {
                     return this.FileName;
-                }
-            }
-            set
-            {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null)
-                {
-                    this.FileName = PathUtilities.GetRelativePath(value, simulations.FileName);
-                }
-                else
-                {
-                    this.FileName = value;
                 }
             }
         }
@@ -347,26 +336,28 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                List<string> pastureProps = new List<string>();
-                pastureProps.Add("Region");
-                pastureProps.Add("Soil");
-                pastureProps.Add("ForageNo");
-                pastureProps.Add("GrassBA");
-                pastureProps.Add("LandCon");
-                pastureProps.Add("StkRate");
-                pastureProps.Add("YearNum");
-                pastureProps.Add("Year");
-                pastureProps.Add("CutNum");
-                pastureProps.Add("Month");
-                pastureProps.Add("Growth");
-                pastureProps.Add("BP1");
-                pastureProps.Add("BP2");
-                pastureProps.Add("Utilisn");
-                pastureProps.Add("SoilLoss");
-                pastureProps.Add("Cover");
-                pastureProps.Add("TreeBA");
-                pastureProps.Add("Rainfall");
-                pastureProps.Add("Runoff");
+                List<string> pastureProps = new List<string>
+                {
+                    "Region",
+                    "Soil",
+                    "ForageNo",
+                    "GrassBA",
+                    "LandCon",
+                    "StkRate",
+                    "YearNum",
+                    "Year",
+                    "CutNum",
+                    "Month",
+                    "Growth",
+                    "BP1",
+                    "BP2",
+                    "Utilisn",
+                    "SoilLoss",
+                    "Cover",
+                    "TreeBA",
+                    "Rainfall",
+                    "Runoff"
+                };
 
                 DataTable table = this.reader.ToTable(pastureProps);
 
@@ -404,7 +395,7 @@ namespace Models.CLEM
             int i = 0;
             foreach (DataRow row in distinctStkRates.Rows)
             {
-                results[i] = Convert.ToDouble(row["StkRate"]);
+                results[i] = Convert.ToDouble(row["StkRate"], CultureInfo.InvariantCulture);
                 i++;
             }
 
@@ -443,7 +434,7 @@ namespace Models.CLEM
         /// <param name="ecolCalculationDate"></param>
         /// <param name="ecolCalculationInterval"></param>
         /// <returns></returns>
-        public List<PastureDataType> GetIntervalsPastureData(int region, int soil, int grassBasalArea, int landCondition, int stockingRate,
+        public List<PastureDataType> GetIntervalsPastureData(int region, string soil, int grassBasalArea, int landCondition, int stockingRate,
                                          DateTime ecolCalculationDate, int ecolCalculationInterval)
         {
             int startYear = ecolCalculationDate.Year;
@@ -509,7 +500,7 @@ namespace Models.CLEM
         /// <param name="landCondition"></param>
         /// <param name="stockingRate"></param>
         private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
-            int region, int soil, int grassBasalArea, int landCondition, int stockingRate)
+            int region, string soil, int grassBasalArea, int landCondition, int stockingRate)
         {
             string errormessageStart = "Problem with GRASP input file." + System.Environment.NewLine
                         + "For Region: " + region + ", Soil: " + soil 
@@ -597,27 +588,28 @@ namespace Models.CLEM
 
         private static PastureDataType DataRow2PastureDataType(DataRow dr)
         {
-            PastureDataType pasturedata = new PastureDataType();
-
-            pasturedata.Region = int.Parse(dr["Region"].ToString());
-            pasturedata.Soil = int.Parse(dr["Soil"].ToString());
-            pasturedata.ForageNo = int.Parse(dr["ForageNo"].ToString());
-            pasturedata.GrassBA = int.Parse(dr["GrassBA"].ToString());
-            pasturedata.LandCon = int.Parse(dr["LandCon"].ToString());
-            pasturedata.StkRate = int.Parse(dr["StkRate"].ToString());
-            pasturedata.YearNum = int.Parse(dr["YearNum"].ToString());
-            pasturedata.Year = int.Parse(dr["Year"].ToString());
-            pasturedata.CutNum = int.Parse(dr["CutNum"].ToString());
-            pasturedata.Month = int.Parse(dr["Month"].ToString());
-            pasturedata.Growth = double.Parse(dr["Growth"].ToString());
-            pasturedata.BP1 = double.Parse(dr["BP1"].ToString());
-            pasturedata.BP2 = double.Parse(dr["BP2"].ToString());
-            pasturedata.Utilisn = double.Parse(dr["Utilisn"].ToString());
-            pasturedata.SoilLoss = double.Parse(dr["SoilLoss"].ToString());
-            pasturedata.Cover = double.Parse(dr["Cover"].ToString());
-            pasturedata.TreeBA = double.Parse(dr["TreeBA"].ToString());
-            pasturedata.Rainfall = double.Parse(dr["Rainfall"].ToString());
-            pasturedata.Runoff = double.Parse(dr["Runoff"].ToString());
+            PastureDataType pasturedata = new PastureDataType
+            {
+                Region = int.Parse(dr["Region"].ToString(), CultureInfo.InvariantCulture),
+                Soil = int.Parse(dr["Soil"].ToString(), CultureInfo.InvariantCulture),
+                ForageNo = int.Parse(dr["ForageNo"].ToString(), CultureInfo.InvariantCulture),
+                GrassBA = int.Parse(dr["GrassBA"].ToString(), CultureInfo.InvariantCulture),
+                LandCon = int.Parse(dr["LandCon"].ToString(), CultureInfo.InvariantCulture),
+                StkRate = int.Parse(dr["StkRate"].ToString(), CultureInfo.InvariantCulture),
+                YearNum = int.Parse(dr["YearNum"].ToString(), CultureInfo.InvariantCulture),
+                Year = int.Parse(dr["Year"].ToString(), CultureInfo.InvariantCulture),
+                CutNum = int.Parse(dr["CutNum"].ToString(), CultureInfo.InvariantCulture),
+                Month = int.Parse(dr["Month"].ToString(), CultureInfo.InvariantCulture),
+                Growth = double.Parse(dr["Growth"].ToString(), CultureInfo.InvariantCulture),
+                BP1 = double.Parse(dr["BP1"].ToString(), CultureInfo.InvariantCulture),
+                BP2 = double.Parse(dr["BP2"].ToString(), CultureInfo.InvariantCulture),
+                Utilisn = double.Parse(dr["Utilisn"].ToString(), CultureInfo.InvariantCulture),
+                SoilLoss = double.Parse(dr["SoilLoss"].ToString(), CultureInfo.InvariantCulture),
+                Cover = double.Parse(dr["Cover"].ToString(), CultureInfo.InvariantCulture),
+                TreeBA = double.Parse(dr["TreeBA"].ToString(), CultureInfo.InvariantCulture),
+                Rainfall = double.Parse(dr["Rainfall"].ToString(), CultureInfo.InvariantCulture),
+                Runoff = double.Parse(dr["Runoff"].ToString(), CultureInfo.InvariantCulture)
+            };
             pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
             return pasturedata;
         }

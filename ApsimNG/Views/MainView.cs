@@ -32,21 +32,9 @@
         private static string indexTabText = "Home";
 
         /// <summary>
-        /// Stores the size, in points, of the "default" base font
-        /// </summary>
-        private double defaultBaseSize;
-
-        /// <summary>
         /// Keeps track of whether or not the waiting cursor is being used.
         /// </summary>
         private bool waiting = false;
-
-        /// <summary>
-        /// The size, in points, of our base font
-        /// </summary>
-        private double baseFontSize = 12.5;
-
-        private double scrollSizeStep = 0.5;
 
         /// <summary>
         /// Number of buttons in the status panel.
@@ -114,11 +102,6 @@
         private HBox hbox1 = null;
 
         /// <summary>
-        /// Keeps track of the font size (and, in theory, other font attributes).
-        /// </summary>
-        private Pango.FontDescription baseFont;
-
-        /// <summary>
         /// Dark theme icon.
         /// </summary>
         private static readonly Gtk.Image darkThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Moon.png");
@@ -129,15 +112,17 @@
         private static readonly Gtk.Image defaultThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Sun.png");
 
         /// <summary>
+        /// Dialog which allows the user to change fonts.
+        /// </summary>
+        private FontSelectionDialog fontDialog;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public MainView(ViewBase owner = null) : base(owner)
         {
             MasterView = this;
             numberOfButtons = 0;
-            baseFont = Rc.GetStyle(new Label()).FontDescription.Copy();
-            defaultBaseSize = baseFont.Size / Pango.Scale.PangoScale;
-            FontSize = Utility.Configuration.Settings.BaseFontSize;
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
             progressBar = (ProgressBar)builder.GetObject("progressBar");
@@ -154,12 +139,6 @@
             listButtonView1 = new ListButtonView(this);
             listButtonView1.ButtonsAreToolbar = true;
 
-            EventBox labelBox = new EventBox();
-            Label label = new Label("NOTE: This version of APSIM writes .apsimx files as JSON, not XML. These files cannot be opened with older versions of APSIM.");
-            labelBox.Add(label);
-            if (!Utility.Configuration.Settings.DarkTheme)
-                labelBox.ModifyBg(StateType.Normal, new Gdk.Color(0xff, 0xff, 0x00)); // yellow
-            vbox1.PackStart(labelBox, false, true, 0);
             vbox1.PackEnd(listButtonView1.MainWidget, true, true, 0);
             listButtonView2 = new ListButtonView(this);
             listButtonView2.ButtonsAreToolbar = true;
@@ -170,6 +149,12 @@
 
             notebook1.SetMenuLabel(vbox1, LabelWithIcon(indexTabText, "go-home"));
             notebook2.SetMenuLabel(vbox2, LabelWithIcon(indexTabText, "go-home"));
+
+            notebook1.SwitchPage += OnChangeTab;
+            notebook2.SwitchPage += OnChangeTab;
+
+            notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
+
             hbox1.HeightRequest = 20;            
 
             TextTag tag = new TextTag("error");
@@ -186,17 +171,48 @@
             stopButton.Image.Visible = true;
             stopButton.Clicked += OnStopClicked;
             window1.DeleteEvent += OnClosing;
-            listButtonView1.ListView.MainWidget.ScrollEvent += ListView_ScrollEvent;
-            listButtonView2.ListView.MainWidget.ScrollEvent += ListView_ScrollEvent;
-            listButtonView1.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
-            listButtonView2.ListView.MainWidget.KeyPressEvent += ListView_KeyPressEvent;
+
+            if (ProcessUtilities.CurrentOS.IsWindows && Utility.Configuration.Settings.Font == null)
+            {
+                // Default font on Windows is Segoe UI. Will fallback to sans if unavailable.
+                Utility.Configuration.Settings.Font = Pango.FontDescription.FromString("Segoe UI 11");
+            }
+
+            // Can't set font until widgets are initialised.
+            if (Utility.Configuration.Settings.Font != null)
+                ChangeFont(Utility.Configuration.Settings.Font);
+
             //window1.ShowAll();
             if (ProcessUtilities.CurrentOS.IsMac)
+            {
                 InitMac();
-            if ((uint)Environment.OSVersion.Platform <= 3)
+                //Utility.Configuration.Settings.DarkTheme = Utility.MacUtilities.DarkThemeEnabled();
+            }
+
+            if (!ProcessUtilities.CurrentOS.IsLinux)
                 RefreshTheme();
         }
 
+        /// <summary>
+        /// Invoked when the user changes tabs.
+        /// Gives the selected tab a special name so that its style is
+        /// modified according to the rules in the .gtkrc file.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [GLib.ConnectBefore]
+        private void OnChangeTab(object sender, SwitchPageArgs args)
+        {
+            Notebook control = sender as Notebook;
+
+            for (int i = 0; i < control.Children.Length; i++)
+            {
+                // The top-level widget in the tab label is always an event box.
+                Widget tabLabel = control.GetTabLabel(control.Children[i]);
+                tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+            }
+        }
+        
         /// <summary>
         /// Invoked when an error has been thrown in a view.
         /// </summary>
@@ -244,26 +260,6 @@
             set
             {
                 hbox1.HeightRequest = value;
-            }
-        }
-
-        /// <summary>
-        /// The size, in pointer, of our base font
-        /// </summary>
-        public double FontSize
-        {
-            get
-            {
-                return baseFontSize;
-            }
-            set
-            {
-                double newSize = Math.Min(40.0, Math.Max(4.0, value));
-                if (newSize != baseFontSize)
-                {
-                    baseFontSize = value;
-                    SetFontSize(baseFontSize);
-                }
             }
         }
 
@@ -460,12 +456,10 @@
                 if (!args.AllowClose)
                     return;
             }
+            notebook1.SwitchPage -= OnChangeTab;
+            notebook2.SwitchPage -= OnChangeTab;
             stopButton.Clicked -= OnStopClicked;
             window1.DeleteEvent -= OnClosing;
-            listButtonView1.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
-            listButtonView2.ListView.MainWidget.ScrollEvent -= ListView_ScrollEvent;
-            listButtonView1.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
-            listButtonView2.ListView.MainWidget.KeyPressEvent -= ListView_KeyPressEvent;
             mainWidget.Destroy();
 
             // Let all the destruction stuff be carried out, just in 
@@ -599,7 +593,7 @@
             get
             {
                 if (window1.GdkWindow != null)
-                    return window1.GdkWindow.State == Gdk.WindowState.Maximized;
+                    return (window1.GdkWindow.State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
                 else
                     return false;
             }
@@ -761,17 +755,21 @@
         {
             if (Utility.Configuration.Settings.DarkTheme)
             {
+                string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
                 using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
                 {
                     using (StreamReader darkTheme = new StreamReader(rcStream))
-                        Rc.ParseString(darkTheme.ReadToEnd());
+                        File.WriteAllText(tempFile, darkTheme.ReadToEnd());
                 }
 
+                Rc.Parse(tempFile);
                 // Remove black colour from colour pallete.
                 Color black = Color.FromArgb(0, 0, 0);
                 ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
             }
-            else
+            else if (ProcessUtilities.CurrentOS.IsWindows)
+                // Apsim's default gtk theme uses the 'wimp' rendering engine,
+                // which doesn't play nicely on non-windows systems.
                 Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
         }
 
@@ -810,6 +808,63 @@
                 button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
                 button.IconWidget.ShowAll();
             }
+        }
+
+        /// <summary>
+        /// Shows the font selection dialog.
+        /// </summary>
+        public void ShowFontChooser()
+        {
+            fontDialog = new FontSelectionDialog("Select a font");
+
+            // Center the dialog on the main window.
+            fontDialog.TransientFor = MainWidget as Window;
+            fontDialog.WindowPosition = WindowPosition.CenterOnParent;
+
+            // Select the current font.
+            if (Utility.Configuration.Settings.Font != null)
+                fontDialog.SetFontName(Utility.Configuration.Settings.Font.ToString());
+
+            // Event handlers.
+            fontDialog.OkButton.Clicked += OnChangeFont;
+            fontDialog.OkButton.Clicked += OnDestroyFontDialog;
+            fontDialog.ApplyButton.Clicked += OnChangeFont;
+            fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
+
+            // Show the dialog.
+            fontDialog.ShowAll();
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks OK or Apply in the font selection
+        /// dialog. Changes the font on all widgets and saves the new font
+        /// in the config file.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnChangeFont(object sender, EventArgs args)
+        {
+            Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
+            Utility.Configuration.Settings.Font = newFont;
+            ChangeFont(newFont);
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks cancel in the font selection dialog.
+        /// Closes the dialog.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnDestroyFontDialog(object sender, EventArgs args)
+        {
+            if (fontDialog == null)
+                return;
+            
+            fontDialog.OkButton.Clicked -= OnChangeFont;
+            fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
+            fontDialog.ApplyButton.Clicked -= OnChangeFont;
+            fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
+            fontDialog.Destroy();
         }
 
         /// <summary>
@@ -861,52 +916,15 @@
         }
 
         /// <summary>
-        /// Handler for mouse wheel events. We intercept it to allow Ctrl+wheel-up/down to adjust font size
+        /// Change Apsim's default font, and apply the new font to all existing
+        /// widgets.
         /// </summary>
-        /// <param name="o"></param>
-        /// <param name="args"></param>
-        private void ListView_ScrollEvent(object o, ScrollEventArgs args)
+        /// <param name="font">The new default font.</param>
+        private void ChangeFont(Pango.FontDescription font)
         {
-            Gdk.ModifierType ctlModifier = !ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
-                //Mac window manager already uses control-scroll, so use command
-                //Command might be either meta or mod1, depending on GTK version
-                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
-
-            if ((args.Event.State & ctlModifier) != 0)
-            {
-                if (args.Event.Direction == Gdk.ScrollDirection.Up)
-                    FontSize += scrollSizeStep;
-                else if (args.Event.Direction == Gdk.ScrollDirection.Down)
-                    FontSize -= scrollSizeStep;
-                args.RetVal = true;
-            }
-        }
-
-        /// <summary>
-        /// Handle key press events to allow ctrl +/-/0 to adjust font size
-        /// </summary>
-        /// <param name="o">Source of the event</param>
-        /// <param name="args">Event arguments</param>
-        [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
-        private void ListView_KeyPressEvent(object o, KeyPressEventArgs args)
-        {
-            args.RetVal = false;
-            Gdk.ModifierType ctlModifier = !ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
-                //Mac window manager already uses control-scroll, so use command
-                //Command might be either meta or mod1, depending on GTK version
-                : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
-
-            if ((args.Event.State & ctlModifier) != 0)
-            {
-                switch (args.Event.Key)
-                {
-                    case Gdk.Key.Key_0: FontSize = defaultBaseSize; args.RetVal = true; break;
-                    case Gdk.Key.KP_Add:
-                    case Gdk.Key.plus: FontSize += scrollSizeStep; args.RetVal = true; break;
-                    case Gdk.Key.KP_Subtract:
-                    case Gdk.Key.minus: FontSize -= scrollSizeStep; args.RetVal = true; break;
-                }
-            }
+            SetWidgetFont(mainWidget, font);
+            Settings.Default.SetStringProperty($"gtk-font-name", font.ToString(), "");
+            //Rc.ParseString($"gtk-font-name = \"{font}\"");
         }
 
         /// <summary>
@@ -927,26 +945,6 @@
                     for (int i = 0; i < (widget as Notebook).NPages; i++)
                         SetWidgetFont((widget as Notebook).GetTabLabel((widget as Notebook).GetNthPage(i)), newFont);
             }
-        }
-
-        /// <summary>
-        /// Change the font size
-        /// </summary>
-        /// <param name="newSize">New base font size, in points</param>
-        private void SetFontSize(double newSize)
-        {
-            newSize = Math.Min(40.0, Math.Max(4.0, newSize));
-            // Convert the new size from points to Pango units
-            int newVal = Convert.ToInt32(newSize * Pango.Scale.PangoScale);
-            baseFont.Size = newVal;
-
-            // Iterate through all existing controls, setting the new base font
-            if (mainWidget != null)
-                SetWidgetFont(mainWidget, baseFont);
-
-            // Reset the style machinery to apply the new base font to all
-            // newly created Widgets.
-            Rc.ReparseAllForSettings(Settings.Default, true);
         }
 
         /// <summary>
