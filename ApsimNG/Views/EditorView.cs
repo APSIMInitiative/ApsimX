@@ -16,6 +16,31 @@ namespace UserInterface.Views
     using Presenters;
     using Cairo;
     using System.Globalization;
+    using Mono.TextEditor.Highlighting;
+
+    /// <summary>
+    /// What sort of text is this editor displaying?
+    /// This is used to determine syntax highlighting rules.
+    /// We could potentially add more options here in future if, say,
+    /// we were to implement a python manager component.
+    /// </summary>
+    public enum EditorType
+    {
+        /// <summary>
+        /// C# manager script.
+        /// </summary>
+        ManagerScript,
+
+        /// <summary>
+        /// Report.
+        /// </summary>
+        Report,
+
+        /// <summary>
+        /// Anything else - this will disable syntax highlighting.
+        /// </summary>
+        Other
+    };
 
     /// <summary>
     /// This is IEditorView interface
@@ -53,6 +78,11 @@ namespace UserInterface.Views
         string[] Lines { get; set; }
 
         /// <summary>
+        /// Controls syntax highlighting mode.
+        /// </summary>
+        EditorType Mode { get; set; }
+
+        /// <summary>
         /// Gets or sets the characters that bring up the intellisense context menu.
         /// </summary>
         string IntelliSenseChars { get; set; }
@@ -67,11 +97,6 @@ namespace UserInterface.Views
         /// </summary>
         System.Drawing.Rectangle Location { get; set; }
         
-        /// <summary>
-        /// Indicates whether we are editing a script, rather than "ordinary" text.
-        /// </summary>
-        bool ScriptMode { get; set; }
-
         /// <summary>
         /// Add a separator line to the context menu
         /// </summary>
@@ -197,8 +222,28 @@ namespace UserInterface.Views
             set
             {
                 textEditor.Text = value;
-                if (ScriptMode)
+                if (Mode == EditorType.ManagerScript)
                     textEditor.Document.MimeType = "text/x-csharp";
+                else if (Mode == EditorType.Report)
+                {
+                    if (SyntaxModeService.GetSyntaxMode(textEditor.Document, "text/x-apsimreport") == null)
+                        LoadReportSyntaxMode();
+                    textEditor.Document.MimeType = "text/x-apsimreport";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Performs a one-time registration of the report syntax highlighting rules.
+        /// This will only run once, the first time the user clicks on a report node.
+        /// </summary>
+        private void LoadReportSyntaxMode()
+        {
+            string resource = "ApsimNG.Resources.SyntaxHighlighting.Report.xml";
+            using (System.IO.Stream s = GetType().Assembly.GetManifestResourceStream(resource))
+            {
+                ProtoTypeSyntaxModeProvider p = new ProtoTypeSyntaxModeProvider(SyntaxMode.Read(s));
+                SyntaxModeService.InstallSyntaxMode("text/x-apsimreport", p);
             }
         }
 
@@ -230,15 +275,15 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Controls the syntax highlighting scheme.
+        /// </summary>
+        public EditorType Mode { get; set; }
+
+        /// <summary>
         /// Gets or sets the characters that bring up the intellisense context menu.
         /// </summary>
         public string IntelliSenseChars { get; set; }
-
-        /// <summary>
-        /// Indicates whether we are editing a script, rather than "ordinary" text.
-        /// </summary>
-        public bool ScriptMode { get; set; }
-
+        
         /// <summary>
         /// Gets the current line number
         /// </summary>

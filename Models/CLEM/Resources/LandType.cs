@@ -31,7 +31,7 @@ namespace Models.CLEM.Resources
         /// Total Area
         /// </summary>
         [Description("Land area")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double LandArea { get; set; }
 
         /// <summary>
@@ -47,13 +47,13 @@ namespace Models.CLEM.Resources
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1.0)]
         [Description("Allocate only proportion of Land area")]
-        [Required, Proportion]
+        [Required, Proportion, GreaterThanValue(0)]
         public double ProportionOfTotalArea { get; set; }
 
         /// <summary>
         /// Soil Type (1-5) 
         /// </summary>
-        [Description("Soil type index")]
+        [Description("Land type id")]
         [Required]
         public string SoilType { get; set; }
 
@@ -300,17 +300,28 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
-            string units = (this as IResourceType).Units;
-            if (units != "NA")
+            if (LandArea == 0)
             {
-                if (units == null || units == "")
+                html += "<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land";
+            }
+            else if (ProportionOfTotalArea == 0)
+            {
+                html += "The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned";
+            }
+            else
+            {
+                html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
+                string units = (this as IResourceType).Units;
+                if (units != "NA")
                 {
-                    html += "";
-                }
-                else
-                {
-                    html += " <span class=\"setvalue\">" + units + "</span>";
+                    if (units == null || units == "")
+                    {
+                        html += "";
+                    }
+                    else
+                    {
+                        html += " <span class=\"setvalue\">" + units + "</span>";
+                    }
                 }
             }
 
@@ -320,7 +331,7 @@ namespace Models.CLEM.Resources
             }
             html += "</div>";
             html += "\n<div class=\"activityentry\">";
-            html += "This land has soil of index <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
+            html += "This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
             html += "\n</div>";
             return html;
         }

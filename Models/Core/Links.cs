@@ -136,25 +136,25 @@ namespace Models.Core
                     }
                     if (matches.Count == 0)
                     {
-                        if (link is ParentLinkAttribute)
+                        if (link.Type == LinkType.Ancestor)
                         {
                             matches = new List<object>();
                             matches.Add(GetParent(obj, fieldType));
                         }
-                        else if (link is LinkByPathAttribute)
+                        else if (link.Type == LinkType.Path)
                         {
                             var locater = new Locater();
-                            object match = locater.Get((link as LinkByPathAttribute).Path, obj as Model);
+                            object match = locater.Get(link.Path, obj as Model);
                             if (match != null)
                                 matches.Add(match);
                         }
-                        else if (link.IsScoped(field))
+                        else if (link.Type == LinkType.Scoped)
                             matches = scope.FindAll(obj as IModel).Cast<object>().ToList();
                         else
                             matches = GetChildren(obj);
                     }
                     matches.RemoveAll(match => !fieldType.IsAssignableFrom(GetModel(match).GetType()));
-                    if (link.UseNameToMatch(field))
+                    if (link.ByName)
                         matches.RemoveAll(match => !StringUtilities.StringsAreEqual(GetName(match), field.Name));
                     if (field.DataType.IsArray)
                     {
@@ -177,7 +177,7 @@ namespace Models.Core
                         if (!link.IsOptional)
                             throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                     }
-                    else if (matches.Count >= 2 && !link.IsScoped(field))
+                    else if (matches.Count >= 2 && link.Type != LinkType.Scoped)
                         throw new Exception(string.Format(": Found {0} matches for link {1} in model {2} !", matches.Count, field.Name, GetFullName(obj)));
                     else
                         field.Value = GetModel(matches[0]);

@@ -1,18 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReportColumn.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Report
+﻿namespace Models.Report
 {
     using APSIM.Shared.Utilities;
-    using Models.Core;
     using Functions;
+    using Models.Core;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Models.Storage;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A class for looking after a column of output. A column will store a value 
@@ -25,87 +21,107 @@ namespace Models.Report
     ///      Types ->    double,    double,    double
     /// e.g. if the variable is a struct {double A; double B; double C;}
     ///      Names -> struct.A, struct.B, struct.C
+    ///      
+    /// # Features
+    /// - 
+    /// 
+    /// ## Aggregation
+    /// 
+    /// Syntax:
+    /// 
+    /// *function* of *variable* from *date* to *date*
+    /// 
+    /// *function* can be any of the following:
+    /// 
+    /// - sum
+    /// - mean
+    /// - min
+    /// - max
+    /// - first
+    /// - last
+    /// - diff
+    /// 
+    /// *variable* is any valid reporting variable.
+    /// 
+    /// There are three ways to specify aggregation dates:
+    /// 
+    /// 1. Fixed/static date
+    /// 
+    /// Description
+    /// 
+    /// e.g. 1-Jan, 1/1/2012, etc.
+    /// 
+    /// 2. Apsim variable
+    /// 
+    /// The date can point to any Apsim variable which is of type DateTime.
+    /// 
+    /// e.g. [Clock].StartDate, [Clock].Today, [Report].LastReportDate, etc.
+    /// 
+    /// 3. Apsim event
+    /// 
+    /// The date can point to any Apsim event.
+    /// 
+    /// e.g. [Clock].StartOfYear, [Wheat].Harvesting, etc.
+    /// 
     /// </summary>
+    /// <remarks>
+    /// Need tests for:
+    /// 
+    /// 1. All permutations of date specification types with all types of aggregation.
+    /// 
+    /// </remarks>
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
     [Serializable]
     public class ReportColumn : IReportColumn
     {
-        /// <summary>The column heading.</summary>
-        public string Name { get; set; }
+        /// <summary>
+        /// An instance of a locator service.
+        /// </summary>
+        private readonly ILocator locator;
 
-        /// <summary>The values for each report event (e.g. daily)</summary>
-        public List<object> Values { get; set; }
-
-        /// <summary>An instance of a storage service.</summary>
-        private IStorageWriter storage;
-
-        /// <summary>An instance of a locator service.</summary>
-        private ILocator locator;
-
-        /// <summary>An instance of an events service.</summary>
-        private IEvent events;
+        /// <summary>Are we in the capture window?</summary>
+        private bool inCaptureWindow;
 
         /// <summary>
-        /// The from field converted to a date.
+        /// True when from field has no year specified.
         /// </summary>
-        private DateTime fromDate;
+        private readonly bool fromHasNoYear;
 
         /// <summary>
-        /// True when from field has no year specified
+        /// The to field has no year specified.
         /// </summary>
-        private bool fromHasNoYear;
+        private readonly bool toHasNoYear;
 
-        /// <summary>
-        /// The to field converted as a date
-        /// </summary>
-        private DateTime toDate;
-
-        /// <summary>
-        /// The to field has no year specified
-        /// </summary>
-        private bool toHasNoYear;
-        
         /// <summary>
         /// Reference to the clock model.
         /// </summary>
-        private IClock clock;
+        private readonly IClock clock;
 
         /// <summary>
         /// The full name of the variable we are retrieving from APSIM.
         /// </summary>
-        private string variableName;
-
-
-        /// <summary>
-        /// The values for each report event (e.g. daily)
-        /// </summary>
-        private List<object> valuesToAggregate = new List<object>();
+        private readonly string variableName;
 
         /// <summary>
-        /// True when the simulation is within the capture window for this variable
+        /// The values for each report event (e.g. daily).
         /// </summary>
-        private bool inCaptureWindow;
+        private readonly List<object> valuesToAggregate = new List<object>();
 
         /// <summary>
         /// The aggregation function if specified. Null if not specified.
         /// </summary>
-        private string aggregationFunction;
+        private readonly string aggregationFunction;
 
         /// <summary>
-        /// Units as specified in the descriptor.
+        /// Variable containing a reference to the aggregation start date.
         /// </summary>
-        public string Units { get; private set; }
+        private readonly IVariable fromVariable = null;
 
         /// <summary>
-        /// The date when an aggregation value was last stored
+        /// Variable containing a reference to the aggregation end date.
         /// </summary>
-        private DateTime lastStoreDate;
+        private readonly IVariable toVariable = null;
 
-        /// <summary>Variable containing a reference to the aggregation start date.</summary>
-        private IVariable fromVariable = null;
-
-        /// <summary>Variable containing a reference to the aggregation end date.</summary>
-        private IVariable toVariable = null;
         /// <summary>
         /// Constructor for an aggregated column.
         /// </summary>
@@ -122,15 +138,10 @@ namespace Models.Report
         private ReportColumn(string aggregationFunction, string variableName, string columnName, object from, object to, 
                              IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
-            Values = new List<object>();
-
             this.aggregationFunction = aggregationFunction;
             this.variableName = variableName;
             this.Name = columnName;
-            this.inCaptureWindow = false;
-            this.storage = storage;
             this.locator = locator;
-            this.events = events;
             this.clock = clock;
             try
             {
@@ -142,24 +153,51 @@ namespace Models.Report
                         Units = Units.Substring(1, Units.Length - 2);
                 }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+            }
 
-            events.Subscribe("[Clock].StartOfDay", this.OnStartOfDay);
-            events.Subscribe("[Clock].DoReportCalculations", this.OnEndOfDay);
+            events.Subscribe("[Clock].DoReportCalculations", OnDoReportCalculations);
+            events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
 
-            if (DateTime.TryParse(from.ToString(), out this.fromDate))
-                this.fromHasNoYear = !from.ToString().Contains(this.fromDate.Year.ToString());
+            if (from == null || string.IsNullOrEmpty(from.ToString()))
+                throw new Exception("No 'from' clause was specified in temporal aggregation");
+
+            if (DateTime.TryParse(from.ToString(), out DateTime date))
+            {
+                // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
+                this.fromVariable = new VariableObject(date);
+
+                // If the date string does not contain a year (ie 1-Jan), we ignore year and
+                this.fromHasNoYear = !from.ToString().Contains(date.Year.ToString());
+            }
             else if (from is IVariable)
                 this.fromVariable = from as IVariable;
             else
-                events.Subscribe(from.ToString(), this.OnBeginCapture);
+            {
+                // Assume the string is an event name.
+                events.Subscribe(from.ToString(), OnFromEvent);
+                inCaptureWindow = true;
+            }
 
-            if (DateTime.TryParse(to.ToString(), out this.toDate))
-                this.toHasNoYear = !to.ToString().Contains(this.toDate.Year.ToString());
+            if (to == null || string.IsNullOrEmpty(to.ToString()))
+                throw new Exception("No 'to' clause was specified in temporal aggregation");
+
+            if (DateTime.TryParse(to.ToString(), out date))
+            {
+                // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
+                this.toVariable = new VariableObject(date);
+
+                // If the date string does not contain a year (ie 1-Jan), we ignore year and
+                this.toHasNoYear = !to.ToString().Contains(date.Year.ToString());
+            }
             else if (to is IVariable)
                 this.toVariable = to as IVariable;
             else
-                events.Subscribe(to.ToString(), this.OnEndCapture);
+            {
+                // Assume the string is an event name.
+                events.Subscribe(to.ToString(), OnToEvent);
+            }
         }
 
         /// <summary>
@@ -174,12 +212,9 @@ namespace Models.Report
         private ReportColumn(string variableName, string columnName, 
                              IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
-            Values = new List<object>();
             this.variableName = variableName.Trim();
             this.Name = columnName;
-            this.storage = storage;
             this.locator = locator;
-            this.events = events;
             this.clock = clock;
             try
             {
@@ -195,26 +230,35 @@ namespace Models.Report
         }
 
         /// <summary>
+        /// Units as specified in the descriptor.
+        /// </summary>
+        public string Units { get; private set; }
+
+        /// <summary>
+        /// The column heading.
+        /// </summary>
+        public string Name { get; set; }
+        
+        /// <summary>
         /// Factory create method. Can throw if invalid descriptor found.
         /// </summary>
         /// <remarks>
         /// A descriptor is passed in that describes what the column represents.
         /// The syntax of this descriptor is:
         /// Evaluate TypeOfAggregation of APSIMVariable/Expression [from Event/Date to Event/Date] as OutputLabel [Units]
-        /// -    TypeOfAggregation – Sum, Ave, Min, Max, First, Last, Diff, (others?) (see below)
+        /// -    TypeOfAggregation – Sum, Mean, Min, Max, First, Last, Diff, (others?) (see below)
         /// -    APSIMVariable/Expression – APSIM output variable or an expression (see below)
         /// -    Event/Date – optional, an events or dates to begin and end the aggregation 
         /// -    OutputLabel – the label to use in the output file
         /// -    Units – optional, the label to use in the output file
         /// TypeOfAggregation
         /// -    Sum – arithmetic summation over  the aggregation period
-        /// -    Ave – arithmetic average over  the aggregation period
+        /// -    Mean – arithmetic average over  the aggregation period
         /// -    Min – minimum value during the aggregation period
         /// -    Max – maximum value during the aggregation period
         /// -    First – first or earliest value during the aggregation period
         /// -    Last – last or latest value during the aggregation period
         /// -    Diff – difference in the value of the variable or expression from the beginning to the end
-        /// -    Others???? Stdev?, sum pos?
         /// APSIMVariable
         /// -    Any output variable or single array element (e.g. sw_dep(1)) from any APSIM module
         /// Expression
@@ -239,9 +283,9 @@ namespace Models.Report
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed.")]
         public static ReportColumn Create(string descriptor, IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
-            string columnName = RemoveWordAfter(ref descriptor, "as");
-            object to = RemoveWordAfter(ref descriptor, "to");
-            object from = RemoveWordAfter(ref descriptor, "from");
+            string columnName = StringUtilities.RemoveWordAfter(ref descriptor, "as");
+            object to = StringUtilities.RemoveWordAfter(ref descriptor, "to");
+            object from = StringUtilities.RemoveWordAfter(ref descriptor, "from");
             if (clock is IModel)
             {
                 if (from != null)
@@ -257,13 +301,30 @@ namespace Models.Report
                         to = toValue;
                 }
             }
-            string aggregationFunction = RemoveWordBefore(ref descriptor, "of");
+            string aggregationFunction = StringUtilities.RemoveWordBefore(ref descriptor, "of");
 
             string variableName = descriptor;  // variable name is what is left over.
 
             // specify a column heading if alias was not specified.
             if (columnName == null)
-                columnName = variableName.Replace("[", string.Empty).Replace("]", string.Empty);
+            {
+                // Look for an array specification. The aim is to encode the starting
+                // index of the array into the column name. e.g. 
+                // for a variableName of [2:4], columnName = [2]
+                // for a variableName of [3:], columnName = [3]
+                // for a variableName of [:5], columnNamne = [0]
+
+                Regex regex = new Regex("\\[([0-9]):*[0-9]*\\]");
+
+                columnName = regex.Replace(variableName.Replace("[:", "[1:"), "($1)");
+
+                // strip off square brackets.
+                columnName = columnName.Replace("[", string.Empty).Replace("]", string.Empty);
+
+                // change any curly brackets back to squares.
+                // columnName = columnName.Replace("{", "[").Replace("}", "]");
+
+            }
 
             if (aggregationFunction != null)
                 return new ReportColumn(aggregationFunction, variableName, columnName, from, to, clock, storage, locator, events);
@@ -271,222 +332,43 @@ namespace Models.Report
                 return new ReportColumn(variableName, columnName, clock, storage, locator, events);
         }
 
-        /// <summary>Remove the end of a string following word and return it.</summary>
-        /// <param name="st">The string.</param>
-        /// <param name="word">Word to look for.</param>
-        /// <returns>The value after the word or null if not found.</returns>
-        private static string RemoveWordAfter(ref string st, string word)
-        {
-            string stringToFind = " " + word + " ";
-            int posWord = st.IndexOf(stringToFind);
-            if (posWord != -1)
-            {   
-                string value = st.Substring(posWord + stringToFind.Length).Trim();
-                st = st.Remove(posWord);
-                return value;
-            }
-            else
-                return null;
-        }
-
-        /// <summary>Remove the start of a string before the word.</summary>
-        /// <param name="st">The string.</param>
-        /// <param name="word">Word to look for.</param>
-        /// <returns>The value before the word or null if not found.</returns>
-        private static string RemoveWordBefore(ref string st, string word)
-        {
-            string stringToFind = " " + word + " ";
-            int posWord = st.IndexOf(stringToFind);
-            if (posWord != -1)
-            {
-                string value = st.Substring(0, posWord).Trim();
-                st = st.Remove(0, posWord + stringToFind.Length);
-                return value;
-            }
-            else
-                return null;
-        }
-
         /// <summary>
-        /// Simulation is terminating. Perform clean up.
+        /// Retrieve the current value to be stored in the report.
         /// </summary>
-        public void OnSimulationCompleted()
-        {
-            if (this.fromDate != DateTime.MinValue)
-                events.Unsubscribe("[Clock].StartOfDay", this.OnStartOfDay);
-
-            if (this.toDate != DateTime.MinValue)
-                events.Unsubscribe("[Clock].EndOfDay", this.OnEndOfDay);
-        }
-
-        #region Capture methods
-
-        /// <summary>
-        /// The from property is an event name. This is the event handler for the from event.,
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnBeginCapture(object sender, EventArgs e)
-        {
-            valuesToAggregate.Clear();
-            this.StoreValueForAggregation();
-            this.inCaptureWindow = true;
-        }
-
-        /// <summary>
-        /// The to property is an event name. This is the event handler for the to event.,
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnEndCapture(object sender, EventArgs e)
-        {
-            if (inCaptureWindow)
-                this.StoreValueForAggregation();
-            this.inCaptureWindow = false;
-        }
-
-        /// <summary>
-        /// Start of day event handler.
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnStartOfDay(object sender, EventArgs e)
-        {
-            if (this.fromVariable != null && this.fromVariable.Value is DateTime)
-                this.fromDate = (DateTime)fromVariable.Value;
-            if (this.toVariable != null && this.toVariable.Value is DateTime)
-                this.toDate = (DateTime)toVariable.Value;
-            // If we're not currently in the capture window, then see if today is the first
-            // day of the window. If so then
-            if (!this.inCaptureWindow)
-            {
-                // Look at the date to see if we are on the 'from' date.
-                // If so then set the capture flag to true.
-                if (this.fromDate == DateTime.MinValue)
-                {
-                }
-                else if (this.fromHasNoYear)
-                {
-                    DateTime d1 = new DateTime(this.clock.Today.Year, this.fromDate.Month, this.fromDate.Day);
-                    DateTime d2 = new DateTime(this.clock.Today.Year, this.toDate.Month, this.toDate.Day);
-                    if (d2.DayOfYear <= d1.DayOfYear)
-                        d2 = new DateTime(this.clock.Today.Year + 1, this.toDate.Month, this.toDate.Day);
-                    if (this.clock.Today >= d1 && this.clock.Today <= d2)
-                        this.inCaptureWindow = true;
-                }
-                else
-                {
-                    if (this.clock.Today >= this.fromDate && this.clock.Today <= this.toDate)
-                        this.inCaptureWindow = true;
-                    else
-                        valuesToAggregate.Clear();
-                }
-
-                // If we have just turned on capture then store a value now.
-                if (this.inCaptureWindow)
-                    this.StoreValueForAggregation();
-            }
-        }
-
-        /// <summary>
-        /// End of day event handler.
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        private void OnEndOfDay(object sender, EventArgs e)
-        {
-            if (this.inCaptureWindow)
-            {
-                this.StoreValueForAggregation();
-
-                // Look at the date to see if we are on the 'end' date.
-                // If so then set the capture flag to false.
-                if (this.toDate == DateTime.MinValue)
-                {
-                }
-                else if (this.toHasNoYear)
-                {
-                    if (this.clock.Today.Day == this.toDate.Day && this.clock.Today.Month == this.toDate.Month)
-                        this.inCaptureWindow = false;
-                }
-                else
-                {
-                    if (this.clock.Today == this.toDate)
-                        this.inCaptureWindow = false;
-                }
-            }
-        }
-
-        /// <summary>Retrieve the current value and store it in our array of values.</summary>
         public virtual object GetValue()
         {
-            object value = null;
+            if (aggregationFunction == null)
+                return GetVariableValue();
 
-            // If we're at the end of the capture window, apply the aggregation.
-            if (this.aggregationFunction != null)
-            {
-                //if (!this.inCaptureWindow)
-                    value = ApplyAggregation();
-                if (toHasNoYear && this.clock.Today.Day == this.toDate.Day && this.clock.Today.Month == this.toDate.Month)
-                    this.valuesToAggregate.Clear();
-            }
-            else
-            {
-                value = locator.Get(variableName);
+            return ApplyAggregation();
+        }
 
-                if (value == null)
-                    Values.Add(null);
-                else
+        /// <summary>
+        /// Gets the value of the variable/expression.
+        /// </summary>
+        private object GetVariableValue()
+        {
+            object value = locator.Get(variableName);
+
+            if (value is IFunction function)
+                value = function.Value();
+            else if (value != null && (value.GetType().IsArray || value.GetType().IsClass))
+            {
+                try
                 {
-                    if (value != null && value is IFunction)
-                    {
-                        value = (value as IFunction).Value();
-                    }
-                    else if (value.GetType().IsArray || value.GetType().IsClass)
-                    {
-                        try
-                        {
-                            value = ReflectionUtilities.Clone(value);
-                        }
-                        catch (Exception)
-                        {
-                            throw new Exception("Cannot report variable " + this.variableName +
-                                                ". Variable is not of a reportable type. Perhaps " +
-                                                " it is a PMF Function that needs a .Value appended to the name.");
-                        }
-                    }
-
-                    Values.Add(value);
+                    value = ReflectionUtilities.Clone(value);
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Cannot report variable \"{variableName}\": Variable is a non-reportable type: \"{value?.GetType()?.Name}\".", err);
                 }
             }
+
             return value;
         }
 
         /// <summary>
-        /// Retrieve the current value and store it in our aggregation array of values.
-        /// </summary>
-        private void StoreValueForAggregation()
-        {
-            if (this.clock.Today != this.lastStoreDate)
-            {
-                object value = locator.Get(variableName);
-
-                if (value == null)
-                    this.valuesToAggregate.Add(null);
-                else
-                {
-                    if (value.GetType().IsArray || value.GetType().IsClass)
-                        value = ReflectionUtilities.Clone(value);
-
-                    this.valuesToAggregate.Add(value);
-                }
-                this.lastStoreDate = this.clock.Today;
-            }
-        }
-
-        /// <summary>
-        /// Apply the aggregation function if necessary to the list of values we
-        /// have stored.
+        /// Apply the aggregation function if necessary to the list of values we have stored.
         /// </summary>
         private object ApplyAggregation()
         {
@@ -500,7 +382,7 @@ namespace Models.Report
                         result = MathUtilities.Sum(this.valuesToAggregate.Cast<int>());
                     else
                         throw new Exception("Unable to use sum function for variable of type " + this.valuesToAggregate[0].GetType().ToString());
-                else if (this.aggregationFunction.Equals("avg", StringComparison.CurrentCultureIgnoreCase))
+                else if (this.aggregationFunction.Equals("mean", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Average(this.valuesToAggregate);
                 else if (this.aggregationFunction.Equals("min", StringComparison.CurrentCultureIgnoreCase))
                     result = MathUtilities.Min(this.valuesToAggregate);
@@ -513,13 +395,67 @@ namespace Models.Report
                 else if (this.aggregationFunction.Equals("diff", StringComparison.CurrentCultureIgnoreCase))
                     result = Convert.ToDouble(this.valuesToAggregate.Last(), System.Globalization.CultureInfo.InvariantCulture) -
                                     Convert.ToDouble(this.valuesToAggregate.First(), System.Globalization.CultureInfo.InvariantCulture);
-
-                //if (!double.IsNaN(result))
-                //    this.valuesToAggregate.Clear();
             }
             return result;
         }
 
-        #endregion
+        /// <summary>
+        /// Invoked at the start of day.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnStartOfDay(object sender, EventArgs e)
+        {
+            if (fromVariable != null)
+            {
+                var fromDate = (DateTime)fromVariable.Value;
+                if (fromHasNoYear)
+                    fromDate = new DateTime(clock.Today.Year, fromDate.Month, fromDate.Day);
+                if (clock.Today == fromDate)
+                    OnFromEvent();
+            }
+
+            if (inCaptureWindow && toVariable != null)
+            {
+                var toDate = (DateTime)toVariable.Value;
+                if (toHasNoYear)
+                    toDate = new DateTime(clock.Today.Year, toDate.Month, toDate.Day);
+
+                if (clock.Today == toDate.AddDays(1))
+                    OnToEvent();
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the from event is invoked or when today is the from date.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnFromEvent(object sender = null, EventArgs e = null)
+        {
+            valuesToAggregate.Clear();
+            inCaptureWindow = true;
+        }
+
+        /// <summary>
+        /// Invoked when the to event is invoked or when today is the to date.        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        private void OnToEvent(object sender = null, EventArgs e = null)
+        {
+            inCaptureWindow = false;
+        }
+
+        /// <summary>
+        /// Called once per day. Stores values for aggregation.
+        /// Note: this could be called before or after reporting occurs.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnDoReportCalculations(object sender, EventArgs e)
+        {
+            if (inCaptureWindow)
+                valuesToAggregate.Add(GetVariableValue());
+        }
     }
 }

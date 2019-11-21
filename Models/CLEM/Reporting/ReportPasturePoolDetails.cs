@@ -69,10 +69,8 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
-            List<string> variableNames = new List<string>
-            {
-                "Parent.Name as Zone"
-            };
+            IModel zone = Apsim.Parent(this, typeof(Zone));
+            List<string> variableNames = new List<string>();
             if (VariableNames != null)
             {
                 for (int i = 0; i < this.VariableNames.Length; i++)
@@ -118,11 +116,14 @@ namespace Models.CLEM.Reporting
                     variableNames.Insert(0, "[Clock].Today");
                 }
             }
-            base.VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = variableNames.ToArray();
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
 
             // Subscribe to events.
-            if (EventNames == null)
+            if (EventNames == null || EventNames.Count() == 0)
             {
                 events.Subscribe("[Clock].CLEMHerdSummary", DoOutputEvent);
             }

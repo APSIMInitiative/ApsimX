@@ -16,10 +16,10 @@ namespace Models.Functions
         /// <summary>The child functions</summary>
         private List<IModel> ChildFunctions;
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction Lower = null;
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction Upper = null;
 
         /// <summary>Gets the value.</summary>

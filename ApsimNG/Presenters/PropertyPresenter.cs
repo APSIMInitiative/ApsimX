@@ -274,7 +274,7 @@ namespace UserInterface.Presenters
             if (this.model != null)
             {
                 var orderedMembers = GetMembers(model);
-
+                properties.Clear();
                 foreach (MemberInfo member in orderedMembers)
                 {
                     IVariable property = null;
@@ -808,7 +808,11 @@ namespace UserInterface.Presenters
                 SetPropertyValue(property, newValue);
 
                 // Update the value shown in the grid.
-                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(property, cell.RowIndex, cell.ColIndex);
+                object val = GetCellValue(property, cell.RowIndex, cell.ColIndex);
+                // Special handling for enumerations, as we want to display the description, not the value
+                if (val.GetType().IsEnum)
+                    val = VariableProperty.GetEnumDescription(val as Enum);
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = val;
             }
 
             UpdateReadOnlyProperties();
@@ -854,7 +858,10 @@ namespace UserInterface.Presenters
 
             try
             {
-                return ReflectionUtilities.StringToObject(property.DataType, cell.NewValue, CultureInfo.CurrentCulture);
+                if (property.DataType.IsEnum)
+                    return VariableProperty.ParseEnum(property.DataType, cell.NewValue);
+                else
+                    return ReflectionUtilities.StringToObject(property.DataType, cell.NewValue, CultureInfo.CurrentCulture);
             }
             catch (FormatException err)
             {

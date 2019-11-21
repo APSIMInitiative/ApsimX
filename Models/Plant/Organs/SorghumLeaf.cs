@@ -36,7 +36,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass, ICanopy
+    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage, ICanopy
     {
         //IHasWaterDemand, removing to see if it's necessary
 
@@ -50,7 +50,7 @@ namespace Models.PMF.Organs
         public double Albedo { get; set; }
 
         /// <summary>The effect of CO2 on stomatal conductance</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction StomatalConductanceCO2Modifier = null;
 
         /// <summary>Gets or sets the gsmax.</summary>
@@ -126,19 +126,19 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction minLeafNo = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction maxLeafNo = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction TTEmergToFI = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction leafInitRate = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction seedNo = null;
 
         #region Canopy interface
@@ -241,19 +241,19 @@ namespace Models.PMF.Organs
         #region Parameters
 
         /// <summary>The extinction coefficient function</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction ExtinctionCoefficientFunction = null;
         
         /// <summary>The photosynthesis</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction Photosynthesis = null;
         
         /// <summary>The height function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction HeightFunction = null;
 
         /// <summary>The lai dead function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction dltLAIFunction = null;
 
         ///// <summary>The lai dead function</summary>
@@ -261,7 +261,7 @@ namespace Models.PMF.Organs
         //IFunction sdRatio = null;
 
         /// <summary>The lai dead function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction ExpansionStress = null;
         
         ///// <summary>The structure</summary>
@@ -269,51 +269,51 @@ namespace Models.PMF.Organs
         //public Structure Structure = null;
 
         /// <summary>Water Demand Function</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction WaterDemandFunction = null;
 
         /// <summary>DM Fixation Demand Function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction DMSupplyFixation = null;
 
         /// <summary>DM Fixation Demand Function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PotentialBiomassTEFunction = null;
         
         /// <summary>Input for NewLeafSLN</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction NewLeafSLN = null;
         
         /// <summary>Input for TargetSLN</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction TargetSLN = null;
 
         /// <summary>Input for SenescedLeafSLN.</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction SenescedLeafSLN = null;
 
         /// <summary>Intercept for N Dilutions</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction NDilutionIntercept = null;
 
         /// <summary>Slope for N Dilutions</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction NDilutionSlope = null;
 
         /// <summary>Slope for N Dilutions</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction MinPlantWt = null;
 
         /// <summary>/// The aX0 for this Culm </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction AX0 = null;
 
         /// <summary> The aMaxSlope for this Culm </summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction AMaxSlope = null;
 
         /// <summary>The aMaxIntercept for this Culm</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction AMaxIntercept = null;
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
@@ -395,7 +395,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Temperature Stress Function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction TemperatureStressFunction = null;
 
         /// <summary>Stress.</summary>
@@ -662,6 +662,7 @@ namespace Models.PMF.Organs
             }
             LAIDead = SenescedLai; // drew todo
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
+            
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
             CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAIDead), 0.0, 0.999999999);
             var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
@@ -940,87 +941,87 @@ namespace Models.PMF.Organs
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The senescence rate function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         protected IFunction SenescenceRate = null;
 
         /// <summary>Radiation level for onset of light senescence.</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("Mj/m^2")]
         private IFunction senRadnCrit = null;
 
         ///// <summary>The N retranslocation factor</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child, ByName = true)]
         //[Units("/d")]
         //protected IFunction NRetranslocationFactor = null;
 
         ///// <summary>The N reallocation factor</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child, ByName = true)]
         //[Units("/d")]
         //protected IFunction nReallocationFactor = null;
 
         // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child, ByName = true)]
         //private IFunction nitrogenDemandSwitch = null;
 
         ///// <summary>The DM retranslocation factor</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child, ByName = true)]
         //[Units("/d")]
         //private IFunction dmRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
 
         /// <summary>The DM demand function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>The N demand function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2")]
         private IFunction initialWtFunction = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2")]
         private IFunction initialLAIFunction = null;
 
         /// <summary>The initial SLN value</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2")]
         private IFunction initialSLNFunction = null;
 
         /// <summary>The maximum N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction maximumNConc = null;
 
         /// <summary>The minimum N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction minimumNConc = null;
 
         /// <summary>The critical N concentration</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction criticalNConc = null;
 
 //#pragma warning disable 414
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction CarbonConcentration = null;
 //#pragma warning restore 414
 
@@ -1244,6 +1245,7 @@ namespace Models.PMF.Organs
                 nGreenToday += newN; // local variable
                 nProvided += newN;
                 DltSenescedLaiN += senescenceLAI;
+
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                 DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
 
@@ -1279,6 +1281,7 @@ namespace Models.PMF.Organs
                     nGreenToday += newN;
                     nProvided += newN;
                     DltSenescedLaiN += senescenceLAI;
+                    
                     DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                     DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
                     return nProvided;
@@ -1308,6 +1311,7 @@ namespace Models.PMF.Organs
                     nGreenToday += newN;
                     nProvided += newN;
                     DltSenescedLaiN += senescenceLAI;
+                    
                     DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
                     DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
                     return nProvided;
@@ -1327,7 +1331,7 @@ namespace Models.PMF.Organs
 
             var dilutionN = Arbitrator.DltTT * ( NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
 
-            NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.StorageN + StartLive.MetabolicN, availableLaiN + dilutionN));
+            NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
 
             //NSupply.Retranslocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value());
             if (NSupply.Retranslocation < -BiomassToleranceValue)

@@ -330,7 +330,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Overrides the base class method to allow for clean up
+        /// Cleans up pools
         /// </summary>
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
@@ -342,12 +342,70 @@ namespace Models.CLEM.Resources
             Pools = null;
         }
 
-        /// <summary>Clear data stores for utilisation at end of ecological indicators calculation month</summary>
+        /// <summary>An event handler to allow us to clear pools.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            // reset pool counters
+            foreach (var pool in Pools)
+            {
+                pool.Reset();
+            }
+        }
+
+        /// <summary>
+        /// Function to detach pasture before reporting
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMDetachPasture")]
+        private void OnCLEMDetachPasture(object sender, EventArgs e)
+        {
+            if (DetachRate < 1 | CarryoverDetachRate < 1)
+            {
+                foreach (var pool in Pools)
+                {
+                    double detach = CarryoverDetachRate;
+                    if (pool.Age < 12)
+                    {
+                        detach = DetachRate;
+                    }
+                    double detachedAmount = pool.Amount * (1 - detach);
+                    pool.Detached = pool.Amount * detach;
+                    pool.Set(detachedAmount);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Function to age resource pools
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAgeResources")]
-        private void ONCLEMAgeResources(object sender, EventArgs e)
+        private void OnCLEMAgeResources(object sender, EventArgs e)
         {
+            if (DecayNitrogen != 0 | DecayDMD > 0)
+            {
+                // decay N and DMD of pools and age by 1 month
+                foreach (var pool in Pools)
+                {
+                    // N is a loss of N% (x = x -loss)
+                    pool.Nitrogen = Math.Max(pool.Nitrogen - DecayNitrogen, MinimumNitrogen);
+                    // DMD is a proportional loss (x = x*(1-proploss))
+                    pool.DMD = Math.Max(pool.DMD * (1 - DecayDMD), MinimumDMD);
+
+                    if (pool.Age < 12)
+                    {
+                        pool.Age++;
+                    }
+                }
+                // remove all pools with less than 10g of food
+                Pools.RemoveAll(a => a.Amount < 0.01);
+            }
+
             if (ZoneCLEM.IsEcologicalIndicatorsCalculationMonth())
             {
                 OnEcologicalIndicatorsCalculated(new EcolIndicatorsEventArgs() { Indicators = CurrentEcologicalIndicators });
@@ -355,6 +413,7 @@ namespace Models.CLEM.Resources
                 biomassAddedThisYear = 0;
                 biomassConsumed = 0;
             }
+
         }
 
         /// <summary>Store amount of pasture available for everyone at the start of the step (kg per hectare)</summary>
@@ -363,7 +422,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMPastureReady")]
         private void ONCLEMPastureReady(object sender, EventArgs e)
         {
-            // do not return zero as there is always something there adn zero affects calculations.
+            // do not return zero as there is always something there and zero affects calculations.
             this.TonnesPerHectareStartOfTimeStep = Math.Max(this.TonnesPerHectare,0.01);
         }
 
@@ -399,7 +458,7 @@ namespace Models.CLEM.Resources
                     // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage) or Double from G-Range
                     throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
-
+            pool.Growth += pool.Amount;
             if (pool.Amount > 0)
             {
                 // allow decaying or no pools currently available
@@ -526,40 +585,6 @@ namespace Models.CLEM.Resources
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
-
-                //while (amountRequired > 0)
-                //{
-                //    // limiter obtained from breed feed limits or unlimited if second take of pools
-                //    double limiter = 1.0;
-                //    if (!secondTakeFromPools)
-                //    {
-                //        limiter = thisBreed.PoolFeedLimits[index].Limit;
-                //    }
-
-                //    double amountToRemove = Math.Min(thisBreed.PoolFeedLimits[index].Pool.Amount * limiter, amountRequired);
-                //    // update DMD and N based on pool utilised
-                //    thisBreed.DMD += thisBreed.PoolFeedLimits[index].Pool.DMD * amountToRemove;
-                //    thisBreed.N += thisBreed.PoolFeedLimits[index].Pool.Nitrogen * amountToRemove;
-
-                //    amountRequired -= amountToRemove;
-
-                //    // remove resource from pool
-                //    thisBreed.PoolFeedLimits[index].Pool.Remove(amountToRemove, thisBreed, "Graze");
-
-                //    index++;
-                //    if (index >= this.Pools.Count)
-                //    {
-                //        // if we've already given second chance to get food so finish without full satisfying individual
-                //        // or strict feeding limits are enforced
-                //        if (secondTakeFromPools)
-                //        {
-                //            break;
-                //        }
-                //        // if not strict limits allow a second request for food from previously limited pools.
-                //        secondTakeFromPools = true;
-                //        index = 0;
-                //    }
-                //}
             }
             else if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(PastureActivityCutAndCarry))
             {

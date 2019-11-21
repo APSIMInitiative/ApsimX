@@ -69,7 +69,7 @@ namespace Models.CLEM.Activities
             GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
             //Create list of children by breed
-            foreach (RuminantType herdType in Resources.RuminantHerd().Children)
+            foreach (RuminantType herdType in Apsim.Children(Resources.RuminantHerd(), typeof(RuminantType)))
             {
                 RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
                 {

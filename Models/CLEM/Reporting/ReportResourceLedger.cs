@@ -72,7 +72,6 @@ namespace Models.CLEM.Reporting
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>
             {
-                "Parent.Name as Zone",
                 "[Clock].Today"
             };
             if (VariableNames != null && VariableNames.Count() > 0)
@@ -149,7 +148,10 @@ namespace Models.CLEM.Reporting
                 events.Subscribe("[Resources]." + this.VariableNames[0] + ".TransactionOccurred", DoOutputEvent);
 
             }
-            base.VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = variableNames.ToArray();
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
         }
 

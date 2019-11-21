@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SyntaxMode name = "APSIM Report" mimeTypes="text/x-apsimreport">
+  <Property name="LineComment">//</Property>
+
+  <EolSpan color = "Comment(Line)" rule="Comment" tagColor="Comment(Line)">//</EolSpan>
+
+  <Keywords color = "Punctuation">
+    <Word>+</Word>
+    <Word>-</Word>
+    <Word>*</Word>
+    <Word>/</Word>
+    <Word>%</Word>
+    <Word>^</Word>
+
+    <Word>?</Word>
+    <Word>:</Word>
+
+    <Word>&amp;</Word>
+
+    <Word>=</Word>
+    <Word>;</Word>
+    <Word>,</Word>
+    <Word>.</Word>
+  </Keywords>
+
+  <Keywords color = "Punctuation(Brackets)">
+    <Word>(</Word>
+    <Word>)</Word>
+    <Word>&lt;</Word>
+    <Word>&gt;</Word>
+    <Word>{</Word>
+    <Word>}</Word>
+    <Word>[</Word>
+    <Word>]</Word>
+  </Keywords>
+
+  <Keywords color = "Keyword(Operator)">
+    <Word>as</Word>
+    <Word>sum</Word>
+    <Word>avg</Word>
+    <Word>min</Word>
+    <Word>max</Word>
+    <Word>first</Word>
+    <Word>last</Word>
+    <Word>diff</Word>
+    <Word>of</Word>
+    <Word>from</Word>
+    <Word>to</Word>
+  </Keywords>
+
+  <Rule name = "Comment">
+    <Keywords color="Comment Tag" ignorecase="True">
+      <Word>TODO</Word>
+      <Word>FIXME</Word>
+      <Word>HACK</Word>
+      <Word>UNDONE</Word>
+    </Keywords>
+  </Rule>
+
+</SyntaxMode>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using UserInterface.Presenters;
 using UserInterface.Views;
+using Utility;
 
 namespace UnitTests.ApsimNG
 {
@@ -15,11 +16,13 @@ namespace UnitTests.ApsimNG
     {
         public static MainPresenter MasterPresenter { get; set; }
 
-        private MainView mainForm;
+        private static MainView mainForm;
 
         [OneTimeSetUp]
-        public void UITestSetup()
+        public static void UITestSetup()
         {
+            Configuration.Settings.DarkTheme = false;
+
             Gtk.Application.Init();
             Gtk.Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
             IntellisensePresenter.Init();
@@ -31,7 +34,7 @@ namespace UnitTests.ApsimNG
         }
 
         [OneTimeTearDown]
-        public void UITestCleanup()
+        public static void UITestCleanup()
         {
             MasterPresenter.Detach(mainForm);
         }
