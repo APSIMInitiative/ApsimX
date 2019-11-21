@@ -209,6 +209,9 @@ namespace Models.PMF.Organs
         /// <summary>Gets the LAI</summary>
         public double SLN { get; set; }
 
+        /// <summary>Used in metabolic ndemand calc.</summary>
+        public double SLN0 { get; set; }
+
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
         public double CoverGreen { get; set; }
@@ -612,6 +615,7 @@ namespace Models.PMF.Organs
             Live.StorageWt = 0;
             LAI = 0;
             SLN = 0;
+            SLN0 = 0;
             Live.StructuralN = 0;
             Live.StorageN = 0;
 
@@ -1480,6 +1484,8 @@ namespace Models.PMF.Organs
         /// <param name="nitrogen">The nitrogen allocation</param>
         public virtual void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
+            SLN0 = MathUtilities.Divide(Live.N, LAI, 0);
+
             Live.StructuralN += nitrogen.Structural;
             Live.StorageN += nitrogen.Storage;
             Live.MetabolicN += nitrogen.Metabolic;
