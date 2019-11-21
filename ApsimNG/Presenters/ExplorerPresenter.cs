@@ -316,6 +316,15 @@
         }
 
         /// <summary>Select a node in the view.</summary>
+        /// <param name="nodePath">Node to be selected.</param>
+        public void SelectNode(IModel node)
+        {
+            SelectNode(Apsim.FullPath(node));
+            this.HideRightHandPanel();
+            this.ShowRightHandPanel();
+        }
+
+        /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
         public void SelectNode(string nodePath)
         {

@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
         /// Weaning age (months)
         /// </summary>
         [Description("Weaning age (months)")]
-        [Required, GreaterThanEqualValue(1)]
+        [Required, GreaterThanEqualValue(0)]
         public double WeaningAge { get; set; }
 
         /// <summary>

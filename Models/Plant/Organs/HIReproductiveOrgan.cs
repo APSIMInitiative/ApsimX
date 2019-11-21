@@ -13,7 +13,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class HIReproductiveOrgan : Model, IOrgan, IArbitration, IRemovableBiomass
+    public class HIReproductiveOrgan : Model, IOrgan, IArbitration, IOrganDamage
     {
         /// <summary>The surface organic matter model</summary>
         [Link]

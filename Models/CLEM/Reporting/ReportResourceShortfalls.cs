@@ -76,10 +76,9 @@ namespace Models.CLEM.Reporting
             EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };
 
             // Tidy up variable/event names.
+            VariableNames = variableNames.ToArray();
             VariableNames = TidyUpVariableNames();
             EventNames = TidyUpEventNames();
-
-            base.VariableNames = variableNames.ToArray();
             this.FindVariableMembers();
 
             // Subscribe to events.

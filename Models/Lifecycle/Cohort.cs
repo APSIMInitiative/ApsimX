@@ -11,6 +11,17 @@ namespace Models.LifeCycle
     /// <summary>
     /// # [Name]
     /// A generic cohort item that exists in a LifeStage within a LifeCycle
+    /// 
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|PhenoAge     |double   |time steps  |Developmental level (within a LifeStage)    |
+    ///|ChronoAge    |double   |time steps  |Period of existence since start of egg(?) stage |
+    ///|PhysiologicalAge |double |0-1 |The fraction of maturity for the cohort |
+    ///|Count        |double |  |Count of organisms in this cohort |
+    ///|Fecundity    |double |  |The fecundity for the time step |
+    ///|Mortality    |double |  |The mortality for the time step |
+    ///|OwningStage  |LifeStage|  |The LifeStage that owns this cohort |
+    ///
     /// </summary>
     [Serializable]
     public class Cohort

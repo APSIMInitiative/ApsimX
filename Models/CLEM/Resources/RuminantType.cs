@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
                     }
                 }
                 // no price match found.
-                string warning = "No " + purchaseStyle.ToString() + " price entry was found for indiviudal [" + ind.ID + "] with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight.ToString("##0.##") + "])";
+                string warning = "No " + purchaseStyle.ToString() + " price entry was found for an indiviudal with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight.ToString("##0") + "])";
                 if (!Warnings.Exists(warning))
                 {
                     Warnings.Add(warning);
@@ -508,20 +508,6 @@ namespace Models.CLEM.Resources
         [Description("Proportion green in pasture at zero in diet")]
         [Required, Proportion]
         public double GreenDietZero { get; set; }
-        /// <summary>
-        /// Coefficient to adjust intake for herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeTropicalQuality { get; set; }
-        /// <summary>
-        /// Coefficient to adjust intake for tropical herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for tropical herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeCoefficientQuality { get; set; }
         /// <summary>
         /// Coefficient to adjust intake for herbage biomass
         /// </summary>
