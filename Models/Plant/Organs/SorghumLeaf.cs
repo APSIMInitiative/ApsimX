@@ -657,7 +657,14 @@ namespace Models.PMF.Organs
                 int flag = 6; //= phenology.StartStagePhaseIndex("FlagLeaf");
                 if (phenology.Stage >= emergence && phenology.Stage <= flag)
                 {
-                    dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
+                    // temp hack - fixme!!
+                    if (Plant.Name == "Sorghum")
+                        dltPotentialLAI = Culms.Sum(culm => culm.calcPotentialArea());
+                    else
+                        dltPotentialLAI = Culms[0].calcPotentialArea();
+
+                    // endhack
+
                     dltStressedLAI = dltPotentialLAI * ExpansionStress.Value();
                 }
 
