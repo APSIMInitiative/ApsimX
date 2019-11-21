@@ -26,7 +26,7 @@ rem Check http code from server
 set /p resp=<"%http_code_file%"
 if "%resp%" neq "200" (
 	echo failure while fetching info about pull request #%PULL_ID%: http response code is "%resp%". Full response from server:
-	cat "%resp_file%"
+	type "%resp_file%"
 	exit /b 1
 )
 
