@@ -85,7 +85,7 @@ namespace Models.CLEM.Activities
             if(this.Children.OfType<CropActivityManageProduct>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Collect product activity" };
-                results.Add(new ValidationResult("At least one [a=CropActivityCollectProduct] activity must be present under this manage crop activity", memberNames));
+                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
             }
             return results;
         }
@@ -96,16 +96,18 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // locate Land Type resource for this forage.
-            LinkedLandItem = Resources.GetResourceItem(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
-
-            if (UseAreaAvailable)
+            if (LandItemNameToUse != null && LandItemNameToUse != "")
             {
-                LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
-            }
+                // locate Land Type resource for this forage.
+                LinkedLandItem = Resources.GetResourceItem(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
 
-            ResourceRequestList = new List<ResourceRequest>
-            {
+                if (UseAreaAvailable)
+                {
+                    LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
+                }
+
+                ResourceRequestList = new List<ResourceRequest>
+                {
                 new ResourceRequest()
                 {
                     AllowTransmutation = false,
@@ -116,18 +118,19 @@ namespace Models.CLEM.Activities
                     Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
                     FilterDetails = null
                 }
-            };
+                };
 
-            CheckResources(ResourceRequestList, Guid.NewGuid());
-            gotLandRequested = TakeResources(ResourceRequestList, false);
+                CheckResources(ResourceRequestList, Guid.NewGuid());
+                gotLandRequested = TakeResources(ResourceRequestList, false);
 
-            //Now the Land has been allocated we have an Area 
-            if (gotLandRequested)
-            {
-                //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
-                Area = ResourceRequestList.FirstOrDefault().Provided;
+                //Now the Land has been allocated we have an Area 
+                if (gotLandRequested)
+                {
+                    //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
+                    Area = ResourceRequestList.FirstOrDefault().Provided;
+                }
+
             }
-
             // set and enable first crop in the list for rotational cropping.
             int i = 0;
             foreach (var item in this.Children.OfType<CropActivityManageProduct>())
