@@ -981,6 +981,18 @@ namespace APSIM.Shared.Utilities
                         result.m_type = ExpressionType.Error;
                     }
                     break;
+                case "floor":
+                    if (args.Length == 1)
+                    {
+                        result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
+                        result.m_value = Math.Floor(((Symbol)args[0]).m_value);
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
                 default:
                     if (m_defaultFunctionEvaluation != null)
                         result = m_defaultFunctionEvaluation(name, args);
