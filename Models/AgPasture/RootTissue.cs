@@ -1,6 +1,9 @@
 ﻿namespace Models.AgPasture
 {
     using APSIM.Shared.Utilities;
+    using Models.Interfaces;
+    using Models.PMF;
+    using Models.Soils;
     using System;
     using System.Linq;
 
@@ -8,10 +11,17 @@
     [Serializable]
     internal class RootTissue : GenericTissue
     {
-        /// <summary>Constructor, initialise array.</summary>
+        private readonly string speciesName;
+        private readonly INutrient nutrientModel;
+
+        /// <summary>Constructor.</summary>
+        /// <param name="speciesNam">The name of the species this tissue belongs to.</param>
+        /// <param name="nutrient">The nutrient model.</param>
         /// <param name="numLayers">The number of layers in the soil</param>
-        public RootTissue(int numLayers)
+        public RootTissue(string speciesNam, INutrient nutrient, int numLayers)
         {
+            speciesName = speciesNam;
+            nutrientModel = nutrient;
             nLayers = numLayers;
             DMLayer = new double[nLayers];
             NamountLayer = new double[nLayers];
@@ -22,6 +32,9 @@
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
+
+        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
+        const double CarbonFractionInDM = 0.4;
 
         #region Basic properties  ------------------------------------------------------------------------------------------
 
@@ -96,8 +109,6 @@
 
         #endregion ---------------------------------------------------------------------------------------------------------
 
-        #region Tissue methods  --------------------------------------------------------------------------------------------
-
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
         internal override void DoUpdateTissue()
         {
@@ -118,6 +129,36 @@
             }
         }
 
-        #endregion ---------------------------------------------------------------------------------------------------------
+        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
+        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
+        /// <param name="amountN">The N amount to send (kg/ha)</param>
+        public override void DetachBiomass(double amountDM, double amountN)
+        {
+            if (amountDM + amountN > 0.0)
+            {
+                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
+                {
+                    FOMType fomData = new FOMType();
+                    fomData.amount = amountDM * FractionWt[layer];
+                    fomData.N = amountN * FractionWt[layer];
+                    fomData.C = amountDM * CarbonFractionInDM * FractionWt[layer];
+                    fomData.P = 0.0; // P not considered here
+                    fomData.AshAlk = 0.0; // Ash not considered here
+
+                    FOMLayerLayerType layerData = new FOMLayerLayerType();
+                    layerData.FOM = fomData;
+                    layerData.CNR = 0.0; // not used here
+                    layerData.LabileP = 0.0; // not used here
+
+                    FOMdataLayer[layer] = layerData;
+                }
+
+                FOMLayerType FOMData = new FOMLayerType();
+                FOMData.Type = speciesName;
+                FOMData.Layer = FOMdataLayer;
+                nutrientModel.DoIncorpFOM(FOMData);
+            }
+        }
     }
 }
