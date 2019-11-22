@@ -215,10 +215,6 @@
                     if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
                         effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
                 }
-                /*double myEffectiveLightExtinctionCoefficient = -Math.Log(1.0 - InterceptedRadn / RadiationTopOfCanopy) / greenLAI;
-                if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
-                    effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
-                    */
             }
         }
 
@@ -3744,7 +3740,7 @@
 
             // get the limitation factor due to soil N deficiency
             double glfNit = 1.0;
-            /*if (dGrowthAfterWaterLimitations > Epsilon)
+            if (dGrowthAfterWaterLimitations > Epsilon)
             {
                 if (dNewGrowthN > Epsilon)
                 {
@@ -3758,13 +3754,6 @@
                     glfNSupply = 0.0;
                     glfNit = 0.0;
                 }
-            }*/
-            if (dNewGrowthN > Epsilon)
-            {
-                glfNSupply = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
-
-                // adjust the glfN
-                glfNit = Math.Pow(glfNSupply, NDillutionCoefficient);
             }
             else
                 glfNSupply = 1.0;
