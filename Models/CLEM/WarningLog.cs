@@ -14,11 +14,14 @@ namespace Models.CLEM
     [Serializable]
     public class WarningLog
     {
+        private int maxCount { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>
-        public WarningLog()
+        public WarningLog(int maxEntries)
         {
+            maxCount = maxEntries;
             warningList = new List<string>();
         }
 
@@ -43,7 +46,14 @@ namespace Models.CLEM
         /// <returns></returns>
         public bool Exists(string name)
         {
-            return warningList.Contains(name.ToUpper());
+            if (warningList.Count <= maxCount)
+            {
+                return warningList.Contains(name.ToUpper());
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

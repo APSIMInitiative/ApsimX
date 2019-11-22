@@ -221,7 +221,14 @@
         [Units("d")]
         [XmlIgnore]
         public int DaysSinceWinterSolstice { get; set; }
-        
+
+        /// <summary>
+        /// Maximum clear sky radiation (MJ/m2)
+        /// </summary>
+        [Units("MJ/M2")]
+        [XmlIgnore]
+        public double Qmax { get; set; }
+
         /// <summary>
         /// Gets or sets the rainfall (mm)
         /// </summary>
@@ -295,10 +302,10 @@
         {
             get
             {
-                if (this.reader == null || this.reader.Constant("Latitude") == null)
+                if (this.reader == null && !this.OpenDataFile())
                     return 0;
-                else
-                    return this.reader.ConstantAsDouble("Latitude");
+
+                return this.reader.ConstantAsDouble("Latitude");
             }
         }
 
@@ -528,6 +535,8 @@
             if (clock.Today.DayOfYear == WinterSolsticeDOY)
                 DaysSinceWinterSolstice = 0;
             else DaysSinceWinterSolstice += 1;
+
+            Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
         }
 
         /// <summary>

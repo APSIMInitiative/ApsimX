@@ -15,7 +15,7 @@ namespace UserInterface.Presenters
     /// This presenter connects an instance of a Model.Graph.Axis with a 
     /// UserInterface.Views.AxisView
     /// </summary>
-    internal class LegendPresenter : IPresenter
+    public class LegendPresenter : IPresenter
     {
         /// <summary>
         /// Graph object

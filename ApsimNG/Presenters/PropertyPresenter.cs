@@ -101,15 +101,15 @@ namespace UserInterface.Presenters
                 grid.ReadOnly = true;
             }
 
-            grid.NumericFormat = "G6"; 
-            FindAllProperties(this.model);
-            if (grid.DataSource == null)
+            grid.NumericFormat = "G6";
+
+            if (this.model != null)
             {
-                PopulateGrid(this.model);
-            }
-            else
-            {
-                FormatTestGrid();
+                FindAllProperties(this.model);
+                if (grid.DataSource == null)
+                    PopulateGrid(this.model);
+                else
+                    FormatTestGrid();
             }
 
             grid.CellsChanged += OnCellsChanged;
@@ -159,11 +159,19 @@ namespace UserInterface.Presenters
             try
             {
                 base.Detach();
-                grid.CellsChanged -= OnCellsChanged;
-                grid.ButtonClick -= OnFileBrowseClick;
-                presenter.CommandHistory.ModelChanged -= OnModelChanged;
-                intellisense.ItemSelected -= OnIntellisenseItemSelected;
-                intellisense.Cleanup();
+                if (grid != null)
+                {
+                    grid.CellsChanged -= OnCellsChanged;
+                    grid.ButtonClick -= OnFileBrowseClick;
+                    grid.ContextItemsNeeded -= GetContextItems;
+                }
+                if (presenter != null)
+                    presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                if (intellisense != null)
+                {
+                    intellisense.ItemSelected -= OnIntellisenseItemSelected;
+                    intellisense.Cleanup();
+                }
             }
             catch (NullReferenceException)
             {
@@ -186,6 +194,9 @@ namespace UserInterface.Presenters
         /// <param name="model">The model to examine for properties.</param>
         private void PopulateGrid(IModel model)
         {
+            if (grid == null)
+                return;
+
             IGridCell selectedCell = grid.GetCurrentCell;
             this.model = model;
 
@@ -244,6 +255,8 @@ namespace UserInterface.Presenters
 
         public void Refresh()
         {
+            if (model == null)
+                return;
             properties.Clear();
             FindAllProperties(model);
             PopulateGrid(model);
@@ -261,7 +274,7 @@ namespace UserInterface.Presenters
             if (this.model != null)
             {
                 var orderedMembers = GetMembers(model);
-
+                properties.Clear();
                 foreach (MemberInfo member in orderedMembers)
                 {
                     IVariable property = null;
@@ -347,7 +360,7 @@ namespace UserInterface.Presenters
             this.model = model;
             if (this.model != null)
             {
-                IGridCell curCell = grid.GetCurrentCell;
+                IGridCell curCell = grid?.GetCurrentCell;
                 for (int i = 0; i < properties.Count; i++)
                 {
                     IGridCell cell = grid.GetCell(1, i);
@@ -598,6 +611,7 @@ namespace UserInterface.Presenters
                         cell.EditorType = EditorTypeEnum.TextBox;
                     }
                 }
+                cell.IsRowReadonly = !IsPropertyEnabled(i);
             }
 
             IGridColumn descriptionColumn = grid.GetColumn(0);
@@ -795,7 +809,11 @@ namespace UserInterface.Presenters
                 SetPropertyValue(property, newValue);
 
                 // Update the value shown in the grid.
-                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = GetCellValue(property, cell.RowIndex, cell.ColIndex);
+                object val = GetCellValue(property, cell.RowIndex, cell.ColIndex);
+                // Special handling for enumerations, as we want to display the description, not the value
+                if (val.GetType().IsEnum)
+                    val = VariableProperty.GetEnumDescription(val as Enum);
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = val;
             }
 
             UpdateReadOnlyProperties();
@@ -841,7 +859,10 @@ namespace UserInterface.Presenters
 
             try
             {
-                return ReflectionUtilities.StringToObject(property.DataType, cell.NewValue, CultureInfo.CurrentCulture);
+                if (property.DataType.IsEnum)
+                    return VariableProperty.ParseEnum(property.DataType, cell.NewValue);
+                else
+                    return ReflectionUtilities.StringToObject(property.DataType, cell.NewValue, CultureInfo.CurrentCulture);
             }
             catch (FormatException err)
             {
@@ -867,6 +888,39 @@ namespace UserInterface.Presenters
                 presenter.MainPresenter.ShowError(err);
             }
             presenter.CommandHistory.ModelChanged += OnModelChanged;
+
+            for (int i = 0; i < properties.Count; i++)
+            {
+                IGridCell cell = grid.GetCell(1, i);
+                cell.IsRowReadonly = !IsPropertyEnabled(i);
+            }
+            grid.Refresh();
+        }
+
+        /// <summary>
+        /// Is the specified property a read only row?
+        /// </summary>
+        /// <param name="i">The property number</param>
+        /// <returns></returns>
+        private bool IsPropertyEnabled(int i)
+        {
+            if (properties[i].Display != null &&
+                properties[i].Display.EnabledCallback != null)
+            {
+                var callbacks = properties[i].Display.EnabledCallback.Split(',');
+                foreach (var callback in callbacks)
+                {
+                    var enabledCallback = model.GetType().GetProperty(callback);
+                    if (enabledCallback != null)
+                    {
+                        bool enabled = (bool)enabledCallback.GetValue(model);
+                        if (enabled)
+                            return true;
+                    }
+                }
+                return false;
+            }
+            return true;
         }
 
         /// <summary>

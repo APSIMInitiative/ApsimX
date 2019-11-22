@@ -285,7 +285,7 @@
             sql.Append("[" + tableName);
             sql.Append("] T ");
 
-            if (hasCheckpointName || hasSimulationName || filter != null)
+            if (hasCheckpointName || hasSimulationName || !string.IsNullOrWhiteSpace(filter))
             {
                 bool firstWhere = true;
                 // Write WHERE clause
@@ -314,7 +314,7 @@
                     firstWhere = false;
                 }
 
-                if (filter != null)
+                if (!string.IsNullOrWhiteSpace(filter))
                 {
                     string copyFilter = filter;
                     // For Firebird, we need to convert column names to their short form to perform the query

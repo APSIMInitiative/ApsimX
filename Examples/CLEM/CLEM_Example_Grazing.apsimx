@@ -796,6 +796,7 @@
                           "NumberOfBreederPurchaseAgeClasses": 1,
                           "MaximumSiresKept": 1.0,
                           "MaximumBullAge": 96.0,
+						  "BullAgeAtPurchase": 48.0,
                           "AllowSireReplacement": false,
                           "MaximumSiresPerPurchase": 1,
                           "FillBreedingMalesAtStartup": false,

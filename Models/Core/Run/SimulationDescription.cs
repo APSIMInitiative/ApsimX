@@ -134,6 +134,7 @@
                 foreach (Soils.Soil soil in soils)
                     SoilStandardiser.Standardise(soil);
 
+                newSimulation.ClearCaches();
                 return newSimulation;
             }
             catch (Exception err)

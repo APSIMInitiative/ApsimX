@@ -29,7 +29,6 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.GridView")] //CLEMFileGRASPView
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileGRASPPresenter
-    [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
@@ -216,6 +215,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Pasture file name")]
+        [Models.Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage ="Pasture file name must be supplied.")]
         public string FileName { get; set; }
 

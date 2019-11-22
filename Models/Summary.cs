@@ -85,7 +85,8 @@
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            storage?.Writer?.WriteTable(messages);
+            if (messages != null)
+                storage?.Writer?.WriteTable(messages);
         }
 
         /// <summary>Initialise the summary messages table.</summary>

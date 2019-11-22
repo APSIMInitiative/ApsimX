@@ -296,7 +296,7 @@ namespace Models.CLEM.Activities
             else
             {
                 this.Status = ActivityStatus.Critical;
-                throw new Exception("No pasture data is available for [a="+this.Name+"]\nCheck that data is available for specified soil id etc. ");
+                throw new Exception("No pasture data is available for [a="+this.Name+"]\nCheck that data is available for specified land id and climate region id etc. ");
             }
 
             // report activity performed.
@@ -331,64 +331,64 @@ namespace Models.CLEM.Activities
             CalculateEcologicalIndicators();
         }
 
-        /// <summary>An event handler to allow us to clear pools.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
-        {
-            // decay N and DMD of pools and age by 1 month
-            foreach (var pool in LinkedNativeFoodType.Pools)
-            {
-                pool.Reset();
-            }
-        }
+        ///// <summary>An event handler to allow us to clear pools.</summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("CLEMStartOfTimeStep")]
+        //private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        //{
+        //    // reset pool counters
+        //    foreach (var pool in LinkedNativeFoodType.Pools)
+        //    {
+        //        pool.Reset();
+        //    }
+        //}
 
-        /// <summary>
-        /// Function to detach pasture before reporting
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMDetachPasture")]
-        private void OnCLEMDetachPasture(object sender, EventArgs e)
-        {
-            foreach (var pool in LinkedNativeFoodType.Pools)
-            {
-                double detach = LinkedNativeFoodType.CarryoverDetachRate;
-                if (pool.Age < 12)
-                {
-                    detach = LinkedNativeFoodType.DetachRate;
-                }
-                double detachedAmount = pool.Amount * (1 - detach);
-                pool.Detached = pool.Amount * detach;
-                pool.Set(detachedAmount);
-            }
-        }
+        ///// <summary>
+        ///// Function to detach pasture before reporting
+        ///// </summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("CLEMDetachPasture")]
+        //private void OnCLEMDetachPasture(object sender, EventArgs e)
+        //{
+        //    foreach (var pool in LinkedNativeFoodType.Pools)
+        //    {
+        //        double detach = LinkedNativeFoodType.CarryoverDetachRate;
+        //        if (pool.Age < 12)
+        //        {
+        //            detach = LinkedNativeFoodType.DetachRate;
+        //        }
+        //        double detachedAmount = pool.Amount * (1 - detach);
+        //        pool.Detached = pool.Amount * detach;
+        //        pool.Set(detachedAmount);
+        //    }
+        //}
 
-        /// <summary>
-        /// Function to age resource pools
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAgeResources")]
-        private void OnCLEMAgeResources(object sender, EventArgs e)
-        {
-            // decay N and DMD of pools and age by 1 month
-            foreach (var pool in LinkedNativeFoodType.Pools)
-            {
-                // N is a loss of N% (x = x -loss)
-                pool.Nitrogen = Math.Max(pool.Nitrogen - LinkedNativeFoodType.DecayNitrogen, LinkedNativeFoodType.MinimumNitrogen);
-                // DMD is a proportional loss (x = x*(1-proploss))
-                pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
+        ///// <summary>
+        ///// Function to age resource pools
+        ///// </summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("CLEMAgeResources")]
+        //private void OnCLEMAgeResources(object sender, EventArgs e)
+        //{
+        //    // decay N and DMD of pools and age by 1 month
+        //    foreach (var pool in LinkedNativeFoodType.Pools)
+        //    {
+        //        // N is a loss of N% (x = x -loss)
+        //        pool.Nitrogen = Math.Max(pool.Nitrogen - LinkedNativeFoodType.DecayNitrogen, LinkedNativeFoodType.MinimumNitrogen);
+        //        // DMD is a proportional loss (x = x*(1-proploss))
+        //        pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
 
-                if (pool.Age < 12)
-                {
-                    pool.Age++;
-                }
-            }
-            // remove all pools with less than 10g of food
-            LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
-        }
+        //        if (pool.Age < 12)
+        //        {
+        //            pool.Age++;
+        //        }
+        //    }
+        //    // remove all pools with less than 10g of food
+        //    LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
+        //}
 
         private void SetupStartingPasturePools(double startingGrowth)
         {

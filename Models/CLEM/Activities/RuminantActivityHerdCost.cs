@@ -242,7 +242,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Pay ";
-            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ";
+            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ";
             html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ";
             if (AccountName == null || AccountName == "")
             {

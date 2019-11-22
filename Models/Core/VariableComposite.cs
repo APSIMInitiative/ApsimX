@@ -8,6 +8,7 @@ namespace Models.Core
     using Functions;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// This class encapsulates a list of IVariables that are evaluated when
@@ -169,7 +170,13 @@ namespace Models.Core
         {
             get
             {
-                return Object.GetType();
+                if (Object != null)
+                    return Object.GetType();
+
+                if (variables != null && variables.Count > 0)
+                    return variables.Last().DataType;
+
+                throw new Exception("Variable is null");
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="stock_manage.cs" company="CSIRO">
-// CSIRO Agriculture & Food
+// Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
 

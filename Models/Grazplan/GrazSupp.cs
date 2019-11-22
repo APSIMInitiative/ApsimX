@@ -1652,7 +1652,7 @@ namespace Models.GrazPlan
         /// <param name="locale">The locale.</param>
         public void ReadFromResource(string locale)
         {
-            string suppData = Properties.Resources.ResourceManager.GetString("Supplement");
+            string suppData = ReflectionUtilities.GetResourceAsString("Models.Resources.Supplement.txt");
             string[] suppStrings = suppData.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
             this.ReadFromStrings(locale, suppStrings);
         }

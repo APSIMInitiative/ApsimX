@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFilter.htm")]
-    public class RuminantFilter: CLEMModel
+    public class RuminantFilter: CLEMModel, IValidatableObject
     {
         /// <summary>
         /// Name of parameter to filter by
@@ -153,14 +154,20 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
+            string html = "";
+            if(!this.ValidParent())
+            {
+                html = "<div class=\"errorlink\">Invalid Parent. Type of Ruminant Group required.</div>";
+            }
             if (this.Value == null)
             {
-                return "<div class=\"errorlink\">[FILTER NOT DEFINED]</div>";
+                html += "<div class=\"errorlink\">[FILTER NOT DEFINED]</div>";
             }
             else
             {
-                return "<div class=\"filter\">" + this.ToString() + "</div>";
+                html += "<div class=\"filter\">" + this.ToString() + "</div>";
             }
+            return html;
         }
 
         /// <summary>
@@ -181,6 +188,23 @@ namespace Models.CLEM.Groupings
             return "";
         }
 
+        /// <summary>
+        /// Validate this component
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // ensure parent is of the right type.
+            if(!this.ValidParent())
+            {
+                string[] memberNames = new string[] { "RuminantFilter" };
+                results.Add(new ValidationResult("The RuminantFilter named "+this.Name+" does not have a valid RuminantGroup parent component", memberNames));
+            }
+            return results;
+        }
     }
 
     /// <summary>
@@ -228,6 +252,10 @@ namespace Models.CLEM.Groupings
         /// Weaned status
         /// </summary>
         Weaned,
+        /// <summary>
+        /// Is individual a weaner (weaned, but less than 12 months)
+        /// </summary>
+        Weaner,
         /// <summary>
         /// Is female lactating
         /// </summary>
