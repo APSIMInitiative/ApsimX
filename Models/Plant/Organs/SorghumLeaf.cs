@@ -410,56 +410,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Potential biomass production due to water (transpiration).</summary>
-        [Description("This is the daily Potential Biomass Production due to Transpiration")]
-        public double dltDMPotentialTE
-        {
-            // referred to as both dlt_dm_transp and dltDMPotTE in old sorghum code
-            get
-            {
-                return 0.0;
-            }
-        }
-
-        /// <summary>Potential biomass production due to light (limited by water and N).</summary>
-        [Description("This is the daily Potential Biomass Production due to light")]
-        public double dltDMPotentialRUE
-        {
-            // referred to as both dlt_dm_transp and dltDMPotTE in old sorghum code
-            get
-            {
-                return 0.0;
-            }
-        }
-        /// <summary>Potential biomass production due to light (limited by water and N).</summary>
-        [Description("This is the daily Potential Biomass Production due to light")]
-        public double RUE
-        {
-            // referred to as both dlt_dm_transp and dltDMPotTE in old sorghum code
-            get
-            {
-                return 0.0;
-            }
-        }
-
-        /// <summary>Temperature Stress Function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction TemperatureStressFunction = null;
-
-        /// <summary>Stress.</summary>
-        [Description("Temp Stress")]
-        public double TempStress
-        {
-            get
-            {
-                if(TemperatureStressFunction != null)
-                {
-                    return TemperatureStressFunction.Value();
-                }
-                return 1; //no stress
-            }
-        }
-
         /// <summary>Stress.</summary>
         [Description("Nitrogen Photosynthesis Stress")]
         public double NitrogenPhotoStress { get; set; }
@@ -736,6 +686,7 @@ namespace Models.PMF.Organs
             CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
             CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAIDead), 0.0, 0.999999999);
             //var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
+
             NitrogenPhotoStress = nPhotoStress.Value(); // Math.Max(photoStress, 0.0);
 
             var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
