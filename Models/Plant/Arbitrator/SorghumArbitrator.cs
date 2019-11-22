@@ -204,7 +204,7 @@ namespace Models.PMF
                     // If after flowering, use dltTTFM instead. If on day of flowering, we want
                     // to mimic a bug in old apsim where the proportion is still based on dltTT.
                     if (phenology.Between("Flowering", "Maturity") && phaseIndex != 7)
-                        potDltTT = (double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? 0;
+                        potDltTT = (double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()");
 
                     // Amount of TT which goes to next phase = total TT - amount allocated to previous phase.
                     double portionInNew = Math.Max(0, potDltTT - dltTT);
@@ -588,7 +588,7 @@ namespace Models.PMF
                 if (phenology.CurrentPhase.Start == "Flowering" && phenology.CurrentPhase is GenericPhase)
                     dltTT = (phenology.CurrentPhase as GenericPhase).ProgressionForTimeStep;
                 else
-                    dltTT = ((double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? 0);
+                    dltTT = ((double?)Apsim.Get(this, "[Phenology].DltTTFM.Value()") ?? (double)Apsim.Get(this, "[Phenology].ThermalTime.Value()"));
                 TTFMFromFlowering += dltTT;
             }
         }
