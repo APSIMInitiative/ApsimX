@@ -1027,8 +1027,11 @@
         {
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, amountToRemove, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
             needToRecalculateLiveDead = true;
-            if (biomassRemoveType != null && biomassRemoveType != "Harvest")
-                IsKLModiferDueToDamageActive = true;
+
+            // Commented out code below because about 10 validation files failed on Jenkins
+            // e.g. Chicory, Oats
+            //if (biomassRemoveType != null && biomassRemoveType != "Harvest")
+            //    IsKLModiferDueToDamageActive = true;
         }
 
         /// <summary>Initialise all zones.</summary>
