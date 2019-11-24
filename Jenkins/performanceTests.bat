@@ -16,9 +16,21 @@ if "%COMMIT_AUTHOR%"=="" (
 	echo WARNING: Using COMMIT_AUTHOR Fallback; COMMIT_AUTHOR='!COMMIT_AUTHOR!'
 )
 set PULL_ID=%ghprbPullId%
-curl -ks https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%PULL_ID% > temp.txt
-for /F "tokens=1-6 delims==><" %%I IN (temp.txt) DO SET FULLRESPONSE=%%K
-del temp.txt
+
+set "http_code_file=%tmp%\http_code.txt"
+set "resp_file=%tmp%\resp.txt"
+
+curl -ks https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=%PULL_ID% -o "%resp_file%" -w "%%{http_code}">"%http_code_file%"
+
+rem Check http code from server
+set /p resp=<"%http_code_file%"
+if "%resp%" neq "200" (
+	echo failure while fetching info about pull request #%PULL_ID%: http response code is "%resp%". Full response from server:
+	type "%resp_file%"
+	exit /b 1
+)
+
+for /F "tokens=1-6 delims==><" %%I IN (%resp_file%) DO SET FULLRESPONSE=%%K
 for /F "tokens=1-6 delims=," %%I IN ("%FULLRESPONSE%") DO SET DATETIMESTAMP=%%I
 
 pushd %apsimx%\..
@@ -51,6 +63,7 @@ if errorlevel 1 (
 	echo Commit author:		"%COMMIT_AUTHOR%"
 	echo Log file:
 	type bin\Release\PerformanceCollector.txt
+	exit /b 1
 ) else (
 	echo Done.
 )

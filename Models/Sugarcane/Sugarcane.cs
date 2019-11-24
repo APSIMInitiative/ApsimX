@@ -374,7 +374,19 @@ namespace Models
         /// <summary>
         /// Gets the LAI (m^2/m^2)
         /// </summary>
-        public double LAI { get { return lai; } }
+        public double LAI 
+        { 
+            get 
+            { 
+                return lai; 
+            } 
+            set 
+            {
+                var delta = g_lai - value;
+                g_lai -= delta;
+                g_slai += delta; 
+            } 
+        }
 
         /// <summary>
         /// Gets the maximum LAI (m^2/m^2)
@@ -466,11 +478,11 @@ namespace Models
         private ISummary Summary = null;
 
         /// <summary>Link to NO3 solute.</summary>
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NO3 = null;
         
         /// <summary>Link to NH4 solute.</summary>
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NH4 = null;
 
         #endregion

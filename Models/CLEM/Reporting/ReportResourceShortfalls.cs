@@ -65,7 +65,6 @@ namespace Models.CLEM.Reporting
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>
             {
-                "Parent.Name as Zone",
                 "[Clock].Today as Date",
                 "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
                 "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
@@ -76,7 +75,10 @@ namespace Models.CLEM.Reporting
 
             EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };
 
-            base.VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = variableNames.ToArray();
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
 
             // Subscribe to events.

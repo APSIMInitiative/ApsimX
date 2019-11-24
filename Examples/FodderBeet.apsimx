@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 283,
-  "Version": 57,
+  "Version": 69,
   "Name": "Simulations",
   "Children": [
     {
@@ -25,7 +25,6 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Descriptors": null,
       "Name": "Simulation",
       "Children": [
         {
@@ -39,8 +38,8 @@
         },
         {
           "$type": "Models.Clock, Models",
-          "StartDate": "2012-10-20T00:00:00",
-          "EndDate": "2013-08-01T00:00:00",
+          "Start": "2012-10-20T00:00:00",
+          "End": "2013-08-01T00:00:00",
           "Name": "clock",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -80,11 +79,12 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
               "$type": "Models.Soils.Soil, Models",
-              "Weirdo": null,
               "RecordNumber": 0,
               "ASCOrder": null,
               "ASCSubOrder": null,
@@ -105,7 +105,15 @@
               "Name": "Lismore",
               "Children": [
                 {
-                  "$type": "Models.Soils.Analysis, Models",
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-20",
+                    "20-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150"
+                  ],
                   "Thickness": [
                     200.0,
                     100.0,
@@ -114,14 +122,22 @@
                     300.0,
                     300.0
                   ],
-                  "Rocks": null,
-                  "RocksMetadata": null,
-                  "Texture": null,
-                  "TextureMetadata": null,
-                  "MunsellColour": null,
-                  "MunsellMetadata": null,
-                  "EC": null,
-                  "ECMetadata": null,
+                  "NO3N": [
+                    12.522935779816512,
+                    20.917431192660544,
+                    0.57142857142857184,
+                    6.7399267399267382,
+                    12.266666666666667,
+                    1.3333333333333333
+                  ],
+                  "NH4N": [
+                    1.9724770642201832,
+                    6.9724770642201808,
+                    1.9523809523809526,
+                    1.9780219780219781,
+                    3.2,
+                    0.13333333333333333
+                  ],
                   "PH": [
                     6.0,
                     6.0,
@@ -130,43 +146,25 @@
                     6.0,
                     6.0
                   ],
-                  "PHMetadata": null,
                   "CL": null,
-                  "CLMetadata": null,
-                  "Boron": null,
-                  "BoronMetadata": null,
-                  "CEC": null,
-                  "CECMetadata": null,
-                  "Ca": null,
-                  "CaMetadata": null,
-                  "Mg": null,
-                  "MgMetadata": null,
-                  "Na": null,
-                  "NaMetadata": null,
-                  "K": null,
-                  "KMetadata": null,
+                  "EC": null,
                   "ESP": null,
-                  "ESPMetadata": null,
-                  "Mn": null,
-                  "MnMetadata": null,
-                  "Al": null,
-                  "AlMetadata": null,
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClay": null,
-                  "ParticleSizeClayMetadata": null,
-                  "PHUnits": 0,
-                  "BoronUnits": 0,
-                  "Name": "Analysis",
+                  "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Water, Models",
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-20",
+                    "20-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150"
+                  ],
                   "Thickness": [
                     200.0,
                     100.0,
@@ -175,6 +173,7 @@
                     300.0,
                     300.0
                   ],
+                  "ParticleSizeClay": null,
                   "BD": [
                     1.09,
                     1.09,
@@ -184,18 +183,18 @@
                     0.25
                   ],
                   "AirDry": [
-                    0.17,
-                    0.17,
-                    0.06,
-                    0.06,
+                    0.1,
+                    0.136,
+                    0.03,
+                    0.014,
                     0.01,
                     0.01
                   ],
                   "LL15": [
-                    0.17,
-                    0.17,
-                    0.07,
-                    0.07,
+                    0.144,
+                    0.136,
+                    0.03,
+                    0.014,
                     0.01,
                     0.01
                   ],
@@ -222,7 +221,7 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "Name": "Water",
+                  "Name": "Physical",
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -290,6 +289,14 @@
                     300.0,
                     300.0
                   ],
+                  "Depth": [
+                    "0-20",
+                    "20-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150"
+                  ],
                   "SWCON": [
                     0.457632449279133,
                     0.52000321289643,
@@ -299,7 +306,7 @@
                     0.650599955554641
                   ],
                   "KLAT": null,
-                  "ResidueInterception": 0.0,
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -307,18 +314,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilOrganicMatter, Models",
-                  "RootCN": 40.0,
-                  "EnrACoeff": 7.4,
-                  "EnrBCoeff": 0.2,
-                  "Thickness": [
-                    200.0,
-                    100.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0
-                  ],
+                  "$type": "Models.Soils.Organic, Models",
                   "Depth": [
                     "0-20",
                     "20-30",
@@ -327,7 +323,16 @@
                     "90-120",
                     "120-150"
                   ],
-                  "OC": [
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    200.0,
+                    100.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Carbon": [
                     2.88976641944061,
                     1.05590533160772,
                     0.807727671418374,
@@ -335,8 +340,7 @@
                     0.800000473578713,
                     0.800000000582934
                   ],
-                  "OCMetadata": null,
-                  "SoilCN": [
+                  "SoilCNRatio": [
                     11.0,
                     11.0,
                     11.0,
@@ -360,7 +364,7 @@
                     0.956082613180008,
                     0.983924276179929
                   ],
-                  "RootWt": [
+                  "FOM": [
                     367.07141222735169,
                     300.53265376629787,
                     164.93581741316149,
@@ -368,8 +372,7 @@
                     49.677713541852036,
                     27.263707246314198
                   ],
-                  "OCUnits": 0,
-                  "Name": "SoilOrganicMatter",
+                  "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -389,6 +392,14 @@
                 },
                 {
                   "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-20",
+                    "20-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150"
+                  ],
                   "Thickness": [
                     200.0,
                     100.0,
@@ -397,30 +408,14 @@
                     300.0,
                     300.0
                   ],
-                  "NO3": [
-                    27.3,
-                    22.8,
-                    1.2,
-                    9.2,
-                    9.2,
-                    1.0
-                  ],
-                  "NH4": [
-                    4.3,
-                    7.6,
-                    4.1,
-                    2.7,
-                    2.4,
-                    0.1
-                  ],
+                  "NO3N": null,
+                  "NH4N": null,
                   "SW": null,
                   "OC": null,
                   "EC": null,
                   "CL": null,
                   "ESP": null,
                   "PH": null,
-                  "NO3Units": 1,
-                  "NH4Units": 1,
                   "SWUnits": 0,
                   "OCUnits": 0,
                   "PHUnits": 0,
@@ -719,6 +714,7 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
@@ -739,7 +735,7 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant FodderBeet;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        [Link] SurfaceOrganicMatter SurfOM;\r\n        \r\n                \r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Sown Crop\")]\r\n        public string CropToSow { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        \r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\r\n                \r\n            }\r\n                        \r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant FodderBeet;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        [Link] SurfaceOrganicMatter SurfOM;\r\n        \r\n                \r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Sown Crop\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CropToSow { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        \r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\r\n                \r\n            }\r\n                        \r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "InitialRootDepth",
@@ -751,7 +747,7 @@
                     },
                     {
                       "Key": "SowingDate",
-                      "Value": "2012-10-29"
+                      "Value": "10/29/2012 00:00:00"
                     }
                   ],
                   "Name": "SowDateCv",
@@ -1055,7 +1051,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "TotalWt",
               "Children": [
                 {
@@ -1121,7 +1119,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "StorageRootWt",
               "Children": [
                 {
@@ -1187,7 +1187,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "SCS",
               "Children": [
                 {

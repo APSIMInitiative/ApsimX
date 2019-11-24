@@ -64,7 +64,7 @@ namespace Models.CLEM.Activities
                     ragp.Resources = this.Resources;
                     ragp.InitialiseHerd(true, true);
 
-                    foreach (RuminantType herdType in Resources.RuminantHerd().Children)
+                    foreach (RuminantType herdType in Apsim.Children(Resources.RuminantHerd(), typeof(RuminantType)))
                     {
                         RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
                         {

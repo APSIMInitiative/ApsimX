@@ -18,7 +18,7 @@ namespace Models.WaterModel
         // --- Links -------------------------------------------------------------------------
 
         /// <summary>A multiplier to CoverTot to get effective cover for runoff.</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private LinearInterpolationFunction EffectiveCoverMultiplier = null;
         
         /// <summary>A list of all canopies.</summary>

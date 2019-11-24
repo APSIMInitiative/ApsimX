@@ -103,6 +103,34 @@ namespace UnitTests
         }
 
         /// <summary>
+        /// Runs models.exe on the given sims and passes along the given command line arguments.
+        /// Returns StdOut of Models.exe.
+        /// </summary>
+        /// <param name="sims">Simulations to be run.</param>
+        /// <param name="arguments">Command line arguments to be passed to Models.exe.</param>
+        public static string RunModels(Simulations sims, string arguments)
+        {
+            sims.FileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
+            sims.Write(sims.FileName);
+            string pathToModels = typeof(IModel).Assembly.Location;
+            return RunModels(sims.FileName + " " + arguments);
+        }
+
+        public static string RunModels(string arguments)
+        {
+            string pathToModels = typeof(IModel).Assembly.Location;
+
+            ProcessUtilities.ProcessWithRedirectedOutput proc = new ProcessUtilities.ProcessWithRedirectedOutput();
+            proc.Start(pathToModels, arguments, Path.GetTempPath(), true);
+            proc.WaitForExit();
+
+            if (proc.ExitCode != 0)
+                throw new Exception(proc.StdOut);
+
+            return proc.StdOut;
+        }
+
+        /// <summary>
         /// Returns a lightweight skeleton simulation which can be run.
         /// </summary>
         public static Simulations GetRunnableSim()
@@ -146,6 +174,7 @@ namespace UnitTests
                 }
             };
             Apsim.ParentAllChildren(sims);
+            sims.Write(sims.FileName);
             return sims;
         }
     }

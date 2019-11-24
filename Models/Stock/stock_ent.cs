@@ -18,11 +18,11 @@ namespace Models.GrazPlan
     public class AgeInfo
     {
         /// <summary>
-        /// 
+        /// Age description
         /// </summary>
         public string AgeDescr;
         /// <summary>
-        /// 
+        /// The tag number
         /// </summary>
         public int TagNumber;
     }
@@ -34,11 +34,11 @@ namespace Models.GrazPlan
     public class TagFlock
     {
         /// <summary>
-        /// 
+        /// Mob description
         /// </summary>
         public string MobDescr;
         /// <summary>
-        /// 
+        /// Is male
         /// </summary>
         public bool Male;
         /// <summary>
@@ -54,27 +54,27 @@ namespace Models.GrazPlan
     public class Reproduction
     {
         /// <summary>
-        /// 
+        /// Mating day
         /// </summary>
         public string MateDay;
         /// <summary>
-        /// 
+        /// Mating age
         /// </summary>
         public int MateAge;
         /// <summary>
-        /// 
+        /// Conception rates
         /// </summary>
         public double[] Conception;
         /// <summary>
-        /// 
+        /// Do castrate
         /// </summary>
         public bool Castrate;
         /// <summary>
-        /// 
+        /// Weaning day
         /// </summary>
         public string WeanDay;
         /// <summary>
-        /// 
+        /// Weaning age
         /// </summary>
         public int WeanAge;
         /// <summary>
@@ -394,15 +394,15 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Reproduction object
         /// </summary>
         public Reproduction reproduction;
 
         /// <summary>
-        /// 
+        /// Get the string date as a std date value
         /// </summary>
-        /// <param name="strDay"></param>
-        /// <returns></returns>
+        /// <param name="strDay">Date string</param>
+        /// <returns>The std date value</returns>
         protected int AsStdDate(string strDay)
         {
             int doy = 0;    // doy = decimal stddate
@@ -418,7 +418,8 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the string of a std date (integer). The string form is 'dd mmm'
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">Std date value</param>
+        /// <returns>The string D mmm</returns>
         protected string SetFromStdDate(int value)
         {
             if (value != 0)
@@ -429,7 +430,7 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// 
+    /// Enterprise list
     /// </summary>
     [Serializable]
     public class EnterpriseList

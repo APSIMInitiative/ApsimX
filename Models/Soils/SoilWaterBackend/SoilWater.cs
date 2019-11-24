@@ -1342,6 +1342,11 @@ namespace Models.Soils
         private double[] inflow_lat;       //! inflowing lateral water
 
         /// <summary>
+        /// The amount of rainfall intercepted by crop and residue canopies
+        /// </summary>
+        public double PrecipitationInterception {get; set;}
+
+        /// <summary>
         /// 
         /// </summary>
         [XmlIgnore]

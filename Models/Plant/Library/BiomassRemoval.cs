@@ -1,4 +1,4 @@
-
+﻿
 
 namespace Models.PMF.Library
 {
@@ -30,7 +30,7 @@ namespace Models.PMF.Library
         Summary summary = null;
 
         /// <summary>Biomass removal defaults for different event types e.g. prune, cut etc.</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         public List<OrganBiomassRemovalType> defaults = null;
 
         /// <summary>Invoked when fresh organic matter needs to be incorporated into soil</summary>
@@ -223,7 +223,7 @@ namespace Models.PMF.Library
             {
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
-                tags.Add(new AutoDocumentation.Paragraph("This organ will respond to certain management actions by either removing some of its biomass from the system or transferring some of its biomass to the soil.  The following table describes the default proportions of live and dead biomass that are transferred for a range of management actions.  These can be changed during a simulation using a manager script.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("This organ will respond to certain management actions by either removing some of its biomass from the system or transferring some of its biomass to the soil surface residues.  The following table describes the default proportions of live and dead biomass that are transferred out of the simulation using \"Removed\" or to soil surface residue using \"To Residue\" for a range of management actions. The total percentage removed for live or dead must not exceed 100%. The difference between the total and 100% gives the biomass remaining on the plant. These can be changed during a simulation using a manager script.", indent));
 
                 DataTable data = new DataTable();
                 data.Columns.Add("Method", typeof(string));
