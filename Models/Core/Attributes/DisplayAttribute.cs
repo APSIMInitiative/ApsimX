@@ -113,5 +113,10 @@ namespace Models.Core
         /// Methods pointed to by this property can return any generic IEnumerable and must accept no arguments.
         /// </summary>
         public string Values { get; set; }
+
+        /// <summary>
+        /// Specifies a callback method that will be called by GUI to determine if this property is enabled.
+        /// </summary>
+        public string EnabledCallback { get; set; }
     }
 }

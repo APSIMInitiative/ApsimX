@@ -471,11 +471,14 @@
                 throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
             organ.RemoveBiomass(biomassRemoveType, biomassToRemove);
 
-            // Also need to reduce LAI
-            var totalFractionToRemove = biomassToRemove.FractionLiveToRemove + biomassToRemove.FractionLiveToResidue;
-            var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
-            var lai = leaf.LAI;
-            ReduceCanopy(lai * totalFractionToRemove);
+            // Also need to reduce LAI if canopy.
+            if (organ is ICanopy)
+            {
+                var totalFractionToRemove = biomassToRemove.FractionLiveToRemove + biomassToRemove.FractionLiveToResidue;
+                var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
+                var lai = leaf.LAI;
+                ReduceCanopy(lai * totalFractionToRemove);
+            }
         }
 
         /// <summary>
@@ -493,10 +496,11 @@
         /// <summary>
         /// Set the plant root length density.
         /// </summary>
-        /// <param name="deltaRLD">New root length density.</param>
-        public void ReduceRootLengthDensity(double deltaRLD)
+        /// <param name="rootLengthModifier">The root length modifier due to root damage (0-1).</param>
+        public void ReduceRootLengthDensity(double rootLengthModifier)
         {
-            throw new NotImplementedException();
+            if (Root != null)
+                Root.RootLengthDensityModifierDueToDamage = rootLengthModifier;
         }
 
         /// <summary>
