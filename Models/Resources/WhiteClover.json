@@ -4267,7 +4267,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Inflorescence].TargetAboveGroundFraction",
+                                      "VariableName": "[TargetAboveGroundFraction]",
                                       "Name": "TargetAboveGroundProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
