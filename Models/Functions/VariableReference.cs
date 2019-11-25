@@ -33,8 +33,8 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             object o = locator.Get(VariableName.Trim());
-//            if (o == null)
-//                throw new Exception("Unable to locate variable called " + VariableName.Trim() + " in function " + Name);
+            if (o == null)
+                throw new Exception("Unable to locate " + VariableName.Trim() + " called from the variable reference function " + Name + " within "+ this.Parent.Name);
 
             if (o is IFunction)
                 return (o as IFunction).Value(arrayIndex);
