@@ -483,6 +483,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\TreeViewImages\ProtectedDivideFunction.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourAdultEquivalentRelationship.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\GraphPanel.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPWhiteClover.png" />

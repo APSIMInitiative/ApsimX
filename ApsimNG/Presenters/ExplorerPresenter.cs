@@ -681,7 +681,7 @@
                         PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                         DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
 
-                        if (descriptionName != null)
+                        if (descriptionName != null && model.GetType().Namespace.Contains("CLEM"))
                         {
                             viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
                             presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
@@ -693,10 +693,10 @@
                             presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
                         }
 
+                        ShowDescriptionInRightHandPanel(descriptionName?.ToString());
+
                         if (viewName != null && presenterName != null)
-                        {
-                            this.ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
-                        }
+                            ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
                     }
                 }
             }
@@ -726,6 +726,15 @@
             ShowInRightHandPanel(model,
                                  newView: new ViewBase(view as ViewBase, gladeResourceName),
                                  presenter: presenter);
+        }
+
+        /// <summary>
+        /// Show a description in the right hand view.
+        /// </summary>
+        /// <param name="description">The description to show (Markdown).</param>
+        public void ShowDescriptionInRightHandPanel(string description)
+        {
+            view.AddDescriptionToRightHandView(description);
         }
 
         /// <summary>Show a view in the right hand panel.</summary>

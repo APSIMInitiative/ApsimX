@@ -2304,6 +2304,7 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
+              "RootLengthDensityModifierDueToDamage": 1.0,
               "RootAngle": 45.0,
               "SWAvailabilityRatio": 0.0,
               "Name": "Root",
@@ -4202,6 +4203,26 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "FN",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "FVPD",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -4233,7 +4254,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FT.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.LeafMaxGrossPhotosynthesis.TemperatureResponse.Value()",
                       "Name": "RUE_FT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -9905,7 +9926,7 @@
                               ],
                               "AirDry": [
                                 0.07,
-                                0.13,
+                                0.11,
                                 0.15,
                                 0.09,
                                 0.1,
