@@ -1,4 +1,10 @@
 {
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 69,
+  "Name": "Simulations",
+  "Children": [
+{
   "$type": "Models.PMF.Plant, Models",
   "CropType": "WhiteClover",
   "IsEnding": false,
@@ -8850,4 +8856,6 @@
   "IncludeInDocumentation": false,
   "Enabled": true,
   "ReadOnly": false
+}
+  ]
 }
