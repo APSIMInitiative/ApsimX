@@ -48,6 +48,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Pasture database file name")]
+        [Models.Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture database file name must be supplied")]
         public string FileName { get; set; }
 
@@ -180,7 +181,7 @@ namespace Models.CLEM
             {
                 if (this.FullFileName == null || this.FullFileName == "")
                 {
-                    ErrorMessage = "File Name for the SQLite database is missing";
+                    ErrorMessage = "File name for the SQLite database is missing";
                     return false;
                 }
                     
@@ -251,7 +252,7 @@ namespace Models.CLEM
             if(!this.FileExists)
             {
                 string[] memberNames = new string[] { "FileName" };
-                results.Add(new ValidationResult("The SQLite database [x="+FullFileName+"] could not be found for [o="+this.Name+"]", memberNames));
+                results.Add(new ValidationResult("The SQLite database [x="+FullFileName+"] could not be found for ["+this.Name+"]", memberNames));
             }
             else
             {
@@ -264,7 +265,7 @@ namespace Models.CLEM
                 catch(Exception ex)
                 {
                     string[] memberNames = new string[] { "SQLite database error" };
-                    results.Add(new ValidationResult("There was a problem opening the SQLite database (" + FullFileName + ")\n"+ex.Message, memberNames));
+                    results.Add(new ValidationResult("There was a problem opening the SQLite database [x=" + FullFileName + "] for [" + this.Name + "]\n" + ex.Message, memberNames));
                 }
 
                 // check all columns present
@@ -295,7 +296,7 @@ namespace Models.CLEM
                     if (!dBcolumns.Contains(col))
                     {
                         string[] memberNames = new string[] { "Missing SQLite database column" };
-                        results.Add(new ValidationResult("Unable to find column " + col + " in GRASP database (" + FullFileName +")", memberNames));
+                        results.Add(new ValidationResult("Unable to find column [o=" + col + "] in GRASP database [x=" + FullFileName + "] for [" + this.Name + "]", memberNames));
                     }
                 }
             }
@@ -429,6 +430,10 @@ namespace Models.CLEM
 
             // sorting not needed as now done at array creation
             int index = Array.BinarySearch(distinctStkRates, stockingRate); 
+            if(index < 0)
+            {
+                throw new ApsimXException(this, $"Unable to locate a suitable dataset for stocking rate [{stockingRate}] in [x={this.FileName}] using the [x={this.Name}] datareader");
+            }
             double category = (index < 0) ? distinctStkRates[~index] : distinctStkRates[index];
             return category;
         }
@@ -603,17 +608,82 @@ namespace Models.CLEM
                 html += "Using table <span class=\"filelink\">" + TableName + "</span>";
                 // add column links
                 html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Region id</span> is <span class=\"setvalue\">" + RegionColumnName + "</span></div>";
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is <span class=\"setvalue\">" + LandIdColumnName + "</span></div>";
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Grass basal area</span> is <span class=\"setvalue\">" + GrassBAColumnName + "</span></div>";
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land condition</span> is <span class=\"setvalue\">" + LandConColumnName + "</span></div>";
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Stocking rate</span> is <span class=\"setvalue\">" + StkRateColumnName + "</span></div>";
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is <span class=\"setvalue\">" + YearColumnName + "</span></div>";
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is <span class=\"setvalue\">" + MonthColumnName + "</span></div>";
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is <span class=\"setvalue\">" + GrowthColumnName + "</span></div>";
+
+                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Region id</span> is ";
+                if (RegionColumnName is null || RegionColumnName == "")
+                {
+                    html += "<span class=\"errorlink\">NOT SET</span></div>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + RegionColumnName + "</span></div>";
+                }
+                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ";
+                if (LandIdColumnName is null || LandIdColumnName == "")
+                {
+                    html += "<span class=\"errorlink\">NOT SET</span></div>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + LandIdColumnName + "</span></div>";
+                }
+                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Grass basal area</span> is ";
+                if (GrassBAColumnName is null || GrassBAColumnName == "")
+                {
+                    html += "<span class=\"errorlink\">NOT SET</span></div>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + GrassBAColumnName + "</span></div>";
+                }
+                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land condition</span> is ";
+                if (LandConColumnName is null || LandConColumnName == "")
+                {
+                    html += "<span class=\"errorlink\">NOT SET</span></div>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + LandConColumnName + "</span></div>";
+                }
+                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Stocking rate</span> is ";
+                if (StkRateColumnName is null || StkRateColumnName == "")
+                {
+                    html += "<span class=\"errorlink\">NOT SET</span></div>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + StkRateColumnName + "</span></div>";
+                }
+                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ";
+                if (YearColumnName is null || YearColumnName == "")
+                {
+                    html += "<span class=\"errorlink\">NOT SET</span></div>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + YearColumnName + "</span></div>";
+                }
+                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ";
+                if (MonthColumnName is null || MonthColumnName == "")
+                {
+                    html += "<span class=\"errorlink\">NOT SET</span></div>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + MonthColumnName + "</span></div>";
+                }
+
+                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ";
+                if (GrowthColumnName is null || GrowthColumnName == "")
+                {
+                    html += "<span class=\"errorlink\">NOT SET</span></div>";
+                }
+                else
+                {
+                    html += "<span class=\"setvalue\">" + GrowthColumnName + "</span></div>";
+                }
 
                 html += "\n</div>";
-
                 html += "\n</div>";
             }
             return html;

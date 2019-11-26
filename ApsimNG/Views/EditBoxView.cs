@@ -8,7 +8,10 @@ namespace UserInterface.Views
     /// <summary>An interface for a drop down</summary>
     public interface IEditView
     {
-        /// <summary>Invoked when the user changes the selection</summary>
+        /// <summary>Invoked when the edit box loses focus.</summary>
+        event EventHandler Leave;
+
+        /// <summary>Invoked when the user changes the text in the edit box.</summary>
         event EventHandler Changed;
 
         /// <summary>
@@ -46,9 +49,12 @@ namespace UserInterface.Views
     /// <summary>A drop down view.</summary>
     public class EditView : ViewBase, IEditView
     {
-        /// <summary>Invoked when the user changes the selection</summary>
+        /// <summary>Invoked when the edit box loses focus.</summary>
+        public event EventHandler Leave;
+        
+        /// <summary>Invoked when the user changes the text in the edit box.</summary>
         public event EventHandler Changed;
-
+        
         /// <summary>
         /// Invoked when the user needs intellisense items.
         /// Currently this is only triggered by pressing control-space.
@@ -56,27 +62,29 @@ namespace UserInterface.Views
         public event EventHandler<NeedContextItemsArgs> IntellisenseItemsNeeded;
 
         private Entry textentry1;
-        
+
+        /// <summary>Constructor</summary>
+        public EditView() { }
+
         /// <summary>Constructor</summary>
         public EditView(ViewBase owner) : base(owner)
         {
-            textentry1 = new Entry();
-            Initialise();
+            Initialise(owner, new Entry());
         }
 
         /// <summary>Constructor</summary>
         public EditView(ViewBase owner, Entry e) : base(owner)
         {
-            textentry1 = e;
-            Initialise();
+            Initialise(owner, e);
         }
 
-        private void Initialise()
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
+            textentry1 = (Gtk.Entry)gtkControl;
             mainWidget = textentry1;
-            textentry1.FocusOutEvent += OnSelectionChanged;
-            textentry1.KeyPressEvent += OnKeyPress;
+            textentry1.Changed += OnChanged;
             textentry1.FocusOutEvent += OnLeave;
+            textentry1.KeyPressEvent += OnKeyPress;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -93,8 +101,9 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textentry1.FocusOutEvent -= OnSelectionChanged;
+            textentry1.FocusOutEvent -= OnLeave;
             mainWidget.Destroyed -= _mainWidget_Destroyed;
+            textentry1.Changed -= OnChanged;
             textentry1.FocusOutEvent -= OnLeave;
             textentry1.KeyPressEvent -= OnKeyPress;
             owner = null;
@@ -130,12 +139,12 @@ namespace UserInterface.Views
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
-        private void OnSelectionChanged(object sender, EventArgs e)
+        private void OnLeave(object sender, EventArgs e)
         {
-            if (Changed != null && textentry1.Text != lastText)
+            if (Leave != null && textentry1.Text != lastText)
             {
                 lastText = textentry1.Text;
-                Changed.Invoke(this, e);
+                Leave.Invoke(this, e);
             }
         }
 
@@ -174,7 +183,7 @@ namespace UserInterface.Views
             }
             else if ((args.Event.Key & Gdk.Key.Return) == Gdk.Key.Return)
             {
-                OnSelectionChanged(this, EventArgs.Empty);
+                OnLeave(this, EventArgs.Empty);
             }
         }
 
@@ -185,7 +194,12 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         private void OnLeave(object o, FocusOutEventArgs args)
         {
-            OnSelectionChanged(o, new EventArgs());
+            OnLeave(o, new EventArgs());
+        }
+
+        private void OnChanged(object sender, EventArgs e)
+        {
+            Changed?.Invoke(this, e);
         }
 
         /// <summary>
@@ -263,7 +277,7 @@ namespace UserInterface.Views
         public void EndEdit()
         {
             if (textentry1.IsFocus)
-                OnSelectionChanged(this, null);
+                OnLeave(this, (EventArgs)null);
         }
     }
 }

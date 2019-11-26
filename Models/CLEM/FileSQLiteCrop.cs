@@ -42,7 +42,7 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Added ability to define table and columns to use")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReaderSQLite.htm")]
-    public class FileSQLiteCrop : CLEMModel, IFileCrop
+    public class FileSQLiteCrop : CLEMModel, IFileCrop, IValidatableObject
     {
         private bool nitrogenColumnExists = false;
 
@@ -51,6 +51,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Crop database file name")]
+        [Models.Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Crop database file name must be supplied")]
         public string FileName { get; set; }
 
@@ -152,6 +153,17 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Validate this component
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            return results;
+        }
+
+        /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>
         [EventSubscribe("Commencing")]
@@ -185,7 +197,7 @@ namespace Models.CLEM
                     {
                         if (!sQLiteReader.GetColumnNames(TableName).Contains(item.Value))
                         {
-                            string errorMsg = "The specified column [" + item.Key + "] does not exist in the table named [" + TableName + "]\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
+                            string errorMsg = "The specified column [o=" + item.Key + "] does not exist in the table named [" + TableName + "] for [x="+this.Name+"]\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
                             throw new ApsimXException(this, errorMsg);
                         }
                     }
@@ -331,7 +343,7 @@ namespace Models.CLEM
             html += "\n<div class=\"activityentry\">";
             if (FileName == null || FileName == "")
             {
-                html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
+                html += "Using <span class=\"errorlink\">FILE NOT SET</span>";
                 html += "\n</div>";
             }
             else if (!this.FileExists)
@@ -354,14 +366,55 @@ namespace Models.CLEM
                     html += "Using table <span class=\"filelink\">" + TableName + "</span>";
                     // add column links
                     html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is <span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is <span class=\"setvalue\">" + CropNameColumnName + "</span></div>";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is <span class=\"setvalue\">" + YearColumnName + "</span></div>";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is <span class=\"setvalue\">" + MonthColumnName + "</span></div>";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is <span class=\"setvalue\">" + AmountColumnName + "</span></div>";
-                    if(PercentNitrogenColumnName == "")
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ";
+                    if (SoilTypeColumnName is null || SoilTypeColumnName == "")
                     {
-                        html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">IGNORED</span></div>";
+                        html += "<span class=\"errorlink\">NOT SET</span></div>";
+                    }
+                    else
+                    {
+                        html += "<span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>";
+                    }
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ";
+                    if (CropNameColumnName is null || CropNameColumnName == "")
+                    {
+                        html += "<span class=\"errorlink\">NOT SET</span></div>";
+                    }
+                    else
+                    {
+                        html += "<span class=\"setvalue\">" + CropNameColumnName + "</span></div>";
+                    }
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ";
+                    if (YearColumnName is null || YearColumnName == "")
+                    {
+                        html += "<span class=\"errorlink\">NOT SET</span></div>";
+                    }
+                    else
+                    {
+                        html += "<span class=\"setvalue\">" + YearColumnName + "</span></div>";
+                    }
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ";
+                    if (MonthColumnName is null || MonthColumnName == "")
+                    {
+                        html += "<span class=\"errorlink\">NOT SET</span></div>";
+                    }
+                    else
+                    {
+                        html += "<span class=\"setvalue\">" + MonthColumnName + "</span></div>";
+                    }
+
+                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ";
+                    if (AmountColumnName is null || AmountColumnName == "")
+                    {
+                        html += "<span class=\"errorlink\">NOT SET</span></div>";
+                    }
+                    else
+                    {
+                        html += "<span class=\"setvalue\">" + AmountColumnName + "</span></div>";
+                    }
+                    if(PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
+                    {
+                        html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>";
                     }
                     else
                     {

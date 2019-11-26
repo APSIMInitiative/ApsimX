@@ -498,7 +498,7 @@ namespace UserInterface.Presenters
 
                 // Get a deep copy of the property value.
                 Array newArray = property.Value as Array;
-                if (newArray == null)
+                if (newArray == null && property.Value != null)
                     continue;
                 newArray = Clone(newArray, property.DataType.GetElementType());
 

@@ -5,7 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using UserInterface.Views;
 using Microsoft.Azure.Batch;
-using Microsoft.WindowsAzure.Storage;
+using Microsoft.Azure.Storage;
 using System.Security.Cryptography;
 using ApsimNG.Cloud;
 using Microsoft.Azure.Batch.Common;
@@ -363,9 +363,9 @@ namespace UserInterface.Presenters
             {
                 CloudJob cloudJob = batchCli.JobOperations.CreateJob(jp.JobId.ToString(), GetPoolInfo(job.PoolInfo));
                 cloudJob.DisplayName = job.DisplayName;
-                cloudJob.JobPreparationTask = job.ToJobPreparationTask(jp.JobId, storageAccount.CreateCloudBlobClient());
-                cloudJob.JobReleaseTask = job.ToJobReleaseTask(jp.JobId, storageAccount.CreateCloudBlobClient());
-                cloudJob.JobManagerTask = job.ToJobManagerTask(jp.JobId, storageAccount.CreateCloudBlobClient(), jp.JobManagerShouldSubmitTasks, jp.AutoScale);
+                cloudJob.JobPreparationTask = job.ToJobPreparationTask(jp.JobId, Microsoft.Azure.Storage.Blob.BlobAccountExtensions.CreateCloudBlobClient(storageAccount));
+                cloudJob.JobReleaseTask = job.ToJobReleaseTask(jp.JobId, Microsoft.Azure.Storage.Blob.BlobAccountExtensions.CreateCloudBlobClient(storageAccount));
+                cloudJob.JobManagerTask = job.ToJobManagerTask(jp.JobId, Microsoft.Azure.Storage.Blob.BlobAccountExtensions.CreateCloudBlobClient(storageAccount), jp.JobManagerShouldSubmitTasks, jp.AutoScale);
 
                 cloudJob.Commit();
             }
@@ -498,12 +498,12 @@ namespace UserInterface.Presenters
         {
             try
             {
-                var credentials = new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(
+                var credentials = new Microsoft.Azure.Storage.Auth.StorageCredentials(
                     (string)AzureSettings.Default["StorageAccount"],
                     (string)AzureSettings.Default["StorageKey"]);
 
                 var storageAccount = new CloudStorageAccount(credentials, true);
-                var blobClient = storageAccount.CreateCloudBlobClient();
+                var blobClient = Microsoft.Azure.Storage.Blob.BlobAccountExtensions.CreateCloudBlobClient(storageAccount);
                 var containerRef = blobClient.GetContainerReference(containerName);
                 containerRef.CreateIfNotExists();
                 containerRef.Metadata.Add(key, val);
@@ -560,12 +560,12 @@ namespace UserInterface.Presenters
         /// <param name="filePath">Path to the file on disk</param>
         private void UploadFileIfNeeded(string containerName, string filePath)
         {
-            var credentials = new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(
+            var credentials = new Microsoft.Azure.Storage.Auth.StorageCredentials(
                 (string)AzureSettings.Default["StorageAccount"],
                 (string)AzureSettings.Default["StorageKey"]);
 
             var storageAccount = new CloudStorageAccount(credentials, true);
-            var blobClient = storageAccount.CreateCloudBlobClient();
+            var blobClient = Microsoft.Azure.Storage.Blob.BlobAccountExtensions.CreateCloudBlobClient(storageAccount);
             var containerRef = blobClient.GetContainerReference(containerName);
             containerRef.CreateIfNotExists();
             var blobRef = containerRef.GetBlockBlobReference(Path.GetFileName(filePath));
@@ -574,7 +574,7 @@ namespace UserInterface.Presenters
             // if blob exists and md5 matches, there is no need to upload the file
             if (blobRef.Exists() && string.Equals(md5, blobRef.Properties.ContentMD5, StringComparison.InvariantCultureIgnoreCase)) return;
             blobRef.Properties.ContentMD5 = md5;
-            blobRef.UploadFromFile(filePath, FileMode.Open);
+            blobRef.UploadFromFileAsync(filePath);
         }
 
         /// <summary>
@@ -701,7 +701,7 @@ namespace UserInterface.Presenters
                 storageAuth = StorageCredentials.FromConfiguration();
                 batchAuth = BatchCredentials.FromConfiguration();
 
-                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
+                storageAccount = new CloudStorageAccount(new Microsoft.Azure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
                 uploader = new FileUploader(storageAccount);
                 var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchAuth.Url, batchAuth.Account, batchAuth.Key);
                 try

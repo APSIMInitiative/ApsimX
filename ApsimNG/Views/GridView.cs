@@ -106,6 +106,11 @@
         private List<int> categoryRows = new List<int>();
 
         /// <summary>
+        /// List of readonly row numbers
+        /// </summary>
+        private List<int> readonlyRows = new List<int>();
+
+        /// <summary>
         /// Dictionary for looking up the rendering attributes for each column.
         /// </summary>
         private Dictionary<int, ColRenderAttributes> colAttributes = new Dictionary<int, ColRenderAttributes>();
@@ -447,6 +452,12 @@
                     textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
                 }
 
+                if (IsRowReadonly(rowNo))
+                {
+                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Insensitive);
+                    textRenderer.Editable = false;
+                }
+
                 if (view == Grid)
                 {
                     col.CellRenderers[1].Visible = false;
@@ -572,6 +583,30 @@
         public bool IsSeparator(int row)
         {
             return categoryRows.Contains(row);
+        }
+
+        /// <summary>
+        /// Indicates that a row should be readonly
+        /// </summary>
+        /// <param name="row">The row number.</param>
+        /// <param name="isReadOnly">Added as a separator if true; removed as a separator if false.</param>
+        public void SetRowAsReadonly(int row, bool isReadOnly = true)
+        {
+            bool present = IsRowReadonly(row);
+            if (isReadOnly && !present)
+                readonlyRows.Add(row);
+            else if (!isReadOnly && present)
+                readonlyRows.Remove(row);
+        }
+
+        /// <summary>
+        /// Checks if a row is a readonly row.
+        /// </summary>
+        /// <param name="row">Index of the row.</param>
+        /// <returns>True if the row is readonly.</returns>
+        public bool IsRowReadonly(int row)
+        {
+            return readonlyRows.Contains(row);
         }
 
         /// <summary>

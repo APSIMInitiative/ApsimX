@@ -524,14 +524,15 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public static string GetResourceAsString(string resourceName)
         {
-            string result;
+            string result = null;
             var assembly = Assembly.GetCallingAssembly();
             assembly.GetManifestResourceStream(resourceName);
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                result = reader.ReadToEnd();
-            }
+                if (stream != null)
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        result = reader.ReadToEnd();
+                    }
 
             return result;
         }

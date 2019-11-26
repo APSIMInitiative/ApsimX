@@ -88,6 +88,11 @@ namespace Models.CLEM.Activities
                 if (ind.Age >= weaningAge)
                 {
                     ind.Wean(true, "Natural");
+                    if (ind.Mother != null)
+                    {
+                        // report conception status changed when last multiple birth dies.
+                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                    }
                 }
             }
         }
@@ -273,6 +278,8 @@ namespace Models.CLEM.Activities
             // grow individuals
 
             List<string> breeds = herd.Select(a => a.BreedParams.Name).Distinct().ToList();
+            this.Status = ActivityStatus.NotNeeded;
+
             foreach (string breed in breeds)
             {
                 double totalMethane = 0;
@@ -347,6 +354,7 @@ namespace Models.CLEM.Activities
 
                 if (methaneEmissions != null)
                 {
+                    // g per day -> total kg
                     methaneEmissions.Add(totalMethane * 30.4 / 1000, this, breed);
                 }
             }
@@ -471,7 +479,7 @@ namespace Models.CLEM.Activities
                         // Reference: Freer
                         double potentialBirthWeight = ind.BreedParams.SRWBirth * standardReferenceWeight * (1 - 0.33 * (1 - ind.Weight / standardReferenceWeight));
                         double foetusAge = (femaleind.Age - femaleind.AgeAtLastConception) * 30.4;
-                        //TODO: Check foetus gage correct
+                        //TODO: Check foetus age correct
                         energyFoetus = potentialBirthWeight * 349.16 * 0.000058 * Math.Exp(345.67 - 0.000058 * foetusAge - 349.16 * Math.Exp(-0.000058 * foetusAge)) / 0.13;
                     }
                 }

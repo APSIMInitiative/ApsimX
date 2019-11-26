@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="stock_vars.cs" company="CSIRO">
-// CSIRO Agriculture & Food
+// Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -441,32 +441,32 @@ namespace Models.GrazPlan
             {
                 parameters = model.GetGenotype(idx);
 
-                if (parameters.iParentageCount() == 1)
+                if (parameters.ParentageCount() == 1)
                 {
-                    damBreed = parameters.sParentageBreed(0);
+                    damBreed = parameters.ParentageBreed(0);
                     sireBreed = damBreed;
                     generation = 0;
                 }
-                else if ((parameters.iParentageCount() == 2) && (parameters.fParentagePropn(0) > 0))
+                else if ((parameters.ParentageCount() == 2) && (parameters.ParentagePropn(0) > 0))
                 {
-                    damBreed = parameters.sParentageBreed(0);
-                    sireBreed = parameters.sParentageBreed(1);
-                    generation = Convert.ToInt32(Math.Max(0, Math.Round(Math.Log(parameters.fParentagePropn(0)) / Math.Log(0.5))), CultureInfo.InvariantCulture);    // TODO: may need checking
+                    damBreed = parameters.ParentageBreed(0);
+                    sireBreed = parameters.ParentageBreed(1);
+                    generation = Convert.ToInt32(Math.Max(0, Math.Round(Math.Log(parameters.ParentagePropn(0)) / Math.Log(0.5))), CultureInfo.InvariantCulture);    // TODO: may need checking
                 }
-                else if (parameters.iParentageCount() == 2)
+                else if (parameters.ParentageCount() == 2)
                 {
-                    sireBreed = parameters.sParentageBreed(1);
+                    sireBreed = parameters.ParentageBreed(1);
                     damBreed = sireBreed;
                     generation = 0;
                 }
                 else
                 {
-                    damBreed = parameters.sParentageBreed(0);
-                    sireBreed = parameters.sParentageBreed(1);
+                    damBreed = parameters.ParentageBreed(0);
+                    sireBreed = parameters.ParentageBreed(1);
                     generation = 0;
                 }
 
-                genoValues[idx].Name = parameters.sName;
+                genoValues[idx].Name = parameters.Name;
                 genoValues[idx].DamBreed = damBreed;
                 genoValues[idx].SireBreed = sireBreed;
                 genoValues[idx].Generation = generation;
@@ -515,7 +515,7 @@ namespace Models.GrazPlan
 
                     initValue[jdx] = new SheepInit();
 
-                    initValue[jdx].Genotype = animalGroup.Genotype.sName;
+                    initValue[jdx].Genotype = animalGroup.Genotype.Name;
                     initValue[jdx].Number = animalGroup.NoAnimals;
                     initValue[jdx].Sex = model.SexString(idx, false);
                     initValue[jdx].Age = animalGroup.AgeDays;
@@ -542,7 +542,7 @@ namespace Models.GrazPlan
                     if ((animalGroup.Pregnancy > 0) || (animalGroup.Young != null))
                     {
                         if (animalGroup.MatedTo != null)
-                            initValue[jdx].MatedTo = animalGroup.MatedTo.sName;
+                            initValue[jdx].MatedTo = animalGroup.MatedTo.Name;
                         else
                             initValue[jdx].MatedTo = string.Empty;
                     }
@@ -595,7 +595,7 @@ namespace Models.GrazPlan
 
                     initValue[jdx] = new CattleInit();
 
-                    initValue[jdx].Genotype = animalGroup.Genotype.sName;
+                    initValue[jdx].Genotype = animalGroup.Genotype.Name;
                     initValue[jdx].Number = animalGroup.NoAnimals;
                     initValue[jdx].Sex = model.SexString(idx, false);
                     initValue[jdx].Age = animalGroup.AgeDays;
@@ -623,7 +623,7 @@ namespace Models.GrazPlan
                     if ((animalGroup.Pregnancy > 0) || (animalGroup.Young != null))
                     {
                         if (animalGroup.MatedTo != null)
-                            initValue[jdx].MatedTo = animalGroup.MatedTo.sName;
+                            initValue[jdx].MatedTo = animalGroup.MatedTo.Name;
                         else
                             initValue[jdx].MatedTo = string.Empty;
                     }

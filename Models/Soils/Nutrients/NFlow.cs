@@ -17,13 +17,13 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.GridView")]
     public class NFlow : Model
     {
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction rate = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction NLoss = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction N2OFraction = null;
 
         private ISolute sourceSolute = null;
