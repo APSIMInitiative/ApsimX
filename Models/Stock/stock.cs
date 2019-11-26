@@ -385,76 +385,36 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Information about each animal genotype")]
         [Units("")]
-        public StockGeno[] GenoTypes
+        public SingleGenotypeInits[] GenoTypes
         {
             get
             {
-                StockGeno[] geno = new StockGeno[1];
-                this.stockModel.GenotypeInits2Value(this.genotypeInits, ref geno);
-                return geno;
+                return this.genotypeInits;
             }
 
             set
             {
                 if (value != null)
                 {
-                    Array.Resize(ref this.genotypeInits, value.Length);
-                    for (int idx = 0; idx < value.Length; idx++)
-                    {
-                        this.genotypeInits[idx] = new SingleGenotypeInits();
-                        this.stockModel.Value2GenotypeInits(value[idx], ref this.genotypeInits[idx]);
-                    }
+                    this.genotypeInits = value;
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets the initial state of each animal group for sheep
+        /// Gets or sets the initial state of each animal group
         /// </summary>
-        [Description("Initial state of each animal group for sheep")]
-        public SheepInit[] Sheep
+        public AnimalInits[] Animals
         {
             get
             {
-                SheepInit[] sheep = new SheepInit[1];
-                StockVars.MakeSheepValue(this.stockModel, GrazType.AnimalType.Sheep, ref sheep);
-                return sheep;
+                AnimalInits[] animal = new AnimalInits[1];
+                StockVars.MakeAnimalValue(this.stockModel, ref animal);
+                return animal;
             }
-
             set
             {
-                if (value != null)
-                {
-                    int offset = this.animalInits.Length;
-                    Array.Resize(ref this.animalInits, offset + value.Length);
-                    for (int idx = 0; idx < value.Length; idx++)
-                        this.stockModel.SheepValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the initial state of each animal group for cattle
-        /// </summary>
-        [Description("Initial state of each animal group for cattle")]
-        public CattleInit[] Cattle
-        {
-            get
-            {
-                CattleInit[] cattle = new CattleInit[1];
-                StockVars.MakeCattleValue(this.stockModel, GrazType.AnimalType.Cattle, ref cattle);
-                return cattle;
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    int offset = this.animalInits.Length;
-                    Array.Resize(ref this.animalInits, offset + value.Length);
-                    for (int idx = 0; idx < value.Length; idx++)
-                        this.stockModel.CattleValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
-                }
+                this.animalInits = value;
             }
         }
 
@@ -4786,15 +4746,15 @@ namespace Models.GrazPlan
         /// <param name="genoInits">The list of genotypes</param>
         /// <param name="genoIdx">The index of the item in the list to use</param>
         /// <returns>The animal parameter set for this genotype</returns>
-        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, StockGeno[] genoInits, int genoIdx)
+        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, int genoIdx)
         {
-            SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
+            /*SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
             for (int idx = 0; idx < genoInits.Length; idx++)
             {
                 genotypeInits[idx] = new SingleGenotypeInits();
                 this.stockModel.Value2GenotypeInits(genoInits[idx], ref genotypeInits[idx]);
-            }
-            return this.stockModel.ParamsFromGenotypeInits(mainParams, genotypeInits, genoIdx);
+            }*/
+            return this.stockModel.ParamsFromGenotypeInits(mainParams, genoInits, genoIdx);
         }
 
         #endregion
