@@ -31,7 +31,7 @@
             events.Publish("DoSoilWaterMovement", args);
             var amountSWHasIncreased = MathUtilities.Sum(soilWater.SWmm) - swBeforeIrrigation;
 
-            Assert.AreEqual(amountSWHasIncreased, 10);
+            Assert.True(MathUtilities.FloatsAreEqual(amountSWHasIncreased, 10));
         }
 
         [Test]
@@ -52,7 +52,7 @@
             events.Publish("DoSoilWaterMovement", args);
             var amountSWHasIncreased = MathUtilities.Sum(soilWater.SWmm) - swBeforeIrrigation;
 
-            Assert.AreEqual(amountSWHasIncreased, 5);
+            Assert.True(MathUtilities.FloatsAreEqual(amountSWHasIncreased, 5));
         }
 
 
@@ -99,7 +99,7 @@
                             new Sample()
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
-                                SW = new double[] { 0.103, 0.238, 0.253, 0.247, 0.247, 0.247 },
+                                SW = new double[] { 0.161, 0.238, 0.268, 0.281, 0.281, 0.281 },
                                 NO3N = new double[] { 23, 7, 2, 1, 1, 1 },
                                 OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN },
                                 SWUnits = Sample.SWUnitsEnum.Gravimetric
