@@ -52,12 +52,12 @@ namespace Models.CLEM.Resources
                 {
                     if (!Warnings.Exists("price"))
                     {
-                        string warn = "No pricing is available for [r=" + this.Name + "]";
+                        string warn = "No pricing is available for [r=" + this.Parent.Name + "." + this.Name + "]";
                         if (Apsim.Children(this, typeof(ResourcePricing)).Count > 0)
                         {
                             warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                         }
-                        warn += "\nNo financial transactions will occur as no packet size set.\nAdd [r=ResourcePricing] component to [r=" + this.Name + "] to improve purchase and sales.";
+                        warn += "\nAdd [r=ResourcePricing] component to [r=" + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
                         Summary.WriteWarning(this, warn);
                         Warnings.Add("price");
                     }
