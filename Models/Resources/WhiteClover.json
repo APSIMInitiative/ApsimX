@@ -3956,16 +3956,6 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": "",
-              "Name": "TargetAboveGroundFraction",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },			
-            {
-              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.4,
               "Units": "gC/gDM",
               "Name": "CarbonConcentration",
@@ -4277,7 +4267,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TargetAboveGroundFraction]",
+                                      "VariableName": "[Inflorescence].TargetAboveGroundFraction",
                                       "Name": "TargetAboveGroundProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
