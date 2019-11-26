@@ -2,12 +2,22 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.PMF;
+    using Models.Surface;
     using System;
 
     /// <summary>Describes a generic tissue of a pasture species.</summary>
     [Serializable]
     public class GenericTissue : Model
     {
+        /// <summary>Name of species.</summary>
+        [Link(Type = LinkType.Ancestor)]
+        protected PastureSpecies species = null;
+
+        /// <summary>The surface organic matter model.</summary>
+        [Link]
+        private SurfaceOrganicMatter surfaceOrganicMatter = null;
+
         #region Basic properties  ------------------------------------------------------------------------------------------
 
         ////- Characteristics (parameters) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -130,5 +140,33 @@
         internal const double MyPrecision = 0.0000000001;
 
         #endregion ---------------------------------------------------------------------------------------------------------
+
+        /// <summary>Removes biomass from tissue.</summary>
+        /// <param name="fractionToRemove">The fraction of biomass to remove from the simulation.</param>
+        /// <param name="fractionToSoil">The fraction of biomass to send to soil.</param>
+        public void RemoveBiomass(double fractionToRemove, double fractionToSoil)
+        {
+            var dmToSoil = fractionToSoil * DM;
+            var nToSoil = fractionToSoil * Namount;
+            var totalFraction = fractionToRemove + fractionToSoil;
+            if (totalFraction > 0)
+            {
+                DM *= (1 - totalFraction);
+                Namount *= (1 - totalFraction);
+                NRemobilisable *= (1 - totalFraction);
+            }
+
+            if (dmToSoil > 0)
+                DetachBiomass(dmToSoil, nToSoil);
+        }
+    
+        /// <summary>Adds a given amount of detached root material (DM and N) to the surface organic matter pool.</summary>
+        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
+        /// <param name="amountN">The N amount to send (kg/ha)</param>
+        public virtual void DetachBiomass(double amountDM, double amountN)
+        { 
+            if (amountDM > 0.0)
+                surfaceOrganicMatter.Add(amountDM, amountN, 0.0, species.Name, species.Name);
+        }
     }
 }

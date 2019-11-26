@@ -24298,14 +24298,14 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.1,
-                                        0.1,
-                                        0.157,
-                                        0.173,
-                                        0.173,
-                                        0.165,
-                                        0.165,
-                                        0.115
+                                        0.14,
+                                        0.14,
+                                        0.16,
+                                        0.17,
+                                        0.17,
+                                        0.17,
+                                        0.17,
+                                        0.12
                                       ],
                                       "KL": [
                                         0.1,
@@ -25801,7 +25801,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Harvest Yield",
               "Children": [
@@ -31767,10 +31767,10 @@
                                     0.3,
                                     0.32,
                                     0.33,
+                                    0.27,
                                     0.28,
-                                    0.29,
-                                    0.29,
-                                    0.32
+                                    0.26,
+                                    0.18
                                   ],
                                   "LL15": [
                                     0.2,

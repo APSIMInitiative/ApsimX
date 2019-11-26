@@ -213,5 +213,20 @@ namespace UserInterface.Classes
                 this.gridView.DataSource.Rows[this.RowIndex][this.ColumnIndex] = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the cell readonly status
+        /// </summary>
+        public bool IsRowReadonly
+        {
+            get
+            {
+                return gridView.IsRowReadonly(RowIndex);
+            }
+            set
+            {
+                gridView.SetRowAsReadonly(RowIndex, value);
+            }
+        }
     }
 }

@@ -611,6 +611,7 @@ namespace UserInterface.Presenters
                         cell.EditorType = EditorTypeEnum.TextBox;
                     }
                 }
+                cell.IsRowReadonly = !IsPropertyEnabled(i);
             }
 
             IGridColumn descriptionColumn = grid.GetColumn(0);
@@ -887,6 +888,39 @@ namespace UserInterface.Presenters
                 presenter.MainPresenter.ShowError(err);
             }
             presenter.CommandHistory.ModelChanged += OnModelChanged;
+
+            for (int i = 0; i < properties.Count; i++)
+            {
+                IGridCell cell = grid.GetCell(1, i);
+                cell.IsRowReadonly = !IsPropertyEnabled(i);
+            }
+            grid.Refresh();
+        }
+
+        /// <summary>
+        /// Is the specified property a read only row?
+        /// </summary>
+        /// <param name="i">The property number</param>
+        /// <returns></returns>
+        private bool IsPropertyEnabled(int i)
+        {
+            if (properties[i].Display != null &&
+                properties[i].Display.EnabledCallback != null)
+            {
+                var callbacks = properties[i].Display.EnabledCallback.Split(',');
+                foreach (var callback in callbacks)
+                {
+                    var enabledCallback = model.GetType().GetProperty(callback);
+                    if (enabledCallback != null)
+                    {
+                        bool enabled = (bool)enabledCallback.GetValue(model);
+                        if (enabled)
+                            return true;
+                    }
+                }
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
