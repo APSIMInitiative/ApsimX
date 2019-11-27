@@ -973,6 +973,16 @@ namespace Models.Soils
         {
             // Starting with the minimalist version. To be updated by Val's group to include a urine patch algorithm
             // urea[0] += UrineAdded.Urea;
+
+            // We could just add the urea to the top layer, but it's better
+            // to work out the penetration depth, and spread it through those layers.
+            double liquidDepth = UrineAdded.VolumePerUrination / UrineAdded.AreaPerUrination * 1000.0; // Depth of liquid to be added per urination, in mm
+            double maxDepth = liquidDepth / 0.05; // basically treats soil as having 5% pore space. This is the depth to which urine will penetrate
+            double[] ureaAdded = new double[nLayers];
+            double[] layerFracs = FractionLayer(maxDepth);
+            for (int iLayer = 0; iLayer < nLayers; iLayer++)
+                ureaAdded[iLayer] = UrineAdded.Urea * layerFracs[iLayer] * dlayer[iLayer] / maxDepth;
+            SetUreaDelta(SoluteSetterType.Other, ureaAdded);
         }
 
         /// <summary>
@@ -1277,6 +1287,7 @@ namespace Models.Soils
             for (int layer = 0; layer <= maxLayer; layer++)
             {
                 result[layer] = Math.Min(1.0, MathUtilities.Divide(maxDepth - cumDepth, dlayer[layer], 0.0));
+                cumDepth += dlayer[layer];
             }
 
             return result;

@@ -10,6 +10,7 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Globalization;
     using Models.Core;
+    using Models.Interfaces;
     using Models.PMF.Interfaces;
     using Models.Soils;
     using Models.Surface;
@@ -4241,7 +4242,7 @@ namespace Models.GrazPlan
 
                     // locate surfaceOM and soil nutrient model
                     SurfaceOrganicMatter surfaceOM = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
-                    SoilNitrogen soiln = (SoilNitrogen)Apsim.Find(zone, typeof(SoilNitrogen));
+                    INutrient soiln = (INutrient)Apsim.Find(zone, typeof(INutrient));
                     thePadd.AddFaecesObj = surfaceOM;
                     thePadd.AddUrineObj = soiln;
                 }
@@ -4378,7 +4379,7 @@ namespace Models.GrazPlan
                     AddUrineType urine = new AddUrineType();
                     if (this.PopulateUrine(paddInfo.PaddID, urine))
                     {
-                        ((SoilNitrogen)paddInfo.AddUrineObj).AddUrine(urine);
+                        ((INutrient)paddInfo.AddUrineObj).AddUrine(urine);
                     }
                 }
             }
