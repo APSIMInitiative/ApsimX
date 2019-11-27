@@ -104,6 +104,11 @@
         /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>
         public void AddUrine(AddUrineType UrineAdded)
         {
+            if (Urea == null)
+            {
+                Summary.WriteWarning(this, "Unable to add urine. The Nutrient model has not been configured with support for Urea as a solute");
+                return;
+            }
             // We could just add the urea to the top layer, but it's better
             // to work out the penetration depth, and spread it through those layers.
             double liquidDepth = UrineAdded.VolumePerUrination / UrineAdded.AreaPerUrination * 1000.0; // Depth of liquid to be added per urinat, in mm
