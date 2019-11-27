@@ -306,6 +306,8 @@ namespace Models.PMF
                 var soilCrop = Soil.Crop(Plant.Name);
                 double[] kl = soilCrop.KL;
 
+                double[] llDep = MathUtilities.Multiply(soilCrop.LL, myZone.soil.Thickness);
+
                 if (root.Depth != myZone.Depth)
                     myZone.Depth += 0; // wtf??
 
@@ -315,8 +317,8 @@ namespace Models.PMF
                 {
                     myZone.StartWater[layer] = myZone.soil.Water[layer];
 
-                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - myZone.soil.LL15mm[layer], 0);
-                    myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - myZone.soil.LL15mm[layer];
+                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - llDep[layer], 0);
+                    myZone.PotentialAvailableSW[layer] = myZone.soil.DULmm[layer] - llDep[layer];
 
                     if (layer == currentLayer)
                     {
