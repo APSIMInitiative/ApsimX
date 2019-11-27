@@ -934,7 +934,7 @@
                     proportion of the layer occupied by the roots. */
                 double top;
 
-                top = layer == 0 ? top = 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
+                top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
 
                 if (top > zone.Depth)
                     return 0;
