@@ -808,6 +808,8 @@ namespace Models.PMF.Organs
 
             DltSenescedLaiFrost = calcLaiSenescenceFrost();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiFrost);
+
+            DltSenescedLai = Math.Min(DltSenescedLai, LAI);
         }
 
         private double calcLaiSenescenceFrost()
