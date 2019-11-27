@@ -15,6 +15,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
+    [ScopedModel]
     public class ReproductiveOrgan : Model, IOrgan, IArbitration, IOrganDamage
     {
         #region Parameter Input Classes

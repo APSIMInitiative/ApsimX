@@ -18,6 +18,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ScopedModel]
     public class Nodule : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {
         #region Paramater Input Classes

@@ -63,6 +63,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
+    [ScopedModel]
     public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage
     {
         /// <summary>Tolerance for biomass comparisons</summary>
