@@ -20,9 +20,136 @@
       "Children": [
         {
           "$type": "Models.Clock, Models",
-          "Start": "2004-06-25T00:00:00",
-          "End": "2017-07-27T00:00:00",
+          "Start": "2004-09-01T00:00:00",
+          "End": "2007-07-27T00:00:00",
           "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Weather, Models",
+          "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
+          "ExcelWorkSheetName": "",
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 1.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "soil_albedo": 0.3,
+          "SoilHeatFluxFraction": 0.4,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n\r\n        private double sale_age = 3.0;\r\n        private int no_to_buy;\r\n        private int group_count;\r\n        private int g;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // purchase animals annually\r\n            //if (DateUtilities.DatesEqual(\"1-jan\", Calendar.Today))\r\n            if (Calendar.Today == new DateTime(2004,9,01))\r\n            {\r\n                g = Animals.NoGroups + 1;\r\n                //no_to_buy = 500 - Animals.NumberAll;\r\n                \r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"EternalKiwiCross\";\r\n                purchase.Number = 10;\r\n                purchase.Sex = \"cow\";\r\n                purchase.Age = 36;\r\n                purchase.Weight = 450.0;\r\n                purchase.UseTag = g + 1;\r\n\r\n                Animals.Buy(purchase);\r\n                Animals.Move(g, \"Paddock\");\r\n            }\r\n\r\n\r\n            //if (Animals.NumberAll > 0)\r\n            //    Feed.Feed(\"wheat, crushed\", 0.5 * Animals.NumberAll, \"Feedlot\");\r\n        }\r\n    }\r\n}\r\n",
+          "Parameters": [],
+          "Name": "ManageStock",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.GrazPlan.Stock, Models",
+          "RandSeed": 9999,
+          "GenoTypes": [
+            {
+              "$type": "Models.GrazPlan.StockGeno, Models",
+              "Conception": [
+                0.0,
+                1.0,
+                0.0,
+                0.0
+              ],
+              "Name": "EternalKiwiCross",
+              "DamBreed": "Friesian",
+              "SireBreed": "Jersey",
+              "Generation": 1,
+              "SRW": 500.0,
+              "DeathRate": 0.0,
+              "RefFleeceWt": 0.0,
+              "MaxFibreDiam": 0.0,
+              "FleeceYield": 0.0,
+              "PeakMilk": 35.0,
+              "WnrDeathRate": 0.0
+            }
+          ],
+          "Sheep": [],
+          "Cattle": [],
+          "PaddockList": [
+            {
+              "$type": "Models.GrazPlan.PaddockInit, Models",
+              "Forages": [],
+              "Name": "",
+              "Area": 1.0,
+              "Slope": 0.0,
+              "Excretion": null,
+              "Urine": null
+            }
+          ],
+          "EnterpriseList": [],
+          "GrazingPeriods": [],
+          "Name": "Stock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.GrazPlan.Supplement, Models",
+          "SpoilageTime": 0.0,
+          "Stores": [
+            {
+              "$type": "Models.GrazPlan.StoreType, Models",
+              "Name": "fodder",
+              "Stored": 0.0,
+              "IsRoughage": true,
+              "DMContent": 0.85,
+              "DMD": 0.0,
+              "MEContent": 0.0,
+              "CPConc": 0.0,
+              "ProtDg": 0.0,
+              "PConc": 0.0,
+              "SConc": 0.0,
+              "EEConc": 0.0,
+              "ADIP2CP": 0.0,
+              "AshAlk": 0.0,
+              "MaxPassage": 0.0
+            },
+            {
+              "$type": "Models.GrazPlan.StoreType, Models",
+              "Name": "wheat, crushed",
+              "Stored": 500000.0,
+              "IsRoughage": false,
+              "DMContent": 0.89,
+              "DMD": 0.9,
+              "MEContent": 13.8,
+              "CPConc": 0.14,
+              "ProtDg": 0.92,
+              "PConc": 0.0038,
+              "SConc": 0.0014000000000000002,
+              "EEConc": 0.02,
+              "ADIP2CP": 0.02,
+              "AshAlk": 0.18,
+              "MaxPassage": 0.0
+            }
+          ],
+          "PaddockList": [],
+          "Name": "Supplement",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -40,39 +167,58 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
-          "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
-          "ExcelWorkSheetName": "",
-          "Name": "Weather",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
-          "Name": "Feedlot",
+          "Name": "Paddock",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
-              "VariableNames": [
-                "[Clock].Today",
-                "[Slurp].Leaf.Live.Wt",
-                "[Slurp].Leaf.Live.N",
-                "[Slurp].Leaf.LAI",
-                "[Stock].NumberAll",
-                "[Stock].WeightAll",
-                "[Stock].IntakeAll.Weight"
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing System.Data;\r\nusing System.IO;\r\nusing System.Diagnostics;\r\n    \r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Plant slurp;\r\n\t\t[Link] Simulation simulation;\r\n\r\n\t\t[NonSerialized]\r\n\t\tprivate DataView data;\r\n\r\n\t\t[NonSerialized]\r\n\t\tprivate SimpleLeaf slurpLeaf;\r\n\r\n\t\t[Separator(\"Slurp will be 'sown' on the first day of the simulation\")]\r\n\r\n        [Description(\"Slurp 'cultivar', select 'Pasture'\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n\r\n\r\n        [Description(\"EXCEL file name with the resetting data (must be .xlsx)\")]\r\n        [Display(Type=DisplayType.FileName)]\r\n\t\tpublic string SSheetFileName { get; set; }\r\n\r\n\t\t[Description (\"Name of worksheet containing the data\")]\r\n\t\tpublic string SSheetWorksheetName { get; set; }\r\n\r\n\t\t[EventSubscribe(\"StartOfSimulation\")]\r\n\t\tprivate void OnStartOfSimulation(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tvar fullFileName = SSheetFileName;\r\n\t\t\tif (simulation != null && simulation.FileName != null)\r\n                fullFileName = PathUtilities.GetAbsolutePath(SSheetFileName, simulation.FileName);\r\n\r\n\t\t\tif (!File.Exists(fullFileName))\r\n\t\t\t\tthrow new Exception(\"Cannot find file: \" + fullFileName);\r\n\t\t\tdata = new DataView(ExcelUtilities.ReadExcelFileData(fullFileName, SSheetWorksheetName, headerRow:true));\r\n\r\n\t\t\tslurpLeaf = Apsim.Child(slurp, typeof(SimpleLeaf)) as SimpleLeaf;\r\n\r\n\t\t\tdouble wt = 300;\r\n\t\t\tslurpLeaf.Live.StructuralWt = wt;\r\n\t\t\tslurpLeaf.Live.StorageWt = 0;\r\n\t\t\tslurpLeaf.Live.StructuralN = wt * slurpLeaf.MinNconc;\r\n\t\t\tslurpLeaf.Live.StorageN = wt * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\t\t}\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tdouble DM = 0;\r\n\t\t\tdouble digestibility = 0;\r\n\r\n\t        if (clock.Today.Date == clock.StartDate)\r\n                slurp.Sow(cultivar: CultivarName, population: 1, depth: 600, rowSpacing: 150);\r\n\r\n\r\n\t\t\t// Find last DM value - This will be the most recent day.\r\n\t\t\tdata.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and Pre_Cover >0\";\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"Pre_Cover\"]))\r\n\t\t\t\t\tDM = Convert.ToDouble(mostRecentRow[\"Pre_Cover\"]) / 10; // to g/m2\r\n\t\t\t}\r\n\r\n\t\t\t// Find last ME value - This will be the most recent day.\r\n\t\t\tdata.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and Pasture_ME >0\";\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"Pasture_ME\"]))\r\n\t\t\t\t\tdigestibility = Convert.ToDouble(mostRecentRow[\"Digestibility\"]);\r\n\t\t\t}\r\n\t\t\tif (digestibility == 0)\r\n\t\t\t\tdigestibility = 0.84;\r\n\r\n\t\t\tif (DM > 0)\r\n\t\t\t{\r\n\t\t\t\tslurpLeaf.Live.StructuralWt = DM;\r\n\t\t\t\tslurpLeaf.Live.StorageWt = 0;\r\n\t\t\t\tslurpLeaf.Live.DMDOfStructural = digestibility;\r\n\t\t\t\tslurpLeaf.Live.StructuralN = DM * slurpLeaf.MinNconc;\r\n\t\t\t\tslurpLeaf.Live.StorageN = DM * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\t\t\t}\r\n\r\n\t\t\t// Columns in spreadsheet:\r\n\t\t\t// Date\r\n\t\t\t// Pasture_Growth_Rate\t(kgDM/ha/day)\r\n\t\t\t// Pre_Cover  (kgDM/ha)\r\n\t\t\t// Post_Cover (kgDM/ha)\r\n\t\t\t// PastureOffered_Obs (kgDM/cow/d)\r\n\t\t\t// PastureOffered_ObsMJ (MJME/cow/d)\r\n\t\t\t// PastureOffered_Mlcalc (MJME/kgDM)\r\n\t\t\t// Milkers offered Grass Silage (kgDM/cow/d)\r\n\t\t\t// ME Silage Obs or Assumed (MJME/kgDM)\r\n\t\t\t// EstmSilageIntake_Obs (MJME)\r\n\t\t\t// EstmSilageIntake_Calc (MJME)\r\n\t\t\t// EstmTotalIntake_Obs (MJME)\r\n\t\t\t// EstmTotalIntake_Calc (MJME)\r\n\t\t\t// Pasture_ME (ME/kgDM)\r\n\t\t\t// Pasture_Protein (%)\r\n\t\t\t// Pasture_DM (%)\r\n\t\t\t// Pasture_WSC (%)\r\n\t\t\t// Pasture_NDF (%)\r\n\t\t\t// Digestability\r\n\t\t}\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "SSheetFileName",
+                  "Value": "C:\\aaUnderVC\\apsimNextGen\\Prototypes\\StockAndSupplement\\LUDF_Observed.xlsx"
+                },
+                {
+                  "Key": "CultivarName",
+                  "Value": "Pasture"
+                },
+                {
+                  "Key": "SSheetWorksheetName",
+                  "Value": "clean data no zeros"
+                }
               ],
-              "EventNames": [
-                "[Clock].EndOfDay"
-              ],
-              "Name": "Report",
-              "Children": [],
+              "Name": "SlurpPreGrazingSet",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.Plant, Models",
+              "CropType": "Slurp",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
+              "ResourceName": "Slurp",
+              "Name": "Slurp",
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
+              "InitialResidueName": "wheat_stubble",
+              "InitialResidueType": "wheat",
+              "InitialResidueMass": 0.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 100.0,
+              "FractionFaecesAdded": 0.5,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -597,220 +743,28 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
-              "InitialResidueName": "wheat_stubble",
-              "InitialResidueType": "wheat",
-              "InitialResidueMass": 0.0,
-              "InitialStandingFraction": 0.0,
-              "InitialCPR": 0.0,
-              "InitialCNR": 100.0,
-              "FractionFaecesAdded": 0.5,
-              "ResourceName": "SurfaceOrganicMatter",
-              "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.MicroClimate, Models",
-              "a_interception": 0.0,
-              "b_interception": 1.0,
-              "c_interception": 0.0,
-              "d_interception": 0.0,
-              "soil_albedo": 0.3,
-              "SoilHeatFluxFraction": 0.4,
-              "NightInterceptionFraction": 0.5,
-              "ReferenceHeight": 2.0,
-              "Name": "MicroClimate",
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Slurp].Leaf.Live.Wt",
+                "[Slurp].Leaf.Live.N",
+                "[Slurp].Leaf.LAI",
+                "[Stock].NumberAll",
+                "[Stock].WeightAll",
+                "[Stock].IntakeAll.Weight"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "Name": "Report",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n               \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n                Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);\r\n            //Potato.Sow(... Contains the following arguements:\r\n            //Population  double  Optional  Seeds sowing/m2.  Default is zero\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
-              "Parameters": [
-                {
-                  "Key": "CultivarName",
-                  "Value": "Pasture"
-                },
-                {
-                  "Key": "InitialRootDepth",
-                  "Value": "600"
-                },
-                {
-                  "Key": "SowingDate",
-                  "Value": "01/01/2004 00:00:00"
-                }
-              ],
-              "Name": "SlurpSowingRule",
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing System.Data;\r\nusing System.IO;\r\nusing System.Diagnostics;\r\n    \r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Plant slurp;\r\n\t\t[Link] Simulation simulation;\r\n\r\n\t\t[NonSerialized]\r\n\t\tprivate DataView data;\r\n\r\n\t\t[NonSerialized]\r\n\t\tprivate SimpleLeaf slurpLeaf;\r\n\r\n        [Description(\"EXCEL file name (must be .xlsx)\")]\r\n        [Display(Type=DisplayType.FileName)]\r\n\t\tpublic string SSheetFileName { get; set; }\r\n\r\n\t\t[EventSubscribe(\"StartOfSimulation\")]\r\n\t\tprivate void OnStartOfSimulation(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tvar fullFileName = SSheetFileName;\r\n\t\t\tif (simulation != null && simulation.FileName != null)\r\n                fullFileName = PathUtilities.GetAbsolutePath(SSheetFileName, simulation.FileName);\r\n\r\n\t\t\tif (!File.Exists(fullFileName))\r\n\t\t\t\tthrow new Exception(\"Cannot find file: \" + fullFileName);\r\n\t\t\tdata = new DataView(ExcelUtilities.ReadExcelFileData(fullFileName, \"Data\", headerRow:true));\r\n\r\n\t\t\tslurpLeaf = Apsim.Child(slurp, typeof(SimpleLeaf)) as SimpleLeaf;\r\n\r\n\t\t\tdouble wt = 300;\r\n\t\t\tslurpLeaf.Live.StructuralWt = wt;\r\n\t\t\tslurpLeaf.Live.StorageWt = 0;\r\n\t\t\tslurpLeaf.Live.StructuralN = wt * slurpLeaf.MinNconc;\r\n\t\t\tslurpLeaf.Live.StorageN = wt * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\t\t}\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tdouble DM = 0;\r\n\t\t\tdouble digestibility = 0;\r\n\r\n\t\t\t// Find last DM value - This will be the most recent day.\r\n\t\t\tdata.RowFilter = \"Date<=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and Pre_Cover>0\";\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"Pre_Cover\"]))\r\n\t\t\t\t\tDM = Convert.ToDouble(mostRecentRow[\"Pre_Cover\"]) / 10; // to g/m2\r\n\t\t\t}\r\n\r\n\t\t\t// Find last ME value - This will be the most recent day.\r\n\t\t\tdata.RowFilter = \"Date<=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and Pasture_ME>0\";\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"Pasture_ME\"]))\r\n\t\t\t\t\tdigestibility = Convert.ToDouble(mostRecentRow[\"Digestibility\"]);\r\n\t\t\t}\r\n\t\t\tif (digestibility == 0)\r\n\t\t\t\tdigestibility = 0.84;\r\n\r\n\t\t\tif (DM > 0)\r\n\t\t\t{\r\n\t\t\t\tslurpLeaf.Live.StructuralWt = DM;\r\n\t\t\t\tslurpLeaf.Live.StorageWt = 0;\r\n\t\t\t\tslurpLeaf.Live.DMDOfStructural = digestibility;\r\n\t\t\t\tslurpLeaf.Live.StructuralN = DM * slurpLeaf.MinNconc;\r\n\t\t\t\tslurpLeaf.Live.StorageN = DM * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\t\t\t}\r\n\r\n\t\t\t// Columns in spreadsheet:\r\n\t\t\t// Date\r\n\t\t\t// Pasture_Growth_Rate\t(kgDM/ha/day)\r\n\t\t\t// Pre_Cover  (kgDM/ha)\r\n\t\t\t// Post_Cover (kgDM/ha)\r\n\t\t\t// PastureOffered_Obs (kgDM/cow/d)\r\n\t\t\t// PastureOffered_ObsMJ (MJME/cow/d)\r\n\t\t\t// PastureOffered_Mlcalc (MJME/kgDM)\r\n\t\t\t// Milkers offered Grass Silage (kgDM/cow/d)\r\n\t\t\t// ME Silage Obs or Assumed (MJME/kgDM)\r\n\t\t\t// EstmSilageIntake_Obs (MJME)\r\n\t\t\t// EstmSilageIntake_Calc (MJME)\r\n\t\t\t// EstmTotalIntake_Obs (MJME)\r\n\t\t\t// EstmTotalIntake_Calc (MJME)\r\n\t\t\t// Pasture_ME (ME/kgDM)\r\n\t\t\t// Pasture_Protein (%)\r\n\t\t\t// Pasture_DM (%)\r\n\t\t\t// Pasture_WSC (%)\r\n\t\t\t// Pasture_NDF (%)\r\n\t\t\t// Digestability\r\n\t\t}\r\n    }\r\n}\r\n",
-              "Parameters": [
-                {
-                  "Key": "SSheetFileName",
-                  "Value": "C:\\aaUnderVC\\apsimNextGen\\Prototypes\\StockAndSupplement\\LUDF_Observed.xlsx"
-                }
-              ],
-              "Name": "ResetSlurp",
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.Plant, Models",
-              "CropType": "Slurp",
-              "IsEnding": false,
-              "DaysAfterEnding": 0,
-              "ResourceName": "Slurp",
-              "Name": "Slurp",
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.GrazPlan.Supplement, Models",
-          "SpoilageTime": 0.0,
-          "Stores": [
-            {
-              "$type": "Models.GrazPlan.StoreType, Models",
-              "Name": "fodder",
-              "Stored": 0.0,
-              "IsRoughage": true,
-              "DMContent": 0.85,
-              "DMD": 0.0,
-              "MEContent": 0.0,
-              "CPConc": 0.0,
-              "ProtDg": 0.0,
-              "PConc": 0.0,
-              "SConc": 0.0,
-              "EEConc": 0.0,
-              "ADIP2CP": 0.0,
-              "AshAlk": 0.0,
-              "MaxPassage": 0.0
-            },
-            {
-              "$type": "Models.GrazPlan.StoreType, Models",
-              "Name": "wheat, crushed",
-              "Stored": 500000.0,
-              "IsRoughage": false,
-              "DMContent": 0.89,
-              "DMD": 0.9,
-              "MEContent": 13.8,
-              "CPConc": 0.14,
-              "ProtDg": 0.92,
-              "PConc": 0.0038,
-              "SConc": 0.0014000000000000002,
-              "EEConc": 0.02,
-              "ADIP2CP": 0.02,
-              "AshAlk": 0.18,
-              "MaxPassage": 0.0
-            }
-          ],
-          "PaddockList": [],
-          "Name": "Supplement",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.GrazPlan.Stock, Models",
-          "RandSeed": 9999,
-          "GenoTypes": [
-            {
-              "$type": "Models.GrazPlan.StockGeno, Models",
-              "Conception": [
-                0.0,
-                0.99,
-                0.0,
-                0.0
-              ],
-              "Name": "Hereford",
-              "DamBreed": "",
-              "SireBreed": "",
-              "Generation": 0,
-              "SRW": 500.0,
-              "DeathRate": 0.02,
-              "RefFleeceWt": 0.0,
-              "MaxFibreDiam": 0.0,
-              "FleeceYield": 0.0,
-              "PeakMilk": 25.0,
-              "WnrDeathRate": 0.02
-            }
-          ],
-          "Sheep": [],
-          "Cattle": [],
-          "PaddockList": [
-            {
-              "$type": "Models.GrazPlan.PaddockInit, Models",
-              "Forages": [],
-              "Name": "",
-              "Area": 1.0,
-              "Slope": 0.0,
-              "Excretion": null,
-              "Urine": null
-            }
-          ],
-          "EnterpriseList": [],
-          "GrazingPeriods": [],
-          "Name": "Stock",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n\r\n        private double sale_age = 3.0;\r\n        private int no_to_buy;\r\n        private int group_count;\r\n        private int g;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // purchase animals annually\r\n            //if (DateUtilities.DatesEqual(\"1-jan\", Calendar.Today))\r\n            if (Calendar.Today == new DateTime(2004,6,25))\r\n            {\r\n                g = Animals.NoGroups + 1;\r\n                //no_to_buy = 500 - Animals.NumberAll;\r\n                \r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"Friesian\";\r\n                purchase.Number = 10;\r\n                purchase.Sex = \"cow\";\r\n                purchase.Age = 36;\r\n                purchase.Weight = 450.0;\r\n                purchase.UseTag = g + 1;\r\n                \r\n                Animals.Buy(purchase);\r\n                Animals.Move(g, \"Feedlot\");\r\n            }\r\n\r\n\r\n            //if (Animals.NumberAll > 0)\r\n            //    Feed.Feed(\"wheat, crushed\", 0.5 * Animals.NumberAll, \"Feedlot\");\r\n        }\r\n    }\r\n}\r\n",
-          "Parameters": [],
-          "Name": "ManageStock",
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report.Report, Models",
-          "VariableNames": [
-            "[Clock].Today",
-            "[Stock].Number[1]",
-            "[Stock].NumberAll",
-            "[Stock].Weight[1]",
-            "[Stock].WeightAll",
-            "[Stock].CondScoreAll",
-            "[Stock].CondScore[1]",
-            "[Stock].FleeceWt[1]",
-            "[Stock].FibreDiam[1]",
-            "[Stock].DSEAll",
-            "[Stock].Intake[1].weight",
-            "[Stock].Intake[1].n",
-            "[Stock].Intake[1].p",
-            "[Stock].Intake[1].s",
-            "[Stock].Intake[1].ash_alk",
-            "[Stock].UrineN[1]",
-            "[Stock].Methane[1]",
-            "[Supplement].stores[2].Name",
-            "[Supplement].stores[2].Stored"
-          ],
-          "EventNames": [
-            "[Clock].EndOfDay"
-          ],
-          "Name": "Report1",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": false,
           "ReadOnly": false
         }
       ],
@@ -1088,6 +1042,57 @@
       ],
       "IncludeInDocumentation": false,
       "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Folder, Models",
+      "ShowPageOfGraphs": true,
+      "Name": "Folder",
+      "Children": [
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Slurp;\r\n        [Link] Clock Clock;\r\n\r\n        [Separator(\"Slurp will be 'sown' on the first day of the simulation\")]\r\n\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n              \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == Clock.StartDate)\r\n                Slurp.Sow(cultivar: CultivarName, population: 1, depth: InitialRootDepth, rowSpacing: 150);\r\n            //Potato.Sow(... Contains the following arguements:\r\n            //Population  double  Optional  Seeds sowing/m2.  Default is zero\r\n            //Cultivar    string  Required  \"NameOfCultivar\"\r\n            //Depth       double  Optional  Depth (mm) seed sown.   Default is 100mm \r\n            //MaxCover    double  Optional  Proportion (0-1) of the ground row crop will cover.   Default is 1.0\r\n            //BudNumber   double  Optional  Number of mainstems per seed sown.  Default is 1.0\r\n            //RowSpacing  double  Optional  Spaceing (mm) between drill rows when crop is sown.  Default is 150mm\r\n            //CropClass   string  Optional  Crop class to instantiate when crop is sown.  Default is \"Plant\"\r\n        }\r\n    }\r\n}\r\n                \r\n",
+          "Parameters": [
+            {
+              "Key": "CultivarName",
+              "Value": "Pasture"
+            },
+            {
+              "Key": "InitialRootDepth",
+              "Value": "600"
+            }
+          ],
+          "Name": "SlurpSowingRule",
+          "IncludeInDocumentation": false,
+          "Enabled": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing System.Data;\r\nusing System.IO;\r\nusing System.Diagnostics;\r\n    \r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Plant slurp;\r\n\t\t[Link] Simulation simulation;\r\n\r\n\t\t[NonSerialized]\r\n\t\tprivate DataView data;\r\n\r\n\t\t[NonSerialized]\r\n\t\tprivate SimpleLeaf slurpLeaf;\r\n\r\n        [Description(\"EXCEL file name (must be .xlsx)\")]\r\n        [Display(Type=DisplayType.FileName)]\r\n\t\tpublic string SSheetFileName { get; set; }\r\n\r\n\t\t[EventSubscribe(\"StartOfSimulation\")]\r\n\t\tprivate void OnStartOfSimulation(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tvar fullFileName = SSheetFileName;\r\n\t\t\tif (simulation != null && simulation.FileName != null)\r\n                fullFileName = PathUtilities.GetAbsolutePath(SSheetFileName, simulation.FileName);\r\n\r\n\t\t\tif (!File.Exists(fullFileName))\r\n\t\t\t\tthrow new Exception(\"Cannot find file: \" + fullFileName);\r\n\t\t\tdata = new DataView(ExcelUtilities.ReadExcelFileData(fullFileName, \"Data\", headerRow:true));\r\n\r\n\t\t\tslurpLeaf = Apsim.Child(slurp, typeof(SimpleLeaf)) as SimpleLeaf;\r\n\r\n\t\t\tdouble wt = 300;\r\n\t\t\tslurpLeaf.Live.StructuralWt = wt;\r\n\t\t\tslurpLeaf.Live.StorageWt = 0;\r\n\t\t\tslurpLeaf.Live.StructuralN = wt * slurpLeaf.MinNconc;\r\n\t\t\tslurpLeaf.Live.StorageN = wt * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\t\t}\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tdouble DM = 0;\r\n\t\t\tdouble digestibility = 0;\r\n\r\n\t\t\t// Find last DM value - This will be the most recent day.\r\n\t\t\tdata.RowFilter = \"Date<=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and Pre_Cover>0\";\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"Pre_Cover\"]))\r\n\t\t\t\t\tDM = Convert.ToDouble(mostRecentRow[\"Pre_Cover\"]) / 10; // to g/m2\r\n\t\t\t}\r\n\r\n\t\t\t// Find last ME value - This will be the most recent day.\r\n\t\t\tdata.RowFilter = \"Date<=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and Pasture_ME>0\";\r\n\t\t\tif (data.Count > 0)\r\n\t\t\t{\r\n\t\t\t\tvar mostRecentRow = data[data.Count-1];\r\n\r\n\t\t\t\tif (!Convert.IsDBNull(mostRecentRow[\"Pasture_ME\"]))\r\n\t\t\t\t\tdigestibility = Convert.ToDouble(mostRecentRow[\"Digestibility\"]);\r\n\t\t\t}\r\n\t\t\tif (digestibility == 0)\r\n\t\t\t\tdigestibility = 0.84;\r\n\r\n\t\t\tif (DM > 0)\r\n\t\t\t{\r\n\t\t\t\tslurpLeaf.Live.StructuralWt = DM;\r\n\t\t\t\tslurpLeaf.Live.StorageWt = 0;\r\n\t\t\t\tslurpLeaf.Live.DMDOfStructural = digestibility;\r\n\t\t\t\tslurpLeaf.Live.StructuralN = DM * slurpLeaf.MinNconc;\r\n\t\t\t\tslurpLeaf.Live.StorageN = DM * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\t\t\t}\r\n\r\n\t\t\t// Columns in spreadsheet:\r\n\t\t\t// Date\r\n\t\t\t// Pasture_Growth_Rate\t(kgDM/ha/day)\r\n\t\t\t// Pre_Cover  (kgDM/ha)\r\n\t\t\t// Post_Cover (kgDM/ha)\r\n\t\t\t// PastureOffered_Obs (kgDM/cow/d)\r\n\t\t\t// PastureOffered_ObsMJ (MJME/cow/d)\r\n\t\t\t// PastureOffered_Mlcalc (MJME/kgDM)\r\n\t\t\t// Milkers offered Grass Silage (kgDM/cow/d)\r\n\t\t\t// ME Silage Obs or Assumed (MJME/kgDM)\r\n\t\t\t// EstmSilageIntake_Obs (MJME)\r\n\t\t\t// EstmSilageIntake_Calc (MJME)\r\n\t\t\t// EstmTotalIntake_Obs (MJME)\r\n\t\t\t// EstmTotalIntake_Calc (MJME)\r\n\t\t\t// Pasture_ME (ME/kgDM)\r\n\t\t\t// Pasture_Protein (%)\r\n\t\t\t// Pasture_DM (%)\r\n\t\t\t// Pasture_WSC (%)\r\n\t\t\t// Pasture_NDF (%)\r\n\t\t\t// Digestability\r\n\t\t}\r\n    }\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "SSheetFileName",
+              "Value": "C:\\aaUnderVC\\apsimNextGen\\Prototypes\\StockAndSupplement\\LUDF_Observed.xlsx"
+            }
+          ],
+          "Name": "ResetSlurp",
+          "IncludeInDocumentation": true,
+          "Enabled": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n\r\n        private double sale_age = 3.0;\r\n        private int no_to_buy;\r\n        private int group_count;\r\n        private int g;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // purchase animals annually\r\n            //if (DateUtilities.DatesEqual(\"1-jan\", Calendar.Today))\r\n            if (Calendar.Today == new DateTime(2004,6,25))\r\n            {\r\n                g = Animals.NoGroups + 1;\r\n                //no_to_buy = 500 - Animals.NumberAll;\r\n                \r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"Friesian\";\r\n                purchase.Number = 10;\r\n                purchase.Sex = \"cow\";\r\n                purchase.Age = 36;\r\n                purchase.Weight = 450.0;\r\n                purchase.UseTag = g + 1;\r\n                \r\n                Animals.Buy(purchase);\r\n                Animals.Move(g, \"Paddock\");\r\n            }\r\n\r\n\r\n            //if (Animals.NumberAll > 0)\r\n            //    Feed.Feed(\"wheat, crushed\", 0.5 * Animals.NumberAll, \"Feedlot\");\r\n        }\r\n    }\r\n}\r\n",
+          "Parameters": [],
+          "Name": "ManageStock",
+          "IncludeInDocumentation": true,
+          "Enabled": false,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": false,
       "ReadOnly": false
     }
   ],
