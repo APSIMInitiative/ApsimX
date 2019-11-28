@@ -9,6 +9,7 @@ namespace Models.GrazPlan
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using Models.Core;
     using Models.PMF.Interfaces;
     using Models.Soils;
@@ -4643,6 +4644,47 @@ namespace Models.GrazPlan
                 this.stockModel.Value2GenotypeInits(genoInits[idx], ref genotypeInits[idx]);
             }*/
             return this.stockModel.ParamsFromGenotypeInits(mainParams, genoInits, genoIdx);
+        }
+
+        /// <summary>
+        /// Get a list of genotype names for the animal type from the current parameter set
+        /// </summary>
+        /// <param name="animal">The animal type (sheep/cattle)</param>
+        /// <returns>Array of genotype names</returns>
+        public string[] GenotypeNames(GrazType.AnimalType animal)
+        {
+            AnimalParamSet paramSet = StockList.MakeParamSet("");   // can use the param filename from component inits
+
+            int count = paramSet.BreedCount(animal);
+            string[] namesArray = new string[count];
+            for (int i = 0; i < count; i++)
+            {
+                namesArray[i] = paramSet.BreedName(animal, i);
+            }
+
+            return namesArray;
+        }
+
+        /// <summary>
+        /// Get the combined list of genotype names that are defined for this instance
+        /// of the stock component.
+        /// </summary>
+        /// <param name="animal">The animal type (sheep/cattle)</param>
+        /// <returns>Array of genotype names</returns>
+        public string[] GenotypeNamesDefined(GrazType.AnimalType animal)
+        {
+            string[] genoParams = GenotypeNames(animal);
+            foreach (SingleGenotypeInits geno in GenoTypes)
+            {
+                if (!genoParams.Contains(geno.GenotypeName))
+                {
+                    Array.Resize(ref genoParams, genoParams.Length + 1);
+                    genoParams[genoParams.Length - 1] = geno.GenotypeName;
+                }
+            }
+
+            Array.Sort(genoParams, StringComparer.InvariantCulture);
+            return genoParams;
         }
 
         #endregion
