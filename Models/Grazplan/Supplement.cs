@@ -997,12 +997,19 @@ namespace Models.GrazPlan
         {
             get
             {
+                double amount;
                 double[] result = new double[theModel.PaddockCount];
                 for (int i = 0; i < theModel.PaddockCount; i++)
-                    result[i] = theModel[i].Amount;
+                {
+                    amount = 0;
+                    theModel.GetFedSuppt(i, ref amount);
+                    result[i] = amount;
+                }
+
                 return result;
             }
         }
+
 
         /// <summary>
         /// Gets the amount and attributes of supplementary feed present in each paddock
