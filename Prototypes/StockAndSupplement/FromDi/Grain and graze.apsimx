@@ -6,7 +6,7 @@
   "Children": [
     {
       "$type": "Models.Core.Simulation, Models",
-      "Name": "Wheat_Sheep",
+      "Name": "WheatSheep",
       "Children": [
         {
           "$type": "Models.Memo, Models",
@@ -21,71 +21,27 @@
           "$type": "Models.Report.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[Wheat].Phenology.CurrentStageName",
-            "[Padd_WheatSheep].Wheat.Grain.Total.Wt*10 as Yield //(kg/ha)"
-          ],
-          "EventNames": [
-            "[Wheat].Harvesting"
-          ],
-          "Name": "Report_harvest",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report.Report, Models",
-          "VariableNames": [
-            "[Clock].Today",
-            "[Padd_WheatSheep].Wheat.AboveGround.Wt as TotalBiomass ",
-            "[Padd_WheatSheep].Wheat.Phenology.Zadok.Stage as Zadok"
-          ],
-          "EventNames": [
-            "[Clock].EndOfDay"
-          ],
-          "Name": "Report_biomass",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report.Report, Models",
-          "VariableNames": [
-            "[Clock].Today",
-            "[Stock].Paddock",
-            "[Stock].Number as No_sheep",
-            "[Stock].NumberAll",
-            "[stock].NumberAll / [Padd_WheatSheep].Area as Stockrate //(sheep/ha)",
-            "[Stock].Weight as SheepWeight // (kg)",
-            "[Stock].Age/30.4 as SheepAge //(month)"
-          ],
-          "EventNames": [
-            "[Clock].EndOfDay"
-          ],
-          "Name": "Report_stock",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report.Report, Models",
-          "VariableNames": [
-            "[Clock].Today",
             "[Stock].Paddock as StockLocation",
-            "[Stock].NumberAll",
-            "[stock].IntakeAll.Weight as Intake //(kg)",
-            "[Supplement].Name",
-            "[Supplement].stores[2].Stored as SupplementStored // (kg)",
-            "[Stock].SuppIntakeAll.Weight as SupplementIntake //(kg)",
-            "[stock].SuppEaten as TotalSuppIntake //(kg)",
-            "[stock].SuppIntake"
+            "[Stock].NumberAll as StockCount",
+            "[Stock].NumberAll / [Paddock].Area as StockingRate  //(sheep/ha)",
+            "[Stock].Weight as Weight // (kg)",
+            "[Stock].IntakeAll.Weight as Intake",
+            "[Stock].CondScore as ConditionScore",
+            "[Stock].WtChangeAll",
+            "[Stock].MilkWtAll * 0.04 * 0.08 + [Stock].MilkWt * 0.04 as MilkSolid",
+            "[Stock].PastIntakeAll.Weight as PastureIntake",
+            "[Stock].SuppIntakeAll.Weight as SupplimentIntake",
+            "[Stock].FleeceWt as FleeceWeight",
+            "[Stock].MEIntake",
+            "[ManageStock].Script.EventName as Event",
+            "[ManageStock].Script.NumberSold as NumberSold",
+            "[Wheat].AboveGround.Wt*10 as PlantBiomass   // kg/ha",
+            "[Wheat].Grain.Wt*10 as PlantYield           // kg/ha"
           ],
           "EventNames": [
             "[Clock].EndOfDay"
           ],
-          "Name": "Report_supplement",
+          "Name": "Report",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -94,7 +50,7 @@
         {
           "$type": "Models.Clock, Models",
           "Start": "2000-01-01T00:00:00",
-          "End": "2012-12-31T00:00:00",
+          "End": "2000-12-31T00:00:00",
           "Name": "Clock",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -133,7 +89,28 @@
         {
           "$type": "Models.GrazPlan.Stock, Models",
           "RandSeed": 9999,
-          "GenoTypes": [],
+          "GenoTypes": [
+            {
+              "$type": "Models.GrazPlan.StockGeno, Models",
+              "Conception": [
+                0.0,
+                0.54,
+                0.41000000000000003,
+                0.0
+              ],
+              "Name": "Small Merino",
+              "DamBreed": "",
+              "SireBreed": "",
+              "Generation": 0,
+              "SRW": 40.0,
+              "DeathRate": 0.02,
+              "RefFleeceWt": 3.6,
+              "MaxFibreDiam": 19.0,
+              "FleeceYield": 0.70000000000000007,
+              "PeakMilk": 0.0,
+              "WnrDeathRate": 0.02
+            }
+          ],
           "Sheep": [],
           "Cattle": [],
           "PaddockList": [
@@ -179,7 +156,7 @@
             {
               "$type": "Models.GrazPlan.StoreType, Models",
               "Name": "wheat, crushed",
-              "Stored": 500.0,
+              "Stored": 500000.0,
               "IsRoughage": false,
               "DMContent": 1.0,
               "DMD": 0.9,
@@ -203,18 +180,132 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "/*-------------------------------------------------------------------------------------\r\nSheep grazing wheat when conditions are suitable, and in feedlot the rest of the time.\r\n---------------------------------------------------------------------------------------\r\n\r\nIn this example simulation sheep are bought and sold on specified date.\r\nThey are fed supplement in a feedlot at a set rate, but graze a wheat crop when crop biomass >= 2.4 t/ha.\r\nSheep are moved from the wheat crop and back to feedlot when crop biomass reaches 0.5 t/ha or crop zadok = 31.\r\n\r\nBased on Sprague SJ, Kirkegaard JA, Dove H, Graham JM, McDonald SE, Kelman WM (2015) Integrating dual-purpose wheat and canola into high-rainfall livestock systems in south-eastern Australia. 1. Crop forage and grain yield. Crop and Pasture Science 66(4), 365-376. \r\n\r\nActivities in this manager:\r\n1. Buy animals at start of year & put in feedlot\r\n2. Move animals from feedlot to crop when ready to graze\r\n3. Move animals from crop to feedlot \r\n4. Shear all animals on specified date\r\n5. Sell all animals at end of year\r\n\r\nERRORS TO FIX\r\n1. When an animal dies, extra supplement is fed (see spikes in supp intake graph)\r\n2. When sheep are culled for age + purchased to maintain stocking rate, several groups of sheep are created.\r\nThis causes irregular amounts of supplement to be fed.\r\n--------------------------------------------------------------------------------------*/\r\n\r\n\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        [Link] Zone Paddock;\r\n\r\n        private double sale_age = 3.0;                                            // Age to sell animals (years)\r\n        private int no_to_buy;\r\n        private int group_count;\r\n        private int g;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n        // purchase animals annually\r\n\r\n            if (DateUtilities.DatesEqual(\"01 JAN\", Calendar.Today))\r\n            {\r\n                g = Animals.NoGroups + 1;\r\n                no_to_buy = 50; //- Animals.NumberAll;                                // Max flock size = 50\r\n                \r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"small merino\";                                // Animal genotype. See \"stock\" for more options.\r\n                purchase.Number = no_to_buy;\r\n                purchase.Sex = \"wethers\";                                        // Animal sex = wether, ewe, ram\r\n                purchase.Age = 12;                                                // Animal age in months\r\n                purchase.Weight = 30.0;                                            // Animal weight in kg\r\n                purchase.UseTag = g + 1;\r\n                \r\n                Animals.Buy(purchase);\r\n                Animals.Move(Animals.NoGroups, \"Feedlot\");                        // Paddock where animals go after purchase\r\n            }\r\n\r\n\r\n        // Move animals to wheat for grazing based on wheat crop biomass and zadok stage\r\n\r\n            double WheatBiomass = (double)Apsim.Get(Wheat,\"AboveGround.Wt\");     //wheat biomass = sum dead and live\r\n            double Zadok = (double)Apsim.Get(Wheat,\"Phenology.Zadok.Stage\");\r\n\r\n            if (WheatBiomass >= 240.0 && Zadok < 31)                             //and if wheat biomass is >= 240 g/m2 and zadok < 31\r\n               {\r\n                group_count = Animals.NoGroups;\r\n                for (g = 1; g <= group_count; g++)\r\n\r\n                {\r\n                Animals.Move(g, \"Padd_WheatSheep\");                //move animals to paddock for grazing\r\n                }\r\n            }\r\n            \r\n\r\n        // Move animals back to feedlot when wheat zadok >31 or wheat biomass <0.5 t/ha\r\n\r\n            if (Zadok >= 31 || WheatBiomass <= 50)                                //if crop zadok >= 31 or wheat biomass <= 50 g/m2\r\n            {            \r\n                group_count = Animals.NoGroups;\r\n                for (g = 1; g <= group_count; g++)\r\n\r\n                {\r\n                Animals.Move(g, \"Feedlot\");\r\n                }\r\n            }\r\n\r\n\r\n         // Shear all animals on specified date\r\n\r\n            if (DateUtilities.DatesEqual(\"15 Dec\", Calendar.Today))\r\n            {\r\n                Animals.Shear(0, \"\");\r\n            }\r\n\r\n\r\n          // Sell cast for age animals on specified date\r\n\r\n            if (DateUtilities.DatesEqual(\"20 Dec\", Calendar.Today))\r\n            {\r\n                group_count = Animals.NoGroups;\r\n               \r\n                Animals.Sell(0, Animals.NumberAll);\r\n\r\n               /* group_count = Animals.NoGroups;\r\n                for (g = 1; g <= group_count; g++)\r\n                {\r\n                    StockSplit split = new StockSplit();\r\n                    split.Group = g;\r\n                    split.Type = \"age\";\r\n                    split.Value = 365 * sale_age;\r\n                    Animals.Split(split);                                       // older animals into a new group\r\n                }\r\n\r\n                for (g = 1; g <= Animals.NoGroups; g++)\r\n                {\r\n                    if (Animals.Age[g - 1] >= 365 * sale_age)\r\n                        Animals.Sell(g, Animals.Number[g - 1]);\r\n\r\n\r\n                }*/\r\n            }\r\n            \r\n           \r\n        }\r\n    }\r\n}\r\n\r\n\r\n",
-          "Parameters": [],
-          "Name": "manage_stock",
+          "Code": "/*-------------------------------------------------------------------------------------\r\nSheep grazing wheat when conditions are suitable, and in feedlot the rest of the time.\r\n---------------------------------------------------------------------------------------\r\n\r\nIn this example simulation sheep are bought and sold on specified date.\r\nThey are fed supplement in a feedlot at a set rate, but graze a wheat crop when crop biomass >= 2.4 t/ha.\r\nSheep are moved from the wheat crop and back to feedlot when crop biomass reaches 0.5 t/ha or crop zadok = 31.\r\n\r\nBased on Sprague SJ, Kirkegaard JA, Dove H, Graham JM, McDonald SE, Kelman WM (2015) Integrating dual-purpose wheat and canola into high-rainfall livestock systems in south-eastern Australia. 1. Crop forage and grain yield. Crop and Pasture Science 66(4), 365-376. \r\n\r\nActivities in this manager:\r\n1. Buy animals at start of year & put in feedlot\r\n2. Move animals from feedlot to crop when ready to graze\r\n3. Move animals from crop to feedlot \r\n4. Shear all animals on specified date\r\n5. Sell all animals at end of year\r\n\r\nERRORS TO FIX\r\n1. When an animal dies, extra supplement is fed (see spikes in supp intake graph)\r\n2. When sheep are culled for age + purchased to maintain stocking rate, several groups of sheep are created.\r\nThis causes irregular amounts of supplement to be fed.\r\n--------------------------------------------------------------------------------------*/\r\n\r\n\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n        [Link] Summary Summary;\r\n        [Link] IPlant plant;\r\n        [Link] Soil Soil; \r\n        [Link] Zone Paddock;\r\n\r\n        private bool isGrazingCrop = false;\r\n        private int tag = 1;\r\n\r\n        public enum AnType\r\n\t\t{\t\t\r\n            Friesian,\r\n            Jersey\r\n        }\r\n\r\n        public enum Gender\r\n        {\r\n            Bulls,\r\n            Cows,\r\n            Steers,\r\n            Heifers,\r\n            Calves\r\n        }\r\n\r\n        public enum SellPolicyType\r\n        {\r\n            Date,\r\n            Weight,\r\n            Age\r\n        }\r\n\r\n\t\t[Separator(\"Buying of animals\")]\r\n\r\n\t\t[Description(\"Buy animals?\")] \r\n\t\tpublic bool Buying { get; set; }\r\n\r\n\t\t[Description(\"Breed of animal (must be chosen in Stock): \")] \r\n\t\t[Display(EnabledCallback=\"BuyingEnabled\")]\r\n\t\tpublic AnType AnimalType { get; set; }\r\n\r\n\t\t[Description(\"Sex of animal bought: \")] \r\n\t\t[Display(EnabledCallback=\"BuyingEnabled\")]\r\n\t\tpublic Gender Sex { get; set; }\r\n\r\n\t\t[Description(\"Date to buy animals (dd-mmm)\")] \r\n\t\t[Display(EnabledCallback=\"BuyingEnabled\")]\r\n\t\tpublic string BuyDate { get; set; }\r\n\r\n\t\t[Description(\"Age of bought animals (months): \")] \r\n\t\t[Display(EnabledCallback=\"BuyingEnabled\")]\r\n\t\tpublic double BuyAge { get; set; }\r\n\r\n\t\t[Description(\"Weight of bought animals (kg): \")] \r\n\t\t[Display(EnabledCallback=\"BuyingEnabled\")]\r\n\t\tpublic double BuyWeight { get; set; }\r\n\r\n\t\t[Description(\"Zero denotes not lactating; 1 or more denotes the time (days) since parturition:\")] \r\n\t\t[Display(EnabledCallback=\"BuyingEnabled\")]\r\n\t\tpublic int BuyLactating { get; set; }\r\n\r\n\t\t[Description(\"Number of animals to buy: \")] \r\n\t\t[Display(EnabledCallback=\"BuyingEnabled\")]\r\n\t\tpublic int NumAntoBuy { get; set; }\r\n\r\n\t\t[Separator(\"Selling of animals\")]\r\n\r\n\t\t[Description(\"Sell animals using this manager (tick) or use operations file (no tick); ensure operations are dis/enabled as required \")] \r\n\t\t[Display(EnabledCallback=\"SellingEnabled\")]\r\n\t\tpublic bool Selling { get; set; }\r\n\r\n\t\t[Description(\"Sell animals based on Age, Weight or Day of Year \")] \r\n\t\t[Display(EnabledCallback=\"SellingEnabled\")]\r\n\t\tpublic SellPolicyType SellPolicy { get; set; }\r\n\r\n\t\t[Description(\"Age at which to sell (months): \")] \r\n\t\t[Display(EnabledCallback=\"SellingEnabled\")]\r\n\t\tpublic double SaleAge { get; set; }\r\n\r\n\t\t[Description(\"Weight at which to sell (kg): \")] \r\n\t\t[Display(EnabledCallback=\"SellingEnabled\")]\r\n\t\tpublic double SaleWeight { get; set; }\r\n\r\n\t\t[Description(\"Date to sell animals (dd-mmm)\")] \r\n\t\t[Display(EnabledCallback=\"SellingEnabled\")]\r\n\t\tpublic string SaleDate { get; set; }\r\n\r\n\t\t[Description(\"Percentage of animals to sell (%)\")] \r\n\t\t[Display(EnabledCallback=\"SellingEnabled\")]\r\n\t\tpublic double SalePercentAnimals { get; set; }\r\n\r\n\t\t[Separator(\"Rule for moving animals into and out of paddock\")]\r\n\r\n\t\t[Description(\"Name of paddock to move animals in to:\")] \r\n\t\t[Display(Type=DisplayType.Model, ModelType=typeof(Zone))]\r\n\t\tpublic IModel PaddockToMoveAnimalsTo { get; set; }\r\n\r\n\t\t[Description(\"First date to consider moving animals:\")] \r\n\t\tpublic string MoveAnimalStartDate { get; set; }\r\n\r\n\t\t[Description(\"Last date to consider moving animals:\")] \r\n\t\tpublic string MoveAnimalEndDate { get; set; }\r\n\r\n\t\t[Description(\"Biomass threshold to move animals IN to paddock:\")] \r\n\t\tpublic double BiomassThresholdToMoveAnimalsIn { get; set; }\r\n\r\n\t\t[Description(\"Zadok stage threshold below which animals can move IN to paddock:\")] \r\n\t\tpublic double ZadokThresholdToMoveAnimalsIn { get; set; }\r\n\r\n\t\t[Description(\"Biomass threshold above which animals will move OUT of paddock:\")] \r\n\t\tpublic double BiomassThresholdToMoveAnimalsOut { get; set; }\r\n\r\n\t\t[Description(\"Zadok stage threshold above which animals will move OUT of paddock:\")] \r\n\t\tpublic double ZadokThresholdToMoveAnimalsOut { get; set; }\r\n\r\n\t\t[Separator(\"Shearing\")]\r\n\r\n\t\t[Description(\"Date to shear animals (dd-mmm)\")] \r\n\t\tpublic string ShearDate { get; set; }\r\n\r\n\t\t[Description(\" \")] \r\n\t\tpublic string Dummy { get; set; }\r\n\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n\t\t// Callback properties to control disabling of properties.\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n\t\tpublic bool BuyingEnabled { get { return Buying; } }\r\n\r\n\t\tpublic bool SellingEnabled { get { return Selling; } }\r\n\r\n\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n\t\t// Outputs\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n\t\t// <summary>Number of animals sold.</summary>\r\n\t\tpublic int NumberSold { get; set; }\r\n\r\n\t\t// <summary>Description of something that has happened.</summary>\r\n\t\tpublic string EventName { get; set; }\r\n\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n\t\t// Once only setup at start of simulation\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n \t\t{\r\n\r\n \t\t}\r\n\r\n\t\t//////////////////////////////////////////////////////\r\n\t\t// Management that happens every day.\r\n\t\t//////////////////////////////////////////////////////\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tEventName = string.Empty;\r\n\r\n        \t// Buy animals\r\n            if (Buying && DateUtilities.DatesAreEqual(BuyDate, clock.Today))\r\n            {\r\n                var purchase = new StockBuy();\r\n                purchase.Genotype = AnimalType.ToString();   // \"small merino\"\r\n                purchase.Number = NumAntoBuy;\r\n                purchase.Sex = Sex.ToString();               // \"wethers\"\r\n                purchase.Age = BuyAge;\r\n                purchase.Weight = BuyWeight;\r\n                purchase.UseTag = tag;\r\n                purchase.Lactating = BuyLactating;\r\n                Animals.Buy(purchase);\r\n                var groupNumberOfBoughtAnimals = Animals.NoGroups;\r\n                Animals.Move(groupNumberOfBoughtAnimals, \"Feedlot\");\r\n                EventName = NumAntoBuy + \" animals bought\";\r\n            }\r\n\r\n            // Sell animals\r\n            if (Selling)\r\n            {\r\n            \tbool doSell = false;\r\n\t\t        if (SellPolicy == SellPolicyType.Date && DateUtilities.DatesAreEqual(SaleDate, clock.Today))\r\n\t\t        \tdoSell = true;\r\n\t\t        else if (SellPolicy == SellPolicyType.Weight && Animals.WeightAll >= SaleWeight)\r\n\t                doSell = true;\r\n\t            else if (SellPolicy == SellPolicyType.Age && Animals.AgeMonthsAll >= SaleAge)\r\n                    doSell = true;\r\n\r\n                if (doSell)\r\n                {\r\n                    NumberSold = Convert.ToInt32(Animals.NumberAll * SalePercentAnimals / 100.0);\r\n\t\t        \tAnimals.SellTag(tag, NumberSold);\r\n\t              \tEventName = NumberSold + \" animals sold\";\r\n\t        \t}\r\n            }\r\n\r\n        \t// Move animals IN to grazing paddock.\r\n            if (!isGrazingCrop && IsMoveAnimalsInConditionMet())\r\n           \t{\r\n                for (int g = 1; g <= Animals.NoGroups; g++)\r\n\t                Animals.Move(g, PaddockToMoveAnimalsTo.Name);\r\n\t            isGrazingCrop = true;\r\n\t            EventName = \"Animals moved to paddock\";\r\n            }\r\n\r\n        \t// Move animals OUT of grazing paddock.\r\n            if (isGrazingCrop && IsMoveAnimalsOutConditionMet())\r\n           \t{\r\n                for (int g = 1; g <= Animals.NoGroups; g++)\r\n\t                Animals.Move(g, \"Feedlot\");\r\n\t            isGrazingCrop = false;\r\n\t            EventName = \"Animals moved to feedlot\";\r\n            }\r\n\r\n         \t// Shear all animals on specified date\r\n            if (DateUtilities.DatesEqual(ShearDate, clock.Today))\r\n            {\r\n                Animals.Shear(0, \"\");\r\n\t            EventName = \"Animals shorn\";\r\n            }\r\n        }\r\n\r\n        ////////////////////////////////////////////////////////////////////////\r\n\t\t// Condition that determines when animals move IN to paddock for grazing.\r\n\t\t// Return true if animals should be moved.\r\n\t\t////////////////////////////////////////////////////////////////////////\r\n        private bool IsMoveAnimalsInConditionMet()\r\n        {\r\n        \tbool moveAnimals = false;\r\n        \tif (MoveAnimalStartDate == null || MoveAnimalEndDate == null ||\r\n            \tDateUtilities.WithinDates(MoveAnimalStartDate, clock.Today, MoveAnimalEndDate))\r\n        \t{\r\n        \t\t\r\n        \t\tif (plant.AboveGround.Wt > BiomassThresholdToMoveAnimalsIn)\r\n        \t\t\tmoveAnimals = true;\r\n        \t\tif (moveAnimals && ZadokThresholdToMoveAnimalsIn > 0)\r\n        \t\t{\r\n        \t\t\tdouble zadok = (double) Apsim.Get(plant as IModel, \"Phenology.Zadok\");\r\n        \t\t\tif (zadok > ZadokThresholdToMoveAnimalsIn)\r\n        \t\t\t\tmoveAnimals = false;\r\n        \t\t}\r\n\t       \t}\r\n        \treturn moveAnimals;\r\n    \t}\r\n\r\n        ////////////////////////////////////////////////////////////////////////\r\n\t\t// Condition that determines when animals move OUT of paddock for grazing.\r\n\t\t// Return true if animals should be moved.\r\n\t\t////////////////////////////////////////////////////////////////////////\r\n        private bool IsMoveAnimalsOutConditionMet()\r\n        {\r\n        \tbool moveAnimals = false;\r\n    \t\tif (plant.AboveGround.Wt < BiomassThresholdToMoveAnimalsOut)\r\n    \t\t\tmoveAnimals = true;\r\n    \t\tif (moveAnimals && ZadokThresholdToMoveAnimalsIn > 0)\r\n    \t\t{\r\n    \t\t\tdouble zadok = (double) Apsim.Get(plant as IModel, \"Phenology.Zadok\");\r\n    \t\t\tif (zadok > ZadokThresholdToMoveAnimalsIn)\r\n    \t\t\t\tmoveAnimals = true;\r\n    \t\t}\r\n\t       \treturn moveAnimals;\r\n        }\r\n    }\r\n}",
+          "Parameters": [
+            {
+              "Key": "Buying",
+              "Value": "True"
+            },
+            {
+              "Key": "AnimalType",
+              "Value": "Friesian"
+            },
+            {
+              "Key": "Sex",
+              "Value": "Bulls"
+            },
+            {
+              "Key": "BuyDate",
+              "Value": "1-Jan-2000"
+            },
+            {
+              "Key": "BuyAge",
+              "Value": "12"
+            },
+            {
+              "Key": "BuyWeight",
+              "Value": "500"
+            },
+            {
+              "Key": "BuyLactating",
+              "Value": "100"
+            },
+            {
+              "Key": "NumAntoBuy",
+              "Value": "10"
+            },
+            {
+              "Key": "Selling",
+              "Value": "False"
+            },
+            {
+              "Key": "SellPolicy",
+              "Value": "Date"
+            },
+            {
+              "Key": "SaleAge",
+              "Value": "0"
+            },
+            {
+              "Key": "SaleWeight",
+              "Value": "0"
+            },
+            {
+              "Key": "SaleDate",
+              "Value": "asdf"
+            },
+            {
+              "Key": "SalePercentAnimals",
+              "Value": "10"
+            },
+            {
+              "Key": "PaddockToMoveAnimalsTo",
+              "Value": "[Paddock]"
+            },
+            {
+              "Key": "MoveAnimalStartDate",
+              "Value": "1-jan"
+            },
+            {
+              "Key": "MoveAnimalEndDate",
+              "Value": "31-dec"
+            },
+            {
+              "Key": "BiomassThresholdToMoveAnimalsIn",
+              "Value": "450"
+            },
+            {
+              "Key": "ZadokThresholdToMoveAnimalsIn",
+              "Value": "0"
+            },
+            {
+              "Key": "BiomassThresholdToMoveAnimalsOut",
+              "Value": "50"
+            },
+            {
+              "Key": "ZadokThresholdToMoveAnimalsOut",
+              "Value": "0"
+            },
+            {
+              "Key": "ShearDate",
+              "Value": "10-nov"
+            },
+            {
+              "Key": "Dummy",
+              "Value": ""
+            },
+            {
+              "Key": "NumberSold",
+              "Value": "0"
+            },
+            {
+              "Key": "EventName",
+              "Value": ""
+            }
+          ],
+          "Name": "ManageStock",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "/*--------------------------------------------------------------------------------------------------\r\nSheep grazing wheat when conditions are suitable, and in feedlot fed supplement the rest of the time.\r\n----------------------------------------------------------------------------------------------------\r\n\r\nThis manager:\r\n1. Feeds stock supplement at set amount in feedlot only\r\n2. Restocks supplement store when reaches minimum level\r\n\r\n--------------------------------------------------------------------------------------------------*/\r\n\r\n\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        [Link] Zone Paddock;\r\n\r\n\r\n        private int group_count;\r\n        private int g;\r\n\r\n        private string buy_date;  \r\n           private string buy_name;\r\n           private double buy_amount;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n\r\n\r\n           // Feed animals supplement in Feedot only\r\n               {\r\n               string FeedPaddock = \"Feedlot\";                                        // Choose paddock where supplement is fed\r\n             double SuppAmount = 0.5;                                            // Amount supplement to feed. Supplement fed is as-is (fresh weight) basis. Check %DM in supplement store.\r\n             string SuppType = \"wheat, crushed\";\r\n\r\n               for (int g = 1; g <= Animals.NoGroups; g++)\r\n               {\r\n                   FeedPaddock = Animals.Paddock[g - 1];\r\n\r\n                   if (string.Compare(FeedPaddock, \"Feedlot\", true) == 0)            // Check if animals are currently in Feedlot paddock\r\n                   {                                                                \r\n                    Feed.Feed(SuppType, SuppAmount * Animals.NumberAll, FeedPaddock);     \r\n                    Summary.WriteMessage(this,string.Format(\"{0}: Supplement fed: {1:0.00} kg of {2} to {3} sheep\", Calendar.Today.ToShortDateString(), SuppAmount, SuppType, Animals.NumberAll));\r\n                }\r\n            }\r\n            }     \r\n\r\n\r\n\r\n          // Stock supplement store\r\n              \r\n \r\n              {    \r\n                 if (Feed.Stores[1].Stored <= 500)                                // Minimum amount of supplement in store\r\n                 {\r\n                     Feed.Buy(5000,\"wheat, crushed\");                            // Amount (kg) and type of supplement to buy\r\n\r\n                     Summary.WriteMessage(this,string.Format(\"{0}: Buy supplement: {1:0.00} kg of {2}\", Calendar.Today.ToShortDateString(), 5000, \"wheat, crushed\"));\r\n                 }\r\n            }\r\n         }\r\n      }             \r\n                  \r\n    }\r\n\r\n   \r\n\r\n",
-          "Parameters": [],
-          "Name": "manage_supplement",
+          "Code": "/*--------------------------------------------------------------------------------------------------\r\nSheep grazing wheat when conditions are suitable, and in feedlot fed supplement the rest of the time.\r\n----------------------------------------------------------------------------------------------------\r\n\r\nThis manager:\r\n1. Feeds stock supplement at set amount in feedlot only\r\n2. Restocks supplement store when reaches minimum level\r\n\r\n--------------------------------------------------------------------------------------------------*/\r\n\r\n\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Stock Animals;\r\n\t\t[Link] Supplement Feed;\r\n\t\t[Link] Summary Summary;\r\n\t\t[Link] Plant Wheat;\r\n\t\t[Link] Soil Soil;\r\n\t\t[Link] Zone Paddock;\r\n\r\n\r\n\t\tprivate int group_count;\r\n\t\tprivate int g;\r\n\r\n\t\tprivate string buy_date;\r\n\t\tprivate string buy_name;\r\n\t\tprivate double buy_amount;\r\n\r\n\t\t[Description(\"Amount supplement to feed (kg/animal). Supplement fed is as-is (fresh weight) basis.\")]\r\n\t\tpublic double SupplementAmount { get; set; }\r\n\r\n\t\t[Description(\"Supplement type\")]\r\n\t\tpublic string SuppType { get; set; }\r\n\r\n\t\t[Description(\"Minimum amount of supplement in store (kg)\")]\r\n\t\tpublic double SupplementThreshold { get; set; }\r\n\r\n\t\t//////////////////////////////////////////////////////\r\n\t\t// Management that happens every day.\r\n\t\t//////////////////////////////////////////////////////\r\n\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t// Feed animals supplement in feedot only\r\n\t\t\tfor (int g = 0; g < Animals.NoGroups; g++)\r\n\t\t\t{\r\n\t\t\t\t// Check if animals are currently in feedlot. If so then offer supplement\r\n\t\t\t\tif (string.Compare(Animals.Paddock[g], \"Feedlot\", true) == 0)   {                                                                \r\n\t\t\t\t\tFeed.Feed(SuppType, SupplementAmount * Animals.NumberAll, \"Feedlot\");     \r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\t\t\t// Stock supplement store\r\n\t\t\tif (Feed.Stores[1].Stored <= SupplementThreshold)\r\n\t\t\t{\r\n\t\t\t\tFeed.Buy(5000, SuppType);           // Amount (kg) and type of supplement to buy\r\n\t\t\t\tSummary.WriteMessage(this, string.Format(\"Buy supplement: {0:0.00} kg of {1}\", 5000, \"wheat, crushed\"));\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n",
+          "Parameters": [
+            {
+              "Key": "SupplementAmount",
+              "Value": "50"
+            },
+            {
+              "Key": "SuppType",
+              "Value": "wheat, crushed"
+            },
+            {
+              "Key": "SupplementThreshold",
+              "Value": "500"
+            }
+          ],
+          "Name": "ManageSupplement",
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
@@ -225,7 +316,7 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
-          "Name": "Padd_WheatSheep",
+          "Name": "Paddock",
           "Children": [
             {
               "$type": "Models.Fertiliser, Models",
@@ -916,20 +1007,6 @@
           "Name": "Feedlot",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
-              "VariableNames": [
-                "[Clock].Today"
-              ],
-              "EventNames": [
-                ""
-              ],
-              "Name": "Report",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Soils.Soil, Models",
               "RecordNumber": 0,
               "ASCOrder": "Vertosol",
@@ -1484,7 +1561,27 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
-        },
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Folder, Models",
+      "ShowPageOfGraphs": true,
+      "Name": "Graphs",
+      "Children": [
         {
           "$type": "Models.Graph.Graph, Models",
           "Caption": "Wheat biomass",
@@ -1503,7 +1600,7 @@
             {
               "$type": "Models.Graph.Axis, Models",
               "Type": 0,
-              "Title": "Yield (kg/ha)",
+              "Title": "Yield and biomass (kg/ha)",
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
@@ -1516,7 +1613,7 @@
           "LegendOrientation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "Wheat biomass",
+          "Name": "Wheat biomass and yield",
           "Children": [
             {
               "$type": "Models.Graph.Series, Models",
@@ -1532,18 +1629,70 @@
               "Line": 0,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "Report_biomass",
+              "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "TotalBiomass",
+              "YFieldName": "PlantBiomass",
               "X2FieldName": null,
               "Y2FieldName": null,
-              "ShowInLegend": false,
+              "ShowInLegend": true,
               "IncludeSeriesNameInLegend": true,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "WheatSheep",
-              "Children": [],
+              "Name": "Biomass",
+              "Children": [
+                {
+                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                  "ColumnName": "Event",
+                  "SimulationName": "WheatSheep",
+                  "Name": "EventNamesOnGraph",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -1663232,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "PlantYield",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": true,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Yield",
+              "Children": [
+                {
+                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                  "ColumnName": "Event",
+                  "SimulationName": "WheatSheep",
+                  "Name": "EventNamesOnGraph",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1571,7 +1720,18 @@
             {
               "$type": "Models.Graph.Axis, Models",
               "Type": 0,
-              "Title": "Yield (kg/ha)",
+              "Title": "Count",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "ME",
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
@@ -1584,7 +1744,7 @@
           "LegendOrientation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "Wheat grain yield",
+          "Name": "Animal count and ME",
           "Children": [
             {
               "$type": "Models.Graph.Series, Models",
@@ -1595,23 +1755,206 @@
               "FactorToVaryColours": null,
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
-              "Marker": 0,
+              "Marker": 11,
               "MarkerSize": 0,
-              "Line": 4,
+              "Line": 0,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "Report_harvest",
+              "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Yield (kg/ha)",
+              "YFieldName": "StockCount",
               "X2FieldName": null,
               "Y2FieldName": null,
-              "ShowInLegend": false,
+              "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "WheatSheep",
-              "Children": [],
+              "Name": "Count",
+              "Children": [
+                {
+                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                  "ColumnName": "Event",
+                  "SimulationName": "WheatSheep",
+                  "Name": "EventNamesOnGraph",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -16747854,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Stock.MEIntake(1)",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "ME",
+              "Children": [
+                {
+                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                  "ColumnName": "Event",
+                  "SimulationName": "WheatSheep",
+                  "Name": "EventNamesOnGraph",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph.Graph, Models",
+          "Caption": "Wheat grain yield",
+          "Axis": [
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 3,
+              "Title": "Date",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 0,
+              "Title": "Weight (kg)",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": "Condition score",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Animal weight change and condition",
+          "Children": [
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -1663232,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Weight(1)",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Weight",
+              "Children": [
+                {
+                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                  "ColumnName": "Event",
+                  "SimulationName": "WheatSheep",
+                  "Name": "EventNamesOnGraph",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -16747854,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "Checkpoint": "Current",
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "ConditionScore(1)",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Condition",
+              "Children": [
+                {
+                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                  "ColumnName": "Event",
+                  "SimulationName": "WheatSheep",
+                  "Name": "EventNamesOnGraph",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1646,13 +1989,24 @@
               "Interval": "NaN",
               "DateTimeAxis": true,
               "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Graph.Axis, Models",
+              "Type": 2,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
           "LegendOrientation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "Sheep number",
+          "Name": "Animal Weight and Milk and Fleece ",
           "Children": [
             {
               "$type": "Models.Graph.Series, Models",
@@ -1668,86 +2022,29 @@
               "Line": 0,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "Report_stock",
+              "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Stock.NumberAll",
+              "YFieldName": "Stock.WtChangeAll",
               "X2FieldName": null,
               "Y2FieldName": null,
-              "ShowInLegend": false,
+              "ShowInLegend": true,
               "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Series1",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": "Sheep liveweight (kg)",
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "Animal Liveweight",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -3376729,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report_stock",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "SheepWeight (kg)(1)",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "group1",
-              "Children": [],
+              "Name": "Weight change",
+              "Children": [
+                {
+                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                  "ColumnName": "Event",
+                  "SimulationName": "WheatSheep",
+                  "Name": "EventNamesOnGraph",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1766,18 +2063,29 @@
               "Line": 0,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "Report_stock",
+              "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SheepWeight (kg)(2)",
+              "YFieldName": "MilkSolid(1)",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
+              "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "group2",
-              "Children": [],
+              "Name": "Milk solids",
+              "Children": [
+                {
+                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                  "ColumnName": "Event",
+                  "SimulationName": "WheatSheep",
+                  "Name": "EventNamesOnGraph",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1786,7 +2094,7 @@
               "$type": "Models.Graph.Series, Models",
               "Type": 1,
               "XAxis": 3,
-              "YAxis": 0,
+              "YAxis": 2,
               "ColourArgb": -11094807,
               "FactorToVaryColours": null,
               "FactorToVaryMarkers": null,
@@ -1796,146 +2104,29 @@
               "Line": 0,
               "LineThickness": 0,
               "Checkpoint": "Current",
-              "TableName": "Report_stock",
+              "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "SheepWeight (kg)(3)",
+              "YFieldName": "FleeceWeight(1)",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
+              "IncludeSeriesNameInLegend": false,
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "group3",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": false,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 0,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": false,
-              "CrossesAtZero": false
-            },
-            {
-              "$type": "Models.Graph.Axis, Models",
-              "Type": 3,
-              "Title": null,
-              "Inverted": false,
-              "Minimum": "NaN",
-              "Maximum": "NaN",
-              "Interval": "NaN",
-              "DateTimeAxis": true,
-              "CrossesAtZero": false
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "Supp intake",
-          "Children": [
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -11094807,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 0,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report_supplement",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "stock.SuppIntake(1).Weight",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series1",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -3376729,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 1,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report_supplement",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "stock.SuppIntake(2).Weight",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series2",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16777216,
-              "FactorToVaryColours": null,
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 11,
-              "MarkerSize": 0,
-              "Line": 2,
-              "LineThickness": 0,
-              "Checkpoint": "Current",
-              "TableName": "Report_supplement",
-              "XFieldName": "Clock.Today",
-              "YFieldName": "stock.SuppIntake(3).Weight",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": true,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Series3",
-              "Children": [],
+              "Name": "Fleece weight",
+              "Children": [
+                {
+                  "$type": "Models.Graph.EventNamesOnGraph, Models",
+                  "ColumnName": "Event",
+                  "SimulationName": "WheatSheep",
+                  "Name": "EventNamesOnGraph",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -1946,16 +2137,6 @@
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
-      "CustomFileName": null,
-      "Name": "DataStore",
-      "Children": [],
       "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
