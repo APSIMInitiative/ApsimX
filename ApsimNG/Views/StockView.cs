@@ -112,6 +112,20 @@ namespace UserInterface.Views
         private Label lblFibreDiam = null;
         private Label untFibreDiam = null;
         private Label lblError = null;
+        // Animals reproduction frame
+        private Frame pnlRepro = null;
+        private Frame rgrpSRepro = null;
+        private Frame rgrpCPreg = null;
+        private RadioButton rbDryEmpty = null;
+        private RadioButton rbPregS = null;
+        private RadioButton rbLact = null;
+        private RadioButton rbEmpty = null;
+        private RadioButton rbPreg = null;
+        private Frame rgrpCLact = null;
+        private RadioButton rbNoLact = null;
+        private RadioButton rbLac = null;
+        private RadioButton rbLactCalf = null;
+        private Frame rgrpNoLambs = null;
 
         /// <summary>
         /// The list of genotypes in the treeview
@@ -188,6 +202,19 @@ namespace UserInterface.Views
             lblFibreDiam = (Label)builder.GetObject("lblFibreDiam");
             untFibreDiam = (Label)builder.GetObject("untFibreDiam");
             lblError = (Label)builder.GetObject("lblError");
+            pnlRepro = (Frame)builder.GetObject("pnlRepro");
+            rgrpSRepro = (Frame)builder.GetObject("rgrpSRepro");
+            rgrpCPreg = (Frame)builder.GetObject("rgrpCPreg");
+            rbDryEmpty = (Gtk.RadioButton)builder.GetObject("rbDryEmpty");
+            rbPregS = (Gtk.RadioButton)builder.GetObject("rbPregS");
+            rbLact = (Gtk.RadioButton)builder.GetObject("rbLact");
+            rbEmpty = (Gtk.RadioButton)builder.GetObject("rbEmpty");
+            rbPreg = (Gtk.RadioButton)builder.GetObject("rbPreg");
+            rgrpCLact = (Frame)builder.GetObject("rgrpCLact");
+            rbNoLact = (Gtk.RadioButton)builder.GetObject("rbNoLact");
+            rbLac = (Gtk.RadioButton)builder.GetObject("rbLac");
+            rbLactCalf = (Gtk.RadioButton)builder.GetObject("rbLactCalf");
+            rgrpNoLambs = (Frame)builder.GetObject("rgrpNoLambs");
 
             // configure the treeview of animal groups
             lbxAnimalList = (Gtk.TreeView)builder.GetObject("tvAnimals");
@@ -1047,82 +1074,87 @@ namespace UserInterface.Views
                 untFibreDiam.Visible = (animalType == GrazType.AnimalType.Sheep);
                 deFibreDiam.Value = animalGroup.FibreDiam;
 
-                /*
-                pnlRepro.Visible     := (Sex = Empty);                                { Reproduction-related controls are on a   }
-          if pnlRepro.Visible then                                              {   (borderless) panel                     }
-          begin
-            bIsPregnant  := (Pregnant     > 0);
-            bIsLactating := (Lactating    > 0);
-            bHasYoung    := (No_Suckling  > 0);
 
-            rgrpSRepro.Visible := (TheAnimal = Sheep);                          { Reproduction options for sheep           }
-            if (TheAnimal = Sheep) then
-              if not (bIsPregnant or bIsLactating) then
-                rgrpSRepro.ItemIndex := 0
-              else if bIsPregnant then
-                rgrpSRepro.ItemIndex := 1
-              else if bIsLactating then
-                rgrpSRepro.ItemIndex := 2;
+                pnlRepro.Visible = (animalGroup.Sex == GrazType.ReproType.Empty); // Reproduction-related controls are on a frame
 
-            rgrpCPreg.Visible := (TheAnimal = Cattle);                          { Pregnancy options for cattle             }
-            if (TheAnimal = Cattle) then
-              if not bIsPregnant then
-                rgrpCPreg.ItemIndex := 0
-              else
-                rgrpCPreg.ItemIndex := 1;
+                if (pnlRepro.Visible)
+                {
+                    bIsPregnant = (animalGroup.Pregnant > 0);
+                    bIsLactating = (animalGroup.Lactating > 0);
+                    bHasYoung = (animalGroup.NumSuckling > 0);
 
-            rgrpCLact.Visible := (TheAnimal = Cattle);                          { Lactation options for cattle             }
-            if (TheAnimal = Cattle) then
-              if not bIsLactating then
-                rgrpCLact.ItemIndex := 0
-              else if bIsLactating and bHasYoung then
-                rgrpCLact.ItemIndex := 1
-              else if bIsLactating and not bHasYoung then
-                rgrpCLact.ItemIndex := 2;
+                    rgrpSRepro.Visible = (animalType == GrazType.AnimalType.Sheep);                          // Reproduction options for sheep           
+                    if (animalType == GrazType.AnimalType.Sheep)
+                    {
+                        if (!(bIsPregnant || bIsLactating))
+                            rbDryEmpty.Active = true;
+                        else if (bIsPregnant)
+                            rbPregS.Active = true;
+                        else if (bIsLactating)
+                            rbLact.Active = true;
+                    }
 
-            rgrpNoLambs.Visible  := (TheAnimal = Sheep) and (bIsPregnant or bIsLactating);
-            if bIsPregnant then
-              rgrpNoLambs.ItemIndex := No_Foetuses - 1
-            else if bisLactating then
-              rgrpNoLambs.ItemIndex := No_Suckling - 1;
+                    rgrpCPreg.Visible = (animalType == GrazType.AnimalType.Cattle);                          // Pregnancy options for cattle             
+                    if (animalType == GrazType.AnimalType.Cattle)
+                    {
+                        if (!bIsPregnant)
+                            rbEmpty.Active = true;
+                        else
+                            rbPreg.Active = true;
+                    }
 
-            lblPregnant.Visible  := bIsPregnant;
-            edtPregnant.Visible  := bIsPregnant;
-            untPregnant.Visible  := bIsPregnant;
-            edtPregnant.Value    := Pregnant;
+                    rgrpCLact.Visible = (animalType == GrazType.AnimalType.Cattle);                          // Lactation options for cattle            
+                    if (animalType == GrazType.AnimalType.Cattle)
+                        if (!bIsLactating)
+                            rbNoLact.Active = true;
+                        else if (bIsLactating && bHasYoung)
+                            rbLac.Active = true;
+                        else if (bIsLactating && !bHasYoung)
+                            rbLactCalf.Active = true;
+                    
+                    rgrpNoLambs.Visible  = (animalType == GrazType.AnimalType.Sheep) && (bIsPregnant || bIsLactating);
+                    /*if bIsPregnant then
+                      rgrpNoLambs.ItemIndex := No_Foetuses - 1
+                    else if bisLactating then
+                      rgrpNoLambs.ItemIndex := No_Suckling - 1;
 
-            lblLactating.Visible := bIsLactating;
-            edtLactating.Visible := bIsLactating;
-            untLactating.Visible := bIsLactating;
-            edtLactating.Value   := Lactating;
+                    lblPregnant.Visible  := bIsPregnant;
+                    edtPregnant.Visible  := bIsPregnant;
+                    untPregnant.Visible  := bIsPregnant;
+                    edtPregnant.Value    := Pregnant;
 
-            lblBirthCS.Visible   := bIsLactating;
-            edtBirthCS.Visible   := bIsLactating;
-            edtBirthCS.Value     := Birth_CS;
+                    lblLactating.Visible := bIsLactating;
+                    edtLactating.Visible := bIsLactating;
+                    untLactating.Visible := bIsLactating;
+                    edtLactating.Value   := Lactating;
 
-            if (theAnimal = Sheep) then
-              lblYoungWt.Caption       := '&Lamb weight'
-            else if (theAnimal = Cattle) then
-              lblYoungWt.Caption       := 'Cal&f weight';
-            lblYoungWt.Visible   := bIsLactating and bHasYoung;
-            edtYoungWt.Visible   := bIsLactating and bHasYoung;
-            untYoungWt.Visible   := bIsLactating and bHasYoung;
-            edtYoungWt.Value     := Young_Wt;
+                    lblBirthCS.Visible   := bIsLactating;
+                    edtBirthCS.Visible   := bIsLactating;
+                    edtBirthCS.Value     := Birth_CS;
 
-            lblLambGFW.Visible   := (TheAnimal = Sheep) and bIsLactating;
-            edtLambGFW.Visible   := (TheAnimal = Sheep) and bIsLactating;
-            untLambGFW.Visible   := (TheAnimal = Sheep) and bIsLactating;
-            edtLambGFW.Value     := Young_GFW;
-          end; {_ if panelRepro.Visible _}
+                    if (theAnimal = Sheep) then
+                    lblYoungWt.Caption       := '&Lamb weight'
+                    else if (theAnimal = Cattle) then
+                    lblYoungWt.Caption       := 'Cal&f weight';
+                    lblYoungWt.Visible   := bIsLactating and bHasYoung;
+                    edtYoungWt.Visible   := bIsLactating and bHasYoung;
+                    untYoungWt.Visible   := bIsLactating and bHasYoung;
+                    edtYoungWt.Value     := Young_Wt;
+
+                    lblLambGFW.Visible   := (TheAnimal = Sheep) and bIsLactating;
+                    edtLambGFW.Visible   := (TheAnimal = Sheep) and bIsLactating;
+                    untLambGFW.Visible   := (TheAnimal = Sheep) and bIsLactating;
+                    edtLambGFW.Value     := Young_GFW; */
+                }
 
 
-            */
+
                 // Update the descriptive string in the animal groups list box
                 string groupText = GroupText(currentGroup);
                 TreeIter iter;
                 groupsList.IterNthChild(out iter, currentGroup);
-                groupsList.SetValue(iter, 0, groupText); 
-                
+                groupsList.SetValue(iter, 0, groupText);
+
                 this.filling = false;
             }
         }
@@ -1174,6 +1206,7 @@ namespace UserInterface.Views
                     animalGroup.MatedTo = "";
                     animalGroup.Pregnant = 0;
 
+                    
                     if (animalGroup.Sex == GrazType.ReproType.Empty)
                     { /*
                     if (animalType == GrazType.AnimalType.Sheep)
