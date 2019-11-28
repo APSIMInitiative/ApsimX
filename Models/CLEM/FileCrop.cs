@@ -30,7 +30,6 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.GridView")] //CLEMFileCropView
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] //CLEMFileCropView
-    [ValidParent(ParentType=typeof(Simulation))]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This model holds a crop data file for the CLEM simulation.")]
@@ -325,6 +324,11 @@ namespace Models.CLEM
                 {
                     this.reader = new ApsimTextFile();
                     this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+
+                    if(this.reader.Headings == null)
+                    {
+                        throw new Exception("@error:Invalid format of datafile [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )");
+                    }
 
                     this.soilNumIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "SoilNum");
                     this.cropNameIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "CropName");

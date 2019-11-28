@@ -26,6 +26,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/LabourFeed.htm")]
     public class LabourActivityFeed : CLEMActivityBase
     {
+        private double feedRequired = 0;
+
         //[Link]
         //Clock Clock = null;
 
@@ -38,20 +40,19 @@ namespace Models.CLEM.Activities
         public string FeedTypeName { get; set; }
 
         /// <summary>
-        /// Feed type
-        /// </summary>
-        [XmlIgnore]
-        public HumanFoodStoreType FeedType { get; set; }
-
-        //private double feedRequired = 0;
-
-        /// <summary>
         /// Feeding style to use
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(LabourFeedActivityTypes.SpecifiedDailyAmountPerAE)]
         [Description("Feeding style to use")]
         [Required]
         public LabourFeedActivityTypes FeedStyle { get; set; }
+
+
+        /// <summary>
+        /// Feed type
+        /// </summary>
+        [XmlIgnore]
+        public HumanFoodStoreType FeedType { get; set; }
 
         /// <summary>
         /// Constructor
@@ -77,7 +78,51 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            return null;
+            feedRequired = 0;
+
+            // get list from filters
+            foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+            {
+                double value = (child as LabourFeedGroup).Value;
+
+                foreach (LabourType ind in Resources.Labour().Items.Filter(child))
+                {
+                    // feed limited to the daily intake per ae set in HumanFoodStoreType
+                    switch (FeedStyle)
+                    {
+                        case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                            feedRequired += Math.Min(value * 30.4, FeedType.MaximumDailyIntakePerAE*ind.AdultEquivalent*30.4);
+                            break;
+                        case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
+                            feedRequired += Math.Min(value, FeedType.MaximumDailyIntakePerAE) * ind.AdultEquivalent * 30.4;
+                            break;
+                        default:
+                            throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
+                    }
+                }
+            }
+
+            if (feedRequired > 0)
+            {
+                //FeedTypeName includes the ResourceGroup name eg. AnimalFoodStore.FeedItemName
+                string feedItemName = FeedTypeName.Split('.').Last();
+                return new List<ResourceRequest>()
+                {
+                    new ResourceRequest()
+                    {
+                        AllowTransmutation = true,
+                        Required = feedRequired,
+                        ResourceType = typeof(HumanFoodStore),
+                        ResourceTypeName = feedItemName,
+                        ActivityModel = this,
+                        Reason = "Consumption"
+                    }
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -87,7 +132,56 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
+            List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
+            int head = 0;
+            double adultEquivalents = 0;
+            foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+            {
+                var subgroup = group.Filter(child).ToList();
+                head += subgroup.Count();
+                adultEquivalents += subgroup.Sum(a => a.AdultEquivalent);
+            }
+
             double daysNeeded = 0;
+            double numberUnits = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    numberUnits = head / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    numberUnits = adultEquivalents / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perKg:
+                    daysNeeded = feedRequired * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perUnit:
+                    numberUnits = feedRequired / requirement.UnitSize;
+                    if (requirement.WholeUnitBlocks)
+                    {
+                        numberUnits = Math.Ceiling(numberUnits);
+                    }
+
+                    daysNeeded = numberUnits * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
             return daysNeeded;
         }
 
@@ -96,6 +190,15 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void AdjustResourcesNeededForActivity()
         {
+            //add limit to amout collected based on labour shortfall
+            double labourLimit = this.LabourLimitProportion;
+            foreach (ResourceRequest item in ResourceRequestList)
+            {
+                if (item.ResourceType != typeof(LabourType))
+                {
+                    item.Required *= labourLimit;
+                }
+            }
             return;
         }
 
@@ -104,6 +207,50 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
+            List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
+            if (group != null && group.Count > 0)
+            {
+                // calculate feed limit
+                double feedLimit = 0.0;
+
+                ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(HumanFoodStore)).FirstOrDefault();
+                if (feedRequest != null)
+                {
+                    feedLimit = Math.Min(1.0, feedRequest.Provided / feedRequest.Required);
+                }
+
+                if (feedRequest == null || (feedRequest.Required == 0 | feedRequest.Available == 0))
+                {
+                    Status = ActivityStatus.NotNeeded;
+                    return;
+                }
+
+                foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+                {
+                    double value = (child as LabourFeedGroup).Value;
+
+                    foreach (LabourType ind in Resources.Labour().Items.Filter(child))
+                    {
+                        switch (FeedStyle)
+                        {
+                            case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                                feedRequest.Provided = Math.Min(value * 30.4, FeedType.MaximumDailyIntakePerAE * ind.AdultEquivalent * 30.4);
+                                feedRequest.Provided *= feedLimit;
+                                ind.AddIntake(feedRequest);
+                                break;
+                            case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
+                                feedRequest.Provided = Math.Min(value, FeedType.MaximumDailyIntakePerAE) * ind.AdultEquivalent * 30.4;
+                                feedRequest.Provided *= feedLimit;
+                                ind.AddIntake(feedRequest);
+                                break;
+                            default:
+                                throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
+                        }
+                    }
+                }
+                SetStatusSuccess();
+            }
+
         }
 
         /// <summary>
@@ -152,7 +299,14 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Feed people ";
-
+            if (FeedTypeName == null || FeedTypeName == "")
+            {
+                html += "<span class=\"errorlink\">[Feed TYPE NOT SET]</span>";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + FeedTypeName + "</span>";
+            }
             html += "</div>";
 
             return html;

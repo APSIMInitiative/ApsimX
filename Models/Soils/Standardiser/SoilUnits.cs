@@ -12,21 +12,6 @@
         /// <param name="soil">The soil.</param>
         public static void Convert(Soil soil)
         {
-            // Convert soil organic matter OC to total %
-            if (soil.SoilOrganicMatter != null)
-            {
-                soil.SoilOrganicMatter.OC = OCTotalPercent(soil.SoilOrganicMatter.OC, soil.SoilOrganicMatter.OCUnits);
-                soil.SoilOrganicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
-            }
-
-            // Convert analysis.
-            var analysis = Apsim.Child(soil, typeof(Analysis)) as Analysis;
-            if (analysis != null)
-            {
-                analysis.PH = PHWater(analysis.PH, analysis.PHUnits);
-                analysis.PHUnits = Sample.PHSampleUnitsEnum.Water;
-            }
-
             // Convert all samples.
             var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
             foreach (Sample sample in samples)
@@ -35,22 +20,6 @@
                 if (MathUtilities.ValuesInArray(sample.SW))
                     sample.SW = SWVolumetric(sample, soil);
                 sample.SWUnits = Sample.SWUnitsEnum.Volumetric;
-
-                // Convert no3 units to ppm.
-                if (MathUtilities.ValuesInArray(sample.NO3))
-                {
-                    double[] bd = Layers.BDMapped(soil, sample.Thickness);
-                    sample.NO3 = Nppm(sample.NO3, sample.Thickness, sample.NO3Units, bd);
-                }
-                sample.NO3Units = Sample.NUnitsEnum.ppm;
-
-                // Convert nh4 units to ppm.
-                if (MathUtilities.ValuesInArray(sample.NH4))
-                {
-                    double[] bd = Layers.BDMapped(soil, sample.Thickness);
-                    sample.NH4 = Nppm(sample.NH4, sample.Thickness, sample.NH4Units, bd);
-                }
-                sample.NH4Units = Sample.NUnitsEnum.ppm;
 
                 // Convert OC to total (%)
                 if (MathUtilities.ValuesInArray(sample.OC))
@@ -83,30 +52,6 @@
                 else
                     return MathUtilities.Divide(sample.SW, sample.Thickness); // from mm to mm/mm
             }
-        }
-
-        /// <summary>Converts n values to ppm.</summary>
-        /// <param name="n">The n values to convert.</param>
-        /// <param name="thickness">The thickness of the values..</param>
-        /// <param name="nunits">The current units of n.</param>
-        /// <param name="bd">The related bulk density.</param>
-        /// <returns>ppm values.</returns>
-        private static double[] Nppm(double[] n, double[] thickness, Sample.NUnitsEnum nunits, double[] bd)
-        {
-            if (nunits == Sample.NUnitsEnum.ppm || n == null)
-                return n;
-
-            // kg/ha to ppm
-            double[] newN = new double[n.Length];
-            for (int i = 0; i < n.Length; i++)
-            {
-                if (Double.IsNaN(n[i]))
-                    newN[i] = double.NaN;
-                else
-                    newN[i] = n[i] * 100 / (bd[i] * thickness[i]);
-            }
-
-            return newN;
         }
 
         /// <summary>Converts OC to total %</summary>

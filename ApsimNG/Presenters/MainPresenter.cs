@@ -45,6 +45,11 @@
         private IFileConverterView fileConverter = null;
 
         /// <summary>
+        /// View used to show help information.
+        /// </summary>
+        private HelpView helpView = null;
+
+        /// <summary>
         /// The most recent exception that has been thrown.
         /// </summary>
         public List<string> LastError { get; private set; }
@@ -59,7 +64,9 @@
             // Set the main window location and size.
             this.view.WindowLocation = Utility.Configuration.Settings.MainFormLocation;
             this.view.WindowSize = Utility.Configuration.Settings.MainFormSize;
-            this.view.WindowMaximised = Utility.Configuration.Settings.MainFormMaximized;
+            // Maximize settings do not save correctly on OS X
+            if (!ProcessUtilities.CurrentOS.IsMac)
+                this.view.WindowMaximised = Utility.Configuration.Settings.MainFormMaximized;
 
             // Set the main window caption with version information.
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -120,12 +127,14 @@
 
             foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
             {
-                ok = presenter.SaveIfChanged() && ok;
+                ok &= presenter.SaveIfChanged();
+                presenter.Detach();
             }
 
             foreach (ExplorerPresenter presenter in this.presenters2.OfType<ExplorerPresenter>())
             {
-                ok = presenter.SaveIfChanged() && ok;
+                ok &= presenter.SaveIfChanged();
+                presenter.Detach();
             }
 
             return ok;
@@ -146,7 +155,17 @@
         /// <returns>Any exception message or null</returns>
         public void ProcessStartupScript(string code)
         {
-            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName());
+            // Allow UI scripts to reference gtk/gdk/etc
+            List<string> assemblies = new List<string>()
+            {
+                typeof(Gtk.Widget).Assembly.Location,
+                typeof(Gdk.Color).Assembly.Location,
+                typeof(Cairo.Context).Assembly.Location,
+                typeof(Pango.Context).Assembly.Location,
+                typeof(GLib.Log).Assembly.Location,
+            };
+
+            Assembly compiledAssembly = Manager.CompileTextToAssembly(code, Path.GetTempFileName(), assemblies.ToArray());
 
             // Get the script 'Type' from the compiled assembly.
             Type scriptType = compiledAssembly.GetType("Script");
@@ -423,7 +442,7 @@
                     }
 
                     // Add to MRU list and update display
-                    Utility.Configuration.Settings.AddMruFile(fileName);
+                    Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
                     this.UpdateMRUDisplay();
                 }
                 catch (Exception err)
@@ -442,9 +461,8 @@
         /// </summary>
         public void UpdateMRUDisplay()
         {
-            this.view.StartPage1.List.Values = Utility.Configuration.Settings.MruList.ToArray();
-            this.view.StartPage2.List.Values = Utility.Configuration.Settings.MruList.ToArray();
-            Utility.Configuration.Settings.Save();
+            this.view.StartPage1.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
+            this.view.StartPage2.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
         }
 
         /// <summary>
@@ -535,7 +553,7 @@
 
 #if DEBUG
             startPage.AddButton(
-                                "Convert XML File",
+                                "Convert Files",
                                 new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
                                 this.OnShowConverter);
 #endif
@@ -562,7 +580,7 @@
                             new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
                             this.OnHelp);
             // Populate the view's listview.
-            startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
+            startPage.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
 
             this.PopulatePopup(startPage);
         }
@@ -653,7 +671,7 @@
         {
             if (this.AskQuestion("Are you sure you want to completely clear the list of recently used files?") == QuestionResponseEnum.Yes)
             {
-                string[] mruFiles = Utility.Configuration.Settings.MruList.ToArray();
+                string[] mruFiles = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
                 foreach (string fileName in mruFiles)
                 {
                     Utility.Configuration.Settings.DelMruFile(fileName);
@@ -708,7 +726,7 @@
                     try
                     {
                         File.Copy(fileName, copyName);
-                        Utility.Configuration.Settings.AddMruFile(copyName);
+                        Configuration.Settings.AddMruFile(new ApsimFileMetadata(copyName));
                         this.UpdateMRUDisplay();
                     }
                     catch (Exception e)
@@ -729,7 +747,7 @@
             string fileName = this.view.GetMenuItemFileName(obj);
             if (!string.IsNullOrEmpty(fileName))
             {
-                if (this.AskQuestion("Are you sure you want to completely delete the file " + fileName + "?") == QuestionResponseEnum.Yes)
+                if (this.AskQuestion("Are you sure you want to completely delete the file " + StringUtilities.PangoString(fileName) + "?") == QuestionResponseEnum.Yes)
                 {
                     try
                     {
@@ -752,6 +770,9 @@
         private void ProcessCommandLineArguments(string[] commandLineArguments)
         {
             // Look for a script specified on the command line.
+            if (commandLineArguments == null)
+                return;
+
             foreach (string argument in commandLineArguments)
             {
                 if (Path.GetExtension(argument) == ".cs")
@@ -887,30 +908,32 @@
         /// <param name="e">Event arguments.</param>
         private void OnTabClosing(object sender, TabClosingEventArgs e)
         {
-            if (e.LeftTabControl)
+            e.AllowClose = true;
+
+            IPresenter presenter = e.LeftTabControl ? Presenters1[e.Index - 1] : presenters2[e.Index - 1];
+            if (presenter is ExplorerPresenter explorerPresenter)
+                e.AllowClose = explorerPresenter.SaveIfChanged();
+
+            if (e.AllowClose)
+                CloseTab(e.Index - 1, e.LeftTabControl);
+        }
+
+        /// <summary>
+        /// Close a tab (does not prompt user to save).
+        /// </summary>
+        /// <param name="index">0-based index of the tab.</param>
+        /// <param name="onLeft">Is the tab in the left tab control?</param>
+        public void CloseTab(int index, bool onLeft)
+        {
+            if (onLeft)
             {
-                IPresenter presenter = Presenters1[e.Index - 1];
-                e.AllowClose = true;
-
-                if (presenter is ExplorerPresenter)
-                    e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();
-
-                if (e.AllowClose)
-                {
-                    presenter.Detach();
-                    this.Presenters1.RemoveAt(e.Index - 1);
-                }
+                Presenters1[index].Detach();
+                Presenters1.RemoveAt(index);
             }
             else
             {
-                IPresenter presenter = presenters2[e.Index - 1];
-                e.AllowClose = true;
-                if (presenter.GetType() == typeof(ExplorerPresenter)) e.AllowClose = ((ExplorerPresenter)presenter).SaveIfChanged();                
-                if (e.AllowClose)
-                {
-                    presenter.Detach();
-                    this.presenters2.RemoveAt(e.Index - 1);
-                }
+                presenters2[index].Detach();
+                presenters2.RemoveAt(index);
             }
 
             // We've just closed Simulations
@@ -1051,9 +1074,17 @@
         /// <param name="args">Event arguments.</param>
         private void OnHelp(object sender, EventArgs args)
         {
-            Process getHelp = new Process();
-            getHelp.StartInfo.FileName = @"https://apsimnextgeneration.netlify.com/";
-            getHelp.Start();
+            try
+            {
+                if (helpView == null)
+                    helpView = new HelpView(view as MainView);
+
+                helpView.Visible = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1205,6 +1236,7 @@
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
                 Utility.Configuration.Settings.StatusPanelHeight = this.view.StatusPanelHeight;
+                Utility.Configuration.Settings.Save();
             }
         }
 

@@ -9,6 +9,7 @@ using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using Models.CLEM.Activities;
 
 namespace Models.CLEM.Resources
 {
@@ -26,6 +27,7 @@ namespace Models.CLEM.Resources
     {
         private List<string> WarningsMultipleEntry = new List<string>();
         private List<string> WarningsNotFound = new List<string>();
+        private LabourAERelationship adultEquivalentRelationship = null;
 
         /// <summary>
         /// Get the Clock.
@@ -69,10 +71,47 @@ namespace Models.CLEM.Resources
             // locate resources
             availabilityList = Apsim.Children(this, typeof(LabourAvailabilityList)).Cast<LabourAvailabilityList>().FirstOrDefault();
 
+            // locate AE relationship
+            adultEquivalentRelationship = Apsim.Children(this, typeof(LabourAERelationship)).Cast<LabourAERelationship>().FirstOrDefault();
+
             if (Clock.Today.Day != 1)
             {
                 OnStartOfMonth(this, null);
             }
+        }
+
+
+        /// <summary>
+        /// A method to calculate the average dietary intake per day per AE
+        /// </summary>
+        /// <param name="factor"></param>
+        /// <returns></returns>
+        public double GetDietaryValue(string factor)
+        {
+            double value = 0;
+            double totalAE = 0;
+            foreach (LabourType ind in Items.Where(a => a.Hired == false))
+            {
+                totalAE += ind.AdultEquivalent;
+                double doubleResult = 0;
+                if (ind.DietaryComponentList != null)
+                {
+                    foreach (ResourceRequest request in ind.DietaryComponentList)
+                    {
+                        var result = (request.Resource as CLEMResourceTypeBase).ConvertTo(factor, request.Provided);
+                        if (result != null)
+                        {
+                            Double.TryParse(result.ToString(), out doubleResult);
+                        }
+                        value += doubleResult;
+                    }
+                }
+            }
+            if (value > 0 && totalAE > 0)
+            {
+                return value / totalAE / 30.4;
+            }
+            return 0;
         }
 
         /// <summary>
@@ -108,10 +147,10 @@ namespace Models.CLEM.Resources
                     {
                         Gender = labourChildModel.Gender,
                         Individuals = 1,
+                        Parent = this,
                         InitialAge = labourChildModel.InitialAge,
                         AgeInMonths = labourChildModel.InitialAge * 12,
                         LabourAvailability = labourChildModel.LabourAvailability,
-                        Parent = this,
                         Name = labourChildModel.Name + ((labourChildModel.Individuals > 1)?"_"+(i+1).ToString():""),
                         Hired = labourChildModel.Hired
                     };
@@ -153,6 +192,10 @@ namespace Models.CLEM.Resources
             {
                 item.AvailabilityLimiter = 1.0;
                 CheckAssignLabourAvailability(item);
+                if (item.DietaryComponentList != null)
+                {
+                    item.DietaryComponentList.Clear();
+                }
             }
 
             // A LabourActivityPayHired may take place after this in CLEMStartOfTimeStep to limit availability
@@ -222,6 +265,22 @@ namespace Models.CLEM.Resources
                     CheckAssignLabourAvailability(item);
 
                 }
+            }
+        }
+
+        /// <summary>
+        /// Calculate the AE of an individual based on provided relationship
+        /// </summary>
+        /// <returns>value</returns>
+        public double? CalculateAE(double ageInMonths)
+        {
+            if (adultEquivalentRelationship != null)
+            {
+                return adultEquivalentRelationship.SolveY(ageInMonths, true);
+            }
+            else
+            {
+                return null;
             }
         }
 

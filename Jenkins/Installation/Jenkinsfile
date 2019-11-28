@@ -17,10 +17,6 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
 							call cleanup
 							
@@ -55,10 +51,6 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build /r
@@ -81,10 +73,6 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build /r
@@ -107,10 +95,6 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build /r

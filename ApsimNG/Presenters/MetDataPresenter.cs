@@ -271,7 +271,7 @@ namespace UserInterface.Presenters
                 if ((yearCol >= 0) && (dayCol >= 0))
                 {
                     // add a new column for the date string
-                    DataColumn dateCol = data.Columns.Add("Date", Type.GetType("System.String"));
+                    DataColumn dateCol = data.Columns.Add("Date", typeof(DateTime));
                     dateCol.SetOrdinal(0);
                     yearCol++;    // moved along
                     dayCol++;
@@ -296,8 +296,8 @@ namespace UserInterface.Presenters
                             else
                                 throw new Exception("Encountered an error while parsing date: " + err.Message);
                         }
-                        rowDate = rowDate.AddDays(day - 1);                 // calc date
-                        data.Rows[r][0] = rowDate.ToString(CultureInfo.InvariantCulture);      // store in Date col
+                        rowDate = rowDate.AddDays(day - 1);   // calc date
+                        data.Rows[r][0] = rowDate;
                     }
 
                     if (dayCol > yearCol)
@@ -633,6 +633,8 @@ namespace UserInterface.Presenters
                                                      months,
                                                      monthlyMaxT,
                                                      null,
+                                                     null,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Red,
@@ -645,6 +647,8 @@ namespace UserInterface.Presenters
                                                      "Minimum Temperature",
                                                      months,
                                                      monthlyMinT,
+                                                     null,
+                                                     null,
                                                      null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
@@ -713,6 +717,8 @@ namespace UserInterface.Presenters
                                                  months,
                                                  avgMonthlyRain,
                                                  null,
+                                                 null,
+                                                 null,
                                                  Axis.AxisType.Bottom,
                                                  Axis.AxisType.Left,
                                                  Color.Blue,
@@ -741,7 +747,9 @@ namespace UserInterface.Presenters
                                                      "Maximum Temperature",
                                                      dates,
                                                      maxTemps,
-                                                     null, 
+                                                     null,
+                                                     null,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Left,
                                                      Color.Blue,
@@ -755,6 +763,8 @@ namespace UserInterface.Presenters
                                                      "Minimum Temperature",
                                                      dates,
                                                      minTemps,
+                                                     null,
+                                                     null,
                                                      null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Left,
@@ -793,6 +803,8 @@ namespace UserInterface.Presenters
                                                      dates,
                                                      radn,
                                                      null,
+                                                     null,
+                                                     null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,
                                                      Color.Blue,
@@ -805,6 +817,8 @@ namespace UserInterface.Presenters
                                                      "Maximum Radiation",
                                                      dates,
                                                      maxRadn,
+                                                     null,
+                                                     null,
                                                      null,
                                                      Axis.AxisType.Bottom,
                                                      Axis.AxisType.Right,

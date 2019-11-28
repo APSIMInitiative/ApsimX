@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.APSoil;
+using Models.Core;
 using Models.Interfaces;
 using Models.PMF;
 using Models.Soils.SoilWaterBackend;
@@ -271,34 +272,23 @@ namespace Models.Soils
         /// <value>
         /// The thickness.
         /// </value>
+        [Units("mm")]
         public double[] Thickness { get; set; }
 
-        /// <summary>
-        /// Soil layer thickness for each layer in cm (only used in the GUI) (cm)
-        /// </summary>
-        /// <remarks>
-        /// This "Depth" variable is only needed for the "Depth" column in the "SoilWater" node of the GUI.
-        /// Just converts back and forth between "Depth" (in cm as string) AND "Thickness" (in mm as double).
-        /// </remarks>
-        /// <value>
-        /// The depth.
-        /// </value>
-        [XmlIgnore]
-        [Units("cm")]
-        [Caption("Depth")]
-        [Description("Soil layer thickness for each layer")]
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("mm")]
         public string[] Depth
-            {
+        {
             get
-                {
-                return Soil.ToDepthStrings(Thickness);
-                }
-            set
-                {
-                Thickness = Soil.ToThickness(value);
-                }
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
             }
-
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
 
         /// <summary>
         /// Fractional amount of water above DUL that can drain under gravity per day
@@ -389,37 +379,6 @@ namespace Models.Soils
         /// <summary>Link to NO3.</summary>
         [Link]
         private List<ISolute> solutes = null;
-
-        // Module Constants (Default Values) (NOT specified in GUI)
-
-        /// <summary>
-        /// Air temperature below which the ratio between eo and eeq decreases (C)
-        /// </summary>
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 10.0)]
-        [Units("C")]
-        public double min_crit_temp { get; set; }
-
-        /// <summary>
-        /// Air temperature above which the ratio between eo and eeq increases (C)
-        /// </summary>
-        /// <value>
-        /// The max_crit_temp.
-        /// </value>
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 50.0)]
-        [Units("C")]
-        public double max_crit_temp { get; set; }
-
-        /// <summary>
-        /// Maximum bare ground soil albedo (0-1)
-        /// </summary>
-        /// <value>
-        /// The max_albedo.
-        /// </value>
-        [XmlIgnore]
-        [Bounds(Lower = 0.0, Upper = 1.0)]        
-        public double max_albedo { get; set; }
 
         /// <summary>
         /// Constant in the calculation of the effect of surface residues on potential evapotranspiration
@@ -616,10 +575,6 @@ namespace Models.Soils
 
 
             //Module Constants
-
-            min_crit_temp = 5.0;
-            max_crit_temp = 35.0;
-            max_albedo = 0.23;
             A_to_evap_fact = 0.44;
             canopy_eos_coef = 1.7;
             sw_top_crit = 0.9;
@@ -654,7 +609,11 @@ namespace Models.Soils
         /// </value>
         [XmlIgnore]
         [Units("mm")]
-        public double Eo { get{return surface != null ? surface.Eo : Double.NaN;} }
+        public double Eo
+        {
+            get {return surface != null ? surface.Eo : Double.NaN;}
+            set { surface.Eo = value; }
+        }
 
         /// <summary>
         /// Potential evaporation of water from the soil (after accounting for the effects of cover and residues)
@@ -1382,27 +1341,17 @@ namespace Models.Soils
         [Units("mm")]
         private double[] inflow_lat;       //! inflowing lateral water
 
-        //interception can be specified in micromet aka microclimate module (not implemented yet)
-        //used in runoff and in infilitration calculation
-
-        //[Input(IsOptional = true)]
         /// <summary>
-        /// The interception
+        /// 
         /// </summary>
-        [Units("mm")]
-        private double interception;      //! canopy interception loss (mm)
-
-        //[Input(IsOptional = true)]
-        /// <summary>
-        /// Loss of precipitation due in interception of surface residues (mm)
-        /// </summary>
-        /// <remarks>
-        /// residueinterception can be specified in surface organic matter module (not implemented yet)
-        /// used in runoff and in infilitration calculation
-        /// residueinterception is only used in ResiduesTrial.apsimx
-        /// </remarks>
-        [Units("mm")]
-        public double ResidueInterception { get; set; }     //residue interception loss (mm)
+        [XmlIgnore]
+        public double PotentialInfiltration
+        {
+            get
+            { return canopy.PotentialInfiltration;}
+            set
+            { canopy.PotentialInfiltration = value;}
+        }
 
         // Get Variables from other Modules
 
@@ -1466,7 +1415,6 @@ namespace Models.Soils
                     canopy.NumberOfCrops += 1;     //increment number of crops ready for next array resize in next iteration.
                 }
 
-            canopy.interception = interception;
          }
 
         /// <summary>
@@ -1477,7 +1425,6 @@ namespace Models.Soils
             surfaceCover.ZeroSurfaceCover();
 
             surfaceCover.surfaceom_cover = SurfaceOM.Cover;
-            surfaceCover.residueinterception = ResidueInterception;
             }
 
         /// <summary>
@@ -1546,9 +1493,6 @@ namespace Models.Soils
             constants.Summary = Summary;
             constants.thismodel = this;
 
-            constants.min_crit_temp                  = min_crit_temp;          
-            constants.max_crit_temp                  = max_crit_temp;          
-            constants.max_albedo                     = max_albedo;             
             constants.A_to_evap_fact                 = A_to_evap_fact;         
             constants.canopy_eos_coef                = canopy_eos_coef;        
             constants.sw_top_crit                    = sw_top_crit;            
@@ -1589,9 +1533,7 @@ namespace Models.Soils
             surfaceCover = new SurfaceCoverData();
 
             //optional daily inputs
-            runon = 0.0;      
-            interception = 0.0;      
-            ResidueInterception = 0.0; 
+            runon = 0.0;       
 
             if (Soil.Thickness != null)
                 {
@@ -1720,7 +1662,7 @@ namespace Models.Soils
             
             // EVAPORATION
 
-            surface.CalcEvaporation();
+            surface.CalcEvaporation(Eo);
 
             surface.RemoveEvaporationFromSoil(ref SoilObject);
 
@@ -1743,9 +1685,6 @@ namespace Models.Soils
 
             // SEND EVENTS OUT
             SendNitrogenChangedEvent();
-
-            //zero this here so it is not used tomorrow. 
-            ResidueInterception = 0.0;
 
         }
 

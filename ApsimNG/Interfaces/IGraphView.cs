@@ -53,6 +53,11 @@ namespace UserInterface.Interfaces
         int LeftRightPadding { get; set; }
 
         /// <summary>
+        /// Iff set to true, the legend will appear inside the graph boundaries.
+        /// </summary>
+        bool LegendInsideGraph { get; set; }
+
+        /// <summary>
         /// Show the specified editor.
         /// </summary>
         /// <param name="editor">Show the specified series editor</param>
@@ -79,6 +84,8 @@ namespace UserInterface.Interfaces
         /// <param name="title">The series title</param>
         /// <param name="x">The x values for the series</param>
         /// <param name="y">The y values for the series</param>
+        /// <param name="xFieldName">The name of the x variable.</param>
+        /// <param name="yFieldName">The name of the y variable.</param>
         /// <param name="error">The error values for the series</param>
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
@@ -93,6 +100,8 @@ namespace UserInterface.Interfaces
              string title, 
              IEnumerable x, 
              IEnumerable y,
+             string xFieldName,
+             string yFieldName,
              IEnumerable error,
              Models.Graph.Axis.AxisType xAxisType, 
              Models.Graph.Axis.AxisType yAxisType,
@@ -163,6 +172,28 @@ namespace UserInterface.Interfaces
             IEnumerable y,
             Axis.AxisType xAxisType,
             Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend);
+
+        /// <summary>
+        /// Draw a stacked area series with the specified arguments.Similar to
+        /// an area series except that the area between this curve and the
+        /// previous curve (or y = 0 if this is first) will be filled with
+        /// colour.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        void DrawStackedArea(
+            string title,
+            object[] x,
+            double[] y,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
             Color colour,
             bool showOnLegend);
 

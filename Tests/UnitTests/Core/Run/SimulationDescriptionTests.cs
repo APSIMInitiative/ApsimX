@@ -195,7 +195,7 @@
                     {
                         Children = new List<Model>()
                         {
-                            new Water()
+                            new Physical()
                             {
                                 Thickness = new double[] { 100, 300, 300 },
                                 BD = new double[] { 1.36, 1.216, 1.24 },
@@ -214,12 +214,12 @@
                                     }
                                 }
                             },
-                            new SoilOrganicMatter
+                            new Organic
                             {
                                 Thickness = new double[] { 100, 300 },
-                                OC = new double[] { 2, 1 }
+                                Carbon = new double[] { 2, 1 }
                             },
-                            new Analysis
+                            new Chemical
                             {
                                 Thickness = new double[] { 100, 200 },
                                 CL = new double[] { 38, double.NaN }
@@ -234,7 +234,7 @@
                             new Sample
                             {
                                 Thickness = new double[] { 1000 },
-                                NO3 = new double[] { 27 },
+                                NO3N = new double[] { 27 },
                                 OC = new double[] { 1.35 },
                                 SWUnits = Sample.SWUnitsEnum.Volumetric
                             }
@@ -245,7 +245,7 @@
             Apsim.ParentAllChildren(sim);
 
             var originalSoil = sim.Children[0] as Soil;
-            var originalWater = originalSoil.Children[0] as Water;
+            var originalWater = originalSoil.Children[0] as Physical;
 
             originalSoil.OnCreated();
             
@@ -253,15 +253,13 @@
 
             var newSim = simulationDescription.ToSimulation();
 
-            var water = newSim.Children[0].Children[0] as Water;
-            var soilOrganicMatter = newSim.Children[0].Children[1] as SoilOrganicMatter;
-            var analysis = newSim.Children[0].Children[2] as Analysis;
+            var water = newSim.Children[0].Children[0] as Physical;
+            var soilOrganicMatter = newSim.Children[0].Children[1] as Organic;
             var sample = newSim.Children[0].Children[3] as Sample;
 
             // Make sure layer structures have been standardised.
             Assert.AreEqual(water.Thickness, originalWater.Thickness);
             Assert.AreEqual(soilOrganicMatter.Thickness, originalWater.Thickness);
-            Assert.AreEqual(analysis.Thickness, originalWater.Thickness);
             Assert.AreEqual(sample.Thickness, originalWater.Thickness);
 
             // Make sure sample units are volumetric.

@@ -183,11 +183,7 @@ namespace Models.PMF.Organs
         public double PotentialEP
         {
             get { return _PotentialEP; }
-            set
-            {
-                _PotentialEP = value;
-                MicroClimatePresent = true;
-            }
+            set { _PotentialEP = value;}
         }
 
         /// <summary>Sets the actual water demand.</summary>
@@ -199,10 +195,6 @@ namespace Models.PMF.Organs
         #endregion
 
         #region Has Water Demand Interface
-        /// <summary>
-        /// Flag to test if Microclimate is present
-        /// </summary>
-        public bool MicroClimatePresent { get; set; }
 
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
@@ -703,7 +695,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if ((MicroClimatePresent) && (LightProfile != null))
+                if (LightProfile != null)
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
@@ -1178,9 +1170,6 @@ namespace Models.PMF.Organs
         {
             if (!parentPlant.IsEmerged)
                 return;
-
-            if (MicroClimatePresent == false)
-                throw new Exception(Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
 
             if (FrostFraction.Value() > 0)
                 foreach (LeafCohort l in Leaves)
@@ -1878,7 +1867,6 @@ namespace Models.PMF.Organs
         {
             if (data.Plant == parentPlant)
             {
-                MicroClimatePresent = false;
                 Reset();
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");

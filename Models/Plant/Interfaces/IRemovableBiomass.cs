@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="IRemovableBiomass.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.PMF.Interfaces
 {
     /// <summary>

@@ -2,6 +2,7 @@
 {
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils.Standardiser;
     using System;
     using System.Xml.Serialization;
 
@@ -30,17 +31,8 @@
             UreaSolute = Apsim.Find(this, "Urea") as ISolute;
         }
 
-        /// <summary>Gets the depth boundaries of each layer.</summary>
-        [XmlIgnore]
-        [Units("cm")]
-        [Caption("Depth")]
-        [Description("Soil layer depth positions")]
-        public string[] Depth { get { return Soil.ToDepthStrings(Thickness); } }
-            
         /// <summary>Gets or sets the thickness of each layer.</summary>
-        [Units("mm")]
-        [Caption("Thickness")]
-        [Description("Thickness for each soil layer")]
+        [Description("Depth (mm)")]
         public double[] Thickness { get; set; }
 
         ///<summary>Gets the current soil water content of each mapped layer</summary>
@@ -48,7 +40,7 @@
         [Units("mm/mm")]
         public double[] SW
         {
-            get { return Soil.Map(Soil.SoilWater.SW, Soil.Thickness, Thickness); }
+            get { return Layers.MapConcentration(Soil.SoilWater.SW, Soil.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the current soil water amount of each mapped layer.</summary>
@@ -56,7 +48,7 @@
         [Units("mm")]
         public double[] SWmm
         {
-            get { return Soil.Map(Soil.SoilWater.SWmm, Soil.Thickness, Thickness,Soil.MapType.Mass); }
+            get { return Layers.MapMass(Soil.SoilWater.SWmm, Soil.Thickness, Thickness); }
         }
 
         ///<summary>Gets the plant available water amount of each mapped layer.</summary>
@@ -64,7 +56,7 @@
         [Units("mm")]
         public double[] PAW
         {
-            get { return Soil.Map(Soil.PAW, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Layers.MapMass(Soil.PAW, Soil.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at the lower limit of each mapped layer</summary>
@@ -72,7 +64,7 @@
         [Units("mm/mm")]
         public double[] LL15
         {
-            get { return Soil.Map(Soil.LL15, Soil.Thickness, Thickness); }
+            get { return Layers.MapConcentration(Soil.LL15, Soil.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the soil water amount at the lower limit of each mapped layer.</summary>
@@ -80,7 +72,7 @@
         [Units("mm")]
         public double[] LL15mm
         {
-            get { return Soil.Map(Soil.LL15mm, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Layers.MapMass(Soil.LL15mm, Soil.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at the upper limit of each mapped layer</summary>
@@ -88,7 +80,7 @@
         [Units("mm/mm")]
         public double[] DUL
         {
-            get { return Soil.Map(Soil.DUL, Soil.Thickness, Thickness); }
+            get { return Layers.MapConcentration(Soil.DUL, Soil.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the soil water amount at the upper limit of each mapped layer.</summary>
@@ -96,7 +88,7 @@
         [Units("mm")]
         public double[] DULmm
         {
-            get { return Soil.Map(Soil.DULmm, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Layers.MapMass(Soil.DULmm, Soil.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at saturation of each mapped layer</summary>
@@ -104,7 +96,7 @@
         [Units("mm/mm")]
         public double[] SAT
         {
-            get { return Soil.Map(Soil.SAT, Soil.Thickness, Thickness); }
+            get { return Layers.MapConcentration(Soil.SAT, Soil.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the soil water amount at saturation of each mapped layer.</summary>
@@ -112,7 +104,7 @@
         [Units("mm")]
         public double[] SATmm
         {
-            get { return Soil.Map(Soil.SATmm, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Layers.MapMass(Soil.SATmm, Soil.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil urea N content of each mapped layer.</summary>
@@ -120,7 +112,7 @@
         [Units("kg/ha")]
         public double[] Urea
         {
-            get { return Soil.Map(UreaSolute.kgha, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Layers.MapMass(UreaSolute.kgha, Soil.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil ammonium N content of each mapped layer.</summary>
@@ -128,7 +120,7 @@
         [Units("kg/ha")]
         public double[] NH4
         {
-            get { return Soil.Map(NH4Solute.kgha, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Layers.MapMass(NH4Solute.kgha, Soil.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil nitrate N content of each mapped layer.</summary>
@@ -136,7 +128,7 @@
         [Units("kg/ha")]
         public double[] NO3
         {
-            get { return Soil.Map(NO3Solute.kgha, Soil.Thickness, Thickness, Soil.MapType.Mass); }
+            get { return Layers.MapMass(NO3Solute.kgha, Soil.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil organic carbon content of each mapped layer.</summary>
@@ -144,7 +136,7 @@
         [Units("%")]
         public double[] OC
         {
-            get { return Soil.Map(Soil.OC, Soil.Thickness, Thickness); }
+            get { return Layers.MapConcentration(Soil.Initial.OC, Soil.Thickness, Thickness, double.NaN); }
         }
     }
 }

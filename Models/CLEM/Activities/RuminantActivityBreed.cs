@@ -34,12 +34,6 @@ namespace Models.CLEM.Activities
         private List<LabourRequirement> labour;
         [Link]
         Clock Clock = null;
-        /// <summary>
-        /// Maximum conception rate for uncontrolled matings
-        /// </summary>
-        [Description("Maximum conception rate for uncontrolled matings")]
-        [Required]
-        public double MaximumConceptionRateUncontrolled { get; set; }
 
         /// <summary>
         /// Use artificial insemination (no bulls required)
@@ -136,7 +130,6 @@ namespace Models.CLEM.Activities
                                     {
                                         // calculate conception
                                         double conceptionRate = ConceptionRate(female) * maleLimiter;
-                                        conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
                                         if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                                         {
                                             female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
@@ -323,8 +316,6 @@ namespace Models.CLEM.Activities
                         {
                             // calculate conception
                             double conceptionRate = ConceptionRate(female) * maleLimiter;
-                            // Temporarally removed max uncontrolled mating conception rate
-                            //conceptionRate = Math.Min(conceptionRate, MaximumConceptionRateUncontrolled);
                             if (conceptionRate > 0 && ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
                             {
                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
@@ -584,12 +575,6 @@ namespace Models.CLEM.Activities
             {
                 html += "\n<div class=\"activityentry\">";
                 html += "Using Artificial insemination";
-                html += "</div>";
-            }
-            else
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "Maximum conception rate is <span class=\"setvalue\">" + MaximumConceptionRateUncontrolled.ToString("0.###") + "</span> using uncontrolled breeding";
                 html += "</div>";
             }
             if (InferStartupPregnancy)

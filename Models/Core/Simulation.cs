@@ -203,6 +203,9 @@ namespace Models.Core
             if (cancelToken == null)
                 cancelToken = new CancellationTokenSource();
 
+            // Remove disabled models.
+            RemoveDisabledModels(this);
+
             // If this simulation was not created from deserialisation then we need
             // to parent all child models correctly and call OnCreated for each model.
             bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
@@ -214,9 +217,6 @@ namespace Models.Core
                 // Call OnCreated in all models.
                 Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
             }
-
-            // Remove disabled models.
-            RemoveDisabledModels(this);
 
             if (Services == null || Services.Count < 1)
             {

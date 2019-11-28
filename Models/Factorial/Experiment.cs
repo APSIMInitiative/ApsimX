@@ -77,18 +77,28 @@
             List<List<CompositeFactor>> allValues = new List<List<CompositeFactor>>();
             if (Factors != null)
             {
+                foreach (CompositeFactor compositeFactor in Apsim.Children(Factors, typeof(CompositeFactor)))
+                {
+                    if (compositeFactor.Enabled)
+                        allValues.Add(new List<CompositeFactor>() { compositeFactor });
+                }
                 foreach (Factor factor in Factors.factors)
                 {
                     if (factor.Enabled)
-                        allValues.Add(factor.GetCompositeFactors());
+                        foreach (var compositeFactor in factor.GetCompositeFactors())
+                            allValues.Add(new List<CompositeFactor>() { compositeFactor });
                 }
-                var allCombinations = MathUtilities.AllCombinationsOf<CompositeFactor>(allValues.ToArray());
-
+                foreach (Permutation factor in Apsim.Children(Factors, typeof(Permutation)))
+                {
+                    if (factor.Enabled)
+                        allValues.AddRange(factor.GetPermutations());
+                }
+                
                 // Remove disabled simulations.
                 if (DisabledSimNames != null)
-                    allCombinations.RemoveAll(comb => DisabledSimNames.Contains(GetName(comb)));
+                    allValues.RemoveAll(comb => DisabledSimNames.Contains(GetName(comb)));
 
-                return allCombinations;
+                return allValues;
             }
             else
                 return null;
@@ -101,9 +111,20 @@
         /// <returns></returns>
         private string GetName(List<CompositeFactor> factors)
         {
-            string newName = Name;
-            factors.ForEach(factor => newName += factor.Parent.Name + factor.Name);
-            return newName;
+            string newName = null;
+            string permutationName = null;
+            foreach (var factor in factors)
+            {
+                if (!(factor.Parent is Factors) && !(factor.Parent is Permutation) )
+                    newName += factor.Parent.Name;
+                if (factor.Parent.Parent is Permutation)
+                    permutationName = factor.Parent.Parent.Name;
+                newName += factor.Name;
+            }
+            if (permutationName == null || permutationName == "Permutation")
+                return Name + newName;
+            else
+                return Name + permutationName + newName;
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

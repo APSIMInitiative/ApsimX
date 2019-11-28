@@ -39,7 +39,7 @@ nuget restore -verbosity quiet
 
 echo Compiling APSIM.PerformanceTests.Collector...
 msbuild /v:m /p:Configuration=Release /m APSIM.PerformanceTests.Collector.sln
-copy /y "%apsimx%\DeploymentSupport\Windows\Bin\sqlite3.dll" bin\Release\
+copy /y "%apsimx%\DeploymentSupport\Windows\Bin32\sqlite3.dll" bin\Release\
 echo Running performance tests collector...
 bin\Release\APSIM.PerformanceTests.Collector.exe AddToDatabase %PULL_ID% %DATETIMESTAMP% %COMMIT_AUTHOR%
 

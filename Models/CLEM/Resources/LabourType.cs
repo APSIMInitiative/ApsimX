@@ -50,11 +50,58 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
 
+        private double ageInMonths = 0;
+        
         /// <summary>
         /// Age in months.
         /// </summary>
         [XmlIgnore]
-        public double AgeInMonths { get; set; }
+        public double AgeInMonths
+        {
+            get
+            {
+                return ageInMonths;
+            }
+            set
+            {
+                if (ageInMonths != value)
+                {
+                    ageInMonths = value;
+                    // update AE
+                    adultEquivalent = (Parent as Labour).CalculateAE(value);
+                }
+            }
+        }
+
+        private double? adultEquivalent = null;
+
+        /// <summary>
+        /// Adult equivalent.
+        /// </summary>
+        [XmlIgnore]
+        public double AdultEquivalent
+        {
+            get
+            {
+                // if null then report warning that no AE relationship has been provided.
+                if(adultEquivalent == null)
+                {
+                    CLEMModel parent = (Parent as CLEMModel);
+                    string warning = "No Adult equivalent relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.";
+                    if (!parent.Warnings.Exists(warning))
+                    {
+                        parent.Warnings.Add(warning);
+                        parent.Summary.WriteWarning(this, warning);
+                    }
+                }
+                return adultEquivalent??1;
+            }
+        }
+
+        /// <summary>
+        /// Monthly dietary components
+        /// </summary>
+        public List<ResourceRequest> DietaryComponentList { get; set; }
 
         /// <summary>
         /// Number of individuals
@@ -179,6 +226,27 @@ namespace Models.CLEM.Resources
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
+        }
+
+        /// <summary>
+        /// Add intake to the DietaryComponents list
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddIntake(ResourceRequest request)
+        {
+            if (DietaryComponentList == null)
+            {
+                DietaryComponentList = new List<ResourceRequest>();
+            }
+            ResourceRequest alreadyEaten = DietaryComponentList.Where(a => a.ResourceTypeName == request.ResourceTypeName).FirstOrDefault();
+            if (alreadyEaten != null)
+            {
+                alreadyEaten.Provided += request.Provided;
+            }
+            else
+            {
+                DietaryComponentList.Add(request);
+            }
         }
 
         /// <summary>

@@ -49,6 +49,7 @@ namespace UserInterface.Presenters
 
         private string CreateHTML()
         {
+            int maxErrors = 100;
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
                 "body {color: [FontColor]; max-width:1000px; font-size:10pt;}" + 
@@ -130,7 +131,7 @@ namespace UserInterface.Presenters
 
             if (dataRows.Count() > 0)
             {
-                foreach (DataRow dr in dataRows)
+                foreach (DataRow dr in dataRows.Take(maxErrors))
                 {
                     bool ignore = false;
                     string msgStr = dr[msgCol].ToString();
@@ -155,7 +156,22 @@ namespace UserInterface.Presenters
                         {
                             parts.RemoveAt(0);
                         }
-                        msgStr = string.Join("\n", parts.ToArray());
+                        msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
+
+                        // remove starter text
+                        string[] starters = new string[]
+                        {
+                            "System.Exception: ",
+                            "Models.Core.ApsimXException: "
+                        };
+
+                        foreach (string start in starters)
+                        {
+                            if (msgStr.Contains(start))
+                            {
+                                msgStr = msgStr.Substring(start.Length);
+                            }
+                        }
 
                         string type = "Message";
                         string title = "Message";
@@ -197,7 +213,7 @@ namespace UserInterface.Presenters
                             title = "Success";
                             DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
                             int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
-                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString(), CultureInfo.InvariantCulture);
+                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
                             msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
                         }
 
@@ -217,6 +233,16 @@ namespace UserInterface.Presenters
                         htmlString += "\n</div>";
                         htmlString += "\n</div>";
                     }
+                }
+                if(dataRows.Count() > maxErrors)
+                {
+                    htmlString += "\n<div class=\"holdermain\">";
+                    htmlString += "\n <div class=\"warningbanner\">Warning limit reached</div>";
+                    htmlString += "\n <div class=\"warningcontent\">";
+                    htmlString += "\n  <div class=\"activityentry\">In excess of "+maxErrors+" errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.";
+                    htmlString += "\n  </div>";
+                    htmlString += "\n </div>";
+                    htmlString += "\n</div>";
                 }
             }
             else

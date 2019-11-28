@@ -145,10 +145,12 @@
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
+    <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityMarkForSale.cs" />
     <Compile Include="CLEM\Activities\RuminantActivityShear.cs" />
     <Compile Include="CLEM\FileSQLiteCrop.cs" />
     <Compile Include="CLEM\Groupings\LabourPriceGroup.cs" />
+    <Compile Include="CLEM\Groupings\LabourFeedGroup.cs" />
     <Compile Include="CLEM\ICLEMUI.cs" />
     <Compile Include="CLEM\IFileCrop.cs" />
     <Compile Include="CLEM\Reporting\CustomQuery.cs" />
@@ -229,6 +231,7 @@
     <Compile Include="Core\ITest.cs" />
     <Compile Include="Core\Reference.cs" />
     <Compile Include="Core\Run\CommenceArgs.cs" />
+    <Compile Include="Core\Run\EmptyJob.cs" />
     <Compile Include="Core\Run\GenerateApsimXFiles.cs" />
     <Compile Include="Core\Run\IReplacement.cs" />
     <Compile Include="Core\Run\ISimulationDescriptionGenerator.cs" />
@@ -237,9 +240,13 @@
     <Compile Include="Core\Run\PropertyReplacement.cs" />
     <Compile Include="Core\Run\Runner.cs" />
     <Compile Include="Core\Run\SimulationDescription.cs" />
+    <Compile Include="Factorial\Permutation.cs" />
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
+    <Compile Include="Functions\LiveOnEventFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
+    <Compile Include="Graph\GraphPanel.cs" />
+    <Compile Include="Graph\IGraphPanelScript.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
@@ -249,8 +256,11 @@
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <Compile Include="RotBubbleChart.cs" />
+    <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
+    <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
+    <Compile Include="Soils\Standardiser\SoilChecker.cs" />
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
     <Compile Include="Soils\Standardiser\SoilStandardiser.cs" />
@@ -444,7 +454,6 @@
     <Compile Include="Soils\Arbitrator\Estimate.cs" />
     <Compile Include="Soils\Arbitrator\SoilState.cs" />
     <Compile Include="Soils\MultiPoreWater\HydraulicProperties.cs" />
-    <Compile Include="Soils\ISoilCrop.cs" />
     <Compile Include="Soils\Arbitrator\ZoneWaterAndN.cs" />
     <Compile Include="Soils\Nutrients\Solute.cs" />
     <Compile Include="Soils\OutputLayers.cs" />
@@ -454,7 +463,6 @@
     <Compile Include="Soils\MultiPoreWater\HourlyData.cs" />
     <Compile Include="Soils\MultiPoreWater\WEIRDO.cs" />
     <Compile Include="Soils\MultiPoreWater\Pore.cs" />
-    <Compile Include="Soils\SoilCropOilPalm.cs" />
     <Compile Include="Soils\Arbitrator\SoilArbitrator.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatch.cs" />
     <Compile Include="Soils\SoilNitrogen\SoilNitrogen.CNPatch.Processes.cs" />
@@ -567,7 +575,7 @@
     <Compile Include="Plant\Plant.cs" />
     <Compile Include="Plant\Structure\Structure.cs" />
     <Compile Include="Irrigation\IrrigationApplicationType.cs" />
-    <Compile Include="Soils\Analysis.cs" />
+    <Compile Include="Soils\Chemical.cs" />
     <Compile Include="Soils\InitialWater.cs" />
     <Compile Include="Soils\LayerStructure.cs" />
     <Compile Include="Soils\Phosphorus.cs" />
@@ -575,15 +583,13 @@
     <Compile Include="Soils\SoilTemp\CERESSoilTemperature.cs" />
     <Compile Include="Soils\Soil.cs" />
     <Compile Include="Soils\SoilCrop.cs" />
-    <Compile Include="Soils\SoilOrganicMatter.cs" />
-    <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
-    <Compile Include="Soils\SoilTemp\SoilTemperature2.cs" />
+    <Compile Include="Soils\Organic.cs" />
     <Compile Include="Soils\SWIM\Swim.cs" />
     <Compile Include="Soils\SWIM\SwimSoluteParameters.cs" />
     <Compile Include="Soils\SWIM\SwimSubsurfaceDrain.cs" />
     <Compile Include="Soils\SWIM\SwimWaterTable.cs" />
     <Compile Include="Soils\TillageType.cs" />
-    <Compile Include="Soils\Water.cs" />
+    <Compile Include="Soils\Physical.cs" />
     <Compile Include="Soils\SoilWaterBackend\SoilWater.cs" />
     <Compile Include="Summary.cs" />
     <Compile Include="Surface\AddFaecesType.cs" />
@@ -728,10 +734,8 @@
     <None Include="app.config" />
     <None Include="ClassDiagram.cd" />
     <None Include="Resources\FodderBeet.json" />
-    <None Include="Resources\Oats1.json" />
+    <EmbeddedResource Include="Resources\Nutrient.json" />
     <None Include="Resources\Potato.json" />
-    <None Include="Resources\Potato1.json" />
-    <None Include="Resources\StandardToolbox.apsimx" />
     <None Include="Resources\WhiteClover.json" />
   </ItemGroup>
   <ItemGroup>
@@ -774,12 +778,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
-      <Project>{E243AE8D-35E3-4397-B180-EF1E8A91AE8C}</Project>
-      <Name>APSIM.Shared</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\OilPalm.json">
       <SubType>Designer</SubType>
     </None>
@@ -801,7 +799,12 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj">
+      <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
+      <Name>APSIM.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

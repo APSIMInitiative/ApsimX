@@ -153,7 +153,7 @@ namespace UserInterface.Commands
             section.Add(version);
             // Convert all models in file to tags.
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
-            explorerPresenter.ApsimXFile.Links.Resolve(explorerPresenter.ApsimXFile, true, true);
+            // No need to resolve links here - they will be resolved in each simulation individually.
             foreach (IModel child in explorerPresenter.ApsimXFile.Children)
             {
                 AutoDocumentation.DocumentModel(child, tags, headingLevel:1, indent:0);
@@ -389,7 +389,7 @@ namespace UserInterface.Commands
             graph.Height = 250;
 
             // Create a line series.
-            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null,
+            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null,
                                      Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
                                      System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
                                      Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);

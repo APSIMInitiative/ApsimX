@@ -175,8 +175,15 @@ namespace Models.CLEM.Resources
             }
 
             double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
+            
+            // more than positive balance can be taken if withdrawal limit set to false
+            if(this.EnforceWithdrawalLimit)
+            {
+                amountRemoved = Math.Min(amountRemoved, FundsAvailable);
+            }
+
             // avoid taking too much
-            amountRemoved = Math.Min(this.Amount, amountRemoved);
+            //amountRemoved = Math.Min(this.Amount, amountRemoved);
             if (amountRemoved == 0)
             {
                 return;

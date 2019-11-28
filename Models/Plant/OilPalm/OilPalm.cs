@@ -144,7 +144,7 @@ namespace Models.PMF.OilPalm
         public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The soil crop</summary>
-        private SoilCropOilPalm soilCrop;
+        private SoilCrop soilCrop;
         /// <summary>The cultivar definition</summary>
         private Cultivar cultivarDefinition;
 
@@ -156,11 +156,17 @@ namespace Models.PMF.OilPalm
                 SortedSet<string> cultivarNames = new SortedSet<string>();
                 foreach (Cultivar cultivar in this.Cultivars)
                 {
-                    cultivarNames.Add(cultivar.Name);
+                    string name = cultivar.Name;
+                    List<IModel> memos = Apsim.Children(cultivar, typeof(Memo));
+                    foreach (IModel memo in memos)
+                    {
+                        name += '|' + ((Memo)memo).Text;
+                    }
+                    cultivarNames.Add(name);
                     if (cultivar.Alias != null)
                     {
                         foreach (string alias in cultivar.Alias)
-                            cultivarNames.Add(alias);
+                            cultivarNames.Add(alias + "|Alias for " + cultivar.Name);
                     }
                 }
 
@@ -196,11 +202,6 @@ namespace Models.PMF.OilPalm
             get { return cover_green + (1 - cover_green) * UnderstoryCoverGreen; }
                 }
 
-        /// <summary>Amount of rainfall intercepted by the plant canopy</summary>
-        [Units("mm")]
-        public double interception = 0.0;
-
-
         /// <summary>Gets or sets the understory cover maximum.</summary>
         /// <value>The understory cover maximum.</value>
         [Description("Maximum understory cover (0-1)")]
@@ -211,11 +212,6 @@ namespace Models.PMF.OilPalm
         [Description("Fraction of understory that is legume (0-1)")]
         [Units("0-1")]
         public double UnderstoryLegumeFraction { get; set; }
-        /// <summary>Gets or sets the interception fraction.</summary>
-        /// <value>The interception fraction.</value>
-        [Description("Fraction of rainfall intercepted by canopy (0-1)")]
-        [Units("0-1")]
-        public double InterceptionFraction { get; set; }
         /// <summary>Gets or sets the maximum root depth.</summary>
         /// <value>The maximum root depth.</value>
         [Description("Maximum palm root depth (mm)")]
@@ -724,7 +720,7 @@ namespace Models.PMF.OilPalm
             Bunches = new List<BunchType>();
             Roots = new List<RootType>();
 
-            soilCrop = Soil.Crop(Name) as SoilCropOilPalm; 
+            soilCrop = Soil.Crop(Name) as SoilCrop; 
             
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.Thickness.Length];
@@ -837,16 +833,6 @@ namespace Models.PMF.OilPalm
 
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
-        }
-
-        // The following event handler will be called each day at the beginning of the day
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            interception = MetData.Rain * InterceptionFraction;
         }
 
         /// <summary>Called when [do plant growth].</summary>

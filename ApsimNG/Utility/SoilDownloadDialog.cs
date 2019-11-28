@@ -238,7 +238,6 @@
         /// <param name="e">Event arguments</param>
         private void BtnOk_Clicked(object sender, EventArgs e)
         {
-            bool result = false;
             Soil newSoil = null;
             if (radioAus.Active)
             {
@@ -271,8 +270,7 @@
                 }
                 else if (dest is Zone)
                 {
-                    string modelStr = FileFormat.WriteToString(newSoil);
-                    AddModelCommand command = new AddModelCommand(replaceNode, modelStr, owningView, explorerPresenter);
+                    AddModelCommand command = new AddModelCommand(replaceNode, newSoil, owningView, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
                 MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok,
@@ -805,9 +803,9 @@
                     }
 
                     newSoil = new Soil(); 
-                    Analysis analysis = new Analysis();
-                    Water waterNode = new Water(); 
-                    SoilOrganicMatter organicMatter = new SoilOrganicMatter();
+                    Chemical analysis = new Chemical();
+                    Physical waterNode = new Physical(); 
+                    Organic organicMatter = new Organic();
                     SoilWater soilWater = new SoilWater();
                     InitialWater initialWater = new InitialWater();
                     Sample initialNitrogen = new Sample();
@@ -882,8 +880,8 @@
 
                     // Initialise nitrogen to 0.0
                     initialNitrogen.Name = "Initial nitrogen";
-                    initialNitrogen.NH4 = new double[layerCount];
-                    initialNitrogen.NO3 = new double[layerCount];
+                    initialNitrogen.NH4N = new double[layerCount];
+                    initialNitrogen.NO3N = new double[layerCount];
 
                     double tAvg = (maxTemp + minTemp) / 2.0;
                     soilWater.CNCov = 0.0;
@@ -910,19 +908,14 @@
                         dul[i] = thetaWwp[i] + awc20[i];  // This could be made Moore complex
                     waterNode.DUL = ConvertLayers(dul, layerCount);
 
-                    analysis.ParticleSizeSand = ConvertLayers(sand, layerCount);
-                    analysis.ParticleSizeSilt = ConvertLayers(silt, layerCount);
-                    analysis.ParticleSizeClay = ConvertLayers(clay, layerCount);
-                    analysis.Rocks = ConvertLayers(coarse, layerCount);
-                    analysis.PHUnits = Sample.PHSampleUnitsEnum.Water;
+                    var particleSizeSand = ConvertLayers(sand, layerCount);
+                    waterNode.ParticleSizeClay = ConvertLayers(clay, layerCount);
                     analysis.PH = ConvertLayers(phWater, layerCount);
-                    analysis.CEC = ConvertLayers(cationEC, layerCount);
                     // Obviously using the averaging in "ConvertLayers" for texture classes is not really correct, but should be OK as a first pass if we don't have sharply contrasting layers
                     double[] classes = ConvertLayers(texture, layerCount);
                     string[] textures = new string[layerCount];
                     for (int i = 0; i < layerCount; i++)
                         textures[i] = textureClasses[(int)Math.Round(classes[i]) - 1];
-                    analysis.Texture = textures;
 
 
                     double[] xf = new double[layerCount];
@@ -938,7 +931,7 @@
 
                     for (int i = 0; i < layerCount; i++)
                     {
-                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * analysis.ParticleSizeSand[i])) / p3;
+                        xf[i] = 1.0 - (waterNode.BD[i] - (p1 + p2 * 0.01 * particleSizeSand[i])) / p3;
                         xf[i] = Math.Max(0.1, Math.Min(1.0, xf[i]));
                         double effectiveThickness = thickness[i] * xf[i];
                         double bottomEffDepth = topEffDepth + effectiveThickness;
@@ -959,8 +952,7 @@
                     wheat.KL = kl;
                     wheat.LL = ll;
 
-                    organicMatter.OCUnits = Sample.OCSampleUnitsEnum.Total;
-                    organicMatter.OC = ConvertLayers(ocdrc, layerCount);
+                    organicMatter.Carbon = ConvertLayers(ocdrc, layerCount);
 
                     double rootWt = Math.Max(0.0, Math.Min(3000.0, 2.5 * (ppt - 100.0)));
                     // For AosimX, root wt needs to be distributed across layers. This conversion logic is adapted from that used in UpgradeToVersion52
@@ -977,7 +969,7 @@
                     double totFOMfraction = MathUtilities.Sum(rootWtFraction);
                     for (int layer = 0; layer < thickness.Length; layer++)
                         rootWtFraction[layer] /= totFOMfraction;
-                    organicMatter.RootWt = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
+                    organicMatter.FOM = MathUtilities.Multiply_Value(rootWtFraction, rootWt);
 
                     double[] fBiom = { 0.04, 0.04 - 0.03 * (225.0 - 150.0) / (400.0 - 150.0),
                         (400.0 - 300.0) / (450.0 - 300.0) * (0.04 - 0.03 * (350.0 - 150.0) / (400.0 - 150.0)) + (450.0 - 400.0) / (450.0 - 300.0) * 0.01,
@@ -989,10 +981,8 @@
                         fInert[layer] = Math.Min(0.99, inert_c / ocdrc[layer] );
                     organicMatter.FInert = ConvertLayers(fInert, layerCount); // Not perfect, but should be good enough
                     organicMatter.FBiom = fBiom;
-                    organicMatter.EnrACoeff = 7.4;
-                    organicMatter.EnrBCoeff = 0.20;
-                    organicMatter.RootCN = 40.0;
-                    organicMatter.SoilCN = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
+                    organicMatter.FOMCNRatio = 40.0;
+                    organicMatter.SoilCNRatio = Enumerable.Repeat(11.0, layerCount).ToArray(); // Is there any good way to estimate this? ISRIC provides no N data
 
                     return newSoil;
                 }

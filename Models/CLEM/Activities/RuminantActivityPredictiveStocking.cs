@@ -51,11 +51,6 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double FeedLowLimit { get; set; }
 
-        // minimum no that can be sold off... now controlled by sale and transport activity 
-
-        // restock proportion. I don't understand this.
-        // Maximum % restock breeders/age group
-
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -165,6 +160,7 @@ namespace Models.CLEM.Activities
         {
             if (animalEquivalentsforSale <= 0)
             {
+                this.Status = ActivityStatus.Ignored;
                 return;
             }
 
@@ -196,11 +192,14 @@ namespace Models.CLEM.Activities
                 }
                 if (animalEquivalentsforSale <= 0)
                 {
+                    this.Status = ActivityStatus.Success;
                     return;
                 }
             }
 
-            // Possible destock groups
+            this.Status = ActivityStatus.Partial;
+
+            // Idea of possible destock groups
             // Steers, Male, Not BreedingSire, > Age
             // Dry Cows, IsDryBreeder
             // Breeders, IsBreeder, !IsPregnant, > Age

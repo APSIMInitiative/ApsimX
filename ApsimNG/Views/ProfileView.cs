@@ -1,9 +1,9 @@
-﻿using System;
-using Gtk;
-using UserInterface.Interfaces;
-
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
+    using System;
+    using Gtk;
+    using Interfaces;
+
     interface IProfileView
     {
         /// <summary>
@@ -92,7 +92,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Allow direct access to the property grid.
         /// </summary>
-        IGridView IProfileView.PropertyGrid
+        public IGridView PropertyGrid
         {
             get { return propertyGrid; }
         }
@@ -100,7 +100,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Allow direct access to the profile grid.
         /// </summary>
-        IGridView IProfileView.ProfileGrid
+        public IGridView ProfileGrid
         {
             get { return profileGrid; }
         }
@@ -108,7 +108,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Allow direct access to the graph.
         /// </summary>
-        IGraphView IProfileView.Graph
+        public IGraphView Graph
         {
             get { return graph; }
         }

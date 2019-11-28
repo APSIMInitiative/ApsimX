@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 53,
+  "Version": 62,
   "Name": "Simulations",
   "Children": [
     {
@@ -15,6 +15,8 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
       "IncludeInDocumentation": false,
@@ -555,17 +557,19 @@
         {
           "$type": "Models.Sensitivity.Parameter, Models",
           "Name": "DUL",
-          "Path": "Field.Soil.Water.DUL[1]",
+          "Path": "Field.Soil.Physical.DUL[1]",
           "LowerBound": 0.2,
           "UpperBound": 0.4
         }
       ],
-      "Years": [
-        1974,
-        1976,
-        1978,
-        1980,
-        1982
+      "TableName": "Report",
+      "AggregationVariableName": "Clock.Today.Year",
+      "AggregationValues": [
+        "1974",
+        "1976",
+        "1978",
+        "1980",
+        "1982"
       ],
       "Name": "MorrisMethodExample",
       "Children": [
@@ -801,7 +805,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] SoluteManager mySolutes;\r\n        [Link] Soil mySoil;\r\n        [Link] ISummary summary = null;\r\n        [Link] AgPasture.Sward Pasture;\r\n\r\n        //[ScopedLinkByName] Report.Report HarvestReport;\r\n\r\n        [Separator(\"Point to component and true/false variable for the harvesting\")]\r\n        [Description(\"Name of the component that does the reporting       :\")] public string ReportName { get; set; }\r\n\r\n        public double HarvestedWt { get; set; }\r\n        public double IntervalNHA { get; set; }\r\n\r\n\r\n        [XmlIgnore][Units(\"\")] public DateTime[] ResetDates { get; set; }\r\n        [XmlIgnore][Units(\"\")] public DateTime[] ReportDates { get; set; }\r\n\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double HerbageCut { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double HerbageNCut { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double Fixation { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double LeachN { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double Denit { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double DenitN2O { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double Drainage { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double PropLeached { get; set; }\r\n\r\n        private double[] soilUrea;\r\n        private double[] soilNH4;\r\n        private double[] soilNO3;\r\n        private double urineApplied;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n        \t// set the reset and reporting dates\r\n        \tDateTime[] urineDates = (DateTime[])Apsim.Get(zone, \"[AddUrinePatches].Script.DepositionDates\");\r\n        \tResetDates = new DateTime[urineDates.Length + 1];\r\n        \tReportDates = new DateTime[urineDates.Length + 1];\r\n        \tfor (int i = 0; i < urineDates.Length; i++)\r\n        \t{\r\n        \t\tResetDates[i] = urineDates[i].AddDays(-1);  // -1 because this manager is after AddUrinePatches\r\n        \t\tReportDates[i] = urineDates[i].AddYears(2).AddDays(-2); // -2 to capture the data before the reset\r\n        \t\tsummary.WriteMessage(this, \"ReportDate \" + i + \" \" + ReportDates[i]);\r\n        \t}\r\n        \tsoilUrea = new double[mySoil.Depth.Length];\r\n        \tsoilNH4 = new double[mySoil.Depth.Length];\r\n        \tsoilNO3 = new double[mySoil.Depth.Length];\r\n\r\n        \turineApplied = (double)Apsim.Get(zone, \"[AddUrinePatches].Script.DepositionLoad\");\r\n       \t\tsummary.WriteMessage(this, \"DoReportingSensit has found a urineApplied value of \" + urineApplied);\r\n\r\n       \t\tsummary.WriteMessage(this, \"DoReportingSensit has initialised\");\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\t\t\tif (DateUtilities.Equals(ResetDates[0], Clock.Today))\r\n\t\t\t{\r\n\t\t\t\tsoilUrea = mySoil.UreaN;\r\n\t\t\t\tsoilNH4 = mySoil.NH4N;\r\n\t\t\t\tsoilNO3 = mySoil.NO3N;\r\n\t\t\t\tsummary.WriteMessage(this, \"Capturing soil mineral N values for future resetting\");\r\n\t\t\t}\r\n\r\n        \tforeach (DateTime myDate in ResetDates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.Equals(myDate, Clock.Today))\r\n        \t\t{\r\n\t\t\t\t\tmySoil.UreaN = soilUrea;\r\n\t\t\t\t\tmySoil.NH4N = soilNH4;\r\n\t\t\t\t\tmySoil.NO3N = soilNO3;\r\n\t\t\t\t\tsummary.WriteMessage(this, \"Resetting soil mineral N values prior to urine deposition\");\r\n        \t\t}\r\n        \t}\r\n\r\n        \tDateTime[] urineDates = (DateTime[])Apsim.Get(zone, \"[AddUrinePatches].Script.DepositionDates\");\r\n        \tforeach (DateTime myDate in urineDates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.Equals(myDate, Clock.Today))\r\n        \t\t{\r\n\t\t\t\t\tHerbageCut = 0.0;\r\n\t\t\t\t\tHerbageNCut = 0.0;\r\n\t\t\t\t\tFixation = 0.0;\r\n\t\t\t\t\tLeachN = 0.0;\r\n\t\t\t\t\tDenit = 0.0;\r\n\t\t\t\t\tDenitN2O = 0.0;\r\n\t\t\t\t\tDrainage = 0.0;\r\n\t\t\t\t\tPropLeached = 0.0;\r\n\t\t\t\t\tsummary.WriteMessage(this, \"Resetting reporting values\");\r\n        \t\t}\r\n        \t}\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n\t\t\tHerbageCut += Pasture.HarvestedWt;\r\n\t\t\tHerbageNCut += Pasture.HarvestedN;\r\n\t\t\tFixation += Pasture.FixedN;\r\n\t\t\tLeachN += mySoil.SoilWater.LeachUrea + mySoil.SoilWater.LeachNH4 + mySoil.SoilWater.LeachNO3;\r\n\t\t\tfor (int i = 0; i < mySoil.Depth.Length; i++)\r\n\t\t\t{\r\n\t\t\t\tDenit += mySoil.SoilNitrogen.Denitrification[i];\r\n\t\t\t\tDenitN2O += mySoil.SoilNitrogen.n2o_atm[i];\r\n\t\t\t}\r\n\t\t\tDrainage += mySoil.SoilWater.Drainage;\r\n\r\n\t\t\tforeach (DateTime myDate in ReportDates)\r\n        \t{\r\n    \t\t\tif (DateUtilities.Equals(myDate, Clock.Today))\r\n        \t\t{\r\n\t\t\t\t\tif (urineApplied > 0.0)\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tPropLeached = LeachN / urineApplied;\r\n\t\t\t\t\t\tsummary.WriteMessage(this, \"PropLeached calc first\" + LeachN + \" \" + urineApplied);\r\n\t\t\t\t\t}\r\n\t\t\t\t\telse\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tPropLeached = 0.0;\r\n\t\t\t\t\t\tsummary.WriteMessage(this, \"PropLeached calc second\" + LeachN + \" \" + urineApplied);\r\n\t\t       \t\t}\r\n\t\t       \t\tModels.Report.Report myReportName = Apsim.Find(this, ReportName) as Models.Report.Report;\r\n\t\t\t\t\tif (myReportName == null)\r\n   \t\t\t\t\t\tthrow new Exception(string.Format(\"Unable to locate report {0}.\", ReportName));\r\n\t\t\t\t\tmyReportName.DoOutput();\r\n        \t\t}\r\n        \t}\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Interfaces;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Simulation Simulation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser fertiliser;\r\n        [Link] private Soil mySoil;\r\n        [Link] private ISummary summary;\r\n        private double urineApplied;\r\n        [ScopedLinkByName]\r\n        private ISolute NO3;\r\n        [ScopedLinkByName]\r\n        private ISolute NH4;\r\n        [ScopedLinkByName]\r\n        private ISolute Urea;\r\n        [ScopedLinkByName]\r\n        private SoilNitrogen SoilNitrogen;\r\n        // - Links to APSIM models\r\n        [Link] AgPasture.Sward Pasture;\r\n\r\n        //[ScopedLinkByName] Report.Report HarvestReport;\r\n\r\n        [Separator(\"Point to component and true/false variable for the harvesting\")]\r\n        [Description(\"Name of the component that does the reporting       :\")] public string ReportName { get; set; }\r\n\r\n        public double HarvestedWt { get; set; }\r\n        public double IntervalNHA { get; set; }\r\n\r\n\r\n        [XmlIgnore][Units(\"\")] public DateTime[] ResetDates { get; set; }\r\n        [XmlIgnore][Units(\"\")] public DateTime[] ReportDates { get; set; }\r\n\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double HerbageCut { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double HerbageNCut { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double Fixation { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double LeachN { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double Denit { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double DenitN2O { get; set; }\r\n        [XmlIgnore][Units(\"kgN/ha\")] public double Drainage { get; set; }\r\n        [XmlIgnore][Units(\"-\")] public double PropLeached { get; set; }\r\n\r\n        private double[] soilUrea;\r\n        private double[] soilNH4;\r\n        private double[] soilNO3;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            // set the reset and reporting dates\r\n            DateTime[] urineDates = (DateTime[])Apsim.Get(zone, \"[AddUrinePatches].Script.DepositionDates\");\r\n            ResetDates = new DateTime[urineDates.Length + 1];\r\n            ReportDates = new DateTime[urineDates.Length + 1];\r\n            for (int i = 0; i < urineDates.Length; i++)\r\n            {\r\n                ResetDates[i] = urineDates[i].AddDays(-1);  // -1 because this manager is after AddUrinePatches\r\n                ReportDates[i] = urineDates[i].AddYears(2).AddDays(-2); // -2 to capture the data before the reset\r\n                summary.WriteMessage(this, \"ReportDate \" + i + \" \" + ReportDates[i]);\r\n            }\r\n            soilUrea = new double[mySoil.Thickness.Length];\r\n            soilNH4 = new double[mySoil.Thickness.Length];\r\n            soilNO3 = new double[mySoil.Thickness.Length];\r\n\r\n            urineApplied = (double)Apsim.Get(zone, \"[AddUrinePatches].Script.DepositionLoad\");\r\n               summary.WriteMessage(this, \"DoReportingSensit has found a urineApplied value of \" + urineApplied);\r\n\r\n               summary.WriteMessage(this, \"DoReportingSensit has initialised\");\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.Equals(ResetDates[0], Clock.Today))\r\n            {\r\n                soilUrea = Urea.kgha;\r\n                soilNH4 = NH4.kgha;\r\n                soilNO3 = NO3.kgha;\r\n                summary.WriteMessage(this, \"Capturing soil mineral N values for future resetting\");\r\n            }\r\n\r\n            foreach (DateTime myDate in ResetDates)\r\n            {\r\n                if (DateUtilities.Equals(myDate, Clock.Today))\r\n                {\r\n                    Urea.kgha = soilUrea;\r\n                    NH4.kgha = soilNH4;\r\n                    NO3.kgha = soilNO3;\r\n                    summary.WriteMessage(this, \"Resetting soil mineral N values prior to urine deposition\");\r\n                }\r\n            }\r\n\r\n            DateTime[] urineDates = (DateTime[])Apsim.Get(zone, \"[AddUrinePatches].Script.DepositionDates\");\r\n            foreach (DateTime myDate in urineDates)\r\n            {\r\n                if (DateUtilities.Equals(myDate, Clock.Today))\r\n                {\r\n                    HerbageCut = 0.0;\r\n                    HerbageNCut = 0.0;\r\n                    Fixation = 0.0;\r\n                    LeachN = 0.0;\r\n                    Denit = 0.0;\r\n                    DenitN2O = 0.0;\r\n                    Drainage = 0.0;\r\n                    PropLeached = 0.0;\r\n                    summary.WriteMessage(this, \"Resetting reporting values\");\r\n                }\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            HerbageCut += Pasture.HarvestedWt;\r\n            HerbageNCut += Pasture.HarvestedN;\r\n            Fixation += Pasture.FixedN;\r\n            LeachN += mySoil.SoilWater.LeachUrea + mySoil.SoilWater.LeachNH4 + mySoil.SoilWater.LeachNO3;\r\n            for (int i = 0; i < mySoil.Thickness.Length; i++)\r\n            {\r\n                Denit += SoilNitrogen.Denitrification[i];\r\n                DenitN2O += SoilNitrogen.n2o_atm[i];\r\n            }\r\n            Drainage += mySoil.SoilWater.Drainage;\r\n\r\n            foreach (DateTime myDate in ReportDates)\r\n            {\r\n                if (DateUtilities.Equals(myDate, Clock.Today))\r\n                {\r\n                    if (urineApplied > 0.0)\r\n                    {\r\n                        PropLeached = LeachN / urineApplied;\r\n                        summary.WriteMessage(this, \"PropLeached calc first\" + LeachN + \" \" + urineApplied);\r\n                    }\r\n                    else\r\n                    {\r\n                        PropLeached = 0.0;\r\n                        summary.WriteMessage(this, \"PropLeached calc second\" + LeachN + \" \" + urineApplied);\r\n                       }\r\n                       Models.Report.Report myReportName = Apsim.Find(this, ReportName) as Models.Report.Report;\r\n                    if (myReportName == null)\r\n                           throw new Exception(string.Format(\"Unable to locate report {0}.\", ReportName));\r\n                    myReportName.DoOutput();\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "ReportName",
@@ -875,7 +879,6 @@
                 },
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -896,7 +899,7 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
                       "Thickness": [
                         200.0,
                         150.0,
@@ -945,7 +948,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -1161,7 +1164,6 @@
                     {
                       "$type": "Models.Soils.SoilOrganicMatter, Models",
                       "RootCN": 0.0,
-                      "SoilCN": 11.01,
                       "EnrACoeff": 0.0,
                       "EnrBCoeff": 0.0,
                       "Thickness": [
@@ -1170,12 +1172,6 @@
                         210.0,
                         230.0
                       ],
-                      "Depth": [
-                        "0-18",
-                        "18-30",
-                        "30-51",
-                        "51-74"
-                      ],
                       "OC": [
                         7.9,
                         2.0,
@@ -1183,6 +1179,12 @@
                         0.5
                       ],
                       "OCMetadata": null,
+                      "SoilCN": [
+                        11.01,
+                        11.01,
+                        11.01,
+                        11.01
+                      ],
                       "FBiom": [
                         0.06,
                         0.04,
@@ -1215,6 +1217,18 @@
                         120.0,
                         210.0,
                         230.0
+                      ],
+                      "NO3N": [
+                        10.0,
+                        10.0,
+                        1.0,
+                        0.1
+                      ],
+                      "NH4N": [
+                        0.1,
+                        0.1,
+                        0.1,
+                        0.1
                       ],
                       "Rocks": null,
                       "RocksMetadata": null,
@@ -1285,26 +1299,14 @@
                         210.0,
                         230.0
                       ],
-                      "NO3": [
-                        10.0,
-                        10.0,
-                        1.0,
-                        0.1
-                      ],
-                      "NH4": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 0,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -1830,17 +1832,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.SoluteManager, Models",
-                  "Name": "SoluteManager",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today.Year",
                     "",

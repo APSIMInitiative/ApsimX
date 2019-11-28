@@ -64,6 +64,7 @@
             match.Parent.Children.Insert(index, newModel as Model);
             newModel.Parent = match.Parent;
             newModel.Name = match.Name;
+            newModel.Enabled = match.Enabled;
             match.Parent.Children.Remove(match as Model);
 
             newModel.Parent.OnCreated();

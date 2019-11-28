@@ -565,7 +565,7 @@
             get
             {
                 if (window1.GdkWindow != null)
-                    return window1.GdkWindow.State == Gdk.WindowState.Maximized;
+                    return (window1.GdkWindow.State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
                 else
                     return false;
             }

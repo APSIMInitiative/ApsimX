@@ -27,6 +27,23 @@ namespace Models.Core.ApsimFile
         public ManagerConverter() { }
 
         /// <summary>
+        /// Parameters (public properties with a display attribute) of the manager script.
+        /// </summary>
+        public Dictionary<string, string> Parameters
+        {
+            get
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                if (manager["Parameters"] == null)
+                    return parameters;
+
+                foreach (var parameter in manager["Parameters"])
+                    parameters.Add(parameter["Key"].ToString(), parameter["Value"].ToString());
+                return parameters;
+            }
+        }
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="manager">The JSON manager object.</param>
@@ -318,8 +335,9 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="searchPattern">The pattern to search for.</param>
         /// <param name="replacePattern">The string to replace.</param>
+        /// <param name="caseSensitive">Case sensitive?</param>
         /// <returns></returns>
-        public bool Replace(string searchPattern, string replacePattern)
+        public bool Replace(string searchPattern, string replacePattern, bool caseSensitive = false)
         {
             if (searchPattern == null)
                 return false;
@@ -327,7 +345,8 @@ namespace Models.Core.ApsimFile
             bool replacementDone = false;
             for (int i = 0; i < lines.Count; i++)
             {
-                int pos = lines[i].IndexOf(searchPattern, StringComparison.CurrentCultureIgnoreCase);
+                StringComparison comparison = caseSensitive ? StringComparison.CurrentCulture : StringComparison.CurrentCultureIgnoreCase;
+                int pos = lines[i].IndexOf(searchPattern, comparison);
                 while (pos != -1)
                 {
                     lines[i] = lines[i].Remove(pos, searchPattern.Length);
@@ -476,6 +495,18 @@ namespace Models.Core.ApsimFile
             return cleanLine;
         }
 
+        /// <summary>
+        /// Changes the value of a parameter with a given key.
+        /// </summary>
+        /// <param name="key">Key of the paramter.</param>
+        /// <param name="newParam">New value of the parameter.</param>
+        public void UpdateParameter(string key, string newParam)
+        {
+            foreach (var parameter in manager["Parameters"].Children())
+                if (parameter["Key"].ToString() == key)
+                    parameter["Value"] = newParam;
+                    //return;
+        }
     }
 
     /// <summary>A manager declaration</summary>

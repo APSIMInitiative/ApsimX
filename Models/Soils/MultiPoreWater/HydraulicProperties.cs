@@ -18,7 +18,7 @@ namespace Models.Soils
     {
         #region External links
         [Link]
-        private Water Water = null;
+        private Physical Water = null;
         #endregion
 
         #region Internal States
@@ -101,26 +101,6 @@ namespace Models.Soils
         /// <summary>Gets or sets the thickness.</summary>
         /// <value>The thickness.</value>
         public double[] Thickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the depth strings e.g. 0-10
-        /// </summary>
-        [Summary]
-        [Description("Depth")]
-        [XmlIgnore]
-        [Units("cm")]
-        public string[] Depth
-        {
-            get
-            {
-                return Soil.ToDepthStrings(this.Thickness);
-            }
-
-            set
-            {
-                this.Thickness = Soil.ToThickness(value);
-            }
-        }
 
         /// <summary>
         /// kdul
