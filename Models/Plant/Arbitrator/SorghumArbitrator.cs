@@ -129,6 +129,11 @@ namespace Models.PMF
         [JsonIgnore]
         public double TTFMFromFlowering { get; private set; }
 
+        /// <summary>
+        /// Used in stem DM demand function. Need to reconsider how this works.
+        /// </summary>
+        public double DMPlantMax { get; set; }
+
         /// <summary>Called at the start of the simulation.</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">Dummy event data.</param>
@@ -140,12 +145,21 @@ namespace Models.PMF
             zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone));
             DaysTotal = new List<double>();
             previousPhase = phenology.CurrentPhase;
+            DMPlantMax = 9999;
         }
 
         [EventSubscribe("StartOfDay")]
         private void OnStartOfDay(object sender, EventArgs e)
         {
             doIncrement = true;
+            if (DMPlantMax > 9990)
+            {
+                double ttNow = phenology.AccumulatedTT;
+                double ttToFlowering = (double)Apsim.Get(this, "[Phenology].TTToFlowering.Value()");
+                double dmPlantMaxTT = (double)Apsim.Get(this, "[Grain].PgrT1.Value()");
+                if (ttNow > dmPlantMaxTT + ttToFlowering)
+                    DMPlantMax = (double)Apsim.Get(this, "[Stem].Live.Wt");
+            }
         }
 
         [EventSubscribe("DoPhenology")]
