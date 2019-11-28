@@ -491,6 +491,7 @@
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
 
         /// <summary>Gets or sets the root length modifier due to root damage (0-1).</summary>
+        [XmlIgnore]
         public double RootLengthDensityModifierDueToDamage { get; set; } = 1.0;
 
         /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>

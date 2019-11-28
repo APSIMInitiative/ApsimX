@@ -132,6 +132,7 @@ namespace Models.PMF
         /// <summary>
         /// Used in stem DM demand function. Need to reconsider how this works.
         /// </summary>
+        [JsonIgnore]
         public double DMPlantMax { get; set; }
 
         /// <summary>Called at the start of the simulation.</summary>
