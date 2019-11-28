@@ -14,6 +14,7 @@ if not exist %apsimx%\Documentation\PDF (
 
 rem Upload under review models' documentation
 call :upload "%apsimx%\Documentation\PDF\UnderReview" ftp://apsimdev.apsim.info/APSIM/ApsimXFiles/UnderReview/
+if errorlevel 1 exit /b 1
 call :upload "%apsimx%\Documentation\PDF" ftp://apsimdev.apsim.info/APSIM/ApsimXFiles/
 endlocal
 exit /b
@@ -39,6 +40,10 @@ for %%D in (*.pdf) do (
 	set "FILE=%%~dpD!NEW_NAME!"
 	echo  Uploading "!FILE!"
 	@curl -s -u !APSIM_SITE_CREDS! -T "!FILE!" %2
+	if errorlevel 1 (
+		echo error
+		exit /b 1
+	)
 )
 popd
 exit /b
