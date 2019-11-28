@@ -275,7 +275,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EndoDormancy.ThermalTime.Value()",
+                              "VariableName": "[Phenology].EndoDormancy.Progression.Value()",
                               "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -309,7 +309,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EndoDormancy.ThermalTime.Value()",
+                              "VariableName": "[Phenology].EndoDormancy.Progression.Value()",
                               "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -700,7 +700,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].EndoDormancy.ThermalTime.Value()",
+                      "VariableName": "[Phenology].EndoDormancy.Progression.Value()",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7324,8 +7324,8 @@
                           "$type": "Models.Soils.SoilCrop, Models",
                           "LL": [
                             0.13,
-                            0.13,
-                            0.1,
+                            0.16,
+                            0.15,
                             0.15,
                             0.15,
                             0.15
@@ -11045,10 +11045,10 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.13,
-                                0.13,
-                                0.1,
+                                0.16,
+                                0.16,
                                 0.15,
+                                0.13,
                                 0.15,
                                 0.15
                               ],
