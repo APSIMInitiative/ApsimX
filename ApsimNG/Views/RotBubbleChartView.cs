@@ -87,7 +87,7 @@ namespace UserInterface.Views
             RuleList.MainWidget.HeightRequest = 75;
             RuleList.MainWidget.WidthRequest = 350;
             RuleList.TextHasChangedByUser += OnRuleChanged;
-            RuleList.ScriptMode = false;
+            //RuleList. ScriptMode = false;
 
             ScrolledWindow rules = new ScrolledWindow();
             rules.ShadowType = ShadowType.EtchedIn;
@@ -101,7 +101,7 @@ namespace UserInterface.Views
             ActionList.MainWidget.HeightRequest = 75;
             ActionList.MainWidget.WidthRequest = 350;
             ActionList.TextHasChangedByUser += OnActionChanged;
-            ActionList.ScriptMode = false;
+            //ActionList.ScriptMode = false;
 
             ScrolledWindow actions = new ScrolledWindow();
             actions.ShadowType = ShadowType.EtchedIn;

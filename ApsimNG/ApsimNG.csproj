@@ -486,6 +486,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\RotBubbleChart.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityMarkForSale.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\CommonLandFoodStoreType.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Permutation.png" />

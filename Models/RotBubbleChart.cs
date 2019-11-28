@@ -225,8 +225,63 @@ namespace Models
                     }
                     foreach (string action in bestArc.action)
                     {
-                        Summary.WriteMessage(this, ">>process 2: action = '" + action + "'");
-                        eventService.Publish(action, null /*new object[] { null, new EventArgs() }*/);
+                        string thisAction = action;
+                        int commentPosition = thisAction.IndexOf("//");
+                        if (commentPosition >= 0)
+                            thisAction = thisAction.Substring(0, commentPosition);
+
+                        Summary.WriteMessage(this, ">>process 2: action = '" + thisAction + "'");
+                        if (thisAction.Trim() != string.Empty)
+                        {
+#if true
+                        eventService.Publish(thisAction, null /*new object[] { null, new EventArgs() }*/);
+#else
+                            // Methodology from operations module
+                            string argumentsString = StringUtilities.SplitOffBracketedValue(ref thisAction, '(', ')');
+                        string[] arguments = argumentsString.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                        int posPeriod = thisAction.LastIndexOf('.');
+                        if (posPeriod == -1)
+                            throw new ApsimXException(this, "Bad operations action found: " + operation.Action);
+                        string modelName = thisAction.Substring(0, posPeriod);
+                        string methodName = thisAction.Substring(posPeriod + 1).Replace(";", "").Trim();
+
+                        Model model = Apsim.Get(this, modelName) as Model;
+                        if (model == null)
+                            throw new ApsimXException(this, "Cannot find model: " + modelName);
+
+
+                        MethodInfo[] methods = model.GetType().GetMethods();
+                        if (methods == null)
+                            throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
+
+                        object[] parameterValues = null;
+                        foreach (MethodInfo method in methods)
+                        {
+                            if (method.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                parameterValues = GetArgumentsForMethod(arguments, method);
+
+                                // invoke method.
+                                if (parameterValues != null)
+                                {
+                                    try
+                                    {
+                                        method.Invoke(model, parameterValues);
+                                    }
+                                    catch (Exception err)
+                                    {
+                                        throw err.InnerException;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (parameterValues == null)
+                            throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
+#endif
+                        }
                     }
                     eventService.Publish("transition_to_" + currentState, null);
                     more = true;

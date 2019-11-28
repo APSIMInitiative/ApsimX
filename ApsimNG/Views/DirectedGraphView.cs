@@ -206,7 +206,7 @@ namespace UserInterface.Views
                     clickedObject = arcs.FindLast(arc => arc.HitTest(clickPoint));
 
                 // If found object, select it.
-                if (clickedObject != null && clickedObject != selectedObject)
+                if (clickedObject != null &&  !clickedObject.Equals(selectedObject))
                 {
                     selected2Object = clickedObject;
                     selected2Object.Selected = true;

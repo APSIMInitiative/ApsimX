@@ -212,19 +212,19 @@
             }
 
             /// <summary>Find all event subscribers in the specified models.</summary>
-            /// <param name="name">The name of the event to look for</param>
+            /// <param name="fullName">The name of the event to look for</param>
             /// <param name="relativeTo">The model to use in scoping lookup</param>
             /// <param name="scope">Scoping rules</param>
             /// <returns>The list of event subscribers</returns>
-            internal static List<Subscriber> FindAll(string name, IModel relativeTo, ScopingRules scope)
+            internal static List<Subscriber> FindAll(string fullName, IModel relativeTo, ScopingRules scope)
             {
                 List<Subscriber> subscribers = new List<Subscriber>();
                 string destModel = "";
-                string eventName = name;
-                if (name.Contains("."))
+                string eventName = fullName;
+                if (fullName.Contains("."))
                 {
-                    eventName = name.Substring(name.LastIndexOf(".") + 1);
-                    Model component = Apsim.Get(relativeTo, name.Substring(0, name.LastIndexOf("."))) as Model;
+                    eventName = fullName.Substring(fullName.LastIndexOf(".") + 1);
+                    Model component = Apsim.Get(relativeTo, fullName.Substring(0, fullName.LastIndexOf("."))) as Model;
                     destModel = Apsim.FullPath(component);
                 }
                 foreach (IModel modelNode in scope.FindAll(relativeTo as IModel))

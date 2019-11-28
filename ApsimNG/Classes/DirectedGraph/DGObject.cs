@@ -44,6 +44,6 @@ namespace ApsimNG.Classes.DirectedGraph
 
             return Math.Sqrt(a * a + b * b);
         }
-
+        public bool Equals(DGObject o) { return ( this.Name == o.Name ); }
     }
 }
