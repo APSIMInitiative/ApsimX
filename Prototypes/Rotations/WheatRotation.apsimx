@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 58,
+  "Version": 67,
   "Name": "Simulations",
   "Children": [
     {
@@ -10,8 +10,8 @@
       "Children": [
         {
           "$type": "Models.Clock, Models",
-          "StartDate": "1900-01-01T00:00:00",
-          "EndDate": "1910-01-01T00:00:00",
+          "Start": "1900-01-01T00:00:00",
+          "End": "1910-01-01T00:00:00",
           "Name": "Clock",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -111,19 +111,19 @@
               "LocationAccuracy": " +/- 20m",
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
-              "AirDry": [
-                0.130250054518252,
-                0.198689390775399,
-                0.28,
-                0.28,
-                0.28,
-                0.28,
-                0.28
-              ],
               "Name": "Soil",
               "Children": [
                 {
-                  "$type": "Models.Soils.Water, Models",
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -133,6 +133,7 @@
                     300.0,
                     300.0
                   ],
+                  "ParticleSizeClay": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -193,7 +194,7 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "Name": "Water",
+                  "Name": "Physical",
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -303,6 +304,15 @@
                     300.0,
                     300.0
                   ],
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
                   "SWCON": [
                     0.3,
                     0.3,
@@ -313,7 +323,6 @@
                     0.3
                   ],
                   "KLAT": null,
-                  "ResidueInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -402,19 +411,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilOrganicMatter, Models",
-                  "RootCN": 40.0,
-                  "EnrACoeff": 7.4,
-                  "EnrBCoeff": 0.2,
-                  "Thickness": [
-                    150.0,
-                    150.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0
-                  ],
+                  "$type": "Models.Soils.Organic, Models",
                   "Depth": [
                     "0-15",
                     "15-30",
@@ -424,7 +421,17 @@
                     "120-150",
                     "150-180"
                   ],
-                  "OC": [
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Carbon": [
                     1.2,
                     0.96,
                     0.6,
@@ -433,8 +440,7 @@
                     0.12,
                     0.12
                   ],
-                  "OCMetadata": null,
-                  "SoilCN": [
+                  "SoilCNRatio": [
                     12.0,
                     12.0,
                     12.0,
@@ -461,7 +467,7 @@
                     1.0,
                     1.0
                   ],
-                  "RootWt": [
+                  "FOM": [
                     347.12903231275641,
                     270.3443621919937,
                     163.97214434990104,
@@ -470,15 +476,23 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
-                  "OCUnits": 0,
-                  "Name": "SoilOrganicMatter",
+                  "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Analysis, Models",
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -488,14 +502,24 @@
                     300.0,
                     300.0
                   ],
-                  "Rocks": null,
-                  "RocksMetadata": null,
-                  "Texture": null,
-                  "TextureMetadata": null,
-                  "MunsellColour": null,
-                  "MunsellMetadata": null,
-                  "EC": null,
-                  "ECMetadata": null,
+                  "NO3N": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "NH4N": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
                   "PH": [
                     8.0,
                     8.0,
@@ -505,36 +529,10 @@
                     8.0,
                     8.0
                   ],
-                  "PHMetadata": null,
                   "CL": null,
-                  "CLMetadata": null,
-                  "Boron": null,
-                  "BoronMetadata": null,
-                  "CEC": null,
-                  "CECMetadata": null,
-                  "Ca": null,
-                  "CaMetadata": null,
-                  "Mg": null,
-                  "MgMetadata": null,
-                  "Na": null,
-                  "NaMetadata": null,
-                  "K": null,
-                  "KMetadata": null,
+                  "EC": null,
                   "ESP": null,
-                  "ESPMetadata": null,
-                  "Mn": null,
-                  "MnMetadata": null,
-                  "Al": null,
-                  "AlMetadata": null,
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClay": null,
-                  "ParticleSizeClayMetadata": null,
-                  "PHUnits": 0,
-                  "BoronUnits": 0,
-                  "Name": "Analysis",
+                  "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -554,6 +552,15 @@
                 },
                 {
                   "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -563,24 +570,8 @@
                     300.0,
                     300.0
                   ],
-                  "NO3": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                  ],
-                  "NH4": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1
-                  ],
+                  "NO3N": null,
+                  "NH4N": null,
                   "SW": [
                     "NaN",
                     "NaN",
@@ -635,8 +626,6 @@
                     "NaN",
                     "NaN"
                   ],
-                  "NO3Units": 0,
-                  "NH4Units": 0,
                   "SWUnits": 0,
                   "OCUnits": 0,
                   "PHUnits": 0,
@@ -990,8 +979,8 @@
       "Children": [
         {
           "$type": "Models.Clock, Models",
-          "StartDate": "1900-01-01T00:00:00",
-          "EndDate": "1910-01-01T00:00:00",
+          "Start": "1900-01-01T00:00:00",
+          "End": "1910-01-01T00:00:00",
           "Name": "Clock",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1091,19 +1080,19 @@
               "LocationAccuracy": " +/- 20m",
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
-              "AirDry": [
-                0.130250054518252,
-                0.198689390775399,
-                0.28,
-                0.28,
-                0.28,
-                0.28,
-                0.28
-              ],
               "Name": "Soil",
               "Children": [
                 {
-                  "$type": "Models.Soils.Water, Models",
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -1113,6 +1102,7 @@
                     300.0,
                     300.0
                   ],
+                  "ParticleSizeClay": null,
                   "BD": [
                     1.01056473311131,
                     1.07145631083388,
@@ -1173,7 +1163,7 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
-                  "Name": "Water",
+                  "Name": "Physical",
                   "Children": [
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
@@ -1283,6 +1273,15 @@
                     300.0,
                     300.0
                   ],
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
                   "SWCON": [
                     0.3,
                     0.3,
@@ -1293,7 +1292,6 @@
                     0.3
                   ],
                   "KLAT": null,
-                  "ResidueInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1382,19 +1380,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilOrganicMatter, Models",
-                  "RootCN": 40.0,
-                  "EnrACoeff": 7.4,
-                  "EnrBCoeff": 0.2,
-                  "Thickness": [
-                    150.0,
-                    150.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0
-                  ],
+                  "$type": "Models.Soils.Organic, Models",
                   "Depth": [
                     "0-15",
                     "15-30",
@@ -1404,7 +1390,17 @@
                     "120-150",
                     "150-180"
                   ],
-                  "OC": [
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Carbon": [
                     1.2,
                     0.96,
                     0.6,
@@ -1413,8 +1409,7 @@
                     0.12,
                     0.12
                   ],
-                  "OCMetadata": null,
-                  "SoilCN": [
+                  "SoilCNRatio": [
                     12.0,
                     12.0,
                     12.0,
@@ -1441,7 +1436,7 @@
                     1.0,
                     1.0
                   ],
-                  "RootWt": [
+                  "FOM": [
                     347.12903231275641,
                     270.3443621919937,
                     163.97214434990104,
@@ -1450,15 +1445,23 @@
                     36.587130828674873,
                     22.1912165985086
                   ],
-                  "OCUnits": 0,
-                  "Name": "SoilOrganicMatter",
+                  "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Analysis, Models",
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -1468,14 +1471,24 @@
                     300.0,
                     300.0
                   ],
-                  "Rocks": null,
-                  "RocksMetadata": null,
-                  "Texture": null,
-                  "TextureMetadata": null,
-                  "MunsellColour": null,
-                  "MunsellMetadata": null,
-                  "EC": null,
-                  "ECMetadata": null,
+                  "NO3N": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "NH4N": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
                   "PH": [
                     8.0,
                     8.0,
@@ -1485,36 +1498,10 @@
                     8.0,
                     8.0
                   ],
-                  "PHMetadata": null,
                   "CL": null,
-                  "CLMetadata": null,
-                  "Boron": null,
-                  "BoronMetadata": null,
-                  "CEC": null,
-                  "CECMetadata": null,
-                  "Ca": null,
-                  "CaMetadata": null,
-                  "Mg": null,
-                  "MgMetadata": null,
-                  "Na": null,
-                  "NaMetadata": null,
-                  "K": null,
-                  "KMetadata": null,
+                  "EC": null,
                   "ESP": null,
-                  "ESPMetadata": null,
-                  "Mn": null,
-                  "MnMetadata": null,
-                  "Al": null,
-                  "AlMetadata": null,
-                  "ParticleSizeSand": null,
-                  "ParticleSizeSandMetadata": null,
-                  "ParticleSizeSilt": null,
-                  "ParticleSizeSiltMetadata": null,
-                  "ParticleSizeClay": null,
-                  "ParticleSizeClayMetadata": null,
-                  "PHUnits": 0,
-                  "BoronUnits": 0,
-                  "Name": "Analysis",
+                  "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -1534,6 +1521,15 @@
                 },
                 {
                   "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
                   "Thickness": [
                     150.0,
                     150.0,
@@ -1543,24 +1539,8 @@
                     300.0,
                     300.0
                   ],
-                  "NO3": [
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0,
-                    1.0
-                  ],
-                  "NH4": [
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1,
-                    0.1
-                  ],
+                  "NO3N": null,
+                  "NH4N": null,
                   "SW": [
                     "NaN",
                     "NaN",
@@ -1615,8 +1595,6 @@
                     "NaN",
                     "NaN"
                   ],
-                  "NO3Units": 0,
-                  "NH4Units": 0,
                   "SWUnits": 0,
                   "OCUnits": 0,
                   "PHUnits": 0,
@@ -1712,7 +1690,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        //[Link] Simulation Simulation;\r\n        [Link] Clock Clock;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil; \r\n\r\n        [Description(\"Crop to manage\")]\r\n        public IPlant Crop { get; set; }\r\n        [Separator(\"\")]\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n\r\n        public enum yesNoType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        [Description(\"Must sow (yes/no)\")]\r\n        public yesNoType MustSow { get; set;}\r\n        [Separator(\"\")]\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n\r\n        private Accumulator accumulatedRain;\r\n        private bool afterInit = false;\r\n                \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (Crop == null) { throw new Exception(\"Crop must not be null in rotations\"); }\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n            afterInit = true;\r\n            Summary.WriteMessage(this, Apsim.FullPath(this) + \" - Commence, crop=\" + (Crop as Model).Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            //FIXME test if sequencer...\r\n            //if (canEnter > 0)\r\n            //    OnEnter();\r\n\r\n            //if (canLeave > 0)\r\n            //    OnLeave();\r\n        }\r\n\r\n   // Test whether we can sow a crop today\r\n   // +ve number - yes\r\n   // 0          - no\r\n   // -ve number - no, out of scope (planting window)\r\n   [Units(\"0-1\")]\r\n   public int canEnter  {\r\n      get {\r\n         if (!afterInit) {return (0);}\r\n         bool isPossibleToday = false;\r\n         bool inWindow = DateUtilities.WithinDates(StartDate, Clock.Today, EndDate);\r\n         bool endOfWindow = DateUtilities.DatesEqual(EndDate, Clock.Today);\r\n         if (! Crop.IsAlive &&\r\n             inWindow &&\r\n             accumulatedRain.Sum > MinRain &&\r\n             MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW) \r\n            isPossibleToday = true;\r\n\r\n         //Summary.WriteMessage(this, \"canEnter:\" + isPossibleToday);\r\n\r\n\t     if (isPossibleToday)\r\n            return 1;\r\n         \r\n         if (! Crop.IsAlive && endOfWindow && MustSow == yesNoType.yes) \r\n            return 1;\r\n\r\n         if (! Crop.IsAlive && ! inWindow)\r\n            return -1;\r\n         return 0;\r\n      }\r\n      set {}\r\n   }\r\n\r\n   [EventSubscribe(\"Enter\")]\r\n   private void OnEnter ()  {\r\n      Summary.WriteMessage(this, Apsim.FullPath(this) + \" -  sowing \" + (Crop as Model).Name);\r\n      Crop.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n   }\r\n\r\n   [Units(\"0-1\")] \r\n   public int canLeave  {\r\n      get {\r\n        if (!afterInit) { return (0); }\r\n        //Summary.WriteMessage(this, \"canLeave:\" + Crop.IsReadyForHarvesting);\r\n        return(Crop.IsReadyForHarvesting ? 1 : 0);\r\n      }\r\n      set{}\r\n   } \r\n\r\n   [EventSubscribe(\"Leave\")]\r\n   private void OnLeave ()  {\r\n      Crop.Harvest();\r\n      Crop.EndCrop();    \r\n   }\r\n  }\r\n}\r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        //[Link] Simulation Simulation;\r\n        [Link] Clock Clock;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil; \r\n\r\n        [Description(\"Crop to manage\")]\r\n        public IPlant Crop { get; set; }\r\n        [Separator(\"\")]\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n\r\n        public enum yesNoType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        [Description(\"Must sow (yes/no)\")]\r\n        public yesNoType MustSow { get; set;}\r\n        [Separator(\"\")]\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n\r\n        private Accumulator accumulatedRain;\r\n        private bool afterInit = false;\r\n                \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (Crop == null) { throw new Exception(\"Crop must not be null in rotations\"); }\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n            afterInit = true;\r\n            Summary.WriteMessage(this, Apsim.FullPath(this) + \" - Commence, crop=\" + (Crop as Model).Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            //FIXME test if sequencer...\r\n            //if (canEnter > 0)\r\n            //    OnEnter();\r\n\r\n            //if (canLeave > 0)\r\n            //    OnLeave();\r\n        }\r\n\r\n   // Test whether we can sow a crop today\r\n   // +ve number - yes\r\n   // 0          - no\r\n   // -ve number - no, out of scope (planting window)\r\n   [Units(\"0-1\")][Description(\"Whether the crop can be sown\")]\r\n   public int canEnter  {\r\n      get {\r\n         if (!afterInit) {return (0);}\r\n         bool isPossibleToday = false;\r\n         bool inWindow = DateUtilities.WithinDates(StartDate, Clock.Today, EndDate);\r\n         bool endOfWindow = DateUtilities.DatesEqual(EndDate, Clock.Today);\r\n         if (! Crop.IsAlive &&\r\n             inWindow &&\r\n             accumulatedRain.Sum > MinRain &&\r\n             MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW) \r\n            isPossibleToday = true;\r\n\r\n         //Summary.WriteMessage(this, \"canEnter:\" + isPossibleToday);\r\n\r\n\t     if (isPossibleToday)\r\n            return 1;\r\n         \r\n         if (! Crop.IsAlive && endOfWindow && MustSow == yesNoType.yes) \r\n            return 1;\r\n\r\n         if (! Crop.IsAlive && ! inWindow)\r\n            return -1;\r\n         return 0;\r\n      }\r\n      set {}\r\n   }\r\n\r\n   [EventSubscribe(\"Enter\")]\r\n   //[Description(\"Sow the crop\")]\r\n   private void OnEnter ()  {\r\n      Summary.WriteMessage(this, Apsim.FullPath(this) + \" -  sowing \" + (Crop as Model).Name);\r\n      Crop.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n   }\r\n\r\n   [Units(\"0-1\")] [Description(\"Whether the crop can be harvested\")]\r\n   public int canLeave  {\r\n      get {\r\n        if (!afterInit) { return (0); }\r\n        //Summary.WriteMessage(this, \"canLeave:\" + Crop.IsReadyForHarvesting);\r\n        return(Crop.IsReadyForHarvesting ? 1 : 0);\r\n      }\r\n      set{}\r\n   } \r\n\r\n   [EventSubscribe(\"Leave\")]\r\n   //[Description(\"Harvest the crop\")]\r\n   private void OnLeave ()  {\r\n      Crop.Harvest();\r\n      Crop.EndCrop();    \r\n   }\r\n  }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "Crop",
@@ -1774,7 +1752,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        //[Link] Simulation Simulation;\r\n        [Link] Clock Clock;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil; \r\n\r\n        [Description(\"Crop to manage\")]\r\n        public IPlant Crop { get; set; }\r\n        [Separator(\"\")]\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n\r\n        public enum yesNoType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        [Description(\"Must sow (yes/no)\")]\r\n        public yesNoType MustSow { get; set;}\r\n        [Separator(\"\")]\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n\r\n        private Accumulator accumulatedRain;\r\n        private bool afterInit = false;\r\n                \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        if (Crop == null) { throw new Exception(\"Crop must not be null in rotations\"); }\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n            afterInit = true;\r\n            Summary.WriteMessage(this, Apsim.FullPath(this) + \" - Commence, crop=\" + (Crop as Model).Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            //FIXME test if sequencer...\r\n            //if (canEnter > 0)\r\n            //    OnEnter();\r\n\r\n            //if (canLeave > 0)\r\n            //    OnLeave();\r\n        }\r\n\r\n   // Test whether we can sow a crop today\r\n   // +ve number - yes\r\n   // 0          - no\r\n   // -ve number - no, out of scope (planting window)\r\n   [Units(\"0-1\")]\r\n   public int canEnter  {\r\n      get {\r\n         if (!afterInit) {return (0);}\r\n         bool isPossibleToday = false;\r\n         bool inWindow = DateUtilities.WithinDates(StartDate, Clock.Today, EndDate);\r\n         bool endOfWindow = DateUtilities.DatesEqual(EndDate, Clock.Today);\r\n         if (! Crop.IsAlive &&\r\n             inWindow &&\r\n             accumulatedRain.Sum > MinRain &&\r\n             MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW) \r\n            isPossibleToday = true;\r\n\r\n         //Summary.WriteMessage(this, \"canEnter:\" + isPossibleToday);\r\n\r\n\t     if (isPossibleToday)\r\n            return 1;\r\n         \r\n         if (! Crop.IsAlive && endOfWindow && MustSow == yesNoType.yes) \r\n            return 1;\r\n\r\n         if (! Crop.IsAlive && ! inWindow)\r\n            return -1;\r\n         return 0;\r\n      }\r\n      set {}\r\n   }\r\n\r\n   [EventSubscribe(\"Enter\")]\r\n   private void OnEnter ()  {\r\n      Summary.WriteMessage(this, Apsim.FullPath(this) + \" -  sowing \" + (Crop as Model).Name);\r\n      Crop.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n   }\r\n\r\n   [Units(\"0-1\")] \r\n   public int canLeave  {\r\n      get {\r\n        if (!afterInit) { return (0); }\r\n        //Summary.WriteMessage(this, \"canLeave:\" + Crop.IsReadyForHarvesting);\r\n        return(Crop.IsReadyForHarvesting ? 1 : 0);\r\n      }\r\n      set{}\r\n   } \r\n\r\n   [EventSubscribe(\"Leave\")]\r\n   private void OnLeave ()  {\r\n      Crop.Harvest();\r\n      Crop.EndCrop();    \r\n   }\r\n  }\r\n}\r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        //[Link] Simulation Simulation;\r\n        [Link] Clock Clock;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil; \r\n\r\n        [Description(\"Crop to manage\")]\r\n        public IPlant Crop { get; set; }\r\n        [Separator(\"\")]\r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n\r\n        public enum yesNoType\r\n        {\r\n            /// <summary>a positive answer</summary>\r\n            yes,\r\n            /// <summary>a negative answer</summary>\r\n            no\r\n        }\r\n\r\n        [Description(\"Must sow (yes/no)\")]\r\n        public yesNoType MustSow { get; set;}\r\n        [Separator(\"\")]\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n\r\n        private Accumulator accumulatedRain;\r\n        private bool afterInit = false;\r\n                \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        if (Crop == null) { throw new Exception(\"Crop must not be null in rotations\"); }\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n            afterInit = true;\r\n            Summary.WriteMessage(this, Apsim.FullPath(this) + \" - Commence, crop=\" + (Crop as Model).Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            //FIXME test if sequencer...\r\n            //if (canEnter > 0)\r\n            //    OnEnter();\r\n\r\n            //if (canLeave > 0)\r\n            //    OnLeave();\r\n        }\r\n\r\n   // Test whether we can sow a crop today\r\n   // +ve number - yes\r\n   // 0          - no\r\n   // -ve number - no, out of scope (planting window)\r\n   [Description(\"Whether the crop can be sown\")][Units(\"0-1\")] \r\n   public int canEnter  {\r\n      get {\r\n         if (!afterInit) {return (0);}\r\n         bool isPossibleToday = false;\r\n         bool inWindow = DateUtilities.WithinDates(StartDate, Clock.Today, EndDate);\r\n         bool endOfWindow = DateUtilities.DatesEqual(EndDate, Clock.Today);\r\n         if (! Crop.IsAlive &&\r\n             inWindow &&\r\n             accumulatedRain.Sum > MinRain &&\r\n             MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW) \r\n            isPossibleToday = true;\r\n\r\n         //Summary.WriteMessage(this, \"canEnter:\" + isPossibleToday);\r\n\r\n\t     if (isPossibleToday)\r\n            return 1;\r\n         \r\n         if (! Crop.IsAlive && endOfWindow && MustSow == yesNoType.yes) \r\n            return 1;\r\n\r\n         if (! Crop.IsAlive && ! inWindow)\r\n            return -1;\r\n         return 0;\r\n      }\r\n      set {}\r\n   }\r\n\r\n   [EventSubscribe(\"Enter\")]\r\n   private void OnEnter ()  {\r\n      Summary.WriteMessage(this, Apsim.FullPath(this) + \" -  sowing \" + (Crop as Model).Name);\r\n      Crop.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n   }\r\n\r\n   [Units(\"0-1\")]  [Description(\"Whether the crop can be harvested\")]\r\n   public int canLeave  {\r\n      get {\r\n        if (!afterInit) { return (0); }\r\n        //Summary.WriteMessage(this, \"canLeave:\" + Crop.IsReadyForHarvesting);\r\n        return(Crop.IsReadyForHarvesting ? 1 : 0);\r\n      }\r\n      set{}\r\n   } \r\n\r\n   [EventSubscribe(\"Leave\")]\r\n   private void OnLeave ()  {\r\n      Crop.Harvest();\r\n      Crop.EndCrop();    \r\n   }\r\n  }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "Crop",
@@ -1842,27 +1820,27 @@
                   "$type": "Models.RotBubbleChart+StateNode, Models",
                   "NodeName": "red",
                   "Name": "Node 1",
-                  "Location": "422, 207",
-                  "Colour": "Beige",
-                  "OutlineColour": "Black",
+                  "Location": "414, 162",
+                  "Colour": "245, 245, 220",
+                  "OutlineColour": "0, 0, 0",
                   "Transparent": false
                 },
                 {
                   "$type": "Models.RotBubbleChart+StateNode, Models",
                   "NodeName": "purple",
                   "Name": "Node 2",
-                  "Location": "256, 56",
-                  "Colour": "Beige",
-                  "OutlineColour": "Black",
+                  "Location": "244, 33",
+                  "Colour": "245, 245, 220",
+                  "OutlineColour": "0, 0, 0",
                   "Transparent": false
                 },
                 {
                   "$type": "Models.RotBubbleChart+StateNode, Models",
                   "NodeName": "Node 3",
                   "Name": "Node 3",
-                  "Location": "217, 371",
-                  "Colour": "Beige",
-                  "OutlineColour": "Black",
+                  "Location": "248, 368",
+                  "Colour": "245, 245, 220",
+                  "OutlineColour": "0, 0, 0",
                   "Transparent": false
                 },
                 {
@@ -1870,8 +1848,8 @@
                   "NodeName": "Node 4",
                   "Name": "Node 4",
                   "Location": "70, 200",
-                  "Colour": "Beige",
-                  "OutlineColour": "Black",
+                  "Colour": "245, 245, 220",
+                  "OutlineColour": "0, 0, 0",
                   "Transparent": false
                 }
               ],
@@ -1886,8 +1864,8 @@
                   ],
                   "SourceName": "Node 2",
                   "DestinationName": "Node 1",
-                  "Location": "415, 45",
-                  "Colour": "Yellow",
+                  "Location": "435, 35",
+                  "Colour": "255, 255, 0",
                   "Name": "Arc 1"
                 },
                 {
@@ -1900,8 +1878,8 @@
                   ],
                   "SourceName": "Node 1",
                   "DestinationName": "Node 3",
-                  "Location": "415, 385",
-                  "Colour": "Yellow",
+                  "Location": "432, 378",
+                  "Colour": "255, 255, 0",
                   "Name": "Arc 2"
                 },
                 {
@@ -1915,7 +1893,7 @@
                   "SourceName": "Node 3",
                   "DestinationName": "Node 4",
                   "Location": "58, 364",
-                  "Colour": "Yellow",
+                  "Colour": "255, 255, 0",
                   "Name": "Arc 3"
                 },
                 {
@@ -1929,7 +1907,7 @@
                   "SourceName": "Node 4",
                   "DestinationName": "Node 2",
                   "Location": "55, 29",
-                  "Colour": "Yellow",
+                  "Colour": "255, 255, 0",
                   "Name": "Arc 4"
                 }
               ],
