@@ -10,18 +10,19 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using Models.Core;
     using StdUnits;
 
     /// <summary>
-    /// Information required to initialise a single animal group, as a record.      
-    /// N.B. the YoungWt and YoungGFW fields may be set to MISSING, in which case    
-    ///      TStockList will estimate defaults.                                       
+    /// Information required to initialise a single animal group
+    /// The YoungWt and YoungGFW fields may be set to MISSING, in which case    
+    /// TStockList will estimate defaults.                                       
     /// </summary>
     [Serializable]
     public struct AnimalInits
     {
         /// <summary>
-        /// Genotype name
+        /// Genotype of this group of animals. Must match the GenotypeName field of an element of the Genotypes property.
         /// </summary>
         public string Genotype;
 
@@ -32,67 +33,83 @@ namespace Models.GrazPlan
 
         /// <summary>
         /// Sex of animals
+        /// Castrated, Male, Empty, EarlyPreg, LatePreg
         /// </summary>
         public GrazType.ReproType Sex;
 
         /// <summary>
         /// Age in days
         /// </summary>
+        [Units("d")]
         public int AgeDays;
 
         /// <summary>
-        /// Weight of animals
+        /// Unfasted live weight of the animals.
         /// </summary>
+        [Units("kg")]
         public double Weight;
 
         /// <summary>
-        /// Maximum previous weight
+        /// Highest weight recorded to date.
         /// </summary>
+        [Units("kg")]
         public double MaxPrevWt;
 
         /// <summary>
-        /// Fleece weight
+        /// Greasy fleece weight of the animals.
         /// </summary>
+        [Units("kg")]
         public double FleeceWt;
 
         /// <summary>
-        /// Fleece fibre diameter 
+        /// Average wool fibre diameter of the animals.
         /// </summary>
+        [Units("u")]
         public double FibreDiam;
 
         /// <summary>
-        /// Mated to animal
+        /// Genotype of the bulls/rams to 
+        /// which pregnant or lactating animals were mated. 
+        /// Must match the name field of an element of the Genotypes property.
         /// </summary>
         public string MatedTo;
 
         /// <summary>
         /// Days pregnant
+        /// Zero denotes not pregnant; 1 or more denotes the time since conception. 
+        /// Only meaningful for cows/ewes.
         /// </summary>
+        [Units("d")]
         public int Pregnant;
 
         /// <summary>
         /// Days lactating
+        /// Zero denotes not lactating; 1 or more denotes the time since parturition. 
+        /// Only meaningful for cows/ewes.
         /// </summary>
+        [Units("d")]
         public int Lactating;
 
         /// <summary>
-        /// Number of foetuses
+        /// Number of foetuses or suckling lambs. Only meaningful for females with Pregnant > 0.
         /// </summary>
         public int NumFoetuses;
 
         /// <summary>
-        /// Number of suckling young
+        /// Number of suckling young. Only meaningful for cows with Lactating > 0.
         /// </summary>
         public int NumSuckling;
 
         /// <summary>
-        /// Greasy fleece weight of young
+        /// Greasy fleece weight of suckling lambs. Only meaningful for ewes with Lactating > 0.
         /// </summary>
+        [Units("kg")]
         public double YoungGFW;
 
         /// <summary>
-        /// Weight of young
+        /// Unfasted live weight of suckling calves/lambs. Only meaningful for cows/ewes with lactating > 0.
         /// </summary>
+        [Units("kg")]
         public double YoungWt;
 
         /// <summary>
@@ -101,17 +118,17 @@ namespace Models.GrazPlan
         public double BirthCS;
 
         /// <summary>
-        /// Paddock location
+        /// Paddock occupied by the animals.
         /// </summary>
         public string Paddock;
 
         /// <summary>
-        /// Tag of animal group
+        /// Initial tag value for the animal group.
         /// </summary>
         public int Tag;
 
         /// <summary>
-        /// Priority level
+        /// Priority accorded the animals in the Draft event
         /// </summary>
         public int Priority;
     }
@@ -288,27 +305,31 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// Used to bundle animal genotype information so it can be passed to            
-    /// TStockList.Create.                                                           
-    /// N.B. All the numeric fields may be set to DMISSING, and MaleBreedName may     
-    ///      be set to the null string, in which case the TStockList class will      
-    ///      provide a default.                                                      
+    /// Used to bundle animal genotype information so it can be passed to TStockList.Create.                                                           
+    /// The animal type (sheep or cattle) is implicit in the genotype fields.
+    /// It is permitted to set both DamBreed and SireBreed to an empty string. 
+    /// In this case the GenotypeName field must be a valid breed name.
     /// </summary>
     [Serializable]
     public class SingleGenotypeInits
     {
         /// <summary>
         /// Gets or sets the death rates
+        /// [0] = Base rate of mortality in mature animals. Default is 0.0.
+        /// [1] = Base rate of mortality in weaners.Default is 0.0.
         /// </summary>
+        [Units("/yr")]
         public double[] DeathRate = new double[2];
 
         /// <summary>
-        /// Conception rates
+        /// Expected rates of conception with 1, 2 and 3 young for mature ewes or cows in average body condition,
+        /// over a mating period lasting 2.5 oestrus cycles.Only the first two elements are meaningful for cattle.
         /// </summary>
         public double[] Conceptions = new double[4];    // array[1..3]
 
         /// <summary>
         /// Gets or sets the genotype name
+        /// Name used to refer to the genotype in management events
         /// </summary>
         public string GenotypeName { get; set; }
 
@@ -323,33 +344,45 @@ namespace Models.GrazPlan
         public string SireBreed { get; set; }
 
         /// <summary>
-        /// Gets or sets the generation, 1 = first cross, 2 = second cross etc
+        /// Gets or sets the generation
+        /// Number of generations of crossing: 0 denotes the pure-bred maternal genotype (in which case SireBreed is
+        /// not used), 1 a first cross, 2 a second cross(75% sire:25% dam), etc.
         /// </summary>
         public int Generation { get; set; }
 
         /// <summary>
         /// Gets or sets the standard reference weight
+        /// Breed standard reference weight. The default value depends on DamBreed and SireBreed.
         /// </summary>
+        [Units("kg")]
         public double SRW { get; set; }
 
         /// <summary>
         /// Gets or sets the potential fleece weight
+        /// Breed reference fleece weight in sheep. The default value depends on DamBreed and SireBreed.
         /// </summary>
+        [Units("kg")]
         public double PotFleeceWt { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum wool fibre diameter
+        /// Maximum average wool fibre diameter in sheep. The default depends on DamBreed and SireBreed.
         /// </summary>
+        [Units("u")]
         public double MaxFibreDiam { get; set; }
 
         /// <summary>
         /// Gets or sets the fleece yield
+        /// Clean fleece weight as a proportion of greasy fleece weight in sheep. Default is 0.70.
         /// </summary>
+        [Units("kg/kg")]
         public double FleeceYield { get; set; }
 
         /// <summary>
         /// Gets or sets the peak milk production
+        /// Potential maximum milk yield per head, in 4% fat-corrected milk equivalents, in cattle. Default is 20.0.
         /// </summary>
+        [Units("kg")]
         public double PeakMilk { get; set; }
     }
 

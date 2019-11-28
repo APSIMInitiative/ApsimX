@@ -10,6 +10,7 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using Models.Core;
 
     /// <summary>
     /// Livestock metabolizable energy partition
@@ -255,18 +256,20 @@ namespace Models.GrazPlan
     public class PaddockInit
     {
         /// <summary>
-        /// Gets or sets the name of the paddock
+        /// Gets or sets the name of the paddock that is used for Move events
         /// </summary>
         public string Name { get; set; }
         
         /// <summary>
         /// Gets or sets the paddock area in ha
         /// </summary>
+        [Units("ha")]
         public double Area { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the paddock slope in deg
         /// </summary>
+        [Units("deg")]
         public double Slope { get; set; }
 
         /// <summary>
