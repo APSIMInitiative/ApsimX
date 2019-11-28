@@ -9,6 +9,7 @@ namespace Models.GrazPlan
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using Models.Core;
     using Models.PMF.Interfaces;
     using Models.Soils;
@@ -19,7 +20,7 @@ namespace Models.GrazPlan
     /// #GrazPlan Stock
     /// The STOCK component encapsulates the GRAZPLAN animal biology model, as described in [FREER1997].
     /// 
-    /// [The GrazPlan animal model technical description](http://www.grazplan.csiro.au/files/TechPaperMay12.pdf)
+    /// [The GrazPlan animal model technical description](https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf)
     /// 
     /// Animals may be of different genotypes. In particular, sheep and cattle may be represented within a single STOCK instance.
     /// 
@@ -71,8 +72,8 @@ namespace Models.GrazPlan
     /// available to a group of animals are determined by the paddock it occupies. Paddocks are
     /// referred to by name in the STOCK component:
     /// 
-    /// * To set the paddock occupied by an animal group, use the **move** event.
-    /// * To determine the paddock occupied by an animal group, use the **paddock** variable.
+    /// * To set the paddock occupied by an animal group, use the **Move** event.
+    /// * To determine the paddock occupied by an animal group, use the **Paddock** variable.
     /// 
     /// It is the user’s responsibility to ensure that paddock names correspond to PADDOCK
     /// modules or other sources of necessary driving variables.
@@ -86,19 +87,19 @@ namespace Models.GrazPlan
     /// example, all lactating ewes might be assigned the same tag value, and then all
     /// animals with this tag value might undergo the same supplementary feeding regime.
     /// * If tag values are assigned sequentially (starting at 1), they can be used to generate
-    /// summary variables. For example, **weight_tag[1]** gives the average live weight
+    /// summary variables. For example, **WeightTag[1]** gives the average live weight
     /// of all animals in groups with a tag value of 1.
     /// 
     /// Note that animal groups with different tag values are never merged, even if they are
     /// otherwise similar.
     /// 
-    /// * To set the tag value of an animal group, use the **tag** method.
-    /// * To determine the tag value of an animal group, use the **tag_no** variable.
+    /// * To set the tag value of an animal group, use the **Tag** method.
+    /// * To determine the tag value of an animal group, use the **TagNo** variable.
     /// 
     /// **Priority Score**
     /// 
     /// Finally, each animal group has a user-assigned *priority score* that takes an integer value.
-    /// Priority scores are used to control the operation of the **draft** method. Positive values for
+    /// Priority scores are used to control the operation of the **Draft** method. Positive values for
     /// the priority score denote the order in which animals should be moved to the available
     /// paddocks (with a score of 1 denoting that the animals should be moved to the highest-
     /// quality pasture). Animal groups with the same priority score are placed in the same
@@ -125,120 +126,6 @@ namespace Models.GrazPlan
     /// * Implants (hormone implants)
     /// * Mean age (if the animals are less than one year old )
     /// 
-    /// **Mangement Operations in Stock**
-    ///
-    /// **1. Add**
-    ///
-    /// * Causes a set of related age cohorts of animals to enter the simulation. 
-    /// Each age cohort may contain animals that are pregnant and/or lactating, in 
-    /// which case distributions of numbers of foetuses and/or suckling offspring are computed automatically. 
-    /// This event is primarily intended to simplify the initialisation of flocks and herds in simulations.
-    ///
-    /// **2. Buy**
-    /// 
-    /// * Buys animals (i.e. they enter the simulation). The purchased animals will form a new animal group that is placed at the end of the list of animal groups
-    ///
-    /// ***Method details:***
-    /// 
-    ///      public void Buy(StockBuy stock)
-    ///    
-    ///      public void Buy(string genotype, double number, string sex, double age, double weight, double fleeceWeight)
-    ///
-    /// _StockBuy_ type:
-    /// 
-    /// |Field       .|Type  .|Units  .|Description                   .| 
-    /// |---           |---     |---    |:--- |
-    /// |Genotype      |string  |       |Genotype of the animals to be bought. Must match the name field of a member of the genotypes property       |
-    /// |Number        |int     |       |Number of animals to be bought       |
-    /// |Sex           |string  |       |Sex of the animals. Feasible values are as for sheep: ram, crypto, wether, ewe or cattle: bull, steer, heifer, cow as appropriate       |
-    /// |Age           |int     |Months |Average age of the animals       |
-    /// |Weight        |double  |kg     |Average unfasted live weight of the animals. If a value of zero is given, a default value will be calculated, making use of the cond_score parameter if it is non-zero. |
-    /// |FleeceWt      |double  |kg     |Average greasy fleece weight of the animals. Only meaningful in sheep. |
-    /// |CondScore     |double  |       |Average condition score of the animals. If a value of zero is given, the default condition score for the weight and age will be used |
-    /// |MatedTo       |string  |       |Genotype of the rams or bulls with which the animals were mated prior to entry. Only meaningful if pregnant or lactating is non-zero. Must match the name field of a member of the genotypes property|
-    /// |Pregnant      |int     |days   |Zero denotes not pregnant; 1 or more denotes the time since conception. Only meaningful for females|
-    /// |Lactating     |int     |days   |Zero denotes not lactating; 1 or more denotes the time since parturition in lactating animals. Only meaningful for females|
-    /// |NumYoung      |int     |       |Number of foetuses and/or suckling offspring|
-    /// |YoungWt       |double  |kg     |Average unfasted live weight of any suckling lambs or calves.|
-    /// |YoungFleeceWt |double  |kg     |Average greasy fleece weight of any suckling lambs.|
-    /// |UseTag        |int     |       |Tag the new animals with this tag number|
-    ///
-    /// **3. Castrate**
-    ///
-    /// * Converts ram lambs to wether lambs, or bull calves to steers.  
-    /// If the animal group(s) denoted by group has no suckling young, has no effect. 
-    /// If the number of male lambs or calves in a nominated group is greater than the number to be castrated, 
-    /// the animal group will be split; the sub-group with castrated offspring will remain at the original index 
-    /// and the sub-group with offspring that were not castrated will be added at the end of the set of animal groups.
-    /// 
-    /// **4. Draft** 
-    /// 
-    /// * Assigns animals to paddocks. The process is as follows:
-    ///     1. Animal groups with a positive priority score are removed from their current paddock; groups with a zero or negative priority score remain in their current paddock.
-    ///     2. The set of unoccupied non-excluded paddocks is identified and then ranked according the quality of the pasture(the best paddock is that which would give highest DM intake).
-    ///     3. The unallocated animal groups are ranked by their priority(lowest values first).
-    ///     4. Unallocated animal groups are then assigned to paddocks in rank order(e.g.those with the lowest positive score are placed in the best unoccupied paddock). 
-    ///     Animal groups with the same priority score are placed in the same paddock.
-    /// 
-    ///
-    /// **5. DryOff**
-    ///
-    /// * Ends lactation in cows that have already had their calves weaned.  The event has no effect on other animals.
-    /// If the number of cows in a nominated group is greater than the number to be dried off, 
-    /// the animal group will be split; the sub-group that is no longer lactating will remain at 
-    /// the original index and the sub-group that continues lactating will be added at the end of the set of animal groups.
-    /// 
-    /// 
-    /// **6. Join** 
-    ///
-    /// * Commences mating of a particular group of animals.  If the animals are not empty females, or if they are too young, has no effect.
-    /// 
-    /// **7. Move**
-    ///
-    /// * Changes the paddock to which an animal group is assigned. 
-    /// 
-    /// **8. Prioritise**
-    ///
-    /// * Sets the "priority" of an animal group for later use in a draft event. It is usual practice to use positive values for priorities.
-    /// 
-    /// **9. Sell**
-    ///
-    /// * Removes animals from the simulation.
-    /// 
-    /// **10. SellTag**
-    ///
-    /// * Removes animals from the simulation based on their tag number.
-    /// 
-    /// **11. Shear**
-    ///
-    /// * Shears sheep. The event has no effect on cattle.
-    /// 
-    /// **12. Sort** 
-    ///
-    /// * Rearranges the list of animal groups in ascending order of tag value. This event has no parameters.
-    /// 
-    /// **13. Split**
-    ///
-    /// * Creates two or more animal groups from the nominated group.  One of these groups is placed at the end of 
-    /// the animal group list. The new groups remain in the same paddock and keep the same tag value as the original animal group. 
-    /// The division may only persist until the beginning of the next do_stock step, when sufficiently similar groups of 
-    /// animals are merged.Splitting an animal group is therefore usually carried out as a preliminary to some other management event.
-    ///
-    /// **14. SplitAll**
-    ///
-    /// * Creates new animal groups from all the animal groups.  The new groups are placed at the end of the animal group list. 
-    /// This event is for when splits need to occur over all animal groups. Description of split event also applies.
-    /// 
-    /// **15. Tag**
-    ///
-    /// * Changes the “tag value” associated with an animal group.  This value is used to sort animals; it can also be used 
-    /// to group animals for user-defined purposes (e.g. to identify animals that are to be managed as a single mob even though
-    /// they differ physiologically) and to keep otherwise similar animal groups distinct from one another.
-    /// 
-    /// **16. Wean**
-    ///
-    /// * Weans some or all of the lambs or calves from an animal group. The newly weaned animals are added to the end of
-    /// the list of animal groups, with males and females in separate groups. 
     /// 
     /// ---
     /// </summary>
@@ -385,76 +272,36 @@ namespace Models.GrazPlan
         /// </summary>
         [Description("Information about each animal genotype")]
         [Units("")]
-        public StockGeno[] GenoTypes
+        public SingleGenotypeInits[] GenoTypes
         {
             get
             {
-                StockGeno[] geno = new StockGeno[1];
-                this.stockModel.GenotypeInits2Value(this.genotypeInits, ref geno);
-                return geno;
+                return this.genotypeInits;
             }
 
             set
             {
                 if (value != null)
                 {
-                    Array.Resize(ref this.genotypeInits, value.Length);
-                    for (int idx = 0; idx < value.Length; idx++)
-                    {
-                        this.genotypeInits[idx] = new SingleGenotypeInits();
-                        this.stockModel.Value2GenotypeInits(value[idx], ref this.genotypeInits[idx]);
-                    }
+                    this.genotypeInits = value;
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets the initial state of each animal group for sheep
+        /// Gets or sets the initial state of each animal group
         /// </summary>
-        [Description("Initial state of each animal group for sheep")]
-        public SheepInit[] Sheep
+        public AnimalInits[] Animals
         {
             get
             {
-                SheepInit[] sheep = new SheepInit[1];
-                StockVars.MakeSheepValue(this.stockModel, GrazType.AnimalType.Sheep, ref sheep);
-                return sheep;
+                AnimalInits[] animal = new AnimalInits[1];
+                StockVars.MakeAnimalValue(this.stockModel, ref animal);
+                return animal;
             }
-
             set
             {
-                if (value != null)
-                {
-                    int offset = this.animalInits.Length;
-                    Array.Resize(ref this.animalInits, offset + value.Length);
-                    for (int idx = 0; idx < value.Length; idx++)
-                        this.stockModel.SheepValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the initial state of each animal group for cattle
-        /// </summary>
-        [Description("Initial state of each animal group for cattle")]
-        public CattleInit[] Cattle
-        {
-            get
-            {
-                CattleInit[] cattle = new CattleInit[1];
-                StockVars.MakeCattleValue(this.stockModel, GrazType.AnimalType.Cattle, ref cattle);
-                return cattle;
-            }
-
-            set
-            {
-                if (value != null)
-                {
-                    int offset = this.animalInits.Length;
-                    Array.Resize(ref this.animalInits, offset + value.Length);
-                    for (int idx = 0; idx < value.Length; idx++)
-                        this.stockModel.CattleValue2AnimalInits(value[idx], ref this.animalInits[offset + idx]);
-                }
+                this.animalInits = value;
             }
         }
 
@@ -4383,7 +4230,9 @@ namespace Models.GrazPlan
                 }
             }
         }
+        #endregion
 
+        #region Management methods ============================================
         // ............................................................................
         // Management methods                                                         
         // ............................................................................
@@ -4417,7 +4266,7 @@ namespace Models.GrazPlan
         /// <param name="genotype">The genotype</param>
         /// <param name="number">The number of animals</param>
         /// <param name="sex">The sex of animals</param>
-        /// <param name="age">The age of animals</param>
+        /// <param name="age">The age of animals (months)</param>
         /// <param name="weight">The weight of animals (kg)</param>
         /// <param name="fleeceWeight">The fleece weight of animals (kg)</param>
         public void Buy(string genotype, double number, string sex, double age, double weight, double fleeceWeight)
@@ -4639,7 +4488,7 @@ namespace Models.GrazPlan
             this.stockModel.DoStockManagement(this.stockModel, sortEvent, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
-        #endregion
+        #endregion ============================================
 
         #region Private functions ============================================
         /// <summary>
@@ -4786,15 +4635,56 @@ namespace Models.GrazPlan
         /// <param name="genoInits">The list of genotypes</param>
         /// <param name="genoIdx">The index of the item in the list to use</param>
         /// <returns>The animal parameter set for this genotype</returns>
-        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, StockGeno[] genoInits, int genoIdx)
+        public AnimalParamSet ParamsFromGenotypeInits(AnimalParamSet mainParams, SingleGenotypeInits[] genoInits, int genoIdx)
         {
-            SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
+            /*SingleGenotypeInits[] genotypeInits = new SingleGenotypeInits[genoInits.Length];
             for (int idx = 0; idx < genoInits.Length; idx++)
             {
                 genotypeInits[idx] = new SingleGenotypeInits();
                 this.stockModel.Value2GenotypeInits(genoInits[idx], ref genotypeInits[idx]);
+            }*/
+            return this.stockModel.ParamsFromGenotypeInits(mainParams, genoInits, genoIdx);
+        }
+
+        /// <summary>
+        /// Get a list of genotype names for the animal type from the current parameter set
+        /// </summary>
+        /// <param name="animal">The animal type (sheep/cattle)</param>
+        /// <returns>Array of genotype names</returns>
+        public string[] GenotypeNames(GrazType.AnimalType animal)
+        {
+            AnimalParamSet paramSet = StockList.MakeParamSet("");   // can use the param filename from component inits
+
+            int count = paramSet.BreedCount(animal);
+            string[] namesArray = new string[count];
+            for (int i = 0; i < count; i++)
+            {
+                namesArray[i] = paramSet.BreedName(animal, i);
             }
-            return this.stockModel.ParamsFromGenotypeInits(mainParams, genotypeInits, genoIdx);
+
+            return namesArray;
+        }
+
+        /// <summary>
+        /// Get the combined list of genotype names that are defined for this instance
+        /// of the stock component.
+        /// </summary>
+        /// <param name="animal">The animal type (sheep/cattle)</param>
+        /// <returns>Array of genotype names</returns>
+        public string[] GenotypeNamesDefined(GrazType.AnimalType animal)
+        {
+            string[] genoParams = GenotypeNames(animal);
+            foreach (SingleGenotypeInits geno in GenoTypes)
+            {
+                if (!genoParams.Contains(geno.GenotypeName))
+                {
+                    Array.Resize(ref genoParams, genoParams.Length + 1);
+                    genoParams[genoParams.Length - 1] = geno.GenotypeName;
+                }
+            }
+
+            Array.Sort(genoParams, StringComparer.InvariantCulture);
+            return genoParams;
         }
 
         #endregion
