@@ -295,7 +295,8 @@
             "Last of [GrazeForageCrop].Script.CurrentLocationNum from [Report].DayAfterLastOutput to [Clock].Today as CurrentLocationNum",
             "Last of [GrazeForageCrop].Script.HarvestableBiomass from [Report].DayAfterLastOutput to [Clock].Today as HarvestableBiomass",
             "Last of [Supplement].stores[2].Stored from [Report].DayAfterLastOutput to [Clock].Today as SupplementRemaining",
-            "Last of [Field].Plantain.AboveGroundLive.Wt * 10.0 from [Report].DayAfterLastOutput to [Clock].Today as PlantainMass"
+            "Last of [Field].Plantain.AboveGroundLive.Wt * 10.0 from [Report].DayAfterLastOutput to [Clock].Today as PlantainMass",
+            "[Stock].Paddock"
           ],
           "EventNames": [
             "[Clock].EndOfDay"
@@ -336,17 +337,6 @@
                   "Interval": "NaN",
                   "DateTimeAxis": false,
                   "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
-                  "Type": 2,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
                 }
               ],
               "LegendPosition": 0,
@@ -355,36 +345,6 @@
               "LegendOutsideGraph": false,
               "Name": "Biomass HeadCount and Supps",
               "Children": [
-                {
-                  "$type": "Models.Graph.Series, Models",
-                  "Type": 0,
-                  "XAxis": 3,
-                  "YAxis": 2,
-                  "ColourArgb": -990142,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 1,
-                  "LineThickness": 0,
-                  "Checkpoint": "Current",
-                  "TableName": "Report",
-                  "XFieldName": "Date",
-                  "YFieldName": "NumStock",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Stock Number",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Graph.Series, Models",
                   "Type": 1,
@@ -410,7 +370,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Grazable Biomass",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.ShadedBarsOnGraph, Models",
+                      "ColumnName": "Stock.Paddock(1)",
+                      "SimulationName": "Forage Crop Grazing",
+                      "Name": "ShadedBarsOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -549,7 +520,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Body Mass",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.ShadedBarsOnGraph, Models",
+                      "ColumnName": "Stock.Paddock(1)",
+                      "SimulationName": "Forage Crop Grazing",
+                      "Name": "ShadedBarsOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -596,7 +578,7 @@
         },
         {
           "$type": "Models.Memo, Models",
-          "Text": "The first plots shows the location of the stock (on the paddock or ‘away’), the grazable biomass in the paddock and the supplement remaining in the store. The second plot shows average body mass and average dry matter intake. Note how body mass resets to a consistent value at the start of each grazing event. This is because a new mob of animals is bought at the start of each grazing event.",
+          "Text": "The first plots shows the location of the stock (on the paddock or ‘away’), the grazable biomass in the paddock and the supplement remaining in the store. The second plot shows average body mass and average dry matter intake. Note how body mass resets to a consistent value at the start of each grazing event. This is because a new mob of animals is bought at the start of each grazing event.\n\nThe shaded area behind the plots shows the location of the stock (get this to show but adding a \"ShadedBarsOnGraph\" model to a Graph|Series). Clicking on one of the shaded areas will pop up the name of the location.",
           "Name": "Memo1",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -1400,7 +1382,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Stock Cows;\r\n        [Link] Supplement Supplement;\r\n        [Link] Zone[] Paddocks;\r\n        [Link] ISummary summary = null;\r\n        [Link] Simulation Farm;\r\n\r\n        //List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();\r\n\r\n        [Serializable]\r\n        public class PaddockInfo\r\n        {\r\n            public string paddockName;\r\n            public double totalBiomass;\r\n            public double harvestableBiomass;\r\n            public int paddockNum;\r\n            public double paddockArea;\r\n        }\r\n\r\n        [Description(\"Do verbose reporting from this script (tick for yes): \")] \r\n        public bool DoVerbose { get; set; }\r\n\r\n        [Separator(\"Whole farm and initial location\")]\r\n\r\n        [Description(\"Whole-farm stocking rate (head/ha): \")] \r\n        public double StockingRate { get; set; } \r\n\r\n        //[Description(\"Initial location of the cows (paddock name): \")] \r\n        //public string CurrentLocationName { get; set; }\r\n        [Description(\"Initial location of the cows (paddock name):\")] \r\n\t\t[Display(Type=DisplayType.Model, ModelType=typeof(Zone))]\r\n\t\tpublic IModel CurrentLocationName { get; set; }\r\n\r\n        [Separator(\"Settings for the rotation\")]\r\n\r\n        [Description(\"Target rotation length (days/paddock): \")] \r\n        public int TargetRotationLength { get; set; }\r\n\r\n        [Description(\"Post-grazing residual to trigger pasture conservation (kgDM/ha): \")] \r\n        public double PostGrazingResidual { get; set; }\r\n\r\n        [Description(\"Post-cutting residual (kgDM/ha): \")] \r\n        public double PostCuttingResidual { get; set; }\r\n\r\n        [Description(\"Harvest excess herbage above residual when cows leave the paddock?: \")] \r\n        public bool HarvestExcessHerbage { get; set; }\r\n\r\n        [Separator(\"Settings for supplementary feeding\")]\r\n\r\n        [Description(\"Baseline (i.e. every day) feeding of silage (kgDM/head/day): \")] \r\n        public double SilageEveryDay { get; set; }\r\n\r\n        [Description(\"Low pre-grazing pasture mass feeding (additional to baseline) of silage (kgDM/head/day): \")] \r\n        public double SilageOnPastureMass { get; set; }\r\n\r\n        [Description(\"Trigger pre-grazing pasture mass for the rule above (kgDM/ha): \")] \r\n        public double TriggerPastureMass { get; set; }\r\n\r\n        public int NumCows { get; set; } // number of cows on the whole farm\r\n        public string pastLocationName { get; set; }  // name of the paddock that the cows are currently in\r\n        public string newLocationName { get; set; }  // name of the paddock that the cows are currently in\r\n        public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in\r\n        public int NumPaddocks { get; set; }\r\n        //public double[] HarvestableBiomass { get; set; }\r\n\r\n        private int group_count; // how many groups are there in the simulation\r\n        private int g = 1;      // index to the groups of animals\r\n\r\n        //private int DaysPerPaddock;\r\n        private int DaysInThisPaddock;\r\n        private bool MoveToday = false;\r\n\r\n        public event BiomassRemovedDelegate BiomassRemoved;\r\n        public List<PaddockInfo> listOfPaddockInfo { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            summary.WriteMessage(this, \"Initialising the paddock information\");\r\n            listOfPaddockInfo = new List<PaddockInfo>();\r\n\r\n\r\n            GetPaddockInfo();\r\n            //HarvestableBiomass = Farm.\r\n\r\n            NumCows = (int)(Math.Round(StockingRate * Farm.Area, 0));\r\n\r\n            SetInitialCowStuff();\r\n\r\n            if (NumCows > 0)\r\n                Cows.Move(g, CurrentLocationName.Name);\r\n\r\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumCows + \" from \" + (StockingRate * Farm.Area));\r\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocationName + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\r\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + Farm.Area + \" ha\");\r\n\r\n            DaysInThisPaddock = -1;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            UpdatePaddockInfo();\r\n\r\n            if ((Cows.LactatingAll > 2) && (Cows.NoSucklingAll > 0))\r\n                WeanCalves();\r\n            if ((Cows.LactatingAll > 4) && (Cows.LactatingAll < 6))\r\n                SellCalves();\r\n\r\n            MoveToday = false;\r\n            // how many days in this paddock?  Ready to move?\r\n            DaysInThisPaddock += 1;\r\n            if (DaysInThisPaddock >= TargetRotationLength)\r\n            {\r\n                MoveToday = true;\r\n\r\n                pastLocationName = CurrentLocationName.Name.ToString();\r\n                if (CurrentLocationNum < NumPaddocks - 1)\r\n                {\r\n                    CurrentLocationNum += 1;\r\n                    newLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName;\r\n                }\r\n                else\r\n                {\r\n                    CurrentLocationNum = 0;\r\n                    newLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName;\r\n                }\r\n                CurrentLocationName.Name = listOfPaddockInfo[CurrentLocationNum].paddockName;\r\n\r\n\r\n                if (HarvestExcessHerbage)\r\n                {\r\n                    foreach (Zone paddock in Paddocks)\r\n                    {\r\n                        if (paddock.Name == pastLocationName)\r\n                        {\r\n                            double pastPaddockBiomass = 0.0;\r\n                            foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))\r\n                                pastPaddockBiomass += plant.AboveGroundWt;\r\n                            if (pastPaddockBiomass > PostGrazingResidual)  //why the 250? Because don't harvest very small amounts ...\r\n                            {\r\n                                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))\r\n                                    plant.Graze(amount: (plant.AboveGroundWt / pastPaddockBiomass * PostCuttingResidual), type: \"SetResidueAmount\");  \r\n\r\n                            }\r\n                        }\r\n                    }\r\n                }\r\n\r\n                if (NumCows > 0)\r\n                    Cows.Move(g, listOfPaddockInfo[CurrentLocationNum].paddockName);\r\n\r\n                if (DoVerbose)\r\n                    summary.WriteMessage(this, \"moving Stock to \" + listOfPaddockInfo[CurrentLocationNum].paddockName);\r\n\r\n                DaysInThisPaddock = 0;\r\n            }\r\n\r\n            if (SilageEveryDay > 0)\r\n            {\r\n            // see how much supplement there is - buy more if needed\r\n            // Stores 1 is from a pasture component so bought supplements start at 2\r\n                double silageOnHand = Supplement.Stores[2 - 1].Stored;\r\n                if (silageOnHand < SilageEveryDay * Cows.NumberAll)\r\n                {\r\n                    Supplement.Buy(SilageEveryDay * 180 * Cows.NumberAll, \"silage_highquality\");  // i.e. 6 months worth\r\n                    summary.WriteMessage(this, \"SilageEveryDay: Buying silage_highquality of total amount : \" + (SilageEveryDay * 180 * Cows.NumberAll) + \" kg DM\");\r\n                }\r\n                Supplement.Feed(\"silage_highquality\", SilageEveryDay * Cows.NumberAll, CurrentLocationName.Name, true);\r\n            }\r\n\r\n            if ((SilageOnPastureMass > 0) && (listOfPaddockInfo[CurrentLocationNum].harvestableBiomass < TriggerPastureMass))\r\n            {\r\n                double silageOnHand = Supplement.Stores[2 - 1].Stored;\r\n                if (silageOnHand < SilageOnPastureMass * Cows.NumberAll)\r\n                {\r\n                    Supplement.Buy(SilageOnPastureMass * 180 * Cows.NumberAll, \"silage_highquality\");\r\n                    summary.WriteMessage(this, \"SilageOnPastureMass: Buying silage_highquality of total amount : \" + (SilageOnPastureMass * 180 * Cows.NumberAll) + \" kg DM\");\r\n                }\r\n                Supplement.Feed(\"silage_highquality\", SilageOnPastureMass * Cows.NumberAll, CurrentLocationName.Name, true);\r\n            }\r\n\r\n\r\n        } // End of Do Management\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void DoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            //this is after Stock have eaten\r\n            UpdatePaddockInfo();\r\n\r\n\r\n        }\r\n\r\n        public void SetInitialCowStuff()\r\n        {\r\n            if (NumCows > 0)\r\n            {\r\n                g = Cows.NoGroups + 1;\r\n\r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"Angus\";\r\n                purchase.Number = NumCows;\r\n                purchase.Sex = \"steers\";\r\n                purchase.Age = 36;       // age in months\r\n                purchase.Weight = 600.0;  // live weight in kg\r\n                purchase.UseTag = g + 1;\r\n                purchase.MatedTo = \"Angus\";\r\n                purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n                purchase.Lactating = 0;  // 0 for dry, 1 for lactating\r\n                purchase.NumYoung = 0;\r\n                purchase.YoungWt = 0;\r\n\r\n                Cows.Buy(purchase);\r\n            }\r\n        }\r\n\r\n        public void WeanCalves()\r\n        {\r\n                StockWean weanData = new StockWean();\r\n                weanData.Group = 0;\r\n                weanData.Sex = \"all\";\r\n                weanData.Number = Cows.NumberAll;\r\n\r\n                Cows.Wean(weanData);\r\n        }\r\n\r\n        public void SellCalves()\r\n        {\r\n                double weanAge = 0.25 * 365;\r\n                int NumGroups = Cows.NoGroups;\r\n\r\n              for (int gg = 1; gg <= NumGroups; gg++)\r\n              {\r\n                  StockSplit split = new StockSplit();\r\n                  split.Group = gg;\r\n                  split.Type = \"age\";\r\n                  split.Value = weanAge;  \r\n\r\n                Cows.Split(split);\r\n              }\r\n\r\n              NumGroups = Cows.NoGroups;\r\n              for (int gg = 1; gg <= NumGroups; gg++)\r\n              {\r\n                if (Cows.Age[gg - 1] < weanAge)\r\n                      Cows.Sell(gg, Cows.Number[gg - 1]);\r\n              }\r\n\r\n\r\n        }\r\n\r\n\r\n        public void GetPaddockInfo()\r\n        {\r\n            NumPaddocks = 0;\r\n            CurrentLocationNum = 0;\r\n\r\n            foreach (Zone paddock in Paddocks)\r\n            {\r\n                NumPaddocks += 1;\r\n\r\n                PaddockInfo paddockInfo = new PaddockInfo();\r\n\r\n                paddockInfo.paddockName = paddock.Name;\r\n                paddockInfo.paddockNum = NumPaddocks - 1;\r\n                paddockInfo.paddockArea = paddock.Area;\r\n\r\n                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))\r\n                {\r\n                    paddockInfo.harvestableBiomass += plant.HarvestableWt;\r\n                    paddockInfo.totalBiomass += plant.AboveGroundWt;\r\n                }\r\n\r\n\r\n                listOfPaddockInfo.Add(paddockInfo);\r\n\r\n                if (paddock.Name == CurrentLocationName.Name)\r\n                    CurrentLocationNum = paddockInfo.paddockNum;\r\n\r\n                summary.WriteMessage(this, \"     Paddock \" + NumPaddocks + \" is called \" + paddock.Name + \", has an area of \" + paddock.Area + \" ha and an initial harvestable biomass of \" + paddockInfo.harvestableBiomass + \" kg DM / ha\");\r\n\r\n            }\r\n\r\n        }\r\n\r\n        public void UpdatePaddockInfo()\r\n        {\r\n            int ii = -1;\r\n\r\n            foreach (Zone paddock in Paddocks)\r\n            {\r\n                ii += 1;\r\n                listOfPaddockInfo[ii].harvestableBiomass = 0.0;\r\n                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))\r\n                {\r\n                    listOfPaddockInfo[ii].harvestableBiomass += plant.HarvestableWt;\r\n                    listOfPaddockInfo[ii].totalBiomass += plant.AboveGroundWt;\r\n                }\r\n\r\n            }\r\n\r\n        }\r\n\r\n\r\n    }\r\n}\r\n",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Stock Cows;\r\n        [Link] Supplement Supplement;\r\n        [Link] Zone[] Paddocks;\r\n        [Link] ISummary summary = null;\r\n        [Link] Simulation Farm;\r\n\r\n        //List<AgPasture.PastureSpecies> Pasture = new List<AgPasture.PastureSpecies>();\r\n\r\n        [Serializable]\r\n        public class PaddockInfo\r\n        {\r\n            public string paddockName;\r\n            public double totalBiomass;\r\n            public double harvestableBiomass;\r\n            public int paddockNum;\r\n            public double paddockArea;\r\n        }\r\n\r\n        [Description(\"Do verbose reporting from this script (tick for yes): \")] \r\n        public bool DoVerbose { get; set; }\r\n\r\n        [Separator(\"Whole farm and initial location\")]\r\n\r\n        [Description(\"Whole-farm stocking rate (head/ha): \")] \r\n        public double StockingRate { get; set; } \r\n\r\n        //[Description(\"Initial location of the cows (paddock name): \")] \r\n        //public string CurrentLocationName { get; set; }\r\n        [Description(\"Initial location of the cows (paddock name):\")] \r\n\t\t[Display(Type=DisplayType.Model, ModelType=typeof(Zone))]\r\n\t\tpublic IModel CurrentLocationName { get; set; }\r\n\r\n        [Separator(\"Settings for the rotation\")]\r\n\r\n        [Description(\"Target rotation length (days/paddock): \")] \r\n        public int TargetRotationLength { get; set; }\r\n\r\n        [Description(\"Post-grazing residual to trigger pasture conservation (kgDM/ha): \")] \r\n        public double PostGrazingResidual { get; set; }\r\n\r\n        [Description(\"Post-cutting residual (kgDM/ha): \")] \r\n        public double PostCuttingResidual { get; set; }\r\n\r\n        [Description(\"Harvest excess herbage above residual when cows leave the paddock?: \")] \r\n        public bool HarvestExcessHerbage { get; set; }\r\n\r\n        [Separator(\"Settings for supplementary feeding\")]\r\n\r\n        [Description(\"Baseline (i.e. every day) feeding of silage (kgDM/head/day): \")] \r\n        public double SilageEveryDay { get; set; }\r\n\r\n        [Description(\"Low pre-grazing pasture mass feeding (additional to baseline) of silage (kgDM/head/day): \")] \r\n        public double SilageOnPastureMass { get; set; }\r\n\r\n        [Description(\"Trigger pre-grazing pasture mass for the rule above (kgDM/ha): \")] \r\n        public double TriggerPastureMass { get; set; }\r\n\r\n        public int NumCows { get; set; } // number of cows on the whole farm\r\n        public string pastLocationName { get; set; }  // name of the paddock that the cows are currently in\r\n        public string newLocationName { get; set; }  // name of the paddock that the cows are currently in\r\n        public int CurrentLocationNum { get; set; }  // name of the paddock that the cows are currently in\r\n        public int NumPaddocks { get; set; }\r\n        //public double[] HarvestableBiomass { get; set; }\r\n\r\n        private int group_count; // how many groups are there in the simulation\r\n        private int g = 1;      // index to the groups of animals\r\n\r\n        //private int DaysPerPaddock;\r\n        private int DaysInThisPaddock;\r\n        private bool MoveToday = false;\r\n        public double BiomassInCurrentPaddock;\r\n\r\n        public event BiomassRemovedDelegate BiomassRemoved;\r\n        public List<PaddockInfo> listOfPaddockInfo { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            summary.WriteMessage(this, \"Initialising the paddock information\");\r\n            listOfPaddockInfo = new List<PaddockInfo>();\r\n\r\n\r\n            GetPaddockInfo();\r\n            //HarvestableBiomass = Farm.\r\n\r\n            NumCows = (int)(Math.Round(StockingRate * Farm.Area, 0));\r\n\r\n            SetInitialCowStuff();\r\n\r\n            if (NumCows > 0)\r\n                Cows.Move(g, CurrentLocationName.Name);\r\n\r\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumCows + \" from \" + (StockingRate * Farm.Area));\r\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocationName + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\r\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + Farm.Area + \" ha\");\r\n\r\n            DaysInThisPaddock = -1;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            UpdatePaddockInfo();\r\n\r\n            // WTF is this?\r\n            if ((Cows.LactatingAll > 2) && (Cows.NoSucklingAll > 0))\r\n                WeanCalves();\r\n            if ((Cows.LactatingAll > 4) && (Cows.LactatingAll < 6))\r\n                SellCalves();\r\n\r\n            MoveToday = false;\r\n            // how many days in this paddock?  Ready to move?\r\n            DaysInThisPaddock += 1;\r\n            if (DaysInThisPaddock >= TargetRotationLength)\r\n            {\r\n                MoveToday = true;\r\n\r\n                pastLocationName = CurrentLocationName.Name.ToString();\r\n                if (CurrentLocationNum < NumPaddocks - 1)\r\n                {\r\n                    CurrentLocationNum += 1;\r\n                    newLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName;\r\n                }\r\n                else\r\n                {\r\n                    CurrentLocationNum = 0;\r\n                    newLocationName = listOfPaddockInfo[CurrentLocationNum].paddockName;\r\n                }\r\n                CurrentLocationName.Name = listOfPaddockInfo[CurrentLocationNum].paddockName;\r\n\r\n\r\n                if (HarvestExcessHerbage)\r\n                {\r\n                    foreach (Zone paddock in Paddocks)\r\n                    {\r\n                        if (paddock.Name == pastLocationName)\r\n                        {\r\n                            double pastPaddockBiomass = 0.0;\r\n                            foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))\r\n                                pastPaddockBiomass += plant.AboveGroundWt;\r\n                            if (pastPaddockBiomass > PostGrazingResidual)  //why the 250? Because don't harvest very small amounts ...\r\n                            {\r\n                                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))\r\n                                    plant.Graze(amount: (plant.AboveGroundWt / pastPaddockBiomass * PostCuttingResidual), type: \"SetResidueAmount\");  \r\n\r\n                            }\r\n                        }\r\n                    }\r\n                }\r\n\r\n                if (NumCows > 0)\r\n                    Cows.Move(g, listOfPaddockInfo[CurrentLocationNum].paddockName);\r\n\r\n                if (DoVerbose)\r\n                    summary.WriteMessage(this, \"moving Stock to \" + listOfPaddockInfo[CurrentLocationNum].paddockName);\r\n\r\n                DaysInThisPaddock = 0;\r\n            }\r\n\r\n            if (SilageEveryDay > 0)\r\n            {\r\n            // see how much supplement there is - buy more if needed\r\n            // Stores 1 is from a pasture component so bought supplements start at 2\r\n                double silageOnHand = Supplement.Stores[2 - 1].Stored;\r\n                if (silageOnHand < SilageEveryDay * Cows.NumberAll)\r\n                {\r\n                    Supplement.Buy(SilageEveryDay * 180 * Cows.NumberAll, \"silage_highquality\");  // i.e. 6 months worth\r\n                    summary.WriteMessage(this, \"SilageEveryDay: Buying silage_highquality of total amount : \" + (SilageEveryDay * 180 * Cows.NumberAll) + \" kg DM\");\r\n                }\r\n                Supplement.Feed(\"silage_highquality\", SilageEveryDay * Cows.NumberAll, CurrentLocationName.Name, false);\r\n            }\r\n\r\n            if ((SilageOnPastureMass > 0) && (listOfPaddockInfo[CurrentLocationNum].harvestableBiomass < TriggerPastureMass))\r\n            {\r\n                double silageOnHand = Supplement.Stores[2 - 1].Stored;\r\n                if (silageOnHand < SilageOnPastureMass * Cows.NumberAll)\r\n                {\r\n                    Supplement.Buy(SilageOnPastureMass * 180 * Cows.NumberAll, \"silage_highquality\");\r\n                    summary.WriteMessage(this, \"SilageOnPastureMass: Buying silage_highquality of total amount : \" + (SilageOnPastureMass * 180 * Cows.NumberAll) + \" kg DM\");\r\n                }\r\n                Supplement.Feed(\"silage_highquality\", SilageOnPastureMass * Cows.NumberAll, CurrentLocationName.Name, false);\r\n            }\r\n\r\n            // capture the pre-grazing biomass before the DoStock event\r\n            BiomassInCurrentPaddock = listOfPaddockInfo[CurrentLocationNum].harvestableBiomass;\r\n\r\n        } // End of Do Management\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            //this is after Stock have eaten\r\n            UpdatePaddockInfo();\r\n\r\n\r\n        }\r\n\r\n        public void SetInitialCowStuff()\r\n        {\r\n            if (NumCows > 0)\r\n            {\r\n                g = Cows.NoGroups + 1;\r\n\r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"Angus\";\r\n                purchase.Number = NumCows;\r\n                purchase.Sex = \"steers\";\r\n                purchase.Age = 36;       // age in months\r\n                purchase.Weight = 600.0;  // live weight in kg\r\n                purchase.UseTag = g + 1;\r\n                purchase.MatedTo = \"Angus\";\r\n                purchase.Pregnant = 0;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n                purchase.Lactating = 0;  // 0 for dry, 1 for lactating\r\n                purchase.NumYoung = 0;\r\n                purchase.YoungWt = 0;\r\n\r\n                Cows.Buy(purchase);\r\n            }\r\n        }\r\n\r\n        public void WeanCalves()\r\n        {\r\n                StockWean weanData = new StockWean();\r\n                weanData.Group = 0;\r\n                weanData.Sex = \"all\";\r\n                weanData.Number = Cows.NumberAll;\r\n\r\n                Cows.Wean(weanData);\r\n        }\r\n\r\n        public void SellCalves()\r\n        {\r\n                double weanAge = 0.25 * 365;\r\n                int NumGroups = Cows.NoGroups;\r\n\r\n              for (int gg = 1; gg <= NumGroups; gg++)\r\n              {\r\n                  StockSplit split = new StockSplit();\r\n                  split.Group = gg;\r\n                  split.Type = \"age\";\r\n                  split.Value = weanAge;  \r\n\r\n                Cows.Split(split);\r\n              }\r\n\r\n              NumGroups = Cows.NoGroups;\r\n              for (int gg = 1; gg <= NumGroups; gg++)\r\n              {\r\n                if (Cows.Age[gg - 1] < weanAge)\r\n                      Cows.Sell(gg, Cows.Number[gg - 1]);\r\n              }\r\n\r\n\r\n        }\r\n\r\n\r\n        public void GetPaddockInfo()\r\n        {\r\n            NumPaddocks = 0;\r\n            CurrentLocationNum = 0;\r\n\r\n            foreach (Zone paddock in Paddocks)\r\n            {\r\n                NumPaddocks += 1;\r\n\r\n                PaddockInfo paddockInfo = new PaddockInfo();\r\n\r\n                paddockInfo.paddockName = paddock.Name;\r\n                paddockInfo.paddockNum = NumPaddocks - 1;\r\n                paddockInfo.paddockArea = paddock.Area;\r\n\r\n                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))\r\n                {\r\n                    paddockInfo.harvestableBiomass += plant.HarvestableWt;\r\n                    paddockInfo.totalBiomass += plant.AboveGroundWt;\r\n                }\r\n\r\n\r\n                listOfPaddockInfo.Add(paddockInfo);\r\n\r\n                if (paddock.Name == CurrentLocationName.Name)\r\n                    CurrentLocationNum = paddockInfo.paddockNum;\r\n\r\n                summary.WriteMessage(this, \"     Paddock \" + NumPaddocks + \" is called \" + paddock.Name + \", has an area of \" + paddock.Area + \" ha and an initial harvestable biomass of \" + paddockInfo.harvestableBiomass + \" kg DM / ha\");\r\n\r\n            }\r\n\r\n        }\r\n\r\n        public void UpdatePaddockInfo()\r\n        {\r\n            int ii = -1;\r\n\r\n            foreach (Zone paddock in Paddocks)\r\n            {\r\n                ii += 1;\r\n                listOfPaddockInfo[ii].harvestableBiomass = 0.0;\r\n                foreach (PastureSpecies plant in Apsim.Children(paddock, typeof(PastureSpecies)))\r\n                {\r\n                    listOfPaddockInfo[ii].harvestableBiomass += plant.HarvestableWt;\r\n                    listOfPaddockInfo[ii].totalBiomass += plant.AboveGroundWt;\r\n                }\r\n\r\n            }\r\n\r\n        }\r\n\r\n\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "DoVerbose",
@@ -1416,7 +1398,7 @@
             },
             {
               "Key": "TargetRotationLength",
-              "Value": "4"
+              "Value": "40"
             },
             {
               "Key": "PostGrazingResidual",
@@ -1432,7 +1414,7 @@
             },
             {
               "Key": "SilageEveryDay",
-              "Value": "0.25"
+              "Value": "0"
             },
             {
               "Key": "SilageOnPastureMass",
@@ -1489,7 +1471,8 @@
             "[Stock].CondScoreAll",
             "[Stock].IntakeAll.Weight * [Stock].NumberAll as TotalIntake",
             "//([Paddock00].AGPRyegrass.HerbageGrowthWt + [Paddock00].AGPWhiteClover.HerbageGrowthWt) * [Paddock00].Area + ([Paddock01].AGPRyegrass.HerbageGrowthWt + [Paddock01].AGPWhiteClover.HerbageGrowthWt) * [Paddock01].Area + ([Paddock02].AGPRyegrass.HerbageGrowthWt + [Paddock02].AGPWhiteClover.HerbageGrowthWt) * [Paddock02].Area as TotalGrowth",
-            "[Supplement].Stores[2].Stored"
+            "[Supplement].Stores[2].Stored",
+            "[Stock].Paddock"
           ],
           "EventNames": [
             "[Clock].EndOfDay"
@@ -1574,7 +1557,18 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Live Cows",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.ShadedBarsOnGraph, Models",
+                      "ColumnName": "Stock.Paddock(1)",
+                      "SimulationName": "A Simple Rotational Grazing",
+                      "Name": "ShadedBarsOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1583,7 +1577,7 @@
                   "$type": "Models.Graph.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
-                  "YAxis": 2,
+                  "YAxis": 0,
                   "ColourArgb": -1663232,
                   "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
@@ -1595,7 +1589,7 @@
                   "Checkpoint": "Current",
                   "TableName": "ReportFarm",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "StockInPaddockNum",
+                  "YFieldName": "Stock.BaseWtAll",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -1603,7 +1597,37 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "Location Number",
+                  "Name": "Body Weight",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "ReportFarm",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Stock.CondScoreAll",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Condition Score",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -1631,17 +1655,6 @@
                 },
                 {
                   "$type": "Models.Graph.Axis, Models",
-                  "Type": 2,
-                  "Title": null,
-                  "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
-                },
-                {
-                  "$type": "Models.Graph.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1656,13 +1669,13 @@
               "LegendOrientation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
-              "Name": "BodyWt and Condition Score",
+              "Name": "Intakes",
               "Children": [
                 {
                   "$type": "Models.Graph.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
-                  "YAxis": 2,
+                  "YAxis": 0,
                   "ColourArgb": -16777216,
                   "FactorToVaryColours": null,
                   "FactorToVaryMarkers": null,
@@ -1674,7 +1687,7 @@
                   "Checkpoint": "Current",
                   "TableName": "ReportFarm",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Stock.BaseWtAll",
+                  "YFieldName": "IntakePast",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -1682,8 +1695,19 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "BodyWeight",
-                  "Children": [],
+                  "Name": "Pasture",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.ShadedBarsOnGraph, Models",
+                      "ColumnName": "Stock.Paddock(1)",
+                      "SimulationName": "A Simple Rotational Grazing",
+                      "Name": "ShadedBarsOnGraph",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1704,7 +1728,7 @@
                   "Checkpoint": "Current",
                   "TableName": "ReportFarm",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "Stock.CondScoreAll",
+                  "YFieldName": "IntakePastSupp",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,
@@ -1712,7 +1736,7 @@
                   "Cumulative": false,
                   "CumulativeX": false,
                   "Filter": null,
-                  "Name": "ConditionScore",
+                  "Name": "PasturePlusSilage",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
