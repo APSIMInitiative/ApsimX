@@ -966,16 +966,6 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Get the information about urine being added
-        /// </summary>
-        /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>
-        public void AddUrine(AddUrineType UrineAdded)
-        {
-            // Starting with the minimalist version. To be updated by Val's group to include a urine patch algorithm
-            // urea[0] += UrineAdded.Urea;
-        }
-
-        /// <summary>
         /// Passes and handles the information about new patch and add it to patch list
         /// </summary>
         /// <param name="PatchtoAdd">Patch data</param>
@@ -1277,6 +1267,7 @@ namespace Models.Soils
             for (int layer = 0; layer <= maxLayer; layer++)
             {
                 result[layer] = Math.Min(1.0, MathUtilities.Divide(maxDepth - cumDepth, dlayer[layer], 0.0));
+                cumDepth += dlayer[layer];
             }
 
             return result;
