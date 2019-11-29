@@ -150,6 +150,7 @@
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedTarget.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargets.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedToTargetsV1.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
