@@ -1346,7 +1346,7 @@ namespace Models.PMF.Organs
                     // half from dilution and half from senescence
                     double nProvided = Math.Min(dilutionN, requiredN / 2.0);
                     requiredN -= nProvided;
-                    nGreenToday += nProvided; //jkb
+                    nGreenToday -= nProvided; //jkb // dh - this should be subtracted, not added
                     DltRetranslocatedN -= nProvided;
 
                     // rest from senescence
