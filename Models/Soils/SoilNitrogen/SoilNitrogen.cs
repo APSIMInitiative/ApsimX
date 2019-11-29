@@ -966,26 +966,6 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Get the information about urine being added
-        /// </summary>
-        /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>
-        public void AddUrine(AddUrineType UrineAdded)
-        {
-            // Starting with the minimalist version. To be updated by Val's group to include a urine patch algorithm
-            // urea[0] += UrineAdded.Urea;
-
-            // We could just add the urea to the top layer, but it's better
-            // to work out the penetration depth, and spread it through those layers.
-            double liquidDepth = UrineAdded.VolumePerUrination / UrineAdded.AreaPerUrination * 1000.0; // Depth of liquid to be added per urination, in mm
-            double maxDepth = liquidDepth / 0.05; // basically treats soil as having 5% pore space. This is the depth to which urine will penetrate
-            double[] ureaAdded = new double[nLayers];
-            double[] layerFracs = FractionLayer(maxDepth);
-            for (int iLayer = 0; iLayer < nLayers; iLayer++)
-                ureaAdded[iLayer] = UrineAdded.Urea * layerFracs[iLayer] * dlayer[iLayer] / maxDepth;
-            SetUreaDelta(SoluteSetterType.Other, ureaAdded);
-        }
-
-        /// <summary>
         /// Passes and handles the information about new patch and add it to patch list
         /// </summary>
         /// <param name="PatchtoAdd">Patch data</param>

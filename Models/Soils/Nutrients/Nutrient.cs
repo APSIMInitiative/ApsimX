@@ -99,33 +99,6 @@
         }
 
         /// <summary>
-        /// Get the information about urine being added
-        /// </summary>
-        /// <param name="UrineAdded">Urine deposition data (includes urea N amount, volume, area affected, etc)</param>
-        public void AddUrine(AddUrineType UrineAdded)
-        {
-            if (Urea == null)
-            {
-                Summary.WriteWarning(this, "Unable to add urine. The Nutrient model has not been configured with support for Urea as a solute");
-                return;
-            }
-            // We could just add the urea to the top layer, but it's better
-            // to work out the penetration depth, and spread it through those layers.
-            double liquidDepth = UrineAdded.VolumePerUrination / UrineAdded.AreaPerUrination * 1000.0; // Depth of liquid to be added per urinat, in mm
-            double maxDepth = liquidDepth / 0.05; // basically treats soil as having 5% pore space. This is the depth to which urine will penetrate
-            int nLayers = Soil.Thickness.Length;
-            double cumDepth = 0.0;
-            double[] ureaAdded = new double[nLayers];
-            for (int iLayer = 0; iLayer < nLayers; iLayer++)
-            {
-                double layerFrac = Math.Min(1.0, MathUtilities.Divide(maxDepth - cumDepth, Soil.Thickness[iLayer], 0.0));
-                ureaAdded[iLayer] = UrineAdded.Urea * layerFrac * Soil.Thickness[iLayer] / maxDepth;
-                cumDepth += Soil.Thickness[iLayer];
-            }
-            Urea.AddKgHaDelta(SoluteSetterType.Other, ureaAdded);
-        }
-
-        /// <summary>
         /// Total C in each soil layer
         /// </summary>
         public double[] TotalC
@@ -217,10 +190,13 @@
                 double[] values = new double[FOMLignin.C.Length];
                 double[] nh4 = NH4.kgha;
                 double[] no3 = NO3.kgha;
-                double[] urea = Urea.kgha;
                 values = MathUtilities.Add(values, nh4);
                 values = MathUtilities.Add(values, no3);
-                values = MathUtilities.Add(values, urea);
+                if (Urea != null)
+                {
+                    double[] urea = Urea.kgha;
+                    values = MathUtilities.Add(values, urea);
+                }
                 return values;
             }
         }
@@ -249,12 +225,11 @@
             {
                 double[] nh4 = NH4.kgha;
                 double[] no3 = NO3.kgha;
-                double[] urea = Urea.kgha;
 
                 double[] values = new double[FOMLignin.C.Length];
                 for (int i = 0; i < FOMLignin.C.Length; i++)
                     values[i] = MathUtilities.Divide(FOMCarbohydrate.C[i] + FOMCellulose.C[i] + FOMLignin.C[i],
-                               FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i] + nh4[i] + no3[i] + urea[i], 0.0);
+                               FOMCarbohydrate.N[i] + FOMCellulose.N[i] + FOMLignin.N[i] + nh4[i] + no3[i], 0.0);
 
                 return values;
             }

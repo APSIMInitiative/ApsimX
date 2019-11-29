@@ -15,6 +15,7 @@ namespace Models.GrazPlan
     using System.Globalization;
     using System.Linq;
     using Models.Core;
+    using Models.Interfaces;
     using Models.PMF.Interfaces;
 
     /*
@@ -1199,6 +1200,11 @@ namespace Models.GrazPlan
         /// Gets or sets the urine destination
         /// </summary>
         public object AddUrineObj { get; set; }
+
+        /// <summary>
+        /// Gets or sets the soil of the paddock
+        /// </summary>
+        public ISoil Soil { get; set; }
 
         /// <summary>
         /// Gets or sets the paddock area (ha)

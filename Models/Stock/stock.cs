@@ -10,6 +10,7 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
     using Models.PMF.Interfaces;
@@ -4088,10 +4089,9 @@ namespace Models.GrazPlan
                     }
 
                     // locate surfaceOM and soil nutrient model
-                    SurfaceOrganicMatter surfaceOM = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
-                    INutrient soiln = (INutrient)Apsim.Find(zone, typeof(INutrient));
-                    thePadd.AddFaecesObj = surfaceOM;
-                    thePadd.AddUrineObj = soiln;
+                    thePadd.AddFaecesObj = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
+                    thePadd.Soil = (ISoil)Apsim.Find(zone, typeof(ISoil));
+                    thePadd.AddUrineObj = (ISolute)Apsim.Find(zone, "Urea");
                 }
             }
 
@@ -4226,7 +4226,21 @@ namespace Models.GrazPlan
                     AddUrineType urine = new AddUrineType();
                     if (this.PopulateUrine(paddInfo.PaddID, urine))
                     {
-                        ((INutrient)paddInfo.AddUrineObj).AddUrine(urine);
+                        // We could just add the urea to the top layer, but it's better
+                        // to work out the penetration depth, and spread it through those layers.
+                        double liquidDepth = urine.VolumePerUrination / urine.AreaPerUrination * 1000.0; // Depth of liquid to be added per urinat, in mm
+                        double maxDepth = liquidDepth / 0.05; // basically treats soil as having 5% pore space. This is the depth to which urine will penetrate
+                        double[] dlayers = paddInfo.Soil.Thickness;
+                        int nLayers = dlayers.Length;
+                        double cumDepth = 0.0;
+                        double[] ureaAdded = new double[nLayers];
+                        for (int iLayer = 0; iLayer < nLayers; iLayer++)
+                        {
+                            double layerFrac = Math.Min(1.0, MathUtilities.Divide(maxDepth - cumDepth, dlayers[iLayer], 0.0));
+                            ureaAdded[iLayer] = layerFrac > 0.0 ? urine.Urea * layerFrac * dlayers[iLayer] / maxDepth : 0.0;
+                            cumDepth += dlayers[iLayer];
+                        }
+                        ((ISolute)paddInfo.AddUrineObj).AddKgHaDelta(SoluteSetterType.Other, ureaAdded);
                     }
                 }
             }
