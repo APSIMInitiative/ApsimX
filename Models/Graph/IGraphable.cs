@@ -191,5 +191,11 @@
 
         /// <summary>Gets the line thickness</summary>
         public LineThicknessType thickness;
+
+        /// <summary>Draw the annotation in front of series?</summary>
+        public bool InFrontOfSeries { get; set; } = true;
+
+        /// <summary>Annotation tooltip</summary>
+        public string ToolTip { get; set; }
     }
 }

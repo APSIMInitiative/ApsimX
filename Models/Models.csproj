@@ -257,6 +257,7 @@
     <Compile Include="Functions\EndOfDayFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
+    <Compile Include="Graph\ShadedBarsOnGraph.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
     <Compile Include="Graph\IGraphPanelScript.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
