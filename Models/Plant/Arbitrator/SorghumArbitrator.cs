@@ -174,6 +174,25 @@ namespace Models.PMF
             UpdateTTElapsed();
         }
 
+        /// <summary>Clears this instance.</summary>
+        protected override void Clear()
+        {
+            base.Clear();
+            DltTT = 0.0;
+            WatSupply = 0.0;
+            NMassFlowSupply = 0.0;
+            NDiffusionSupply = 0.0;
+            TTFMFromFlowering = 0.0;
+            DaysTotal = new List<double>();
+
+            SWAvailRatio = 0.0;
+            SDRatio = 0.0;
+            PhotoStress = 0.0;
+            TotalAvail  = 0.0;
+            TotalPotAvail  = 0.0;
+        }
+
+
         /// <summary>
         /// This is basically one giant hack to calculate the equivalent
         /// of phenology's daysTotal variable in the old sorghum model.
