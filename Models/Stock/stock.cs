@@ -10,7 +10,9 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Interfaces;
     using Models.PMF.Interfaces;
     using Models.Soils;
     using Models.Surface;
@@ -4087,10 +4089,9 @@ namespace Models.GrazPlan
                     }
 
                     // locate surfaceOM and soil nutrient model
-                    SurfaceOrganicMatter surfaceOM = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
-                    SoilNitrogen soiln = (SoilNitrogen)Apsim.Find(zone, typeof(SoilNitrogen));
-                    thePadd.AddFaecesObj = surfaceOM;
-                    thePadd.AddUrineObj = soiln;
+                    thePadd.AddFaecesObj = (SurfaceOrganicMatter)Apsim.Find(zone, typeof(SurfaceOrganicMatter));
+                    thePadd.Soil = (ISoil)Apsim.Find(zone, typeof(ISoil));
+                    thePadd.AddUrineObj = (ISolute)Apsim.Find(zone, "Urea");
                 }
             }
 
@@ -4225,7 +4226,21 @@ namespace Models.GrazPlan
                     AddUrineType urine = new AddUrineType();
                     if (this.PopulateUrine(paddInfo.PaddID, urine))
                     {
-                        ((SoilNitrogen)paddInfo.AddUrineObj).AddUrine(urine);
+                        // We could just add the urea to the top layer, but it's better
+                        // to work out the penetration depth, and spread it through those layers.
+                        double liquidDepth = urine.VolumePerUrination / urine.AreaPerUrination * 1000.0; // Depth of liquid to be added per urinat, in mm
+                        double maxDepth = liquidDepth / 0.05; // basically treats soil as having 5% pore space. This is the depth to which urine will penetrate
+                        double[] dlayers = paddInfo.Soil.Thickness;
+                        int nLayers = dlayers.Length;
+                        double cumDepth = 0.0;
+                        double[] ureaAdded = new double[nLayers];
+                        for (int iLayer = 0; iLayer < nLayers; iLayer++)
+                        {
+                            double layerFrac = Math.Min(1.0, MathUtilities.Divide(maxDepth - cumDepth, dlayers[iLayer], 0.0));
+                            ureaAdded[iLayer] = layerFrac > 0.0 ? urine.Urea * layerFrac * dlayers[iLayer] / maxDepth : 0.0;
+                            cumDepth += dlayers[iLayer];
+                        }
+                        ((ISolute)paddInfo.AddUrineObj).AddKgHaDelta(SoluteSetterType.Other, ureaAdded);
                     }
                 }
             }
@@ -4294,7 +4309,7 @@ namespace Models.GrazPlan
         public void Draft(StockDraft closedZones)
         {
             this.RequestAvailableToAnimal();
-            this.outputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed)); 
+            this.outputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed));
             this.stockModel.DoStockManagement(this.stockModel, closedZones, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4460,7 +4475,7 @@ namespace Models.GrazPlan
             StockTag tag = new StockTag();
             tag.Group = group;
             tag.Value = value;
-            this.outputSummary.WriteMessage(this, "Tag animal group " + group.ToString() + " to " + value.ToString()); 
+            this.outputSummary.WriteMessage(this, "Tag animal group " + group.ToString() + " to " + value.ToString());
             this.stockModel.DoStockManagement(this.stockModel, tag, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4474,7 +4489,7 @@ namespace Models.GrazPlan
             StockPrioritise prioritise = new StockPrioritise();
             prioritise.Group = group;
             prioritise.Value = value;
-            this.outputSummary.WriteMessage(this, "Prioritise animal group " + group.ToString() + " to " + value.ToString()); 
+            this.outputSummary.WriteMessage(this, "Prioritise animal group " + group.ToString() + " to " + value.ToString());
             this.stockModel.DoStockManagement(this.stockModel, prioritise, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4538,7 +4553,7 @@ namespace Models.GrazPlan
                         }
                     }
                 }
-                
+
                 for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
                 {
                     forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
@@ -4687,6 +4702,33 @@ namespace Models.GrazPlan
             return genoParams;
         }
 
+        /// <summary>
+        /// Returns the combined list of all animal types and user defined types.
+        /// </summary>
+        /// <returns>Genotype names</returns>
+        public string[] GenotypeNamesAll()
+        {
+            string[] allGenoNames = new string[0];
+            foreach (GrazType.AnimalType animal in Enum.GetValues(typeof(GrazType.AnimalType)))
+            {
+                string[] genoParams = GenotypeNames(animal);
+                
+                Array.Resize(ref allGenoNames, allGenoNames.Length + genoParams.Length);
+                genoParams.CopyTo(allGenoNames, allGenoNames.Length - genoParams.Length);
+            }
+
+            foreach (SingleGenotypeInits geno in GenoTypes)
+            {
+                if (!allGenoNames.Contains(geno.GenotypeName))
+                {
+                    Array.Resize(ref allGenoNames, allGenoNames.Length + 1);
+                    allGenoNames[allGenoNames.Length - 1] = geno.GenotypeName;
+                }
+            }
+            Array.Sort(allGenoNames, StringComparer.InvariantCulture);
+
+            return allGenoNames;
+        }
         #endregion
     }
 }

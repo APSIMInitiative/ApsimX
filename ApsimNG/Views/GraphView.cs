@@ -807,6 +807,8 @@ namespace UserInterface.Views
         /// <param name="textRotation">Text rotation</param>
         /// <param name="thickness">Line thickness</param>
         /// <param name="colour">The color of the text</param>
+        /// <param name="inFrontOfSeries">Show annotation in front of series?</param>
+        /// <param name="toolTip">Annotation tool tip.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawLine(
             object x1,
@@ -815,10 +817,10 @@ namespace UserInterface.Views
             object y2,
             Models.Graph.LineType type,
             Models.Graph.LineThicknessType thickness,
-            Color colour)
+            Color colour,
+            bool inFrontOfSeries,
+            string toolTip)
         {
-            OxyPlot.Annotations.LineAnnotation annotation = new OxyPlot.Annotations.LineAnnotation();
-
             double x1Position = 0.0;
             if (x1 is DateTime)
                 x1Position = DateTimeAxis.ToDouble(x1);
@@ -844,23 +846,38 @@ namespace UserInterface.Views
             else
                 y2Position = (double)y2;
 
-            annotation.X = x1Position;
-            annotation.Y = y1Position;
-            annotation.MinimumX = x1Position;
-            annotation.MinimumY = y1Position;
-            annotation.MaximumX = x2Position;
-            annotation.MaximumY = y2Position;
-            annotation.Type = LineAnnotationType.Vertical;
-            annotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+            OxyPlot.Annotations.Annotation annotation;
 
-            // Line type.
-            // LineStyle oxyLineType;
-            // if (Enum.TryParse<LineStyle>(type.ToString(), out oxyLineType))
-            //    annotation.LineStyle = oxyLineType;
-
-            // Line thickness
-            if (thickness == LineThicknessType.Thin)
-                annotation.StrokeThickness = 0.5;
+            if (x1Position == x2Position)
+            {
+                var lineAnnotation = new OxyPlot.Annotations.LineAnnotation();
+                lineAnnotation.X = x1Position;
+                lineAnnotation.Y = y1Position;
+                lineAnnotation.MinimumX = x1Position;
+                lineAnnotation.MinimumY = y1Position;
+                lineAnnotation.MaximumX = x2Position;
+                lineAnnotation.MaximumY = y2Position;
+                lineAnnotation.Type = LineAnnotationType.Vertical;
+                lineAnnotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+                if (thickness == LineThicknessType.Thin)
+                    lineAnnotation.StrokeThickness = 0.5;
+                annotation = lineAnnotation;
+            }
+            else
+            {
+                var rectangleAnnotation = new RectangleAnnotation();
+                rectangleAnnotation.MinimumX = x1Position;
+                rectangleAnnotation.MinimumY = y1Position;
+                rectangleAnnotation.MaximumX = x2Position;
+                rectangleAnnotation.MaximumY = y2Position;
+                rectangleAnnotation.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+                annotation = rectangleAnnotation;
+            }
+            if (inFrontOfSeries)
+                annotation.Layer = AnnotationLayer.AboveSeries;
+            else
+                annotation.Layer = AnnotationLayer.BelowSeries;
+            annotation.ToolTip = toolTip;
             this.plot1.Model.Annotations.Add(annotation);
         }
 
@@ -1653,6 +1670,7 @@ namespace UserInterface.Views
         private void OnChartClick(object sender, OxyMouseDownEventArgs e)
         {
             e.Handled = false;
+
             inRightClick = e.ChangedButton == OxyMouseButton.Right;
             if (e.ChangedButton == OxyMouseButton.Left) /// Left clicks only
             {
@@ -1661,6 +1679,10 @@ namespace UserInterface.Views
                 else if (e.ClickCount == 2)
                     OnMouseDoubleClick(sender, e);
             }
+
+            // Annotation tool tips.
+            if (e.HitTestResult != null && e.HitTestResult.Element is OxyPlot.Annotations.Annotation)
+                plot1.TooltipText = (e.HitTestResult.Element as OxyPlot.Annotations.Annotation).ToolTip;
         }
 
         /// <summary>Mouse up event on chart. If in a right click, display the popup menu.</summary>
@@ -1672,6 +1694,7 @@ namespace UserInterface.Views
             if (inRightClick)
                 popup.Popup();
             inRightClick = false;
+            plot1.TooltipText = null;
         }
 
         /// <summary>Mouse has moved on the chart.

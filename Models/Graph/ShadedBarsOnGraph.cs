@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EventNamesOnGraph.cs" company="CSIRO">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Graph
+﻿namespace Models.Graph
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -21,7 +16,7 @@ namespace Models.Graph
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
-    public class EventNamesOnGraph : Model, IGraphable
+    public class ShadedBarsOnGraph : Model, IGraphable
     {
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
@@ -116,10 +111,10 @@ namespace Models.Graph
 
             if (data != null && ColumnName != null && xFieldName != null)
             {
-                string phenologyColumnName = FindPhenologyStageColumn(data);
-                if (phenologyColumnName != null && data.Columns.Contains(xFieldName))
+                string columnName = FindColumn(data);
+                if (columnName != null && data.Columns.Contains(xFieldName))
                 {
-                    string[] names = DataTableUtilities.GetColumnAsStrings(data, phenologyColumnName);
+                    string[] names = DataTableUtilities.GetColumnAsStrings(data, columnName);
                     List<object> x;
                     Type columnType = data.Columns[xFieldName].DataType;
                     if (columnType == typeof(DateTime))
@@ -133,31 +128,42 @@ namespace Models.Graph
 
                     if (names.Length == x.Count)
                     {
+                        var baseColour = Color.LightBlue;
+                        var colourMap = new Dictionary<string, Color>();
+                        int startIndex = -1;
+                        string startName = string.Empty;
                         for (int i = 0; i < names.Length; i++)
                         {
                             if (names[i] != "?" && !string.IsNullOrEmpty(names[i]))
                             {
-                                // Add a line annotation.
-                                LineAnnotation line = new LineAnnotation();
-                                line.colour = Color.Black;
-                                line.type = LineType.Dot;
-                                line.x1 = x[i];
-                                line.y1 = double.MinValue;
-                                line.x2 = x[i];
-                                line.y2 = double.MaxValue;
-                                annotations.Add(line);
+                                if (startIndex == -1)
+                                {
+                                    startIndex = i;
+                                    startName = names[i];
+                                }
+                                else if (names[i] != startName)
+                                {
+                                    // Add a line annotation.
+                                    var bar = new LineAnnotation();
+                                    if (colourMap.ContainsKey(startName))
+                                        bar.colour = colourMap[startName];
+                                    else
+                                    {
+                                        bar.colour = ColourUtilities.ChangeColorBrightness(baseColour, colourMap.Count * 0.2);
+                                        colourMap.Add(startName, bar.colour);
+                                    }
+                                    bar.type = LineType.Dot;
+                                    bar.x1 = x[startIndex];
+                                    bar.y1 = double.MinValue;
+                                    bar.x2 = x[i-1];
+                                    bar.y2 = double.MaxValue;
+                                    bar.InFrontOfSeries = false;
+                                    bar.ToolTip = startName;
+                                    annotations.Add(bar);
 
-                                // Add a text annotation.
-
-                                TextAnnotation text = new TextAnnotation();
-                                text.text = names[i];
-                                text.colour = Color.Black;
-                                text.leftAlign = true;
-                                text.x = x[i];
-
-                                text.y = double.MinValue;
-                                text.textRotation = 270;
-                                annotations.Add(text);
+                                    startName = names[i];
+                                    startIndex = i;
+                                }
                             }
                         }
                     }
@@ -167,7 +173,7 @@ namespace Models.Graph
 
         /// <summary>Find and return the phenology stage column name.</summary>
         /// <param name="data">The data table to search</param>
-        private string FindPhenologyStageColumn(DataTable data)
+        private string FindColumn(DataTable data)
         {
             if (ColumnName == null || ColumnName == string.Empty)
                 return null;

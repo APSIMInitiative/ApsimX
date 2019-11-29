@@ -2376,7 +2376,7 @@ namespace Models.GrazPlan
             double[] urineRefLength = { 0.20, 0.60 };          // m
             double[] urineWidthToLength = { 1.00, 1.00 };
             double[] urineRefVolume = { 0.00015, 0.00200 };    // m^3
-            double[] dailyUrineRefVol = { 0.0003, 0.0250 };    // m^3/head/d
+            double[] dailyUrineRefVol = { 0.0030, 0.0250 };    // m^3/head/d
 
             double faecalLongAxis;         // metres
             double faecalHeight;           // metres

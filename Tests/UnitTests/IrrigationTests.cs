@@ -126,7 +126,8 @@
                                     new MockNutrientPool() { Name = "FOMLignin" },
                                     new MockNutrientPool() { Name = "SurfaceResidue" },
                                     new Solute() { Name = "NO3" },
-                                    new Solute() { Name = "NH4" }
+                                    new Solute() { Name = "NH4" },
+                                    new Solute() { Name = "Urea"}
                                 }
                             }
                         }
