@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 296,
-  "Version": 69,
+  "Version": 70,
   "Name": "Simulations",
   "Children": [
     {
@@ -731,28 +731,29 @@
           "RandSeed": 9999,
           "GenoTypes": [
             {
-              "$type": "Models.GrazPlan.StockGeno, Models",
-              "Conception": [
+              "$type": "Models.GrazPlan.SingleGenotypeInits, Models",
+              "DeathRate": [
+                0.02,
+                0.02
+              ],
+              "Conceptions": [
                 0.0,
                 0.99,
                 0.0,
                 0.0
               ],
-              "Name": "Hereford",
+              "GenotypeName": "Hereford",
               "DamBreed": "",
               "SireBreed": "",
               "Generation": 0,
               "SRW": 500.0,
-              "DeathRate": 0.02,
-              "RefFleeceWt": 0.0,
+              "PotFleeceWt": 0.0,
               "MaxFibreDiam": 0.0,
               "FleeceYield": 0.0,
-              "PeakMilk": 25.0,
-              "WnrDeathRate": 0.02
+              "PeakMilk": 25.0
             }
           ],
-          "Sheep": [],
-          "Cattle": [],
+          "Animals": [],
           "PaddockList": [
             {
               "$type": "Models.GrazPlan.PaddockInit, Models",
@@ -774,7 +775,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n\r\n        private double sale_age = 3.0;\r\n        private int no_to_buy;\r\n        private int group_count;\r\n        private int g;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // purchase animals annually\r\n            //if (DateUtilities.DatesEqual(\"1-jan\", Calendar.Today))\r\n            if (Calendar.Today == new DateTime(2004,6,25))\r\n            {\r\n                g = Animals.NoGroups + 1;\r\n                //no_to_buy = 500 - Animals.NumberAll;\r\n                \r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"Friesian\";\r\n                purchase.Number = 10;\r\n                purchase.Sex = \"cow\";\r\n                purchase.Age = 36;\r\n                purchase.Weight = 450.0;\r\n                purchase.UseTag = g + 1;\r\n                \r\n                Animals.Buy(purchase);\r\n                Animals.Move(g, \"Feedlot\");\r\n            }\r\n\r\n\r\n            //if (Animals.NumberAll > 0)\r\n            //    Feed.Feed(\"wheat, crushed\", 0.5 * Animals.NumberAll, \"Feedlot\");\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Calendar;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n\r\n        private double sale_age = 3.0;\r\n        private int no_to_buy;\r\n        private int group_count;\r\n        private int g;\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // purchase animals annually\r\n            //if (DateUtilities.DatesEqual(\"1-jan\", Calendar.Today))\r\n            if (Calendar.Today == new DateTime(2004,6,25))\r\n            {\r\n                g = Animals.NoGroups + 1;\r\n                //no_to_buy = 500 - Animals.NumberAll;\r\n                \r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = \"Friesian\";\r\n                purchase.Number = 10;\r\n                purchase.Sex =  ReproductiveType.Female;\r\n                purchase.Age = 36;\r\n                purchase.Weight = 450.0;\r\n                purchase.UseTag = g + 1;\r\n                \r\n                Animals.Buy(purchase);\r\n                Animals.Move(g, \"Feedlot\");\r\n            }\r\n\r\n\r\n            //if (Animals.NumberAll > 0)\r\n            //    Feed.Feed(\"wheat, crushed\", 0.5 * Animals.NumberAll, \"Feedlot\");\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [],
           "Name": "ManageStock",
           "IncludeInDocumentation": true,

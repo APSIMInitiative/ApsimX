@@ -145,7 +145,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the animal sex type
         /// </summary>
-        public GrazType.ReproType Sex { get; set; } 
+        public ReproductiveType Sex { get; set; } 
         
         /// <summary>
         /// Gets or sets the in days
