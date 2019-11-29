@@ -4294,7 +4294,7 @@ namespace Models.GrazPlan
         public void Draft(StockDraft closedZones)
         {
             this.RequestAvailableToAnimal();
-            this.outputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed)); 
+            this.outputSummary.WriteMessage(this, "Drafting animals. Excluding paddocks: " + string.Join(", ", closedZones.Closed));
             this.stockModel.DoStockManagement(this.stockModel, closedZones, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4460,7 +4460,7 @@ namespace Models.GrazPlan
             StockTag tag = new StockTag();
             tag.Group = group;
             tag.Value = value;
-            this.outputSummary.WriteMessage(this, "Tag animal group " + group.ToString() + " to " + value.ToString()); 
+            this.outputSummary.WriteMessage(this, "Tag animal group " + group.ToString() + " to " + value.ToString());
             this.stockModel.DoStockManagement(this.stockModel, tag, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4474,7 +4474,7 @@ namespace Models.GrazPlan
             StockPrioritise prioritise = new StockPrioritise();
             prioritise.Group = group;
             prioritise.Value = value;
-            this.outputSummary.WriteMessage(this, "Prioritise animal group " + group.ToString() + " to " + value.ToString()); 
+            this.outputSummary.WriteMessage(this, "Prioritise animal group " + group.ToString() + " to " + value.ToString());
             this.stockModel.DoStockManagement(this.stockModel, prioritise, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4538,7 +4538,7 @@ namespace Models.GrazPlan
                         }
                     }
                 }
-                
+
                 for (int i = 0; i <= this.stockModel.ForagesAll.Count() - 1; i++)
                 {
                     forageProvider = this.stockModel.ForagesAll.ForageProvider(i);
@@ -4687,6 +4687,33 @@ namespace Models.GrazPlan
             return genoParams;
         }
 
+        /// <summary>
+        /// Returns the combined list of all animal types and user defined types.
+        /// </summary>
+        /// <returns>Genotype names</returns>
+        public string[] GenotypeNamesAll()
+        {
+            string[] allGenoNames = new string[0];
+            foreach (GrazType.AnimalType animal in Enum.GetValues(typeof(GrazType.AnimalType)))
+            {
+                string[] genoParams = GenotypeNames(animal);
+                
+                Array.Resize(ref allGenoNames, allGenoNames.Length + genoParams.Length);
+                genoParams.CopyTo(allGenoNames, allGenoNames.Length - genoParams.Length);
+            }
+
+            foreach (SingleGenotypeInits geno in GenoTypes)
+            {
+                if (!allGenoNames.Contains(geno.GenotypeName))
+                {
+                    Array.Resize(ref allGenoNames, allGenoNames.Length + 1);
+                    allGenoNames[allGenoNames.Length - 1] = geno.GenotypeName;
+                }
+            }
+            Array.Sort(allGenoNames, StringComparer.InvariantCulture);
+
+            return allGenoNames;
+        }
         #endregion
     }
 }
