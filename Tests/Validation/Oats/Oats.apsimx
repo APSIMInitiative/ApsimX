@@ -1542,7 +1542,7 @@
                                 0.05,
                                 0.13,
                                 0.1,
-                                0.09,
+                                0.08,
                                 0.16,
                                 0.16,
                                 0.08,
@@ -2238,47 +2238,6 @@
                               "KSMetadata": null,
                               "Name": "Physical",
                               "Children": [
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.1,
-                                    0.1,
-                                    0.07,
-                                    0.07,
-                                    0.08,
-                                    0.07,
-                                    0.07,
-                                    0.07
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.04,
-                                    0.025,
-                                    0.01,
-                                    0.005
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "WheatSoil",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
@@ -6351,8 +6310,8 @@
                                 0.15,
                                 0.15,
                                 0.15,
-                                0.11,
-                                0.12
+                                0.15,
+                                0.15
                               ],
                               "OC": null,
                               "EC": null,
@@ -7822,8 +7781,8 @@
                                 0.15,
                                 0.15,
                                 0.15,
-                                0.11,
-                                0.12
+                                0.15,
+                                0.15
                               ],
                               "OC": null,
                               "EC": null,
@@ -10372,7 +10331,7 @@
                               ],
                               "AirDry": [
                                 0.1,
-                                0.15,
+                                0.1,
                                 0.08,
                                 0.14,
                                 0.14,
