@@ -5724,6 +5724,7 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "IsAboveGround": false,
           "Name": "Taproot",
           "Children": [
             {
