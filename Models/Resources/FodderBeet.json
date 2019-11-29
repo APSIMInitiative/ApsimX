@@ -779,7 +779,6 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
-          "IsAboveGround": false,
           "Name": "StorageRoot",
           "Children": [
             {
