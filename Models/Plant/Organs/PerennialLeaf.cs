@@ -10,6 +10,7 @@ using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.Linq;
 
 namespace Models.PMF.Organs
 {
@@ -20,7 +21,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PerennialLeaf : Model, IOrgan, ICanopy, IArbitration, IHasWaterDemand, IRemovableBiomass
+    public class PerennialLeaf : Model, IOrgan, ICanopy, IArbitration, IHasWaterDemand, IOrganDamage
     {
         /// <summary>The met data</summary>
         [Link]
@@ -139,6 +140,21 @@ namespace Models.PMF.Organs
                 foreach (PerrenialLeafCohort L in Leaves)
                     lai = lai + L.Area;
                 return lai;
+            }
+            set
+            {
+                var totalLeafArea = Leaves.Sum(x => x.Area);
+                if (totalLeafArea > 0)
+                {
+                    var delta = totalLeafArea - value;
+                    var prop = delta / totalLeafArea;
+                    foreach (var L in Leaves)
+                    {
+                        var amountToRemove = L.Area * prop;
+                        L.Area -= amountToRemove;
+                        L.AreaDead += amountToRemove;
+                    }
+                }
             }
         }
 

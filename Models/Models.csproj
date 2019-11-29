@@ -132,6 +132,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgPasture\SimpleGrazing.cs" />
     <Compile Include="AgPasture\PastureSpecies.cs" />
     <Compile Include="AgPasture\PastureAboveGroundOrgan.cs" />
     <Compile Include="AgPasture\PastureBelowGroundOrgan.cs" />
@@ -256,14 +257,21 @@
     <Compile Include="Functions\EndOfDayFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
+    <Compile Include="Graph\ShadedBarsOnGraph.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
     <Compile Include="Graph\IGraphPanelScript.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
     <Compile Include="Graph\SeriesDefinition.cs" />
+    <Compile Include="Lifecycle\PlantAssimilateConsumption.cs" />
+    <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
+    <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
+    <Compile Include="Lifecycle\PlantMortality.cs" />
+    <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
+    <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
@@ -327,7 +335,7 @@
     <Compile Include="Plant\Phenology\Phases\IPhaseWithTrarget.cs" />
     <Compile Include="Plant\Phenology\Phases\PhaseChangedType.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhase.cs" />
-    <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
+    <Compile Include="Plant\Interfaces\IOrganDamage.cs" />
     <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
     <Compile Include="Plant\Structure\BudNumberFunction.cs" />
@@ -355,7 +363,6 @@
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="Irrigation\IIrrigation.cs" />
-    <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
     <Compile Include="Interfaces\ISoil.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />

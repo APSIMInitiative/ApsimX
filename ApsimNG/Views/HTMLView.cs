@@ -821,6 +821,7 @@ namespace UserInterface.Views
             frame1.ExposeEvent += OnWidgetExpose;
             hbox1.Realized += Hbox1_Realized;
             hbox1.SizeAllocated += Hbox1_SizeAllocated;
+            vbox2.SizeAllocated += OnBrowserSizeAlloc;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -906,6 +907,7 @@ namespace UserInterface.Views
         protected void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             memo.MemoChange -= this.TextUpdate;
+            vbox2.SizeAllocated -= OnBrowserSizeAlloc;
             if (keyPressObject != null)
                 (keyPressObject as HtmlElement).KeyPress -= OnKeyPress;
             frame1.ExposeEvent -= OnWidgetExpose;
@@ -939,6 +941,37 @@ namespace UserInterface.Views
         {
             vpaned1.Position = 30; 
             memo.LabelText = "Edit text";
+        }
+
+        /// <summary>
+        /// Ok so for reasons I don't understand, the main widget's
+        /// size request seems to be in some cases smaller than the
+        /// browser's size request. As a result, the HTMLView will
+        /// sometimes overlap with other widgets because the HTMLView's
+        /// size request is actually smaller than the space used by the
+        /// browser. In this scenario I would have expected the browser
+        /// widget to be cut off at the limits of the main widget's
+        /// gdk window, but this doesn't happen - perhaps due to a
+        /// limitation or oversight in the gtk socket component which
+        /// we use to wrap the browser widget.
+        /// 
+        /// Either way, this little hack seems to correct the problem.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnBrowserSizeAlloc(object sender, SizeAllocatedArgs args)
+        {
+            try
+            {
+                // Force the main widget to request enough space for
+                // the browser.
+                mainWidget.HeightRequest = args.Allocation.Height;
+                mainWidget.WidthRequest = args.Allocation.Width;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

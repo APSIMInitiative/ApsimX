@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-
+using System.Linq;
 
 namespace Models.PMF.OilPalm
 {
@@ -58,7 +58,23 @@ namespace Models.PMF.OilPalm
                 else
                     return 0;
             }
-
+            set
+            {
+                if (CropInGround)
+                {
+                    var totalFrondArea = Fronds.Sum(x => x.Area);
+                    if (totalFrondArea > 0)
+                    {
+                        var delta = totalFrondArea - (value / SowingData.Population);
+                        var prop = delta / totalFrondArea;
+                        foreach (var L in Fronds)
+                        {
+                            var amountToRemove = L.Area * prop;
+                            L.Area -= amountToRemove;
+                        }
+                    }
+                }
+            }
         }
         
         /// <summary>Gets the maximum LAI (m^2/m^2)</summary>

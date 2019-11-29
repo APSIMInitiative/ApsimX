@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 69; } }
+        public static int LatestVersion { get { return 70; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1357,6 +1357,31 @@
                 manager.Replace("[ChildLink]", "[Link(Type = LinkType.Child)]", caseSensitive: true);
 
                 manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Changes the type of the Stock component inital values genotypes array
+        /// from StockGeno to SingleGenotypeInits.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion70(JObject root, string fileName)
+        {
+            foreach (var stockNode in JsonUtilities.ChildrenOfType(root, "Stock"))
+            {
+                // for each element of GenoTypes[]
+                var genotypes = stockNode["GenoTypes"];
+                for (int i = 0; i < genotypes.Count(); i++)
+                {
+                    genotypes[i]["$type"] = "Models.GrazPlan.SingleGenotypeInits, Models";
+                    double dr = Convert.ToDouble(genotypes[i]["DeathRate"]);
+                    double drw = Convert.ToDouble(genotypes[i]["WnrDeathRate"]);
+                    genotypes[i]["DeathRate"] = new JArray(new double[] {dr , drw });
+                    genotypes[i]["PotFleeceWt"] = genotypes[i]["RefFleeceWt"];
+                    genotypes[i]["Conceptions"] = genotypes[i]["Conception"];
+                    genotypes[i]["GenotypeName"] = genotypes[i]["Name"];
+                }
             }
         }
 

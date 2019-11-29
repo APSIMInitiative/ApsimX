@@ -36,7 +36,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass, ICanopy
+    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage, ICanopy
     {
         //IHasWaterDemand, removing to see if it's necessary
 
@@ -558,18 +558,24 @@ namespace Models.PMF.Organs
         
             LeafInitialised = false;
             laiEqlbLightTodayQ = new Queue<double>(10);
-            laiEqlbLightTodayQ.Clear();
+            sdRatio = 0.0;
+            totalLaiEqlbLight = 0.0;
+            avgLaiEquilibLight = 0.0;
 
             laiEquilibWaterQ = new Queue<double>(10);
             sdRatioQ = new Queue<double>(5);
+            totalSDRatio = 0.0;
+            avSDRatio = 0.0;
 
-            Live.StructuralWt = 0;
-            Live.StorageWt = 0;
             LAI = 0;
             SLN = 0;
-            Live.StructuralN = 0;
-            Live.StorageN = 0;
 
+            DltSenescedLaiN = 0.0;
+            SenescedLai = 0.0;
+            CoverGreen = 0.0;
+            CoverDead = 0.0;
+            LAIDead = 0.0;
+            LossFromExpansionStress = 0.0;
         }
         #endregion
 
@@ -1487,7 +1493,7 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Called when crop is ending</summary>
+        /// <summary>Called when crop is being sown</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]

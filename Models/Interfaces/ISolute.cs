@@ -9,7 +9,9 @@
         /// <summary>The setting model is a soil model</summary>
         Soil,
         /// <summary>The setting model is a fertiliser model</summary>
-        Fertiliser
+        Fertiliser,
+        /// <summary>Anything else</summary>
+        Other
     }
 
     /// <summary>This interface defines what a solute can do.</summary>

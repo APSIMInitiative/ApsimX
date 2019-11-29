@@ -16,7 +16,7 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
+    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001; 
@@ -364,12 +364,31 @@
             RetranslocateNitrogen.Allocate(this, nitrogen);
 
             // Reallocation
+            double senescedFrac = SenescenceRate.Value();
+            if (StartLive.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
+                senescedFrac = 1.0;  // remaining amount too small, senesce all
+
+            if (senescedFrac > 0 && StartLive.Wt>0 && Name=="Shell")
+            { }
+
             if (MathUtilities.IsGreaterThan(nitrogen.Reallocation, StartLive.StorageN + StartLive.MetabolicN))
                 throw new Exception("N reallocation exceeds storage + metabolic nitrogen in organ: " + Name);
-            double StorageNReallocation = Math.Min(nitrogen.Reallocation, StartLive.StorageN * SenescenceRate.Value() * nReallocationFactor.Value());
+            double StorageNReallocation = Math.Min(nitrogen.Reallocation, StartLive.StorageN * senescedFrac * nReallocationFactor.Value());
             Live.StorageN -= StorageNReallocation;
             Live.MetabolicN -= (nitrogen.Reallocation - StorageNReallocation);
             Allocated.StorageN -= nitrogen.Reallocation;
+
+            // now move the remaining senescing material to the dead pool
+            Biomass Loss = new Biomass();
+            Loss.StructuralN = StartLive.StructuralN * senescedFrac;
+            Loss.StorageN = StartLive.StorageN * senescedFrac - StorageNReallocation;
+            Loss.MetabolicN = StartLive.MetabolicN * senescedFrac - (nitrogen.Reallocation - StorageNReallocation);
+            Loss.StructuralWt = StartLive.StructuralWt * senescedFrac;
+            Loss.MetabolicWt = StartLive.MetabolicWt * senescedFrac;
+            Loss.StorageWt = StartLive.StorageWt * senescedFrac;
+            Live.Subtract(Loss);
+            Dead.Add(Loss);
+            Senesced.Add(Loss);
         }
 
         /// <summary>Remove maintenance respiration from live component of organs.</summary>
@@ -479,15 +498,6 @@
         {
             if (parentPlant.IsAlive)
             {
-                // Do senescence
-                double senescedFrac = SenescenceRate.Value();
-                if (Live.Wt * (1.0 - senescedFrac) < BiomassToleranceValue)
-                    senescedFrac = 1.0;  // remaining amount too small, senesce all
-                Biomass Loss = Live * senescedFrac;
-                Live.Subtract(Loss);
-                Dead.Add(Loss);
-                Senesced.Add(Loss);
-
                 // Do detachment
                 double detachedFrac = detachmentRateFunction.Value();
                 if (Dead.Wt * (1.0 - detachedFrac) < BiomassToleranceValue)

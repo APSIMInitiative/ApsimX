@@ -72,7 +72,7 @@
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300 },
                                 BD = new double[] { 1.36, 1.216, 1.24, 1.32, 1.372, 1.368 },
-                                AirDry = new double[] { 0.135, 0.214, 0.261, 0.261, 0.261, 0.261 },
+                                AirDry = new double[] { 0.135, 0.214, 0.253, 0.261, 0.261, 0.261 },
                                 LL15 = new double[] { 0.27, 0.267, 0.261, 0.261, 0.261, 0.261 },
                                 DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 },
                                 SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 },
@@ -126,7 +126,8 @@
                                     new MockNutrientPool() { Name = "FOMLignin" },
                                     new MockNutrientPool() { Name = "SurfaceResidue" },
                                     new Solute() { Name = "NO3" },
-                                    new Solute() { Name = "NH4" }
+                                    new Solute() { Name = "NH4" },
+                                    new Solute() { Name = "Urea"}
                                 }
                             }
                         }

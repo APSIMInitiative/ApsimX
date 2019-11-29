@@ -79,7 +79,7 @@
                 explorerPresenter.MainPresenter.ShowError(errors);
 
             SoundPlayer player = new SoundPlayer();
-            if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
+            if (DateTime.Now.Month == 12)
                 player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.notes.wav");
             else
                 player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");

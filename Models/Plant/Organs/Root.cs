@@ -63,7 +63,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IRemovableBiomass
+    public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         private double BiomassToleranceValue = 0.0000000001;
@@ -247,6 +247,7 @@
         /// <summary>The metabolic N demand</summary>
         private double metabolicNDemand = 0.0;
 
+
         /// <summary>Constructor</summary>
         public Root()
         {
@@ -315,7 +316,7 @@
                 value = new double[PlantZone.soil.Thickness.Length];
                 double SRL = specificRootLength.Value();
                 for (int i = 0; i < PlantZone.soil.Thickness.Length; i++)
-                    value[i] = PlantZone.LayerLive[i].Wt * SRL * 1000 / 1000000 / PlantZone.soil.Thickness[i];
+                    value[i] = PlantZone.LayerLive[i].Wt * RootLengthDensityModifierDueToDamage * SRL * 1000 / 1000000 / PlantZone.soil.Thickness[i];
                 return value;
             }
         }
@@ -488,6 +489,26 @@
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
+
+        /// <summary>Gets or sets the root length modifier due to root damage (0-1).</summary>
+        public double RootLengthDensityModifierDueToDamage { get; set; } = 1.0;
+
+        /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
+        private bool IsKLModiferDueToDamageActive { get; set; } = false;
+
+        /// <summary>Gets the KL modifier due to root damage (0-1).</summary>
+        private double KLModiferDueToDamage(int layerIndex)
+        {
+            var threshold = 0.01;
+            if (!IsKLModiferDueToDamageActive)
+                return 1;
+            else if (LengthDensity[layerIndex] < 0)
+                return 0;
+            else if (LengthDensity[layerIndex] >= threshold)
+                return 1;
+            else
+                return (1 / threshold) * LengthDensity[layerIndex];
+        }
 
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
@@ -877,7 +898,7 @@
 
                         var proportionThroughLayer = rootProportionInLayer(layer, myZone);
                         var klMod = klModifier.Value(layer);
-                        supply[layer] = Math.Max(0.0, kl[layer] * klMod * available[layer] * proportionThroughLayer);
+                        supply[layer] = Math.Max(0.0, kl[layer] * klMod * KLModiferDueToDamage(layer) * available[layer] * proportionThroughLayer);
                     }
 
                     return supply;
@@ -893,7 +914,7 @@
                     {
                         if (layer <= myZone.soil.LayerIndexOfDepth(myZone.Depth))
                         {
-                            supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) *
+                            supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
                             (zone.Water[layer] - ll[layer] * myZone.soil.Thickness[layer]) * rootProportionInLayer(layer, myZone));
                         }
                     }
@@ -1006,6 +1027,11 @@
         {
             biomassRemovalModel.RemoveBiomassToSoil(biomassRemoveType, amountToRemove, PlantZone.LayerLive, PlantZone.LayerDead, Removed, Detached);
             needToRecalculateLiveDead = true;
+
+            // Commented out code below because about 10 validation files failed on Jenkins
+            // e.g. Chicory, Oats
+            //if (biomassRemoveType != null && biomassRemoveType != "Harvest")
+            //    IsKLModiferDueToDamageActive = true;
         }
 
         /// <summary>Initialise all zones.</summary>
@@ -1095,7 +1121,7 @@
             for (int layer = 0; layer < LL.Length; layer++)
             {
                 if (layer <= PlantZone.soil.LayerIndexOfDepth(Depth))
-                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
+                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) * (SWmm[layer] - LL[layer] * DZ[layer]) *
                         rootProportionInLayer(layer, PlantZone));
             }
             return supply;
@@ -1137,7 +1163,7 @@
                     var kl = KL[layer];
                     var klmod = klModifier.Value(layer);
 
-                    supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) *
+                    supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
                         rootProportionInLayer(layer, PlantZone));
 
                     supplyTotal += supply[layer];

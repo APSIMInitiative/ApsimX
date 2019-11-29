@@ -8,6 +8,7 @@
     using Models.PMF.Phen;
     using Models.PMF.Struct;
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using System.Data;
     using System.Xml.Serialization;
@@ -19,7 +20,7 @@
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation
+    public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation, IPlantDamage
     {
         #region Class links
         /// <summary>The summary</summary>
@@ -44,7 +45,7 @@
         public ICanopy Canopy = null;
         /// <summary>The leaf</summary>
         [Link(IsOptional = true)]
-        public Leaf Leaf = null;
+        public ICanopy Leaf = null;
         /// <summary>The root</summary>
         [Link(IsOptional = true)]
         public Root Root = null;
@@ -193,6 +194,34 @@
         /// <summary>Counter for the number of days after corp being ended.</summary>
         /// <remarks>USed to clean up data the day after an EndCrop, enabling some reporting.</remarks>
         public int DaysAfterEnding { get; set; }
+
+        /// <summary>A list of organs that can be damaged.</summary>
+        List<IOrganDamage> IPlantDamage.Organs { get { return Organs.Cast<IOrganDamage>().ToList(); } }
+
+        /// <summary>Leaf area index.</summary>
+        public double LAI
+        { 
+            get
+            {
+                var leaf = Organs.FirstOrDefault(o => o is Leaf) as Leaf;
+                if (leaf != null)
+                    return leaf.LAI;
+
+                var simpleLeaf = Organs.FirstOrDefault(o => o is SimpleLeaf) as SimpleLeaf;
+                if (simpleLeaf != null)
+                    return simpleLeaf.LAI;
+
+                var perennialLeaf = Organs.FirstOrDefault(o => o is PerennialLeaf) as PerennialLeaf;
+                if (perennialLeaf != null)
+                    return perennialLeaf.LAI;
+
+                return 0;
+            }
+        }
+
+
+        /// <summary>Amount of assimilate available to be damaged.</summary>
+        public double AssimilateAvailable => throw new NotImplementedException();
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
@@ -354,7 +383,7 @@
                 OrganBiomassRemovalType biomassRemoval = null;
                 if (removalData != null)
                     biomassRemoval = removalData.GetFractionsForOrgan(organ.Name);
-                (organ as IRemovableBiomass).RemoveBiomass(biomassRemoveType, biomassRemoval);
+                organ.RemoveBiomass(biomassRemoveType, biomassRemoval);
             }
 
             // Reset the phenology if SetPhenologyStage specified.
@@ -427,6 +456,69 @@
                 foreach (IModel child in Apsim.Children(this, typeof(IModel)))
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
             }
+        }
+
+        /// <summary>
+        /// Remove biomass from an organ.
+        /// </summary>
+        /// <param name="organName">Name of organ.</param>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove.</param>
+        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            var organ = Organs.FirstOrDefault(o => o.Name.Equals(organName, StringComparison.InvariantCultureIgnoreCase));
+            if (organ == null)
+                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
+            organ.RemoveBiomass(biomassRemoveType, biomassToRemove);
+
+            // Also need to reduce LAI if canopy.
+            if (organ is ICanopy)
+            {
+                var totalFractionToRemove = biomassToRemove.FractionLiveToRemove + biomassToRemove.FractionLiveToResidue;
+                var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
+                var lai = leaf.LAI;
+                ReduceCanopy(lai * totalFractionToRemove);
+            }
+        }
+
+        /// <summary>
+        /// Set the plant leaf area index.
+        /// </summary>
+        /// <param name="deltaLAI">Delta LAI.</param>
+        public void ReduceCanopy(double deltaLAI)
+        {
+            var leaf = Organs.FirstOrDefault(o => o is ICanopy) as ICanopy;
+            var lai = leaf.LAI;
+            if (lai > 0)
+                leaf.LAI = lai - deltaLAI;
+        }
+
+        /// <summary>
+        /// Set the plant root length density.
+        /// </summary>
+        /// <param name="rootLengthModifier">The root length modifier due to root damage (0-1).</param>
+        public void ReduceRootLengthDensity(double rootLengthModifier)
+        {
+            if (Root != null)
+                Root.RootLengthDensityModifierDueToDamage = rootLengthModifier;
+        }
+
+        /// <summary>
+        /// Remove an amount of assimilate from the plant.
+        /// </summary>
+        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
+        public void RemoveAssimilate(double deltaAssimilate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Reduce the plant population.
+        /// </summary>
+        /// <param name="newPlantPopulation">The new plant population.</param>
+        public void ReducePopulation(double newPlantPopulation)
+        {
+            throw new NotImplementedException();
         }
     }
 }

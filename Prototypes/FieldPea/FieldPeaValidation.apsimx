@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 283,
-  "Version": 54,
+  "ExplorerWidth": 282,
+  "Version": 69,
   "Name": "Simulations",
   "Children": [
     {
@@ -2497,6 +2497,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -3113,6 +3114,14 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3136,11 +3145,11 @@
               "Albedo": 0.0,
               "Gsmax350": 0.0,
               "R50": 200.0,
+              "LAI": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
               "LightProfile": null,
-              "MicroClimatePresent": true,
               "KDead": 0.3,
               "MaximumMainStemLeafNumber": 40,
               "TipsAtEmergence": 0,
@@ -4279,6 +4288,7 @@
             },
             {
               "$type": "Models.PMF.Organs.GenericOrgan, Models",
+              "StartLive": null,
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
@@ -4838,7 +4848,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structuture].Height",
+                      "VariableName": "[Structure].Height",
                       "Name": "DepthFunction",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5073,6 +5083,14 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5379,6 +5397,8 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [
         {
@@ -5397,7 +5417,6 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": "The specified file does not exist.",
           "FileName": "%root%\\Prototypes\\FieldPea\\Observations\\SowingDateNodes.txt",
           "Name": "Input",
           "Children": [],
@@ -5407,7 +5426,6 @@
         },
         {
           "$type": "Models.PostSimulationTools.Input, Models",
-          "ErrorMessage": "The specified file does not exist.",
           "FileName": "%root%\\Prototypes\\FieldPea\\Observations\\SowingDatePhenology.txt",
           "Name": "Pheno",
           "Children": [],
@@ -5617,100 +5635,123 @@
           "Name": "Factors",
           "Children": [
             {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specifications": [],
-              "Name": "Sowing",
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation",
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1997-12-23",
-                    "[FieldPeaSowingRule].Script.SowingDepth=20"
+                  "Specification": null,
+                  "Name": "Sowing",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1997-12-23",
+                        "[FieldPeaSowingRule].Script.SowingDepth=20"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "23Dec",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1998-02-19",
+                        "[FieldPeaSowingRule].Script.SowingDepth=20"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "19Feb",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1998-9-14",
+                        "[FieldPeaSowingRule].Script.SowingDepth=20"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "14Sep",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1998-11-18",
+                        "[FieldPeaSowingRule].Script.SowingDepth=20"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "18Nov",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
                   ],
-                  "Name": "23Dec",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1998-02-19",
-                    "[FieldPeaSowingRule].Script.SowingDepth=20"
+                  "Specification": null,
+                  "Name": "Population",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingRate=45",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "50",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingRate=90",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "100",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingRate=135",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "150",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
                   ],
-                  "Name": "19Feb",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1998-9-14",
-                    "[FieldPeaSowingRule].Script.SowingDepth=20"
-                  ],
-                  "Name": "14Sep",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1998-11-18",
-                    "[FieldPeaSowingRule].Script.SowingDepth=20"
-                  ],
-                  "Name": "18Nov",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specifications": [],
-              "Name": "Population",
-              "Children": [
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingRate=45",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "50",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingRate=90",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "100",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingRate=135",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "150",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5731,8 +5772,8 @@
           "Children": [
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1997-12-01T00:00:00",
-              "EndDate": "1999-07-01T00:00:00",
+              "Start": "1997-12-01T00:00:00",
+              "End": "1999-07-01T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -5772,11 +5813,12 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "paddock",
               "Children": [
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -5797,7 +5839,15 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -5806,14 +5856,22 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        180.83333333333337,
+                        12.5,
+                        1.3888888888888928,
+                        1.3888888888888928,
+                        0.0,
+                        0.0
+                      ],
+                      "NH4N": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
                       "PH": [
                         6.6,
                         6.2,
@@ -5822,36 +5880,10 @@
                         5.5,
                         5.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -5870,7 +5902,15 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -5879,6 +5919,7 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -5926,7 +5967,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -6029,6 +6070,14 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "SWCON": [
                         0.55,
                         0.55,
@@ -6038,7 +6087,7 @@
                         0.55
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6127,19 +6176,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 30.0,
-                      "SoilCN": 11.5,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        100.0,
-                        200.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-10",
                         "10-30",
@@ -6148,7 +6185,16 @@
                         "90-120",
                         "120-150"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 30.0,
+                      "Thickness": [
+                        100.0,
+                        200.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         1.82,
                         1.47,
                         1.2,
@@ -6156,7 +6202,14 @@
                         0.47,
                         0.47
                       ],
-                      "OCMetadata": null,
+                      "SoilCNRatio": [
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5
+                      ],
                       "FBiom": [
                         0.025,
                         0.025,
@@ -6173,7 +6226,7 @@
                         0.96,
                         0.96
                       ],
-                      "RootWt": [
+                      "FOM": [
                         1243.9310541346904,
                         833.83192147272689,
                         457.61666105087295,
@@ -6181,8 +6234,7 @@
                         137.83148958311097,
                         75.643525303383925
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -6190,6 +6242,14 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -6198,30 +6258,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        217.0,
-                        30.0,
-                        5.0,
-                        5.0,
-                        0.0,
-                        0.0
-                      ],
-                      "NH4": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -6278,7 +6322,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {      \r\n        [Link] private Clock Clock;\r\n        [Link] private Weather Met;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Plant FieldPea;\r\n        [Link] private Zone zone;\r\n        [ScopedLinkByName]\r\n        private ISolute Urea;\r\n        [ScopedLinkByName]\r\n        private ISolute NO3;\r\n        [ScopedLinkByName]\r\n        private ISolute NH4;\r\n        [ScopedLinkByName]\r\n        private SoilNitrogen SoilNitrogen;\r\n        [Link] Soils.Soil Soil;\r\n        [Link] Models.Surface.SurfaceOrganicMatter SOM;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumPlantN { get; set; }\r\n        [XmlIgnore] public double AccumMineralisation { get; set; }\r\n        [XmlIgnore] public double AccumDenit { get; set; }\r\n        [XmlIgnore] public double AccumFert { get; set; }\r\n        [XmlIgnore] public double AccumLeach { get; set; }\r\n        [XmlIgnore] public double AccumDetach { get; set; }\r\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\r\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumEO { get; set; }\r\n        [XmlIgnore] public double AccumEP { get; set; }\r\n        [XmlIgnore] public double AccumES { get; set; }\r\n        [XmlIgnore] public double AccumDrainage { get; set; }\r\n        [XmlIgnore] public double AccumRunoff { get; set; }\r\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\r\n        [XmlIgnore] public double AccumIrrigation { get; set; }\r\n        [XmlIgnore] public double AccumRainfall { get; set; }\r\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\r\n    \r\n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\r\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double  InitialMineralN { get; set; }\r\n        \r\n        [XmlIgnore] public double SWC { get; set; }\r\n        [XmlIgnore] public double DUL { get; set; }\r\n        [XmlIgnore] public double OutFlowLat { get; set; }\r\n\r\n        [XmlIgnore] public double FomN { get; set; }\r\n        [XmlIgnore] public double BiomN { get; set; }\r\n        [XmlIgnore] public double HumN { get; set; }\r\n        [XmlIgnore] public double OrganicN { get; set; }\r\n        [XmlIgnore] public double NO3N { get; set; }\r\n        [XmlIgnore] public double NH4N { get; set; }\r\n        [XmlIgnore] public double UreaN { get; set; }\r\n        [XmlIgnore] public double MineralN { get; set; }\r\n        [XmlIgnore] public double DltNMinRes { get; set; }\r\n        [XmlIgnore] public double DltNMinTot { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }       \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //!!!!!! Nitrogen balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n               FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            OrganicN = FomN + HumN + BiomN;\r\n            NO3N = MathUtilities.Sum(NO3.kgha);\r\n            NH4N = MathUtilities.Sum(NH4.kgha);\r\n            UreaN = MathUtilities.Sum(Urea.kgha);\r\n            MineralN = NO3N + NH4N + UreaN; \r\n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\r\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            int layers = Soil.Thickness.Length;\r\n            if (InitialDay == true)\r\n            {\r\n                InitialSurfaceOMN = SOM.N;\r\n                InitialSoilOMN = OrganicN;\r\n                InitialMineralN = MineralN;\r\n                InitialDay = false;\r\n            }\r\n            AccumFert += Fert.NitrogenApplied;\r\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\r\n            AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails\r\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\r\n            AccumPlantN -= (double)zone.Get(\"FieldPea.Root.NUptake\");\r\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\r\n            DeltaSoilMineralN = MineralN - InitialMineralN;\r\n            SoilNitrogenContent = MineralN;\r\n            \r\n            //!!!!!! Water balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n\r\n            AccumIrrigation += Irrig.IrrigationApplied;\r\n            AccumRainfall += Met.Rain;\r\n            //AccumEP -= (double)zone.Get(\"[FieldPea].Leaf.Transpiration\");\r\n            AccumEP -= (double)zone.Get(\"FieldPea.Root.WaterUptake\");\r\n            SoilWaterDeficit =  (SWC - DUL);\r\n            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.LateralOutflow);\r\n            AccumOutflowLat -= OutFlowLat;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            \r\n            \r\n            AccumEO -= Soil.SoilWater.Eo;\r\n            AccumES -= Soil.SoilWater.Es; \r\n            AccumDrainage -= Soil.SoilWater.Drainage;\r\n            AccumRunoff -= Soil.SoilWater.Runoff;\r\n            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);\r\n            DUL = MathUtilities.Sum(Soil.DULmm);\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                  "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {      \r\n        [Link] private Clock Clock;\r\n        [Link] private Weather Met;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Plant FieldPea;\r\n        [Link] private Zone zone;\r\n        [Link(ByName = true)]\r\n        private ISolute Urea;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link(ByName = true)]\r\n        private ISolute NH4;\r\n        [Link(ByName = true)]\r\n        private SoilNitrogen SoilNitrogen;\r\n        [Link] Soils.Soil Soil;\r\n        [Link] Models.Surface.SurfaceOrganicMatter SOM;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumPlantN { get; set; }\r\n        [XmlIgnore] public double AccumMineralisation { get; set; }\r\n        [XmlIgnore] public double AccumDenit { get; set; }\r\n        [XmlIgnore] public double AccumFert { get; set; }\r\n        [XmlIgnore] public double AccumLeach { get; set; }\r\n        [XmlIgnore] public double AccumDetach { get; set; }\r\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\r\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumEO { get; set; }\r\n        [XmlIgnore] public double AccumEP { get; set; }\r\n        [XmlIgnore] public double AccumES { get; set; }\r\n        [XmlIgnore] public double AccumDrainage { get; set; }\r\n        [XmlIgnore] public double AccumRunoff { get; set; }\r\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\r\n        [XmlIgnore] public double AccumIrrigation { get; set; }\r\n        [XmlIgnore] public double AccumRainfall { get; set; }\r\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\r\n    \r\n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\r\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double  InitialMineralN { get; set; }\r\n        \r\n        [XmlIgnore] public double SWC { get; set; }\r\n        [XmlIgnore] public double DUL { get; set; }\r\n        [XmlIgnore] public double OutFlowLat { get; set; }\r\n\r\n        [XmlIgnore] public double FomN { get; set; }\r\n        [XmlIgnore] public double BiomN { get; set; }\r\n        [XmlIgnore] public double HumN { get; set; }\r\n        [XmlIgnore] public double OrganicN { get; set; }\r\n        [XmlIgnore] public double NO3N { get; set; }\r\n        [XmlIgnore] public double NH4N { get; set; }\r\n        [XmlIgnore] public double UreaN { get; set; }\r\n        [XmlIgnore] public double MineralN { get; set; }\r\n        [XmlIgnore] public double DltNMinRes { get; set; }\r\n        [XmlIgnore] public double DltNMinTot { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }       \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //!!!!!! Nitrogen balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n               FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            OrganicN = FomN + HumN + BiomN;\r\n            NO3N = MathUtilities.Sum(NO3.kgha);\r\n            NH4N = MathUtilities.Sum(NH4.kgha);\r\n            UreaN = MathUtilities.Sum(Urea.kgha);\r\n            MineralN = NO3N + NH4N + UreaN; \r\n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\r\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            int layers = Soil.Thickness.Length;\r\n            if (InitialDay == true)\r\n            {\r\n                InitialSurfaceOMN = SOM.N;\r\n                InitialSoilOMN = OrganicN;\r\n                InitialMineralN = MineralN;\r\n                InitialDay = false;\r\n            }\r\n            AccumFert += Fert.NitrogenApplied;\r\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\r\n            AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails\r\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\r\n            AccumPlantN -= (double)zone.Get(\"FieldPea.Root.NUptake\");\r\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\r\n            DeltaSoilMineralN = MineralN - InitialMineralN;\r\n            SoilNitrogenContent = MineralN;\r\n            \r\n            //!!!!!! Water balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n\r\n            AccumIrrigation += Irrig.IrrigationApplied;\r\n            AccumRainfall += Met.Rain;\r\n            //AccumEP -= (double)zone.Get(\"[FieldPea].Leaf.Transpiration\");\r\n            AccumEP -= (double)zone.Get(\"FieldPea.Root.WaterUptake\");\r\n            SoilWaterDeficit =  (SWC - DUL);\r\n            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.LateralOutflow);\r\n            AccumOutflowLat -= OutFlowLat;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            \r\n            \r\n            AccumEO -= Soil.SoilWater.Eo;\r\n            AccumES -= Soil.SoilWater.Es; \r\n            AccumDrainage -= Soil.SoilWater.Drainage;\r\n            AccumRunoff -= Soil.SoilWater.Runoff;\r\n            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);\r\n            DUL = MathUtilities.Sum(Soil.DULmm);\r\n        }\r\n    }\r\n}\r\n       \r\n",
                   "Parameters": null,
                   "Name": "DiagnosticsVariables",
                   "IncludeInDocumentation": true,
@@ -6287,6 +6331,7 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 0.0,
@@ -6302,8 +6347,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today",
                     "[DiagnosticsVariables].Script.AccumPlantN",
@@ -6453,8 +6496,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today",
                     "[FieldPea].Structure.MainStemPrimordiaNo",
@@ -6597,7 +6638,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Plant Biomass components",
               "Children": [
                 {
@@ -6993,7 +7036,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "N balance components",
               "Children": [
                 {
@@ -7269,7 +7314,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "WaterBalanceComponents",
               "Children": [
                 {
@@ -7605,7 +7652,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Plant Nitrogen components",
               "Children": [
                 {
@@ -8012,7 +8061,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Water supply and demand",
               "Children": [
                 {
@@ -8269,7 +8320,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Crop structure",
               "Children": [
                 {
@@ -8496,7 +8549,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "N supply and demand",
               "Children": [
                 {
@@ -8603,7 +8658,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Stress Factors",
               "Children": [
                 {
@@ -8710,7 +8767,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Leaf Appearance",
               "Children": [
                 {
@@ -8817,7 +8876,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LeafSize",
               "Children": [
                 {
@@ -9313,7 +9374,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "AboveGroundWt",
               "Children": [
                 {
@@ -9409,7 +9472,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Appeared leaves",
               "Children": [
                 {
@@ -9505,7 +9570,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Dead leaves",
               "Children": [
                 {
@@ -9601,7 +9668,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "GrainWt",
               "Children": [
                 {
@@ -9697,7 +9766,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LAI",
               "Children": [
                 {
@@ -9793,7 +9864,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LeafWt",
               "Children": [
                 {
@@ -9889,7 +9962,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "StemWt",
               "Children": [
                 {
@@ -9985,7 +10060,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "ShellWt",
               "Children": [
                 {
@@ -10081,7 +10158,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Cover",
               "Children": [
                 {
@@ -10177,7 +10256,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "GrainFreshWeight",
               "Children": [
                 {
@@ -10273,7 +10354,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "DryMatterContent",
               "Children": [
                 {
@@ -10369,7 +10452,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Grain Yield Comparison",
               "Children": [
                 {
@@ -10435,7 +10520,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "GrainNumber",
               "Children": [
                 {
@@ -10531,7 +10618,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NFF",
               "Children": [
                 {
@@ -10597,7 +10686,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "PodNumber",
               "Children": [
                 {
@@ -10685,232 +10776,275 @@
           "Name": "Factors",
           "Children": [
             {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specifications": [],
-              "Name": "Sowing",
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation",
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1993-10-19",
-                    "[Clock].StartDate=1993-10-19",
-                    "[Clock].EndDate=1994-04-19"
+                  "Specification": null,
+                  "Name": "Sowing",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1993-10-19",
+                        "[Clock].StartDate=1993-10-19",
+                        "[Clock].EndDate=1994-04-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "19Oct1993",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1993-11-23",
+                        "[Clock].StartDate=1993-11-23",
+                        "[Clock].EndDate=1994-04-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "23Nov1993",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1993-12-21",
+                        "[Clock].StartDate=1993-12-21",
+                        "[Clock].EndDate=1994-04-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "21Dec1993",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1994-01-19",
+                        "[Clock].StartDate=1994-01-19",
+                        "[Clock].EndDate=1994-05-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "19Jan1994",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1994-02-22",
+                        "[Clock].StartDate=1994-02-22",
+                        "[Clock].EndDate=1994-08-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "22Feb1994",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1994-03-23",
+                        "[Clock].StartDate=1994-03-23",
+                        "[Clock].EndDate=1994-09-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "23Mar1994",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1994-04-20",
+                        "[Clock].StartDate=1994-04-20",
+                        "[Clock].EndDate=1994-12-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "20Apr1994",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1994-05-24",
+                        "[Clock].StartDate=1994-05-24",
+                        "[Clock].EndDate=1994-12-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "24May1994",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1994-07-17",
+                        "[Clock].StartDate=1994-07-17",
+                        "[Clock].EndDate=1995-01-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "17Jul1994",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1994-08-15",
+                        "[Clock].StartDate=1994-08-15",
+                        "[Clock].EndDate=1995-01-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "15Aug1994",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1994-09-15",
+                        "[Clock].StartDate=1994-09-15",
+                        "[Clock].EndDate=1995-01-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "15Sep1994",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1994-10-12",
+                        "[Clock].StartDate=1994-10-12",
+                        "[Clock].EndDate=1995-01-19"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "12Oct1994",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
                   ],
-                  "Name": "19Oct1993",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1993-11-23",
-                    "[Clock].StartDate=1993-11-23",
-                    "[Clock].EndDate=1994-04-19"
+                  "Specification": null,
+                  "Name": "Cultivar",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.CultivarName=Massey",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Massey",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.CultivarName=Patea",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Patea",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.CultivarName=Trounce",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Trounce",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.CultivarName=Rovar",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Rovar",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.CultivarName=Whero",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Whero",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
                   ],
-                  "Name": "23Nov1993",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1993-12-21",
-                    "[Clock].StartDate=1993-12-21",
-                    "[Clock].EndDate=1994-04-19"
-                  ],
-                  "Name": "21Dec1993",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1994-01-19",
-                    "[Clock].StartDate=1994-01-19",
-                    "[Clock].EndDate=1994-05-19"
-                  ],
-                  "Name": "19Jan1994",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1994-02-22",
-                    "[Clock].StartDate=1994-02-22",
-                    "[Clock].EndDate=1994-08-19"
-                  ],
-                  "Name": "22Feb1994",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1994-03-23",
-                    "[Clock].StartDate=1994-03-23",
-                    "[Clock].EndDate=1994-09-19"
-                  ],
-                  "Name": "23Mar1994",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1994-04-20",
-                    "[Clock].StartDate=1994-04-20",
-                    "[Clock].EndDate=1994-12-19"
-                  ],
-                  "Name": "20Apr1994",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1994-05-24",
-                    "[Clock].StartDate=1994-05-24",
-                    "[Clock].EndDate=1994-12-19"
-                  ],
-                  "Name": "24May1994",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1994-07-17",
-                    "[Clock].StartDate=1994-07-17",
-                    "[Clock].EndDate=1995-01-19"
-                  ],
-                  "Name": "17Jul1994",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1994-08-15",
-                    "[Clock].StartDate=1994-08-15",
-                    "[Clock].EndDate=1995-01-19"
-                  ],
-                  "Name": "15Aug1994",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1994-09-15",
-                    "[Clock].StartDate=1994-09-15",
-                    "[Clock].EndDate=1995-01-19"
-                  ],
-                  "Name": "15Sep1994",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1994-10-12",
-                    "[Clock].StartDate=1994-10-12",
-                    "[Clock].EndDate=1995-01-19"
-                  ],
-                  "Name": "12Oct1994",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specifications": [],
-              "Name": "Cultivar",
-              "Children": [
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.CultivarName=Massey",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "Massey",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.CultivarName=Patea",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "Patea",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.CultivarName=Trounce",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "Trounce",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.CultivarName=Rovar",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "Rovar",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.CultivarName=Whero",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "Whero",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -10931,8 +11065,8 @@
           "Children": [
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1993-10-15T00:00:00",
-              "EndDate": "1995-01-01T00:00:00",
+              "Start": "1993-10-15T00:00:00",
+              "End": "1995-01-01T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -10972,11 +11106,12 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "paddock",
               "Children": [
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -10997,7 +11132,15 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -11006,14 +11149,22 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        180.83333333333337,
+                        12.5,
+                        1.3888888888888928,
+                        1.3888888888888928,
+                        0.0,
+                        0.0
+                      ],
+                      "NH4N": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
                       "PH": [
                         6.6,
                         6.2,
@@ -11022,36 +11173,10 @@
                         5.5,
                         5.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -11070,7 +11195,15 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -11079,6 +11212,7 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -11126,7 +11260,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -11229,6 +11363,14 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "SWCON": [
                         0.55,
                         0.55,
@@ -11238,7 +11380,7 @@
                         0.55
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -11327,19 +11469,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 30.0,
-                      "SoilCN": 11.5,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        100.0,
-                        200.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-10",
                         "10-30",
@@ -11348,7 +11478,16 @@
                         "90-120",
                         "120-150"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 30.0,
+                      "Thickness": [
+                        100.0,
+                        200.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         1.82,
                         1.47,
                         1.2,
@@ -11356,7 +11495,14 @@
                         0.47,
                         0.47
                       ],
-                      "OCMetadata": null,
+                      "SoilCNRatio": [
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5
+                      ],
                       "FBiom": [
                         0.025,
                         0.025,
@@ -11373,7 +11519,7 @@
                         0.96,
                         0.96
                       ],
-                      "RootWt": [
+                      "FOM": [
                         1243.9310541346904,
                         833.83192147272689,
                         457.61666105087295,
@@ -11381,8 +11527,7 @@
                         137.83148958311097,
                         75.643525303383925
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -11390,6 +11535,14 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -11398,30 +11551,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        217.0,
-                        30.0,
-                        5.0,
-                        5.0,
-                        0.0,
-                        0.0
-                      ],
-                      "NH4": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -11490,6 +11627,7 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 0.0,
@@ -11505,8 +11643,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today",
                     "[FieldPea].Structure.LeafTipsAppeared ",
@@ -11599,7 +11735,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Plant Biomass components",
               "Children": [
                 {
@@ -11995,7 +12133,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "N balance components",
               "Children": [
                 {
@@ -12271,7 +12411,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "WaterBalanceComponents",
               "Children": [
                 {
@@ -12607,7 +12749,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Plant Nitrogen components",
               "Children": [
                 {
@@ -13014,7 +13158,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Water supply and demand",
               "Children": [
                 {
@@ -13271,7 +13417,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Crop structure",
               "Children": [
                 {
@@ -13498,7 +13646,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "N supply and demand",
               "Children": [
                 {
@@ -13605,7 +13755,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Stress Factors",
               "Children": [
                 {
@@ -13712,7 +13864,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Leaf Appearance",
               "Children": [
                 {
@@ -13819,7 +13973,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LeafSize",
               "Children": [
                 {
@@ -14315,7 +14471,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Appeared leaves",
               "Children": [
                 {
@@ -14411,7 +14569,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "FNN",
               "Children": [
                 {
@@ -14489,7 +14649,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NFF",
               "Children": [
                 {
@@ -14567,7 +14729,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "FN",
               "Children": [
                 {
@@ -14637,100 +14801,123 @@
           "Name": "Factors",
           "Children": [
             {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specifications": [],
-              "Name": "Sowing",
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation",
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1997-12-23",
-                    "[FieldPeaSowingRule].Script.SowingDepth=20"
+                  "Specification": null,
+                  "Name": "Sowing",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1997-12-23",
+                        "[FieldPeaSowingRule].Script.SowingDepth=20"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "23Dec",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1998-02-19",
+                        "[FieldPeaSowingRule].Script.SowingDepth=20"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "19Feb",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1998-9-14",
+                        "[FieldPeaSowingRule].Script.SowingDepth=20"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "14Sep",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingDate=1998-11-18",
+                        "[FieldPeaSowingRule].Script.SowingDepth=20"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "18Nov",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
                   ],
-                  "Name": "23Dec",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1998-02-19",
-                    "[FieldPeaSowingRule].Script.SowingDepth=20"
+                  "Specification": null,
+                  "Name": "Population",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingRate=50",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "50",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingRate=100",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "100",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[FieldPeaSowingRule].Script.SowingRate=150",
+                        "[FieldPeaSowingRule].Script.RowSpacing=150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "150",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
                   ],
-                  "Name": "19Feb",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1998-9-14",
-                    "[FieldPeaSowingRule].Script.SowingDepth=20"
-                  ],
-                  "Name": "14Sep",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingDate=1998-11-18",
-                    "[FieldPeaSowingRule].Script.SowingDepth=20"
-                  ],
-                  "Name": "18Nov",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specifications": [],
-              "Name": "Population",
-              "Children": [
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingRate=50",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "50",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingRate=100",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "100",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specifications": [
-                    "[FieldPeaSowingRule].Script.SowingRate=150",
-                    "[FieldPeaSowingRule].Script.RowSpacing=150"
-                  ],
-                  "Name": "150",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -14751,8 +14938,8 @@
           "Children": [
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1997-12-01T00:00:00",
-              "EndDate": "1999-07-01T00:00:00",
+              "Start": "1997-12-01T00:00:00",
+              "End": "1999-07-01T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -14792,11 +14979,12 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "paddock",
               "Children": [
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -14817,7 +15005,15 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -14826,14 +15022,22 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        180.83333333333337,
+                        12.5,
+                        1.3888888888888928,
+                        1.3888888888888928,
+                        0.0,
+                        0.0
+                      ],
+                      "NH4N": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
                       "PH": [
                         6.6,
                         6.2,
@@ -14842,36 +15046,10 @@
                         5.5,
                         5.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -14890,7 +15068,15 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -14899,6 +15085,7 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -14946,7 +15133,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -15049,6 +15236,14 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "SWCON": [
                         0.55,
                         0.55,
@@ -15058,7 +15253,7 @@
                         0.55
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -15147,19 +15342,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 30.0,
-                      "SoilCN": 11.5,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        100.0,
-                        200.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-10",
                         "10-30",
@@ -15168,7 +15351,16 @@
                         "90-120",
                         "120-150"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 30.0,
+                      "Thickness": [
+                        100.0,
+                        200.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         1.82,
                         1.47,
                         1.2,
@@ -15176,7 +15368,14 @@
                         0.47,
                         0.47
                       ],
-                      "OCMetadata": null,
+                      "SoilCNRatio": [
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5
+                      ],
                       "FBiom": [
                         0.025,
                         0.025,
@@ -15193,7 +15392,7 @@
                         0.96,
                         0.96
                       ],
-                      "RootWt": [
+                      "FOM": [
                         1243.9310541346904,
                         833.83192147272689,
                         457.61666105087295,
@@ -15201,8 +15400,7 @@
                         137.83148958311097,
                         75.643525303383925
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -15210,6 +15408,14 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -15218,30 +15424,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        217.0,
-                        30.0,
-                        5.0,
-                        5.0,
-                        0.0,
-                        0.0
-                      ],
-                      "NH4": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -15310,7 +15500,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {      \r\n        [Link] private Clock Clock;\r\n        [Link] private Weather Met;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Plant FieldPea;\r\n        [Link] private Zone zone;\r\n        [ScopedLinkByName]\r\n        private ISolute Urea;\r\n        [ScopedLinkByName]\r\n        private ISolute NO3;\r\n        [ScopedLinkByName]\r\n        private ISolute NH4;\r\n        [ScopedLinkByName]\r\n        private SoilNitrogen SoilNitrogen;\r\n        [Link] Soils.Soil Soil;\r\n        [Link] Models.Surface.SurfaceOrganicMatter SOM;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumPlantN { get; set; }\r\n        [XmlIgnore] public double AccumMineralisation { get; set; }\r\n        [XmlIgnore] public double AccumDenit { get; set; }\r\n        [XmlIgnore] public double AccumFert { get; set; }\r\n        [XmlIgnore] public double AccumLeach { get; set; }\r\n        [XmlIgnore] public double AccumDetach { get; set; }\r\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\r\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumEO { get; set; }\r\n        [XmlIgnore] public double AccumEP { get; set; }\r\n        [XmlIgnore] public double AccumES { get; set; }\r\n        [XmlIgnore] public double AccumDrainage { get; set; }\r\n        [XmlIgnore] public double AccumRunoff { get; set; }\r\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\r\n        [XmlIgnore] public double AccumIrrigation { get; set; }\r\n        [XmlIgnore] public double AccumRainfall { get; set; }\r\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\r\n    \r\n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\r\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double  InitialMineralN { get; set; }\r\n        \r\n        [XmlIgnore] public double SWC { get; set; }\r\n        [XmlIgnore] public double DUL { get; set; }\r\n        [XmlIgnore] public double OutFlowLat { get; set; }\r\n\r\n        [XmlIgnore] public double FomN { get; set; }\r\n        [XmlIgnore] public double BiomN { get; set; }\r\n        [XmlIgnore] public double HumN { get; set; }\r\n        [XmlIgnore] public double OrganicN { get; set; }\r\n        [XmlIgnore] public double NO3N { get; set; }\r\n        [XmlIgnore] public double NH4N { get; set; }\r\n        [XmlIgnore] public double UreaN { get; set; }\r\n        [XmlIgnore] public double MineralN { get; set; }\r\n        [XmlIgnore] public double DltNMinRes { get; set; }\r\n        [XmlIgnore] public double DltNMinTot { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }       \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //!!!!!! Nitrogen balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n               FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            OrganicN = FomN + HumN + BiomN;\r\n            NO3N = MathUtilities.Sum(NO3.kgha);\r\n            NH4N = MathUtilities.Sum(NH4.kgha);\r\n            UreaN = MathUtilities.Sum(Urea.kgha);\r\n            MineralN = NO3N + NH4N + UreaN; \r\n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\r\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            int layers = Soil.Thickness.Length;\r\n            if (InitialDay == true)\r\n            {\r\n                InitialSurfaceOMN = SOM.N;\r\n                InitialSoilOMN = OrganicN;\r\n                InitialMineralN = MineralN;\r\n                InitialDay = false;\r\n            }\r\n            AccumFert += Fert.NitrogenApplied;\r\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\r\n            AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails\r\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\r\n            AccumPlantN -= (double)zone.Get(\"FieldPea.Root.NUptake\");\r\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\r\n            DeltaSoilMineralN = MineralN - InitialMineralN;\r\n            SoilNitrogenContent = MineralN;\r\n            \r\n            //!!!!!! Water balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n\r\n            AccumIrrigation += Irrig.IrrigationApplied;\r\n            AccumRainfall += Met.Rain;\r\n            //AccumEP -= (double)zone.Get(\"[FieldPea].Leaf.Transpiration\");\r\n            AccumEP -= (double)zone.Get(\"FieldPea.Root.WaterUptake\");\r\n            SoilWaterDeficit =  (SWC - DUL);\r\n            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.LateralOutflow);\r\n            AccumOutflowLat -= OutFlowLat;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            \r\n            \r\n            AccumEO -= Soil.SoilWater.Eo;\r\n            AccumES -= Soil.SoilWater.Es; \r\n            AccumDrainage -= Soil.SoilWater.Drainage;\r\n            AccumRunoff -= Soil.SoilWater.Runoff;\r\n            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);\r\n            DUL = MathUtilities.Sum(Soil.DULmm);\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                  "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {      \r\n        [Link] private Clock Clock;\r\n        [Link] private Weather Met;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Plant FieldPea;\r\n        [Link] private Zone zone;\r\n        [Link(ByName = true)]\r\n        private ISolute Urea;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link(ByName = true)]\r\n        private ISolute NH4;\r\n        [Link(ByName = true)]\r\n        private SoilNitrogen SoilNitrogen;\r\n        [Link] Soils.Soil Soil;\r\n        [Link] Models.Surface.SurfaceOrganicMatter SOM;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumPlantN { get; set; }\r\n        [XmlIgnore] public double AccumMineralisation { get; set; }\r\n        [XmlIgnore] public double AccumDenit { get; set; }\r\n        [XmlIgnore] public double AccumFert { get; set; }\r\n        [XmlIgnore] public double AccumLeach { get; set; }\r\n        [XmlIgnore] public double AccumDetach { get; set; }\r\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\r\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumEO { get; set; }\r\n        [XmlIgnore] public double AccumEP { get; set; }\r\n        [XmlIgnore] public double AccumES { get; set; }\r\n        [XmlIgnore] public double AccumDrainage { get; set; }\r\n        [XmlIgnore] public double AccumRunoff { get; set; }\r\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\r\n        [XmlIgnore] public double AccumIrrigation { get; set; }\r\n        [XmlIgnore] public double AccumRainfall { get; set; }\r\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\r\n    \r\n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\r\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double  InitialMineralN { get; set; }\r\n        \r\n        [XmlIgnore] public double SWC { get; set; }\r\n        [XmlIgnore] public double DUL { get; set; }\r\n        [XmlIgnore] public double OutFlowLat { get; set; }\r\n\r\n        [XmlIgnore] public double FomN { get; set; }\r\n        [XmlIgnore] public double BiomN { get; set; }\r\n        [XmlIgnore] public double HumN { get; set; }\r\n        [XmlIgnore] public double OrganicN { get; set; }\r\n        [XmlIgnore] public double NO3N { get; set; }\r\n        [XmlIgnore] public double NH4N { get; set; }\r\n        [XmlIgnore] public double UreaN { get; set; }\r\n        [XmlIgnore] public double MineralN { get; set; }\r\n        [XmlIgnore] public double DltNMinRes { get; set; }\r\n        [XmlIgnore] public double DltNMinTot { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }       \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //!!!!!! Nitrogen balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n               FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            OrganicN = FomN + HumN + BiomN;\r\n            NO3N = MathUtilities.Sum(NO3.kgha);\r\n            NH4N = MathUtilities.Sum(NH4.kgha);\r\n            UreaN = MathUtilities.Sum(Urea.kgha);\r\n            MineralN = NO3N + NH4N + UreaN; \r\n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\r\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            int layers = Soil.Thickness.Length;\r\n            if (InitialDay == true)\r\n            {\r\n                InitialSurfaceOMN = SOM.N;\r\n                InitialSoilOMN = OrganicN;\r\n                InitialMineralN = MineralN;\r\n                InitialDay = false;\r\n            }\r\n            AccumFert += Fert.NitrogenApplied;\r\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\r\n            AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails\r\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\r\n            AccumPlantN -= (double)zone.Get(\"FieldPea.Root.NUptake\");\r\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\r\n            DeltaSoilMineralN = MineralN - InitialMineralN;\r\n            SoilNitrogenContent = MineralN;\r\n            \r\n            //!!!!!! Water balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n\r\n            AccumIrrigation += Irrig.IrrigationApplied;\r\n            AccumRainfall += Met.Rain;\r\n            //AccumEP -= (double)zone.Get(\"[FieldPea].Leaf.Transpiration\");\r\n            AccumEP -= (double)zone.Get(\"FieldPea.Root.WaterUptake\");\r\n            SoilWaterDeficit =  (SWC - DUL);\r\n            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.LateralOutflow);\r\n            AccumOutflowLat -= OutFlowLat;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            \r\n            \r\n            AccumEO -= Soil.SoilWater.Eo;\r\n            AccumES -= Soil.SoilWater.Es; \r\n            AccumDrainage -= Soil.SoilWater.Drainage;\r\n            AccumRunoff -= Soil.SoilWater.Runoff;\r\n            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);\r\n            DUL = MathUtilities.Sum(Soil.DULmm);\r\n        }\r\n    }\r\n}\r\n       \r\n",
                   "Parameters": null,
                   "Name": "DiagnosticsVariables",
                   "IncludeInDocumentation": true,
@@ -15319,6 +15509,7 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 0.0,
@@ -15334,8 +15525,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today",
                     "[DiagnosticsVariables].Script.AccumPlantN",
@@ -15480,8 +15669,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today",
                     "[FieldPea].Structure.MainStemPrimordiaNo",
@@ -15530,7 +15717,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Plant Biomass components",
               "Children": [
                 {
@@ -15926,7 +16115,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "N balance components",
               "Children": [
                 {
@@ -16202,7 +16393,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "WaterBalanceComponents",
               "Children": [
                 {
@@ -16538,7 +16731,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Plant Nitrogen components",
               "Children": [
                 {
@@ -16945,7 +17140,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Water supply and demand",
               "Children": [
                 {
@@ -17202,7 +17399,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Crop structure",
               "Children": [
                 {
@@ -17429,7 +17628,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "N supply and demand",
               "Children": [
                 {
@@ -17536,7 +17737,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Stress Factors",
               "Children": [
                 {
@@ -17643,7 +17846,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Leaf Appearance",
               "Children": [
                 {
@@ -17750,7 +17955,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LeafSize",
               "Children": [
                 {
@@ -18246,7 +18453,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Appeared leaves",
               "Children": [
                 {
@@ -18342,7 +18551,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Dead leaves",
               "Children": [
                 {
@@ -18438,7 +18649,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "GrainWt",
               "Children": [
                 {
@@ -18534,7 +18747,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LAI",
               "Children": [
                 {
@@ -18630,7 +18845,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LeafWt",
               "Children": [
                 {
@@ -18726,7 +18943,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "StemWt",
               "Children": [
                 {
@@ -18822,7 +19041,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "AboveGroundWt",
               "Children": [
                 {
@@ -18918,7 +19139,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "ShellWt",
               "Children": [
                 {
@@ -19014,7 +19237,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Cover",
               "Children": [
                 {
@@ -19110,7 +19335,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "GrainFreshWeight",
               "Children": [
                 {
@@ -19206,7 +19433,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "DryMatterContent",
               "Children": [
                 {
@@ -19302,7 +19531,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Grain Yield Comparison",
               "Children": [
                 {
@@ -19368,7 +19599,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "GrainNumber",
               "Children": [
                 {
@@ -19464,7 +19697,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NFF",
               "Children": [
                 {
@@ -19523,15 +19758,17 @@
           "Children": [
             {
               "$type": "Models.Factorial.Factor, Models",
-              "Specifications": [],
+              "Specification": null,
               "Name": "NFert",
               "Children": [
                 {
-                  "$type": "Models.Factorial.Factor, Models",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[FieldPeaSowingRule].Script.SowingFert=0",
                     "[FieldPeaSowingRule].Script.SowingDepth=20"
                   ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "0",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -19539,11 +19776,13 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Factorial.Factor, Models",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[FieldPeaSowingRule].Script.SowingFert=100",
                     "[FieldPeaSowingRule].Script.SowingDepth=20"
                   ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "100",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -19551,11 +19790,13 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Factorial.Factor, Models",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[FieldPeaSowingRule].Script.SowingFert=300",
                     "[FieldPeaSowingRule].Script.SowingDepth=20"
                   ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "300",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -19578,8 +19819,8 @@
           "Children": [
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1997-12-01T00:00:00",
-              "EndDate": "1998-07-01T00:00:00",
+              "Start": "1997-12-01T00:00:00",
+              "End": "1998-07-01T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -19619,11 +19860,12 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "paddock",
               "Children": [
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -19644,7 +19886,15 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -19653,14 +19903,22 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        4.166666666666667,
+                        0.0,
+                        0.0,
+                        1.3888888888888886,
+                        0.0,
+                        0.0
+                      ],
+                      "NH4N": [
+                        0.1,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
                       "PH": [
                         6.6,
                         6.2,
@@ -19669,36 +19927,10 @@
                         5.5,
                         5.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -19717,7 +19949,15 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -19726,6 +19966,7 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -19773,7 +20014,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -19876,6 +20117,14 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "SWCON": [
                         0.55,
                         0.55,
@@ -19885,7 +20134,7 @@
                         0.55
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -19974,19 +20223,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 30.0,
-                      "SoilCN": 11.5,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        100.0,
-                        200.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-10",
                         "10-30",
@@ -19995,7 +20232,16 @@
                         "90-120",
                         "120-150"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 30.0,
+                      "Thickness": [
+                        100.0,
+                        200.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         0.1,
                         0.1,
                         0.1,
@@ -20003,7 +20249,14 @@
                         0.1,
                         0.1
                       ],
-                      "OCMetadata": null,
+                      "SoilCNRatio": [
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5,
+                        11.5
+                      ],
                       "FBiom": [
                         0.025,
                         0.025,
@@ -20020,7 +20273,7 @@
                         0.96,
                         0.96
                       ],
-                      "RootWt": [
+                      "FOM": [
                         1243.9310541346904,
                         833.83192147272689,
                         457.61666105087295,
@@ -20028,8 +20281,7 @@
                         137.83148958311097,
                         75.643525303383925
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -20037,6 +20289,14 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -20045,30 +20305,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        5.0,
-                        0.0,
-                        0.0,
-                        5.0,
-                        0.0,
-                        0.0
-                      ],
-                      "NH4": [
-                        0.1,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 0,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -20125,6 +20369,7 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 0.0,
@@ -20140,8 +20385,6 @@
                 },
                 {
                   "$type": "Models.Report.Report, Models",
-                  "ExperimentFactorNames": null,
-                  "ExperimentFactorValues": null,
                   "VariableNames": [
                     "[Clock].Today",
                     "[DiagnosticsVariables].Script.AccumDenit",
@@ -20387,7 +20630,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": null,
+                  "LegendOutsideGraph": false,
                   "Name": "RootN",
                   "Children": [
                     {
@@ -20630,7 +20875,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "N balance components",
                       "Children": [
                         {
@@ -20906,7 +21153,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "WaterBalanceComponents",
                       "Children": [
                         {
@@ -21242,7 +21491,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Plant Biomass components",
                       "Children": [
                         {
@@ -21728,7 +21979,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Plant Nitrogen components",
                       "Children": [
                         {
@@ -22244,7 +22497,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Stress factors",
                       "Children": [
                         {
@@ -22411,7 +22666,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Water supply and demand",
                       "Children": [
                         {
@@ -22668,7 +22925,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Canopy structure",
                       "Children": [
                         {
@@ -22854,7 +23113,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "LeafCohorts",
                       "Children": [
                         {
@@ -23141,7 +23402,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Leaf Nitrogen %",
                       "Children": [
                         {
@@ -23338,7 +23601,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Stem Nitrogen %",
                       "Children": [
                         {
@@ -23535,7 +23800,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Grain Nitrogen %",
                       "Children": [
                         {
@@ -23721,7 +23988,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Root Nitrogen %",
                       "Children": [
                         {
@@ -23877,7 +24146,9 @@
                         }
                       ],
                       "LegendPosition": 3,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "Leafappearance",
                       "Children": [
                         {
@@ -24093,7 +24364,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "DM Allocation",
                       "Children": [
                         {
@@ -24253,7 +24526,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {      \r\n        [Link] private Clock Clock;\r\n        [Link] private Weather Met;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Plant FieldPea;\r\n        [Link] private Zone zone;\r\n        [ScopedLinkByName]\r\n        private ISolute Urea;\r\n        [ScopedLinkByName]\r\n        private ISolute NO3;\r\n        [ScopedLinkByName]\r\n        private ISolute NH4;\r\n        [ScopedLinkByName]\r\n        private SoilNitrogen SoilNitrogen;\r\n        [Link] Soils.Soil Soil;\r\n        [Link] Models.Surface.SurfaceOrganicMatter SOM;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumPlantN { get; set; }\r\n        [XmlIgnore] public double AccumMineralisation { get; set; }\r\n        [XmlIgnore] public double AccumDenit { get; set; }\r\n        [XmlIgnore] public double AccumFert { get; set; }\r\n        [XmlIgnore] public double AccumLeach { get; set; }\r\n        [XmlIgnore] public double AccumDetach { get; set; }\r\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\r\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumEO { get; set; }\r\n        [XmlIgnore] public double AccumEP { get; set; }\r\n        [XmlIgnore] public double AccumES { get; set; }\r\n        [XmlIgnore] public double AccumDrainage { get; set; }\r\n        [XmlIgnore] public double AccumRunoff { get; set; }\r\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\r\n        [XmlIgnore] public double AccumIrrigation { get; set; }\r\n        [XmlIgnore] public double AccumRainfall { get; set; }\r\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\r\n        \r\n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\r\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double  InitialMineralN { get; set; }\r\n        \r\n        [XmlIgnore] public double SWC { get; set; }\r\n        [XmlIgnore] public double DUL { get; set; }\r\n        [XmlIgnore] public double OutFlowLat { get; set; }\r\n\r\n        [XmlIgnore] public double FomN { get; set; }\r\n        [XmlIgnore] public double BiomN { get; set; }\r\n        [XmlIgnore] public double HumN { get; set; }\r\n        [XmlIgnore] public double OrganicN { get; set; }\r\n        [XmlIgnore] public double NO3N { get; set; }\r\n        [XmlIgnore] public double NH4N { get; set; }\r\n        [XmlIgnore] public double UreaN { get; set; }\r\n        [XmlIgnore] public double MineralN { get; set; }\r\n        [XmlIgnore] public double DltNMinRes { get; set; }\r\n        [XmlIgnore] public double DltNMinTot { get; set; }\r\n        [XmlIgnore] public double NonStructuralDM {get; set;}\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }       \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //!!!!!! Nitrogen balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n               FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            OrganicN = FomN + HumN + BiomN;\r\n            NO3N = MathUtilities.Sum(NO3.kgha);\r\n            NH4N = MathUtilities.Sum(NH4.kgha);\r\n            UreaN = MathUtilities.Sum(Urea.kgha);\r\n            MineralN = NO3N + NH4N + UreaN; \r\n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\r\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            int layers = Soil.Thickness.Length;\r\n            if (InitialDay == true)\r\n            {\r\n                InitialSurfaceOMN = SOM.N;\r\n                InitialSoilOMN = OrganicN;\r\n                InitialMineralN = MineralN;\r\n                InitialDay = false;\r\n            }\r\n            AccumFert += Fert.NitrogenApplied;\r\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\r\n            AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails\r\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\r\n            AccumPlantN -= (double)zone.Get(\"FieldPea.Root.NUptake\");\r\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\r\n            DeltaSoilMineralN = MineralN - InitialMineralN;\r\n            SoilNitrogenContent = MineralN;\r\n            \r\n            //!!!!!! Water balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n\r\n            AccumIrrigation += Irrig.IrrigationApplied;\r\n            AccumRainfall += Met.Rain;\r\n            AccumEP -= (double)zone.Get(\"FieldPea.Leaf.Transpiration\");\r\n            SoilWaterDeficit =  (SWC - DUL);\r\n            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.LateralOutflow);\r\n            AccumOutflowLat -= OutFlowLat;\r\n\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            \r\n            \r\n            AccumEO -= Soil.SoilWater.Eo;\r\n            AccumES -= Soil.SoilWater.Es; \r\n            AccumDrainage -= Soil.SoilWater.Drainage;\r\n            AccumRunoff -= Soil.SoilWater.Runoff;\r\n            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);\r\n            DUL = MathUtilities.Sum(Soil.DULmm);\r\n            \r\n            NonStructuralDM = (double)zone.Get(\"FieldPea.Leaf.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Stem.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Root.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Nodule.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Shell.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Grain.Live.StorageWt\");\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {      \r\n        [Link] private Clock Clock;\r\n        [Link] private Weather Met;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Plant FieldPea;\r\n        [Link] private Zone zone;\r\n        [Link(ByName = true)]\r\n        private ISolute Urea;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link(ByName = true)]\r\n        private ISolute NH4;\r\n        [Link(ByName = true)]\r\n        private SoilNitrogen SoilNitrogen;\r\n        [Link] Soils.Soil Soil;\r\n        [Link] Models.Surface.SurfaceOrganicMatter SOM;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumPlantN { get; set; }\r\n        [XmlIgnore] public double AccumMineralisation { get; set; }\r\n        [XmlIgnore] public double AccumDenit { get; set; }\r\n        [XmlIgnore] public double AccumFert { get; set; }\r\n        [XmlIgnore] public double AccumLeach { get; set; }\r\n        [XmlIgnore] public double AccumDetach { get; set; }\r\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\r\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumEO { get; set; }\r\n        [XmlIgnore] public double AccumEP { get; set; }\r\n        [XmlIgnore] public double AccumES { get; set; }\r\n        [XmlIgnore] public double AccumDrainage { get; set; }\r\n        [XmlIgnore] public double AccumRunoff { get; set; }\r\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\r\n        [XmlIgnore] public double AccumIrrigation { get; set; }\r\n        [XmlIgnore] public double AccumRainfall { get; set; }\r\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\r\n        \r\n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\r\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double  InitialMineralN { get; set; }\r\n        \r\n        [XmlIgnore] public double SWC { get; set; }\r\n        [XmlIgnore] public double DUL { get; set; }\r\n        [XmlIgnore] public double OutFlowLat { get; set; }\r\n\r\n        [XmlIgnore] public double FomN { get; set; }\r\n        [XmlIgnore] public double BiomN { get; set; }\r\n        [XmlIgnore] public double HumN { get; set; }\r\n        [XmlIgnore] public double OrganicN { get; set; }\r\n        [XmlIgnore] public double NO3N { get; set; }\r\n        [XmlIgnore] public double NH4N { get; set; }\r\n        [XmlIgnore] public double UreaN { get; set; }\r\n        [XmlIgnore] public double MineralN { get; set; }\r\n        [XmlIgnore] public double DltNMinRes { get; set; }\r\n        [XmlIgnore] public double DltNMinTot { get; set; }\r\n        [XmlIgnore] public double NonStructuralDM {get; set;}\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }       \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //!!!!!! Nitrogen balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n               FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            OrganicN = FomN + HumN + BiomN;\r\n            NO3N = MathUtilities.Sum(NO3.kgha);\r\n            NH4N = MathUtilities.Sum(NH4.kgha);\r\n            UreaN = MathUtilities.Sum(Urea.kgha);\r\n            MineralN = NO3N + NH4N + UreaN; \r\n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\r\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            int layers = Soil.Thickness.Length;\r\n            if (InitialDay == true)\r\n            {\r\n                InitialSurfaceOMN = SOM.N;\r\n                InitialSoilOMN = OrganicN;\r\n                InitialMineralN = MineralN;\r\n                InitialDay = false;\r\n            }\r\n            AccumFert += Fert.NitrogenApplied;\r\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\r\n            AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails\r\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\r\n            AccumPlantN -= (double)zone.Get(\"FieldPea.Root.NUptake\");\r\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\r\n            DeltaSoilMineralN = MineralN - InitialMineralN;\r\n            SoilNitrogenContent = MineralN;\r\n            \r\n            //!!!!!! Water balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n\r\n            AccumIrrigation += Irrig.IrrigationApplied;\r\n            AccumRainfall += Met.Rain;\r\n            AccumEP -= (double)zone.Get(\"FieldPea.Leaf.Transpiration\");\r\n            SoilWaterDeficit =  (SWC - DUL);\r\n            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.LateralOutflow);\r\n            AccumOutflowLat -= OutFlowLat;\r\n\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            \r\n            \r\n            AccumEO -= Soil.SoilWater.Eo;\r\n            AccumES -= Soil.SoilWater.Es; \r\n            AccumDrainage -= Soil.SoilWater.Drainage;\r\n            AccumRunoff -= Soil.SoilWater.Runoff;\r\n            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);\r\n            DUL = MathUtilities.Sum(Soil.DULmm);\r\n            \r\n            NonStructuralDM = (double)zone.Get(\"FieldPea.Leaf.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Stem.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Root.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Nodule.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Shell.Live.StorageWt\") + (double)zone.Get(\"FieldPea.Grain.Live.StorageWt\");\r\n        }\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": null,
                       "Name": "DiagnosticsVariables",
                       "IncludeInDocumentation": true,
@@ -24320,7 +24593,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LAI",
               "Children": [
                 {
@@ -24386,7 +24661,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NFixation",
               "Children": [
                 {
@@ -24452,7 +24729,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NDemand",
               "Children": [
                 {
@@ -24578,7 +24857,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "RootWeight",
               "Children": [
                 {
@@ -24674,7 +24955,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "GrainWt",
               "Children": [
                 {
@@ -24740,7 +25023,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "RootN",
               "Children": [
                 {
@@ -24806,7 +25091,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NSummary",
               "Children": [
                 {
@@ -24932,7 +25219,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Biomass",
               "Children": [
                 {
@@ -24998,7 +25287,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NFixationCost",
               "Children": [
                 {
@@ -25094,7 +25385,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "DMDemand",
               "Children": [
                 {
@@ -25160,7 +25453,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Nodule Wt",
               "Children": [
                 {
@@ -25226,7 +25521,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Leaf Wt",
               "Children": [
                 {
@@ -25292,7 +25589,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "RootWt",
               "Children": [
                 {
@@ -25358,7 +25657,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Branch number",
               "Children": [
                 {
@@ -25424,7 +25725,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NonStructuralWt",
               "Children": [
                 {

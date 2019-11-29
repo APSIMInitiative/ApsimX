@@ -11,6 +11,7 @@
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
     using Models.Functions;
+    using Models.PMF.Interfaces;
 
     /// <summary>
     /// # [Name]
@@ -20,7 +21,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake
+    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IPlantDamage
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -101,7 +102,14 @@
         [Units("m^2/m^2")]
         public double LAI
         {
-            get { return LAIGreen; }
+            get 
+            { 
+                return LAIGreen; 
+            }
+            set
+            {
+                LAIGreen = value;
+            }
         }
 
         /// <summary>Gets the total LAI, live + dead (m^2/m^2).</summary>
@@ -145,7 +153,7 @@
         }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
-        //[Description("The depth of the canopy")]
+        //[Description("The width of the canopy")]
         [Units("mm")]
         public double Width
         {
@@ -187,18 +195,26 @@
                     InterceptedRadn += canopyLayer.amount;
 
                 // (RCichota, May-2017) Made intercepted radiation equal to solar radiation and implemented the variable 'effective cover'.
-                // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate passes the value of  total intercepted
-                //  radiation (over all canopy). We here assume that solar radiation is the best value for AgPasture (agrees with Ecomod).
-                // The 'effective cover' is computed using an 'effective light extinction coefficient' which is based on the value for intercepted
-                //  radiation supplied by MicroClimate. This is the light extinction coefficient that result in the same total intercepted radiation,
-                //  but using solar radiation on top of canopy (this value is only used in the calcualtion of photosynthesis).
-                // TODO: this approach may have to be amended when multi-layer canopies are used (the thought behind the approach here is that
-                //  things like shading (which would reduce Radn on top of canopy) are irrelevant).
+                // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate only passes the value of total
+                //  intercepted radiation (over all canopy). Here it is assumed/defined that solar radiation is indeed the best value for
+                //  AgPasture to use in its photosynthesis (agrees with the implementation in Ecomod).
+                // The 'effective cover' is computed using an 'effective light extinction coefficient', which is obtained based on the 
+                //  value for intercepted radiation supplied by MicroClimate. This is the light extinction coefficient that result in the
+                //  same total intercepted radiation, but using solar radiation on top of canopy.
+                //  (note that this value is only used in the calculation of photosynthesis).
+                // TODO: this approach may have to be amended when multi-layer canopies are used (the thought behind the approach here
+                //  is that things like shading (which would reduce Radn on top of canopy) are irrelevant).
                 RadiationTopOfCanopy = myMetData.Radn;
-                double myEffectiveLightExtinctionCoefficient = -Math.Log(1.0 - InterceptedRadn / myMetData.Radn) / greenLAI;
                 effectiveGreenCover = 0.0;
-                if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
-                    effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
+                if (RadiationTopOfCanopy > 0.0)
+                {
+                    double AuxVar = 0.0;
+                    if (InterceptedRadn < RadiationTopOfCanopy)
+                        AuxVar = Math.Log(1.0 - InterceptedRadn / RadiationTopOfCanopy);
+                    double myEffectiveLightExtinctionCoefficient = MathUtilities.Divide(-AuxVar, greenLAI, 0.0);
+                    if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
+                        effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
+                }
             }
         }
 
@@ -275,7 +291,7 @@
 
             // Incorporate all root mass to soil fresh organic matter
             foreach (PastureBelowGroundOrgan root in roots)
-                root.DoDetachBiomass(root.DMTotal, root.NTotal);
+                root.Tissue[0].DetachBiomass(root.DMTotal, root.NTotal);
 
             // zero all variables
             RefreshVariables();
@@ -2627,6 +2643,7 @@
         public double LAIGreen
         {
             get { return greenLAI; }
+            set { greenLAI = value; }
         }
 
         /// <summary>Gets the leaf area index of dead tissues (m^2/m^2).</summary>
@@ -3128,6 +3145,23 @@
         {
             get { return stolons.Tissue[2].Nconc; }
         }
+
+        /// <summary>A list of organs that can be damaged.</summary>
+        public List<IOrganDamage> Organs
+        {
+            get
+            {
+                var organsThatCanBeDamaged = new List<IOrganDamage>() { leaves, stems, stolons };
+                return organsThatCanBeDamaged;
+            }
+        }
+
+
+        /// <summary>Plant population.</summary>
+        public double Population => throw new NotImplementedException();
+
+        /// <summary>Amount of assimilate available to be damaged.</summary>
+        public double AssimilateAvailable => throw new NotImplementedException();
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -3635,7 +3669,7 @@
 
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
                     DoAddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
-                    roots[0].DoDetachBiomass(detachedRootDM, detachedRootN);
+                    roots[0].Tissue[0].DetachBiomass(detachedRootDM, detachedRootN);
                     //foreach (PastureBelowGroundOrgan root in rootZones)
                     //    root.DoDetachBiomass(root.DMDetached, root.NDetached);
                     // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -3706,12 +3740,20 @@
 
             // get the limitation factor due to soil N deficiency
             double glfNit = 1.0;
-            if (dNewGrowthN > Epsilon)
+            if (dGrowthAfterWaterLimitations > Epsilon)
             {
-                glfNSupply = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
+                if (dNewGrowthN > Epsilon)
+                {
+                    glfNSupply = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
 
-                // adjust the glfN
-                glfNit = Math.Pow(glfNSupply, NDillutionCoefficient);
+                    // adjust the glfN
+                    glfNit = Math.Pow(glfNSupply, NDillutionCoefficient);
+                }
+                else
+                {
+                    glfNSupply = 0.0;
+                    glfNit = 0.0;
+                }
             }
             else
                 glfNSupply = 1.0;
@@ -3747,7 +3789,7 @@
             double myDayLength = 3600 * myMetData.CalculateDayLength(-6);
 
             // Photosynthetically active radiation, converted from MJ/m2.day to J/m2.s
-            double interceptedPAR = FractionPAR * RadiationTopOfCanopy * 1000000.0 / myDayLength;
+            double interceptedPAR = MathUtilities.Divide(FractionPAR * RadiationTopOfCanopy * 1000000.0, myDayLength, 0.0);
 
             // Photosynthetically active radiation, for the middle of the day (J/m2 leaf/s)
             interceptedPAR *= LightExtinctionCoefficient * (4.0 / 3.0);
@@ -4496,7 +4538,7 @@
                 double glfFactor = 1.0 - ShootRootGlfFactor * (1.0 - Math.Pow(glfMin, 1.0 / ShootRootGlfFactor));
 
                 // get the current shoot/root ratio (partition will try to make this value closer to targetSR)
-                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, BelowGroundLiveWt, 1000000.0);
+                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, BelowGroundLiveWt, double.MaxValue);
 
                 // get the factor for the reproductive season of perennials (increases shoot allocation during spring)
                 double reproFac = 1.0;
@@ -4507,7 +4549,7 @@
                 double targetSR = TargetShootRootRatio * reproFac;
 
                 // update today's shoot:root partition
-                double growthSR = targetSR * glfFactor * targetSR / currentSR;
+                double growthSR = MathUtilities.Divide(targetSR * glfFactor * targetSR, currentSR, double.MaxValue - 1.5);
 
                 // compute fraction to shoot
                 fractionToShoot = growthSR / (1.0 + growthSR);
@@ -4541,16 +4583,21 @@
                 targetFLeaf = FractionLeafMinimum + (FractionLeafMaximum - FractionLeafMinimum) / (1.0 + fLeafAux);
             }
 
-            // get current leaf:stem ratio
-            double currentLS = leaves.DMLive / (stems.DMLive + stolons.DMLive);
+            if (leaves.DMLive > 0.0)
+            {
+                // get current leaf:stem ratio
+                double currentLS = MathUtilities.Divide(leaves.DMLive, stems.DMLive + stolons.DMLive, double.MaxValue);
 
-            // get today's target leaf:stem ratio
-            double targetLS = targetFLeaf / (1 - targetFLeaf);
+                // get today's target leaf:stem ratio
+                double targetLS = targetFLeaf / (1.0 - targetFLeaf);
 
-            // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
-            double newLS = targetLS * targetLS / currentLS;
+                // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
+                double newLS = MathUtilities.Divide(targetLS * targetLS, currentLS, double.MaxValue - 1.5);
 
-            fractionToLeaf = newLS / (1 + newLS);
+                fractionToLeaf = newLS / (1.0 + newLS);
+            }
+            else
+                fractionToLeaf = FractionLeafMaximum;
         }
 
         /// <summary>Computes the variations in root depth.</summary>
@@ -5503,6 +5550,63 @@
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Remove biomass from an organ.
+        /// </summary>
+        /// <param name="organName">Name of organ.</param>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove.</param>
+        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            var organ = Organs.Find(o => o.Name == organName);
+            if (organ == null)
+                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
+            if (organ is PastureAboveGroundOrgan)
+                (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassToRemove);
+            else if (organ is PastureBelowGroundOrgan)
+                (organ as PastureBelowGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
+        }
+
+        /// <summary>
+        /// Set the plant leaf area index.
+        /// </summary>
+        /// <param name="deltaLAI">Delta LAI.</param>
+        public void ReduceCanopy(double deltaLAI)
+        {
+            if (LAI > 0)
+            {
+                var prop = deltaLAI / LAI;
+                leaves.RemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToRemove = prop * leaves.DMLive });
+            }
+        }
+
+        /// <summary>
+        /// Set the plant root length density.
+        /// </summary>
+        /// <param name="deltaRLD">New root length density.</param>
+        public void ReduceRootLengthDensity(double deltaRLD)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Remove an amount of assimilate from the plant.
+        /// </summary>
+        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
+        public void RemoveAssimilate(double deltaAssimilate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Reduce the plant population.
+        /// </summary>
+        /// <param name="newPlantPopulation">The new plant population.</param>
+        public void ReducePopulation(double newPlantPopulation)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
