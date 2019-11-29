@@ -215,7 +215,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The argument values</param>
         private void OnNeedVariableNames(object sender, NeedContextItemsArgs e)
         {
-            GetCompletionOptions(sender, e, true, false, true);
+            GetCompletionOptions(sender, e, true);
         }
 
         /// <summary>The view is asking for event names.</summary>
@@ -223,7 +223,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The argument values</param>
         private void OnNeedEventNames(object sender, NeedContextItemsArgs e)
         {
-            GetCompletionOptions(sender, e, false, true, false);
+            GetCompletionOptions(sender, e, false);
         }
 
         /// <summary>
@@ -234,13 +234,16 @@ namespace UserInterface.Presenters
         /// <param name="properties">Whether or not property suggestions should be generated.</param>
         /// <param name="methods">Whether or not method suggestions should be generated.</param>
         /// <param name="events">Whether or not event suggestions should be generated.</param>
-        private void GetCompletionOptions(object sender, NeedContextItemsArgs e, bool properties, bool methods, bool events)
+        private void GetCompletionOptions(object sender, NeedContextItemsArgs e, bool rules)
         {
             try
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
                 currentEditor = sender as IEditorView;
-                if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, model , properties, methods, events, e.ControlSpace))
+                if (!e.ControlShiftSpace && 
+                     (rules ? 
+                        intellisense.GenerateGridCompletions(currentLine, e.ColNo, model , true, false, false, false, e.ControlSpace) :
+                        intellisense.GenerateGridCompletions(currentLine, e.ColNo, model, false, true, false, true, e.ControlSpace)))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)

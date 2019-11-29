@@ -30,7 +30,7 @@
             allModels.Add(relativeTo);
             allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
 
-            var publishers = Publisher.FindAll(allModels);
+            var publishers = Publisher.FindAllPublishers(allModels);
             var subscribers = Subscriber.GetAll(allModels);
 
             foreach (Publisher publisher in publishers)
@@ -46,7 +46,7 @@
             List<IModel> allModels = new List<IModel>();
             allModels.Add(relativeTo);
             allModels.AddRange(Apsim.ChildrenRecursively(relativeTo));
-            List<Events.Publisher> publishers = Events.Publisher.FindAll(allModels);
+            List<Events.Publisher> publishers = Events.Publisher.FindAllPublishers(allModels);
             foreach (Events.Publisher publisher in publishers)
                 publisher.DisconnectAll();
         }
@@ -307,7 +307,7 @@
             /// <summary>Find all event publishers in the specified models.</summary>
             /// <param name="models">The models to scan for event publishers</param>
             /// <returns>The list of event publishers</returns>
-            public static List<Publisher> FindAll(List<IModel> models)
+            public static List<Publisher> FindAllPublishers(List<IModel> models)
             {
                 List<Publisher> publishers = new List<Publisher>();
                 foreach (IModel modelNode in models)

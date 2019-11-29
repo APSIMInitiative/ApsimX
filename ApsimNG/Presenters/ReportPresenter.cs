@@ -156,7 +156,7 @@ namespace UserInterface.Presenters
             {
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
                 currentEditor = sender as IEditorView;
-                if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, e.ControlSpace))
+                if (!e.ControlShiftSpace && intellisense.GenerateGridCompletions(currentLine, e.ColNo, report, properties, methods, events, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
