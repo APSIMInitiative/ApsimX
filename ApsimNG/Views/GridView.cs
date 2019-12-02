@@ -1238,6 +1238,12 @@
                     if (DeleteCells == null)
                         throw new Exception("Unable to perform the delete operation - this grid is not owned by a grid presenter! 😠");
                 }
+                else if (IsUserEditingCell && (keyName == "Return" || keyName == "Tab"))
+                {
+                    args.RetVal = true;
+                    EndEdit();
+                    HandleNavigation(args.Event);
+                }
             }
             catch (Exception err)
             {
