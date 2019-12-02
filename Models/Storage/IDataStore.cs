@@ -20,5 +20,12 @@
 
         /// <summary>Closes the database connection.</summary>
         void Close();
+
+        /// <summary>
+        /// Add a view to the datastore where available (SQLite)
+        /// </summary>
+        /// <param name="name">Name of the view to create</param>
+        /// <param name="selectSQL">Select sql statement for the view</param>
+        void AddView(string name, string selectSQL);
     }
 }

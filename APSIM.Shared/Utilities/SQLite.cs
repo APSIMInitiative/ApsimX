@@ -801,12 +801,42 @@ namespace APSIM.Shared.Utilities
             return tableNames;
         }
 
+        /// <summary>Return a list of table names</summary>
+        public List<string> GetViewNames()
+        {
+            List<string> tableNames = new List<string>();
+            DataTable tableData = ExecuteQuery("SELECT * FROM sqlite_master");
+            var names = DataTableUtilities.GetColumnAsStrings(tableData, "Name");
+            var types = DataTableUtilities.GetColumnAsStrings(tableData, "Type");
+            for (int i = 0; i < names.Length; i++)
+            {
+                if (types[i] == "view")
+                    tableNames.Add(names[i]);
+            }
+            return tableNames;
+        }
+
+        /// <summary>Return a list of table and view names</summary>
+        /// <returns>A list of table and view names in sorted order (upper case)</returns>
+        public List<string> GetTableAndViewNames()
+        {
+            return GetTableNames().Union(GetViewNames()).ToList();
+        }
+
         /// <summary>Does the specified table exist?</summary>
         /// <param name="tableName">The table name to look for</param>
         public bool TableExists(string tableName)
         {
             List<string> tableNames = GetTableNames();
             return tableNames.Contains(tableName);
+        }
+
+        /// <summary>Does the specified table exist?</summary>
+        /// <param name="viewName">The view name to look for</param>
+        public bool ViewExists(string viewName)
+        {
+            List<string> viewNames = GetViewNames();
+            return viewNames.Contains(viewName);
         }
 
         /// <summary>

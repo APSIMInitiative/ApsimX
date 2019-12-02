@@ -543,7 +543,7 @@ namespace UserInterface.Presenters
             this.seriesView.YCumulative.IsChecked = series.Cumulative;
 
             // Populate data source drop down.
-            List<string> dataSources = storage.Reader.TableNames.ToList();
+            List<string> dataSources = storage.Reader.TableAndViewNames.ToList();
             if (!dataSources.Contains(series.TableName) && !string.IsNullOrEmpty(series.TableName))
             {
                 dataSources.Add(series.TableName);
