@@ -74,7 +74,11 @@
         /// <summary>A link to a irrigation data.</summary>
         [Link]
         private IIrrigation irrigation = null;
-        
+
+        /// <summary>A link to a summary data.</summary>
+        [Link]
+        private ISummary summary = null;
+
         [Link]
         SoilNitrogen soilNitrogen = null;
 
@@ -337,7 +341,7 @@
                double max_sw = 1.0 - MathUtilities.Divide(properties.Water.BD[i], specific_bd, 0.0);  // ie. Total Porosity
                 
                 if (MathUtilities.IsLessThan(properties.Water.AirDry[i], min_sw))
-                    throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
+                    summary.WriteWarning(this, String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G})",
                                                " Air dry lower limit of ",
                                                properties.Water.AirDry[i],
                                                " in layer ",
@@ -347,7 +351,7 @@
                                                min_sw));
 
                 if (MathUtilities.IsLessThan(properties.Water.LL15[i], properties.Water.AirDry[i]))
-                    throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
+                    summary.WriteWarning(this, String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G})",
                                                " 15 bar lower limit of ",
                                                properties.Water.LL15[i],
                                                " in layer ",
@@ -357,7 +361,7 @@
                                                properties.Water.AirDry[i]));
 
                 if (MathUtilities.IsLessThanOrEqual(properties.Water.DUL[i], properties.Water.LL15[i]))
-                    throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
+                    summary.WriteWarning(this, String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G})",
                                                " drained upper limit of ",
                                                properties.Water.DUL[i],
                                                " in layer ",
@@ -367,7 +371,7 @@
                                                properties.Water.LL15[i]));
 
                 if (MathUtilities.IsLessThanOrEqual(properties.Water.SAT[i], properties.Water.DUL[i]))
-                    throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
+                    summary.WriteWarning(this, String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G})",
                                                " saturation of ",
                                                properties.Water.SAT[i],
                                                " in layer ",
@@ -377,7 +381,7 @@
                                                properties.Water.DUL[i]));
 
                 if (MathUtilities.IsGreaterThan(properties.Water.SAT[i], max_sw))
-                    throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4} {7} {8} {9:G4} {10} {11} {12:G4})",
+                    summary.WriteWarning(this, String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G} {7} {8} {9:G} {10} {11} {12:G})",
                                                " saturation of ",
                                                properties.Water.SAT[i],
                                                " in layer ",
@@ -393,7 +397,7 @@
                                                max_sw));
 
                 if (MathUtilities.IsGreaterThan(Water[i], properties.Water.SAT[i]))
-                    throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4}",
+                    summary.WriteWarning(this, String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G}",
                                                " soil water of ",
                                                Water[i],
                                                " in layer ",
@@ -403,7 +407,7 @@
                                                properties.Water.SAT[i]));
 
                 if (MathUtilities.IsLessThan(Water[i], properties.Water.AirDry[i]))
-                    throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4}",
+                    summary.WriteWarning(this, String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G}",
                                                " soil water of ",
                                                Water[i],
                                                " in layer ",
