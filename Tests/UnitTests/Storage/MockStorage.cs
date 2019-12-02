@@ -50,6 +50,10 @@ namespace UnitTests.Storage
 
         List<string> IStorageReader.TableNames => throw new NotImplementedException();
 
+        public List<string> ViewNames => throw new NotImplementedException();
+
+        public List<string> TableAndViewNames => throw new NotImplementedException();
+
         [Serializable]
         internal class Row
         {
@@ -250,6 +254,11 @@ namespace UnitTests.Storage
 
         public void Refresh()
         {
+        }
+
+        public void AddView(string name, string selectSQL)
+        {
+            throw new NotImplementedException();
         }
     }
 }

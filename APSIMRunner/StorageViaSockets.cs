@@ -108,5 +108,10 @@
         {
             throw new NotImplementedException();
         }
+
+        public void AddView(string name, string selectSQL)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
