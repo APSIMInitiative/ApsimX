@@ -64,12 +64,24 @@
                                             "sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test",
                                             "[Clock].Today.Year as Year",
                                             "sum of [Clock].Today.DayOfYear from 1-Jan to 31-Dec as SigmaDay",
-                                            "sum of [Clock].Today.DayOfYear from 1-Jan to 9-Jan as HardCoded"
+                                            "sum of [Clock].Today.DayOfYear from 1-Jan to 9-Jan as HardCoded",
+                                            "[Manager1].A as M1A",
+                                            "[Manager2].A as M2A"
                                         },
                                         EventNames = new string[]
                                         {
                                             "[Clock].DoReport"
                                         }
+                                    },
+                                    new Manager()
+                                    {
+                                        Name = "Manager1",
+                                        Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n    public class Script : Model\r\n {\r\n public double A { get { return (1); } set { } }\r\n public double B { get { return (2); } set { } }\r\n }\r\n}\r\n"
+                                    },
+                                    new Manager()
+                                    {
+                                        Name = "Manager2",
+                                        Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n    public class Script : Model\r\n {\r\n public double A { get { return (3); } set { } }\r\n public double B { get { return (4); } set { } }\r\n }\r\n}\r\n"
                                     }
                                 }
                             }
@@ -78,6 +90,26 @@
                 }
             };
         }
+        /// <summary>
+        /// Ensures that multiple components that expose the same variables are reported correctly
+        /// 
+        /// </summary>
+        [Test]
+        public void TestMultipleChildren()
+        {
+            var runner = new Runner(sims);
+            List<Exception> errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            var storage = sims.Children[0] as IDataStore;
+            DataTable data = storage.Reader.GetData("Report", fieldNames: new List<string>() { "n", "M1A", "M2A" });
+
+            double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "M1A");
+            double[] expected = DataTableUtilities.GetColumnAsDoubles(data, "M2A");
+            Assert.AreEqual(expected, actual);
+        }
+
 
         /// <summary>
         /// This test ensures that aggregation to and from variable dates (ie [Clock].Today) works.
@@ -312,6 +344,7 @@
             double[] expected = new double[] { 1, 8, 15, 22, 29, 36, 43, 50, 57 };
             Assert.AreEqual(expected, actual);
         }
+
 
         /// <summary>
         /// Reads an .apsimx file from an embedded resource, runs it,

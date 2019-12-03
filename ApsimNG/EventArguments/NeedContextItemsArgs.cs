@@ -326,7 +326,7 @@ namespace UserInterface.EventArguments
                 string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
 
                 // Find a parents sibling with a matching name
-                node = Apsim.FindAll(relativeTo.Parent).FirstOrDefault(child => child.Name == modelName);
+                node = Apsim.FindAll(relativeTo).FirstOrDefault(child => child.Name == modelName);
             }
 
             // If the object name string does not contain any children/properties 
