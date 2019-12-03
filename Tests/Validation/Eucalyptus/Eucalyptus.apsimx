@@ -288,6 +288,48 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": "SimulationName",
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 1,
+                  "Line": 4,
+                  "LineThickness": 1,
+                  "Checkpoint": "Released",
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Predicted.Eucalyptus.Wood.Wt",
+                  "YFieldName": "Observed.Eucalyptus.Wood.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series1",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -14880,7 +14922,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Site",
                           "Children": [
                             {
@@ -15788,7 +15830,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -15804,9 +15846,9 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
+                      "FactorToVaryColours": "Site",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "CultC3334",
+                      "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -15834,8 +15876,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
-                      "FactorToVaryMarkers": "CultC3334",
+                      "FactorToVaryColours": "Site",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -15886,7 +15928,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -15902,9 +15944,9 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
+                      "FactorToVaryColours": "Site",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "CultC3334",
+                      "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -15932,8 +15974,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
-                      "FactorToVaryMarkers": "CultC3334",
+                      "FactorToVaryColours": "Site",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -15984,7 +16026,7 @@
                       "Minimum": 0.0,
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -16000,13 +16042,13 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
+                      "FactorToVaryColours": "Site",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "CultC3334",
+                      "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 1,
                       "Line": 0,
-                      "LineThickness": 1,
+                      "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
@@ -16030,8 +16072,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -1663232,
-                      "FactorToVaryColours": "CultC3336",
-                      "FactorToVaryMarkers": "CultC3334",
+                      "FactorToVaryColours": "Site",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -16082,7 +16124,7 @@
                       "Minimum": 0.0,
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -16098,9 +16140,9 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
+                      "FactorToVaryColours": "Site",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "CultC3334",
+                      "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 1,
                       "Line": 0,
@@ -16128,8 +16170,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -1663232,
-                      "FactorToVaryColours": "CultC3336",
-                      "FactorToVaryMarkers": "CultC3334",
+                      "FactorToVaryColours": "Site",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -22868,7 +22910,7 @@
                                 },
                                 {
                                   "Key": "SowingDate",
-                                  "Value": "2009-11-01"
+                                  "Value": "11/01/2009 00:00:00"
                                 }
                               ],
                               "Name": "TreeTransplantRule",
@@ -22910,15 +22952,6 @@
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileName": null,
-                          "Name": "Input",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -22951,7 +22984,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -23049,7 +23082,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -24218,7 +24251,7 @@
                                 },
                                 {
                                   "Key": "SowingDate",
-                                  "Value": "2009-11-15"
+                                  "Value": "11/15/2009 00:00:00"
                                 }
                               ],
                               "Name": "TreeTransplantRule",
@@ -24310,7 +24343,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -24408,7 +24441,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
