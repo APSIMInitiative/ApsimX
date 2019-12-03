@@ -797,7 +797,9 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Create documentation", FollowsSeparator = true)]
+        [ContextMenu(MenuName = "Create simulation documentation",
+                     FollowsSeparator = true,
+                     AppliesTo = new[] { typeof(Simulations) })]
         public void CreateDocumentation(object sender, EventArgs e)
         {
             try
