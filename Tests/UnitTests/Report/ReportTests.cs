@@ -107,7 +107,7 @@
 
             double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "M1A");
             double[] expected = DataTableUtilities.GetColumnAsDoubles(data, "M2A");
-            Assert.AreEqual(expected, actual);
+            Assert.AreNotEqual(expected, actual);
         }
 
 
