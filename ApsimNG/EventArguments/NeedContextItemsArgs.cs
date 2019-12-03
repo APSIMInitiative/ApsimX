@@ -325,9 +325,8 @@ namespace UserInterface.EventArguments
                 // Get the raw model name without square brackets.
                 string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
 
-                // Get the node in the simulations tree corresponding to the model name which was surrounded by square brackets.
-                node = Apsim.ChildrenRecursively(Apsim.Parent(relativeTo, typeof(Simulations))).FirstOrDefault(child => child.Name == modelName);
-
+                // Find a parents sibling with a matching name
+                node = Apsim.FindAll(relativeTo.Parent).FirstOrDefault(child => child.Name == modelName);
             }
 
             // If the object name string does not contain any children/properties 
