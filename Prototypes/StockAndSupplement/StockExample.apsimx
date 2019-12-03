@@ -1248,7 +1248,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "(next script add more complexity to animal trading)\r\n\r\n",
+          "Text": "(next script add more complexity to animal trading) - this would be a good thing to do!\r\n\r\n",
           "Name": "Memo",
           "Children": [],
           "IncludeInDocumentation": true,
