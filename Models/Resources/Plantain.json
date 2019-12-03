@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 69,
+  "Version": 70,
   "Name": "Simulations",
   "Children": [
     {
@@ -3252,6 +3252,7 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "IsAboveGround": false,
           "Name": "Taproot",
           "Children": [
             {

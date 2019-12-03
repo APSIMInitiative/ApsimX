@@ -430,6 +430,10 @@ namespace Models.CLEM
 
             // sorting not needed as now done at array creation
             int index = Array.BinarySearch(distinctStkRates, stockingRate); 
+            if(index < 0)
+            {
+                throw new ApsimXException(this, $"Unable to locate a suitable dataset for stocking rate [{stockingRate}] in [x={this.FileName}] using the [x={this.Name}] datareader");
+            }
             double category = (index < 0) ? distinctStkRates[~index] : distinctStkRates[index];
             return category;
         }

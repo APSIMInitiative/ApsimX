@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 69,
+  "Version": 70,
   "Name": "Simulations",
   "Children": [
     {
@@ -4018,6 +4018,7 @@
               "FixedValue": 0.0,
               "Units": "g/m^2",
               "Name": "InitialWtFunction",
+              "IsAboveGround": false,
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

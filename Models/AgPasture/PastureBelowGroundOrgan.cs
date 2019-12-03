@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
+    using Models.PMF;
     using Models.Soils;
     using Models.Soils.Arbitrator;
     using System;
@@ -67,11 +68,16 @@
                                        double referenceRLD, double exponentSoilMoisture,
                                        Soil theSoil)
         {
+            mySoil = theSoil;
+            SoilNitrogen = Apsim.Find(mySoil, typeof(INutrient)) as INutrient;
+            if (SoilNitrogen == null)
+                throw new Exception("Cannot find SoilNitrogen in zone");
+
             // Typically two tissues below ground, one live and one dead
             Tissue = new RootTissue[numTissues];
             nLayers = theSoil.Thickness.Length;
             for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t] = new RootTissue(nLayers);
+                Tissue[t] = new RootTissue(nameOfSpecies, SoilNitrogen, nLayers);
 
             // save the parameters for this organ
             mySpeciesName = nameOfSpecies;            
@@ -97,16 +103,11 @@
             myExponentSoilMoisture = exponentSoilMoisture;
 
             // Link to soil and initialise variables
-            mySoil = theSoil;
             myZoneName = mySoil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
             NO3 = Apsim.Find(mySoil, "NO3") as ISolute;
             NH4 = Apsim.Find(mySoil, "NH4") as ISolute;
-
-            SoilNitrogen = Apsim.Find(mySoil, typeof(INutrient)) as INutrient;
-            if (SoilNitrogen == null)
-                throw new Exception("Cannot find SoilNitrogen in zone");
 
             // Initialise root DM, N, depth, and distribution
             Depth = initialDepth;
@@ -386,7 +387,7 @@
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
                 result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * mySoil.Thickness[layer]));
-                result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer];
+                result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer);
             }
 
             return result;
@@ -423,7 +424,9 @@
                 result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * mySoil.Thickness[layer]));
 
                 // Actual plant available water
-                result[layer] *= FractionLayerWithRoots(layer) * Math.Min(1.0, soilCropData.KL[layer] * swFac * rldFac);
+                result[layer] *= FractionLayerWithRoots(layer) * Math.Min(1.0, soilCropData.KL[layer] 
+                                                                               * KLModiferDueToDamage(layer) 
+                                                                               * swFac * rldFac);
             }
 
             return result;
@@ -493,6 +496,22 @@
         /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
         internal double[] mySoilNO3Available { get; private set; }
 
+        /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
+        private bool IsKLModiferDueToDamageActive { get; set; } = false;
+
+        /// <summary>Gets the KL modifier due to root damage (0-1).</summary>
+        private double KLModiferDueToDamage(int layerIndex)
+        {
+            var threshold = 0.01;
+            if (!IsKLModiferDueToDamageActive)
+                return 1;
+            else if (RootLengthDensity[layerIndex] < 0)
+                return 0;
+            else if (RootLengthDensity[layerIndex] >= threshold)
+                return 1;
+            else
+                return (1 / threshold) * RootLengthDensity[layerIndex];
+        }
         #endregion ---------------------------------------------------------------------------------------------------------
 
         #region Organ methods  ---------------------------------------------------------------------------------------------
@@ -558,36 +577,20 @@
             }
         }
 
-        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
-        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
-        /// <param name="amountN">The N amount to send (kg/ha)</param>
-        public void DoDetachBiomass(double amountDM, double amountN)
+        /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">The fractions of biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
         {
-            if (amountDM + amountN > 0.0)
-            {
-                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
-                for (int layer = 0; layer < nLayers; layer++)
-                {
-                    FOMType fomData = new FOMType();
-                    fomData.amount = amountDM * Tissue[0].FractionWt[layer];
-                    fomData.N = amountN * Tissue[0].FractionWt[layer];
-                    fomData.C = amountDM * CarbonFractionInDM * Tissue[0].FractionWt[layer];
-                    fomData.P = 0.0; // P not considered here
-                    fomData.AshAlk = 0.0; // Ash not considered here
+            // Live removal
+            for (int t = 0; t < Tissue.Length - 1; t++)
+                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
 
-                    FOMLayerLayerType layerData = new FOMLayerLayerType();
-                    layerData.FOM = fomData;
-                    layerData.CNR = 0.0; // not used here
-                    layerData.LabileP = 0.0; // not used here
+            // Dead removal
+            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
 
-                    FOMdataLayer[layer] = layerData;
-                }
-
-                FOMLayerType FOMData = new FOMLayerType();
-                FOMData.Type = mySpeciesName;
-                FOMData.Layer = FOMdataLayer;
-                SoilNitrogen.DoIncorpFOM(FOMData);
-            }
+            if (biomassRemoveType != "Harvest")
+                IsKLModiferDueToDamageActive = true;
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
@@ -958,8 +961,6 @@
 
         #endregion ---------------------------------------------------------------------------------------------------------
 
-        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
-        const double CarbonFractionInDM = 0.4;
 
         /// <summary>Minimum significant difference between two values.</summary>
         const double Epsilon = 0.000000001;

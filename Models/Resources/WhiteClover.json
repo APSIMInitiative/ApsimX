@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 69,
+  "Version": 70,
   "Name": "Simulations",
   "Children": [
     {
@@ -3956,6 +3956,16 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": "",
+              "Name": "TargetAboveGroundFractionBrokenLink",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.4,
               "Units": "gC/gDM",
               "Name": "CarbonConcentration",
@@ -4267,7 +4277,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Inflorescence].TargetAboveGroundFraction",
+                                      "VariableName": "[Inflorescence].TargetAboveGroundFractionBrokenLink",
                                       "Name": "TargetAboveGroundProp",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -5850,6 +5860,7 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "IsAboveGround": false,
           "Name": "Taproot",
           "Children": [
             {

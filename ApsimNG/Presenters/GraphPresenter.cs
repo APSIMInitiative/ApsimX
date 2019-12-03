@@ -374,7 +374,9 @@ namespace UserInterface.Presenters
                                         lineAnnotation.y2,
                                         lineAnnotation.type, 
                                         lineAnnotation.thickness,
-                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour);
+                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour,
+                                        lineAnnotation.InFrontOfSeries,
+                                        lineAnnotation.ToolTip);
                 }
             }
         }

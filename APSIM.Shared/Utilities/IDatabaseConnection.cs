@@ -29,9 +29,21 @@ namespace APSIM.Shared.Utilities
         /// <returns>A list of table names in sorted order (upper case)</returns>
         List<string> GetTableNames();
 
+        /// <summary>Return a list of view names</summary>
+        /// <returns>A list of view names in sorted order (upper case)</returns>
+        List<string> GetViewNames();
+
+        /// <summary>Return a list of view names</summary>
+        /// <returns>A list of view names in sorted order (upper case)</returns>
+        List<string> GetTableAndViewNames();
+
         /// <summary>Does the specified table exist?</summary>
         /// <param name="tableName">The table name to look for</param>
         bool TableExists(string tableName);
+
+        /// <summary>Does the specified view exist?</summary>
+        /// <param name="viewName">The table name to look for</param>
+        bool ViewExists(string viewName);
 
         /// <summary>
         /// Run a query and return a data table of results

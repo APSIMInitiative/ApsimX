@@ -97,10 +97,7 @@
             this.wait = wait;
             this.numberOfProcessors = numberOfProcessors;
 
-            List<string> files = new List<string>();
-            DirectoryUtilities.FindFiles(Path.GetDirectoryName(pathAndFileSpec), 
-                                         Path.GetFileName(pathAndFileSpec),
-                                         ref files, recurse);
+            string[] files = DirectoryUtilities.FindFiles(pathAndFileSpec, recurse);
             foreach (string fileName in files)
             {
                 if (!DoIgnoreFile(fileName, ignorePaths))
