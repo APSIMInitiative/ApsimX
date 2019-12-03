@@ -15056,7 +15056,8 @@
                                     "60-80",
                                     "80-100",
                                     "100-150",
-                                    "150-200"
+                                    "150-200",
+                                    "200-300"
                                   ],
                                   "Thickness": [
                                     200.0,
@@ -15065,11 +15066,13 @@
                                     200.0,
                                     200.0,
                                     500.0,
-                                    500.0
+                                    500.0,
+                                    1000.0
                                   ],
                                   "ParticleSizeClay": [
                                     78.82,
                                     79.780000000000015,
+                                    80.71,
                                     80.71,
                                     80.71,
                                     80.71,
@@ -15083,6 +15086,7 @@
                                     1.5,
                                     1.5,
                                     1.5,
+                                    1.5,
                                     1.5
                                   ],
                                   "AirDry": [
@@ -15090,6 +15094,7 @@
                                     0.01,
                                     0.01,
                                     0.02,
+                                    0.05,
                                     0.05,
                                     0.05,
                                     0.05
@@ -15101,6 +15106,7 @@
                                     0.25,
                                     0.25,
                                     0.25,
+                                    0.2,
                                     0.2
                                   ],
                                   "DUL": [
@@ -15110,12 +15116,14 @@
                                     0.37,
                                     0.37,
                                     0.37,
+                                    0.37,
                                     0.37
                                   ],
                                   "SAT": [
                                     0.4,
                                     0.4,
                                     0.4,
+                                    0.39,
                                     0.39,
                                     0.39,
                                     0.39,
@@ -15139,6 +15147,7 @@
                                         0.25,
                                         0.25,
                                         0.25,
+                                        0.2,
                                         0.2
                                       ],
                                       "KL": [
@@ -15148,9 +15157,11 @@
                                         0.07,
                                         0.07,
                                         0.07,
+                                        0.07,
                                         0.07
                                       ],
                                       "XF": [
+                                        1.0,
                                         1.0,
                                         1.0,
                                         1.0,
@@ -16238,7 +16249,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Site",
                           "Children": [
                             {
@@ -16473,7 +16484,7 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        0.0
+                                        1.0
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
@@ -17100,15 +17111,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileName": null,
-                          "Name": "Input",
-                          "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
