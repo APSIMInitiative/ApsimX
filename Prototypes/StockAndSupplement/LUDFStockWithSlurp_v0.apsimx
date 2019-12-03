@@ -2894,7 +2894,7 @@
             "[Stock].SuppIntakeAll.Weight as CowSilageIntake // kg DM /head /day",
             "([Stock].MilkWtAll * 0.04 * 0.80 + [Stock].MilkWtAll * 0.04) as MilkSolids // kg MS /head /day - 0.80 is the average Protein:Fat ratio from LUDF data, the NZ national average is 0.77 https://www.dairynz.co.nz/media/816845/WEB_Protein-to-fat-ratio.pdf",
             "[Paddock].Area as GrazedArea",
-            "[Stock].CondScoreAll as ConditionScore1to5",
+            "[Stock].CondScoreAll as ConditionScore1to5 // spurious",
             "[SlurpPreGrazingSet].Script.SupplementOffered",
             "//[SlurpPreGrazingSet].Script.SupplementOffered - [Stock].SuppIntakeAll.Weight * [Stock].NumberAll as SilageUneaten"
           ],

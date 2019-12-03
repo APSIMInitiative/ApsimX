@@ -1390,7 +1390,7 @@
             },
             {
               "Key": "StockingRate",
-              "Value": "10"
+              "Value": "5"
             },
             {
               "Key": "CurrentLocationName",
@@ -2147,6 +2147,74 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Series1",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Graph.Axis, Models",
+                  "Type": 0,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "BiomassPlot1",
+              "Children": [
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": "Zone",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "Checkpoint": "Current",
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "PaddockBiomass",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "[Zone] LIKE 'Paddock02'",
+                  "Name": "Pasture",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
