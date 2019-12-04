@@ -59,14 +59,14 @@
                                         Name = "Report",
                                         VariableNames = new string[]
                                         {
-                                            "[Clock].Today.DayOfYear as n",
-                                            "sum of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as TriangularNumbers",
-                                            "sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test",
-                                            "[Clock].Today.Year as Year",
-                                            "sum of [Clock].Today.DayOfYear from 1-Jan to 31-Dec as SigmaDay",
-                                            "sum of [Clock].Today.DayOfYear from 1-Jan to 9-Jan as HardCoded",
-                                            "[Manager1].A as M1A",
-                                            "[Manager2].A as M2A"
+                                            "//[Clock].Today.DayOfYear as n",
+                                            "//sum of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as TriangularNumbers",
+                                            "//sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test",
+                                            "//[Clock].Today.Year as Year",
+                                            "//sum of [Clock].Today.DayOfYear from 1-Jan to 31-Dec as SigmaDay",
+                                            "//sum of [Clock].Today.DayOfYear from 1-Jan to 9-Jan as HardCoded",
+                                            "[Manager1].Script.A as M1A",
+                                            "[Manager2].Script.A as M2A"
                                         },
                                         EventNames = new string[]
                                         {
@@ -76,12 +76,18 @@
                                     new Manager()
                                     {
                                         Name = "Manager1",
-                                        Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n    public class Script : Model\r\n {\r\n public double A { get { return (1); } set { } }\r\n public double B { get { return (2); } set { } }\r\n }\r\n}\r\n"
+                                        Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n"+
+                                               "public class Script : Model\r\n {\r\n " +
+                                               "public double A { get { return (1); } set { } }\r\n" + 
+                                               "public double B { get { return (2); } set { } }\r\n }\r\n}\r\n"
                                     },
                                     new Manager()
                                     {
                                         Name = "Manager2",
-                                        Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n    public class Script : Model\r\n {\r\n public double A { get { return (3); } set { } }\r\n public double B { get { return (4); } set { } }\r\n }\r\n}\r\n"
+                                        Code = "using System;\r\nusing Models.Core;\r\nnamespace Models\r\n{\r\n[Serializable]\r\n" +"" +
+                                               "    public class Script : Model\r\n {\r\n" + 
+                                               " public double A { get { return (3); } set { } }\r\n" + 
+                                               " public double B { get { return (4); } set { } }\r\n }\r\n}\r\n"
                                     }
                                 }
                             }
@@ -107,6 +113,7 @@
 
             double[] actual = DataTableUtilities.GetColumnAsDoubles(data, "M1A");
             double[] expected = DataTableUtilities.GetColumnAsDoubles(data, "M2A");
+            Console.WriteLine("A=" + actual);
             Assert.AreNotEqual(expected, actual);
         }
 
