@@ -39,6 +39,10 @@ namespace UnitTests
 
         public List<string> TableNames { get { return new List<string>() { "Report" }; } }
 
+        public List<string> ViewNames => throw new System.NotImplementedException();
+
+        public List<string> TableAndViewNames => throw new System.NotImplementedException();
+
         public List<string> ColumnNames(string tableName) { return DataTableUtilities.GetColumnNames(data).ToList(); }
 
         public int GetCheckpointID(string checkpointName) { return 1; }

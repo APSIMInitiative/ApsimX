@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 69,
+  "Version": 70,
   "Name": "Simulations",
   "Children": [
     {
@@ -1325,7 +1325,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Nit",
                           "Children": [
                             {
@@ -1395,7 +1395,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Irr",
                           "Children": [
                             {
@@ -24240,12 +24240,12 @@
                                   "AirDry": [
                                     0.05,
                                     0.05,
-                                    0.16,
-                                    0.17,
-                                    0.17,
-                                    0.17,
-                                    0.17,
-                                    0.12
+                                    0.1,
+                                    0.1,
+                                    0.1,
+                                    0.1,
+                                    0.05,
+                                    0.05
                                   ],
                                   "LL15": [
                                     0.14,
@@ -39503,7 +39503,7 @@
                     },
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": null,
+                      "Specification": "",
                       "Name": "Nitrogen",
                       "Children": [
                         {

@@ -52,6 +52,7 @@ namespace Models.CLEM.Reporting
                     break;
                 case ConceptionStatus.Unsuccessful:
                 case ConceptionStatus.NotMated:
+                case ConceptionStatus.NotReady:
                     ConceptionDate = dateTime;
                     break;
                 default:

@@ -21,13 +21,19 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs human feeding based upon the current labour filtering and a feeding style.")]
+    [Description("This activity performs human feeding based on nutritional quality and desired daily targets. It also includes sales of excess food.")]
+    [Version(1, 0, 2, "This version implements the latest approach as outlines in the help system. Suitable for Ethiopian food security project")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Labour/LabourActivitiyFeedToTargets.htm")]
+    [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedToTargets.htm")]
     public class LabourActivityFeedToTargets: CLEMActivityBase, IValidatableObject
     {
         private Labour people = null;
         private HumanFoodStore food = null;
+        private FinanceType bankAccount;
+        private ResourcePricing price;
+
+        [Link]
+        Clock Clock = null;
 
         /// <summary>
         /// Feed hired labour as well as household
@@ -51,6 +57,27 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Intake from sources not modelled required"), GreaterThanEqualValue(0)]
         public double DailyIntakeOtherSources { get; set; }
 
+        /// <summary>
+        /// Undertake managed sales t0 reserve level
+        /// </summary>
+        [Description("Sell excess")]
+        public bool SellExcess { get; set; }
+
+        /// <summary>
+        /// Bank account to use
+        /// </summary>
+        [Description("Bank account to use")]
+        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) }, CLEMExtraEntries = new string[] { "Not provided" })]
+        public string AccountName { get; set; }
+
+        /// <summary>
+        /// Storage reserves to maintain before sales
+        /// </summary>
+        [Description("Months storage for reserves")]
+        [Units("months")]
+        [GreaterThanEqualValue(0)]
+        public int MonthsStorage { get; set; }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -59,6 +86,7 @@ namespace Models.CLEM.Activities
         {
             people = Resources.GetResourceGroupByType(typeof(Labour)) as Labour;
             food = Resources.GetResourceGroupByType(typeof(HumanFoodStore)) as HumanFoodStore;
+            bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
         }
 
         /// <summary>
@@ -70,8 +98,18 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
 
+            // if finances and not account provided throw error
+            if(SellExcess && Resources.GetResourceGroupByType(typeof(Finance)) != null)
+            {
+                if(bankAccount is null)
+                {
+                    string[] memberNames = new string[] { "AccountName" };
+                    results.Add(new ValidationResult($"A valid bank account must be supplied as sales of excess food is enabled and [r=Finance] resources are available.", memberNames));
+                }
+            }
+
             // check that at least one target has been provided. 
-            if(Apsim.Children(this, typeof(LabourActivityFeedTarget)).Count() == 0)
+            if (Apsim.Children(this, typeof(LabourActivityFeedTarget)).Count() == 0)
             {
                 string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
                 results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
@@ -90,154 +128,140 @@ namespace Models.CLEM.Activities
                 return null;
             }
 
-            List<LabourType> peopleList = people.Items.Where(a => IncludeHiredLabour || a.Hired == true).ToList();
+            List<LabourType> peopleList = people.Items.Where(a => IncludeHiredLabour || a.Hired == false).ToList();
             peopleList.Select(a => a.FeedToTargetIntake == 0);
-
-            List<ResourceRequest> requests = new List<ResourceRequest>();
 
             // determine AEs to be fed
             double aE = peopleList.Sum(a => a.AdultEquivalent);
 
+            if(aE <= 0)
+            {
+                return null;
+            }
+
+            int daysInMonth = DateTime.DaysInMonth(Clock.Today.Year, Clock.Today.Month);
+
             // determine feed limits (max kg per AE per day * AEs * days)
-            double intakeLimit = DailyIntakeLimit * aE * 30.4;
+            double intakeLimit = DailyIntakeLimit * aE * daysInMonth;
 
             // remove previous consumption
-            intakeLimit -= this.DailyIntakeOtherSources * aE * 30.4;
-            intakeLimit -= peopleList.Sum(a => a.GetAmountConsumed());
+            double otherIntake = this.DailyIntakeOtherSources * aE * daysInMonth;
+            otherIntake += peopleList.Sum(a => a.GetAmountConsumed());
 
             List<LabourActivityFeedTarget> labourActivityFeedTargets = Apsim.Children(this, typeof(LabourActivityFeedTarget)).Cast<LabourActivityFeedTarget>().ToList();
-            int feedTargetIndex = 0;
 
             // determine targets
             foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
             {
                 // calculate target
-                target.Target = target.TargetValue * aE * 30.4;
+                target.Target = target.TargetValue * aE * daysInMonth;
 
                 // set initial level based on off store inputs
-                target.CurrentAchieved = target.OtherSourcesValue * aE * 30.4;
+                target.CurrentAchieved = target.OtherSourcesValue * aE * daysInMonth;
 
                 // calculate current level from previous intake this month (LabourActivityFeed)
-                target.CurrentAchieved += people.GetDietaryValue(target.Metric, IncludeHiredLabour) * aE * 30.4;
+                target.CurrentAchieved += people.GetDietaryValue(target.Metric, IncludeHiredLabour) * aE * daysInMonth;
             }
 
-            // order food to achieve best returns for first criteria conversion factor decreasing
-            List<HumanFoodStoreType> foodStoreTypes = Apsim.Children(food, typeof(HumanFoodStoreType)).Cast<HumanFoodStoreType>().OrderBy(a => a.ConversionFactor(labourActivityFeedTargets[feedTargetIndex].Metric)).ToList();
+            // get max months before spoiling of all food stored (will be zero for non perishable food)
+            int maxFoodAge = Apsim.Children(food, typeof(HumanFoodStoreType)).Cast<HumanFoodStoreType>().Max(a => a.Pools.Select(b => a.UseByAge - b.Age).DefaultIfEmpty(0).Max());
 
-            // check availability to take food based on order in simulation tree
-            while(foodStoreTypes.Count() > 0 & intakeLimit > 0)
+            // create list of all food parcels
+            List<HumanFoodParcel> foodParcels = new List<HumanFoodParcel>();
+
+            foreach (HumanFoodStoreType foodStore in Apsim.Children(food, typeof(HumanFoodStoreType)).Cast<HumanFoodStoreType>().ToList())
             {
-                // get next food store type
-                HumanFoodStoreType foodtype = foodStoreTypes[0];
-
-                // get amount people can still eat based on limits and previous consumption
-                double amountNeededRaw = 0;
-                foreach (LabourType labourType in peopleList)
+                foreach (HumanFoodStorePool pool in foodStore.Pools)
                 {
-                    double indLimit = (labourType.AdultEquivalent * DailyIntakeLimit * 30.4);
-                    double alreadyEatenThis = labourType.GetAmountConsumed(foodtype.Name);
-                    double alreadyEaten = labourType.GetAmountConsumed() + labourType.FeedToTargetIntake;
-                    double canStillEat = Math.Max(0,indLimit - alreadyEaten);
-
-                    double amountOfThisFood = canStillEat;
-                    amountNeededRaw += amountOfThisFood / foodtype.EdibleProportion;
-                }
-                
-                // update targets based on amount available (will update excess if transmutated later)
-                double amountNeededEdible = Math.Min(amountNeededRaw, foodtype.Amount) * foodtype.EdibleProportion;
-                foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
-                {
-                    target.CurrentAchieved += amountNeededEdible * foodtype.ConversionFactor(target.Metric);
-                }
-
-                if (amountNeededRaw > 0)
-                {
-                    // create request
-                    requests.Add(new ResourceRequest()
+                    foodParcels.Add(new HumanFoodParcel()
                     {
-                        AllowTransmutation = false,
-                        Required = amountNeededRaw,
-                        Available = foodtype.Amount,
-                        ResourceType = typeof(HumanFoodStore),
-                        ResourceTypeName = foodtype.Name,
-                        ActivityModel = this,
-                        Reason = "Consumption"
-                    }
-                    );
-                }
-
-                foodStoreTypes.RemoveAt(0);
-
-                // check if target has been met (allows slight overrun)
-                if(labourActivityFeedTargets[feedTargetIndex].CurrentAchieved >= labourActivityFeedTargets[feedTargetIndex].Target)
-                {
-                    feedTargetIndex++;
-                    if(feedTargetIndex > labourActivityFeedTargets.Count())
-                    {
-                        // all feed targets have been met. Preserve remaining food for next time.
-                        //TODO: eat food that will go off if not eaten and still below limits.
-                        break;
-                    }
-                    // reorder remaining food types to next feed target if available
-                    foodStoreTypes = foodStoreTypes.OrderBy(a => a.ConversionFactor(labourActivityFeedTargets[feedTargetIndex].Metric)).ToList();
+                        FoodStore = foodStore,
+                        Pool = pool,
+                        Expires = ((foodStore.UseByAge == 0) ? maxFoodAge+1: foodStore.UseByAge - pool.Age)
+                    });
                 }
             }
 
-            // We have now been through all food types or all targets have been achieved.
-            // Any unused food will not be consumed even if it is about to spoil.
-            // The food requests ready to send contain excesses that may need to be purchased but haven't been accounted for towards targets yet
-
-            // Next we go through and check all requests that exceed available to see if we can and there is need to buy resources.
-            foreach (ResourceRequest request in ResourceRequestList.Where(a => a.Required > a.Available))
+            //foodParcels = foodParcels.OrderBy(a => a.Expires).ThenByDescending(a => a.FoodStore.ConversionFactor(labourActivityFeedTargets.FirstOrDefault().Metric)).ThenBy(a => a.FoodStore.ConversionFactor("$")).ToList();
+            foodParcels = foodParcels.OrderBy(a => a.Expires).ToList();
+            int parcelIndex = 0;
+            double intake = otherIntake;
+            // start eating food from list from that about to expire first
+            while(parcelIndex < foodParcels.Count)
             {
-                // all targets have not been met
-                if (feedTargetIndex <= labourActivityFeedTargets.Count())
+                foodParcels[parcelIndex].Proportion = 0;
+                if (intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0 | foodParcels[parcelIndex].Expires == 0))
                 {
-                    // allow if transmutation possible
-                    if((request.Resource as HumanFoodStoreType).TransmutationDefined)
+                    // still able to eat and target not met or food about to expire this timestep
+                    //reduce by amout theat can be eaten
+                    double reduceAmount = Math.Min(1, (intakeLimit - intake) / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
+                    // reduce to target limits
+                    double reduceTarget = 1;
+                    if (foodParcels[parcelIndex].Expires != 0)
                     {
-                        // allow if still below threshold
-                        if (labourActivityFeedTargets[feedTargetIndex].CurrentAchieved < labourActivityFeedTargets[feedTargetIndex].Target)
+                        LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();
+                        if (targetUnfilled != null)
                         {
-                            HumanFoodStoreType foodStore = request.Resource as HumanFoodStoreType;
-
-                            // if this food type provides towards the target
-                            if (foodStore.ConversionFactor(labourActivityFeedTargets[feedTargetIndex].Metric)>0)
-                            {
-                                // work out what the extra is worth
-                                double excess = request.Required - request.Available;
-                                // get target needed
-                                double remainingToTarget = labourActivityFeedTargets[feedTargetIndex].Target - labourActivityFeedTargets[feedTargetIndex].CurrentAchieved;
-                                double excessConverted = excess * foodStore.EdibleProportion * foodStore.ConversionFactor(labourActivityFeedTargets[feedTargetIndex].Metric);
-
-                                // reduce if less than needed
-                                double prop = Math.Max(excessConverted / remainingToTarget, 1.0);
-                                double newExcess = excess * prop;
-                                request.Required = request.Available + newExcess;
-                                request.AllowTransmutation = true;
-
-                                // update targets based on new amount eaten
-                                foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
-                                {
-                                    target.CurrentAchieved += newExcess * foodStore.EdibleProportion * foodStore.ConversionFactor(target.Metric);
-                                }
-
-                                // move to next target if achieved.
-                                if (labourActivityFeedTargets[feedTargetIndex].CurrentAchieved >= labourActivityFeedTargets[feedTargetIndex].Target)
-                                {
-                                    feedTargetIndex++;
-                                }
-                            }
+                            // calculate reduction to metric target
+                            double metricneeded = Math.Max(0, targetUnfilled.Target - targetUnfilled.CurrentAchieved);
+                            double amountneeded = metricneeded / foodParcels[parcelIndex].FoodStore.ConversionFactor(targetUnfilled.Metric);
+                            double reduceAmountMetric = Math.Min(1, (amountneeded) / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
+                            reduceTarget = (reduceAmountMetric < 1) ? reduceAmountMetric : 1;
                         }
                     }
+                    foodParcels[parcelIndex].Proportion = Math.Min(reduceAmount, reduceTarget);
+                    // update intake
+                    double newIntake = (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion);
+                    intake += newIntake;
+                    // update metrics
+                    foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
+                    {
+                        target.CurrentAchieved += newIntake * foodParcels[parcelIndex].FoodStore.ConversionFactor(target.Metric);
+                    }
                 }
-                // transmutation not allowed so only get what was available.
-                if (request.AllowTransmutation == false)
+                else if (intake >= intakeLimit && labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 1)
                 {
-                    request.Required = request.Available;
+                    // full but could still reach target with some substitution
+                    // but can substitute to remove a previous target
+
+                    // does the current parcel have better target values than any previous non age 0 pool of a different food type
+
+                }
+                else
+                {
+                    break;
+                }
+                parcelIndex++;
+            }
+
+            // fill resource requests
+            List<ResourceRequest> requests = new List<ResourceRequest>();
+            foreach (var item in foodParcels.GroupBy(a => a.FoodStore))
+            {
+                if (item.Sum(a => a.Pool.Amount * a.Proportion) > 0)
+                {
+                    requests.Add(new ResourceRequest()
+                    {
+                        Resource = item.Key,
+                        ResourceType = typeof(HumanFoodStore),
+                        AllowTransmutation = false,
+                        Required = item.Sum(a => a.Pool.Amount * a.Proportion),
+                        ResourceTypeName = item.Key.Name,
+                        ActivityModel = this,
+                        Reason = "Consumption"
+                    });
                 }
             }
+
+            // now we need to add a heap of purchase requests for the shortfall in intake
+            // finances will limit the 
+            // one at a time going through the food types we will try and buy the shortfall up to intake and targets
+            // This will take money only if the food is available to buy (limited if market is present)
+            // This process will stop as soon as sufficient food has been purchased.
+            // The relavent resource request will need to be updated or a new request added
+
             return requests;
+
         }
 
         /// <summary>
@@ -303,6 +327,7 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
+
             return;
         }
 
@@ -341,6 +366,108 @@ namespace Models.CLEM.Activities
                                 });
                             }
                         }
+                    }
+                }
+            }
+            
+        }
+
+        /// <summary>An event handler to allow us to sell excess resources.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAnimalSell")]
+        private void OnCLEMAnimalSell(object sender, EventArgs e)
+        {
+            // Sell excess above store reserve level calculated from AE and daily target of first feed target
+            // Performed here so all activities have access to human food stores before being sold.
+
+            if (SellExcess && TimingOK)
+            {
+                // only uses the first target metric as measure
+                double[] stored = new double[MonthsStorage + 1];
+                double[] target = new double[MonthsStorage + 1];
+                int[] daysInMonth = new int[MonthsStorage + 1];
+
+                // determine AEs to be fed - NOTE does not account ofr aging in reserve calcualtion
+                double aE = people.Items.Where(a => IncludeHiredLabour || a.Hired == false).Sum(a => a.AdultEquivalent);
+
+                LabourActivityFeedTarget feedTarget = Apsim.Children(this, typeof(LabourActivityFeedTarget)).FirstOrDefault() as LabourActivityFeedTarget;
+
+                for (int i = 1; i <= MonthsStorage; i++)
+                {
+                    DateTime month = Clock.Today.AddMonths(i);
+                    daysInMonth[i] = DateTime.DaysInMonth(month.Year, month.Month);
+                    target[i] = daysInMonth[i] * aE * feedTarget.TargetValue;
+                }
+
+                foreach (HumanFoodStoreType foodStore in Apsim.Children(food, typeof(HumanFoodStoreType)).Cast<HumanFoodStoreType>().ToList())
+                {
+                    double amountStored = 0;
+                    double amountAvailable = foodStore.Pools.Sum(a => a.Amount);
+
+                    if (amountAvailable > 0)
+                    {
+                        foreach (HumanFoodStorePool pool in foodStore.Pools.OrderBy(a => ((foodStore.UseByAge == 0) ? MonthsStorage : a.Age)))
+                        {
+                            if (foodStore.UseByAge != 0 && pool.Age == foodStore.UseByAge)
+                            {
+                                // don't sell food expiring this month as spoiled
+                                amountStored += pool.Amount;
+                            }
+                            else
+                            {
+                                int currentMonth = ((foodStore.UseByAge == 0) ? MonthsStorage : foodStore.UseByAge - pool.Age + 1);
+                                double poolRemaining = pool.Amount;
+                                while (currentMonth > 0)
+                                {
+                                    if (stored[currentMonth] < target[currentMonth])
+                                    {
+                                        // place amount in store
+                                        double amountNeeded = target[currentMonth] - stored[currentMonth];
+                                        double towardTarget = pool.Amount * foodStore.EdibleProportion * foodStore.ConversionFactor(feedTarget.Metric);
+                                        double amountSupplied = Math.Min(towardTarget, amountNeeded);
+                                        double proportionProvided = amountSupplied / towardTarget;
+
+                                        amountStored += pool.Amount * proportionProvided;
+                                        poolRemaining -= pool.Amount * proportionProvided;
+                                        stored[currentMonth] += amountSupplied;
+
+                                        if (poolRemaining <= 0)
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    currentMonth--;
+                                }
+                            }
+                        }
+
+                        double amountSold = amountAvailable - amountStored;
+                        if (amountSold > 0)
+                        {
+                            price = foodStore.Price;
+                            double units = amountSold / price.PacketSize;
+                            if (price.UseWholePackets)
+                            {
+                                units = Math.Truncate(units);
+                            }
+
+                            // remove resource
+                            ResourceRequest purchaseRequest = new ResourceRequest
+                            {
+                                ActivityModel = this,
+                                Required = units * price.PacketSize,
+                                AllowTransmutation = false,
+                                Reason = "Sell excess"
+                            };
+                            foodStore.Remove(purchaseRequest);
+
+                            // transfer money earned
+                            if (bankAccount != null)
+                            {
+                                bankAccount.Add(units * price.PricePerPacket, this, $"Sales {foodStore.Name}");
+                            }
+                        } 
                     }
                 }
             }

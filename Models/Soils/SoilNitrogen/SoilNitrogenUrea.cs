@@ -34,7 +34,7 @@
         /// <param name="value">New values.</param>
         public void SetKgHa(SoluteSetterType callingModelType, double[] value)
         {
-            parent.Seturea(callingModelType, value);
+            parent.SetUrea(callingModelType, value);
         }
 
         /// <summary>Setter for kgha delta.</summary>
@@ -42,7 +42,7 @@
         /// <param name="delta">New delta values</param>
         public void AddKgHaDelta(SoluteSetterType callingModelType, double[] delta)
         {
-            parent.SetureaDelta(callingModelType, delta);
+            parent.SetUreaDelta(callingModelType, delta);
         }
     }
 }

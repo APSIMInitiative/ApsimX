@@ -87,7 +87,7 @@ namespace Models.CLEM.Resources
                 if(adultEquivalent == null)
                 {
                     CLEMModel parent = (Parent as CLEMModel);
-                    string warning = "No Adult equivalent relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.";
+                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.";
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
@@ -132,8 +132,15 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <returns></returns>
         public double GetAmountConsumed()
-        { 
-             return DietaryComponentList.Sum(a => a.AmountConsumed);
+        {
+            if (DietaryComponentList is null)
+            {
+                return 0;
+            }
+            else
+            {
+                return DietaryComponentList.Sum(a => a.AmountConsumed);
+            }
         }
 
         /// <summary>
@@ -142,7 +149,14 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double GetAmountConsumed(string foodTypeName)
         {
-            return DietaryComponentList.Where(a => a.FoodStore.Name == foodTypeName).Sum(a => a.AmountConsumed);
+            if (DietaryComponentList is null)
+            {
+                return 0;
+            }
+            else
+            {
+                return DietaryComponentList.Where(a => a.FoodStore.Name == foodTypeName).Sum(a => a.AmountConsumed);
+            }
         }
 
         /// <summary>
