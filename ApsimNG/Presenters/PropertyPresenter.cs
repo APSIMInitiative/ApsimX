@@ -47,6 +47,8 @@ namespace UserInterface.Presenters
         [Link]
         private IDataStore storage = null;
 
+        private ExplorerPresenter explorerPresenter;
+
         /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
@@ -89,6 +91,7 @@ namespace UserInterface.Presenters
             grid.ContextItemsNeeded += GetContextItems;
             grid.CanGrow = false;
             this.model = model as Model;
+            this.explorerPresenter = explorerPresenter;
             intellisense = new IntellisensePresenter(grid as ViewBase);
 
             // The grid does not have control-space intellisense (for now).
@@ -601,6 +604,7 @@ namespace UserInterface.Presenters
                     }
                     else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
                     {
+                        explorerPresenter.ApsimXFile.Links.Resolve(model, allLinks: true, throwOnFail: false);
                         MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values);
                         string[] values = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
                         cell.EditorType = EditorTypeEnum.DropDown;
