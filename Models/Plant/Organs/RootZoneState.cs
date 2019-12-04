@@ -165,13 +165,11 @@ namespace Models.PMF.Organs
                 LayerLive[layer].StructuralWt = toMass[layer] * population;
                 LayerLive[layer].StructuralN = LayerLive[layer].StructuralWt * maxNConc;
             }
-            double mtomm = 1000.0;
             if(plant.SowingData != null)
             {
-                LeftDist = plant.SowingData.RowSpacing * mtomm * (plant.SowingData.SkipRow - 0.5);
-                RightDist = plant.SowingData.RowSpacing * mtomm * 0.5;
+                LeftDist = plant.SowingData.RowSpacing * (plant.SowingData.SkipRow - 0.5);
+                RightDist = plant.SowingData.RowSpacing * 0.5;
             }
-
         }
 
 
