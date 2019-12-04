@@ -4018,6 +4018,7 @@
               "FixedValue": 0.0,
               "Units": "g/m^2",
               "Name": "InitialWtFunction",
+              "IsAboveGround": false,
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

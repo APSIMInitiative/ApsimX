@@ -35,7 +35,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the sex of the animals. Feasible values are as for sheep:sex or cattle:sex, as appropriate.
         /// </summary>
-        public string Sex { get; set; }
+        public ReproductiveType Sex { get; set; }
 
         /// <summary>
         /// Gets or sets the day of year (1-365) on which all animals are assumed to have been born.
@@ -171,7 +171,7 @@ namespace Models.GrazPlan
         /// Gets or sets the sex of the animals. 
         /// Feasible values are as for sheep:sex or cattle:sex, as appropriate,
         /// </summary>
-        public string Sex { get; set; }
+        public ReproductiveType Sex { get; set; }
 
         /// <summary>
         /// Gets or sets the average age of the animals.

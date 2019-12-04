@@ -1337,7 +1337,7 @@ namespace Models.PMF.Organs
         /// <param name="amountToRemove">The frations of biomass to remove</param>
         public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
-            bool writeToSummary = true;
+            bool writeToSummary = false;
             foreach (LeafCohort leaf in Leaves)
             {
                 if (leaf.IsInitialised)
@@ -1350,6 +1350,18 @@ namespace Models.PMF.Organs
                 }
 
                 needToRecalculateLiveDead = true;
+            }
+
+            if (amountToRemove != null)
+            {
+                var toResidue = Detached.Wt / Total.Wt * 100;
+                var removedOff = Removed.Wt / Total.Wt * 100;
+                double totalFractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue +
+                                               amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue;
+                Summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
+                             + "% of " + Name.ToLower() + " biomass from " + parentPlant.Name
+                             + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
+                             + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
             }
         }
 

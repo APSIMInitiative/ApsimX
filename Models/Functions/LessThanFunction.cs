@@ -17,8 +17,7 @@ namespace Models.Functions
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+            ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
             double TestVariable = 0.0;
             double LessThanCriteria = 0.0;

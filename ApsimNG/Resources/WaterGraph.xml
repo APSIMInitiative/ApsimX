@@ -43,7 +43,7 @@
           <Name>LL15</Name>
           <Type>Scatter</Type>
           <Title>LL15</Title>
-          <ShowInLegend>true</ShowInLegend>
+          <ShowInLegend>false</ShowInLegend>
           <XAxis>Top</XAxis>
           <YAxis>Left</YAxis>
           <ColourArgb>-16711681</ColourArgb>
