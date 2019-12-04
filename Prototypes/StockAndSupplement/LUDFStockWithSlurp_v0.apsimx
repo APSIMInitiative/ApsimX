@@ -2289,7 +2289,7 @@
               "Parameters": [
                 {
                   "Key": "SSheetFileName",
-                  "Value": "C:\\aaUnderVC\\apsimNextGen\\Prototypes\\StockAndSupplement\\LUDF_InputPasture.xlsx"
+                  "Value": "LUDF_InputPasture.xlsx"
                 },
                 {
                   "Key": "SSheetWorksheetName",
