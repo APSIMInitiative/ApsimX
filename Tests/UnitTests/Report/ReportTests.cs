@@ -59,12 +59,12 @@
                                         Name = "Report",
                                         VariableNames = new string[]
                                         {
-                                            "//[Clock].Today.DayOfYear as n",
-                                            "//sum of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as TriangularNumbers",
-                                            "//sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test",
-                                            "//[Clock].Today.Year as Year",
-                                            "//sum of [Clock].Today.DayOfYear from 1-Jan to 31-Dec as SigmaDay",
-                                            "//sum of [Clock].Today.DayOfYear from 1-Jan to 9-Jan as HardCoded",
+                                            "[Clock].Today.DayOfYear as n",
+                                            "sum of [Clock].Today.DayOfYear from [Clock].StartDate to [Clock].Today as TriangularNumbers",
+                                            "sum of [Clock].Today.DayOfYear from [Clock].StartOfWeek to [Clock].EndOfWeek as test",
+                                            "[Clock].Today.Year as Year",
+                                            "sum of [Clock].Today.DayOfYear from 1-Jan to 31-Dec as SigmaDay",
+                                            "sum of [Clock].Today.DayOfYear from 1-Jan to 9-Jan as HardCoded",
                                             "[Manager1].Script.A as M1A",
                                             "[Manager2].Script.A as M2A"
                                         },
