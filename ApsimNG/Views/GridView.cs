@@ -1238,6 +1238,12 @@
                     if (DeleteCells == null)
                         throw new Exception("Unable to perform the delete operation - this grid is not owned by a grid presenter! 😠");
                 }
+                else if (IsUserEditingCell && (keyName == "Return" || keyName == "Tab"))
+                {
+                    args.RetVal = true;
+                    EndEdit();
+                    HandleNavigation(args.Event);
+                }
             }
             catch (Exception err)
             {
@@ -2422,6 +2428,14 @@
                                 // Shift + left click
                                 selectionColMax = Array.IndexOf(view.Columns, column);
                                 selectionRowMax = path.Indices[0];
+
+                                // If we've clicked on the bottom row of populated data, all cells 
+                                // below the current cell will also be selected. To overcome this,
+                                // we add a new row to the datasource. Not a great solution, but 
+                                // it works.
+                                if (selectionRowMax >= DataSource.Rows.Count - 1)
+                                    DataSource.Rows.Add(DataSource.NewRow());
+
                                 e.RetVal = true;
                                 Refresh();
                             }
