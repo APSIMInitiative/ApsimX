@@ -141,6 +141,9 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Scoped, ByName = true)]
         private IFunction LeafNumSeed = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction SDRatio = null;
+
         #region Canopy interface
 
         /// <summary>
@@ -872,7 +875,7 @@ namespace Models.PMF.Organs
             //avSD.push_back(plant->water->getSdRatio());
 
             double dltSlaiWater = 0.0;
-            if (avSDRatio < senThreshold.Value())
+            if (SDRatio.Value() < senThreshold.Value())
                 dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst.Value(), 0.0));
             dltSlaiWater = Math.Min(LAI, dltSlaiWater);
             return dltSlaiWater;
