@@ -134,41 +134,48 @@
                         string startName = string.Empty;
                         for (int i = 0; i < names.Length; i++)
                         {
-                            if (names[i] != "?" && !string.IsNullOrEmpty(names[i]))
+                            if (startIndex == -1)
                             {
-                                if (startIndex == -1)
-                                {
-                                    startIndex = i;
-                                    startName = names[i];
-                                }
-                                else if (names[i] != startName)
+                                startIndex = i;
+                                startName = names[i];
+                            }
+                            else if (names[i] != startName)
+                            {
+                                if (!string.IsNullOrEmpty(startName))
                                 {
                                     // Add a line annotation.
-                                    var bar = new LineAnnotation();
-                                    if (colourMap.ContainsKey(startName))
-                                        bar.colour = colourMap[startName];
-                                    else
-                                    {
-                                        bar.colour = ColourUtilities.ChangeColorBrightness(baseColour, colourMap.Count * 0.2);
-                                        colourMap.Add(startName, bar.colour);
-                                    }
-                                    bar.type = LineType.Dot;
-                                    bar.x1 = x[startIndex];
-                                    bar.y1 = double.MinValue;
-                                    bar.x2 = x[i-1];
-                                    bar.y2 = double.MaxValue;
-                                    bar.InFrontOfSeries = false;
-                                    bar.ToolTip = startName;
-                                    annotations.Add(bar);
-
-                                    startName = names[i];
-                                    startIndex = i;
+                                    AddAnnotation(annotations, x, baseColour, colourMap, startIndex, startName, i);
                                 }
+                                startName = names[i];
+                                startIndex = i;
                             }
+
                         }
+                        if (startIndex != -1)
+                            AddAnnotation(annotations, x, baseColour, colourMap, startIndex, startName, names.Length);
                     }
                 }
             }
+        }
+
+        private static void AddAnnotation(List<Annotation> annotations, List<object> x, Color baseColour, Dictionary<string, Color> colourMap, int startIndex, string startName, int i)
+        {
+            var bar = new LineAnnotation();
+            if (colourMap.ContainsKey(startName))
+                bar.colour = colourMap[startName];
+            else
+            {
+                bar.colour = ColourUtilities.ChangeColorBrightness(baseColour, colourMap.Count * 0.2);
+                colourMap.Add(startName, bar.colour);
+            }
+            bar.type = LineType.Dot;
+            bar.x1 = x[startIndex];
+            bar.y1 = double.MinValue;
+            bar.x2 = x[i - 1];
+            bar.y2 = double.MaxValue;
+            bar.InFrontOfSeries = false;
+            bar.ToolTip = startName;
+            annotations.Add(bar);
         }
 
         /// <summary>Find and return the phenology stage column name.</summary>
