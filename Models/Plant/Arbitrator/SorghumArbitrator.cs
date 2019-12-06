@@ -153,14 +153,6 @@ namespace Models.PMF
         private void OnStartOfDay(object sender, EventArgs e)
         {
             doIncrement = true;
-            if (DMPlantMax > 9990)
-            {
-                double ttNow = phenology.AccumulatedTT;
-                double ttToFlowering = (double)Apsim.Get(this, "[Phenology].TTToFlowering.Value()");
-                double dmPlantMaxTT = (double)Apsim.Get(this, "[Grain].PgrT1.Value()");
-                if (ttNow > dmPlantMaxTT + ttToFlowering)
-                    DMPlantMax = (double)Apsim.Get(this, "[Stem].Live.Wt");
-            }
         }
 
         [EventSubscribe("DoPhenology")]
@@ -179,6 +171,20 @@ namespace Models.PMF
         private void PostPhenology(object sender, EventArgs e)
         {
             IncrementDaysTotal(false);
+
+            if ((Apsim.Find(this, typeof(Clock)) as Clock).Today.DayOfYear == 60)
+            {
+
+            }
+
+            if (DMPlantMax > 9990)
+            {
+                double ttNow = phenology.AccumulatedTT;
+                double ttToFlowering = (double)Apsim.Get(this, "[Phenology].TTToFlowering.Value()");
+                double dmPlantMaxTT = (double)Apsim.Get(this, "[Grain].PgrT1.Value()");
+                if (ttNow > dmPlantMaxTT + ttToFlowering)
+                    DMPlantMax = (double)Apsim.Get(this, "[Stem].Live.Wt");
+            }
         }
 
         [EventSubscribe("DoPotentialPlantGrowth")]
