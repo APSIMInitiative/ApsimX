@@ -905,7 +905,7 @@ namespace Models.GrazPlan
                 double totalRemoved = 0.0;
                 for (int i = 0; i < removed.Herbage.Length; i++)
                     totalRemoved += removed.Herbage[i];
-                double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead));
+                double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead + GrazType.Ungrazeable * 10.0)); //  calculations in kg /ha, needs more checking, would be good to use a variable for the unit conversion on ungrazeable
 
                 // calculations of proportions each organ of the total plant removed (in the native units)
                 double totalDM = 0;
