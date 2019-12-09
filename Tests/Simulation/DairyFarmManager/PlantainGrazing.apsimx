@@ -206,7 +206,7 @@
             },
             {
               "Key": "SupplementFirst",
-              "Value": "True"
+              "Value": "False"
             },
             {
               "Key": "SupplementEveryDay",
