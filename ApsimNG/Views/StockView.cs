@@ -1021,7 +1021,6 @@ namespace UserInterface.Views
             int iGenotype;
             AnimalInits animalGroup;
             GrazType.AnimalType animalType;
-            int Idx;
 
             if (currentGroup < 0)
                 gbxAnimals.Hide();
@@ -1164,11 +1163,6 @@ namespace UserInterface.Views
         /// </summary>
         private void ParseCurrGroup()
         {
-            int iGenotype;
-            bool bIsPregnant = false;
-            bool bIsLactating = false;
-            bool bHasYoung = false;
-
             if (currentGroup >= 0)
             {
                 AnimalInits animalGroup = this.animalInits[currentGroup];
