@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether a pasture biomass (t/ha) is within a specified range.")]
+    [HelpUri(@"Content/Features/Timers/PastureLevel.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
@@ -97,22 +98,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if (GrazeFoodStoreModel.KilogramsPerHa >= MinimumPastureLevel & GrazeFoodStoreModel.KilogramsPerHa < MaximumPastureLevel)
-                {
-                    // report activity performed.
-                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
-                    {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = this.Name
-                        }
-                    };
-                    this.OnActivityPerformed(activitye);
-                    activitye.Activity.SetGuID(this.UniqueID);
-                    return true;
-                }
-                return false;
+                return (GrazeFoodStoreModel.KilogramsPerHa >= MinimumPastureLevel && GrazeFoodStoreModel.KilogramsPerHa < MaximumPastureLevel);
             }
         }
 
@@ -129,7 +115,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnActivityPerformed(EventArgs e)
+        public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
@@ -142,15 +128,35 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">";
             html += "\n<div class=\"filter\">";
             html += "Perform when ";
-            html += "<span class=\"resourcelink\">"+GrazeFoodStoreTypeName+"</span>";
+            if (GrazeFoodStoreTypeName is null || GrazeFoodStoreTypeName == "")
+            {
+                html += "<span class=\"errorlink\">RESOURCE NOT SET</span> ";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span> ";
+            }
             html += " is between <span class=\"setvalueextra\">";
             html += MinimumPastureLevel.ToString();
-            html += "</span> and <span class=\"setvalueextra\">";
-            html += MaximumPastureLevel.ToString();
-            html += "</span> kg per hectare</div>";
+            html += "</span> and ";
+            if (MaximumPastureLevel <= MinimumPastureLevel)
+            {
+                html += "<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += MaximumPastureLevel.ToString();
+                html += "</span> ";
+            }
+            html += " kg per hectare</div>";
+            if (!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             html += "\n</div>";
             return html;
         }

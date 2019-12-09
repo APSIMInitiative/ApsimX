@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using Interfaces;
     using Gtk;
+    using System.Globalization;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -45,7 +46,7 @@ namespace UserInterface.Views
             radiobutton1 = (RadioButton)builder.GetObject("radiobutton1");
             radiobutton2 = (RadioButton)builder.GetObject("radiobutton2");
             combobox1 = (ComboBox)builder.GetObject("combobox1");
-            _mainWidget = hpaned1;
+            mainWidget = hpaned1;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Model = comboModel;
@@ -63,7 +64,7 @@ namespace UserInterface.Views
             spinbutton1.Changed += OnNumericUpDown1ValueChanged;
             combobox1.Changed += OnComboBox1SelectedValueChanged;
             frameRadio1.Toggled += FrameRadio_Toggled;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -78,8 +79,8 @@ namespace UserInterface.Views
             comboRender.Destroy();
             graphView1.MainWidget.Destroy();
             graphView1 = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>
@@ -181,7 +182,7 @@ namespace UserInterface.Views
                     int result = 0;
                     try
                     {
-                        result = Convert.ToInt32(this.entry1.Text);
+                        result = Convert.ToInt32(this.entry1.Text, CultureInfo.InvariantCulture);
                     }
                     catch (Exception)
                     {  // If there are any errors, return 0
@@ -209,7 +210,7 @@ namespace UserInterface.Views
                 int result = 0;
                 try
                 {
-                    result = Convert.ToInt32(this.entry2.Text);
+                    result = Convert.ToInt32(this.entry2.Text, CultureInfo.InvariantCulture);
                 }
                 catch (Exception)
                 {  // If there are any errors, return 0

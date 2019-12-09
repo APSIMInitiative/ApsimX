@@ -15,6 +15,11 @@ namespace Models.LifeCycle
     /// # [Name]
     /// An immigration process within a Lifestage.
     /// Immigration process that brings in new numbers for a new cohort in the linked lifestage
+    ///
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|Immigrants   |double   |  |The number of immigrants at this timestep    |
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]

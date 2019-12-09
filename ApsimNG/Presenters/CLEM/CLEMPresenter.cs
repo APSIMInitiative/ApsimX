@@ -16,6 +16,7 @@ namespace UserInterface.Presenters
     public class CLEMPresenter : IPresenter
     {
         private ICLEMView view;
+        private ICLEMUI clemModel;
 
         /// <summary>
         /// The explorer
@@ -51,6 +52,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The explorer</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
+            this.clemModel = model as ICLEMUI;
             this.explorerPresenter = explorerPresenter;
 
             this.view = view as ICLEMView;
@@ -83,7 +85,25 @@ namespace UserInterface.Presenters
                     {
                         this.view.AddTabView("Summary", newView);
                         summaryPresenter.Attach(model, newView, this.explorerPresenter);
-                        this.view.SummaryTabSelected += OnSummaryTabSelected; 
+                    }
+                }
+                catch (Exception err)
+                {
+                    this.explorerPresenter.MainPresenter.ShowError(err);
+                }
+                //Versions
+                try
+                {
+                    var versions = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
+                    if (versions.Count() > 0)
+                    {
+                        object newView = new HTMLView(this.view as ViewBase);
+                        versionPresenter = new VersionsPresenter();
+                        if (newView != null && versionPresenter != null)
+                        {
+                            this.view.AddTabView("Version", newView);
+                            versionPresenter.Attach(model, newView, this.explorerPresenter);
+                        }
                     }
                 }
                 catch (Exception err)
@@ -119,34 +139,30 @@ namespace UserInterface.Presenters
                 {
                     this.explorerPresenter.MainPresenter.ShowError(err);
                 }
-                //Versions
-                try
+
+                if (clemModel != null)
                 {
-                    var versions = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
-                    if (versions.Count() > 0)
-                    {
-                        object newView = new HTMLView(this.view as ViewBase);
-                        versionPresenter = new VersionsPresenter();
-                        if (newView != null && versionPresenter != null)
-                        {
-                            this.view.AddTabView("Version", newView);
-                            versionPresenter.Attach(model, newView, this.explorerPresenter);
-                        }
-                    }
+                    this.view.SelectTabView(clemModel.SelectedTab);
                 }
-                catch (Exception err)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(err);
-                }
+                this.view.TabSelected += OnTabSelected;
             }
         }
 
         /// <summary>Summary tab selected</summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Close arguments</param>
-        private void OnSummaryTabSelected(object sender, EventArgs e)
+        private void OnTabSelected(object sender, EventArgs e)
         {
-            (summaryPresenter as CLEMSummaryPresenter).RefreshSummary();
+            // change tab name
+            if (clemModel != null)
+            {
+                clemModel.SelectedTab = (e as TabChangedEventArgs).TabName;
+            }
+
+            if((e as TabChangedEventArgs).TabName == "Summary")
+            {
+                (summaryPresenter as CLEMSummaryPresenter).RefreshSummary();
+            }
         }
 
         /// <summary>
@@ -154,7 +170,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.view.SummaryTabSelected -= OnSummaryTabSelected;
+            this.view.TabSelected -= OnTabSelected;
             if(propertyPresenter!=null)
             {
                 propertyPresenter.Detach();

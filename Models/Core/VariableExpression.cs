@@ -141,7 +141,7 @@ namespace Models.Core
         /// </summary>
         private void FillVariableNames()
         {
-            ArrayList variablesToFill = fn.Variables;
+            List<Symbol> variablesToFill = fn.Variables;
             for (int i = 0; i < variablesToFill.Count; i++)
             {
                 Symbol sym = (Symbol) variablesToFill[i];

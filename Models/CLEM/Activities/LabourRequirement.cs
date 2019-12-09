@@ -34,8 +34,10 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ResourceActivityProcess))]
     [ValidParent(ParentType = typeof(PastureActivityCutAndCarry))]
     [ValidParent(ParentType = typeof(LabourActivityTask))]
+    [ValidParent(ParentType = typeof(LabourActivityOffFarm))]
     [Description("Defines the amount and type of labour required for an activity. This model component must have at least one LabourFilterGroup nested below in the UI tree structure")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Activities/Labour/LabourRequirement.htm")]
     public class LabourRequirement: CLEMModel, IValidatableObject
     {
         /// <summary>
@@ -188,7 +190,7 @@ namespace Models.CLEM.Activities
             {
                 html += "\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">" + MinimumPerPerson.ToString()+"</span> day"+((MinimumPerPerson==1)?"":"s")+" is required</div>" ;
             }
-            if (MaximumPerPerson > 0 & MaximumPerPerson<30)
+            if (MaximumPerPerson > 0 && MaximumPerPerson<30)
             {
                 html += "\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">" + MaximumPerPerson.ToString() + "</span> days</div>";
             }

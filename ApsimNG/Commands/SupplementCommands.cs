@@ -36,10 +36,10 @@ namespace UserInterface.Commands
         /// <param name="commandHistory">The command history.</param>
         public void Do(CommandHistory commandHistory)
         {
-            int iSuppNo = SupplementLibrary.DefaultSuppConsts.IndexOf(this.supplementName);
-            if (iSuppNo >= 0)
+            int suppNo = SupplementLibrary.DefaultSuppConsts.IndexOf(this.supplementName);
+            if (suppNo >= 0)
             {
-                this.supplementToAdd = SupplementLibrary.DefaultSuppConsts[iSuppNo];
+                this.supplementToAdd = SupplementLibrary.DefaultSuppConsts[suppNo];
                 this.prevSuppIdx = this.parent.CurIndex;
                 this.parent.CurIndex = this.parent.Add(this.supplementName);
                 this.supplementAdded = true;
@@ -88,9 +88,9 @@ namespace UserInterface.Commands
         /// <param name="commandHistory">The command history.</param>
         public void Do(CommandHistory commandHistory)
         {
-            int iSuppNo = parent.IndexOf(this.supplementToDelete);
+            int suppNo = parent.IndexOf(this.supplementToDelete);
             this.prevSuppIdx = this.parent.CurIndex;
-            this.parent.Delete(iSuppNo);
+            this.parent.Delete(suppNo);
             this.parent.CurIndex = Math.Min(this.prevSuppIdx, parent.NoStores - 1);
             this.supplementDeleted = true;
             commandHistory.InvokeModelChanged(this.parent);

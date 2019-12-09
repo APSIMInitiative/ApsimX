@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of a specified type of other animal.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityBreed.htm")]
     public class OtherAnimalsActivityBreed : CLEMActivityBase
     {
         /// <summary>
@@ -97,11 +98,11 @@ namespace Models.CLEM.Activities
         {
             if(this.TimingOK)
             {
-                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Male).Sum(b => b.Number);
+                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Gender == Sex.Male).Sum(b => b.Number);
                 if (!UseLocalMales || malebreeders > 0)
                 {
                     // get number of females
-                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge & a.Gender == Sex.Female).Sum(b => b.Number);
+                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Gender == Sex.Female).Sum(b => b.Number);
                     // create new cohorts (male and female)
                     if (breeders > 0)
                     {
@@ -114,7 +115,7 @@ namespace Models.CLEM.Activities
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newmales, this.Name, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.Name);
                         OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
                         {
                             Age = 0,
@@ -123,7 +124,7 @@ namespace Models.CLEM.Activities
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newfemales, this.Name, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.Name);
                     }
                 }
             }

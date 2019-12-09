@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -20,27 +20,27 @@ namespace Models.Functions.SupplyFunctions
     public class RUEModel : Model, IFunction
     {
         /// <summary>The rue</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction RUE = null;
 
         /// <summary>The fc o2</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction FCO2 = null;
 
         /// <summary>The function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction FN = null;
 
         /// <summary>The ft</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction FT = null;
 
         /// <summary>The fw</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction FW = null;
 
         /// <summary>The FVPD</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction FVPD = null;
 
         /// <summary>The met data</summary>
@@ -48,7 +48,7 @@ namespace Models.Functions.SupplyFunctions
         IWeather MetData = null;
 
         /// <summary>The radiation interception data</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction RadnInt = null;
 
         #region Class Data Members
@@ -92,7 +92,7 @@ namespace Models.Functions.SupplyFunctions
             double radiationInterception = RadnInt.Value(arrayIndex);
             if (Double.IsNaN(radiationInterception))
                 throw new Exception("NaN Radiation interception value supplied to RUE model");
-            if (radiationInterception < 0)
+            if (radiationInterception < -0.000000000001)
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
             return radiationInterception * RueAct;
         }

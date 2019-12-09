@@ -29,8 +29,8 @@
         }
 
         /// <summary>Performs the command.</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Do(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history.</param>
+        public void Do(CommandHistory commandHistory)
         {
             string originalPath = Apsim.FullPath(this.modelToRename);
 
@@ -43,8 +43,8 @@
         }
 
         /// <summary>Undoes the command.</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Undo(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history.</param>
+        public void Undo(CommandHistory commandHistory)
         {
             explorerView.Tree.Rename(Apsim.FullPath(modelToRename), originalName);
             modelToRename.Name = originalName;

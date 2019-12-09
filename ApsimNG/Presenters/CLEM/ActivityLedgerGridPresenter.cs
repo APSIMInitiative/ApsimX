@@ -14,12 +14,13 @@ namespace UserInterface.Presenters
     using Views;
     using global::UserInterface.Interfaces;
     using System.Collections.Generic;
+    using Models.Storage;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class ActivityLedgerGridPresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
-        private IStorageReader dataStore;
+        private IDataStore dataStore;
 
         /// <summary>The display grid store view to work with.</summary>
         public IActivityLedgerGridView Grid { get; set; }
@@ -40,7 +41,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            dataStore = model as IStorageReader;
+            dataStore = model as IDataStore;
             this.Grid = view as ActivityLedgerGridView;
             this.explorerPresenter = explorerPresenter;
             this.Grid.ReadOnly = true;
@@ -61,19 +62,24 @@ namespace UserInterface.Presenters
                 {
                     // get unique rows
                     List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                    string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
+
                     // get unique columns
                     List<DateTime> dates = data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct().ToList<DateTime>();
-                    // create table
 
+                    // create table
                     DataTable tbl = new DataTable();
                     tbl.Columns.Add("Activity");
                     foreach (var item in dates)
                     {
                         tbl.Columns.Add(item.Month.ToString("00") + "\n" + item.ToString("yy"));
                     }
+                    // add blank column for resize row height of pixelbuf with font size change
+                    tbl.Columns.Add(" ");
+
                     foreach (var item in activities)
                     {
-                        if (item != "TimeStep")
+                        if (item != timeStepUID)
                         {
                             DataRow dr = tbl.NewRow();
                             string name = data.AsEnumerable().Where(a => a.Field<string>("UniqueID") == item).FirstOrDefault()["Name"].ToString();
@@ -85,6 +91,7 @@ namespace UserInterface.Presenters
                                 string status = activityTick["Status"].ToString();
                                 dr[dte.Month.ToString("00") + "\n" + dte.ToString("yy")] = status;
                             }
+                            dr[" "] = " ";
                             tbl.Rows.Add(dr);
                         }
                     }
@@ -104,7 +111,7 @@ namespace UserInterface.Presenters
                 try
                 {
                     int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
-                    data = dataStore.GetData(
+                    data = dataStore.Reader.GetData(
                                             tableName: ModelName,
                                             count: Utility.Configuration.Settings.MaximumRowsOnReportGrid);
 

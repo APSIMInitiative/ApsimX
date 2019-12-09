@@ -19,8 +19,15 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a manure store. This is a special type of Product Store Type and is needed for manure management and must be named \"Manure\".")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Products/ManureType.htm")]
     public class ProductStoreTypeManure: CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
+
         /// <summary>
         /// List of all uncollected manure stores
         /// These present manure in the field and yards
@@ -205,12 +212,13 @@ namespace Models.CLEM.Resources
             {
                 amount += addAmount;
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Gain = addAmount;
-                details.Activity = activity.Name;
-                details.ActivityType = activity.GetType().Name;
-                details.Reason = reason;
-                details.ResourceType = this.Name;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    Gain = addAmount,
+                    Activity = activity,
+                    Reason = reason,
+                    ResourceType = this
+                };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -233,12 +241,13 @@ namespace Models.CLEM.Resources
             this.amount -= amountRemoved;
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = amountRemoved;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this,
+                Loss = amountRemoved,
+                Activity = request.ActivityModel,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

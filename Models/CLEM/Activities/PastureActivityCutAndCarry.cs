@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Activity to perform cut and carry from a specified graze food store (i.e. native pasture paddock).")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Activities/Pasture/CutAndCarry.htm")]
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase
     {
         [Link]
@@ -103,8 +104,6 @@ namespace Models.CLEM.Activities
 
             if (this.TimingOK)
             {
-                int year = Clock.Today.Year;
-                int month = Clock.Today.Month - 1;
                 List<Ruminant> herd = new List<Ruminant>();
 
                 // determine amount to be cut and carried
@@ -176,7 +175,7 @@ namespace Models.CLEM.Activities
                         AdditionalDetails = this,
                         Reason = "Cut and carry",
                         Required = AmountHarvested,
-                        Resource = pasture
+                        Resource = pasture,
                     }
                 };
             }
@@ -190,10 +189,10 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
+            double daysNeeded;
             // TODO add labour multiplier if pasture below given amount and difficult to cut
             // as per IAT rules below 500kg/ha
 
-            double daysNeeded = 0;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.perKg:
@@ -261,8 +260,6 @@ namespace Models.CLEM.Activities
 
         private void PutPastureInStore()
         {
-            int year = Clock.Today.Year;
-            int month = Clock.Today.Month-1;
             AmountHarvested = 0;
             AmountAvailableForHarvest = 0;
             List<Ruminant> herd = new List<Ruminant>();
@@ -358,7 +355,7 @@ namespace Models.CLEM.Activities
             ActivityCutAndCarryLimiter limiterFound = Apsim.Children(model, typeof(ActivityCutAndCarryLimiter)).Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
             if (limiterFound == null)
             {
-                if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) | model.Parent.GetType() == typeof(ActivitiesHolder))
+                if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
                 {
                     limiterFound = LocateCutAndCarryLimiter(model.Parent);
                 }

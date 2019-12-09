@@ -64,14 +64,14 @@ namespace UserInterface.Views
             entryTitle = (Entry)builder.GetObject("entryTitle");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
-            _mainWidget = table1;
+            mainWidget = table1;
             entryTitle.Changed += TitleTextBox_TextChanged;
-            entryMin.FocusOutEvent += OnMinimumChanged;
-            entryMax.FocusOutEvent += OnMaximumChanged;
-            entryInterval.FocusOutEvent += OnIntervalChanged;
+            entryMin.Changed += OnMinimumChanged;
+            entryMax.Changed += OnMaximumChanged;
+            entryInterval.Changed += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             checkbutton2.Toggled += OnCrossesAtZeroChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -154,6 +154,12 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the axis is a date time axis.
+        /// This is not editable by the user.
+        /// </summary>
+        public bool IsDateAxis { get; set; }
+
+        /// <summary>
         /// Gets or sets the minimum axis scale. double.Nan for auto scale
         /// </summary>
         public double Minimum
@@ -163,7 +169,7 @@ namespace UserInterface.Views
                 DateTime date;
                 if (string.IsNullOrEmpty(entryMin.Text))
                     return double.NaN;
-                else if (DateTime.TryParse(entryMin.Text, out date))
+                else if (IsDateAxis && DateTime.TryParse(entryMin.Text, out date))
                     return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(
@@ -182,7 +188,7 @@ namespace UserInterface.Views
                 DateTime date;
                 if (string.IsNullOrEmpty(entryMax.Text))
                     return double.NaN;
-                else if (DateTime.TryParse(entryMax.Text, out date))
+                else if (IsDateAxis && DateTime.TryParse(entryMax.Text, out date))
                     return DateTimeAxis.ToDouble(date);
                 else
                     return Convert.ToDouble(
@@ -279,8 +285,8 @@ namespace UserInterface.Views
             entryInterval.FocusOutEvent -= OnIntervalChanged;
             checkbutton1.Toggled -= OnCheckedChanged;
             checkbutton2.Toggled -= OnCheckedChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>

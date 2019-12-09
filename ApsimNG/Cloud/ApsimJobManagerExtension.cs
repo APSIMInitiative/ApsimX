@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.Batch;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 
 namespace ApsimNG.Cloud
 {
@@ -28,7 +28,7 @@ namespace ApsimNG.Cloud
                 CommandLine = cmd,
                 DisplayName = "Job manager task",
                 KillJobOnCompletion = true,
-                Id = BatchConstants.JOB_MANAGER_NAME,
+                Id = BatchConstants.JobManagerName,
                 RunExclusive = false,
                 ResourceFiles = GetResourceFiles(job, blobClient).ToList()
             };
@@ -45,7 +45,7 @@ namespace ApsimNG.Cloud
                     SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(2),
                     Permissions = SharedAccessBlobPermissions.Read,
                 });
-                yield return new ResourceFile(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
+                yield return ResourceFile.FromUrl(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
             }
         }
     }

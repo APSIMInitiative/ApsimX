@@ -145,10 +145,10 @@ namespace UserInterface
             }
         }
 
-        public void InvokeModelChanged(object Model)
+        public void InvokeModelChanged(object model)
         {
-            if (ModelChanged != null && Model != null)
-                ModelChanged(Model);
+            if (ModelChanged != null && model != null)
+                ModelChanged(model);
         }
 
         public void InvokeModelStructureChanged(IModel model)

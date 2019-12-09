@@ -12,6 +12,8 @@ namespace Models.Graph
     using Models.Core;
     using Factorial;
     using System.Data;
+    using System.Linq;
+    using Models.Storage;
 
     /// <summary>
     /// Represents a graph
@@ -22,10 +24,11 @@ namespace Models.Graph
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    [ValidParent(ParentType = typeof(Factorial.Experiment))]
+    [ValidParent(ParentType = typeof(Experiment))]
     [ValidParent(ParentType = typeof(Morris))]
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(Folder))]
+    [ValidParent(ParentType = typeof(GraphPanel))]
     public class Graph : Model, AutoDocumentation.ITag, ICustomDocumentation
     {
         /// <summary>The data tables on the graph.</summary>
@@ -35,6 +38,9 @@ namespace Models.Graph
         /// <summary>
         /// An enumeration for the position of the legend
         /// </summary>
+        /// <remarks>
+        /// fixme - we should support all valid OxyPlot legend position types.
+        /// </remarks>
         public enum LegendPositionType
         {
             /// <summary>
@@ -55,7 +61,43 @@ namespace Models.Graph
             /// <summary>
             /// Bottom right corner of the graph
             /// </summary>
-            BottomRight
+            BottomRight,
+
+            /// <summary>
+            /// Left side of the graph, in the middle.
+            /// </summary>
+            LeftMiddle,
+
+            /// <summary>
+            /// Right side of the graph, in the middle.
+            /// </summary>
+            RightMiddle,
+
+            /// <summary>
+            /// Top of the graph, in the middle
+            /// </summary>
+            TopCenter,
+
+            /// <summary>
+            /// Bottom of the graph, in the middle
+            /// </summary>
+            BottomCenter
+        }
+
+        /// <summary>
+        /// An enumeration for the orientation of the legend items.
+        /// </summary>
+        public enum LegendOrientationType
+        {
+            /// <summary>
+            /// Stack legend items vertically.
+            /// </summary>
+            Vertical,
+
+            /// <summary>
+            /// Stack legend items horizontally.
+            /// </summary>
+            Horizontal
         }
 
         /// <summary>
@@ -80,20 +122,31 @@ namespace Models.Graph
         public LegendPositionType LegendPosition { get; set; }
 
         /// <summary>
+        /// Controls the orientation of legend items.
+        /// </summary>
+        public LegendOrientationType LegendOrientation { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of raw grpah series that should be disabled.
         /// </summary>
         public List<string> DisabledSeries { get; set; }
 
+        /// <summary>
+        /// If set to true, the legend will be shown outside the graph area.
+        /// </summary>
+        public bool LegendOutsideGraph { get; set; }
+
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
         /// <param name="storage">Storage service</param>
-        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage)
+        /// <param name="simulationFilter">(Optional) Simulation name filter.</param>
+        public List<SeriesDefinition> GetDefinitionsToGraph(IStorageReader storage, List<string> simulationFilter = null)
         {
             EnsureAllAxesExist();
 
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
-                series.GetSeriesToPutOnGraph(storage, definitions);
+            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)).Where(g => g.Enabled))
+                series.GetSeriesToPutOnGraph(storage, definitions, simulationFilter);
 
             return definitions;
         }
@@ -103,7 +156,7 @@ namespace Models.Graph
         public List<Annotation> GetAnnotationsToGraph()
         {
             List<Annotation> annotations = new List<Annotation>();
-            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)))
+            foreach (IGraphable series in Apsim.Children(this, typeof(IGraphable)).Where(g => g.Enabled))
                 series.GetAnnotationsToPutOnGraph(annotations);
 
             return annotations;

@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer defines a date range to perfrom activities.")]
+    [HelpUri(@"Content/Features/Timers/DateRange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
@@ -118,7 +119,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnActivityPerformed(EventArgs e)
+        public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
@@ -134,16 +135,25 @@ namespace Models.CLEM.Activities
             DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
 
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">";
             html += "\n<div class=\"filter\">";
             string invertString = "";
             if (Invert)
             {
                 invertString = "when <b>NOT</b> ";
             }
-            html += "Perform "+invertString+"between <span class=\"setvalueextra\">";
-            html += startDate.ToString("d MMM yyyy");
-            html += "</span> and ";
+            html += "Perform " + invertString + "between ";
+            if (startDate.Year == 1)
+            {
+                html += "<span class=\"errorlink\">NOT SET</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += startDate.ToString("d MMM yyyy");
+                html += "</span>";
+            }
+            html += " and ";
             if (EndDate <= StartDate)
             {
                 html += "<span class=\"errorlink\">[must be > StartDate]";
@@ -154,11 +164,15 @@ namespace Models.CLEM.Activities
                 html += endDate.ToString("d MMM yyyy");
             }
             html += "</span>";
-            if(StartDate!=startDate | EndDate != endDate)
+            if(StartDate!=startDate || EndDate != endDate)
             {
                 html += " (modified for monthly timestep)";
             }
             html += "</div>";
+            if (!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             html += "\n</div>";
             return html;
         }

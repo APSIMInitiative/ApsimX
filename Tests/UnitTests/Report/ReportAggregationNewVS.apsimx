@@ -1,0 +1,250 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 250,
+  "Version": 67,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "The old unit test was only testing that the simulation ran - not if it was doing the right thing. Have added something to address that here. I don't think that a statistical test is suitable - this is an absolute. Use a Manager to fail the simulation if there are differences.\n\n- I added a daily aggregation to make sure it wasn't causing a problem - and it does - the sum is wrong\n\t- but only when using the original test item [Clocl].Today.DayOfYear - using a Weather variable is giveing a sensible result ",
+      "Name": "Memo",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Base",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1981-11-16T00:00:00",
+          "End": "1984-03-05T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Weather, Models",
+          "FileName": "%root%\\Tests\\WeatherFiles\\Goond.met",
+          "ExcelWorkSheetName": "",
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "Summary",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "Name": "Field",
+          "Children": [
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].MaxT"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].MaxT",
+                "sum of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as sumD",
+                "avg of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as meanD",
+                "min of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as minD",
+                "max of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as maxD",
+                "first of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as firstD",
+                "last of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as lastD",
+                "diff of [Weather].MaxT from [ReportDaily].DateOfLastOutput to [Clock].Today as diffD"
+              ],
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "Name": "ReportDaily",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].MaxT",
+                "sum of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as sumW",
+                "avg of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as meanW",
+                "min of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as minW",
+                "max of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as maxW",
+                "first of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as firstW",
+                "last of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as lastW",
+                "diff of [Weather].MaxT from [ReportWeekly].DateOfLastOutput to [Clock].Today as diffW"
+              ],
+              "EventNames": [
+                "[Clock].EndOfWeek"
+              ],
+              "Name": "ReportWeekly",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].MaxT",
+                "sum of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as sumM",
+                "avg of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as meanM",
+                "min of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as minM",
+                "max of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as maxM",
+                "first of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as firstM",
+                "last of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as lastM",
+                "diff of [Weather].MaxT from [ReportMonthly].DateOfLastOutput to [Clock].Today as diffM"
+              ],
+              "EventNames": [
+                "[Clock].EndOfMonth"
+              ],
+              "Name": "ReportMonthly",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].MaxT",
+                "sum of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as sumY",
+                "avg of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as meanY",
+                "min of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as minY",
+                "max of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as maxY",
+                "first of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as firstY",
+                "last of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as lastY",
+                "diff of [Weather].MaxT from [ReportYearly].DateOfLastOutput to [Clock].Today as diffY"
+              ],
+              "EventNames": [
+                "[Clock].EndOfYear"
+              ],
+              "Name": "ReportYearly",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].MaxT",
+                "sum of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as sumS",
+                "avg of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as meanS",
+                "min of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as minS",
+                "max of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as maxS",
+                "first of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as firstS",
+                "last of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as lastS",
+                "diff of [Weather].MaxT from [ReportSimulation].DateOfLastOutput to [Clock].Today as diffS"
+              ],
+              "EventNames": [
+                "[Clock].EndOfSimulation"
+              ],
+              "Name": "ReportSimulation",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].MaxT",
+                "sum of [Weather].MaxT from 15-Jun to [Clock].Today as sumY2",
+                "avg of [Weather].MaxT from 15-Jun to [Clock].Today as meanY2",
+                "min of [Weather].MaxT from 15-Jun to [Clock].Today as minY2",
+                "max of [Weather].MaxT from 15-Jun to [Clock].Today as maxY2",
+                "first of [Weather].MaxT from 15-Jun to [Clock].Today as firstY2",
+                "last of [Weather].MaxT from 15-Jun to [Clock].Today as lastY2",
+                "diff of [Weather].MaxT from 15-Jun to [Clock].Today as diffY2"
+              ],
+              "EventNames": [
+                "[Clock].EndOfYear"
+              ],
+              "Name": "ReportYearlyV2",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].MaxT",
+                "sum of [Weather].MaxT from 1-Jan-1982 to [Clock].Today as sumS2",
+                "avg of [Weather].MaxT from 1-Jan-1982 to [Clock].Today as meanS2",
+                "min of [Weather].MaxT from 1-Jan-1982 to [Clock].Today as minS2",
+                "max of [Weather].MaxT from 1-Jan-1982 to [Clock].Today as maxS2",
+                "first of [Weather].MaxT from 1-Jan-1982 to [Clock].Today as firstS2",
+                "last of [Weather].MaxT from 1-Jan-1982 to [Clock].Today as lastS2",
+                "diff of [Weather].MaxT from 1-Jan-1982 to [Clock].Today as diffS2"
+              ],
+              "EventNames": [
+                "[Clock].EndOfSimulation"
+              ],
+              "Name": "ReportSimulationV2",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

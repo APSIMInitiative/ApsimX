@@ -1,4 +1,4 @@
-using Models.Core;
+ï»¿using Models.Core;
 using Models.PMF;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Models.Functions.DemandFunctions
     public class PartitionFractionDemandFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The partition fraction</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PartitionFraction = null;
 
         /// <summary>The arbitrator</summary>
@@ -46,7 +46,7 @@ namespace Models.Functions.DemandFunctions
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // add a description of the equation for this function
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = PartitionFraction × [Arbitrator].DM.TotalFixationSupply</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = PartitionFraction ï¿½ [Arbitrator].DM.TotalFixationSupply</i>", indent));
 
                 // write children
                 tags.Add(new AutoDocumentation.Paragraph("Where:", indent));

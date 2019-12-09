@@ -1,12 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using CMPServices;
+// -----------------------------------------------------------------------
+// <copyright file="grazparam.cs" company="CSIRO">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace Models.GrazPlan
 {
+    using System;
+    using System.Globalization;
+    using CMPServices;
+
     /// <summary>
     /// ParameterDefinition                                                         
     /// Class used for the definition of parameter names and types, and for storing  
@@ -41,274 +44,290 @@ namespace Models.GrazPlan
         ///      |     |       |     |       |     |       |     |                     
         ///      leaf  stem    leaf  stem    leaf  stem    leaf  stem                  
         /// </summary>
-        /// <param name="sDefnStrings"></param>
-        /// <param name="aType"></param>
-        /// <param name="iOffset"></param>
-        public ParameterDefinition(string[] sDefnStrings, TTypedValue.TBaseType aType, int iOffset = 0)
+        /// <param name="defnStrings">Definition strings</param>
+        /// <param name="baseType">Base type</param>
+        /// <param name="offset">Offset index</param>
+        public ParameterDefinition(string[] defnStrings, TTypedValue.TBaseType baseType, int offset = 0)
         {
-            FItems = new ParameterDefinition[0];
-            string[] sSubDefnStrings = new string[0];
-            string sIndexStr;
-            int iPosn;
-            int Idx;
+            this.FItems = new ParameterDefinition[0];
+            string[] subDefnStrings = new string[0];
+            string indexStr;
+            int posIdx;
+            int idx;
 
-            FName = sDefnStrings[0];
-            for (Idx = 1; Idx <= iOffset; Idx++)
-                FName = FName + "-" + sDefnStrings[Idx];
-            if (iOffset < (sDefnStrings.Length - 1))
-                FName = FName + "-";
-            FName = FName.ToLower();
+            this.FName = defnStrings[0];
+            for (idx = 1; idx <= offset; idx++)
+                this.FName = this.FName + "-" + defnStrings[idx];
+            if (offset < (defnStrings.Length - 1))
+                this.FName = this.FName + "-";
+            this.FName = this.FName.ToLower();
 
-            FNamePart = sDefnStrings[iOffset].ToLower();
-            FType = aType;
-            FDefined = false;
+            this.FNamePart = defnStrings[offset].ToLower();
+            this.FType = baseType;
+            this.FDefined = false;
 
-            if (iOffset < (sDefnStrings.Length - 1))
+            if (offset < (defnStrings.Length - 1))
             {
-                Array.Resize(ref sSubDefnStrings, sDefnStrings.Length);
-                for (Idx = 0; Idx <= (sSubDefnStrings.Length - 1); Idx++)
-                    sSubDefnStrings[Idx] = sDefnStrings[Idx];
-                sIndexStr = sDefnStrings[iOffset + 1];
+                Array.Resize(ref subDefnStrings, defnStrings.Length);
+                for (idx = 0; idx <= (subDefnStrings.Length - 1); idx++)
+                    subDefnStrings[idx] = defnStrings[idx];
+                indexStr = defnStrings[offset + 1];
 
-                iPosn = sIndexStr.IndexOf(':');
-                if (iPosn >= 0)                                                        // Integer subrange                      
+                posIdx = indexStr.IndexOf(':');
+                if (posIdx >= 0)                                                                              
                 {
-                    int start = Convert.ToInt32(sIndexStr.Substring(0, iPosn));
-                    int endpos = Convert.ToInt32(sIndexStr.Substring(iPosn + 1, sIndexStr.Length - iPosn - 1));
-                    for (Idx = start; Idx <= endpos; Idx++)
+                    // Integer subrange
+                    int start = Convert.ToInt32(indexStr.Substring(0, posIdx), CultureInfo.InvariantCulture);
+                    int endpos = Convert.ToInt32(indexStr.Substring(posIdx + 1, indexStr.Length - posIdx - 1), CultureInfo.InvariantCulture);
+                    for (idx = start; idx <= endpos; idx++)
                     {
-                        sSubDefnStrings[iOffset + 1] = Convert.ToString(Idx);
-                        Array.Resize(ref FItems, FItems.Length + 1);
-                        FItems[FItems.Length - 1] = new ParameterDefinition(sSubDefnStrings, aType, iOffset + 1);
+                        subDefnStrings[offset + 1] = Convert.ToString(idx, CultureInfo.InvariantCulture);
+                        Array.Resize(ref this.FItems, this.FItems.Length + 1);
+                        this.FItems[this.FItems.Length - 1] = new ParameterDefinition(subDefnStrings, baseType, offset + 1);
                     }
                 }
-                else                                                                       // Single index or semi-colon-separated  }
-                {                                                                      //   list of indices                     }
-                    while (sIndexStr != "")
+                else                                                                          
+                {
+                    // Single index or semi-colon-separated list of indices
+                    while (indexStr != string.Empty)
                     {
-                        iPosn = sIndexStr.IndexOf(";");
-                        if (iPosn >= 0)
+                        posIdx = indexStr.IndexOf(";");
+                        if (posIdx >= 0)
                         {
-                            sSubDefnStrings[iOffset + 1] = sIndexStr.Substring(0, iPosn);
-                            sIndexStr = sIndexStr.Substring(iPosn + 1, sIndexStr.Length - iPosn - 1);
+                            subDefnStrings[offset + 1] = indexStr.Substring(0, posIdx);
+                            indexStr = indexStr.Substring(posIdx + 1, indexStr.Length - posIdx - 1);
                         }
                         else
                         {
-                            sSubDefnStrings[iOffset + 1] = sIndexStr;
-                            sIndexStr = "";
+                            subDefnStrings[offset + 1] = indexStr;
+                            indexStr = string.Empty;
                         }
 
-                        Array.Resize(ref FItems, FItems.Length + 1);
-                        FItems[FItems.Length - 1] = new ParameterDefinition(sSubDefnStrings, aType, iOffset + 1);
+                        Array.Resize(ref this.FItems, this.FItems.Length + 1);
+                        this.FItems[this.FItems.Length - 1] = new ParameterDefinition(subDefnStrings, baseType, offset + 1);
                     }
                 }
             }
 
-            FCount = FItems.Length;
-            if (bIsScalar())
-                FParamCount = 1;
+            this.FCount = this.FItems.Length;
+            if (this.IsScalar())
+                this.FParamCount = 1;
             else
-                FParamCount = FCount * item(0).iParamCount;
+                this.FParamCount = this.FCount * this.Item(0).ParamCount;
         }
 
         /// <summary>
         /// Initalises ParameterDefinition from another instance
         /// </summary>
-        /// <param name="Source"></param>
-        public ParameterDefinition(ParameterDefinition Source)
+        /// <param name="sourceParam">The source parameter</param>
+        public ParameterDefinition(ParameterDefinition sourceParam)
         {
-            FItems = new ParameterDefinition[0];
-            int Idx;
+            this.FItems = new ParameterDefinition[0];
+            int idx;
 
-            FName = Source.sFullName;
-            FNamePart = Source.sPartName;
-            FType = Source.paramType;
-            FCount = Source.iCount;
+            this.FName = sourceParam.FullName;
+            this.FNamePart = sourceParam.PartName;
+            this.FType = sourceParam.ParamType;
+            this.FCount = sourceParam.Count;
 
-            if (FCount > 0)
+            if (this.FCount > 0)
             {
-                Array.Resize(ref FItems, FCount);
-                for (Idx = 0; Idx <= FCount - 1; Idx++)
-                    FItems[Idx] = new ParameterDefinition(Source.item(Idx));
+                Array.Resize(ref this.FItems, this.FCount);
+                for (idx = 0; idx <= this.FCount - 1; idx++)
+                    this.FItems[idx] = new ParameterDefinition(sourceParam.Item(idx));
             }
             else
-                FItems = null;
+                this.FItems = null;
 
-            FParamCount = Source.iParamCount;
-            FDefined = Source.FDefined;
+            this.FParamCount = sourceParam.ParamCount;
+            this.FDefined = sourceParam.FDefined;
         }
+
         /// <summary>
-        /// Full name of the parameter
+        /// Gets the full name of the parameter
         /// </summary>
-        public string sFullName
+        public string FullName
         {
-            get { return FName; }
+            get { return this.FName; }
         }
+
         /// <summary>
-        /// Part name of the parameter
+        /// Gets the part name of the parameter
         /// </summary>
-        public string sPartName
+        public string PartName
         {
-            get { return FNamePart; }
+            get { return this.FNamePart; }
         }
+
         /// <summary>
-        /// Parameter type
+        /// Gets the parameter type
         /// </summary>
-        public TTypedValue.TBaseType paramType
+        public TTypedValue.TBaseType ParamType
         {
-            get { return FType; }
+            get { return this.FType; }
         }
+
         /// <summary>
         /// Is a scalar
         /// </summary>
-        /// <returns></returns>
-        public bool bIsScalar()
+        /// <returns>True if this is scalar</returns>
+        public bool IsScalar()
         {
-            return (FItems.Length == 0);
+            return this.FItems.Length == 0;
         }
+
         /// <summary>
         /// Get the dimension of the parameter
         /// </summary>
-        /// <returns></returns>
-        public int iDimension()
+        /// <returns>The dimension value</returns>
+        public int Dimension()
         {
-            if (bIsScalar())
+            if (this.IsScalar())
                 return 0;
             else
-                return 1 + this.item(0).iDimension();
+                return 1 + this.Item(0).Dimension();
         }
+
         /// <summary>
-        /// Count
+        /// Gets the count of items
         /// </summary>
-        public int iCount
+        public int Count
         {
-            get { return FCount; }
+            get { return this.FCount; }
         }
+
         /// <summary>
-        /// Get item
+        /// Gets the item at the index
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public ParameterDefinition item(int Idx)
+        /// <param name="idx">Item index 0-n</param>
+        /// <returns>The item</returns>
+        public ParameterDefinition Item(int idx)
         {
-            return FItems[Idx];
+            return this.FItems[idx];
         }
+
         /// <summary>
         /// Parameter count
         /// </summary>
-        public int iParamCount
+        public int ParamCount
         {
-            get { return FParamCount; }
+            get { return this.FParamCount; }
         }
+
         /// <summary>
         /// Get the parameter definition at Idx
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public ParameterDefinition getParam(int Idx)
+        /// <param name="idx">The index</param>
+        /// <returns>The parameter definition</returns>
+        public ParameterDefinition getParam(int idx)
         {
-            int iDefn;
-            int iOffset;
+            int defnIdx;
+            int offset;
             ParameterDefinition result;
 
-            if (bIsScalar() && (Idx == 0))
+            if (this.IsScalar() && (idx == 0))
                 result = this;
-            else if ((Idx < 0) || (Idx >= iParamCount))
+            else if ((idx < 0) || (idx >= this.ParamCount))
                 result = null;
             else
             {
-                iDefn = 0;
-                iOffset = 0;
-                while ((iDefn < iCount) && (iOffset + item(iDefn).iParamCount <= Idx))
+                defnIdx = 0;
+                offset = 0;
+                while ((defnIdx < this.Count) && (offset + this.Item(defnIdx).ParamCount <= idx))
                 {
-                    iOffset = iOffset + item(iDefn).iParamCount;
-                    iDefn++;
+                    offset = offset + this.Item(defnIdx).ParamCount;
+                    defnIdx++;
                 }
-                result = item(iDefn).getParam(Idx - iOffset);
+                result = this.Item(defnIdx).getParam(idx - offset);
             }
             return result;
         }
+
         /// <summary>
         /// Find parameter by name
         /// </summary>
-        /// <param name="sParam"></param>
-        /// <param name="iOffset"></param>
-        /// <returns></returns>
-        public ParameterDefinition FindParam(string[] sParam, int iOffset = 0)
+        /// <param name="param">Parameter array</param>
+        /// <param name="offset">Offset value</param>
+        /// <returns>The parameter definition</returns>
+        public ParameterDefinition FindParam(string[] param, int offset = 0)
         {
-            int Idx;
+            int idx;
 
             ParameterDefinition result;
-            if (sPartName != sParam[iOffset])
+            if (this.PartName != param[offset])
                 result = null;
-            else if (iOffset == sParam.Length - 1)
+            else if (offset == param.Length - 1)
                 result = this;
             else
             {
                 result = null;
-                Idx = 0;
-                while ((Idx < iCount) && (result == null))
+                idx = 0;
+                while ((idx < this.Count) && (result == null))
                 {
-                    result = item(Idx).FindParam(sParam, iOffset + 1);
-                    Idx++;
+                    result = this.Item(idx).FindParam(param, offset + 1);
+                    idx++;
                 }
             }
             return result;
         }
+
         /// <summary>
         /// Returns true if the parameter is defined
         /// </summary>
-        /// <param name="sParam"></param>
-        /// <returns></returns>
-        public bool ParamIsDefined(string[] sParam)
+        /// <param name="param">Parameter array</param>
+        /// <returns>True if found</returns>
+        public bool ParamIsDefined(string[] param)
         {
-            ParameterDefinition aParam;
+            ParameterDefinition foundParam;
 
-            aParam = FindParam(sParam, 0);
-            return ((aParam != null) && (aParam.bIsScalar()));
+            foundParam = this.FindParam(param, 0);
+            return (foundParam != null) && (foundParam.IsScalar());
         }
+
         /// <summary>
         /// Returns true if a value is defined
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if defined</returns>
         public bool ValueIsDefined()
         {
-            int Idx;
+            int idx;
             bool result;
 
-            if (bIsScalar())
-                result = FDefined;
+            if (this.IsScalar())
+                result = this.FDefined;
             else
             {
                 result = true;
-                for (Idx = 0; Idx <= iCount - 1; Idx++)
-                    result = (result && item(Idx).ValueIsDefined());
+                for (idx = 0; idx <= this.Count - 1; idx++)
+                    result = (result && this.Item(idx).ValueIsDefined());
             }
             return result;
         }
+
         /// <summary>
         /// Set defined
         /// </summary>
-        /// <param name="bValue"></param>
-        public void setDefined(bool bValue)
+        /// <param name="isDefined">Whether it is defined</param>
+        public void SetDefined(bool isDefined)
         {
-            if (bIsScalar())
-                FDefined = bValue;
+            if (this.IsScalar())
+                this.FDefined = isDefined;
         }
+
         /// <summary>
         /// Set defined for the source
         /// </summary>
-        /// <param name="Source"></param>
-        public void setDefined(ParameterDefinition Source)
+        /// <param name="source"></param>
+        public void SetDefined(ParameterDefinition source)
         {
-            int Idx;
+            int idx;
 
-            if (bIsScalar())
-                FDefined = Source.FDefined;
+            if (this.IsScalar())
+                this.FDefined = source.FDefined;
             else
             {
-                for (Idx = 0; Idx <= iCount - 1; Idx++)
-                    FItems[Idx].setDefined(Source.FItems[Idx]);
+                for (idx = 0; idx <= this.Count - 1; idx++)
+                    this.FItems[idx].SetDefined(source.FItems[idx]);
             }
         }
     }
@@ -322,14 +341,16 @@ namespace Models.GrazPlan
         /// <summary>
         /// Language
         /// </summary>
-        public string sLang;
+        public string Lang;
+
         /// <summary>
         /// 
         /// </summary>
-        public string sText;
+        public string Text;
     }
 
-    //=================================================================================
+    // =================================================================================
+
     /// <summary>
     /// Parameter set class
     /// </summary>
@@ -339,19 +360,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// Real-single type
         /// </summary>
-        protected const TTypedValue.TBaseType ptyReal = TTypedValue.TBaseType.ITYPE_SINGLE;
+        protected const TTypedValue.TBaseType TYPEREAL = TTypedValue.TBaseType.ITYPE_SINGLE;
+
         /// <summary>
         /// Integer type
         /// </summary>
-        protected const TTypedValue.TBaseType ptyInt = TTypedValue.TBaseType.ITYPE_INT4;
+        protected const TTypedValue.TBaseType TYPEINT = TTypedValue.TBaseType.ITYPE_INT4;
+
         /// <summary>
         /// Boolean type
         /// </summary>
-        protected const TTypedValue.TBaseType ptyBool = TTypedValue.TBaseType.ITYPE_BOOL;
+        protected const TTypedValue.TBaseType TYPEBOOL = TTypedValue.TBaseType.ITYPE_BOOL;
+
         /// <summary>
         /// String type
         /// </summary>
-        protected const TTypedValue.TBaseType ptyText = TTypedValue.TBaseType.ITYPE_STR;
+        protected const TTypedValue.TBaseType TYPETEXT = TTypedValue.TBaseType.ITYPE_STR;
 
         private string FVersion;
         private string FName;
@@ -365,12 +389,13 @@ namespace Models.GrazPlan
 
         private string FCurrLocale;
         private string FFileSource;
-        private string UILang = "";
+        private string UILang = string.Empty;
 
         /// <summary>
         /// Registry key used to store setting
         /// </summary>
         public const string PARAM_KEY = "\\Software\\CSIRO\\Common\\Parameters"; // Base registry key for parameter info  
+
         /// <summary>
         /// Represents all locales
         /// </summary>
@@ -379,592 +404,628 @@ namespace Models.GrazPlan
         /// <summary>
         /// Propagates the new current locale to the entire parameter set              
         /// </summary>
-        /// <param name="sValue"></param>
-        private void setCurrLocale(string sValue)
+        /// <param name="localeName"></param>
+        private void SetCurrLocale(string localeName)
         {
-            ParameterSet Ancestor;
-            int Idx;
+            ParameterSet ancestor;
+            int idx;
 
-            Ancestor = this;
-            if (Ancestor != null)
+            ancestor = this;
+            if (ancestor != null)
             {
-                while (Ancestor.Parent != null)
-                    Ancestor = Ancestor.Parent;
+                while (ancestor.Parent != null)
+                    ancestor = ancestor.Parent;
 
-                for (Idx = 0; Idx <= Ancestor.NodeCount() - 1; Idx++)
-                    Ancestor.GetNode(Idx).FCurrLocale = sValue;
+                for (idx = 0; idx <= ancestor.NodeCount() - 1; idx++)
+                    ancestor.GetNode(idx).FCurrLocale = localeName;
             }
         }
 
         /// <summary>
-        /// 
+        /// Define parameter types
         /// </summary>
-        /// <param name="sTagDefinition"></param>
-        /// <param name="aType"></param>
-        protected void defineParameters(string sTagDefinition, TTypedValue.TBaseType aType)
+        /// <param name="tagDefinition">Tag definition</param>
+        /// <param name="baseType">The definition type</param>
+        protected void DefineParameters(string tagDefinition, TTypedValue.TBaseType baseType)
         {
-            string[] sDefn = new string[0];
-            int Kdx;
+            string[] defn = new string[0];
+            int kdx;
 
-            Tokenise(sTagDefinition, ref sDefn, "-");
-            Kdx = FDefinitions.Length;
-            Array.Resize(ref FDefinitions, Kdx + 1);
-            FDefinitions[Kdx] = new ParameterDefinition(sDefn, aType);
+            this.Tokenise(tagDefinition, ref defn, "-");
+            kdx = this.FDefinitions.Length;
+            Array.Resize(ref this.FDefinitions, kdx + 1);
+            this.FDefinitions[kdx] = new ParameterDefinition(defn, baseType);
         }
 
         /// <summary>
         /// Parse tokens from the string
         /// </summary>
-        /// <param name="sList">Input string</param>
-        /// <param name="sTags">Parsed tokens</param>
-        /// <param name="sDelim">Delimiter to use</param>
-        private void Tokenise(string sList, ref string[] sTags, string sDelim)
+        /// <param name="strList">Input string</param>
+        /// <param name="tags">Parsed tokens</param>
+        /// <param name="delim">Delimiter to use</param>
+        private void Tokenise(string strList, ref string[] tags, string delim)
         {
-            int iLength;
-            int iPosn;
+            int length;
+            int posnIdx;
 
-            sList = sList.ToLower();
-            iLength = 0;
-            Array.Resize(ref sTags, iLength);
-            while (sList != "")
+            strList = strList.ToLower();
+            length = 0;
+            Array.Resize(ref tags, length);
+            while (strList != string.Empty)
             {
-                iLength++;
-                Array.Resize(ref sTags, iLength);
+                length++;
+                Array.Resize(ref tags, length);
 
-                iPosn = sList.IndexOf(sDelim);
-                if (iPosn >= 0)
+                posnIdx = strList.IndexOf(delim);
+                if (posnIdx >= 0)
                 {
-                    sTags[iLength - 1] = sList.Substring(0, iPosn);
-                    sList = sList.Remove(0, iPosn + 1);
+                    tags[length - 1] = strList.Substring(0, posnIdx);
+                    strList = strList.Remove(0, posnIdx + 1);
                 }
                 else
                 {
-                    sTags[iLength - 1] = sList;
-                    sList = "";
+                    tags[length - 1] = strList;
+                    strList = string.Empty;
                 }
             }
         }
 
         /// <summary>
-        /// 
+        /// Copy the parameter definitions
         /// </summary>
-        /// <param name="srcSet"></param>
-        /// <param name="Defn"></param>
-        protected void copyDefinition(ParameterSet srcSet, ParameterDefinition Defn)
+        /// <param name="srcSet">Source parameter set</param>
+        /// <param name="defn">Parameter definitions</param>
+        protected void CopyDefinition(ParameterSet srcSet, ParameterDefinition defn)
         {
             int Idx;
 
-            if ((Defn.bIsScalar()) && (srcSet != null) && (srcSet.IsDefined(Defn.sFullName)))
+            if (defn.IsScalar() && (srcSet != null) && (srcSet.IsDefined(defn.FullName)))
             {
-                switch (Defn.paramType)
+                switch (defn.ParamType)
                 {
-                    case ptyReal: SetParam(Defn.sFullName, srcSet.fParam(Defn.sFullName));
+                    case TYPEREAL: this.SetParam(defn.FullName, srcSet.ParamReal(defn.FullName));
                         break;
-                    case ptyInt: SetParam(Defn.sFullName, srcSet.iParam(Defn.sFullName));
+                    case TYPEINT: this.SetParam(defn.FullName, srcSet.ParamInt(defn.FullName));
                         break;
-                    case ptyBool: SetParam(Defn.sFullName, srcSet.bParam(Defn.sFullName));
+                    case TYPEBOOL: this.SetParam(defn.FullName, srcSet.ParamBool(defn.FullName));
                         break;
-                    case ptyText: SetParam(Defn.sFullName, srcSet.sParam(Defn.sFullName));
+                    case TYPETEXT: this.SetParam(defn.FullName, srcSet.ParamStr(defn.FullName));
                         break;
                 }
             }
-            else if (Defn.bIsScalar())
-                SetUndefined(Defn.sFullName);
+            else if (defn.IsScalar())
+                this.SetUndefined(defn.FullName);
             else
-                for (Idx = 0; Idx <= Defn.iCount - 1; Idx++)
-                    copyDefinition(srcSet, Defn.item(Idx));
+                for (Idx = 0; Idx <= defn.Count - 1; Idx++)
+                    this.CopyDefinition(srcSet, defn.Item(Idx));
         }
 
         /// <summary>
-        /// 
+        /// Copy the parameter set
         /// </summary>
-        /// <param name="srcSet"></param>
-        /// <param name="bCopyData"></param>
-        virtual protected void copyParams(ParameterSet srcSet, bool bCopyData)
+        /// <param name="srcSet">Source parameter set</param>
+        /// <param name="copyData">Copy the data</param>
+        protected virtual void CopyParams(ParameterSet srcSet, bool copyData)
         {
-            int Kdx;
+            int kdx;
 
             if (srcSet != null)
             {
-                FVersion = srcSet.FVersion;
-                FName = srcSet.FName;
-                FEnglishName = srcSet.FEnglishName;
+                this.FVersion = srcSet.FVersion;
+                this.FName = srcSet.FName;
+                this.FEnglishName = srcSet.FEnglishName;
 
-                Array.Resize(ref FLocales, srcSet.FLocales.Length);
-                for (Kdx = 0; Kdx <= FLocales.Length - 1; Kdx++)
+                Array.Resize(ref this.FLocales, srcSet.FLocales.Length);
+                for (kdx = 0; kdx <= this.FLocales.Length - 1; kdx++)
                 {
-                    FLocales[Kdx] = srcSet.FLocales[Kdx];
+                    this.FLocales[kdx] = srcSet.FLocales[kdx];
                 }
-                FCurrLocale = srcSet.sCurrLocale;
-                Array.Resize(ref FTranslations, srcSet.FTranslations.Length);
-                for (Kdx = 0; Kdx <= FTranslations.Length - 1; Kdx++)
+                this.FCurrLocale = srcSet.CurrLocale;
+                Array.Resize(ref this.FTranslations, srcSet.FTranslations.Length);
+                for (kdx = 0; kdx <= this.FTranslations.Length - 1; kdx++)
                 {
-                    FTranslations[Kdx] = srcSet.FTranslations[Kdx];
+                    this.FTranslations[kdx] = srcSet.FTranslations[kdx];
                 }
             }
 
-            if (bCopyData)
+            if (copyData)
             {
-                for (Kdx = 0; Kdx <= (DefinitionCount() - 1); Kdx++)
+                for (kdx = 0; kdx <= (this.DefinitionCount() - 1); kdx++)
                 {
-                    copyDefinition(srcSet, GetDefinition(Kdx));
+                    this.CopyDefinition(srcSet, this.GetDefinition(kdx));
                 }
-                deriveParams();
+                this.DeriveParams();
             }
-
         }
+
         /// <summary>
-        /// 
+        /// Make a parameter set child
         /// </summary>
-        /// <returns></returns>
-        virtual protected ParameterSet makeChild()
+        /// <returns>A new parameter set</returns>
+        protected virtual ParameterSet MakeChild()
         {
             return new ParameterSet(this);
         }
+
         /// <summary>
         /// This is over-ridden in descendant classes and then called within the         
         /// </summary>
-        virtual protected void defineEntries()
+        protected virtual void DefineEntries()
         {
         }
+
         /// <summary>
         /// These routines are over-ridden in descendant classes
         /// </summary>
-        /// <param name="sTagList"></param>
-        /// <returns></returns>
-        virtual protected double getRealParam(string[] sTagList)
+        /// <param name="tagList">Array of tags</param>
+        /// <returns>The float value</returns>
+        protected virtual double GetRealParam(string[] tagList)
         {
             return 0;
         }
+
         /// <summary>
-        /// 
+        /// These routines are over-ridden in descendant classes
         /// </summary>
-        /// <param name="sTagList"></param>
-        /// <returns></returns>
-        virtual protected int getIntParam(string[] sTagList)
+        /// <param name="tagList">Array of tags</param>
+        /// <returns>The integer value</returns>
+        protected virtual int GetIntParam(string[] tagList)
         {
             return 0;
         }
+
         /// <summary>
-        /// 
+        /// These routines are over-ridden in descendant classes
         /// </summary>
-        /// <param name="sTagList"></param>
-        /// <returns></returns>
-        virtual protected bool getBoolParam(string[] sTagList)
+        /// <param name="tagList">Array of tags</param>
+        /// <returns>The Boolean value</returns>
+        protected virtual bool GetBoolParam(string[] tagList)
         {
             return false;
         }
+
         /// <summary>
-        /// 
+        /// These routines are over-ridden in descendant classes
         /// </summary>
-        /// <param name="sTagList"></param>
-        /// <returns></returns>
-        virtual protected string getTextParam(string[] sTagList)
+        /// <param name="tagList">Array of tags</param>
+        /// <returns>The text value</returns>
+        protected virtual string GetTextParam(string[] tagList)
         {
-            return "";
+            return string.Empty;
         }
+
         /// <summary>
-        /// 
+        /// These routines are over-ridden in descendant classes
         /// </summary>
-        /// <param name="sTagList"></param>
-        /// <param name="fValue"></param>
-        virtual protected void setRealParam(string[] sTagList, double fValue)
+        /// <param name="tagList">Array of tags</param>
+        /// <param name="value">Double value</param>
+        protected virtual void SetRealParam(string[] tagList, double value)
         {
-            //empty
+            // empty
         }
+
         /// <summary>
-        /// 
+        /// These routines are over-ridden in descendant classes
         /// </summary>
-        /// <param name="sTagList"></param>
-        /// <param name="iValue"></param>
-        virtual protected void setIntParam(string[] sTagList, int iValue)
+        /// <param name="tagList">Array of tags</param>
+        /// <param name="value">Integer value</param>
+        protected virtual void SetIntParam(string[] tagList, int value)
         {
-            //empty
+            // empty
         }
+
         /// <summary>
-        /// 
+        /// These routines are over-ridden in descendant classes
         /// </summary>
-        /// <param name="sTagList"></param>
-        /// <param name="bValue"></param>
-        virtual protected void setBoolParam(string[] sTagList, bool bValue)
+        /// <param name="tagList">Array of tags</param>
+        /// <param name="value">Boolean value</param>
+        protected virtual void SetBoolParam(string[] tagList, bool value)
         {
-            //empty
+            // empty
         }
+
         /// <summary>
-        /// 
+        /// These routines are over-ridden in descendant classes
         /// </summary>
-        /// <param name="sTagList"></param>
-        /// <param name="sValue"></param>
-        virtual protected void setTextParam(string[] sTagList, string sValue)
+        /// <param name="tagList">Array of tags</param>
+        /// <param name="value">Text value</param>
+        protected virtual void SetTextParam(string[] tagList, string value)
         {
-            //empty
+            // empty
         }
+
         /// <summary>
         /// Constructor for the root set
         /// </summary>
         public ParameterSet()
         {
-            //new ParameterSet(null, null);
-            FParent = null;
+            // new ParameterSet(null, null);
+            this.FParent = null;
         }
+
         // Constructor for creating a child set
         /*public ParameterSet(ParameterSet aParent)
         {
             new ParameterSet(aParent, aParent);
         }*/
+
         /// <summary>
         /// Copy constructor (with parent)
         /// </summary>
-        /// <param name="aParent"></param>
-        public ParameterSet(ParameterSet aParent)
+        /// <param name="parent">Parent parameter set</param>
+        public ParameterSet(ParameterSet parent)
         {
-            FParent = aParent;
+            this.FParent = parent;
         }
 
         /// <summary>
         /// After calling the constructor, this must be called to 
         /// configure the definitions.
         /// </summary>
-        /// <param name="srcSet"></param>
+        /// <param name="srcSet">The source parameter set</param>
         public void ConstructCopy(ParameterSet srcSet)
         {
-            defineEntries();
-            copyParams(srcSet, true);
+            this.DefineEntries();
+            this.CopyParams(srcSet, true);
 
-            if (FParent != null)
-                sVersion = FParent.sVersion;
+            if (this.FParent != null)
+                this.Version = this.FParent.Version;
             else if (srcSet != null)
-                sVersion = srcSet.sVersion;
+                this.Version = srcSet.Version;
         }
 
         /// <summary>
         /// This is over-ridden in descendant classes and then called within the         
         /// </summary>
-        virtual public void deriveParams()
+        public virtual void DeriveParams()
         {
         }
+
         /// <summary>
-        /// 
+        /// Copy the paramter set
         /// </summary>
-        /// <param name="srcSet"></param>
+        /// <param name="srcSet">The source parameter set</param>
         public void CopyAll(ParameterSet srcSet)
         {
-            int Idx;
+            int idx;
 
-            copyParams(srcSet, true);
+            this.CopyParams(srcSet, true);
 
-            while (ChildCount() > srcSet.ChildCount())
+            while (this.ChildCount() > srcSet.ChildCount())
             {
-                DeleteChild(ChildCount() - 1);
+                this.DeleteChild(this.ChildCount() - 1);
             }
-            while (ChildCount() < srcSet.ChildCount())
+            while (this.ChildCount() < srcSet.ChildCount())
             {
-                AddChild();
+                this.AddChild();
             }
-            for (Idx = 0; Idx <= ChildCount() - 1; Idx++)
+            for (idx = 0; idx <= this.ChildCount() - 1; idx++)
             {
-                GetChild(Idx).CopyAll(srcSet.GetChild(Idx));
+                this.GetChild(idx).CopyAll(srcSet.GetChild(idx));
             }
         }
+
         /// <summary>
-        /// Version
+        /// Gets or sets the version string
         /// </summary>
-        public string sVersion
+        public string Version
         {
-            get { return FVersion; }
-            set { FVersion = value; }
+            get { return this.FVersion; }
+            set { this.FVersion = value; }
         }
+
         /// <summary>
-        /// Name
+        /// Gets or sets the parameter set name
         /// </summary>
-        public string sName
+        public string Name
         {
-            get { return FName; }
-            set { FName = value; }
+            get { return this.FName; }
+            set { this.FName = value; }
         }
+
         /// <summary>
-        /// English name
+        /// Gets or sets the parameter set english name
         /// </summary>
-        public string sEnglishName
+        public string EnglishName
         {
-            get { return FEnglishName; }
-            set { FEnglishName = value; }
+            get { return this.FEnglishName; }
+            set { this.FEnglishName = value; }
         }
+
         /// <summary>
-        /// 
+        /// Get the count of translations
         /// </summary>
-        /// <returns></returns>
-        public int iTranslationCount()
+        /// <returns>The count</returns>
+        public int TranslationCount()
         {
-            if (FLocales != null)
-                return FTranslations.Length;
+            if (this.FLocales != null)
+                return this.FTranslations.Length;
             else
                 return 0;
         }
+
         /// <summary>
-        /// 
+        /// Add a new translation
         /// </summary>
-        /// <param name="lang"></param>
-        /// <param name="text"></param>
-        public void addTranslation(string lang, string text)
+        /// <param name="lang">Language name</param>
+        /// <param name="text">Translation text</param>
+        public void AddTranslation(string lang, string text)
         {
             bool found;
-            int Idx;
+            int idx;
 
             found = false;
-            for (Idx = 0; Idx <= FTranslations.Length - 1; Idx++)
+            for (idx = 0; idx <= this.FTranslations.Length - 1; idx++)
             {
-                if (String.Compare(FTranslations[Idx].sLang, lang, true) == 0)
+                if (string.Compare(this.FTranslations[idx].Lang, lang, true) == 0)
                 {
-                    FTranslations[Idx].sText = text;
+                    this.FTranslations[idx].Text = text;
                     found = true;
                 }
             }
             if (!found)
             {
-                Idx = FTranslations.Length;
-                Array.Resize(ref FTranslations, Idx + 1);
-                FTranslations[Idx].sLang = lang;
-                FTranslations[Idx].sText = text;
+                idx = this.FTranslations.Length;
+                Array.Resize(ref this.FTranslations, idx + 1);
+                this.FTranslations[idx].Lang = lang;
+                this.FTranslations[idx].Text = text;
             }
-            if ((String.Compare("en", lang, true) == 0) || (String.Compare(sName, "") == 0))
-                sName = text;
+            if ((string.Compare("en", lang, true) == 0) || (string.Compare(this.Name, string.Empty) == 0))
+                this.Name = text;
         }
+
         /// <summary>
-        /// 
+        /// Get a translation at an index
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public Translation getTranslation(int Idx)
+        /// <param name="idx">Index value</param>
+        /// <returns>The translation</returns>
+        public Translation GetTranslation(int idx)
         {
-            return FTranslations[Idx];
+            return this.FTranslations[idx];
         }
+
         /// <summary>
         /// Delete the translation at index
         /// </summary>
-        /// <param name="Idx"></param>
-        public void deleteTranslation(int Idx)
+        /// <param name="idx">Index value</param>
+        public void DeleteTranslation(int idx)
         {
-            if ((Idx >= 0) && (Idx < FTranslations.Length))
+            if ((idx >= 0) && (idx < this.FTranslations.Length))
             {
-                for (int i = (Idx + 1); i <= FTranslations.Length - 1; i++)
+                for (int i = idx + 1; i <= this.FTranslations.Length - 1; i++)
                 {
-                    FTranslations[i - 1] = FTranslations[i];
+                    this.FTranslations[i - 1] = this.FTranslations[i];
                 }
-                Array.Resize(ref FTranslations, FTranslations.Length - 1);
+                Array.Resize(ref this.FTranslations, this.FTranslations.Length - 1);
             }
         }
+
         /// <summary>
         /// Count of locales
         /// </summary>
-        /// <returns></returns>
-        public int iLocaleCount()
+        /// <returns>The count of locales</returns>
+        public int LocaleCount()
         {
-            if (FLocales != null)
-                return FLocales.Length;
+            if (this.FLocales != null)
+                return this.FLocales.Length;
             else
                 return 0;
         }
+
         /// <summary>
         /// Get local at index
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public string getLocale(int Idx)
+        /// <param name="idx">Index value</param>
+        /// <returns>The locale string</returns>
+        public string GetLocale(int idx)
         {
-            return FLocales[Idx];
+            return this.FLocales[idx];
         }
+
         /// <summary>
-        /// 
+        /// Add a locale
         /// </summary>
-        /// <param name="sLocale"></param>
-        public void AddLocale(string sLocale)
+        /// <param name="locale">Locale name</param>
+        public void AddLocale(string locale)
         {
-            int Idx = FLocales.Length;
-            Array.Resize(ref FLocales, Idx + 1);
-            FLocales[Idx] = sLocale;
+            int idx = this.FLocales.Length;
+            Array.Resize(ref this.FLocales, idx + 1);
+            this.FLocales[idx] = locale;
         }
+
         /// <summary>
-        /// 
+        /// Get the text for a locale
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Locale text</returns>
         public string GetLocaleText()
         {
-            string result = "";
-            for (int Idx = 0; Idx <= iLocaleCount() - 1; Idx++)
+            string result = string.Empty;
+            for (int idx = 0; idx <= this.LocaleCount() - 1; idx++)
             {
-                if (Idx == 0)
+                if (idx == 0)
                 {
-                    result = result + getLocale(Idx);
+                    result = result + this.GetLocale(idx);
                 }
                 else
                 {
-                    result = result + ";" + getLocale(Idx);
+                    result = result + ";" + this.GetLocale(idx);
                 }
             }
             return result;
         }
+
         /// <summary>
         /// TODO: Test this
         /// </summary>
-        /// <param name="sText"></param>
-        public void SetLocaleText(string sText)
+        /// <param name="text">Locale text</param>
+        public void SetLocaleText(string text)
         {
-            int iPosn;
+            int posIdx;
 
-            Array.Resize(ref FLocales, 0);
+            Array.Resize(ref this.FLocales, 0);
 
-            sText = sText.Trim();
-            while (sText != "")
+            text = text.Trim();
+            while (text != string.Empty)
             {
-                iPosn = sText.IndexOf(";");
-                if (iPosn < 0)
+                posIdx = text.IndexOf(";");
+                if (posIdx < 0)
                 {
-                    AddLocale(sText);
-                    sText = String.Empty;
+                    this.AddLocale(text);
+                    text = string.Empty;
                 }
                 else
                 {
-                    AddLocale((sText.Substring(0, iPosn).Trim()));
-                    sText = sText.Remove(0, iPosn + 1);
+                    this.AddLocale(text.Substring(0, posIdx).Trim());
+                    text = text.Remove(0, posIdx + 1);
                 }
             }
         }
+
         /// <summary>
-        /// 
+        /// Check if this locale is in the list of locales
         /// </summary>
-        /// <param name="sLocale"></param>
-        /// <returns></returns>
-        public bool bInLocale(string sLocale)
+        /// <param name="locale">Locale name</param>
+        /// <returns>True if found</returns>
+        public bool InLocale(string locale)
         {
-            int Idx;
+            int idx;
 
             bool result = false;
 
-            if (sLocale == ALL_LOCALES)
+            if (locale == ALL_LOCALES)
                 result = true;
             else
             {
                 result = false;
-                sLocale = sLocale.ToLower();
-                Idx = 0;
-                while (!result && (Idx < FLocales.Length))
+                locale = locale.ToLower();
+                idx = 0;
+                while (!result && (idx < this.FLocales.Length))
                 {
-                    result = (sLocale == (FLocales[Idx]).ToLower());
-                    Idx++;
+                    result = locale == this.FLocales[idx].ToLower();
+                    idx++;
                 }
             }
 
             return result;
         }
+
         /// <summary>
-        /// Current locale
+        /// Gets or sets the current locale
         /// </summary>
-        public string sCurrLocale
+        public string CurrLocale
         {
-            get { return FCurrLocale; }
-            set { setCurrLocale(value); }
+            get { return this.FCurrLocale; }
+            set { this.SetCurrLocale(value); }
         }
+
         /// <summary>
-        /// Parent parameter set
+        /// Gets the parent parameter set
         /// </summary>
         public ParameterSet Parent
         {
-            get { return FParent; }
+            get { return this.FParent; }
         }
+
         /// <summary>
         /// Count of children
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The count of children</returns>
         public int ChildCount()
         {
-            if (FChildren != null)
-                return FChildren.Length;
+            if (this.FChildren != null)
+                return this.FChildren.Length;
             else
                 return 0;
         }
+
         /// <summary>
-        /// 
+        /// Get a child item
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public ParameterSet GetChild(int Idx)
+        /// <param name="idx">Child index</param>
+        /// <returns>A child paramater set</returns>
+        public ParameterSet GetChild(int idx)
         {
-            return FChildren[Idx];
+            return this.FChildren[idx];
         }
+
         /// <summary>
-        /// 
+        /// Get child by name
         /// </summary>
-        /// <param name="sChild"></param>
-        /// <returns></returns>
-        public ParameterSet GetChild(string sChild)
+        /// <param name="child">Child name</param>
+        /// <returns>The child parameter set</returns>
+        public ParameterSet GetChild(string child)
         {
-            int Idx;
+            int idx;
 
-            sChild = sChild.ToLower().Trim();
-            Idx = 0;
-            while ((Idx < ChildCount()) && (sChild != GetChild(Idx).sName.ToLower()))
-                Idx++;
+            child = child.ToLower().Trim();
+            idx = 0;
+            while ((idx < this.ChildCount()) && (child != this.GetChild(idx).Name.ToLower()))
+                idx++;
 
-            if (Idx < ChildCount())
-                return GetChild(Idx);
+            if (idx < this.ChildCount())
+                return this.GetChild(idx);
             else
                 return null;
         }
+
         /// <summary>
-        /// 
+        /// Add a new parameter set child and return it
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The new child</returns>
         public ParameterSet AddChild()
         {
-            ParameterSet result = makeChild();
-            if (FChildren == null)
-                FChildren = new ParameterSet[0];
-            Array.Resize(ref FChildren, FChildren.Length + 1);
-            FChildren[FChildren.Length - 1] = result;
-            return FChildren[FChildren.Length - 1];
+            ParameterSet result = this.MakeChild();
+            if (this.FChildren == null)
+                this.FChildren = new ParameterSet[0];
+            Array.Resize(ref this.FChildren, this.FChildren.Length + 1);
+            this.FChildren[this.FChildren.Length - 1] = result;
+            return this.FChildren[this.FChildren.Length - 1];
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Idx"></param>
-        public void DeleteChild(int Idx)
-        {
-            int Jdx;
 
-            for (Jdx = Idx + 1; Jdx <= ChildCount() - 1; Jdx++)
+        /// <summary>
+        /// Delete child parameter set by index
+        /// </summary>
+        /// <param name="idx">Child index</param>
+        public void DeleteChild(int idx)
+        {
+            int jdx;
+
+            for (jdx = idx + 1; jdx <= this.ChildCount() - 1; jdx++)
             {
-                FChildren[Jdx - 1] = FChildren[Jdx];
+                this.FChildren[jdx - 1] = this.FChildren[jdx];
             }
-            Array.Resize(ref FChildren, FChildren.Length - 1);
+            Array.Resize(ref this.FChildren, this.FChildren.Length - 1);
         }
+
         /// <summary>
         /// Returns TRUE i.f.f. this is the root (ultimate parent) node                  
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if this is the root</returns>
         public bool NodeIsRoot()
         {
-            return (Parent == null);
+            return this.Parent == null;
         }
+
         /// <summary>
         /// Returns TRUE i.f.f. this node has no child nodes                             
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if no child nodes</returns>
         public bool NodeIsLeaf()
         {
-            return (Parent != null) && ((FChildren == null) || (FChildren.Length == 0));
+            return (this.Parent != null) && ((this.FChildren == null) || (this.FChildren.Length == 0));
         }
+
         /// <summary>
         /// Total number of nodes in the tree of parameter sets, including the current node
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Number of nodes</returns>
         public int NodeCount()
         {
-            int Idx;
+            int idx;
 
             int result = 1;                                                                 // Include Self in the count of nodes    
-            for (Idx = 0; Idx <= ChildCount() - 1; Idx++)
-                result = result + GetChild(Idx).NodeCount();
+            for (idx = 0; idx <= this.ChildCount() - 1; idx++)
+                result = result + this.GetChild(idx).NodeCount();
             return result;
         }
 
@@ -972,73 +1033,75 @@ namespace Models.GrazPlan
         /// Locate a node in the tree by ordinal value. Node 0 is the current node;      
         /// the search then proceeds depth-first (i.e. the first child of node N is node N+1)                                                                         
         /// </summary>
-        /// <param name="iNode"></param>
-        /// <returns></returns>
-        public ParameterSet GetNode(int iNode)
+        /// <param name="nodeIdx">Node index</param>
+        /// <returns>The parameter set node</returns>
+        public ParameterSet GetNode(int nodeIdx)
         {
-            int iOffset, Idx;
+            int offset, idx;
             ParameterSet result;
 
-            if (iNode == 0)
+            if (nodeIdx == 0)
                 result = this;
             else
             {
-                iOffset = 1;
+                offset = 1;
                 result = null;
-                Idx = 0;
-                while ((Idx < ChildCount()) && (result == null))
+                idx = 0;
+                while ((idx < this.ChildCount()) && (result == null))
                 {
-                    result = GetChild(Idx).GetNode(iNode - iOffset);
+                    result = this.GetChild(idx).GetNode(nodeIdx - offset);
                     if (result == null)
                     {
-                        iOffset = iOffset + GetChild(Idx).NodeCount();
-                        Idx++;
+                        offset = offset + this.GetChild(idx).NodeCount();
+                        idx++;
                     }
                 }
             }
             return result;
         }
+
         /// <summary>
-        /// 
+        /// Get the parameter set by node name
         /// </summary>
-        /// <param name="sNode"></param>
-        /// <returns></returns>
-        public ParameterSet GetNode(string sNode)
+        /// <param name="nodeName">Node name</param>
+        /// <returns>The parameter set</returns>
+        public ParameterSet GetNode(string nodeName)
         {
-            int Idx;
+            int idx;
             ParameterSet result;
 
-            sNode = sNode.ToLower().Trim();
-            if (sNode == this.sName.ToLower())
+            nodeName = nodeName.ToLower().Trim();
+            if (nodeName == this.Name.ToLower())
                 result = this;
             else
             {
-                result = GetChild(sNode);
-                Idx = 0;
-                while ((Idx < ChildCount()) && (result == null))
+                result = this.GetChild(nodeName);
+                idx = 0;
+                while ((idx < this.ChildCount()) && (result == null))
                 {
-                    result = GetChild(Idx).GetNode(sNode);
-                    Idx++;
+                    result = this.GetChild(idx).GetNode(nodeName);
+                    idx++;
                 }
             }
             return result;
         }
+
         /// <summary>
         /// Leaf count
         /// </summary>
-        /// <param name="bUseLocale"></param>
-        /// <returns></returns>
-        public int LeafCount(bool bUseLocale = true)
+        /// <param name="useLocale">Filter by current locale</param>
+        /// <returns>The count</returns>
+        public int LeafCount(bool useLocale = true)
         {
-            int Idx;
+            int idx;
 
             int result = 0;
-            if (!NodeIsLeaf())
-                for (Idx = 0; Idx <= ChildCount() - 1; Idx++)
+            if (!this.NodeIsLeaf())
+                for (idx = 0; idx <= this.ChildCount() - 1; idx++)
                 {
-                    result = result + GetChild(Idx).LeafCount(bUseLocale);
+                    result = result + this.GetChild(idx).LeafCount(useLocale);
                 }
-            else if (!bUseLocale || bInLocale(sCurrLocale))
+            else if (!useLocale || this.InLocale(this.CurrLocale))
                 result = 1;
 
             return result;
@@ -1047,115 +1110,117 @@ namespace Models.GrazPlan
         /// <summary>
         /// Locate leaf nodes that match a locale
         /// </summary>
-        /// <param name="iLeaf"></param>
-        /// <param name="bUseLocale"></param>
-        /// <returns></returns>
-        public ParameterSet GetLeaf(int iLeaf, bool bUseLocale = true)
+        /// <param name="leafIdx">Index of the leaf</param>
+        /// <param name="useLocale">Match to current locale</param>
+        /// <returns>The parameter set node</returns>
+        public ParameterSet GetLeaf(int leafIdx, bool useLocale = true)
         {
-            ParameterSet Node;
-            int Idx, Jdx;
+            ParameterSet node;
+            int idx, jdx;
             ParameterSet result;
 
             result = null;
-            int iCount = NodeCount();
-            Idx = 0;
-            Jdx = 0;
-            while ((Idx < iCount) && (result == null))
+            int nodeCount = this.NodeCount();
+            idx = 0;
+            jdx = 0;
+            while ((idx < nodeCount) && (result == null))
             {
-                Node = GetNode(Idx);
-                if (Node.NodeIsLeaf() && (!bUseLocale || Node.bInLocale(sCurrLocale)))
+                node = this.GetNode(idx);
+                if (node.NodeIsLeaf() && (!useLocale || node.InLocale(this.CurrLocale)))
                 {
-                    if (Jdx == iLeaf)
-                        result = Node;
-                    Jdx++;
+                    if (jdx == leafIdx)
+                        result = node;
+                    jdx++;
                 }
-                Idx++;
+                idx++;
             }
 
             return result;
         }
 
         /// <summary>
-        /// 
+        /// Count of definitions
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The count</returns>
         public int DefinitionCount()
         {
-            if (FDefinitions != null)
-                return FDefinitions.Length;
+            if (this.FDefinitions != null)
+                return this.FDefinitions.Length;
             else
                 return 0;
         }
 
         /// <summary>
-        /// 
+        /// Get a parameter definition
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public ParameterDefinition GetDefinition(int Idx)
+        /// <param name="idx">Index of definition</param>
+        /// <returns>The definition</returns>
+        public ParameterDefinition GetDefinition(int idx)
         {
-            return FDefinitions[Idx];
+            return this.FDefinitions[idx];
         }
+
         /// <summary>
         /// Get the parameter definition for sTag
         /// </summary>
-        /// <param name="sTag"></param>
-        /// <returns></returns>
-        public ParameterDefinition GetDefinition(string sTag)
+        /// <param name="tag">Tag name</param>
+        /// <returns>The definition</returns>
+        public ParameterDefinition GetDefinition(string tag)
         {
             ParameterDefinition result = null;
-            string[] sTagList = new string[0];
-            bool bPartName;
+            string[] tagList = new string[0];
+            bool isPartName;
 
-            if (sTag == "")
+            if (tag == string.Empty)
                 result = null;
             else
             {
-                bPartName = (sTag[sTag.Length - 1] == '-');
-                if (bPartName)
-                    sTag = sTag.Remove(sTag.Length - 1, 1);
-                Tokenise(sTag, ref sTagList, "-");
-                result = GetDefinition(sTagList);
-                if ((result != null) && (bPartName == result.bIsScalar()))
+                isPartName = (tag[tag.Length - 1] == '-');
+                if (isPartName)
+                    tag = tag.Remove(tag.Length - 1, 1);
+                this.Tokenise(tag, ref tagList, "-");
+                result = this.GetDefinition(tagList);
+                if ((result != null) && (isPartName == result.IsScalar()))
                     result = null;
             }
             return result;
         }
+
         /// <summary>
-        /// 
+        /// Get the parameter definition
         /// </summary>
-        /// <param name="sTags"></param>
-        /// <returns></returns>
-        public ParameterDefinition GetDefinition(string[] sTags)
+        /// <param name="tags">Array of tags</param>
+        /// <returns>The parameter definition</returns>
+        public ParameterDefinition GetDefinition(string[] tags)
         {
-            int Idx;
+            int idx;
             int defCount;
 
             ParameterDefinition result = null;
-            Idx = 0;
-            defCount = DefinitionCount();
-            while ((Idx < defCount) && (result == null))
+            idx = 0;
+            defCount = this.DefinitionCount();
+            while ((idx < defCount) && (result == null))
             {
-                result = FDefinitions[Idx].FindParam(sTags);
-                Idx++;
+                result = this.FDefinitions[idx].FindParam(tags);
+                idx++;
             }
 
             return result;
         }
 
         /// <summary>
-        /// 
+        /// Get the parameter count
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The count</returns>
         public int ParamCount()
         {
-            int Idx;
+            int idx;
             int defCount;
 
             int result = 0;
-            defCount = DefinitionCount();
-            for (Idx = 0; Idx <= defCount - 1; Idx++)
-                result = result + GetDefinition(Idx).iParamCount;
+            defCount = this.DefinitionCount();
+            for (idx = 0; idx <= defCount - 1; idx++)
+                result = result + this.GetDefinition(idx).ParamCount;
 
             return result;
         }
@@ -1163,43 +1228,44 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get parameter at index
         /// </summary>
-        /// <param name="Idx"></param>
-        /// <returns></returns>
-        public ParameterDefinition getParam(int Idx)
+        /// <param name="idx">The index</param>
+        /// <returns>The parameter definition</returns>
+        public ParameterDefinition GetParam(int idx)
         {
-            int iDefn = 0;
-            int iOffset = 0;
-            int defCount = DefinitionCount();
-            while ((iDefn < defCount) && (iOffset + GetDefinition(iDefn).iParamCount <= Idx))
+            int defnIdx = 0;
+            int offset = 0;
+            int defCount = this.DefinitionCount();
+            while ((defnIdx < defCount) && (offset + this.GetDefinition(defnIdx).ParamCount <= idx))
             {
-                iOffset = iOffset + GetDefinition(iDefn).iParamCount;
-                iDefn++;
+                offset = offset + this.GetDefinition(defnIdx).ParamCount;
+                defnIdx++;
             }
 
-            if (iDefn < defCount)
-                return GetDefinition(iDefn).getParam(Idx - iOffset);
+            if (defnIdx < defCount)
+                return this.GetDefinition(defnIdx).getParam(idx - offset);
             else
                 return null;
         }
+
         /// <summary>
         /// Returns a floating-point parameter
         /// </summary>
-        /// <param name="sTag"></param>
-        /// <returns>Returns a floating-point parameter</returns>
-        public double fParam(string sTag)
+        /// <param name="tag">The tag name</param>
+        /// <returns>Returns the parameter value</returns>
+        public double ParamReal(string tag)
         {
-            string[] sTagList = new string[0];
-            ParameterDefinition Definition;
+            string[] tagList = new string[0];
+            ParameterDefinition definition;
             double result = 0;
 
-            Tokenise(sTag, ref sTagList, "-");
-            Definition = GetDefinition(sTagList);
-            if ((Definition == null) || !(Definition.bIsScalar()))
-                throw new Exception("Invalid parameter name " + sTag);
-            else if (!Definition.ValueIsDefined())
-                throw new Exception("Parameter value undefined: " + sTag);
+            this.Tokenise(tag, ref tagList, "-");
+            definition = this.GetDefinition(tagList);
+            if ((definition == null) || !definition.IsScalar())
+                throw new Exception("Invalid parameter name " + tag);
+            else if (!definition.ValueIsDefined())
+                throw new Exception("Parameter value undefined: " + tag);
             else
-                result = getRealParam(sTagList);
+                result = this.GetRealParam(tagList);
 
             return result;
         }
@@ -1207,23 +1273,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// Returns an integer parameter.
         /// </summary>
-        /// <param name="sTag"></param>
-        /// <returns></returns>
-        public int iParam(string sTag)
+        /// <param name="tag">The tag name</param>
+        /// <returns>The integer value</returns>
+        public int ParamInt(string tag)
         {
-
-            string[] sTagList = new string[0];
-            ParameterDefinition Definition;
+            string[] tagList = new string[0];
+            ParameterDefinition definition;
             int result = 0;
 
-            Tokenise(sTag, ref sTagList, "-");
-            Definition = GetDefinition(sTagList);
-            if ((Definition == null) || !(Definition.bIsScalar()))
-                throw new Exception("Invalid parameter name " + sTag);
-            else if (!(Definition.ValueIsDefined()))
-                throw new Exception("Parameter value undefined: " + sTag);
+            this.Tokenise(tag, ref tagList, "-");
+            definition = this.GetDefinition(tagList);
+            if ((definition == null) || !definition.IsScalar())
+                throw new Exception("Invalid parameter name " + tag);
+            else if (!definition.ValueIsDefined())
+                throw new Exception("Parameter value undefined: " + tag);
             else
-                result = getIntParam(sTagList);
+                result = this.GetIntParam(tagList);
 
             return result;
         }
@@ -1231,22 +1296,22 @@ namespace Models.GrazPlan
         /// <summary>
         /// Returns a Boolean parameter.
         /// </summary>
-        /// <param name="sTag"></param>
-        /// <returns></returns>
-        public bool bParam(string sTag)
+        /// <param name="tag">The tag name</param>
+        /// <returns>The boolean value</returns>
+        public bool ParamBool(string tag)
         {
-            string[] sTagList = new string[0];
-            ParameterDefinition Definition;
+            string[] tagList = new string[0];
+            ParameterDefinition definition;
             bool result = false;
 
-            Tokenise(sTag, ref sTagList, "-");
-            Definition = GetDefinition(sTagList);
-            if ((Definition == null) || !(Definition.bIsScalar()))
-                throw new Exception("Invalid parameter name " + sTag);
-            else if (!(Definition.ValueIsDefined()))
-                throw new Exception("Parameter value undefined: " + sTag);
+            this.Tokenise(tag, ref tagList, "-");
+            definition = this.GetDefinition(tagList);
+            if ((definition == null) || !definition.IsScalar())
+                throw new Exception("Invalid parameter name " + tag);
+            else if (!definition.ValueIsDefined())
+                throw new Exception("Parameter value undefined: " + tag);
             else
-                result = getBoolParam(sTagList);
+                result = this.GetBoolParam(tagList);
 
             return result;
         }
@@ -1254,31 +1319,31 @@ namespace Models.GrazPlan
         /// <summary>
         /// Returns a string parameter.
         /// </summary>
-        /// <param name="sTag"></param>
-        /// <returns></returns>
-        public string sParam(string sTag)
+        /// <param name="tag">The tag name</param>
+        /// <returns>The parameter value</returns>
+        public string ParamStr(string tag)
         {
-            string[] sTagList = new string[0];
-            ParameterDefinition Definition;
-            string result = "";
+            string[] tagList = new string[0];
+            ParameterDefinition definition;
+            string result = string.Empty;
 
-            Tokenise(sTag, ref sTagList, "-");
-            Definition = GetDefinition(sTagList);
-            if ((Definition == null) || !(Definition.bIsScalar()))
-                throw new Exception("Invalid parameter name " + sTag);
-            else if (!(Definition.ValueIsDefined()))
-                throw new Exception("Parameter value undefined: " + sTag);
+            this.Tokenise(tag, ref tagList, "-");
+            definition = this.GetDefinition(tagList);
+            if ((definition == null) || !definition.IsScalar())
+                throw new Exception("Invalid parameter name " + tag);
+            else if (!definition.ValueIsDefined())
+                throw new Exception("Parameter value undefined: " + tag);
             else
             {
-                switch (Definition.paramType)
+                switch (definition.ParamType)
                 {
-                    case ptyText: result = getTextParam(sTagList);
+                    case TYPETEXT: result = this.GetTextParam(tagList);
                         break;
-                    case ptyReal: result = String.Format("{0:G}", getRealParam(sTagList));
+                    case TYPEREAL: result = string.Format("{0:G}", this.GetRealParam(tagList));
                         break;
-                    case ptyInt: result = String.Format("{0:D}", getIntParam(sTagList));
+                    case TYPEINT: result = string.Format("{0:D}", this.GetIntParam(tagList));
                         break;
-                    case ptyBool: if (getBoolParam(sTagList))
+                    case TYPEBOOL: if (this.GetBoolParam(tagList))
                             result = "true";
                         else
                             result = "false";
@@ -1291,170 +1356,172 @@ namespace Models.GrazPlan
         /// <summary>
         /// Sets the value of a floating-point parameter, noting that its value is now defined
         /// </summary>
-        /// <param name="sTag"></param>
-        /// <param name="fValue"></param>
-        public void SetParam(string sTag, double fValue)
+        /// <param name="tag">The tag name</param>
+        /// <param name="newValue">The new value</param>
+        public void SetParam(string tag, double newValue)
         {
-            string[] sTagList = new string[0];
-            ParameterDefinition Definition;
+            string[] tagList = new string[0];
+            ParameterDefinition definition;
 
-            Tokenise(sTag, ref sTagList, "-");
-            Definition = GetDefinition(sTagList);
-            if ((Definition == null) || !(Definition.bIsScalar()))
-                throw new Exception("Invalid parameter name " + sTag);
+            this.Tokenise(tag, ref tagList, "-");
+            definition = this.GetDefinition(tagList);
+            if ((definition == null) || !definition.IsScalar())
+                throw new Exception("Invalid parameter name " + tag);
             else
             {
-                setRealParam(sTagList, fValue);
-                Definition.setDefined(true);
+                this.SetRealParam(tagList, newValue);
+                definition.SetDefined(true);
             }
         }
+
         /// <summary>
         /// Sets the value of an integer parameter, noting that its value is now defined 
         /// </summary>
-        /// <param name="sTag"></param>
-        /// <param name="iValue"></param>
-        public void SetParam(string sTag, int iValue)
+        /// <param name="tag">The tag name</param>
+        /// <param name="newValue">New value</param>
+        public void SetParam(string tag, int newValue)
         {
-            string[] sTagList = new string[0];
-            ParameterDefinition Definition;
+            string[] tagList = new string[0];
+            ParameterDefinition definition;
 
-            Tokenise(sTag, ref sTagList, "-");
-            Definition = GetDefinition(sTagList);
-            if ((Definition == null) || !(Definition.bIsScalar()))
-                throw new Exception("Invalid parameter name " + sTag);
+            this.Tokenise(tag, ref tagList, "-");
+            definition = this.GetDefinition(tagList);
+            if ((definition == null) || !definition.IsScalar())
+                throw new Exception("Invalid parameter name " + tag);
             else
             {
-                setIntParam(sTagList, iValue);
-                Definition.setDefined(true);
+                this.SetIntParam(tagList, newValue);
+                definition.SetDefined(true);
             }
-
         }
+
         /// <summary>
         /// Sets the value of a Boolean parameter, noting that its value is now defined
         /// </summary>
-        /// <param name="sTag"></param>
-        /// <param name="bValue"></param>
-        public void SetParam(string sTag, bool bValue)
+        /// <param name="tag"></param>
+        /// <param name="newValue"></param>
+        public void SetParam(string tag, bool newValue)
         {
-            string[] sTagList = new string[0];
-            ParameterDefinition Definition;
+            string[] tagList = new string[0];
+            ParameterDefinition definition;
 
-            Tokenise(sTag, ref sTagList, "-");
-            Definition = GetDefinition(sTagList);
-            if ((Definition == null) || !Definition.bIsScalar())
-                throw new Exception("Invalid parameter name " + sTag);
+            this.Tokenise(tag, ref tagList, "-");
+            definition = this.GetDefinition(tagList);
+            if ((definition == null) || !definition.IsScalar())
+                throw new Exception("Invalid parameter name " + tag);
             else
             {
-                setBoolParam(sTagList, bValue);
-                Definition.setDefined(true);
+                this.SetBoolParam(tagList, newValue);
+                definition.SetDefined(true);
             }
         }
+
         /// <summary>
         /// 1. Sets the value of a string parameter, noting that its value is now defined.                                                                  
         /// 2. Parses and sets the value of a floating-point, integer or Boolean parameter.                                                                
         /// </summary>
-        /// <param name="sTag"></param>
-        /// <param name="sValue"></param>
-        public void SetParam(string sTag, string sValue)
+        /// <param name="tag"></param>
+        /// <param name="newValue">New value</param>
+        public void SetParam(string tag, string newValue)
         {
-            string[] sTagList = new string[0];
-            ParameterDefinition Definition;
-            double fValue;
-            int iValue;
+            string[] tagList = new string[0];
+            ParameterDefinition definition;
+            double dblValue;
+            int intValue;
 
-            Tokenise(sTag, ref sTagList, "-");
-            Definition = GetDefinition(sTagList);
-            if ((Definition == null) || !Definition.bIsScalar())
-                throw new Exception("Invalid parameter name " + sTag);
+            this.Tokenise(tag, ref tagList, "-");
+            definition = this.GetDefinition(tagList);
+            if ((definition == null) || !definition.IsScalar())
+                throw new Exception("Invalid parameter name " + tag);
             else
             {
-                switch (Definition.paramType)
+                switch (definition.ParamType)
                 {
-                    case ptyText: setTextParam(sTagList, sValue);
+                    case TYPETEXT: this.SetTextParam(tagList, newValue);
                         break;
-                    case ptyReal:
+                    case TYPEREAL:
                         {
                             try
                             {
-                                fValue = System.Convert.ToDouble(sValue, 
-                                                                 System.Globalization.CultureInfo.InvariantCulture);
-                                setRealParam(sTagList, fValue);
+                                dblValue = System.Convert.ToDouble(newValue, System.Globalization.CultureInfo.InvariantCulture);
+                                this.SetRealParam(tagList, dblValue);
                             }
                             catch
                             {
-                                throw new Exception("Error parsing parameter " + sTag + " = " + sValue);
+                                throw new Exception("Error parsing parameter " + tag + " = " + newValue);
                             }
                         }
                         break;
-                    case ptyInt:
+                    case TYPEINT:
                         {
                             try
                             {
-                                iValue = System.Convert.ToInt32(sValue);
-                                setIntParam(sTagList, iValue);
+                                intValue = System.Convert.ToInt32(newValue, CultureInfo.InvariantCulture);
+                                this.SetIntParam(tagList, intValue);
                             }
                             catch
                             {
-                                throw new Exception("Error parsing parameter " + sTag + " = " + sValue);
+                                throw new Exception("Error parsing parameter " + tag + " = " + newValue);
                             }
                         }
                         break;
-                    case ptyBool:
+                    case TYPEBOOL:
                         {
-                            if (sValue.ToLower() == "true")
-                                setBoolParam(sTagList, true);
-                            else if (sValue.ToLower() == "false")
-                                setBoolParam(sTagList, false);
+                            if (newValue.ToLower() == "true")
+                                this.SetBoolParam(tagList, true);
+                            else if (newValue.ToLower() == "false")
+                                this.SetBoolParam(tagList, false);
                             else
-                                throw new Exception("Error parsing parameter " + sTag + " = " + sValue);
+                                throw new Exception("Error parsing parameter " + tag + " = " + newValue);
                         }
                         break;
                 }
-                Definition.setDefined(true);
+                definition.SetDefined(true);
             }
         }
 
         /// <summary>
         /// Un-defines a parameter value 
         /// </summary>
-        /// <param name="sTag"></param>
-        public void SetUndefined(string sTag)
+        /// <param name="tag">Tag name</param>
+        public void SetUndefined(string tag)
         {
-            ParameterDefinition Definition;
+            ParameterDefinition definition;
 
-            Definition = GetDefinition(sTag);
-            if ((Definition == null) || !(Definition.bIsScalar()))
-                throw new Exception("Invalid parameter name " + sTag);
+            definition = this.GetDefinition(tag);
+            if ((definition == null) || !definition.IsScalar())
+                throw new Exception("Invalid parameter name " + tag);
             else
-                Definition.setDefined(false);
+                definition.SetDefined(false);
         }
 
         /// <summary>
-        /// 
+        /// Is the parameter defined
         /// </summary>
-        /// <param name="sTag"></param>
+        /// <param name="tag">Tag name</param>
         /// <returns>Returns TRUE i.f.f. the nominated parameter has a defined value</returns>
-        public bool IsDefined(string sTag)
+        public bool IsDefined(string tag)
         {
-            ParameterDefinition Definition;
+            ParameterDefinition definition;
 
-            Definition = GetDefinition(sTag);
-            return ((Definition != null) && (Definition.ValueIsDefined()));
+            definition = this.GetDefinition(tag);
+            return (definition != null) && definition.ValueIsDefined();
         }
+
         /// <summary>
         /// Returns TRUE i.f.f. all parameters in the set have defined values
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if all the parameters have values</returns>
         public bool IsComplete()
         {
-            int Idx;
+            int idx;
             int defCount;
 
             bool result = true;
-            defCount = DefinitionCount();
-            for (Idx = 0; Idx <= defCount - 1; Idx++)
+            defCount = this.DefinitionCount();
+            for (idx = 0; idx <= defCount - 1; idx++)
             {
-                result = (result && GetDefinition(Idx).ValueIsDefined());
+                result = result && this.GetDefinition(idx).ValueIsDefined();
             }
 
             return result;
@@ -1465,51 +1532,52 @@ namespace Models.GrazPlan
         /// </summary>
         public void LocaliseNames()
         {
-            ParameterSet Ancestor, child;
-            int Idx, itrans;
+            ParameterSet ancestor, child;
+            int idx, itrans;
             Translation translation;
 
-            Ancestor = this;
-            if (Ancestor != null)
+            ancestor = this;
+            if (ancestor != null)
             {
-                while (Ancestor.Parent != null)
+                while (ancestor.Parent != null)
                 {
-                    Ancestor = Ancestor.Parent;
+                    ancestor = ancestor.Parent;
                 }
 
-                for (Idx = 0; Idx <= Ancestor.NodeCount() - 1; Idx++)
+                for (idx = 0; idx <= ancestor.NodeCount() - 1; idx++)
                 {
-                    child = Ancestor.GetNode(Idx);
-                    child.sName = child.sEnglishName; // Use English name if target language not found
-                    for (itrans = 0; itrans <= child.iTranslationCount() - 1; itrans++)
+                    child = ancestor.GetNode(idx);
+                    child.Name = child.EnglishName; // Use English name if target language not found
+                    for (itrans = 0; itrans <= child.TranslationCount() - 1; itrans++)
                     {
-                        translation = child.getTranslation(itrans);
-                        if (String.Compare(translation.sLang, GetUILang(), true) == 0)
-                            child.sName = translation.sText;
+                        translation = child.GetTranslation(itrans);
+                        if (string.Compare(translation.Lang, this.GetUILang(), true) == 0)
+                            child.Name = translation.Text;
                     }
                 }
             }
         }
+
         /// <summary>
-        /// Source file name
+        /// Gets or sets the source file name
         /// </summary>
         public string FileSource
         {
-            get { return FFileSource; }
-            set { FFileSource = value; }
+            get { return this.FFileSource; }
+            set { this.FFileSource = value; }
         }
 
         /// <summary>
         /// Returns the 2-letter ISO 639 language code, or 'en' if that fails            
         /// TODO: Test this
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The language code</returns>
         public string GetUILang()
         {
             string result;
 
-            if (UILang != "")
-                result = UILang;
+            if (this.UILang != string.Empty)
+                result = this.UILang;
             else
             {
                 result = System.Environment.GetEnvironmentVariable("LANG");  // Allow environment variable to override system setting
@@ -1521,13 +1589,14 @@ namespace Models.GrazPlan
 
             return result;
         }
+
         /// <summary>
         /// Set the IU language
         /// </summary>
-        /// <param name="sLang"></param>
-        public void SetUILang(string sLang)
+        /// <param name="language">The language name</param>
+        public void SetUILang(string language)
         {
-            UILang = sLang;
+            this.UILang = language;
         }
     }
 
@@ -1574,6 +1643,7 @@ namespace Models.GrazPlan
    end; {_ RealToText _}
 
 */
+
     /// <summary>
     /// Common locale for use across models and programs
     /// * The locale is a two-character country code that is stored in the registry. 
@@ -1586,11 +1656,11 @@ namespace Models.GrazPlan
         /// * The locale is a two-character country code that is stored in the registry. 
         /// * If there is no entry in the registry, 'au' is returned.                     
         /// </summary>
-        /// <returns></returns>
-        public static string sDefaultLocale()
+        /// <returns>The current locale being used</returns>
+        public static string DefaultLocale()
         {
-            string Result;
-            string sRegString = "";
+            string result;
+            string regString = string.Empty;
             /*       TRegistry Registry;
                //  CountryName: array[0..3] of char;
    
@@ -1604,18 +1674,19 @@ namespace Models.GrazPlan
                    catch()
                  {
                    } */
-            if (sRegString == "")
+            if (regString == string.Empty)
             {
-                //    // If locale (=ISO 3166 country code) is not specified in the registry, then query the OS
-                //    if GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SISO3166CTRYNAME, CountryName, SizeOf(CountryName)) = 3 then
-                //      Result := LowerCase(CountryName)
-                //    else
-                Result = "au"; // Australia is the default locale
+                //// If locale (=ISO 3166 country code) is not specified in the registry, then query the OS
+                // if GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SISO3166CTRYNAME, CountryName, SizeOf(CountryName)) = 3 then
+                //   Result := LowerCase(CountryName)
+                // else
+                result = "au"; // Australia is the default locale
             }
             else
-                Result = sRegString.ToLower();
-            return Result;
+                result = regString.ToLower();
+            return result;
         }
+
         /*
            {==============================================================================}
            { bInLocale                                                                    }

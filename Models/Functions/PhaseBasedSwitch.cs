@@ -21,6 +21,10 @@ namespace Models.Functions
         [Link]
         Phenology Phenology = null;
 
+        private int startStageIndex;
+
+        private int endStageIndex;
+
         /// <summary>The start</summary>
         [Description("Start")]
         public string Start { get; set; }
@@ -44,7 +48,7 @@ namespace Models.Functions
             if (End == "")
                 throw new Exception("Phase end name not set:" + Name);
 
-            if (Phenology.Between(Start, End))
+            if (Phenology.Between(startStageIndex, endStageIndex))
             {
                 return 1.0;
             }
@@ -69,6 +73,16 @@ namespace Models.Functions
                 foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
             }
+        }
+
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            startStageIndex = Phenology.StartStagePhaseIndex(Start);
+            endStageIndex = Phenology.EndStagePhaseIndex(End);
         }
     }
 }

@@ -3,7 +3,7 @@ using UserInterface.Interfaces;
 
 namespace UserInterface.Views
 {
-    interface IManagerView
+    public interface IManagerView
     {
         /// <summary>
         /// Provides access to the properties grid.
@@ -24,8 +24,8 @@ namespace UserInterface.Views
     public class ManagerView : ViewBase,  IManagerView
     {
 
-        private GridView Grid;
-        private EditorView ScriptEditor;
+        private GridView grid;
+        private EditorView scriptEditor;
         private Notebook notebook;
 
 
@@ -35,22 +35,22 @@ namespace UserInterface.Views
         public ManagerView(ViewBase owner) : base(owner)
         {
             notebook = new Notebook();
-            _mainWidget = notebook;
-            Grid = new GridView(this);
-            ScriptEditor = new EditorView(this);
-            notebook.AppendPage(Grid.MainWidget, new Label("Properties"));
-            notebook.AppendPage(ScriptEditor.MainWidget, new Label("Script"));
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget = notebook;
+            grid = new GridView(this);
+            scriptEditor = new EditorView(this);
+            notebook.AppendPage(grid.MainWidget, new Label("Properties"));
+            notebook.AppendPage(scriptEditor.MainWidget, new Label("Script"));
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            Grid.MainWidget.Destroy();
-            Grid = null;
-            ScriptEditor.MainWidget.Destroy();
-            ScriptEditor = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            grid.MainWidget.Destroy();
+            grid = null;
+            scriptEditor.MainWidget.Destroy();
+            scriptEditor = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>
@@ -62,8 +62,8 @@ namespace UserInterface.Views
             set { notebook.CurrentPage = value; }
         }
 
-        public IGridView GridView { get { return Grid; } }
-        public IEditorView Editor { get { return ScriptEditor; } }
+        public IGridView GridView { get { return grid; } }
+        public IEditorView Editor { get { return scriptEditor; } }
        
     }
 }

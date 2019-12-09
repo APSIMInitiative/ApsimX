@@ -1,13 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Scope.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Linq;
 
     /// <summary>
     /// Implements APSIMs scoping rules.
@@ -28,34 +24,41 @@ namespace Models.Core
             if (cache.TryGetValue(relativeToFullPath, out modelsInScope))
                 return modelsInScope.ToArray();
 
-            // The algorithm is to find the parent Zone of the specified model.
-            // Then return all children of this zone recursively and then recursively 
-            // the direct children of the parents of the zone.
-            IModel parentZone = FindScopedParentModel(relativeTo);
-            if (parentZone == null)
+            // The algorithm is to find the parent scoped model of the specified model.
+            // Then return all descendants of the scoped model and then recursively
+            // the direct children of the parents of the scoped model. For any direct
+            // child of the parents of the scoped model, we also return its descendants
+            // if it is not a scoped model.
+
+            IModel scopedParent = FindScopedParentModel(relativeTo);
+            if (scopedParent == null)
                 throw new Exception("No scoping model found relative to: " + Apsim.FullPath(relativeTo));
 
-            // return all models in zone and all direct children of zones parent.
+            // Return all models in zone and all direct children of zones parent.
             modelsInScope = new List<IModel>();
-            modelsInScope.Add(parentZone);
-            modelsInScope.AddRange(Apsim.ChildrenRecursively(parentZone));
-            while (parentZone.Parent != null)
+            modelsInScope.Add(scopedParent);
+            modelsInScope.AddRange(Apsim.ChildrenRecursively(scopedParent));
+            while (scopedParent.Parent != null)
             {
-                parentZone = parentZone.Parent;
-                modelsInScope.Add(parentZone);
-                foreach (IModel child in parentZone.Children)
+                scopedParent = scopedParent.Parent;
+                modelsInScope.Add(scopedParent);
+                foreach (IModel child in scopedParent.Children)
                 {
                     if (!modelsInScope.Contains(child))
                     {
                         modelsInScope.Add(child);
+
+                        // Return the child's descendants if it is not a scoped model.
+                        // This ensures that a soil's water node will be in scope of
+                        // a manager inside a folder inside a zone.
                         if (!IsScopedModel(child))
                             modelsInScope.AddRange(Apsim.ChildrenRecursively(child));
                     }
                 }
             }
 
-            if (!modelsInScope.Contains(parentZone))
-                modelsInScope.Add(parentZone); // top level simulation
+            if (!modelsInScope.Contains(scopedParent))
+                modelsInScope.Add(scopedParent); // top level simulation
 
             // add to cache for next time.
             cache.Add(relativeToFullPath, modelsInScope);
@@ -67,7 +70,7 @@ namespace Models.Core
         /// Returns null if non found.
         /// </summary>
         /// <param name="relativeTo">The model to use as a base.</param>
-        private static IModel FindScopedParentModel(IModel relativeTo)
+        public static IModel FindScopedParentModel(IModel relativeTo)
         {
             do
             {
@@ -80,6 +83,16 @@ namespace Models.Core
             while (relativeTo != null);
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns true iff model x is in scope of model y.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        public bool InScopeOf(IModel x, IModel y)
+        {
+            return FindAll(y).Contains(x);
         }
 
         /// <summary>

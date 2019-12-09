@@ -1,0 +1,26 @@
+{
+	"$type": "Models.Core.Simulations, Models",
+	"Version": 32,
+	"Name": "Simulations",
+	"Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Name": "Clock1",
+		  "Children": []
+        },
+		{
+          "$type": "Models.Clock, Models",
+          "Name": "Clock2",
+        },
+		{
+          "$type": "Models.Clock, Models",
+          "Name": "Clock3",
+		  "Children": [
+			{
+			  "$type": "Models.Clock, Models",
+			  "Name": "Clock",
+			}
+		  ]
+        },
+	]
+}

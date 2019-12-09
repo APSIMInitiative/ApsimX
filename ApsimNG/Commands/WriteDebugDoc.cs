@@ -14,6 +14,7 @@ namespace UserInterface.Commands
     using Presenters;
     using System.Xml.Xsl;
     using System.Diagnostics;
+    using Models.Core.Run;
 
     /// <summary>
     /// This command exports the specified node and all child nodes as HTML.
@@ -40,20 +41,16 @@ namespace UserInterface.Commands
         /// <summary>
         /// Perform the command
         /// </summary>
-        public void Do(CommandHistory CommandHistory)
+        public void Do(CommandHistory commandHistory)
         {
             Simulation clonedSimulation = null;
-            IEvent events = null;
             try
             {
                 List<Simulation> sims = new List<Models.Core.Simulation>();
-                clonedSimulation = Apsim.Clone(simulation) as Simulation;
-                sims.Add(clonedSimulation);
-                explorerPresenter.ApsimXFile.MakeSubsAndLoad(clonedSimulation);
+                var sim = new SimulationDescription(simulation);
+                sims.Add(sim.ToSimulation());
 
-                events = explorerPresenter.ApsimXFile.GetEventService(clonedSimulation);
-                events.ConnectEvents();
-                explorerPresenter.ApsimXFile.Links.Resolve(clonedSimulation);
+                explorerPresenter.ApsimXFile.GetEventService(clonedSimulation).ConnectEvents();
 
                 List<ModelDoc> models = new List<ModelDoc>();
                 foreach (IModel model in Apsim.ChildrenRecursively(clonedSimulation))
@@ -91,8 +88,8 @@ namespace UserInterface.Commands
             {
                 if (clonedSimulation != null)
                 {
-                    events.DisconnectEvents();
-                    explorerPresenter.ApsimXFile.Links.Unresolve(clonedSimulation, allLinks:true);
+                    explorerPresenter.ApsimXFile.GetEventService(clonedSimulation).DisconnectEvents();
+                    explorerPresenter.ApsimXFile.Links.Unresolve(clonedSimulation, true);
                 }
             }
         }
@@ -238,7 +235,7 @@ namespace UserInterface.Commands
         /// <summary>
         /// Undo the command
         /// </summary>
-        public void Undo(CommandHistory CommandHistory)
+        public void Undo(CommandHistory commandHistory)
         {
 
         }

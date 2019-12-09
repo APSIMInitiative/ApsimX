@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all human food store types for the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStore.htm")]
     public class HumanFoodStore: ResourceBaseWithTransactions
     {
         /// <summary>
@@ -85,7 +86,17 @@ namespace Models.CLEM.Resources
 
         #endregion
 
-    }
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            return html;
+        }
 
+    }
 
 }

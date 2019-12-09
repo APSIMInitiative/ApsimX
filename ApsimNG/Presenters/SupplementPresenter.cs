@@ -112,7 +112,7 @@ namespace UserInterface.Presenters
         /// <param name="e">The arguments</param>
         private void OnSupplementSelected(object sender, TIntArgs e)
         {
-            this.explorerPresenter.CommandHistory.Add(new Commands.SelectSupplementCommand(supplement, supplement.CurIndex, e.value + 1)); // Offset by 1 to skip fodder
+            this.explorerPresenter.CommandHistory.Add(new Commands.SelectSupplementCommand(supplement, supplement.CurIndex, e.Value + 1)); // Offset by 1 to skip fodder
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                this.explorerPresenter.CommandHistory.Add(new Commands.AddSupplementCommand(supplement, e.name));
+                this.explorerPresenter.CommandHistory.Add(new Commands.AddSupplementCommand(supplement, e.Name));
             }
             catch (Exception err)
             {
@@ -208,19 +208,19 @@ namespace UserInterface.Presenters
         {
             try
             {
-                int attr = e.attr;
+                int attr = e.Attr;
                 if (attr == -2)
                 {
-                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], "IsRoughage", e.attrVal != 0.0));
+                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], "IsRoughage", e.AttrVal != 0.0));
                 }
                 else if (attr == -1)
                 {
-                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], "Amount", e.attrVal));
+                    explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], "Amount", e.AttrVal));
                 }
                 else if (attr >= 0)
                 {
                     string propName = null;
-                    FoodSupplement.SuppAttribute tagEnum = (FoodSupplement.SuppAttribute)e.attr;
+                    FoodSupplement.SuppAttribute tagEnum = (FoodSupplement.SuppAttribute)e.Attr;
                     switch (tagEnum)
                     {
                         case FoodSupplement.SuppAttribute.spaDMP:
@@ -254,7 +254,7 @@ namespace UserInterface.Presenters
                             break;
                     }
                     if (propName != null)
-                        explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], propName, e.attrVal));
+                        explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], propName, e.AttrVal));
                 }
             }
             catch (Exception err)
@@ -272,7 +272,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], "Name", e.name));
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(supplement[supplement.CurIndex], "Name", e.Name));
             }
             catch (Exception err)
             {

@@ -27,6 +27,9 @@ namespace UserInterface.Views
 
         /// <summary>Gets or sets whether the control should be editable.</summary>
         bool IsEditable { get; set; }
+
+        /// <summary>Controls whether the user can change the selected item.</summary>
+        bool IsSensitive { get; set; }
     }
 
     /// <summary>A drop down view.</summary>
@@ -74,11 +77,11 @@ namespace UserInterface.Views
         /// </summary>
         private void SetupCombo()
         {
-            _mainWidget = combobox1;
+            mainWidget = combobox1;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Changed += OnSelectionChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -91,8 +94,8 @@ namespace UserInterface.Views
             combobox1.Changed -= OnSelectionChanged;
             comboModel.Dispose();
             comboRender.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Gets or sets the list of valid values.</summary>
@@ -104,7 +107,7 @@ namespace UserInterface.Views
                 string[] result = new string[numNames];
                 TreeIter iter;
                 int i = 0;
-                if (combobox1.GetActiveIter(out iter))
+                if (comboModel.GetIterFirst(out iter))
                     do
                         result[i++] = (string)comboModel.GetValue(iter, 0);
                     while (comboModel.IterNext(ref iter) && i < numNames);
@@ -167,7 +170,7 @@ namespace UserInterface.Views
                 if (comboModel.GetIterFirst(out iter))
                 {
                     string entry = (string)comboModel.GetValue(iter, 0);
-                    while (!entry.Equals(value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
+                    while (entry != null && !entry.Equals(value, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
                         entry = (string)comboModel.GetValue(iter, 0);
                     if (entry == value)
                         combobox1.SetActiveIter(iter);
@@ -207,13 +210,33 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Controls whether the user can change the selected item.</summary>
+        public bool IsSensitive
+        {
+            get
+            {
+                return combobox1.Sensitive;
+            }
+            set
+            {
+                combobox1.Sensitive = value;
+            }
+        }
+
         /// <summary>User has changed the selection.</summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
         private void OnSelectionChanged(object sender, EventArgs e)
         {
-            if (Changed != null)
-                Changed.Invoke(this, e);
+            try
+            {
+                if (Changed != null)
+                    Changed.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

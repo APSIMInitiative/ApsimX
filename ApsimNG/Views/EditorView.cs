@@ -15,6 +15,32 @@ namespace UserInterface.Views
     using Utility;
     using Presenters;
     using Cairo;
+    using System.Globalization;
+    using Mono.TextEditor.Highlighting;
+
+    /// <summary>
+    /// What sort of text is this editor displaying?
+    /// This is used to determine syntax highlighting rules.
+    /// We could potentially add more options here in future if, say,
+    /// we were to implement a python manager component.
+    /// </summary>
+    public enum EditorType
+    {
+        /// <summary>
+        /// C# manager script.
+        /// </summary>
+        ManagerScript,
+
+        /// <summary>
+        /// Report.
+        /// </summary>
+        Report,
+
+        /// <summary>
+        /// Anything else - this will disable syntax highlighting.
+        /// </summary>
+        Other
+    };
 
     /// <summary>
     /// This is IEditorView interface
@@ -37,6 +63,11 @@ namespace UserInterface.Views
         event EventHandler LeaveEditor;
 
         /// <summary>
+        /// Invoked when the user changes the style.
+        /// </summary>
+        event EventHandler StyleChanged;
+
+        /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         string Text { get; set; }
@@ -45,6 +76,11 @@ namespace UserInterface.Views
         /// Gets or sets the lines property to get and set the lines in the editor.
         /// </summary>
         string[] Lines { get; set; }
+
+        /// <summary>
+        /// Controls syntax highlighting mode.
+        /// </summary>
+        EditorType Mode { get; set; }
 
         /// <summary>
         /// Gets or sets the characters that bring up the intellisense context menu.
@@ -61,11 +97,6 @@ namespace UserInterface.Views
         /// </summary>
         System.Drawing.Rectangle Location { get; set; }
         
-        /// <summary>
-        /// Indicates whether we are editing a script, rather than "ordinary" text.
-        /// </summary>
-        bool ScriptMode { get; set; }
-
         /// <summary>
         /// Add a separator line to the context menu
         /// </summary>
@@ -111,6 +142,11 @@ namespace UserInterface.Views
         /// </summary>
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
         System.Drawing.Point GetPositionOfCursor();
+
+        /// <summary>
+        /// Redraws the text editor.
+        /// </summary>
+        void Refresh();
     }
 
     /// <summary>
@@ -121,7 +157,7 @@ namespace UserInterface.Views
         /// <summary>
         /// The find-and-replace form
         /// </summary>
-        private FindAndReplaceForm _findForm = new FindAndReplaceForm();
+        private FindAndReplaceForm findForm = new FindAndReplaceForm();
 
         /// <summary>
         /// Scrolled window
@@ -169,6 +205,11 @@ namespace UserInterface.Views
         public event EventHandler LeaveEditor;
 
         /// <summary>
+        /// Invoked when the user changes the style.
+        /// </summary>
+        public event EventHandler StyleChanged;
+
+        /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
         /// </summary>
         public string Text
@@ -181,20 +222,28 @@ namespace UserInterface.Views
             set
             {
                 textEditor.Text = value;
-                if (ScriptMode)
-                {
+                if (Mode == EditorType.ManagerScript)
                     textEditor.Document.MimeType = "text/x-csharp";
-                    textEditor.Options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
-                    textEditor.Options.Zoom = Utility.Configuration.Settings.EditorZoom;
-                    StyleSeparator.Visible = true;
-                    StyleMenu.Visible = true;
-                }
-                else
+                else if (Mode == EditorType.Report)
                 {
-                    textEditor.Options.ColorScheme = "Default";
-                    StyleSeparator.Visible = false;
-                    StyleMenu.Visible = false;
+                    if (SyntaxModeService.GetSyntaxMode(textEditor.Document, "text/x-apsimreport") == null)
+                        LoadReportSyntaxMode();
+                    textEditor.Document.MimeType = "text/x-apsimreport";
                 }
+            }
+        }
+
+        /// <summary>
+        /// Performs a one-time registration of the report syntax highlighting rules.
+        /// This will only run once, the first time the user clicks on a report node.
+        /// </summary>
+        private void LoadReportSyntaxMode()
+        {
+            string resource = "ApsimNG.Resources.SyntaxHighlighting.Report.xml";
+            using (System.IO.Stream s = GetType().Assembly.GetManifestResourceStream(resource))
+            {
+                ProtoTypeSyntaxModeProvider p = new ProtoTypeSyntaxModeProvider(SyntaxMode.Read(s));
+                SyntaxModeService.InstallSyntaxMode("text/x-apsimreport", p);
             }
         }
 
@@ -226,15 +275,15 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Controls the syntax highlighting scheme.
+        /// </summary>
+        public EditorType Mode { get; set; }
+
+        /// <summary>
         /// Gets or sets the characters that bring up the intellisense context menu.
         /// </summary>
         public string IntelliSenseChars { get; set; }
-
-        /// <summary>
-        /// Indicates whether we are editing a script, rather than "ordinary" text.
-        /// </summary>
-        public bool ScriptMode { get; set; }
-
+        
         /// <summary>
         /// Gets the current line number
         /// </summary>
@@ -246,8 +295,8 @@ namespace UserInterface.Views
             }
         }
 
-        private MenuItem StyleMenu;
-        private MenuItem StyleSeparator;
+        private MenuItem styleMenu;
+        private MenuItem styleSeparator;
 
         /// <summary>
         /// Gets or sets the current location of the caret (column and line) and the current scrolling position
@@ -259,7 +308,7 @@ namespace UserInterface.Views
             get
             {
                 DocumentLocation loc = textEditor.Caret.Location;
-                return new System.Drawing.Rectangle(loc.Column, loc.Line, Convert.ToInt32(scroller.Hadjustment.Value), Convert.ToInt32(scroller.Vadjustment.Value));
+                return new System.Drawing.Rectangle(loc.Column, loc.Line, Convert.ToInt32(scroller.Hadjustment.Value, CultureInfo.InvariantCulture), Convert.ToInt32(scroller.Vadjustment.Value, CultureInfo.InvariantCulture));
             }
 
             set
@@ -307,17 +356,19 @@ namespace UserInterface.Views
             scroller = new ScrolledWindow();
             textEditor = new TextEditor();
             scroller.Add(textEditor);
-            _mainWidget = scroller;
+            mainWidget = scroller;
             Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
             Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
             options.EnableSyntaxHighlighting = true;
-            options.ColorScheme = Utility.Configuration.Settings.EditorStyleName;
-            options.Zoom = Utility.Configuration.Settings.EditorZoom;
+            options.ColorScheme = Configuration.Settings.EditorStyleName;
+            options.Zoom = Configuration.Settings.EditorZoom;
             options.HighlightCaretLine = true;
             options.EnableSyntaxHighlighting = true;
             options.HighlightMatchingBracket = true;
             textEditor.Options = options;
             textEditor.Options.Changed += EditorOptionsChanged;
+            textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
+            textEditor.Options.Zoom = Configuration.Settings.EditorZoom;
             textEditor.TextArea.DoPopupMenu = DoPopup;
             textEditor.Document.LineChanged += OnTextHasChanged;
             textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
@@ -325,7 +376,7 @@ namespace UserInterface.Views
             textEditor.TextArea.KeyPressEvent += OnKeyPress;
             scroller.Hadjustment.Changed += Hadjustment_Changed;
             scroller.Vadjustment.Changed += Vadjustment_Changed;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
 
             AddContextActionWithAccel("Cut", OnCut, "Ctrl+X");
             AddContextActionWithAccel("Copy", OnCopy, "Ctrl+C");
@@ -336,8 +387,8 @@ namespace UserInterface.Views
             AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
-            StyleSeparator = AddContextSeparator();
-            StyleMenu = AddMenuItem("Use style", null);
+            styleSeparator = AddContextSeparator();
+            styleMenu = AddMenuItem("Use style", null);
             Menu styles = new Menu();
 
             // find all the editor styles and add sub menu items to the popup
@@ -352,7 +403,7 @@ namespace UserInterface.Views
                 subItem.Visible = true;
                 styles.Append(subItem);
             }
-            StyleMenu.Submenu = styles;
+            styleMenu.Submenu = styles;
 
             IntelliSenseChars = ".";
         }
@@ -371,7 +422,7 @@ namespace UserInterface.Views
             scroller.Hadjustment.Changed -= Hadjustment_Changed;
             scroller.Vadjustment.Changed -= Vadjustment_Changed;
             textEditor.Options.Changed -= EditorOptionsChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
 
             // It's good practice to disconnect all event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -400,8 +451,8 @@ namespace UserInterface.Views
             accel.Dispose();
             textEditor.Destroy();
             textEditor = null;
-            _findForm.Destroy();
-            _owner = null;
+            findForm.Destroy();
+            owner = null;
         }
 
         /// <summary>
@@ -455,10 +506,10 @@ namespace UserInterface.Views
             double x; // unused, but needed as an out parameter.
             if (e.Event.Key == Gdk.Key.F3)
             {
-                if (string.IsNullOrEmpty(_findForm.LookFor))
-                    _findForm.ShowFor(textEditor, false);
+                if (string.IsNullOrEmpty(findForm.LookFor))
+                    findForm.ShowFor(textEditor, false);
                 else
-                    _findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", _findForm.LookFor));
+                    findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
                 e.RetVal = true;
             }
             // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
@@ -545,9 +596,18 @@ namespace UserInterface.Views
             // Need to convert to screen coordinates....
             int x, y, frameX, frameY;
             MasterView.MainWindow.GetOrigin(out frameX, out frameY);
-            textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
+            textEditor.TextArea.TranslateCoordinates(mainWidget.Toplevel, p.X, p.Y, out x, out y);
 
             return new System.Drawing.Point(x + frameX, y + frameY);
+        }
+
+        /// <summary>
+        /// Redraws the text editor.
+        /// </summary>
+        public void Refresh()
+        {
+            textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
+            textEditor.QueueDraw();
         }
 
         /// <summary>
@@ -573,9 +633,40 @@ namespace UserInterface.Views
         {
             if (string.IsNullOrEmpty(completionOption))
                 return;
-            textEditor.InsertAtCaret(completionOption);
+
+            // If no trigger word provided, insert at caret.
+            if (string.IsNullOrEmpty(triggerWord))
+            {
+                int offset = Offset + completionOption.Length;
+                textEditor.InsertAtCaret(completionOption);
+                textEditor.Caret.Offset = offset;
+                return;
+            }
+
+            // If trigger word is entire text, replace the entire text.
+            if (textEditor.Text == triggerWord)
+            {
+                textEditor.Text = completionOption;
+                textEditor.Caret.Offset = completionOption.Length;
+                return;
+            }
+
+            // Overwrite the last occurrence of this word before the caret.
+            int index = textEditor.GetTextBetween(0, Offset).LastIndexOf(triggerWord);
+            if (index < 0)
+                // If text does not contain trigger word, isnert at caret.
+                textEditor.InsertAtCaret(completionOption);
+
+            string textBeforeTriggerWord = textEditor.Text.Substring(0, index);
+
+            string textAfterTriggerWord = "";
+            if (textEditor.Text.Length > index + triggerWord.Length)
+                textAfterTriggerWord = textEditor.Text.Substring(index + triggerWord.Length);
+
+            textEditor.Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
+            textEditor.Caret.Offset = index + completionOption.Length;
         }
-        
+
         /// <summary>
         /// Insert the currently selected completion item into the text box.
         /// </summary>
@@ -777,7 +868,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnFind(object sender, EventArgs e)
         {
-            _findForm.ShowFor(textEditor, false);
+            findForm.ShowFor(textEditor, false);
         }
 
         /// <summary>
@@ -787,7 +878,7 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnReplace(object sender, EventArgs e)
         {
-            _findForm.ShowFor(textEditor, true);
+            findForm.ShowFor(textEditor, true);
         }
 
         /// <summary>
@@ -810,6 +901,8 @@ namespace UserInterface.Views
             Utility.Configuration.Settings.EditorStyleName = caption;
             textEditor.Options.ColorScheme = caption;
             textEditor.QueueDraw();
+
+            StyleChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

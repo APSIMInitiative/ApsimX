@@ -30,7 +30,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Add a view to the right hand panel.
         /// </summary>
-        void AddRightHandView(object Control);
+        void AddRightHandView(object control);
 
         /// <summary>Get a screen shot of the right hand panel.</summary>
         System.Drawing.Image GetScreenshotOfRightHandPanel();

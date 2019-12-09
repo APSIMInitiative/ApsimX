@@ -14,21 +14,30 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AccumulateAtEvent : Model, IFunction, ICustomDocumentation
     {
-        //Class members
+        ///Links
+        /// -----------------------------------------------------------------------------------------------------------
+        
         /// <summary>Link to an event service.</summary>
         [Link]
         private IEvent events = null;
-
-        /// <summary>The accumulated value</summary>
-        private double accumulatedValue = 0;
-
-        /// <summary>The child functions</summary>
-        private List<IModel> childFunctions;
 
         /// <summary>The phenology</summary>
         [Link]
         Phenology phenology = null;
 
+        /// Private fields
+        /// -----------------------------------------------------------------------------------------------------------
+
+        private double accumulatedValue = 0;
+
+        private List<IModel> childFunctions;
+
+        private int startStageIndex;
+
+        private int endStageIndex;
+
+        ///Public Properties
+        /// -----------------------------------------------------------------------------------------------------------
         /// <summary>The start stage name</summary>
         [Description("Stage name to start accumulation")]
         public string StartStageName { get; set; }
@@ -41,49 +50,8 @@ namespace Models.Functions
         [Description("Event name to accumulate")]
         public string AccumulateEventName { get; set; }
 
-        /// <summary>Called when [simulation commencing].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            accumulatedValue = 0;
-
-            events.Subscribe(AccumulateEventName, OnCalcEvent);
-        }
-
-        /// <summary>
-        /// Invoked when simulation has completed.
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            events.Unsubscribe(AccumulateEventName, OnCalcEvent);
-        }
-
-
-        /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
-        /// <param name="sender">Plant.cs</param>
-        /// <param name="e">Event arguments</param>
-        private void OnCalcEvent(object sender, EventArgs e)
-        {
-            if (childFunctions == null)
-                childFunctions = Apsim.Children(this, typeof(IFunction));
-
-            if (phenology.Between(StartStageName, EndStageName))
-            {
-                double DailyIncrement = 0.0;
-                foreach (IFunction function in childFunctions)
-                {
-                    DailyIncrement += function.Value();
-                }
-
-                accumulatedValue += DailyIncrement;
-            }
-        }
-
+        ///6. Public methods
+        /// -----------------------------------------------------------------------------------------------------------
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -109,6 +77,58 @@ namespace Models.Functions
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
+
+        ///7. Private methods
+        /// -----------------------------------------------------------------------------------------------------------
+        
+        /// <summary>Called when [simulation commencing].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            accumulatedValue = 0;
+
+            events.Subscribe(AccumulateEventName, OnCalcEvent);
+
+            startStageIndex = phenology.StartStagePhaseIndex(StartStageName);
+            endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
+        }
+
+        /// <summary>
+        /// Invoked when simulation has completed.
+        /// </summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            events.Unsubscribe(AccumulateEventName, OnCalcEvent);
+        }
+
+        /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
+        /// <param name="sender">Plant.cs</param>
+        /// <param name="e">Event arguments</param>
+        private void OnCalcEvent(object sender, EventArgs e)
+        {
+            if (childFunctions == null)
+                childFunctions = Apsim.Children(this, typeof(IFunction));
+
+            if (phenology.Between(startStageIndex, endStageIndex))
+            {
+                double DailyIncrement = 0.0;
+                foreach (IFunction function in childFunctions)
+                {
+                    DailyIncrement += function.Value();
+                }
+
+                accumulatedValue += DailyIncrement;
+            }
+        }
+
+
+
+        
     }
 
 }

@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether a resource level meets a set criteria.")]
+    [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
@@ -154,7 +155,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnActivityPerformed(EventArgs e)
+        public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
@@ -167,10 +168,17 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">";
             html += "\n<div class=\"filter\">";
             html += "Perform when ";
-            html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
+            if(ResourceTypeName is null || ResourceTypeName == "")
+            {
+                html += "<span class=\"errorlink\">RESOURCE NOT SET</span> ";
+            }
+            else
+            {
+                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span> ";
+            }
             string str = "";
             switch (Operator)
             {
@@ -196,10 +204,21 @@ namespace Models.CLEM.Activities
                     break;
             }
             html += str;
-            html += " <span class=\"setvalueextra\">";
-            html += Amount.ToString();
-            html += "</span> and <span class=\"setvalueextra\">";
-            html += "</span></div>";
+            if(Amount == 0)
+            {
+                html += " <span class=\"errorlink\">NOT SET</span>";
+            }
+            else
+            {
+                html += " <span class=\"setvalueextra\">";
+                html += Amount.ToString();
+                html += "</span>";
+            }
+            html += "</div>";
+            if (!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             html += "\n</div>";
             return html;
         }

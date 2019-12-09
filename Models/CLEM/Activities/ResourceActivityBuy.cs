@@ -20,6 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the purchase of a specified resource.")]
+    [HelpUri(@"Content/Features/Activities/All resources/BuyResource.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivityBuy : CLEMActivityBase
     {
@@ -109,7 +110,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded = 0;
+            double daysNeeded;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
@@ -140,13 +141,12 @@ namespace Models.CLEM.Activities
             double labourlimit = this.LabourLimitProportion;
             double pricelimit = this.LimitProportion(typeof(FinanceType));
             double limit = Math.Min(labourlimit, pricelimit);
-            double units2buy = 0;
             Status = ActivityStatus.NotNeeded;
             if (price != null)
             {
                 if (limit == 1 || this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
                 {
-                    units2buy = units * limit;
+                    double units2buy = units * limit;
                     if (price.UseWholePackets)
                     {
                         units2buy = Math.Truncate(units2buy);

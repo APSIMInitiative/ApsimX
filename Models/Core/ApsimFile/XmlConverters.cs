@@ -134,7 +134,7 @@ namespace Models.Core.ApsimFile
                 try
                 {
                     double area = Convert.ToDouble(areaString,
-                                                   System.Globalization.CultureInfo.InvariantCulture);
+                                                   CultureInfo.InvariantCulture);
                     if (area <= 0)
                         XmlUtilities.SetValue(zoneNode, "Area", "1");
                 }
@@ -630,10 +630,13 @@ namespace Models.Core.ApsimFile
 
                         foreach (string tableName in tableNames)
                         {
-                            List<string> columnNames = connection.GetColumnNames(tableName);
-                            if (columnNames.Contains("SimulationID"))
+                            if (!tableName.EndsWith("Index"))
                             {
-                                connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
+                                List<string> columnNames = connection.GetColumnNames(tableName);
+                                if (columnNames.Contains("SimulationID") && !columnNames.Contains("CheckpointID"))
+                                {
+                                    connection.ExecuteNonQuery("ALTER TABLE " + tableName + " ADD COLUMN CheckpointID INTEGER DEFAULT 1");
+                                }
                             }
                         }
 
@@ -665,7 +668,7 @@ namespace Models.Core.ApsimFile
         {
             foreach (XmlNode manager in XmlUtilities.FindAllRecursivelyByType(node, "manager"))
             {
-                string replacePattern = @"Convert.ToDouble(zone.Get(${variable}))";
+                string replacePattern = @"Convert.ToDouble(zone.Get(${variable}), System.Globalization.CultureInfo.InvariantCulture)";
                 string[] variableNames = new string[] { "ExpandedCohortNo", "AppearedCohortNo", "GreenCohortNo", "SenescingCohortNo" };
                 foreach (string variableName in variableNames)
                 {
@@ -783,7 +786,7 @@ namespace Models.Core.ApsimFile
                     string value = XmlUtilities.Value(series, "FactorIndexToVaryColours");
                     if (value != string.Empty)
                     {
-                        int index = Convert.ToInt32(value);
+                        int index = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                         if (index > -1 && index < uniqueFactorNames.Count())
                             XmlUtilities.SetValue(series, "FactorToVaryColours", uniqueFactorNames[index]);
                         XmlUtilities.DeleteValue(series, "FactorIndexToVaryColours");
@@ -792,7 +795,7 @@ namespace Models.Core.ApsimFile
                     value = XmlUtilities.Value(series, "FactorIndexToVaryMarkers");
                     if (value != string.Empty)
                     {
-                        int index = Convert.ToInt32(value);
+                        int index = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                         if (index > -1 && index < uniqueFactorNames.Count())
                             XmlUtilities.SetValue(series, "FactorToVaryMarkers", uniqueFactorNames[index]);
                         XmlUtilities.DeleteValue(series, "FactorIndexToVaryMarkers");
@@ -801,7 +804,7 @@ namespace Models.Core.ApsimFile
                     value = XmlUtilities.Value(series, "FactorIndexToVaryLines");
                     if (value != string.Empty)
                     {
-                        int index = Convert.ToInt32(value);
+                        int index = Convert.ToInt32(value, CultureInfo.InvariantCulture);
                         if (index > -1 && index < uniqueFactorNames.Count())
                             XmlUtilities.SetValue(series, "FactorToVaryLines", uniqueFactorNames[index]);
                         XmlUtilities.DeleteValue(series, "FactorIndexToVaryLines");
@@ -893,6 +896,11 @@ namespace Models.Core.ApsimFile
             public bool FactorParentIsFactor { get; set; }
         }
 
+        private class PathValuesPair
+        {
+            public string path;
+            public object value;
+        }
         private static List<FValue> CreateValues(XmlNode factorNode)
         {
             List<FValue> factorValues = new List<FValue>();
@@ -1072,15 +1080,27 @@ namespace Models.Core.ApsimFile
                 List<XmlNode> baseSimulations = XmlUtilities.ChildNodes(experiment, "Simulation");
                 if (baseSimulations.Count == 1)
                 {
-                    string childType = specification.Replace("[", "").Replace("]", "");
+                    string childName = specification.Replace("[", "").Replace("]", "");
 
-                    List<string> specifications = XmlUtilities.Values(factorNode, "Specifications/string");
+                    var childType = FindChildTypeFromName(childName, baseSimulations[0]);
 
+                    
                     foreach (XmlNode child in XmlUtilities.ChildNodes(factorNode, childType))
                         pairs.Add(new PathValuesPair() { path = specification, value = XmlUtilities.Value(child, "Name") });
                 }
             }
             return pairs;
+        }
+
+        private static string FindChildTypeFromName(string childName, XmlNode baseSimulation)
+        {
+            var nodes = XmlUtilities.ChildNodesRecursively(baseSimulation, "Name");
+            var foundNode = nodes.Find(n => n.InnerText == childName);
+
+            if (foundNode == null)
+                return null;
+            else
+                return foundNode.ParentNode.Name;
         }
 
 

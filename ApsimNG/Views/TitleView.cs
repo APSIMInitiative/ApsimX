@@ -20,7 +20,7 @@ namespace UserInterface.Views
     /// </summary>
     public class TitleView : ViewBase, ITitleView
     {
-        private string OriginalText;
+        private string originalText;
 
         public event TitleChangedDelegate OnTitleChanged;
 
@@ -35,16 +35,16 @@ namespace UserInterface.Views
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.TitleView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             entry1 = (Entry)builder.GetObject("entry1");
-            _mainWidget = hbox1;
+            mainWidget = hbox1;
             entry1.Changed += OnPositionComboChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             entry1.Changed -= OnPositionComboChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>
@@ -61,11 +61,11 @@ namespace UserInterface.Views
         /// </summary>
         private void OnPositionComboChanged(object sender, EventArgs e)
         {
-            if (OriginalText == null)
-                OriginalText = entry1.Text;
-            if (entry1.Text != OriginalText && OnTitleChanged != null)
+            if (originalText == null)
+                originalText = entry1.Text;
+            if (entry1.Text != originalText && OnTitleChanged != null)
             {
-                OriginalText = entry1.Text;
+                originalText = entry1.Text;
                 OnTitleChanged.Invoke(entry1.Text);
             }
         }

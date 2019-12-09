@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Models.Core;
-using System.IO;
-using System.Data;
-using System.Xml.Serialization;
-using APSIM.Shared.Utilities;
-using Models.Storage;
-
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
-
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Core.Run;
+    using Models.Storage;
+    using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.IO;
+    using System.Threading;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
@@ -29,6 +28,12 @@ namespace Models.PostSimulationTools
     public class Input : Model, IPostSimulationTool, IReferenceExternalFiles
     {
         /// <summary>
+        /// The DataStore.
+        /// </summary>
+        [Link]
+        private IDataStore storage = null;
+
+        /// <summary>
         /// Gets or sets the file name to read from.
         /// </summary>
         public string FileName { get; set; }
@@ -42,10 +47,9 @@ namespace Models.PostSimulationTools
         {
             get
             {
-                Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                if (simulations != null && simulations.FileName != null && this.FileName != null)
-                    return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
-                return null;
+                if (storage == null)
+                    return PathUtilities.GetAbsolutePath(this.FileName, (Apsim.Parent(this, typeof(Simulations)) as Simulations).FileName);
+                return PathUtilities.GetAbsolutePath(this.FileName, storage.FileName);
             }
 
             set
@@ -64,19 +68,18 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Main run method for performing our calculations and storing data.
         /// </summary>
-        public void Run(IStorageReader dataStore)
+        public void Run()
         {
             string fullFileName = FullFileName;
             if (fullFileName != null)
             {
                 Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
 
-                dataStore.DeleteDataInTable(Name);
                 DataTable data = GetTable();
                 if (data != null)
                 {
                     data.TableName = this.Name;
-                    dataStore.WriteTable(data);
+                    storage.Writer.WriteTable(data);
                 }
             }
         }
@@ -84,6 +87,8 @@ namespace Models.PostSimulationTools
         /// <summary>
         /// Provides an error message to display if something is wrong.
         /// </summary>
+        [JsonIgnore]
+        [NonSerialized]
         public string ErrorMessage = string.Empty;
 
         /// <summary>

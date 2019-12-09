@@ -16,17 +16,27 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AccumulateFunction : Model, IFunction, ICustomDocumentation
     {
-        //Class members
-        /// <summary>The accumulated value</summary>
-        private double AccumulatedValue = 0;
-        
-        /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        ///Links
+        /// -----------------------------------------------------------------------------------------------------------
 
         /// <summary>The phenology</summary>
         [Link]
-        Phenology Phenology = null;
+        Phenology phenology = null;
 
+        /// Private class members
+        /// -----------------------------------------------------------------------------------------------------------
+
+        private int startStageIndex;
+
+        private int endStageIndex;
+       
+        private double AccumulatedValue = 0;
+
+        private List<IModel> ChildFunctions;
+
+        ///Public Properties
+        /// -----------------------------------------------------------------------------------------------------------
+        
         /// <summary>The start stage name</summary>
         [Description("Stage name to start accumulation")]
         public string StartStageName { get; set; }
@@ -62,6 +72,8 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
+            startStageIndex = phenology.StartStagePhaseIndex(StartStageName);
+            endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -73,7 +85,7 @@ namespace Models.Functions
             if (ChildFunctions == null)
                 ChildFunctions = Apsim.Children(this, typeof(IFunction));
 
-            if (Phenology.Between(StartStageName, EndStageName))
+            if (phenology.Between(startStageIndex, endStageIndex))
             {
                 double DailyIncrement = 0.0;
                 foreach (IFunction function in ChildFunctions)

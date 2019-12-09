@@ -6,6 +6,7 @@ using System.Reflection;
 using Models.Core;
 using Models.Functions;
 using System.Xml.Serialization;
+using System.Globalization;
 
 namespace Models.PMF
 {
@@ -169,7 +170,7 @@ namespace Models.PMF
         private double[] AddValuesToList(string SubPropertyName)
         {
             if (ArraySizeNumber == -1)
-                ArraySizeNumber = Convert.ToInt32(ExpressionFunction.Evaluate(ArraySize, this));
+                ArraySizeNumber = Convert.ToInt32(ExpressionFunction.Evaluate(ArraySize, this), CultureInfo.InvariantCulture);
 
             double[] Values = new double[ArraySizeNumber];
             int i = 0;

@@ -24,25 +24,28 @@ namespace UserInterface.Views
     /// </summary>
     public class ExplorerView : ViewBase, IExplorerView
     {
-        private Viewport RightHandView;
-        private MenuView popup;
+        private VBox rightHandView;
         private Gtk.TreeView treeviewWidget;
+        private HTMLView descriptionView;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
-            _mainWidget = (VBox)builder.GetObject("vbox1");
+            mainWidget = (VBox)builder.GetObject("vbox1");
             ToolStrip = new ToolStripView((Toolbar)builder.GetObject("toolStrip"));
 
             treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
             treeviewWidget.Realized += OnLoaded;
             Tree = new TreeView(owner, treeviewWidget);
-            popup = new MenuView();
-            RightHandView = (Viewport)builder.GetObject("RightHandView");
-            RightHandView.ShadowType = ShadowType.EtchedOut;
-            _mainWidget.Destroyed += OnDestroyed;
+            rightHandView = (VBox)builder.GetObject("vbox2");
+            //rightHandView.ShadowType = ShadowType.EtchedOut;
+
+            mainWidget.Destroyed += OnDestroyed;
         }
+
+        /// <summary>The current right hand view.</summary>
+        public ViewBase CurrentRightHandView { get; private set; }
 
         /// <summary>The tree on the left side of the explorer view</summary>
         public ITreeView Tree { get; private set; }
@@ -54,18 +57,51 @@ namespace UserInterface.Views
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
         /// </summary>
         /// <param name="control">The control to add.</param>
+        /// <param name="description">Descriptive text to show at top of view.</param>
         public void AddRightHandView(object control)
         {
-            foreach (Widget child in RightHandView.Children)
+            // Remove existing right hand view.
+            foreach (var child in rightHandView.Children)
             {
-                RightHandView.Remove(child);
-                child.Destroy();
+                if (child != descriptionView?.MainWidget)
+                {
+                    rightHandView.Remove(child);
+                    child.Destroy();
+                }
             }
+
             ViewBase view = control as ViewBase;
             if (view != null)
             {
-                RightHandView.Add(view.MainWidget);
-                RightHandView.ShowAll();
+                CurrentRightHandView = view;
+                rightHandView.PackEnd(view.MainWidget, true, true, 0);
+                rightHandView.ShowAll();
+            }
+        }
+
+        /// <summary>
+        /// Add a description to the right hand view.
+        /// </summary>
+        /// <param name="description">The description to show.</param>
+        public void AddDescriptionToRightHandView(string description)
+        {
+            if (description == null)
+            {
+                if (descriptionView != null)
+                {
+                    rightHandView.Remove(descriptionView.MainWidget);
+                    descriptionView.MainWidget.Destroy();
+                }
+                descriptionView = null;
+            }
+            else
+            {
+                if (descriptionView == null)
+                {
+                    descriptionView = new HTMLView(this);
+                    rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
+                }
+                descriptionView.SetContents(description, false);
             }
         }
 
@@ -75,7 +111,7 @@ namespace UserInterface.Views
             // Create a Bitmap and draw the panel
             int width;
             int height;
-            Gdk.Window panelWindow = RightHandView.Child.GdkWindow;
+            Gdk.Window panelWindow = CurrentRightHandView.MainWidget.GdkWindow;
             panelWindow.GetSize(out width, out height);
             Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
             byte[] buffer = screenshot.SaveToBuffer("png");
@@ -110,18 +146,17 @@ namespace UserInterface.Views
         private void OnDestroyed(object sender, EventArgs e)
         {
             treeviewWidget.Realized -= OnLoaded;
-            if (RightHandView != null)
+            if (rightHandView != null)
             {
-                foreach (Widget child in RightHandView.Children)
+                foreach (Widget child in rightHandView.Children)
                 {
-                    RightHandView.Remove(child);
+                    rightHandView.Remove(child);
                     child.Destroy();
                 }
             }
             ToolStrip.Destroy();
-            popup.Destroy();
-            _mainWidget.Destroyed -= OnDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= OnDestroyed;
+            owner = null;
         }
     }
 }

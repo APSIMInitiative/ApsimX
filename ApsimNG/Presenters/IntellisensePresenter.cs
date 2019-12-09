@@ -19,6 +19,8 @@
     using System.Xml;
     using ICSharpCode.NRefactory.TypeSystem;
     using APSIM.Shared.Utilities;
+    using Models.Storage;
+    using System.Threading;
 
     /// <summary>
     /// Responsible for handling intellisense operations.
@@ -40,12 +42,12 @@
         /// <summary>
         /// Fired when the we need to generate intellisense suggestions.
         /// </summary>
-        private event EventHandler<NeedContextItemsArgs> onContextItemsNeeded;
+        private event EventHandler<NeedContextItemsArgs> OnContextItemsNeeded;
 
         /// <summary>
         /// Fired when an item is selected in the intellisense window.
         /// </summary>
-        private event EventHandler<IntellisenseItemSelectedArgs> onItemSelected;
+        private event EventHandler<IntellisenseItemSelectedArgs> OnItemSelected;
 
         /// <summary>
         /// Responsible for generating the completion options.
@@ -67,6 +69,16 @@
         /// Stores the last used coordinates for the intellisense popup.
         /// </summary>
         private Point recentLocation;
+
+        /// <summary>
+        /// Speeds up initialisation of all future intellisense objects.
+        /// Only needs to be called once, when the application starts.
+        /// </summary>
+        public static void Init()
+        {
+            Thread initThread = new Thread(CSharpCompletion.Init);
+            initThread.Start();
+        }
 
         /// <summary>
         /// Constructor. Requires a reference to the view holding the text editor.
@@ -110,12 +122,12 @@
         {
             add
             {
-                DetachHandlers(ref onItemSelected);
-                onItemSelected += value;
+                DetachHandlers(ref OnItemSelected);
+                OnItemSelected += value;
             }
             remove
             {
-                onItemSelected -= value;
+                OnItemSelected -= value;
             }
         }
 
@@ -126,20 +138,20 @@
         {
             add
             {
-                if (onContextItemsNeeded == null)
-                    onContextItemsNeeded += value;
-                else if (onContextItemsNeeded != value)
+                if (OnContextItemsNeeded == null)
+                    OnContextItemsNeeded += value;
+                else if (OnContextItemsNeeded != value)
                 {
-                    foreach (var d in onContextItemsNeeded.GetInvocationList())
+                    foreach (var d in OnContextItemsNeeded.GetInvocationList())
                     {
-                        onContextItemsNeeded -= (d as EventHandler<NeedContextItemsArgs>);
+                        OnContextItemsNeeded -= (d as EventHandler<NeedContextItemsArgs>);
                     }
-                    onContextItemsNeeded += value;
+                    OnContextItemsNeeded += value;
                 }
             }
             remove
             {
-                onContextItemsNeeded -= value;
+                OnContextItemsNeeded -= value;
             }
         }
 
@@ -161,6 +173,26 @@
             {
                 handler -= anonymousHandler;
             }
+        }
+
+        /// <summary>
+        /// Gets a list of all events which are published by models in
+        /// the current simulations tree.
+        /// </summary>
+        /// <param name="model"></param>
+        public List<NeedContextItemsArgs.ContextItem> GetEvents(IModel model)
+        {
+            var events = new List<NeedContextItemsArgs.ContextItem>();
+
+            List<IModel> allModels = Apsim.ChildrenRecursively(Apsim.Parent(model, typeof(Simulations)));
+            foreach (var publisher in Events.Publisher.FindAll(allModels))
+            {
+                string description = NeedContextItemsArgs.GetDescription(publisher.EventInfo);
+                Type eventType = publisher.EventInfo.EventHandlerType;
+                events.Add(NeedContextItemsArgs.ContextItem.NewEvent(publisher.Name, description, eventType));
+            }
+
+            return events;
         }
 
         /// <summary>
@@ -196,6 +228,7 @@
             }
 
             List<NeedContextItemsArgs.ContextItem> results = NeedContextItemsArgs.ExamineModelForContextItemsV2(model as Model, objectName, properties, methods, events);
+
             view.Populate(results);
             return results.Any();
         }
@@ -546,7 +579,7 @@
                 ItemSelected = args.Name + (args.IsMethod ? "(" : ""),
                 IsMethod = args.IsMethod
             };
-            onItemSelected?.Invoke(this, itemSelectedArgs);
+            OnItemSelected?.Invoke(this, itemSelectedArgs);
         }
     }
 }

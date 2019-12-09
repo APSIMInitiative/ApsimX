@@ -1,8 +1,10 @@
 ﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
     using Models.Core.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Reflection;
 
     /// <summary>This class loads a model from a resource</summary>
@@ -25,15 +27,23 @@
             // lookup the resource get the xml and then deserialise to a model.
             if (ResourceName != null && ResourceName != "")
             {
-                string contents = Properties.Resources.ResourceManager.GetString(ResourceName);
+                string contents = ReflectionUtilities.GetResourceAsString("Models.Resources." + ResourceName + ".json");
                 if (contents != null)
                 {
                     List<Exception> creationExceptions;
-                    Model ModelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out creationExceptions);
+                    Model modelFromResource = ApsimFile.FileFormat.ReadFromString<Model>(contents, out creationExceptions);
+                    if (this.GetType() != modelFromResource.GetType())
+                    {
+                        // Top-level model may be a simulations node. Search for a child of the correct type.
+                        Model child = Apsim.Child(modelFromResource, this.GetType()) as Model;
+                        if (child != null)
+                            modelFromResource = child;
+                    }
+                    modelFromResource.Enabled = Enabled;
                     Children.Clear();
-                    Children.AddRange(ModelFromResource.Children);
-                    CopyPropertiesFrom(ModelFromResource);
-                    SetNotVisible(ModelFromResource);
+                    Children.AddRange(modelFromResource.Children);
+                    CopyPropertiesFrom(modelFromResource);
+                    SetNotVisible(modelFromResource);
                     Apsim.ParentAllChildren(this);
                     DoSerialiseChildren = false;
                 }
@@ -58,7 +68,7 @@
                     object fromValue = property.GetValue(from);
                     bool doSetPropertyValue;
                     if (fromValue is double)
-                        doSetPropertyValue = Convert.ToDouble(fromValue) != 0;
+                        doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
                     else
                         doSetPropertyValue = fromValue != null;
 

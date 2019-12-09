@@ -49,3 +49,5 @@ Documentation/errors.txt
 .vscode/
 *.db
 *.db-journal
+*.db-shm
+*.db-wal

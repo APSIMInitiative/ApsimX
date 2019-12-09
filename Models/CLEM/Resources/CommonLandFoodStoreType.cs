@@ -23,6 +23,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a common land food store.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Link to GrazeFoodStore implemented")]
+    [HelpUri(@"Content/Features/Resources/AnimalFoodStore/CommonLandStoreType.htm")]
     public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType
     {
         /// <summary>
@@ -30,6 +31,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Link]
         public ResourcesHolder Resources = null;
+
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get; set; }
 
         /// <summary>
         /// Coefficient to convert N% to DMD%
@@ -236,7 +243,7 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
             // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
-            if (!(resourceAmount.GetType() == typeof(GrazeFoodStorePool) | resourceAmount.GetType() != typeof(FoodResourcePacket)))
+            if (!(resourceAmount.GetType() == typeof(GrazeFoodStorePool) || resourceAmount.GetType() != typeof(FoodResourcePacket)))
             {
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
@@ -260,7 +267,7 @@ namespace Models.CLEM.Resources
                 // need to check the follwoing code is no longer needed.
 
                 // allow decaying or no pools currently available
-                //if (PastureDecays | Pools.Count() == 0)
+                //if (PastureDecays || Pools.Count() == 0)
                 //{
                 //    Pools.Insert(0, pool);
                 //}
@@ -271,12 +278,13 @@ namespace Models.CLEM.Resources
                 //// update biomass available
                 //biomassAddedThisYear += pool.Amount;
 
-                ResourceTransaction details = new ResourceTransaction();
-                details.Gain = pool.Amount;
-                details.Activity = activity.Name;
-                details.ActivityType = activity.GetType().Name;
-                details.Reason = reason;
-                details.ResourceType = this.Name;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    Gain = pool.Amount,
+                    Activity = activity,
+                    Reason = reason,
+                    ResourceType = this
+                };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -304,22 +312,25 @@ namespace Models.CLEM.Resources
             // grazing does not access pools by breed by gets all it needs of this quality common pasture
             // common pasture quality can be linked to a real pasture or foodstore and this has already been done.
 
-            FoodResourcePacket additionalDetails = new FoodResourcePacket();
-            additionalDetails.PercentN = this.Nitrogen;
-            additionalDetails.DMD = this.dryMatterDigestibility;
-            additionalDetails.Amount = request.Required;
+            FoodResourcePacket additionalDetails = new FoodResourcePacket
+            {
+                PercentN = this.Nitrogen,
+                DMD = this.dryMatterDigestibility,
+                Amount = request.Required
+            };
             request.AdditionalDetails = additionalDetails;
 
             // other non grazing activities requesting common land pasture
             request.Provided = request.Required;
 
             // report 
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = request.Provided;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this,
+                Loss = request.Provided,
+                Activity = request.ActivityModel,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);

@@ -15,6 +15,8 @@ namespace UserInterface.Presenters
     using Models.Soils;
     using Views;
     using Commands;
+    using EventArguments;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// The tree proxy presenter
@@ -134,7 +136,7 @@ namespace UserInterface.Presenters
                 rowNames.Add("Root Length Density (cm/cm3)");
                 rowNames.Add("Depth (cm)");
 
-                foreach (string s in soil.Depth)
+                foreach (string s in APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(soil.Thickness))
                 {
                     rowNames.Add(s);
                 }
@@ -222,8 +224,14 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">The sender object</param>
         /// <param name="e">Event arguments</param>
-        private void OnCellEndEdit(object sender, EventArgs e)
+        private void OnCellEndEdit(object sender, GridCellsChangedArgs e)
         {
+            GridView grid = sender as GridView;
+            // fixme - need some (any!) data validation but it will
+            // require a partial rewrite of TreeProxy.
+            foreach (GridCellChangedArgs cell in e.ChangedCells)
+                grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = cell.NewValue;
+
             SaveTable();
             AttachData();
         }

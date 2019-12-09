@@ -20,16 +20,16 @@ namespace Models.Soils.Nutrients
     {
         private List<NutrientPool> destinations = new List<NutrientPool>();
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction Rate = null;
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction CO2Efficiency = null;
 
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         ISolute NO3 = null;
 
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         ISolute NH4 = null;
 
 

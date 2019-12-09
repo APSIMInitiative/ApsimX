@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity time defines a start month and interval upon which to perform activities.")]
+    [HelpUri(@"Content/Features/Timers/Interval.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
@@ -72,21 +73,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
-                {
-                    // report activity performed.
-                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
-                    {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = this.Name
-                        }
-                    };
-                    activitye.Activity.SetGuID(this.UniqueID);
-                    this.OnActivityPerformed(activitye);
-                }
-                return (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month);
+                return (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month);
             }
         }
 
@@ -97,7 +84,7 @@ namespace Models.CLEM.Activities
         public bool Check(DateTime dateToCheck)
         {
             // compare with next due date
-            if (this.NextDueDate.Year == Clock.Today.Year & this.NextDueDate.Month == Clock.Today.Month)
+            if (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month)
             {
                 return true;
             }
@@ -170,7 +157,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnActivityPerformed(EventArgs e)
+        public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
@@ -183,13 +170,35 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled)?"1":"0.4") + "\">";
             html += "\n<div class=\"filter\">";
-            html += "Perform every <span class=\"setvalueextra\">";
-            html += Interval.ToString();
-            html += "</span> months from <span class=\"setvalueextra\">";
-            html += new DateTime(2000, MonthDue, 1).ToString("MMMM");
+            html += "Perform every ";
+            if (Interval > 0)
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += Interval.ToString();
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">";
+                html += "NOT SET";
+            }
+            html += "</span> months from ";
+            if(MonthDue > 0)
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += new DateTime(2000, MonthDue, 1).ToString("MMMM");
+            }
+            else
+            {
+                html += "<span class=\"errorlink\">";
+                html += "NOT SET";
+            }
             html += "</span></div>";
+            if(!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             html += "\n</div>";
             return html;
         }

@@ -12,6 +12,7 @@
     using System.Xml;
     using System.Xml.Serialization;
     using Newtonsoft.Json;
+    using System.CodeDom.Compiler;
 
     /// <summary>
     /// The manager model
@@ -24,8 +25,14 @@
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
+    [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
+    [ValidParent(ParentType = typeof(Factorial.Factor))]
     public class Manager : Model, IOptionallySerialiseChildren
     {
+        private static bool haveTrappedAssemblyResolveEvent = false;
+
+        private static object haveTrappedAssemblyResolveEventLock = new object();
+
         /// <summary>The compiled code</summary>
         private string CompiledCode;
 
@@ -77,6 +84,26 @@
         /// </summary>
         public override void OnCreated()
         {
+            // This looks weird but I'm trying to avoid having to call lock
+            // everytime we come through here.
+            if (!haveTrappedAssemblyResolveEvent)
+            {
+                lock (haveTrappedAssemblyResolveEventLock)
+                {
+                    if (!haveTrappedAssemblyResolveEvent)
+                    {
+                        haveTrappedAssemblyResolveEvent = true;
+
+                        // Trap the assembly resolve event.
+                        AppDomain.CurrentDomain.AssemblyResolve -= new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
+                        AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(Manager.ResolveManagerAssembliesEventHandler);
+
+                        // Clean up apsimx manager .dll files.
+                        CleanupOldAssemblies();
+                    }
+                }
+            }
+
             isCreated = true;
             RebuildScriptModel();
         }
@@ -98,12 +125,12 @@
             if (Children.Count == 1)
                 GetParametersFromScriptModel(Children[0]);
 
-            if (isCreated && Code != null && (Code != CompiledCode || Children.Count == 0))
+            if (Enabled && isCreated && Code != null && (Code != CompiledCode || Children.Count == 0))
             {
                 try
                 {
                     Children?.RemoveAll(x => x.GetType().Name == "Script");
-                    Assembly compiledAssembly = ReflectionUtilities.CompileTextToAssembly(Code, GetAssemblyFileName());
+                    Assembly compiledAssembly = CompileTextToAssembly(Code, GetAssemblyFileName());
                     if (compiledAssembly.GetType("Models.Script") == null)
                         throw new ApsimXException(this, "Cannot find a public class called 'Script'");
 
@@ -122,11 +149,12 @@
                     // Attempt to give the new script's properties the same
                     // values used by the old script.
                     SetParametersInObject(script);
+                    script.OnCreated();
                 }
                 catch (Exception err)
                 {
                     CompiledCode = null;
-                    throw new Exception("Unable to compile \"" + Name + "\"", err);
+                    throw new Exception("Unable to compile \"" + Name + "\"" + ". Full path: " + Apsim.FullPath(this), err);
                 }
             }
         }
@@ -134,7 +162,7 @@
         /// <summary>Work out the assembly file name (with path).</summary>
         public string GetAssemblyFileName()
         {
-            return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".dll");
+            return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), "ApsimXManager" + Guid.NewGuid().ToString()), ".dll");
         }
 
         /// <summary>A handler to resolve the loading of manager assemblies when binary deserialization happens.</summary>
@@ -143,22 +171,40 @@
         /// <remarks>
         /// Seems like it will only look for DLL's in the bin folder. We can't put the manager DLLs in there
         /// because when ApsimX is installed, the bin folder will be under c:\program files and we won't have
-        /// permission to save the manager dlls there. Instead we put them in %TEMP%\ApsimX and use this 
+        /// permission to save the manager dlls there. Instead we put them in %TEMP% and use this 
         /// event handler to resolve the assemblies to that location.
         /// </remarks>
         /// <returns></returns>
         public static Assembly ResolveManagerAssembliesEventHandler(object sender, ResolveEventArgs args)
         {
-            string tempDLLPath = Path.GetTempPath();
-            if (!Path.GetTempPath().Contains("ApsimX"))
-                tempDLLPath = Path.Combine(tempDLLPath, "ApsimX");
-            if (Directory.Exists(tempDLLPath))
-            {
-                foreach (string fileName in Directory.GetFiles(tempDLLPath, "*.dll"))
-                    if (args.Name.Split(',')[0] == Path.GetFileNameWithoutExtension(fileName))
-                        return Assembly.LoadFrom(fileName);
-            }
+            foreach (string fileName in Directory.GetFiles(Path.GetTempPath(), "ApsimXManager*.dll"))
+                if (args.Name.Split(',')[0] == Path.GetFileNameWithoutExtension(fileName))
+                    return Assembly.LoadFrom(fileName);
             return null;
+        }
+
+        /// <summary>
+        /// Cleanup old assemblies in the TEMP folder.
+        /// </summary>
+        private void CleanupOldAssemblies()
+        {
+            var filesToCleanup = new List<string>();
+            filesToCleanup.AddRange(Directory.GetFiles(Path.GetTempPath(), "ApsimXManager*.dll"));
+            filesToCleanup.AddRange(Directory.GetFiles(Path.GetTempPath(), "ApsimXManager*.cs"));
+
+            foreach (string fileName in filesToCleanup)
+            {
+                try
+                {
+                    TimeSpan timeSinceLastAccess = DateTime.Now - File.GetLastAccessTime(fileName);
+                    if (timeSinceLastAccess.Hours > 1)
+                        File.Delete(fileName);
+                }
+                catch (Exception)
+                {
+                    // File locked?
+                }                
+            }
         }
 
         /// <summary>Set the scripts parameters from the 'xmlElement' passed in.</summary>
@@ -176,7 +222,7 @@
                         if (property != null)
                         {
                             object value;
-                            if (parameter.Value.StartsWith("."))
+                            if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
                                 value = Apsim.Get(this, parameter.Value);
                             else if (property.PropertyType == typeof(IPlant))
                                 value = Apsim.Find(this, parameter.Value);
@@ -217,7 +263,7 @@
                     if (value == null)
                         value = "";
                     else if (value is IModel)
-                        value = Apsim.FullPath(value as IModel);
+                        value = "[" + (value as IModel).Name + "]";
                     Parameters.Add(new KeyValuePair<string, string>
                                         (property.Name, 
                                          ReflectionUtilities.ObjectToString(value)));
@@ -225,5 +271,97 @@
             }
         }
 
+
+        /// <summary>
+        /// An assembly cache.
+        /// </summary>
+        private static Dictionary<string, Assembly> AssemblyCache = new Dictionary<string, Assembly>();
+
+        /// <summary>
+        /// Compile the specified 'code' into an executable assembly. If 'assemblyFileName'
+        /// is null then compile to an in-memory assembly.
+        /// </summary>
+        public static Assembly CompileTextToAssembly(string code, string assemblyFileName, params string[] referencedAssemblies)
+        {
+            // See if we've already compiled this code. If so then return the assembly.
+            if (AssemblyCache.ContainsKey(code))
+                return AssemblyCache[code];
+
+            lock (AssemblyCache)
+            {
+                if (AssemblyCache.ContainsKey(code))
+                    return AssemblyCache[code];
+                bool VB = code.IndexOf("Imports System") != -1;
+                string Language;
+                if (VB)
+                    Language = CodeDomProvider.GetLanguageFromExtension(".vb");
+                else
+                    Language = CodeDomProvider.GetLanguageFromExtension(".cs");
+
+                if (Language != null && CodeDomProvider.IsDefinedLanguage(Language))
+                {
+                    CodeDomProvider Provider = CodeDomProvider.CreateProvider(Language);
+                    if (Provider != null)
+                    {
+                        CompilerParameters Params = new CompilerParameters();
+
+                        string[] source = new string[1];
+                        if (assemblyFileName == null)
+                        {
+                            Params.GenerateInMemory = true;
+                            source[0] = code;
+                        }
+                        else
+                        {
+                            Params.GenerateInMemory = false;
+                            Params.OutputAssembly = assemblyFileName;
+                            string sourceFileName;
+                            if (VB)
+                                sourceFileName = Path.ChangeExtension(assemblyFileName, ".vb");
+                            else
+                                sourceFileName = Path.ChangeExtension(assemblyFileName, ".cs");
+                            File.WriteAllText(sourceFileName, code);
+                            source[0] = sourceFileName;
+                        }
+                        Params.TreatWarningsAsErrors = false;
+                        Params.IncludeDebugInformation = true;
+                        Params.WarningLevel = 2;
+                        Params.ReferencedAssemblies.Add("System.dll");
+                        Params.ReferencedAssemblies.Add("System.Xml.dll");
+                        Params.ReferencedAssemblies.Add("System.Windows.Forms.dll");
+                        Params.ReferencedAssemblies.Add("System.Data.dll");
+                        Params.ReferencedAssemblies.Add("System.Core.dll");
+                        Params.ReferencedAssemblies.Add(typeof(MathNet.Numerics.Fit).Assembly.Location); // MathNet.Numerics
+                        Params.ReferencedAssemblies.Add(typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location); // APSIM.Shared.dll
+                        Params.ReferencedAssemblies.Add(typeof(IModel).Assembly.Location); // Models.exe
+                        Params.ReferencedAssemblies.AddRange(referencedAssemblies);
+
+                        if (!Params.ReferencedAssemblies.Contains(Assembly.GetCallingAssembly().Location))
+                            Params.ReferencedAssemblies.Add(Assembly.GetCallingAssembly().Location);
+                        Params.TempFiles = new TempFileCollection(Path.GetTempPath());  // ensure that any temp files are in a writeable area
+                        Params.TempFiles.KeepFiles = false;
+                        CompilerResults results;
+                        if (assemblyFileName == null)
+                            results = Provider.CompileAssemblyFromSource(Params, source);
+                        else
+                            results = Provider.CompileAssemblyFromFile(Params, source);
+                        string Errors = "";
+                        foreach (CompilerError err in results.Errors)
+                        {
+                            if (Errors != "")
+                                Errors += "\r\n";
+
+                            Errors += err.ErrorText + ". Line number: " + err.Line.ToString();
+                        }
+                        if (Errors != "")
+                            throw new Exception(Errors);
+
+                        AssemblyCache.Add(code, results.CompiledAssembly);
+                        return results.CompiledAssembly;
+                    }
+                }
+                throw new Exception("Cannot compile manager script to an assembly");
+            }
+        }
     }
 }

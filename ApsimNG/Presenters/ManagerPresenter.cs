@@ -71,9 +71,17 @@ namespace UserInterface.Presenters
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             scriptModel = manager.Children.FirstOrDefault();
+
+            // See if manager script has a description attribute on it's class.
             if (scriptModel != null)
-                propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
-            managerView.Editor.ScriptMode = true;
+            {
+                DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(scriptModel.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (descriptionName != null)
+                    explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
+            }
+
+            propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
+            managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
             managerView.Editor.LeaveEditor += OnEditorLeave;
@@ -132,8 +140,8 @@ namespace UserInterface.Presenters
                 BuildScript();
             if (scriptModel != null)
             {
-                propertyPresenter.FindAllProperties(scriptModel);
-                propertyPresenter.PopulateGrid(scriptModel);
+                propertyPresenter.UpdateModel(scriptModel);
+                propertyPresenter.Refresh();
             }
         }
 
@@ -190,7 +198,7 @@ namespace UserInterface.Presenters
                 // User could have added more inputs to manager script - therefore we update the property presenter.
                 scriptModel = Apsim.Child(manager, "Script") as Model;
                 if (scriptModel != null)
-                    propertyPresenter.Attach(scriptModel, managerView.GridView, explorerPresenter);
+                    propertyPresenter.Refresh();
             }
             catch (Exception err)
             {

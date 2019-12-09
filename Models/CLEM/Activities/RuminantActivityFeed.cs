@@ -23,7 +23,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
     [Version(1, 0, 1, "")]
-    public class RuminantActivityFeed : CLEMRuminantActivityBase
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
+    public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
         Clock Clock = null;
@@ -43,8 +44,6 @@ namespace Models.CLEM.Activities
         [Description("Proportion wastage through trampling (feed trough = 0)")]
         [Required, Proportion]
         public double ProportionTramplingWastage { get; set; }
-
-        private IResourceType foodSource { get; set; }
 
         /// <summary>
         /// Feed type
@@ -70,6 +69,23 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (Apsim.Children(this, typeof(RuminantFeedGroup)).Count + Apsim.Children(this, typeof(RuminantFeedGroupMonthly)).Count == 0)
+            {
+                string[] memberNames = new string[] { "Ruminant feed group" };
+                results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] filter group must be present", memberNames));
+            }
+            return results;
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -81,7 +97,6 @@ namespace Models.CLEM.Activities
 
             // locate FeedType resource
             FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
-            foodSource = FeedType;
         }
 
         /// <summary>

@@ -19,8 +19,14 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
     public class CropActivityTask: CLEMActivityBase, IValidatableObject
     {
+        [Link]
+        Clock Clock = null;
+
+        private bool timingIssueReported = false;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -54,6 +60,34 @@ namespace Models.CLEM.Activities
             return null;
         }
 
+        /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        private void OnGetResourcesRequired(object sender, EventArgs e)
+        {
+            // if first step of parent rotation
+            // and timer failed because of harvest data
+            int start = (Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct).FirstTimeStepOfRotation;
+            if (Clock.Today.Year*100+Clock.Today.Month == start)
+            {
+                // check if it can only occur before this rotation started
+                ActivityTimerCropHarvest chtimer = Apsim.Children(this, typeof(ActivityTimerCropHarvest)).FirstOrDefault() as ActivityTimerCropHarvest;
+                if (chtimer != null)
+                {
+                    if (chtimer.ActivityPast)
+                    {
+                        this.Status = ActivityStatus.Warning;
+                        if(!timingIssueReported)
+                        {
+                            Summary.WriteWarning(this, String.Format("The harvest timer for crop task [a="+this.Name+"] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", this.Name));
+                            timingIssueReported = true;
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
@@ -61,8 +95,8 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded = 0;
-            double numberUnits = 0;
+            double daysNeeded;
+            double numberUnits;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
@@ -91,7 +125,6 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
-                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
                     productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                     numberUnits = productParent.AmountHarvested;
                     if (requirement.WholeUnitBlocks)
@@ -102,7 +135,6 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    cropParent = Apsim.Parent(this, typeof(CropActivityManageCrop)) as CropActivityManageCrop;
                     productParent = Apsim.Parent(this, typeof(CropActivityManageProduct)) as CropActivityManageProduct;
                     numberUnits = productParent.AmountHarvested / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)

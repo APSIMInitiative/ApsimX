@@ -45,13 +45,13 @@
             middleBox.PackStart(SimulationDropDown.MainWidget, true, true, 10);
 
             mainControl = new VBox();
-            _mainWidget = mainControl;
+            mainWidget = mainControl;
             mainControl.PackStart(topBox, false, false, 0);
             mainControl.PackStart(middleBox, false, false, 0);
             HtmlView = new HTMLView(this);
             mainControl.PackEnd(HtmlView.MainWidget, true, true, 0);
 
-            _mainWidget.Destroyed += MainWidgetDestroyed;
+            mainWidget.Destroyed += MainWidgetDestroyed;
         }
 
         /// <summary>Main widget destroyed handler</summary>
@@ -67,8 +67,8 @@
             SimulationDropDown.MainWidget.Destroy();
             mainControl.Destroy();
             HtmlView.MainWidget.Destroy();
-            _mainWidget.Destroyed -= MainWidgetDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= MainWidgetDestroyed;
+            owner = null;
         }
     }
 }

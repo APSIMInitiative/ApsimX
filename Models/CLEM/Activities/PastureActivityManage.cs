@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with the GRASP data file.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         [Link]
@@ -128,7 +129,7 @@ namespace Models.CLEM.Activities
         private double unitsOfArea2Ha;
         private IFileGRASP FileGRASP = null;
         private int pkGrassBA = 0; //rounded integer value used as primary key in GRASP file.
-        private int soilIndex = 0; // obtained from LandType used
+        private string soilIndex = "0"; // obtained from LandType used
         private double StockingRateSummed;  //summed since last Ecological Calculation.
         private int pkStkRate = 0; //rounded integer value used as primary key in GRASP file.
         private double ha2sqkm = 0.01; //convert ha to square km
@@ -144,22 +145,16 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            // Get Land condition relationship from children
-            LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as Relationship;
             if (LandConditionIndex == null)
             {
                 string[] memberNames = new string[] { "LandConditionIndexRelationship" };
                 results.Add(new ValidationResult("Unable to locate Land Condition Index relationship in user interface", memberNames));
             }
-            // Get Grass basal area relationship from children
-            GrassBasalArea = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as Relationship;
             if (GrassBasalArea == null)
             {
                 string[] memberNames = new string[] { "GrassBasalAreaRelationship" };
                 results.Add(new ValidationResult("Unable to locate grass Basal Area relationship in user interface", memberNames));
             }
-
-            FileGRASP = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == ModelNameFileGRASP).FirstOrDefault() as IFileGRASP;
             if (FileGRASP == null)
             {
                 string[] memberNames = new string[] { "FileGRASP" };
@@ -179,25 +174,29 @@ namespace Models.CLEM.Activities
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+            LandConditionIndex = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "LandConditionIndex").FirstOrDefault() as Relationship;
+            GrassBasalArea = Apsim.Children(this, typeof(Relationship)).Where(a => a.Name == "GrassBasalArea").FirstOrDefault() as Relationship;
+            FileGRASP = Apsim.ChildrenRecursively(ZoneCLEM.Parent).Where(a => a.Name == ModelNameFileGRASP).FirstOrDefault() as IFileGRASP;
 
             if (UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
             }
-            if (Area == 0 & AreaRequested > 0)
+            if (Area == 0 && AreaRequested > 0)
             {
-                ResourceRequestList = new List<ResourceRequest>();
-                ResourceRequestList.Add(new ResourceRequest()
+                ResourceRequestList = new List<ResourceRequest>
                 {
-                    AllowTransmutation = false,
-                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
-                    ResourceType = typeof(Land),
-                    ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
-                    ActivityModel = this,
-                    Reason = "Assign",
-                    FilterDetails = null
-                }
-                );
+                    new ResourceRequest()
+                    {
+                        AllowTransmutation = false,
+                        Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                        ResourceType = typeof(Land),
+                        ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
+                        ActivityModel = this,
+                        Reason = "Assign",
+                        FilterDetails = null
+                    }
+                };
             }
 
             // if we get here we assume some land has been supplied
@@ -244,7 +243,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (LinkedLandItem != null & UseAreaAvailable)
+            if (LinkedLandItem != null && UseAreaAvailable)
             {
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
             }
@@ -262,9 +261,12 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
                 double growth = 0;
 
-                // method is performed on last day of month but needs to work with next month's details
-                int year = Clock.Today.AddDays(1).Year;
-                int month = Clock.Today.AddDays(1).Month;
+                //// method is performed on last day of month but needs to work with next month's details
+                //int year = Clock.Today.AddDays(1).Year;
+                //int month = Clock.Today.AddDays(1).Month;
+
+                int year = Clock.Today.Year;
+                int month = Clock.Today.Month;
 
                 //Get this months pasture data from the pasture data list
                 PastureDataType pasturedata = PastureDataList.Where(a => a.Year == year && a.Month == month).FirstOrDefault();
@@ -272,16 +274,19 @@ namespace Models.CLEM.Activities
                 growth = pasturedata.Growth;
                 //TODO: check units from input files.
                 // convert from kg/ha to kg/area unit
-                growth = growth * unitsOfArea2Ha;
+                growth *= unitsOfArea2Ha;
 
                 Cover = pasturedata.Cover;
 
                 if (growth > 0)
                 {
                     this.Status = ActivityStatus.Success;
-                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool();
-                    newPasture.Age = 0;
-                    newPasture.Set(growth * Area);  
+                    GrazeFoodStorePool newPasture = new GrazeFoodStorePool
+                    {
+                        Age = 0
+                    };
+                    newPasture.Set(growth * Area);
+                    newPasture.Growth = growth * Area;
                     newPasture.Nitrogen = this.LinkedNativeFoodType.GreenNitrogen; 
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DMD = Math.Min(100,Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
@@ -291,7 +296,7 @@ namespace Models.CLEM.Activities
             else
             {
                 this.Status = ActivityStatus.Critical;
-                throw new Exception("No pasture data");
+                throw new Exception("No pasture data is available for [a="+this.Name+"]\nCheck that data is available for specified land id and climate region id etc. ");
             }
 
             // report activity performed.
@@ -326,49 +331,64 @@ namespace Models.CLEM.Activities
             CalculateEcologicalIndicators();
         }
 
-        /// <summary>An event handler to allow us to clear pools.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
-        {
-            // decay N and DMD of pools and age by 1 month
-            foreach (var pool in LinkedNativeFoodType.Pools)
-            {
-                pool.Reset();
-            }
-        }
+        ///// <summary>An event handler to allow us to clear pools.</summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("CLEMStartOfTimeStep")]
+        //private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        //{
+        //    // reset pool counters
+        //    foreach (var pool in LinkedNativeFoodType.Pools)
+        //    {
+        //        pool.Reset();
+        //    }
+        //}
 
-        /// <summary>
-        /// Function to age resource pools
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAgeResources")]
-        private void OnCLEMAgeResources(object sender, EventArgs e)
-        {
-            // decay N and DMD of pools and age by 1 month
-            foreach (var pool in LinkedNativeFoodType.Pools)
-            {
-                // N is a loss of N% (x = x -loss)
-                pool.Nitrogen = Math.Max(pool.Nitrogen - LinkedNativeFoodType.DecayNitrogen, LinkedNativeFoodType.MinimumNitrogen);
-                // DMD is a proportional loss (x = x*(1-proploss))
-                pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
+        ///// <summary>
+        ///// Function to detach pasture before reporting
+        ///// </summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("CLEMDetachPasture")]
+        //private void OnCLEMDetachPasture(object sender, EventArgs e)
+        //{
+        //    foreach (var pool in LinkedNativeFoodType.Pools)
+        //    {
+        //        double detach = LinkedNativeFoodType.CarryoverDetachRate;
+        //        if (pool.Age < 12)
+        //        {
+        //            detach = LinkedNativeFoodType.DetachRate;
+        //        }
+        //        double detachedAmount = pool.Amount * (1 - detach);
+        //        pool.Detached = pool.Amount * detach;
+        //        pool.Set(detachedAmount);
+        //    }
+        //}
 
-                double detach = LinkedNativeFoodType.CarryoverDetachRate;
-                if (pool.Age < 12)
-                {
-                    detach = LinkedNativeFoodType.DetachRate;
-                    pool.Age++;
-                }
-                double detachedAmount = pool.Amount * (1 - detach);
-                pool.Set(detachedAmount);
-                pool.Detached = detachedAmount;
-            }
+        ///// <summary>
+        ///// Function to age resource pools
+        ///// </summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("CLEMAgeResources")]
+        //private void OnCLEMAgeResources(object sender, EventArgs e)
+        //{
+        //    // decay N and DMD of pools and age by 1 month
+        //    foreach (var pool in LinkedNativeFoodType.Pools)
+        //    {
+        //        // N is a loss of N% (x = x -loss)
+        //        pool.Nitrogen = Math.Max(pool.Nitrogen - LinkedNativeFoodType.DecayNitrogen, LinkedNativeFoodType.MinimumNitrogen);
+        //        // DMD is a proportional loss (x = x*(1-proploss))
+        //        pool.DMD = Math.Max(pool.DMD * (1 - LinkedNativeFoodType.DecayDMD), LinkedNativeFoodType.MinimumDMD);
 
-            // remove all pools with less than 10g of food
-            LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
-        }
+        //        if (pool.Age < 12)
+        //        {
+        //            pool.Age++;
+        //        }
+        //    }
+        //    // remove all pools with less than 10g of food
+        //    LinkedNativeFoodType.Pools.RemoveAll(a => a.Amount < 0.01);
+        //}
 
         private void SetupStartingPasturePools(double startingGrowth)
         {
@@ -434,17 +454,19 @@ namespace Models.CLEM.Activities
             // Previously: remove this months growth from pool age 0 to keep biomass at approximately setup.
             // But as updates happen at the end of the month, the fist months biomass is never added so stay with 0 or delete following section
             // Get this months growth
-            //Get this months pasture data from the pasture data list
-            PastureDataType pasturedata = PastureDataList.Where(a => a.Year == Clock.StartDate.Year && a.Month == Clock.StartDate.Month).FirstOrDefault();
-            //double growth = ; // GRASPFile.Get(xxxxxxxxx)
-
-            double thisMonthsGrowth = pasturedata.Growth;
-            if (thisMonthsGrowth > 0)
+            // Get this months pasture data from the pasture data list
+            if (PastureDataList != null)
             {
-                GrazeFoodStorePool thisMonth = newPools.Where(a => a.Age == 0).FirstOrDefault() as GrazeFoodStorePool;
-                if (thisMonth != null)
+                PastureDataType pasturedata = PastureDataList.Where(a => a.Year == Clock.StartDate.Year && a.Month == Clock.StartDate.Month).FirstOrDefault();
+
+                double thisMonthsGrowth = pasturedata.Growth * Area;
+                if (thisMonthsGrowth > 0)
                 {
-                    thisMonth.Set(Math.Max(0, thisMonth.Amount - thisMonthsGrowth));
+                    GrazeFoodStorePool thisMonth = newPools.Where(a => a.Age == 0).FirstOrDefault() as GrazeFoodStorePool;
+                    if (thisMonth != null)
+                    {
+                        thisMonth.Set(Math.Max(0, thisMonth.Amount - thisMonthsGrowth));
+                    }
                 }
             }
 
@@ -464,7 +486,12 @@ namespace Models.CLEM.Activities
         {
             if (Resources.RuminantHerd() != null)
             {
-                return Resources.RuminantHerd().Herd.Where(a => a.Location == FeedTypeName).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
+                string paddock = FeedTypeName;
+                if(paddock.Contains("."))
+                {
+                    paddock = paddock.Substring(paddock.IndexOf(".")+1);
+                }
+                return Resources.RuminantHerd().Herd.Where(a => a.Location == paddock).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
             }
             else
             {
@@ -491,7 +518,7 @@ namespace Models.CLEM.Activities
 
                 // Calculate average monthly stocking rate
                 // Check number of months to use
-                int monthdiff = ((ZoneCLEM.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + ZoneCLEM.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month;
+                int monthdiff = ((ZoneCLEM.EcologicalIndicatorsNextDueDate.Year - Clock.StartDate.Year) * 12) + ZoneCLEM.EcologicalIndicatorsNextDueDate.Month - Clock.StartDate.Month+1;
                 if (monthdiff >= ZoneCLEM.EcologicalIndicatorsCalculationInterval)
                 {
                     monthdiff = ZoneCLEM.EcologicalIndicatorsCalculationInterval;

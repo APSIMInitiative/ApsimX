@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-
+using System.Linq;
 
 namespace Models.PMF.OilPalm
 {
@@ -58,7 +58,23 @@ namespace Models.PMF.OilPalm
                 else
                     return 0;
             }
-
+            set
+            {
+                if (CropInGround)
+                {
+                    var totalFrondArea = Fronds.Sum(x => x.Area);
+                    if (totalFrondArea > 0)
+                    {
+                        var delta = totalFrondArea - (value / SowingData.Population);
+                        var prop = delta / totalFrondArea;
+                        foreach (var L in Fronds)
+                        {
+                            var amountToRemove = L.Area * prop;
+                            L.Area -= amountToRemove;
+                        }
+                    }
+                }
+            }
         }
         
         /// <summary>Gets the maximum LAI (m^2/m^2)</summary>
@@ -75,6 +91,9 @@ namespace Models.PMF.OilPalm
 
         /// <summary>Gets the canopy depth (mm)</summary>
         public double Depth { get { return 10000; } }
+        
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width{ get { return 0; } }
 
         /// <summary>Gets the LAI (m^2/m^2)</summary>
         [Units("0-1")]
@@ -133,7 +152,7 @@ namespace Models.PMF.OilPalm
         ISummary Summary = null;
 
         /// <summary>NO3 solute.</summary>
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NO3 = null;
 
 
@@ -141,7 +160,7 @@ namespace Models.PMF.OilPalm
         public Biomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The soil crop</summary>
-        private SoilCropOilPalm soilCrop;
+        private SoilCrop soilCrop;
         /// <summary>The cultivar definition</summary>
         private Cultivar cultivarDefinition;
 
@@ -153,11 +172,17 @@ namespace Models.PMF.OilPalm
                 SortedSet<string> cultivarNames = new SortedSet<string>();
                 foreach (Cultivar cultivar in this.Cultivars)
                 {
-                    cultivarNames.Add(cultivar.Name);
+                    string name = cultivar.Name;
+                    List<IModel> memos = Apsim.Children(cultivar, typeof(Memo));
+                    foreach (IModel memo in memos)
+                    {
+                        name += '|' + ((Memo)memo).Text;
+                    }
+                    cultivarNames.Add(name);
                     if (cultivar.Alias != null)
                     {
                         foreach (string alias in cultivar.Alias)
-                            cultivarNames.Add(alias);
+                            cultivarNames.Add(alias + "|Alias for " + cultivar.Name);
                     }
                 }
 
@@ -193,11 +218,6 @@ namespace Models.PMF.OilPalm
             get { return cover_green + (1 - cover_green) * UnderstoryCoverGreen; }
                 }
 
-        /// <summary>Amount of rainfall intercepted by the plant canopy</summary>
-        [Units("mm")]
-        public double interception = 0.0;
-
-
         /// <summary>Gets or sets the understory cover maximum.</summary>
         /// <value>The understory cover maximum.</value>
         [Description("Maximum understory cover (0-1)")]
@@ -208,11 +228,6 @@ namespace Models.PMF.OilPalm
         [Description("Fraction of understory that is legume (0-1)")]
         [Units("0-1")]
         public double UnderstoryLegumeFraction { get; set; }
-        /// <summary>Gets or sets the interception fraction.</summary>
-        /// <value>The interception fraction.</value>
-        [Description("Fraction of rainfall intercepted by canopy (0-1)")]
-        [Units("0-1")]
-        public double InterceptionFraction { get; set; }
         /// <summary>Gets or sets the maximum root depth.</summary>
         /// <value>The maximum root depth.</value>
         [Description("Maximum palm root depth (mm)")]
@@ -379,97 +394,97 @@ namespace Models.PMF.OilPalm
         private List<RootType> Roots = new List<RootType>();
 
         /// <summary>The frond appearance rate</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the frond appearance rate under optimal temperature conditions.")]
         [Units("d")]
         IFunction FrondAppearanceRate = null;
         /// <summary>The relative developmental rate</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the relative rate of plant development (e.g. frond appearance) as affected by air temperature.")]
         [Units("0-1")]
         IFunction RelativeDevelopmentalRate = null;
         /// <summary>The frond maximum area</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the maximum area of an individual frond.")]
         [Units("m^2")]
         IFunction FrondMaxArea = null;
         /// <summary>The direct extinction coeff</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the Beer-Lambert law extinction coefficient for direct beam radiation.")]
         [Units("unitless")]
         IFunction DirectExtinctionCoeff = null;
         /// <summary>The diffuse extinction coeff</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the Beer-Lambert law extinction coefficient for diffuse beam radiation.")]
         [Units("unitless")]
         IFunction DiffuseExtinctionCoeff = null;
         /// <summary>The expanding fronds</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the number of expanding fronds at a given point in time.")]
         [Units("/palm")]
         IFunction ExpandingFronds = null;
         /// <summary>The initial frond number</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the number of fronds on the palm at planting.")]
         [Units("/palm")]
         IFunction InitialFrondNumber = null;
         /// <summary>The rue</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the radiation use efficiency for total short wave radiation.")]
         [Units("g/m^2")]
         IFunction RUE = null;
         /// <summary>The root front velocity</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the root front velocity, that is the vertical rate of root front advance.")]
         [Units("mm/d")]
         IFunction RootFrontVelocity = null;
         /// <summary>The root senescence rate</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the fraction of the live root system that senesces per day (ie first order decay coefficient).")]
         [Units("/d")]
         IFunction RootSenescenceRate = null;
         /// <summary>The specific leaf area</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the amount of frond area per unit frond mass. This is used to calculate frond dry matter demand.")]
         [Units("m^2/g")]
         IFunction SpecificLeafArea = null;
         /// <summary>The specific leaf area maximum</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the maximum amount of frond area per unit frond mass. Used to limit area growth when dry matter is limiting.")]
         [Units("m^2/g")]
         IFunction SpecificLeafAreaMax = null;
         /// <summary>The root fraction</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the fraction of daily growth partitioned into the root system.")]
         [Units("0-1")]
         IFunction RootFraction = null;
         /// <summary>The bunch size maximum</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the maximum bunch size on a dry mass basis.")]
         [Units("g")]
         IFunction BunchSizeMax = null;
         /// <summary>The female flower fraction</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the female fraction of a cohort's population of inflorescences as affected by age.")]
         [Units("0-1")]
         IFunction FemaleFlowerFraction = null;
         /// <summary>The FFF stress impact</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the fraction of inflorescences that become female each day during the gender determination phase.")]
         [Units("0-1")]
         IFunction FFFStressImpact = null;
         /// <summary>The stem to frond fraction</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the ratio of stem to frond growth as affected by plant age.")]
         [Units("g/g")]
         IFunction StemToFrondFraction = null;
         /// <summary>The flower abortion fraction</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the fraction of inflorescences that become aborted each day during the flower abortion phase.")]
         [Units("0-1")]
         IFunction FlowerAbortionFraction = null;
         /// <summary>The bunch failure fraction</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the fraction of bunches that fail each day during the bunch failure phase.")]
         [Units("0-1")]
         IFunction BunchFailureFraction = null;
@@ -478,53 +493,53 @@ namespace Models.PMF.OilPalm
         private double InitialRootDepth = 300;
 
         /// <summary>The kn o3</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function describes the NO3 uptake coefficient for a simple second-order decay.  Its value represents the fraction of NO3 available at a soil concentration of 1ppm. ")]
         [Units("/ppm")]
         IFunction KNO3 = null;
 
         /// <summary>The stem n concentration</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the stem nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction StemNConcentration = null;
         /// <summary>The bunch n concentration</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the bunch nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction BunchNConcentration = null;
         /// <summary>The root n concentration</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the root nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction RootNConcentration = null;
         /// <summary>The bunch oil conversion factor</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the conversion factor to convert carbohydrate to bunch dry mass to account for oil content.")]
         [Units("g/g")]
         IFunction BunchOilConversionFactor = null;
         /// <summary>The ripe bunch water content</summary>
-        [Link] 
+        [Link(Type = LinkType.Child, ByName = true)] 
         [Description("This function returns the fractional contribution of water to fresh bunch mass.")]
         [Units("g/g")]
         IFunction RipeBunchWaterContent = null;
         /// <summary>The harvest frond number</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the frond number removed when bunches are ready for harvest.  This is used to determine harvest time.")]
         [Units("/palm")]
         IFunction HarvestFrondNumber = null;
         /// <summary>The frond maximum n concentration</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the maximum frond nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction FrondMaximumNConcentration = null;
         /// <summary>The frond critical n concentration</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the critical frond nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction FrondCriticalNConcentration = null;
         /// <summary>The frond minimum n concentration</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Description("This function returns the minimum frond nitrogen concentration on dry mass basis.")]
         [Units("%")]
         IFunction FrondMinimumNConcentration = null;
@@ -721,7 +736,7 @@ namespace Models.PMF.OilPalm
             Bunches = new List<BunchType>();
             Roots = new List<RootType>();
 
-            soilCrop = Soil.Crop(Name) as SoilCropOilPalm; 
+            soilCrop = Soil.Crop(Name) as SoilCrop; 
             
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[Soil.Thickness.Length];
@@ -834,16 +849,6 @@ namespace Models.PMF.OilPalm
 
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
-        }
-
-        // The following event handler will be called each day at the beginning of the day
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        private void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            interception = MetData.Rain * InterceptionFraction;
         }
 
         /// <summary>Called when [do plant growth].</summary>

@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(OtherAnimalsType))]
     [Description("This specifies an other animal cohort at the start of the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalsTypeCohort.htm")]
     public class OtherAnimalsTypeCohort: CLEMModel
     {
         /// <summary>

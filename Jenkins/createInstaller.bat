@@ -49,11 +49,13 @@ exit /b
 
 :windows
 call :getIssueNumber
+if exist C:\signapsimx call C:\signapsimx\sign.bat "%apsimx%\Bin\Updater.exe"
 echo Generating installer...
 iscc /Q %setup%\apsimx.iss
 set "file_name=ApsimSetup%ISSUE_NUMBER%.exe"
 rename "%setup%\Output\ApsimSetup.exe" "!file_name!"
 set "file_name=%output%\%file_name%"
+if exist C:\signapsimx call C:\signapsimx\sign.bat "%file_name%"
 goto :upload
 
 :debian
@@ -78,7 +80,7 @@ if errorlevel 1 (
 	exit /b 1
 ) else echo Done.
 echo Uploading %file_name%...
-@curl -s -u !APSIM_SITE_CREDS! -T %file_name% ftp://www.apsim.info/APSIM/ApsimXFiles/
+@curl -s -u !APSIM_SITE_CREDS! -T %file_name% ftp://apsimdev.apsim.info/APSIM/ApsimXFiles/
 if errorlevel 1 (
 	echo Encountered an error while uploading %file_name%!
 ) else (

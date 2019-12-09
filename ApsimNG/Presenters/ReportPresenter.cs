@@ -48,7 +48,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The data storage
         /// </summary>
-        private IStorageReader dataStore;
+        private IDataStore dataStore;
 
         /// <summary>
         /// The data store presenter object
@@ -73,8 +73,8 @@ namespace UserInterface.Presenters
             this.view = view as IReportView;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
-            this.view.VariableList.ScriptMode = false;
-            this.view.EventList.ScriptMode = false;
+            this.view.VariableList.Mode = EditorType.Report;
+            this.view.EventList.Mode = EditorType.Report;
             this.view.VariableList.Lines = report.VariableNames;
             this.view.EventList.Lines = report.EventNames;
             this.view.VariableList.ContextItemsNeeded += OnNeedVariableNames;
@@ -86,24 +86,24 @@ namespace UserInterface.Presenters
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
             if (simulations != null)
             {
-                dataStore = Apsim.Child(simulations, typeof(IStorageReader)) as IStorageReader;
+                dataStore = Apsim.Child(simulations, typeof(IDataStore)) as IDataStore;
             }
             
             //// TBI this.view.VariableList.SetSyntaxHighlighter("Report");
 
             dataStorePresenter = new DataStorePresenter();
             Simulation simulation = Apsim.Parent(report, typeof(Simulation)) as Simulation;
-            if (simulation != null)
-            {
-                if (simulation.Parent is Experiment)
-                {
-                    dataStorePresenter.ExperimentFilter = simulation.Parent as Experiment;
-                }
-                else
-                {
-                    dataStorePresenter.SimulationFilter = simulation;
-                }
-            }
+            Experiment experiment = Apsim.Parent(report, typeof(Experiment)) as Experiment;
+            Zone paddock = Apsim.Parent(report, typeof(Zone)) as Zone;
+
+            // Only show data which is in scope of this report.
+            // E.g. data from this zone and either experiment (if applicable) or simulation.
+            if (paddock != null)
+                dataStorePresenter.ZoneFilter = paddock;
+            if (experiment != null)
+                dataStorePresenter.ExperimentFilter = experiment;
+            else if (simulation != null)
+                dataStorePresenter.SimulationFilter = simulation;
 
             dataStorePresenter.Attach(dataStore, this.view.DataStoreView, explorerPresenter);
             this.view.DataStoreView.TableList.SelectedValue = this.report.Name;

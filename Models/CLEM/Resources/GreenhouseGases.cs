@@ -17,6 +17,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all greehouse gas types for the simulation.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGases.htm")]
     public class GreenhouseGases : ResourceBaseWithTransactions
     {
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -70,6 +71,17 @@ namespace Models.CLEM.Resources
         }
 
         #endregion
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            return html;
+        }
 
     }
 }

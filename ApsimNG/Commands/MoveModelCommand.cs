@@ -35,7 +35,7 @@
         }
 
         /// <summary>Perform the command.</summary>
-        public void Do(CommandHistory CommandHistory)
+        public void Do(CommandHistory commandHistory)
         {
             fromParent = fromModel.Parent as Model;
             
@@ -49,8 +49,8 @@
             {
                 Structure.Move(fromModel, toParent);
                 presenter.Move(originalPath, toParent, nodeDescription);
-                CommandHistory.InvokeModelStructureChanged(fromParent);
-                CommandHistory.InvokeModelStructureChanged(toParent);
+                commandHistory.InvokeModelStructureChanged(fromParent);
+                commandHistory.InvokeModelStructureChanged(toParent);
             }
             catch (Exception err)
             {
@@ -60,7 +60,7 @@
         }
 
         /// <summary>Undo the command.</summary>
-        public void Undo(CommandHistory CommandHistory)
+        public void Undo(CommandHistory commandHistory)
         {
             if (modelMoved)
             {
@@ -69,8 +69,8 @@
                 fromModel.Name = originalName;
                 nodeDescription.Name = originalName;
 
-                CommandHistory.InvokeModelStructureChanged(fromParent);
-                CommandHistory.InvokeModelStructureChanged(toParent);
+                commandHistory.InvokeModelStructureChanged(fromParent);
+                commandHistory.InvokeModelStructureChanged(toParent);
             }
         }
 

@@ -18,7 +18,7 @@ namespace UserInterface.Presenters
         private Report report;
         private IReportActivityLedgerView view;
         private ExplorerPresenter explorerPresenter;
-        private IStorageReader dataStore;
+        private IDataStore dataStore;
         private DataStorePresenter dataStorePresenter;
 
         private ActivityLedgerGridPresenter activityGridPresenter;
@@ -35,12 +35,16 @@ namespace UserInterface.Presenters
             Simulations simulations = Apsim.Parent(report, typeof(Simulations)) as Simulations;
             if (simulations != null)
             {
-                dataStore = Apsim.Child(simulations, typeof(IStorageReader)) as IStorageReader;
+                dataStore = Apsim.Child(simulations, typeof(IDataStore)) as IDataStore;
             }
 
             dataStorePresenter = new DataStorePresenter();
             activityGridPresenter = new ActivityLedgerGridPresenter();
             Simulation simulation = Apsim.Parent(report, typeof(Simulation)) as Simulation;
+            Zone paddock = Apsim.Parent(report, typeof(Zone)) as Zone;
+
+            if (paddock != null)
+                dataStorePresenter.ZoneFilter = paddock;
             if (simulation != null)
             {
                 if (simulation.Parent is Experiment)

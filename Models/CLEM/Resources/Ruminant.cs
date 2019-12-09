@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.CLEM.Reporting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,9 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class Ruminant
     {
+        private RuminantFemale mother;
+        private double weight;
+
         /// <summary>
         /// Reference to the Breed Parameters.
         /// </summary>
@@ -35,7 +39,25 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Link to individual's mother
         /// </summary>
-        public RuminantFemale Mother { get; set; }
+        public RuminantFemale Mother
+        {
+            get
+            {
+                return mother;
+            }
+            set
+            {
+                mother = value;
+                if (mother != null)
+                {
+                    MotherID = value.ID;
+                }
+            }
+        }
+        /// <summary>
+        /// Link to individual's mother
+        /// </summary>
+        public int MotherID { get; private set; }
 
         /// <summary>
         /// Gender
@@ -51,7 +73,23 @@ namespace Models.CLEM.Resources
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
-        public double Age { get; set; }
+        public double Age { get; private set; }
+
+        /// <summary>
+        /// The age (months) this individual entered the simulation.
+        /// </summary>
+        /// <units>Months</units>
+        public double AgeEnteredSimulation { get; private set; }
+
+        /// <summary>
+        /// A method to set the age (months) this individual entered the simulation.
+        /// This should be used with caution as this is usually a automatic calculation
+        /// </summary>
+        /// <units>Months</units>
+        public void SetAgeEnteredSimulation(double age)
+        {
+            AgeEnteredSimulation = age;
+        }
 
         /// <summary>
         /// Purchase age (Months)
@@ -70,7 +108,24 @@ namespace Models.CLEM.Resources
         /// Weight (kg)
         /// </summary>
         /// <units>kg</units>
-        public double Weight { get; set; }
+        public double Weight
+        {
+            get
+            {
+                return weight;
+            }
+            set
+            {
+                weight = value;
+
+                // if highweight has not been defined set to initial weight
+                if (HighWeight == 0)
+                {
+                    HighWeight = weight;
+                }
+                HighWeight = Math.Max(HighWeight, weight);
+            }
+        }
 
         /// <summary>
         /// Previous weight (kg)
@@ -94,7 +149,7 @@ namespace Models.CLEM.Resources
         /// Highest previous weight
         /// </summary>
         /// <units>kg</units>
-        public double HighWeight { get; set; }
+        public double HighWeight { get; private set; }
 
         /// <summary>
         /// The current weight as a proportion of High weight achieved
@@ -108,13 +163,25 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// The current weight as a proportion of High weight achieved
+        /// </summary>
+        public double ProportionOfNormalisedWeight
+        {
+            get
+            {
+                return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
+            }
+        }
+
+
+        /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
         /// </summary>
         public bool Weaner
         {
             get
             {
-                return (Weaned & Age<12);
+                return (Weaned && Age<12);
             }
         }
 
@@ -163,6 +230,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <units>kg/month</units>
         public double PotentialIntake { get; set; }
+
+        /// <summary>
+        /// Current monthly metabolic intake after crude protein adjustment
+        /// </summary>
+        /// <units>kg/month</units>
+        public double MetabolicIntake { get; set; }
 
         /// <summary>
         /// Number in this class (1 if individual model)
@@ -224,6 +297,8 @@ namespace Models.CLEM.Resources
                         return 1;
                     case HerdChangeReason.InitialHerd:
                         return 1;
+                    case HerdChangeReason.MarkedSale:
+                        return -1;
                     default:
                         return 0;
                 }
@@ -307,14 +382,24 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Wean this individual
         /// </summary>
-        public void Wean()
+        public void Wean(bool report, string reason)
         {
             weaned = true;
-            MilkIntake = 0;
             if (this.Mother != null)
             {
-                this.Mother.SucklingOffspring.Remove(this);
+                this.Mother.SucklingOffspringList.Remove(this);
+                this.Mother.NumberOfWeaned++;
             }
+            if(report)
+            {
+                RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
+                {
+                    RumObj = this,
+                    Reason = reason
+                };
+                (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
+            }
+
         }
 
         private bool weaned = true;
@@ -345,15 +430,9 @@ namespace Models.CLEM.Resources
                     // same location as mother and not isolated
                     if (this.Location == this.Mother.Location)
                     {
-                        if (this.Mother.CarryingTwins)
-                        {
-                            // distribute milk between offspring
-                            milk = this.Mother.MilkProduction / 2;
-                        }
-                        else
-                        {
-                            milk = this.Mother.MilkProduction;
-                        }
+                        // distribute milk between offspring
+                        int offspring = (this.Mother.SucklingOffspringList.Count <= 1) ? 1 : this.Mother.SucklingOffspringList.Count;
+                        milk = this.Mother.MilkProduction / offspring;
                     }
                 }
                 return milk;
@@ -387,16 +466,39 @@ namespace Models.CLEM.Resources
         public double Wool { get; set; }
 
         /// <summary>
-        /// Amount of wool on individual
+        /// Amount of cashmere on individual
         /// </summary>
         public double Cashmere { get; set; }
 
+        /// <summary>
+        /// Method to increase age
+        /// </summary>
+        public void IncrementAge()
+        {
+            Age++;
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public Ruminant()
+        public Ruminant(double setAge, Sex setGender, double setWeight, RuminantType setParams)
         {
+            this.Age = setAge;
+            this.AgeEnteredSimulation = setAge;
+            this.Gender = setGender;
+            this.BreedParams = setParams;
+
+            if (setWeight <= 0)
+            {
+                // use normalised weight
+                this.Weight = NormalisedAnimalWeight;
+            }
+            else
+            {
+                this.Weight = setWeight;
+            }
+
+            this.PreviousWeight = this.Weight;
             this.Number = 1;
             this.Wool = 0;
             this.Cashmere = 0;

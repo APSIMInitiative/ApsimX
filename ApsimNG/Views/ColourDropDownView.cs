@@ -36,12 +36,12 @@ namespace UserInterface.Views
         public ColourDropDownView(ViewBase owner) : base(owner)
         {
             combobox1 = new ComboBox(comboModel);
-            _mainWidget = combobox1;
+            mainWidget = combobox1;
             combobox1.PackStart(comboRender, true);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.SetCellDataFunc(comboRender, OnDrawColourCombo);
             combobox1.Changed += OnChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -50,8 +50,8 @@ namespace UserInterface.Views
             combobox1.SetCellDataFunc(comboRender, null);
             comboModel.Dispose();
             comboRender.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Invoked when the user changes the selection</summary>
@@ -73,10 +73,7 @@ namespace UserInterface.Views
                         if (typeEnum == ColourDropTypeEnum.Text)
                             result[i++] = (string)comboModel.GetValue(iter, 0);
                         else
-                        {
-                            Gdk.Color color = (Gdk.Color)comboModel.GetValue(iter, 1);
-                            result[i++] = Color.FromArgb(color.Red * 255 / 65535, color.Green * 255 / 65535, color.Blue * 255 / 65535);
-                        }
+                            result[i++] = Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                     }
                     while (comboModel.IterNext(ref iter) && i < nVals);
                 return result;
@@ -124,10 +121,7 @@ namespace UserInterface.Views
                     if (typeEnum == ColourDropTypeEnum.Text)
                         return (string)comboModel.GetValue(iter, 0);
                     else
-                    {
-                        Gdk.Color color = (Gdk.Color)comboModel.GetValue(iter, 1);
-                        return Color.FromArgb(color.Red * 255 / 65535, color.Green * 255 / 65535, color.Blue * 255 / 65535);
-                    }
+                        return Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                 }
                 else
                     return null;
@@ -144,7 +138,7 @@ namespace UserInterface.Views
                         if (value.GetType() == typeof(Color))
                         {
                             Gdk.Color entry = (Gdk.Color)comboModel.GetValue(iter, 1);
-                            Color rgb = Color.FromArgb(entry.Red * 255 / 65535, entry.Green * 255 / 65535, entry.Blue * 255 / 65535);
+                            Color rgb = Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                             if (rgb.Equals((Color)value))
                             {
                                 combobox1.SetActiveIter(iter);
@@ -154,7 +148,7 @@ namespace UserInterface.Views
                         else if (typeEnum == ColourDropTypeEnum.Text)
                         {
                             string entry = (string)comboModel.GetValue(iter, 0);
-                            if (entry.Equals((string)value, StringComparison.InvariantCultureIgnoreCase))
+                            if (string.Equals(value as string, entry, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 combobox1.SetActiveIter(iter);
                                 return;

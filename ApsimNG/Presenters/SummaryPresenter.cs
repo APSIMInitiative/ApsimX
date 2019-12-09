@@ -7,9 +7,12 @@
     using Models;
     using Models.Core;
     using Models.Factorial;
-    using global::UserInterface.Views;
-    using global::EventArguments;
-    using global::UserInterface.Commands;
+    using Views;
+    using Commands;
+    using Utility;
+    using Models.Storage;
+    using System.Collections.Generic;
+    using Models.Core.Run;
 
     /// <summary>Presenter class for working with HtmlView</summary>
     public class SummaryPresenter : IPresenter
@@ -25,7 +28,7 @@
 
         /// <summary>Our data store</summary>
         [Link]
-        private IStorageReader dataStore = null;
+        private IDataStore dataStore = null;
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model to work with</param>
@@ -36,41 +39,57 @@
             summaryModel = model as Summary;
             this.explorerPresenter = parentPresenter;
             summaryView = view as ISummaryView;
+
+            // Populate the view.
+            SetSimulationNamesInView();
+            this.SetHtmlInView();
+
+            summaryView.SummaryCheckBox.IsChecked = summaryModel.CaptureSummaryText;
+            summaryView.SummaryCheckBox.Changed += OnSummaryCheckBoxChanged;
+            summaryView.WarningCheckBox.IsChecked = summaryModel.CaptureWarnings;
+            summaryView.WarningCheckBox.Changed += OnWarningCheckBoxChanged;
+            summaryView.ErrorCheckBox.IsChecked = summaryModel.CaptureErrors;
+            summaryView.ErrorCheckBox.Changed += OnErrorCheckBoxChanged;
+
+            // Subscribe to the simulation name changed event.
+            summaryView.SimulationDropDown.Changed += this.OnSimulationNameChanged;
+
+            // Subscribe to the view's copy event.
+            summaryView.HtmlView.Copy += OnCopy;
+        }
+
+        private void SetSimulationNamesInView()
+        {
             // populate the simulation names in the view.
-            Simulation parentSimulation = Apsim.Parent(this.summaryModel, typeof(Simulation)) as Simulation;
-            if (parentSimulation != null)
+            IModel scopedParent = ScopingRules.FindScopedParentModel(summaryModel);
+
+            if (scopedParent is Simulation parentSimulation)
             {
-                if (parentSimulation.Parent is Experiment)
-                {
-                    Experiment experiment = parentSimulation.Parent as Experiment;
-                    string[] simulationNames = experiment.GetSimulationNames().ToArray();
-                    summaryView.SimulationDropDown.Values = simulationNames;
-                    if (simulationNames.Length > 0)
-                    {
-                        summaryView.SimulationDropDown.SelectedValue = simulationNames[0];
-                    }
-                }
+                if (scopedParent.Parent is Experiment)
+                    scopedParent = scopedParent.Parent;
                 else
                 {
                     summaryView.SimulationDropDown.Values = new string[] { parentSimulation.Name };
                     summaryView.SimulationDropDown.SelectedValue = parentSimulation.Name;
+                    return;
                 }
+            }
 
-                // Populate the view.
-                this.SetHtmlInView();
-
-                summaryView.SummaryCheckBox.IsChecked = summaryModel.CaptureSummaryText;
-                summaryView.SummaryCheckBox.Changed += OnSummaryCheckBoxChanged;
-                summaryView.WarningCheckBox.IsChecked = summaryModel.CaptureWarnings;
-                summaryView.WarningCheckBox.Changed += OnWarningCheckBoxChanged;
-                summaryView.ErrorCheckBox.IsChecked = summaryModel.CaptureErrors;
-                summaryView.ErrorCheckBox.Changed += OnErrorCheckBoxChanged;
-
-                // Subscribe to the simulation name changed event.
-                summaryView.SimulationDropDown.Changed += this.OnSimulationNameChanged;
-
-                // Subscribe to the view's copy event.
-                summaryView.HtmlView.Copy += OnCopy;
+            if (scopedParent is Experiment experiment)
+            {
+                string[] simulationNames = experiment.GenerateSimulationDescriptions().Select(s => s.Name).ToArray();
+                summaryView.SimulationDropDown.Values = simulationNames;
+                if (simulationNames != null && simulationNames.Count() > 0)
+                    summaryView.SimulationDropDown.SelectedValue = simulationNames.First();
+            }
+            else
+            {
+                List<ISimulationDescriptionGenerator> simulations = Apsim.FindAll(summaryModel, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>().ToList();
+                simulations.RemoveAll(s => s is Simulation && (s as IModel).Parent is Experiment);
+                string[] simulationNames = simulations.SelectMany(m => m.GenerateSimulationDescriptions()).Select(m => m.Name).ToArray();
+                summaryView.SimulationDropDown.Values = simulationNames;
+                if (simulationNames != null && simulationNames.Length > 0)
+                    summaryView.SimulationDropDown.SelectedValue = simulationNames[0];
             }
         }
 
@@ -88,7 +107,7 @@
         private void SetHtmlInView()
         {
             StringWriter writer = new StringWriter();
-            Summary.WriteReport(this.dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Utility.Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html);
+            Summary.WriteReport(dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html, darkTheme : Configuration.Settings.DarkTheme);
             summaryView.HtmlView.SetContents(writer.ToString(), false);
             writer.Close();
         }

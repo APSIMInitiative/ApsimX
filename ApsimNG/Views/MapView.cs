@@ -181,7 +181,7 @@ namespace UserInterface.Views
                     Gtk.Application.RunIteration();
                 if ((browser as TWWebBrowserIE) != null)
                 {
-                    System.Windows.Forms.WebBrowser wb = (browser as TWWebBrowserIE).wb;
+                    System.Windows.Forms.WebBrowser wb = (browser as TWWebBrowserIE).Browser;
                     System.Drawing.Bitmap bm = new System.Drawing.Bitmap(width, height);
                     System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, width, height);
                     wb.DrawToBitmap(bm, rect);
@@ -196,9 +196,9 @@ namespace UserInterface.Views
             return bitmap;
         }
 
-        private double _zoom = 1.0;
+        private double zoom = 1.0;
 
-        private Models.Map.Coordinate _center = new Models.Map.Coordinate() { Latitude = 0.0, Longitude = 0.0 };
+        private Models.Map.Coordinate center = new Models.Map.Coordinate() { Latitude = 0.0, Longitude = 0.0 };
 
         /// <summary>
         /// Get or set the zoom factor of the map
@@ -207,12 +207,12 @@ namespace UserInterface.Views
         {
             get
             {
-                return _zoom;
+                return zoom;
             }
             set
             {
-                _zoom = Math.Truncate(value + 0.5);
-                browser.ExecJavaScript("SetZoom", new object[] { (int)_zoom });
+                zoom = Math.Truncate(value + 0.5);
+                browser.ExecJavaScript("SetZoom", new object[] { (int)zoom });
                 if (popupWindow != null)
                 {
                     Stopwatch watch = new Stopwatch();
@@ -230,11 +230,11 @@ namespace UserInterface.Views
         {
             get
             {
-                return _center;
+                return center;
             }
             set
             {
-                _center = value;
+                center = value;
                 browser.ExecJavaScript("SetCenter", new object[] { value.Latitude, value.Longitude });
 
                 // With WebKit, it appears we need to give it time to actually update the display
@@ -266,17 +266,17 @@ namespace UserInterface.Views
                 title = title.Replace("(", "");
                 title = title.Replace(")", "");
                 string[] parts = title.Split(new char[] { ',' });
-                if (Double.TryParse(parts[0], out newZoom) && newZoom != _zoom)
+                if (Double.TryParse(parts[0], out newZoom) && newZoom != zoom)
                 {
-                    _zoom = newZoom;
+                    zoom = newZoom;
                     modified = true;
                 }
                 if (Double.TryParse(parts[1], out newLat) &&
                     Double.TryParse(parts[2], out newLong) &&
-                    (newLat != _center.Latitude || newLong != _center.Longitude))
+                    (newLat != center.Latitude || newLong != center.Longitude))
                 {
-                    _center.Latitude = newLat;
-                    _center.Longitude = newLong;
+                    center.Latitude = newLat;
+                    center.Longitude = newLong;
                     modified = true;
                 }
                 if (modified && ViewChanged != null)

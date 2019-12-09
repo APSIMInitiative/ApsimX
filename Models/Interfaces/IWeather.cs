@@ -1,14 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IWeather.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Interfaces
+﻿namespace Models.Interfaces
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>A weather interface.</summary>
     public interface IWeather

@@ -54,7 +54,7 @@
         /// Summary file Link
         /// </summary>
         [Link]
-        Summary Summary = null;
+        ISummary Summary = null;
 
         /// <summary>The surface organic matter</summary>
         [Link]
@@ -64,18 +64,20 @@
         [Link]
         private Soil Soil = null;
 
-        [ChildLinkByName]
-        NutrientPool FOMCellulose = null;
-        [ChildLinkByName]
-        NutrientPool FOMCarbohydrate = null;
-        [ChildLinkByName]
-        NutrientPool FOMLignin = null;
-        [ChildLinkByName]
-        NutrientPool SurfaceResidue = null;
-        [ScopedLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
+        INutrientPool FOMCellulose = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        INutrientPool FOMCarbohydrate = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        INutrientPool FOMLignin = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        INutrientPool SurfaceResidue = null;
+        [Link(ByName = true)]
         private ISolute NO3 = null;
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NH4 = null;
+        [Link(ByName = true)]
+        private ISolute Urea = null;
 
         // Carbon content of FOM
         private double CinFOM = 0.4;
@@ -190,6 +192,11 @@
                 double[] no3 = NO3.kgha;
                 values = MathUtilities.Add(values, nh4);
                 values = MathUtilities.Add(values, no3);
+                if (Urea != null)
+                {
+                    double[] urea = Urea.kgha;
+                    values = MathUtilities.Add(values, urea);
+                }
                 return values;
             }
         }
@@ -390,7 +397,7 @@
 
             foreach (NutrientPool pool in Apsim.Children(this, typeof(NutrientPool)))
             {
-                directedGraphInfo.AddNode(pool.Name, Color.LightGreen, Color.Black);
+                directedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black);
 
                 foreach (CarbonFlow cFlow in Apsim.Children(pool, typeof(CarbonFlow)))
                 {
@@ -410,7 +417,7 @@
 
             foreach (Solute solute in Apsim.Children(this, typeof(Solute)))
             {
-                directedGraphInfo.AddNode(solute.Name, Color.LightCoral, Color.Black);
+                directedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black);
                 foreach (NFlow nitrogenFlow in Apsim.Children(solute, typeof(NFlow)))
                 {
                     string destName = nitrogenFlow.destinationName;
@@ -424,7 +431,7 @@
             }
 
             if (needAtmosphereNode)
-                directedGraphInfo.AddNode("Atmosphere", Color.White, Color.White);
+                directedGraphInfo.AddTransparentNode("Atmosphere");
 
             
             directedGraphInfo.End();

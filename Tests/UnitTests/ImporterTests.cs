@@ -11,6 +11,9 @@
     using Models.Surface;
     using NUnit.Framework;
     using System;
+    using System.IO;
+    using UserInterface.Presenters;
+    using UserInterface.Views;
 
     /// <summary>This is a test class for the .apsim file importer.</summary>
     [TestFixture]
@@ -83,7 +86,7 @@
             APSIMImporter importer = new APSIMImporter();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            Weather w = sims.Children[0].Children[0] as Weather;
+            var w = sims.Children[0].Children[0] as Models.Weather;
             Assert.AreEqual(w.FileName, @"\Examples\MetFiles\Goond.met");
         }
 
@@ -111,7 +114,7 @@
         [Test]
         public void ImporterTests_SoilImports()
         {
-            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.ImporterTests_SoilImports.xml");
+            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsSoilImports.xml");
 
             APSIMImporter importer = new APSIMImporter();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
@@ -123,7 +126,7 @@
             Assert.AreEqual(initWater.FractionFull, 0.5);
             Assert.AreEqual(initWater.PercentMethod, InitialWater.PercentMethodEnum.FilledFromTop);
 
-            Water w = s.Children[1] as Water;
+            Physical w = s.Children[1] as Physical;
             Assert.AreEqual(w.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(w.BD, new double[] { 1.02, 1.03, 1.02, 1.02 });
             Assert.AreEqual(w.LL15, new double[] { 0.29, 0.29, 0.29, 0.29 });
@@ -138,23 +141,22 @@
 
             Assert.IsTrue(s.Children[3] is SoilNitrogen);
 
-            SoilOrganicMatter som = s.Children[4] as SoilOrganicMatter;
+            Organic som = s.Children[4] as Organic;
             Assert.AreEqual(som.Thickness, new double[] { 150, 150, 300, 300 });
-            Assert.AreEqual(som.OC, new double[] { 1.04, 0.89, 0.89, 0.89 });
+            Assert.AreEqual(som.Carbon, new double[] { 1.04, 0.89, 0.89, 0.89 });
             Assert.AreEqual(som.FBiom, new double[] { 0.025, 0.02, 0.015, 0.01});
 
-            Analysis a = s.Children[5] as Analysis;
+            Chemical a = s.Children[5] as Chemical;
             Assert.AreEqual(a.Thickness, new double[] { 150, 150, 300, 300 });
+            Assert.AreEqual(a.NO3N, new double[] { 6.5, 2.1, 2.1, 1.0 });
+            Assert.AreEqual(a.NH4N, new double[] { 0.5, 0.1, 0.1, 0.2 });
             Assert.AreEqual(a.EC, new double[] { 0.2, 0.25, 0.31, 0.40 });
             Assert.AreEqual(a.PH, new double[] { 8.4, 8.8, 9.0, 9.2 });
 
             Sample sam = s.Children[6] as Sample;
             Assert.AreEqual(sam.Thickness, new double[] { 150, 150, 300 });
-            Assert.AreEqual(sam.NO3, new double[] { 6.5, 2.1, 2.1 });
-            Assert.AreEqual(sam.NH4, new double[] { 0.5, 0.1, 0.1 });
 
             SoilCrop crop = s.Children[1].Children[0] as SoilCrop;
-            Assert.AreEqual(crop.Thickness, new double[] { 150, 150, 300, 300 });
             Assert.AreEqual(crop.LL, new double[] { 0.29, 0.29, 0.32, 0.38 });
             Assert.AreEqual(crop.KL, new double[] { 0.1, 0.1, 0.08, 0.06 });
             Assert.AreEqual(crop.XF, new double[] { 1, 1, 1, 1 });
@@ -280,7 +282,7 @@
             APSIMImporter importer = new APSIMImporter();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
-            var r = sims.Children[0].Children[0] as Report;
+            var r = sims.Children[0].Children[0] as Models.Report.Report;
             Assert.IsNotNull(r);
             Assert.AreEqual(r.VariableNames[0], "[Clock].Today");
             Assert.AreEqual(r.VariableNames[1], "biomass");
@@ -348,5 +350,31 @@
             Assert.AreEqual(m.d_interception, 0.4);
         }
 
+        /// <summary>
+        /// This test ensures that failures in the importer do not cause the UI
+        /// to crash.
+        /// </summary>
+        [Test]
+        public void EnsureNoCrash()
+        {
+            // First, write the faulty .apsimx file to a temp file on disk.
+            string defective = ReflectionUtilities.GetResourceAsString("UnitTests.defective.apsim");
+            string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + "-defective.apsim");
+            File.WriteAllText(fileName, defective);
+            MainPresenter presenter = new MainPresenter();
+            Assert.DoesNotThrow(() => presenter.Import(fileName));
+        }
+
+        /// <summary>Ensure entire old APSIM file loads OK.</summary>
+        [Test]
+        public void EnsureOldAPSIMFileLoads()
+        {
+            string oldXml = ReflectionUtilities.GetResourceAsString("UnitTests.ImporterTestsOldAPSIM.xml");
+
+            APSIMImporter importer = new APSIMImporter();
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+
+            Assert.IsNotNull(sims);
+        }
     }
 }

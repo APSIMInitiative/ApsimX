@@ -18,6 +18,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all activities used in the CLEM simulation")]
+    [HelpUri(@"Content/Features/Activities/ActivitiesHolder.htm")]
     [Version(1, 0, 1, "")]
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
@@ -49,19 +50,22 @@ namespace Models.CLEM.Activities
 
         private void UnBindEvents(List<IModel> root)
         {
-            foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
+            if (root != null)
             {
-                if (item.GetType() != typeof(ActivityFolder))
+                foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
                 {
-                    (item as CLEMActivityBase).ResourceShortfallOccurred -= ActivitiesHolder_ResourceShortfallOccurred;
-                    (item as CLEMActivityBase).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
+                    if (item.GetType() != typeof(ActivityFolder))
+                    {
+                        (item as CLEMActivityBase).ResourceShortfallOccurred -= ActivitiesHolder_ResourceShortfallOccurred;
+                        (item as CLEMActivityBase).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
+                    }
+                    UnBindEvents(item.Children.Cast<IModel>().ToList());
                 }
-                UnBindEvents(item.Children.Cast<IModel>().ToList());
-            }
-            // remove link to all timers as children
-            foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
-            {
-                (timer as IActivityPerformedNotifier).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
+                // remove link to all timers as children
+                foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
+                {
+                    (timer as IActivityPerformedNotifier).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
+                }
             }
         }
 
@@ -238,7 +242,29 @@ namespace Models.CLEM.Activities
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                child.ReportAllAllActivitiesPerformed();
+                if (child.Enabled)
+                {
+                    child.ReportAllAllActivitiesPerformed();
+                }
+            }
+
+            // report all timers that were due this time step
+            foreach (IActivityTimer timer in Apsim.ChildrenRecursively(this, typeof(IActivityTimer)))
+            {
+                if (timer.ActivityDue)
+                {
+                    // report activity performed.
+                    ActivityPerformedEventArgs timerActivity = new ActivityPerformedEventArgs
+                    {
+                        Activity = new BlankActivity()
+                        {
+                            Status = ActivityStatus.Timer,
+                            Name = (timer as IModel).Name
+                        }
+                    };
+                    timerActivity.Activity.SetGuID((timer as CLEMModel).UniqueID);
+                    timer.OnActivityPerformed(timerActivity);
+                }
             }
 
             // add timestep activity for reporting
@@ -259,7 +285,10 @@ namespace Models.CLEM.Activities
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
             {
-                child.ClearAllAllActivitiesPerformedStatus();
+                if (child.Enabled)
+                {
+                    child.ClearAllAllActivitiesPerformedStatus();
+                }
             }
         }
 

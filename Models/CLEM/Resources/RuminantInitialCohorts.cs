@@ -17,14 +17,20 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
     [Version(1, 0, 1, "")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantCohorts.htm")]
     public class RuminantInitialCohorts : CLEMModel
     {
+        /// <summary>
+        /// Records if a warning about set weight occurred
+        /// </summary>
+        public bool WeightWarningOccurred = false;
+
         /// <summary>
         /// Constructor
         /// </summary>
         protected RuminantInitialCohorts()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
         }
 
         /// <summary>
@@ -60,6 +66,10 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "</table>";
+            if(WeightWarningOccurred)
+            {
+                html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
+            }
             return html;
         }
 
@@ -70,7 +80,8 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "<table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
+            WeightWarningOccurred = false;
+            html += "<table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
             return html;
         }
 
