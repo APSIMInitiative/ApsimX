@@ -97,6 +97,7 @@
                 this.view.StatusPanelHeight = 20;
             else
                 this.view.StatusPanelHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            this.view.SplitScreenPosition = Configuration.Settings.SplitScreenPosition;
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
         }
@@ -1232,6 +1233,7 @@
             if (e.AllowClose)
             {
                 fileConverter?.Destroy();
+                Configuration.Settings.SplitScreenPosition = view.SplitScreenPosition;
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;

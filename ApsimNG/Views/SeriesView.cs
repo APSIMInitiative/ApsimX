@@ -93,7 +93,7 @@ namespace UserInterface.Views
             Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
             helpBox = new EventBox();
             helpBox.Add(helpImage);
-            helpBox.ButtonPressEvent += Help_ButtonPressEvent;
+            helpBox.ButtonReleaseEvent += Help_ButtonPressEvent;
             HBox filterBox = new HBox();
             filterBox.PackStart(editView1.MainWidget, true, true, 0);
             filterBox.PackEnd(helpBox, false, true, 0);
@@ -117,7 +117,7 @@ namespace UserInterface.Views
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
             mainWidget.Destroyed -= _mainWidget_Destroyed;
-            helpBox.ButtonPressEvent -= Help_ButtonPressEvent;
+            helpBox.ButtonReleaseEvent -= Help_ButtonPressEvent;
             checkpointDropDown.MainWidget.Destroy();
             dataSourceDropDown.MainWidget.Destroy();
             xDropDown.MainWidget.Destroy();
@@ -214,7 +214,7 @@ namespace UserInterface.Views
         /// <summary>Show the filter help.</summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Help_ButtonPressEvent(object o, ButtonPressEventArgs args)
+        private void Help_ButtonPressEvent(object o, ButtonReleaseEventArgs args)
         {
             if (args.Event.Button == 1)
               System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphfilters/");
