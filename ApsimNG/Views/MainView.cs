@@ -613,6 +613,14 @@
             set { window1.Title = value; }
         }
 
+        /// <summary>Position of split screen divider.</summary>
+        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
+        public int SplitScreenPosition
+        {
+            get { return hpaned1.Position; }
+            set { hpaned1.Position = value; }
+        }
+
         /// <summary>Turn split window on/off</summary>
         public bool SplitWindowOn
         {
@@ -624,7 +632,8 @@
                 if (value)
                 {
                     hpaned1.Child2.Show();
-                    hpaned1.Position = hpaned1.Allocation.Width / 2;
+                    if (hpaned1.Position == 0)
+                        hpaned1.Position = hpaned1.Allocation.Width / 2;
                 }
                 else
                     hpaned1.Child2.Hide();

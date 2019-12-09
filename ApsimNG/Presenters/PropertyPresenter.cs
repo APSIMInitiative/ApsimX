@@ -375,7 +375,11 @@ namespace UserInterface.Presenters
                     if (properties[i].Display != null &&
                         properties[i].Display.Type == DisplayType.CultivarName)
                     {
-                        IPlant crop = GetCrop(properties);
+                        IPlant crop;
+                        if (properties[i].Display.PlantName != null)
+                            crop = Apsim.FindAll(model, typeof(IPlant)).FirstOrDefault(p => p.Name == properties[i].Display.PlantName) as IPlant;
+                        else
+                            crop = GetCrop(properties);
                         if (crop != null)
                         {
                             cell.DropDownStrings = GetCultivarNames(crop);
@@ -478,7 +482,11 @@ namespace UserInterface.Presenters
                          properties[i].Display.Type == DisplayType.CultivarName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    IPlant crop = GetCrop(properties);
+                    IPlant crop;
+                    if (properties[i].Display.PlantName != null)
+                        crop = Apsim.FindAll(model, typeof(IPlant)).FirstOrDefault(p => p.Name == properties[i].Display.PlantName) as IPlant;
+                    else
+                        crop = GetCrop(properties);
                     if (crop != null)
                     {
                         cell.DropDownStrings = GetCultivarNames(crop);

@@ -433,6 +433,7 @@
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
 
+                textRenderer.Editable = true;
                 if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
@@ -444,7 +445,6 @@
                 {
                     cell.CellBackgroundGdk = attributes.BackgroundColor;
                     textRenderer.ForegroundGdk = attributes.ForegroundColor;
-                    textRenderer.Editable = true;
                 }
                 else
                 {
