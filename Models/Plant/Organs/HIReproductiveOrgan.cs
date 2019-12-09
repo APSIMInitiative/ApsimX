@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
@@ -13,7 +13,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class HIReproductiveOrgan : Model, IOrgan, IArbitration, IRemovableBiomass
+    public class HIReproductiveOrgan : Model, IOrgan, IArbitration, IOrganDamage
     {
         /// <summary>The surface organic matter model</summary>
         [Link]
@@ -24,21 +24,21 @@ namespace Models.PMF.Organs
         protected Plant parentPlant = null;
 
         /// <summary>Gets or sets the above ground.</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction AboveGroundWt = null;
 
         /// <summary>The water content</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction WaterContent = null;
         /// <summary>The hi increment</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction HIIncrement = null;
         /// <summary>The n conc</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction NConc = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The dry matter potentially being allocated</summary>

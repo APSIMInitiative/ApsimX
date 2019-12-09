@@ -39,7 +39,7 @@
         /// </summary>
         public List<CompositeFactor> GetCompositeFactors()
         {
-            var childCompositeFactors = Apsim.Children(this, typeof(CompositeFactor)).Cast<CompositeFactor>();
+            var childCompositeFactors = Apsim.Children(this, typeof(CompositeFactor)).Where(f => f.Enabled).Cast<CompositeFactor>();
             if (string.IsNullOrEmpty(Specification))
             {
                 // Return each child CompositeFactor
@@ -161,7 +161,7 @@
                 IModel modelToReplace = Apsim.Get(baseSimulation, specification) as IModel;
                 if (modelToReplace == null)
                     throw new ApsimXException(this, "Cannot find model: " + specification);
-                foreach (IModel newModel in Children)
+                foreach (IModel newModel in Children.Where(c => c.Enabled))
                     values.Add(new CompositeFactor(this, specification, newModel));
             }
             return values;

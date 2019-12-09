@@ -2,18 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Surface;
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-    using System.Security;
-    using System.Text;
-    using System.Threading.Tasks;
 
     // Note: typing three consecutive comment characters (e.g.''') above a sub or function will generate xml documentation.
 
@@ -514,7 +503,7 @@
             if (oldGSW != null)
                 Array.Copy(oldGSW, gSW, Math.Min(gNumLayers + 1 + 1, oldGSW.Length));     // SW dimensioned for layers 1 to gNumlayers + 1 extra for zone below bottom layer
             for (int layer = 1; layer <= gNumLayers; layer++)
-                gSW[layer] = soil.SoilWater.SWmm[layer - 1] / gDLayer[layer];
+                gSW[layer] = MathUtilities.Divide(soil.SoilWater.SWmm[layer - 1], gDLayer[layer], 0);
             gSW[gNz] = gSW[gNumLayers];
             var oldGMaxTsoil = gMaxTsoil;
             gMaxTsoil = new double[gNumLayers + 1 + 1];
@@ -659,7 +648,7 @@
                 gC2[element] = 1.06 * gRhob[layer];                              // * SW[i]; //B for mineral soil - assume (is there missing text here??)
                                                                                  // The coefficient C3 (C in Caqmpbell 4.28) determines the water content where thermal conductivity begins to
                                                                                  // increase rapidly and is highly correlated with clay content. The following correlation appears to fit data well.
-                gC3[element] = 1.0D + 2.6 / Math.Sqrt(gClay[layer]);             // C is the water content where co (is there missing text here??)
+                gC3[element] = 1.0D + MathUtilities.Divide(2.6, Math.Sqrt(gClay[layer]), 0);             // C is the water content where co (is there missing text here??)
                                                                                  // Coefficient C4 (D in Campbell 4.22) is the thermal conductivity when volumetric water content=0. 
                                                                                  // For mineral soils with a particle density of 2.65 Mg/m3 the equation becomes the following.
                 gC4[element] = 0.03 + 0.1 * Math.Pow(gRhob[layer], 2);           // D assume mineral soil particle d (is there missing text here??)
@@ -674,15 +663,10 @@
         private void GetOtherVariables()
         {
             BoundCheck(weather.MaxT, weather.MinT, 100.0, "maxt");
-            gMaxT = weather.MaxT;
-
             BoundCheck(weather.MinT, -100.0, weather.MaxT, "mint");
+            gMaxT = weather.MaxT;
             gMinT = weather.MinT;
-
-            BoundCheck(timestep, 0, System.Convert.ToDouble(DAYmins), "timestep");
             gTimeStepSec = System.Convert.ToDouble(timestep) * MIN2SEC;
-
-            BoundCheckArray(soil.SoilWater.SW, 0.0, 1.0, "sw");
             soil.SoilWater.SW.CopyTo(gSW, 1);
             gSW[gNz] = gSW[gNumLayers];
             // Debug(test): multiplyArray(gSW, 0.1)
@@ -704,7 +688,12 @@
             BoundCheck(gWindSpeed, 0.0, 1000.0, "wind");
 
             gCanopyHeight = Math.Max(microClimate.CanopyHeight, gSoilRoughnessHeight) * MM2M;
-            BoundCheck(gCanopyHeight, 0.0, 20000.0, "Height");
+            BoundCheck(gCanopyHeight, 0.0, 20.0, "Height");
+
+
+            // Vals HACK. Should be recalculating wind profile.
+            gInstrumHt = Math.Max(gInstrumHt, gCanopyHeight + 0.5); 
+
         } // GetOtherVariables
 
 
@@ -856,8 +845,8 @@
                 double d2 = gZ_zb[node + 1] * M2MM - depthLayerAbove;
                 double dSum = d1 + d2;
 
-                nodeArray[node] = (layerArray[layer] * d1 / dSum)
-                                + (layerArray[layer + 1] * d2 / dSum);
+                nodeArray[node] = MathUtilities.Divide(layerArray[layer] * d1, dSum, 0)
+                                + MathUtilities.Divide(layerArray[layer + 1] * d2, dSum, 0);
             }
         }
         /// <summary>
@@ -881,11 +870,11 @@
             for (int node = SURFACEnode; node <= gNz; node++)
             {
                 double VolSoilAtNode = 0.5 * (gZ_zb[node + 1] - gZ_zb[node - 1]);   // Volume of soil around node (m^3), assuming area is 1 m^2
-                gheatStorage[node] = gVolSpecHeatSoil[node] * VolSoilAtNode / gDt;       // Joules/s/K or W/K
+                gheatStorage[node] = MathUtilities.Divide(gVolSpecHeatSoil[node] * VolSoilAtNode, gDt, 0);       // Joules/s/K or W/K
                                                                                          // rate of heat
                                                                                          // convert to thermal conductance
                 double elementLength = gZ_zb[node + 1] - gZ_zb[node];             // (m)
-                gThermalConductance_zb[node] = gThermConductivity_zb[node] / elementLength;  // (W/m/K)
+                gThermalConductance_zb[node] = MathUtilities.Divide(gThermConductivity_zb[node], elementLength, 0);  // (W/m/K)
             }
 
             // Debug test: multiplyArray(gThermalConductance_zb, 2.0)
@@ -918,18 +907,18 @@
             {
                 case "calc":
                     {
-                        RadnNet = gRadnNet * MJ2J / gDt;       // net Radiation Rn heat flux (J/m2/s or W/m2).
+                        RadnNet = MathUtilities.Divide(gRadnNet * MJ2J, gDt, 0);       // net Radiation Rn heat flux (J/m2/s or W/m2).
                         break;
                     }
 
                 case "eos":
                     {
                         // If (gEos - gEs) > 0.2 Then
-                        RadnNet = gEos * LAMBDA / gTimeStepSec;    // Eos*L = net Radiation Rn heat flux.
+                        RadnNet = MathUtilities.Divide(gEos * LAMBDA, gTimeStepSec, 0);    // Eos*L = net Radiation Rn heat flux.
                         break;
                     }
             }
-            double LatentHeatFlux = gEs * LAMBDA / gTimeStepSec;      // Es*L = latent heat flux LE (W/m)
+            double LatentHeatFlux = MathUtilities.Divide(gEs * LAMBDA, gTimeStepSec, 0);      // Es*L = latent heat flux LE (W/m)
             double SoilSurfaceHeatFlux = sensibleHeatFlux + RadnNet - LatentHeatFlux;  // from Rn = G + H + LE (W/m)
             d[SURFACEnode] += SoilSurfaceHeatFlux;        // FIXME JNGH testing alternative net radn
 
@@ -944,12 +933,12 @@
             // Calculate coeffs A, B, C, D for intermediate nodes
             for (int node = SURFACEnode; node <= gNz - 1; node++)
             {
-                c[node] /= b[node];
-                d[node] /= b[node];
+                c[node] = MathUtilities.Divide(c[node], b[node], 0);
+                d[node] = MathUtilities.Divide(d[node], b[node], 0);
                 b[node + 1] -= a[node + 1] * c[node];
                 d[node + 1] -= a[node + 1] * d[node];
             }
-            TNew_zb[gNz] = d[gNz] / b[gNz];  // do temperature at bottom node
+            TNew_zb[gNz] = MathUtilities.Divide(d[gNz], b[gNz], 0);  // do temperature at bottom node
 
             // Do temperatures at intermediate nodes from second bottom to top in soil profile
             for (int node = gNz - 1; node >= SURFACEnode; node += -1)
@@ -980,10 +969,10 @@
             Therm_zb[0] = gThermConductivity_zb[0];
             for (int node = 1; node <= gNz; node++)
             {
-                heat[node] = gVolSpecHeatSoil[node] * 0.5 * (gZ_zb[node + 1] - gZ_zb[node - 1]) / gDt;
+                heat[node] = MathUtilities.Divide(gVolSpecHeatSoil[node] * 0.5 * (gZ_zb[node + 1] - gZ_zb[node - 1]), gDt, 0);
                 // rate of heat
                 // convert to thermal conduc
-                Therm_zb[node] = gThermConductivity_zb[node] / (gZ_zb[node + 1] - gZ_zb[node]);
+                Therm_zb[node] = MathUtilities.Divide(gThermConductivity_zb[node], gZ_zb[node + 1] - gZ_zb[node], 0);
             }
 
             // My version
@@ -993,7 +982,7 @@
             d[1] = gT_zb[0] * (1 - nu) * Therm_zb[0] - gT_zb[1] * (1 - nu) * Therm_zb[1] - gT_zb[1] * (1 - nu) * Therm_zb[0] + gT_zb[1] * heat[1] + gT_zb[2] * (1 - nu) * Therm_zb[1] + Therm_zb[0] * TNew_zb[0] * nu;
 
             if ((gEos - gEs) > 0.2)
-                d[1] += (gEos - gEs) * LAMBDA / gTimeStepSec;
+                d[1] += MathUtilities.Divide((gEos - gEs) * LAMBDA, gTimeStepSec, 0);
             else
             {
             }
@@ -1019,12 +1008,12 @@
             // the Thomas algorithm
             for (int node = 1; node <= gNz - 1; node++)
             {
-                c[node] /= b[node];
-                d[node] /= b[node];
+                c[node] = MathUtilities.Divide(c[node], b[node], 0);
+                d[node] = MathUtilities.Divide(d[node], b[node], 0);
                 b[node + 1] -= a[node + 1] * c[node];
                 d[node + 1] -= a[node + 1] * d[node];
             }
-            TNew_zb[gNz] = d[gNz] / b[gNz];
+            TNew_zb[gNz] = MathUtilities.Divide(d[gNz], b[gNz], 0);
 
             for (int node = gNz - 1; node >= 1; node += -1)
                 TNew_zb[node] = d[node] - c[node] * TNew_zb[node + 1];
@@ -1117,17 +1106,18 @@
                     gMinTsoil[node] = gT_zb[node];
                 else if (gT_zb[node] > gMaxTsoil[node])
                     gMaxTsoil[node] = gT_zb[node];
-                gAveTsoil[node] += gT_zb[node] / System.Convert.ToDouble(IterationsPerDay);
+                gAveTsoil[node] += MathUtilities.Divide(gT_zb[node], System.Convert.ToDouble(IterationsPerDay), 0);
             }
-            gBoundaryLayerConductance += gThermConductivity_zb[AIRnode] / System.Convert.ToDouble(IterationsPerDay);
+            gBoundaryLayerConductance += MathUtilities.Divide(gThermConductivity_zb[AIRnode], System.Convert.ToDouble(IterationsPerDay), 0);
         } // doUpdate
-          /// <summary>
-          ///     '''     calculate the density of air (kg/m3) at a given temperature and pressure
-          ///     ''' </summary>
-          ///     ''' <param name="temperature">temperature (oC)</param>
-          ///     ''' <param name="AirPressure">air pressure (hPa)</param>
-          ///     ''' <returns>density of air</returns>
-          ///     ''' <remarks></remarks>
+
+        /// <summary>
+        ///     '''     calculate the density of air (kg/m3) at a given temperature and pressure
+        ///     ''' </summary>
+        ///     ''' <param name="temperature">temperature (oC)</param>
+        ///     ''' <param name="AirPressure">air pressure (hPa)</param>
+        ///     ''' <returns>density of air</returns>
+        ///     ''' <remarks></remarks>
         private double RhoA(double temperature, double AirPressure)
         {
             const double MWair = 0.02897;     // molecular weight air (kg/mol)
@@ -1198,20 +1188,24 @@
                 // of turbulence above the crop. The level of turbulence, in turn, is determined by the roughness of the surface,
                 // the distance from the surface and the thermal stratification of the boundary layer.
                 // Eqn 12.11 Campbell 
-                FrictionVelocity = gWindSpeed * VONK
-                                 / (Math.Log((gInstrumHt - d + RoughnessFacMomentum) / RoughnessFacMomentum)
-                                   + StabilityCorMomentum);
+                FrictionVelocity = MathUtilities.Divide(gWindSpeed * VONK,
+                                                        Math.Log(MathUtilities.Divide(gInstrumHt - d + RoughnessFacMomentum, 
+														                              RoughnessFacMomentum, 
+																					  0)) + StabilityCorMomentum, 
+														0);
                 // Eqn 12.10 Campbell
-                BoundaryLayerCond = SpecificHeatAir * VONK * FrictionVelocity
-                                  / (Math.Log((gInstrumHt - d + RoughnessFacHeat) / RoughnessFacHeat)
-                                    + StabilityCorHeat);
+                BoundaryLayerCond = MathUtilities.Divide(SpecificHeatAir * VONK * FrictionVelocity,
+                                                         Math.Log(MathUtilities.Divide(gInstrumHt - d + RoughnessFacHeat, 
+														                               RoughnessFacHeat, 0)) + StabilityCorHeat,
+							                             0);
 
                 BoundaryLayerCond += radiativeConductance; // * (1.0 - sunAngleAdjust())
 
                 HeatFluxDensity = BoundaryLayerCond * (SurfaceTemperature - gAirT);
                 // Eqn 12.14
-                StabilityParam = -VONK * gInstrumHt * GRAVITATIONALconst * HeatFluxDensity
-                                / (SpecificHeatAir * kelvinT(gAirT) * Math.Pow(FrictionVelocity, 3.0));
+                StabilityParam = MathUtilities.Divide(-VONK * gInstrumHt * GRAVITATIONALconst * HeatFluxDensity,
+                                                      SpecificHeatAir * kelvinT(gAirT) * Math.Pow(FrictionVelocity, 3.0)
+                                                      , 0);
 
                 // The stability correction parameters correct the boundary layer conductance for the effects
                 // of buoyancy in the atmosphere. When the air near the surface is hotter than the air above, 
@@ -1522,7 +1516,7 @@
         ///     ''' <remarks></remarks>
         private void doNetRadiation(ref double[] solarRadn, ref double cloudFr, ref double cva, int ITERATIONSperDAY)
         {
-            double TSTEPS2RAD = DEG2RAD * 360.0 / System.Convert.ToDouble(ITERATIONSperDAY);          // convert timestep of day to radians
+            double TSTEPS2RAD = MathUtilities.Divide(DEG2RAD * 360.0, Convert.ToDouble(ITERATIONSperDAY), 0);          // convert timestep of day to radians
             const double SOLARconst = 1360.0;     // W/M^2
             double solarDeclination = 0.3985 * Math.Sin(4.869 + clock.Today.DayOfYear * DOY2RAD + 0.03345 * Math.Sin(6.224 + clock.Today.DayOfYear * DOY2RAD));
             double cD = Math.Sqrt(1.0 - solarDeclination * solarDeclination);
@@ -1539,12 +1533,13 @@
 
             const double W2MJ = HR2MIN * MIN2SEC * J2MJ;      // convert W to MJ
             double psr = m1Tot * SOLARconst * W2MJ;   // potential solar radiation for the day (MJ/m^2)
-            double fr = Math.Max(weather.Radn, 0.1) / psr;               // ratio of potential to measured daily solar radiation (0-1)
+            double fr = MathUtilities.Divide(Math.Max(weather.Radn, 0.1), psr, 0);               // ratio of potential to measured daily solar radiation (0-1)
             cloudFr = 2.33 - 3.33 * fr;    // fractional cloud cover (0-1)
             cloudFr = bound(cloudFr, 0.0, 1.0);
 
             for (int timestepNumber = 1; timestepNumber <= ITERATIONSperDAY; timestepNumber++)
-                solarRadn[timestepNumber] = Math.Max(weather.Radn, 0.1) * m1[timestepNumber] / m1Tot;
+                solarRadn[timestepNumber] = Math.Max(weather.Radn, 0.1) * 
+                                            MathUtilities.Divide(m1[timestepNumber], m1Tot, 0);
 
             // cva is vapour concentration of the air (g/m^3)
             cva = Math.Exp(31.3716 - 6014.79 / kelvinT(gMinT) - 0.00792495 * kelvinT(gMinT)) / kelvinT(gMinT);
@@ -1566,7 +1561,8 @@
             double emissivityAtmos = (1 - 0.84 * cloudFr) * 0.58 * Math.Pow(cva, (1.0 / 7.0)) + 0.84 * cloudFr;
             // To calculate the longwave radiation out, we need to account for canopy and residue cover
             // Calculate a penetration constant. Here we estimate this using the Soilwat algorithm for calculating EOS from EO and the cover effects.
-            double PenetrationConstant = Math.Max(0.1, gEos) / Math.Max(0.1, gEo);
+            double PenetrationConstant = MathUtilities.Divide(Math.Max(0.1, gEos), 
+                                                              Math.Max(0.1, gEo), 0);
 
             // Eqn 12.1 modified by cover.
             double lwRinSoil = longWaveRadn(emissivityAtmos, gAirT) * PenetrationConstant * w2MJ;
@@ -1629,17 +1625,17 @@
                 if ((Math.Abs(dividend) > Math.Abs(LARGEST * divisor)))
                     quotient = defaultValue;
                 else
-                    quotient = dividend / divisor;
+                    quotient = MathUtilities.Divide(dividend, divisor, 0);
             }
             else if ((Math.Abs(divisor) > 1.0))
             {
                 if ((Math.Abs(dividend) < Math.Abs(SMALLEST * divisor)))
                     quotient = NOUGHT;
                 else
-                    quotient = dividend / divisor;
+                    quotient = MathUtilities.Divide(dividend, divisor, 0);
             }
             else
-                quotient = dividend / divisor;
+                quotient = MathUtilities.Divide(dividend, divisor, 0);
 
             return quotient;
         }

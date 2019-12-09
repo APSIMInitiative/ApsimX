@@ -106,6 +106,11 @@
         private List<int> categoryRows = new List<int>();
 
         /// <summary>
+        /// List of readonly row numbers
+        /// </summary>
+        private List<int> readonlyRows = new List<int>();
+
+        /// <summary>
         /// Dictionary for looking up the rendering attributes for each column.
         /// </summary>
         private Dictionary<int, ColRenderAttributes> colAttributes = new Dictionary<int, ColRenderAttributes>();
@@ -428,6 +433,7 @@
             {
                 StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
 
+                textRenderer.Editable = true;
                 if (IsSeparator(rowNo))
                 {
                     textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
@@ -439,12 +445,17 @@
                 {
                     cell.CellBackgroundGdk = attributes.BackgroundColor;
                     textRenderer.ForegroundGdk = attributes.ForegroundColor;
-                    textRenderer.Editable = true;
                 }
                 else
                 {
                     cell.CellBackgroundGdk = Grid.Style.Base(cellState);
                     textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
+                }
+
+                if (IsRowReadonly(rowNo))
+                {
+                    textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Insensitive);
+                    textRenderer.Editable = false;
                 }
 
                 if (view == Grid)
@@ -572,6 +583,30 @@
         public bool IsSeparator(int row)
         {
             return categoryRows.Contains(row);
+        }
+
+        /// <summary>
+        /// Indicates that a row should be readonly
+        /// </summary>
+        /// <param name="row">The row number.</param>
+        /// <param name="isReadOnly">Added as a separator if true; removed as a separator if false.</param>
+        public void SetRowAsReadonly(int row, bool isReadOnly = true)
+        {
+            bool present = IsRowReadonly(row);
+            if (isReadOnly && !present)
+                readonlyRows.Add(row);
+            else if (!isReadOnly && present)
+                readonlyRows.Remove(row);
+        }
+
+        /// <summary>
+        /// Checks if a row is a readonly row.
+        /// </summary>
+        /// <param name="row">Index of the row.</param>
+        /// <returns>True if the row is readonly.</returns>
+        public bool IsRowReadonly(int row)
+        {
+            return readonlyRows.Contains(row);
         }
 
         /// <summary>
@@ -1138,7 +1173,7 @@
                     return;
 
                 string keyName = GetKeyName(args.Event);
-                if (keyName == "Return" || keyName == "Tab" || IsArrowKey(args.Event.Key))
+                if (!IsUserEditingCell && (keyName == "Return" || keyName == "Tab" || IsArrowKey(args.Event.Key)))
                 {
                     HandleNavigation(args.Event);
                     while (GLib.MainContext.Iteration()) ;
@@ -1202,6 +1237,12 @@
                 {
                     if (DeleteCells == null)
                         throw new Exception("Unable to perform the delete operation - this grid is not owned by a grid presenter! 😠");
+                }
+                else if (IsUserEditingCell && (keyName == "Return" || keyName == "Tab"))
+                {
+                    args.RetVal = true;
+                    EndEdit();
+                    HandleNavigation(args.Event);
                 }
             }
             catch (Exception err)
@@ -1507,6 +1548,7 @@
                 comboRender.EditingStarted += ComboRenderEditing;
                 CellRendererActiveButton pixbufRender = new CellRendererActiveButton();
                 pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
+                pixbufRender.Activatable = true;
                 pixbufRender.Toggled += OnChooseFile;
 
                 colLookup.Add(textRender, i);
@@ -1875,7 +1917,7 @@
         {
             try
             {
-                ((o as Widget).Toplevel as Window).RemoveAccelGroup(accel);
+                    ((o as Widget).Toplevel as Window).RemoveAccelGroup(accel);
             }
             catch (Exception err)
             {
@@ -2383,6 +2425,8 @@
                     EditSelectedCell();
                     e.RetVal = true;
                 }
+                else
+                    e.RetVal = false;
             }
             catch (Exception err)
             {
@@ -2417,6 +2461,14 @@
                                 // Shift + left click
                                 selectionColMax = Array.IndexOf(view.Columns, column);
                                 selectionRowMax = path.Indices[0];
+
+                                // If we've clicked on the bottom row of populated data, all cells 
+                                // below the current cell will also be selected. To overcome this,
+                                // we add a new row to the datasource. Not a great solution, but 
+                                // it works.
+                                if (selectionRowMax >= DataSource.Rows.Count - 1)
+                                    DataSource.Rows.Add(DataSource.NewRow());
+
                                 e.RetVal = true;
                                 Refresh();
                             }
@@ -2427,6 +2479,29 @@
                                 // If the user has clicked on a selected cell, or if they have double clicked on any cell, we start editing the cell.
                                 if (!IsUserEditingCell && newlySelectedRowIndex == selectedCellRowIndex && newlySelectedColumnIndex == selectedCellColumnIndex)
                                 {
+                                    //
+                                    // We can have a cell renderer that is meant to be displayed when the entry is a file path,
+                                    // intended to activate a file selection dialog if clicked. For reasons that I do not understand,
+                                    // this isn't working as intended. The renderer is derived from CellRendererToggle, but the Toggled event
+                                    // is never being fired.
+                                    //
+                                    // The next few lines are an ugly hack to try to work around this problem. We attempt to see whether the
+                                    // button press occurred on one of these renderers, and if it did, activate the choose file dialog directly.
+                                    //
+                                    // We shouldn't have to do things this way, but I haven't been able to get it to otherwise work in the way I expected.
+                                    //
+                                    Tuple<int, int> location = new Tuple<int, int>(newlySelectedRowIndex, newlySelectedColumnIndex);
+                                    if (ButtonList.Contains(location) && e.Event.Type == Gdk.EventType.ButtonPress)
+                                    {
+                                        CellRendererActiveButton button = column.CellRenderers[3] as CellRendererActiveButton;
+                                        if (e.Event.X >= button.lastRect.X &&
+                                            e.Event.X <= button.lastRect.X + button.lastRect.Width)
+                                        {
+                                            OnChooseFile(button, null);
+                                            e.RetVal = false;
+                                            return;
+                                        }
+                                    }
                                     comboEditHack = GetCurrentCell.EditorType == EditorTypeEnum.DropDown;
                                     if (!comboEditHack)
                                         EditSelectedCell();

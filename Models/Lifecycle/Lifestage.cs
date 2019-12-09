@@ -14,6 +14,29 @@ namespace Models.LifeCycle
     /// <summary>
     /// # [Name]
     /// A lifestage is a developmental segment of a lifecycle. It contains cohorts.
+    ///
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|CurrentCohort     |Cohort   |  |Reference to the current cohort    |
+    ///|OwningCycle       |LifeCycle|  |The owning LifeCycle |
+    ///|CohortCount       |int      |  |The count of cohorts in this LifeStage |
+    ///|TotalPopulation   |double   |  |Population of all the cohorts in this LifeStage |
+    ///|Populations       |double[] |  |Gets the array of cohort populations for this LifeStage |
+    ///|Mortality         |double   |  |The current mortality numbers for this time step |
+    ///|Migrants          |double   |  |The number of organisms migrating to another LifeStage for this time step |
+    ///
+    /// **Cohort**
+    /// 
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|PhenoAge     |double   |time steps  |Developmental level (within a LifeStage)    |
+    ///|ChronoAge    |double   |time steps  |Period of existence since start of egg(?) stage |
+    ///|PhysiologicalAge |double |0-1 |The fraction of maturity for the cohort |
+    ///|Count        |double |  |Count of organisms in this cohort |
+    ///|Fecundity    |double |  |The fecundity for the time step |
+    ///|Mortality    |double |  |The mortality for the time step |
+    ///|OwningStage  |LifeStage|  |The LifeStage that owns this cohort |
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -36,7 +59,10 @@ namespace Models.LifeCycle
         private List<Cohort> CohortList;
 
         [NonSerialized]
-        private double StepMortality;
+        private double stepMortality;
+
+        [NonSerialized]
+        private double stepMigrants;
 
         [NonSerialized]
         private List<ILifeStageProcess> ProcessList;
@@ -110,8 +136,16 @@ namespace Models.LifeCycle
         {
             get
             {
-                return StepMortality;
+                return stepMortality;
             }
+        }
+
+        /// <summary>
+        /// The number of organisms migrating to another lifestage for this timestep
+        /// </summary>
+        public double Migrants
+        {
+            get { return stepMigrants; }
         }
 
         /// <summary>
@@ -151,7 +185,8 @@ namespace Models.LifeCycle
                 Cohort aCohort;
                 int count = CohortList.Count;
 
-                StepMortality = 0;
+                stepMigrants = 0;
+                stepMortality = 0;
                 // for each cohort in the lifestage
                 for (int i = 0; i < count; i++)
                 {
@@ -165,8 +200,9 @@ namespace Models.LifeCycle
                         proc.ProcessCohort(aCohort);    // execute process function and may include transfer to another lifestage
                     }
                     aCohort.AgeCohort();                // finally age the creatures in the cohort
-                    StepMortality += aCohort.Mortality;
+                    stepMortality += aCohort.Mortality;
                 }
+
                 RemoveEmptyCohorts();                   // remove any empty cohorts from the cohortlist
             }
         }
@@ -184,7 +220,8 @@ namespace Models.LifeCycle
                 newCohort.PhenoAge = 0;
                 newCohort.PhysiologicalAge = 0;
                 newCohort.Count = count;
-                srcCohort.Count = srcCohort.Count - count;
+                stepMigrants += count;
+                srcCohort.Count -= count;
             }
             else
             {
@@ -208,7 +245,7 @@ namespace Models.LifeCycle
                 int i = 0;
                 while (i < destStage.CohortList.Count)
                 {
-                    if (destStage.CohortList[i].PhenoAge == 0)
+                    if (destStage.CohortList[i].PhenoAge <= 0)
                     {
                         newCohort = destStage.CohortList[i];
                         i = destStage.CohortList.Count; // terminate loop

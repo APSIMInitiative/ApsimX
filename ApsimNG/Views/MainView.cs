@@ -149,6 +149,12 @@
 
             notebook1.SetMenuLabel(vbox1, LabelWithIcon(indexTabText, "go-home"));
             notebook2.SetMenuLabel(vbox2, LabelWithIcon(indexTabText, "go-home"));
+
+            notebook1.SwitchPage += OnChangeTab;
+            notebook2.SwitchPage += OnChangeTab;
+
+            notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
+
             hbox1.HeightRequest = 20;            
 
             TextTag tag = new TextTag("error");
@@ -187,6 +193,26 @@
                 RefreshTheme();
         }
 
+        /// <summary>
+        /// Invoked when the user changes tabs.
+        /// Gives the selected tab a special name so that its style is
+        /// modified according to the rules in the .gtkrc file.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [GLib.ConnectBefore]
+        private void OnChangeTab(object sender, SwitchPageArgs args)
+        {
+            Notebook control = sender as Notebook;
+
+            for (int i = 0; i < control.Children.Length; i++)
+            {
+                // The top-level widget in the tab label is always an event box.
+                Widget tabLabel = control.GetTabLabel(control.Children[i]);
+                tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+            }
+        }
+        
         /// <summary>
         /// Invoked when an error has been thrown in a view.
         /// </summary>
@@ -430,6 +456,8 @@
                 if (!args.AllowClose)
                     return;
             }
+            notebook1.SwitchPage -= OnChangeTab;
+            notebook2.SwitchPage -= OnChangeTab;
             stopButton.Clicked -= OnStopClicked;
             window1.DeleteEvent -= OnClosing;
             mainWidget.Destroy();
@@ -585,6 +613,14 @@
             set { window1.Title = value; }
         }
 
+        /// <summary>Position of split screen divider.</summary>
+        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
+        public int SplitScreenPosition
+        {
+            get { return hpaned1.Position; }
+            set { hpaned1.Position = value; }
+        }
+
         /// <summary>Turn split window on/off</summary>
         public bool SplitWindowOn
         {
@@ -596,7 +632,8 @@
                 if (value)
                 {
                     hpaned1.Child2.Show();
-                    hpaned1.Position = hpaned1.Allocation.Width / 2;
+                    if (hpaned1.Position == 0)
+                        hpaned1.Position = hpaned1.Allocation.Width / 2;
                 }
                 else
                     hpaned1.Child2.Hide();

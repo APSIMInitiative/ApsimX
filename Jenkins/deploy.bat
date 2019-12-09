@@ -9,4 +9,4 @@ if "%2"=="" (
 	exit /b 1
 )
 
-@curl -f "https://www.apsim.info/APSIM.Builds.Service/Builds.svc/AddBuild?pullRequestNumber=%1&ChangeDBPassword=%2"
+@curl -f "https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/AddBuild?pullRequestNumber=%1&ChangeDBPassword=%2"

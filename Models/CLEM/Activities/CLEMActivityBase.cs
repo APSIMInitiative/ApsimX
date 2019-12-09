@@ -94,7 +94,7 @@ namespace Models.CLEM.Activities
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
                     current = current.Parent as IModel;
                 }
                 return (result == 0);
@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
             IModel current = this as IModel;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.Check(date) ? 0 : 1);
+                result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.Check(date) ? 0 : 1);
                 current = current.Parent as IModel;
             }
             return (result == 0);
@@ -137,7 +137,7 @@ namespace Models.CLEM.Activities
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Count();
+                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Count();
                     current = current.Parent as IModel;
                 }
                 return (result != 0);
@@ -374,7 +374,6 @@ namespace Models.CLEM.Activities
 
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                // if reportErrorAndStop or SkipActivity do not perform Activity
                 if (tookRequestedResources || (ResourceRequestList.Count == 0))
                 {
                     DoActivity();

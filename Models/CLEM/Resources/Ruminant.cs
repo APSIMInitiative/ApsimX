@@ -82,6 +82,16 @@ namespace Models.CLEM.Resources
         public double AgeEnteredSimulation { get; private set; }
 
         /// <summary>
+        /// A method to set the age (months) this individual entered the simulation.
+        /// This should be used with caution as this is usually a automatic calculation
+        /// </summary>
+        /// <units>Months</units>
+        public void SetAgeEnteredSimulation(double age)
+        {
+            AgeEnteredSimulation = age;
+        }
+
+        /// <summary>
         /// Purchase age (Months)
         /// </summary>
         /// <units>Months</units>
@@ -287,6 +297,8 @@ namespace Models.CLEM.Resources
                         return 1;
                     case HerdChangeReason.InitialHerd:
                         return 1;
+                    case HerdChangeReason.MarkedSale:
+                        return -1;
                     default:
                         return 0;
                 }
@@ -486,6 +498,7 @@ namespace Models.CLEM.Resources
                 this.Weight = setWeight;
             }
 
+            this.PreviousWeight = this.Weight;
             this.Number = 1;
             this.Wool = 0;
             this.Cashmere = 0;

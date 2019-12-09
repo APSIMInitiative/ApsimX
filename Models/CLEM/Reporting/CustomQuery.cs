@@ -20,7 +20,7 @@ namespace Models.CLEM.Reporting
     [PresenterName("ApsimNG.Presenters.CLEM.CustomQueryPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("Allows custom SQL queries to be applied to the DataStore.")]
-    [HelpUri(@"Content/Features/Reporting/CropDataReaderSQLite.htm")]
+    [Version(1, 0, 2, "Now generates a database view for accessing the required data")]
     [Version(1, 0, 1, "")]
     public class CustomQuery : Model, IPostSimulationTool
     {
@@ -28,7 +28,7 @@ namespace Models.CLEM.Reporting
         private IDataStore dataStore = null;
 
         /// <summary>
-        /// Raw text of an SQL query
+        /// Raw text of an SQL select query
         /// </summary>
         public string Sql { get; set; }
 
@@ -47,15 +47,18 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public void Run()
         {
-            var data = dataStore.Reader.GetDataUsingSql(Sql);
-
-            if (data == null)
+            try
             {
-                throw new ApsimXException(this, "A custom SQL query was invalid");
+                // create view
+                dataStore.AddView(Tablename, Sql);
             }
-
-            data.TableName = Tablename;
-            dataStore.Writer.WriteTable(data);
+            catch(Exception ex)
+            {
+                if (!ex.Message.Contains("No Table"))
+                {
+                    throw new ApsimXException(this, ex.Message);
+                }
+            }
         }
     }
 }

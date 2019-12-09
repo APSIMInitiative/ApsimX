@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 283,
-  "Version": 67,
+  "Version": 69,
   "Name": "Simulations",
   "Children": [
     {
@@ -79,6 +79,8 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "paddock",
           "Children": [
             {
@@ -181,18 +183,18 @@
                     0.25
                   ],
                   "AirDry": [
-                    0.17,
-                    0.17,
-                    0.06,
-                    0.06,
+                    0.1,
+                    0.136,
+                    0.03,
+                    0.014,
                     0.01,
                     0.01
                   ],
                   "LL15": [
-                    0.17,
-                    0.17,
-                    0.07,
-                    0.07,
+                    0.144,
+                    0.136,
+                    0.03,
+                    0.014,
                     0.01,
                     0.01
                   ],
@@ -304,6 +306,7 @@
                     0.650599955554641
                   ],
                   "KLAT": null,
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -439,7 +442,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Inert",
                         "Location": "656, 254",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -447,7 +450,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "SurfaceResidue",
                         "Location": "566, 69",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -455,7 +458,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMLignin",
                         "Location": "261, 69",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -463,7 +466,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCellulose",
                         "Location": "397, 70",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -471,7 +474,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCarbohydrate",
                         "Location": "123, 70",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -479,7 +482,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Microbial",
                         "Location": "218, 299",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -487,7 +490,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Humic",
                         "Location": "458, 293",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -495,7 +498,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Urea",
                         "Location": "529, 419",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -503,7 +506,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NO3",
                         "Location": "185, 435",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -511,7 +514,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NH4",
                         "Location": "357, 422",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -527,7 +530,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNO3",
                         "Location": "688, 415",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -535,7 +538,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNH4",
                         "Location": "691, 421",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       }
@@ -711,6 +714,7 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
@@ -913,7 +917,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients; \r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] List<Zone> paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n\r\n        private int CurrentGroupNum = 1;    // animal group number\r\n        private int CurrentLocationNum { get; set; }\r\n\r\n        public enum Genotypes\r\n        {\r\n            SmallMerino,\r\n            Angus,\r\n            Friesian\r\n        }\r\n\r\n        public enum SexTypes\r\n        {\r\n            Cows,\r\n            Heifers,\r\n            Steers,\r\n            Bulls,\r\n            Ewes,\r\n            Weathers,\r\n            Rams,\r\n            Cryptos\r\n        }\r\n\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n        public Genotypes Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Cows, Heifers, Steers, Bulls, Ewes, Weathers, Rams, Cryptos):\")] \r\n        public SexTypes Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: number of unweaned young:\")]\r\n        public int YoungNumber { get; set; }\r\n\r\n        [Description(\"Stock: weight of unweaned young:\")] \r\n        public double YoungWt { get; set; }\r\n\r\n        [Separator(\"Grazing type info\")]\r\n\r\n        [Description(\"Paddock stocking rate (head/ha): \")] \r\n        public double StockingRate { get; set; }\r\n\r\n        [Description(\"Initial location of the cows (give either the paddock name or 'Away'): \")] \r\n        public string CurrentLocation { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \r\n        public double PreGrazingDM { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \r\n        public double PostGrazingDM { get; set; }\r\n\r\n        [Description(\"Implement a no-grazing window? (tick for yes): \")] \r\n        public bool DoNoGrazingWindow { get; set; }\r\n\r\n        [Description(\"Start of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeStart { get; set; }\r\n\r\n        [Description(\"End of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeEnd { get; set; }\r\n\r\n\r\n        public int NumStock { get; set; }\r\n        // number of cows on the whole farm\r\n        public bool GrazingSeasonIsOpen { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n\r\n            //Debugger.Break();\r\n\r\n            summary.WriteMessage(this, \"Initialising the paddock information\");\r\n\r\n            NumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\r\n\r\n            if (CurrentLocation.ToLower() != \"away\")\r\n            {\r\n                BuyStock();\r\n                stock.Move(CurrentGroupNum, CurrentLocation);\r\n                summary.WriteMessage(this, \" The Stock have been moved to \" + CurrentLocation);\r\n            }\r\n\r\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area));\r\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocation + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\r\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\");\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazingSeasonIsOpen = true;\r\n            if (DoNoGrazingWindow)\r\n                GrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\r\n\r\n            bool sellSomeStock = false;\r\n            if (!GrazingSeasonIsOpen)\r\n                sellSomeStock = true;\r\n\r\n            double harvestableBiomass = paddocks[0].Plants.Sum(plant => plant.AboveGround.Wt * 10);\r\n            if (harvestableBiomass <= PostGrazingDM)\r\n                sellSomeStock = true;\r\n\r\n            if (CurrentLocation == \"Away\")\r\n                sellSomeStock = false;\r\n\r\n            if (CurrentLocation == \"Away\" && harvestableBiomass >= PreGrazingDM && GrazingSeasonIsOpen)\r\n            {\r\n                CurrentLocation = paddocks[0].Name;\r\n                CurrentLocationNum = paddocks[0].Index;\r\n                BuyStock();\r\n                stock.Move(CurrentGroupNum, CurrentLocation);\r\n                summary.WriteMessage(this, \"     Buying stock \");\r\n            }\r\n\r\n            if (sellSomeStock)\r\n            {\r\n                CurrentLocation = \"Away\";\r\n                CurrentLocationNum = -1;\r\n                SellStock();\r\n                summary.WriteMessage(this, \"     Selling stock \");\r\n            }\r\n\r\n        }\r\n\r\n\r\n        public void BuyStock()\r\n        {\r\n            CurrentGroupNum = stock.NoGroups + 1;\r\n            StockBuy purchase = new StockBuy();\r\n            purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n            purchase.Number = NumStock;\r\n            purchase.Sex = ReflectionUtilities.EnumToString(Sex);\r\n            purchase.Age = Age;       // age in months\r\n            purchase.Weight = Weight;  // live weight in kg\r\n            purchase.UseTag = CurrentGroupNum + 1;\r\n            purchase.MatedTo = purchase.Genotype;\r\n            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n            purchase.NumYoung = YoungNumber;\r\n            purchase.YoungWt = YoungWt;\r\n\r\n            stock.Buy(purchase);\r\n        }\r\n\r\n        public void SellStock()\r\n        {\r\n            int NumGroups = stock.NoGroups;\r\n\r\n            NumGroups = stock.NoGroups;\r\n            for (int gg = 1; gg <= NumGroups; gg++)\r\n            {\r\n                stock.Sell(gg, stock.Number[gg - 1]);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using System;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients; \r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] List<Zone> paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n\r\n        private int CurrentGroupNum = 1;    // animal group number\r\n        private int CurrentLocationNum { get; set; }\r\n\r\n        public enum Genotypes\r\n        {\r\n            SmallMerino,\r\n            Angus,\r\n            Friesian\r\n        }\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n        public Genotypes Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: number of unweaned young:\")]\r\n        public int YoungNumber { get; set; }\r\n\r\n        [Description(\"Stock: weight of unweaned young:\")] \r\n        public double YoungWt { get; set; }\r\n\r\n        [Separator(\"Grazing type info\")]\r\n\r\n        [Description(\"Paddock stocking rate (head/ha): \")] \r\n        public double StockingRate { get; set; }\r\n\r\n        [Description(\"Initial location of the cows (give either the paddock name or 'Away'): \")] \r\n        public string CurrentLocation { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \r\n        public double PreGrazingDM { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \r\n        public double PostGrazingDM { get; set; }\r\n\r\n        [Description(\"Implement a no-grazing window? (tick for yes): \")] \r\n        public bool DoNoGrazingWindow { get; set; }\r\n\r\n        [Description(\"Start of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeStart { get; set; }\r\n\r\n        [Description(\"End of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeEnd { get; set; }\r\n\r\n\r\n        public int NumStock { get; set; }\r\n        // number of cows on the whole farm\r\n        public bool GrazingSeasonIsOpen { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n\r\n            //Debugger.Break();\r\n\r\n            summary.WriteMessage(this, \"Initialising the paddock information\");\r\n\r\n            NumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\r\n\r\n            if (CurrentLocation.ToLower() != \"away\")\r\n            {\r\n                BuyStock();\r\n                stock.Move(CurrentGroupNum, CurrentLocation);\r\n                summary.WriteMessage(this, \" The Stock have been moved to \" + CurrentLocation);\r\n            }\r\n\r\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area));\r\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocation + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\r\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\");\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazingSeasonIsOpen = true;\r\n            if (DoNoGrazingWindow)\r\n                GrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\r\n\r\n            bool sellSomeStock = false;\r\n            if (!GrazingSeasonIsOpen)\r\n                sellSomeStock = true;\r\n\r\n            double harvestableBiomass = paddocks[0].Plants.Sum(plant => plant.AboveGround.Wt * 10);\r\n            if (harvestableBiomass <= PostGrazingDM)\r\n                sellSomeStock = true;\r\n\r\n            if (CurrentLocation == \"Away\")\r\n                sellSomeStock = false;\r\n\r\n            if (CurrentLocation == \"Away\" && harvestableBiomass >= PreGrazingDM && GrazingSeasonIsOpen)\r\n            {\r\n                CurrentLocation = paddocks[0].Name;\r\n                CurrentLocationNum = paddocks[0].Index;\r\n                BuyStock();\r\n                stock.Move(CurrentGroupNum, CurrentLocation);\r\n                summary.WriteMessage(this, \"     Buying stock \");\r\n            }\r\n\r\n            if (sellSomeStock)\r\n            {\r\n                CurrentLocation = \"Away\";\r\n                CurrentLocationNum = -1;\r\n                SellStock();\r\n                summary.WriteMessage(this, \"     Selling stock \");\r\n            }\r\n\r\n        }\r\n\r\n\r\n        public void BuyStock()\r\n        {\r\n            CurrentGroupNum = stock.NoGroups + 1;\r\n            StockBuy purchase = new StockBuy();\r\n            purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n            purchase.Number = NumStock;\r\n            purchase.Sex = Sex;\r\n            purchase.Age = Age;       // age in months\r\n            purchase.Weight = Weight;  // live weight in kg\r\n            purchase.UseTag = CurrentGroupNum + 1;\r\n            purchase.MatedTo = purchase.Genotype;\r\n            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n            purchase.NumYoung = YoungNumber;\r\n            purchase.YoungWt = YoungWt;\r\n\r\n            stock.Buy(purchase);\r\n        }\r\n\r\n        public void SellStock()\r\n        {\r\n            int NumGroups = stock.NoGroups;\r\n\r\n            NumGroups = stock.NoGroups;\r\n            for (int gg = 1; gg <= NumGroups; gg++)\r\n            {\r\n                stock.Sell(gg, stock.Number[gg - 1]);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [
             {
               "Key": "Genotype",
@@ -921,7 +925,7 @@
             },
             {
               "Key": "Sex",
-              "Value": "Cows"
+              "Value": "Female"
             },
             {
               "Key": "Age",
@@ -1047,7 +1051,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "TotalWt",
               "Children": [
                 {
@@ -1113,7 +1119,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "StorageRootWt",
               "Children": [
                 {
@@ -1179,7 +1187,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "SCS",
               "Children": [
                 {

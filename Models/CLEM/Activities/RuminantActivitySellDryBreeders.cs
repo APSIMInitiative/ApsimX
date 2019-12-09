@@ -53,8 +53,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, false);
-
+            this.InitialiseHerd(true, true);
         }
 
         /// <summary>An event handler to perform herd dry breeder cull</summary>

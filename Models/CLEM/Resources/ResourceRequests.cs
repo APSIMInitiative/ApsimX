@@ -104,6 +104,29 @@ namespace Models.CLEM.Resources
         public double PercentN { get; set; }
     }
 
+    ///<summary>
+    /// Information for a food parcel eaten
+    ///</summary> 
+    public class HumanFoodParcel
+    {
+        /// <summary>
+        /// Link to the food store
+        /// </summary>
+        public HumanFoodStoreType FoodStore { get; set; }
+        /// <summary>
+        /// The pool of food
+        /// </summary>
+        public HumanFoodStorePool Pool { get; set; }
+        /// <summary>
+        /// Number of months before expires
+        /// </summary>
+        public int Expires { get; set; }
+        /// <summary>
+        /// Proportion eaten
+        /// </summary>
+        public double Proportion { get; set; }
+    }
+
     /// <summary>
     /// Class for reporting transaction details in OnTransactionEvents
     /// </summary>

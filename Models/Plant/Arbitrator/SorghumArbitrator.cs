@@ -45,11 +45,11 @@ namespace Models.PMF
         #region Links and Input parameters
 
         ///// <summary>The method used to arbitrate N allocations</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child, ByName = true)]
         //private IArbitrationMethod NArbitrator = null;
 
         ///// <summary>The method used to arbitrate N allocations</summary>
-        //[ChildLinkByName]
+        //[Link(Type = LinkType.Child, ByName = true)]
         //private IArbitrationMethod DMArbitrator = null;
 
         ///// <summary>The kgha2gsm</summary>
@@ -165,6 +165,33 @@ namespace Models.PMF
         {
             IncrementDaysTotal(false);
         }
+
+        [EventSubscribe("DoPotentialPlantGrowth")]
+        private void DoPotentialPlantGrowth(object sender, EventArgs e)
+        {
+            for (int i = 0; i < Organs.Count; i++)
+                N.UptakeSupply[i] = 0;
+            UpdateTTElapsed();
+        }
+
+        /// <summary>Clears this instance.</summary>
+        protected override void Clear()
+        {
+            base.Clear();
+            DltTT = 0.0;
+            WatSupply = 0.0;
+            NMassFlowSupply = 0.0;
+            NDiffusionSupply = 0.0;
+            TTFMFromFlowering = 0.0;
+            DaysTotal = new List<double>();
+
+            SWAvailRatio = 0.0;
+            SDRatio = 0.0;
+            PhotoStress = 0.0;
+            TotalAvail  = 0.0;
+            TotalPotAvail  = 0.0;
+        }
+
 
         /// <summary>
         /// This is basically one giant hack to calculate the equivalent
@@ -399,8 +426,6 @@ namespace Models.PMF
                 // demand, so we must include its structural demand in this calculation.
                 double totalDemand = N.TotalMetabolicDemand + N.StructuralDemand[rootIndex] + N.StructuralDemand[grainIndex];
                 double nDemand = Math.Max(0, totalDemand - grainDemand); // to replicate calcNDemand in old sorghum 
-                for (int i = 0; i < Organs.Count; i++)
-                    N.UptakeSupply[i] = 0;
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
 
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
@@ -442,7 +467,6 @@ namespace Models.PMF
                         var actualMassFlow = DltTT > 0 ? totalMassFlow : 0.0;
                         var maxDiffusionConst = root.MaxDiffusion.Value();
 
-                        UpdateTTElapsed();
                         double NUptakeCease = (Apsim.Find(this, "NUptakeCease") as Functions.IFunction).Value();
                         if (TTFMFromFlowering > NUptakeCease)
                             totalMassFlow = 0;
@@ -460,11 +484,6 @@ namespace Models.PMF
                             var maxUptake = Math.Max(0, maxUptakeRateFrac * DltTT - actualMassFlow);
                             actualDiffusion = Math.Min(actualDiffusion, maxUptake);
                         }
-
-                        // Update reporting variables. Yes this will be called four times each day
-                        // and so we only record the last value each time. It doesn't make a huge difference.
-                        NDiffusionSupply = actualDiffusion;
-                        NMassFlowSupply = actualMassFlow;
 
                         //adjust diffusion values proportionally
                         //make sure organNO3Supply is in kg/ha

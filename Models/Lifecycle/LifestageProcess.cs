@@ -40,7 +40,13 @@ namespace Models.LifeCycle
     }
 
     /// <summary>
-    /// A process within a Lifestage which will be of ProcessType.
+    /// A process within a Lifestage which will be of ProcessType (Transfer, PhysiologicalGrowth, Mortality).
+    /// 
+    ///|Property          .|Type    .|Units  .|Description              .| 
+    ///|---|---|---|:---|
+    ///|ProcessAction     |ProcessType   |  |The type of this process    |
+    ///|TransferTo        |string        |  |The name of the LifeStage to transfer cohorts to |
+    ///
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -68,7 +74,6 @@ namespace Models.LifeCycle
         /// </summary>
         public void Process(LifeStage host)
         {
-
         }
 
         /// <summary>

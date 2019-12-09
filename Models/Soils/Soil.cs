@@ -719,6 +719,9 @@
         /// <returns></returns>
         public double[] kgha2ppm(double[] values)
         {
+            if (values == null)
+                return null;
+
             double[] ppm = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
                 ppm[i] = values[i] * (100.0 / (BD[i] * Thickness[i]));
@@ -730,6 +733,9 @@
         /// <returns></returns>
         public double[] ppm2kgha(double[] values)
         {
+            if (values == null)
+                return null;
+
             double[] kgha = new double[values.Length];
             for (int i = 0; i < values.Length; i++)
                 kgha[i] = values[i] * (BD[i] * Thickness[i] / 100);

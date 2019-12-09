@@ -302,10 +302,10 @@
         {
             get
             {
-                if (this.reader == null || this.reader.Constant("Latitude") == null)
+                if (this.reader == null && !this.OpenDataFile())
                     return 0;
-                else
-                    return this.reader.ConstantAsDouble("Latitude");
+
+                return this.reader.ConstantAsDouble("Latitude");
             }
         }
 
@@ -407,8 +407,10 @@
             this.windIndex = 0;
             this.DiffuseFractionIndex = 0;
             this.dayLengthIndex = 0;
-            this.CO2 = 350;
-            this.AirPressure = 1010;
+            if (CO2 == 0)
+                this.CO2 = 350;
+            if (AirPressure == 0)
+                this.AirPressure = 1010;
             if (reader != null)
             {
                 reader.Close();
