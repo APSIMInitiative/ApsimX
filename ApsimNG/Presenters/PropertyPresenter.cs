@@ -218,6 +218,8 @@ namespace UserInterface.Presenters
             DataTable table = new DataTable();
             table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
+            table.Columns.Add("tooltip", typeof(string));
+            table.Columns[2].ExtendedProperties["tooltip"] = true;
 
             return table;
         }
