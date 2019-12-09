@@ -1537,6 +1537,14 @@
             // Now set up the grid columns
             for (int i = 0; i < numCols; i++)
             {
+                ColRenderAttributes attrib = new ColRenderAttributes();
+                if (!colAttributes.TryGetValue(i, out _))
+                {
+                    // Only fallback to defaults if no custom colour specified.
+                    attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
+                    attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
+                    colAttributes.Add(i, attrib);
+                }
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new CellRendererText();
                 CellRendererToggle toggleRender = new CellRendererToggle();
