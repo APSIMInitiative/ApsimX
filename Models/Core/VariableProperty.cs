@@ -136,6 +136,21 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Gets a tooltip for the property.
+        /// </summary>
+        public string Tooltip
+        {
+            get
+            {
+                TooltipAttribute attribute = property.GetCustomAttribute<TooltipAttribute>();
+                if (attribute == null)
+                    return null;
+
+                return attribute.Tooltip;
+            }
+        }
+
+        /// <summary>
         /// Gets the text to use as a label for the property.
         /// This is derived from the BriefLabel attribute or,
         /// if that does not exist, from the Description attribute

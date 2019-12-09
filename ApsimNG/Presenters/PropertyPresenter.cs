@@ -202,7 +202,6 @@ namespace UserInterface.Presenters
 
             IGridCell selectedCell = grid.GetCurrentCell;
             this.model = model;
-
             DataTable table = CreateGrid();
             FillTable(table);
             grid.DataSource = table;
@@ -219,6 +218,8 @@ namespace UserInterface.Presenters
             DataTable table = new DataTable();
             table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
+            table.Columns.Add("tooltip", typeof(string));
+            table.Columns[2].ExtendedProperties["tooltip"] = true;
 
             return table;
         }
@@ -432,16 +433,13 @@ namespace UserInterface.Presenters
         protected virtual void AddPropertyToTable(DataTable table, IVariable property)
         {
             if (property is VariableObject)
-                table.Rows.Add(new object[] { property.Value, null });
+                table.Rows.Add(new object[] { property.Value, null, null });
             else if (property.Value is IModel)
-                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
+                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Name });
+            else if (property is VariableProperty p)
+                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, p.Tooltip });
             else
-            {
-                string description = property.Description;
-                if (!string.IsNullOrEmpty(property.Units))
-                    description += " (" + property.Units + ")";
-                table.Rows.Add(new object[] { description, property.ValueWithArrayHandling });
-            }
+                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, property.Description });
         }
 
         /// <summary>
