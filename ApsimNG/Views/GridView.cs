@@ -1661,8 +1661,12 @@
                     int row = path.Indices[0];
                     if (row >= 0 && row < DataSource.Rows.Count && col >= 0 && col < DataSource.Columns.Count)
                     {
-                        args.Tooltip.Text = DataSource.Rows[row][col]?.ToString();
-                        args.RetVal = true;
+                        string tooltip = DataSource.Rows[row][col]?.ToString();
+                        if (!string.IsNullOrWhiteSpace(tooltip))
+                        {
+                            args.Tooltip.Text = tooltip;
+                            args.RetVal = true;
+                        }
                     }
                 }
             }

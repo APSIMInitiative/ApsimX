@@ -429,18 +429,13 @@ namespace UserInterface.Presenters
         protected virtual void AddPropertyToTable(DataTable table, IVariable property)
         {
             if (property is VariableObject)
-                table.Rows.Add(new object[] { property.Value, null });
+                table.Rows.Add(new object[] { property.Value, null, null });
             else if (property.Value is IModel)
-                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
+                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Name });
+            else if (property is VariableProperty p)
+                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, p.Tooltip });
             else
-            {
-                if (property is VariableObject)
-                    table.Rows.Add(new object[] { property.Value , null, property.Description });
-                else if (property.Value is IModel)
-                    table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Description });
-                else
-                    table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, property.Description });
-            }
+                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, property.Description });
         }
 
         /// <summary>
