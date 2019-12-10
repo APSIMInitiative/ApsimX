@@ -1522,6 +1522,12 @@
             for (int i = 0; i < numCols; i++)
                 colTypes[i] = typeof(string);
             gridModel = new ListStore(colTypes);
+
+            // We want to specify some default background/foreground colours based on the active
+            // Gtk theme. Unfortunately, theme info is not loaded until the grid is realized.
+            // Therefore we need to trap the Realized event and fix the colours when it fires.
+            Grid.Realized += GridRealized;
+
             Grid.ModifyBase(StateType.Active, fixedColView.Style.Base(StateType.Selected));
             Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
             fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
@@ -1633,6 +1639,44 @@
         }
 
         /// <summary>
+        /// Grid has been Realized (drawn) on the screen. The implication is that it will have
+        /// loaded the rc file style settings, so we can now specify some default colours based
+        /// on the active theme. This will probably need to change if we ever move to Gtk+3.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void GridRealized(object sender, EventArgs e)
+        {
+            try
+            {
+                // We only want to run this code once, so disconnect the event handler.
+                if (Grid != null)
+                    Grid.Realized -= GridRealized;
+
+                fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
+                fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
+
+                if (DataSource == null)
+                    return;
+
+                for (int i = 0; i < DataSource.Columns.Count; i++)
+                {
+                    ColRenderAttributes attrib = new ColRenderAttributes();
+                    if (!colAttributes.TryGetValue(i, out _))
+                    {
+                        // Only fallback to defaults if no custom colour specified.
+                        attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
+                        attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
+                        colAttributes.Add(i, attrib);
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         /// Invoked when the view needs a tooltip.
         /// </summary>
         /// <param name="o">Sender object.</param>
