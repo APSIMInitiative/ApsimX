@@ -23,7 +23,7 @@ public class Script
 			while (presenter.SelectNextNode())
 			{
 				presenter.HideRightHandPanel();
-				presenter.ShowrightHandPanel();
+				presenter.ShowRightHandPanel();
 			}
         }
 		
