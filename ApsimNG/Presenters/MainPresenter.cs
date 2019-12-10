@@ -1214,13 +1214,10 @@
             {
                 ShowError("You are on a custom build. You cannot upgrade.");
             }
-            else
+            if (this.AllowClose())
             {
-                if (this.AllowClose())
-                {
-                    UpgradeView form = new UpgradeView(view as ViewBase);
-                    form.Show();
-                }
+                UpgradeView form = new UpgradeView(view as ViewBase);
+                form.Show();
             }
         }
 
