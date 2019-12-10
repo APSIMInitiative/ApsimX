@@ -354,9 +354,16 @@
         /// <param name="e">Button press event arguments</param>
         public void OnEventbox1ButtonPress(object o, ButtonPressEventArgs e)
         {
-            if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
+            try
             {
-                CloseTabContaining(o);
+                if (e.Event.Button == 2) // Let a center-button click on a tab close that tab.
+                {
+                    CloseTabContaining(o);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -890,17 +897,24 @@
         /// <param name="e">Event arguments.</param>
         protected void OnClosing(object o, DeleteEventArgs e)
         {
-            if (AllowClose != null)
+            try
             {
-                AllowCloseArgs args = new AllowCloseArgs();
-                AllowClose.Invoke(this, args);
-                e.RetVal = !args.AllowClose;
+                if (AllowClose != null)
+                {
+                    AllowCloseArgs args = new AllowCloseArgs();
+                    AllowClose.Invoke(this, args);
+                    e.RetVal = !args.AllowClose;
+                }
+                else
+                    e.RetVal = false;
+                if ((bool)e.RetVal == false)
+                {
+                    Close(false);
+                }
             }
-            else
-                e.RetVal = false;
-            if ((bool)e.RetVal == false)
+            catch (Exception err)
             {
-                Close(false);
+                ShowError(err);
             }
         }
 
