@@ -205,6 +205,7 @@
     <Compile Include="CLEM\Resources\LabourSpecifications.cs" />
     <Compile Include="CLEM\Resources\ResourcePricing.cs" />
     <Compile Include="Core\Attributes\CategoryAttribute.cs" />
+    <Compile Include="Core\Attributes\TooltipAttribute.cs" />
     <Compile Include="Core\Attributes\VersionAttribute.cs" />
     <Compile Include="Core\Checkpoints.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
@@ -752,6 +753,15 @@
     <EmbeddedResource Include="Resources\Potato.json" />
     <EmbeddedResource Include="Resources\RedClover.json" />
     <EmbeddedResource Include="Resources\WhiteClover.json" />
+    <EmbeddedResource Include="Resources\AGPBrownTop.json" />
+    <EmbeddedResource Include="Resources\AGPCocksfoot.json" />
+    <EmbeddedResource Include="Resources\AGPKikuyu.json" />
+    <EmbeddedResource Include="Resources\AGPPaspalum.json" />
+    <EmbeddedResource Include="Resources\AGPPhalaris.json" />
+    <EmbeddedResource Include="Resources\AGPRedClover.json" />
+    <EmbeddedResource Include="Resources\AGPRhodes.json" />
+    <EmbeddedResource Include="Resources\AGPTallFescue.json" />
+    <EmbeddedResource Include="Resources\AGPLucerne.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
