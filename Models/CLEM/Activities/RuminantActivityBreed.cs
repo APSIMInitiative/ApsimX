@@ -192,7 +192,7 @@ namespace Models.CLEM.Activities
                             (ind.Gender == Sex.Male && ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
                             (ind.Gender == Sex.Female &&
                             ind.Age >= ind.BreedParams.MinimumAge1stMating &&
-                            ind.Weight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
+                            ind.HighWeight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
                             )
                             group ind by ind.Location into grp
                             select grp;
@@ -362,78 +362,6 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                //// uncontrolled conception
-                //if (!UseAI)
-                //{
-                //    // check if males and females of breeding condition are together
-                //    if (location.GroupBy(a => a.Gender).Count() == 2)
-                //    {
-                //        // servicing rate
-                //        int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
-                //        int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
-                //        double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
-                //        double maleLimiter = Math.Min(1.0, matingsPossible / femaleCount);
-
-                //        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
-                //        {
-                //            // calculate conception
-                //            double conceptionRate = ConceptionRate(female);
-                //            double conceptionRateLimited = ConceptionRate(female) * maleLimiter;
-                //            if (conceptionRate > 0 && ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRateLimited)
-                //            {
-                //                female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRateLimited, 0);
-                //                // report conception status on conceiving.
-                //                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
-                //            }
-                //            else
-                //            {
-                //                // report conception status on conceiving.
-                //                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, Clock.Today));
-                //            }
-                //        }
-                //    }
-                //}
-                //// controlled conception
-                //else
-                //{
-                //    if (this.TimingOK)
-                //    {
-                //        numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
-                //        foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
-                //        {
-                //            // calculate conception
-                //            double conceptionRate = ConceptionRate(female);
-                //            if (numberServiced <= numberPossible & conceptionRate > 0) // labour/finance limited number
-                //            {
-                //                if (ZoneCLEM.RandomGenerator.NextDouble() <= conceptionRate)
-                //                {
-                //                    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
-                //                    // report conception status on conceiving.
-                //                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
-                //                }
-                //                else
-                //                {
-                //                    // report conception status on conceiving.
-                //                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Unsuccessful, female, Clock.Today));
-                //                }
-                //                numberServiced++;
-                //            }
-                //            else
-                //            {
-                //                if (conceptionRate == 0)
-                //                {
-                //                    // report conception status not ready to mate.
-                //                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotReady, female, Clock.Today));
-                //                }
-                //                else
-                //                {
-                //                    // report conception status no mating occurred.
-                //                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotMated, female, Clock.Today));
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
             }
         }
 
@@ -501,7 +429,7 @@ namespace Models.CLEM.Activities
 
             // get only breeders for labour calculations
             List<Ruminant> herd = CurrentHerd(true).Where(a => a.Gender == Sex.Female &&
-                            a.Age >= a.BreedParams.MinimumAge1stMating && a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).ToList();
+                            a.Age >= a.BreedParams.MinimumAge1stMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).ToList();
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 
