@@ -353,17 +353,17 @@
                 if (DoActualPlantGrowth != null)
                     DoActualPlantGrowth.Invoke(this, args);
 
-                if (DoUpdate != null)
-                    DoUpdate.Invoke(this, args);
-
-                if (DoManagementCalculations != null)
-                    DoManagementCalculations.Invoke(this, args);
-
                 if (DoStock != null)
                     DoStock.Invoke(this, args);
 
                 if (DoLifecycle != null)
                     DoLifecycle.Invoke(this, args);
+
+                if (DoUpdate != null)
+                    DoUpdate.Invoke(this, args);
+
+                if (DoManagementCalculations != null)
+                    DoManagementCalculations.Invoke(this, args);
 
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);

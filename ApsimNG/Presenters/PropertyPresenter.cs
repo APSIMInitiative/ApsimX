@@ -47,6 +47,8 @@ namespace UserInterface.Presenters
         [Link]
         private IDataStore storage = null;
 
+        private ExplorerPresenter explorerPresenter;
+
         /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
@@ -89,6 +91,7 @@ namespace UserInterface.Presenters
             grid.ContextItemsNeeded += GetContextItems;
             grid.CanGrow = false;
             this.model = model as Model;
+            this.explorerPresenter = explorerPresenter;
             intellisense = new IntellisensePresenter(grid as ViewBase);
 
             // The grid does not have control-space intellisense (for now).
@@ -199,7 +202,6 @@ namespace UserInterface.Presenters
 
             IGridCell selectedCell = grid.GetCurrentCell;
             this.model = model;
-
             DataTable table = CreateGrid();
             FillTable(table);
             grid.DataSource = table;
@@ -216,6 +218,8 @@ namespace UserInterface.Presenters
             DataTable table = new DataTable();
             table.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
             table.Columns.Add(hasData ? "Value" : " ", typeof(object));
+            table.Columns.Add("tooltip", typeof(string));
+            table.Columns[2].ExtendedProperties["tooltip"] = true;
 
             return table;
         }
@@ -372,7 +376,11 @@ namespace UserInterface.Presenters
                     if (properties[i].Display != null &&
                         properties[i].Display.Type == DisplayType.CultivarName)
                     {
-                        IPlant crop = GetCrop(properties);
+                        IPlant crop;
+                        if (properties[i].Display.PlantName != null)
+                            crop = Apsim.FindAll(model, typeof(IPlant)).FirstOrDefault(p => p.Name == properties[i].Display.PlantName) as IPlant;
+                        else
+                            crop = GetCrop(properties);
                         if (crop != null)
                         {
                             cell.DropDownStrings = GetCultivarNames(crop);
@@ -425,16 +433,13 @@ namespace UserInterface.Presenters
         protected virtual void AddPropertyToTable(DataTable table, IVariable property)
         {
             if (property is VariableObject)
-                table.Rows.Add(new object[] { property.Value, null });
+                table.Rows.Add(new object[] { property.Value, null, null });
             else if (property.Value is IModel)
-                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel) });
+                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Name });
+            else if (property is VariableProperty p)
+                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, p.Tooltip });
             else
-            {
-                string description = property.Description;
-                if (!string.IsNullOrEmpty(property.Units))
-                    description += " (" + property.Units + ")";
-                table.Rows.Add(new object[] { description, property.ValueWithArrayHandling });
-            }
+                table.Rows.Add(new object[] { property.Description, property.ValueWithArrayHandling, property.Description });
         }
 
         /// <summary>
@@ -475,7 +480,11 @@ namespace UserInterface.Presenters
                          properties[i].Display.Type == DisplayType.CultivarName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
-                    IPlant crop = GetCrop(properties);
+                    IPlant crop;
+                    if (properties[i].Display.PlantName != null)
+                        crop = Apsim.FindAll(model, typeof(IPlant)).FirstOrDefault(p => p.Name == properties[i].Display.PlantName) as IPlant;
+                    else
+                        crop = GetCrop(properties);
                     if (crop != null)
                     {
                         cell.DropDownStrings = GetCultivarNames(crop);
@@ -601,6 +610,7 @@ namespace UserInterface.Presenters
                     }
                     else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
                     {
+                        explorerPresenter.ApsimXFile.Links.Resolve(model, allLinks: true, throwOnFail: false);
                         MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values);
                         string[] values = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
                         cell.EditorType = EditorTypeEnum.DropDown;
