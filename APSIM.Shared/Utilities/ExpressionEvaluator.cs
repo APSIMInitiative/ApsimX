@@ -939,6 +939,8 @@ namespace APSIM.Shared.Utilities
                         {
                             if (i == 0)
                                 result.m_value = Values[i];
+                            else if (MathUtilities.FloatsAreEqual(Values[i], 0, 1e-8))
+                                result.m_value = 0;
                             else
                                 result.m_value /= Values[i];
                         }
