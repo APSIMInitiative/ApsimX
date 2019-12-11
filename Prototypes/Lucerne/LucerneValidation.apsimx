@@ -1693,6 +1693,75 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "FixationRate1",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "The rate of N fixation in legumes is highly regulated by the host plant, but in its basis it is defined by the presence and quantity of symbiont bacteria.  The RedClover model uses an approach whereby the basic fixation rate is directly proportional to the biomass of nodules ([RysAndPhung1985]; [LedgardEtAl1990]; [WarembourgEtAl1997]; [HoghJensenEtAl2002]; [RusselleEtAl2008]). This is then regulated by environmental factors and the plant ([CrushChapter1987]; [RusselleEtAl2008]).  The plants control N fixation by limiting the supply of sugars and oxygen to the nodules ([PuppoEtAl2005]; [RusselleEtAl2008]; [HaagEtAl2013]).  In the model, this is simulated as a function of N deficiency, with fixation rate being inversely proportional to the plant's N deficiency factor.  The mechanism regulating N fixation is quite fast, with fixation nearly ceasing soon after fertilisation or defoliation (e.g. [CarrollGresshoff1983]; [RusselleEtAl2008]).  By linking potential fixation to nodule biomass, the model is capable of describing both a upper limit for fixation and the temporal lag between the inception of N stress and an elevated N fixation rate.  \r\n",
+                      "Name": "Description",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.1,
+                      "Units": "gN/gDM nodule/day",
+                      "Name": "MaxFixationRate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Nodule].Live.Wt",
+                      "Name": "NoduleBiomass",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "XProperty": "[Leaf].FN",
+                      "Name": "NDeficiencyFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.5,
+                            0.75,
+                            0.9,
+                            1.0
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            0.9,
+                            0.5,
+                            0.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "FixationRate",
                   "Children": [
                     {
@@ -1710,84 +1779,6 @@
                       "VariableName": "[Leaf].Photosynthesis.Value()",
                       "Name": "VariableReference",
                       "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "FixationRate0",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.4,
-                      "Units": "g/m^2/d",
-                      "Name": "MaximumFixationRate",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExponentialFunction, Models",
-                      "A": 0.0,
-                      "B": 1.0,
-                      "C": 1.0,
-                      "Name": "TemperatureResponse",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "DivideFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "SubtractFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.SoilTemperatureDepthFunction, Models",
-                                  "Depth": 100.0,
-                                  "Name": "SoilTemperatureDepthFunction",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 20.0,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 10.0,
-                              "Units": null,
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -2055,7 +2046,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.41,
+                      "FixedValue": 1.1,
                       "Units": null,
                       "Name": "RUE",
                       "Children": [],
@@ -2474,84 +2465,15 @@
                                           "X": [
                                             8.0,
                                             10.0,
-                                            12.0,
-                                            16.0
+                                            16.5
                                           ],
                                           "Y": [
                                             0.0,
-                                            0.0,
-                                            0.015,
-                                            0.018
+                                            0.0056,
+                                            0.015
                                           ],
                                           "Name": "XYPairs",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Graph.Graph, Models",
-                                              "Caption": null,
-                                              "Axis": [
-                                                {
-                                                  "$type": "Models.Graph.Axis, Models",
-                                                  "Type": 0,
-                                                  "Title": "Y",
-                                                  "Inverted": false,
-                                                  "Minimum": "NaN",
-                                                  "Maximum": "NaN",
-                                                  "Interval": "NaN",
-                                                  "DateTimeAxis": false,
-                                                  "CrossesAtZero": false
-                                                },
-                                                {
-                                                  "$type": "Models.Graph.Axis, Models",
-                                                  "Type": 3,
-                                                  "Title": "X",
-                                                  "Inverted": false,
-                                                  "Minimum": "NaN",
-                                                  "Maximum": "NaN",
-                                                  "Interval": "NaN",
-                                                  "DateTimeAxis": false,
-                                                  "CrossesAtZero": false
-                                                }
-                                              ],
-                                              "LegendPosition": 3,
-                                              "DisabledSeries": [],
-                                              "Name": "Graph",
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.Graph.Series, Models",
-                                                  "Type": 1,
-                                                  "XAxis": 3,
-                                                  "YAxis": 0,
-                                                  "ColourArgb": -65536,
-                                                  "FactorToVaryColours": null,
-                                                  "FactorToVaryMarkers": null,
-                                                  "FactorToVaryLines": null,
-                                                  "Marker": 11,
-                                                  "MarkerSize": 0,
-                                                  "Line": 0,
-                                                  "LineThickness": 0,
-                                                  "Checkpoint": "Current",
-                                                  "TableName": null,
-                                                  "XFieldName": ".Simulations.Replacements.Lucerne.Leaf.Area.DeltaLAI.LAER.Vegetative.LAER.Increasing.XYPairs.X",
-                                                  "YFieldName": ".Simulations.Replacements.Lucerne.Leaf.Area.DeltaLAI.LAER.Vegetative.LAER.Increasing.XYPairs.Y",
-                                                  "X2FieldName": null,
-                                                  "Y2FieldName": null,
-                                                  "ShowInLegend": false,
-                                                  "IncludeSeriesNameInLegend": false,
-                                                  "Cumulative": false,
-                                                  "CumulativeX": false,
-                                                  "Filter": null,
-                                                  "Name": "Series",
-                                                  "Children": [],
-                                                  "IncludeInDocumentation": true,
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
@@ -2570,15 +2492,15 @@
                                           "$type": "Models.Functions.XYPairs, Models",
                                           "X": [
                                             8.0,
-                                            10.0,
+                                            11.5,
                                             12.0,
-                                            16.0
+                                            16.5
                                           ],
                                           "Y": [
                                             0.0,
                                             0.0,
-                                            0.011,
-                                            0.018
+                                            0.018,
+                                            0.022
                                           ],
                                           "Name": "XYPairs",
                                           "Children": [],
@@ -2609,7 +2531,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0001,
+                                  "FixedValue": 0.0,
                                   "Units": null,
                                   "Name": "Constant",
                                   "Children": [],
@@ -2638,18 +2560,228 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].ThermalTimeAfterCutting.Value()",
-                          "Name": "EarlyLag",
+                          "XProperty": "[Mower].Script.Year",
+                          "Name": "Seedling",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                1.0,
+                                2.0
+                              ],
+                              "Y": [
+                                0.9,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LessThanFunction, Models",
+                          "Name": "Earlylag",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].DeltaPhotoperiod.Value()",
+                              "Name": "DeltaPhotoperiod",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "XProperty": "[Phenology].ThermalTimeAfterCutting.Value()",
+                              "Name": "Decreasing",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    150.0,
+                                    200.0
+                                  ],
+                                  "Y": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "XProperty": "[Phenology].ThermalTimeAfterCutting.Value()",
+                              "Name": "Increasing",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    150.0,
+                                    200.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.5,
+                                    1.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "SenescenceRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Red clover has, similar to otehr clovers, a relatively high rate of leaf senescence, with leaf area estabilising when LAI reaches about 5.0 m2/m2 ([Brougham1958_LeafDev]; [JoggiEtAl1983_RedClover]; [MurrayThesis2012]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.",
+                          "Name": "Description",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": "/day",
+                          "Name": "ReferenceRate",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "XProperty": "[Phenology].Stage",
+                          "Name": "StageFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                3.0,
+                                4.0,
+                                5.0,
+                                6.0
+                              ],
+                              "Y": [
+                                0.5,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "XProperty": "[Leaf].LAI",
+                          "Name": "CoverFactor",
                           "Children": [
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                150.0
+                                2.0,
+                                4.0,
+                                5.0,
+                                7.0
                               ],
                               "Y": [
-                                0.01,
-                                1.0
+                                0.0,
+                                0.1,
+                                0.5,
+                                0.5,
+                                1.5
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                          "MaximumTemperatureWeighting": 0.5,
+                          "Name": "TemperatureFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                -20.0,
+                                -5.0,
+                                0.0,
+                                5.0,
+                                17.0,
+                                28.0,
+                                37.5
+                              ],
+                              "Y": [
+                                1.5,
+                                0.25,
+                                0.1,
+                                0.1,
+                                1.0,
+                                1.0,
+                                1.5
                               ],
                               "Name": "XYPairs",
                               "Children": [],
@@ -2839,7 +2971,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.8,
+                          "FixedValue": 0.81,
                           "Units": null,
                           "Name": "Constant",
                           "Children": [],
@@ -2881,7 +3013,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.78,
+                          "FixedValue": 0.81,
                           "Units": null,
                           "Name": "Constant",
                           "Children": [],
@@ -2993,42 +3125,16 @@
                                             4.0,
                                             3.234,
                                             2.5,
-                                            2.3,
-                                            2.0,
-                                            1.59,
+                                            2.1,
+                                            1.75,
+                                            1.4,
                                             1.083,
                                             0.938,
                                             0.822,
                                             0.675,
                                             0.644,
                                             0.642,
-                                            0.63775
-                                          ],
-                                          "Name": "XYPairs",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "XProperty": "[Mower].Script.Year",
-                                      "Name": "Seedling",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            1.0,
-                                            2.0
-                                          ],
-                                          "Y": [
-                                            1.5,
-                                            1.0
+                                            0.64
                                           ],
                                           "Name": "XYPairs",
                                           "Children": [],
@@ -3151,11 +3257,127 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "SenescenceRate",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Red clover has, similar to otehr clovers, a relatively high rate of leaf senescence, with leaf area estabilising when LAI reaches about 5.0 m2/m2 ([Brougham1958_LeafDev]; [JoggiEtAl1983_RedClover]; [MurrayThesis2012]).  Generic relationships to enviromental factors, such as temperature and soil moisture, are assumed based on other plant models.",
+                      "Name": "Description",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "/day",
+                      "Name": "ReferenceRate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "XProperty": "[Phenology].Stage",
+                      "Name": "StageFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            3.0,
+                            4.0,
+                            5.0,
+                            6.0
+                          ],
+                          "Y": [
+                            0.5,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "XProperty": "[Leaf].LAI",
+                      "Name": "CoverFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            2.0,
+                            4.0,
+                            5.0,
+                            7.0
+                          ],
+                          "Y": [
+                            0.0,
+                            0.1,
+                            0.5,
+                            0.5,
+                            1.5
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                      "MaximumTemperatureWeighting": 0.5,
+                      "Name": "TemperatureFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            -20.0,
+                            -5.0,
+                            0.0,
+                            5.0,
+                            17.0,
+                            28.0,
+                            37.5
+                          ],
+                          "Y": [
+                            1.5,
+                            0.25,
+                            0.1,
+                            0.1,
+                            1.0,
+                            1.0,
+                            1.5
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3202,10 +3424,40 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.06,
+                  "FixedValue": 0.065,
                   "Units": null,
                   "Name": "MaximumNConc",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "XProperty": "[Phenology].ThermalTimeAfterCutting",
+                  "Name": "CriticalNConc",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        200.0,
+                        450.0,
+                        600.0
+                      ],
+                      "Y": [
+                        0.055,
+                        0.055,
+                        0.045,
+                        0.045
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3348,36 +3600,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].ThermalTimeAfterCutting",
-                  "Name": "CriticalNConc",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        200.0,
-                        450.0,
-                        600.0
-                      ],
-                      "Y": [
-                        0.055,
-                        0.055,
-                        0.045,
-                        0.045
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.4,
                   "Units": null,
@@ -3392,8 +3614,20 @@
                   "Name": "DMDemands",
                   "Children": [
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.DemandFunctions.AllometricDemandFunction, Models",
+                      "Const": 39.4,
+                      "Power": 0.85,
+                      "XProperty": "[Leaf].LAI",
+                      "YProperty": "[Leaf].Live.Wt",
                       "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural0",
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
@@ -3406,7 +3640,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookup, Models",
-                          "Name": "SLA",
+                          "Name": "SLW",
                           "Children": [
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
@@ -3416,7 +3650,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 50.0,
+                                  "FixedValue": 40.0,
                                   "Units": null,
                                   "Name": "Constant",
                                   "Children": [],
@@ -3437,7 +3671,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.LessThanFunction, Models",
-                                  "Name": "SLA",
+                                  "Name": "SLW",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
@@ -3469,8 +3703,8 @@
                                             18.0
                                           ],
                                           "Y": [
-                                            17.0,
-                                            41.0
+                                            40.0,
+                                            30.0
                                           ],
                                           "Name": "XYPairs",
                                           "Children": [],
@@ -3491,10 +3725,10 @@
                                           "$type": "Models.Functions.XYPairs, Models",
                                           "X": [
                                             8.0,
-                                            15.0
+                                            16.0
                                           ],
                                           "Y": [
-                                            48.0,
+                                            40.0,
                                             30.0
                                           ],
                                           "Name": "XYPairs",
@@ -3526,7 +3760,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 30.0,
+                                  "FixedValue": 35.0,
                                   "Units": null,
                                   "Name": "Constant",
                                   "Children": [],
@@ -5346,7 +5580,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.005,
+                                  "FixedValue": 0.0001,
                                   "Units": null,
                                   "Name": "Decreasing",
                                   "Children": [],
@@ -5356,7 +5590,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.02,
+                                  "FixedValue": 0.05,
                                   "Units": null,
                                   "Name": "Increasing",
                                   "Children": [],
@@ -5382,8 +5616,8 @@
                                     300.0
                                   ],
                                   "Y": [
-                                    1.3,
-                                    1.3,
+                                    2.0,
+                                    2.0,
                                     0.0
                                   ],
                                   "Name": "XYPairs",
@@ -5502,7 +5736,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.005,
+                                  "FixedValue": 0.0001,
                                   "Units": null,
                                   "Name": "Decreasing",
                                   "Children": [],
@@ -5512,7 +5746,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.02,
+                                  "FixedValue": 0.05,
                                   "Units": null,
                                   "Name": "Increasing",
                                   "Children": [],
@@ -5534,12 +5768,12 @@
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
                                     0.0,
-                                    200.0,
-                                    250.0
+                                    300.0,
+                                    300.0
                                   ],
                                   "Y": [
-                                    1.3,
-                                    1.3,
+                                    1.5,
+                                    1.5,
                                     0.0
                                   ],
                                   "Name": "XYPairs",
@@ -5600,7 +5834,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.016,
+                  "FixedValue": 0.022,
                   "Units": null,
                   "Name": "MaximumNConc",
                   "Children": [
@@ -5620,7 +5854,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.007,
+                  "FixedValue": 0.015,
                   "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [
@@ -5934,7 +6168,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.003,
+                              "FixedValue": 0.001,
                               "Units": null,
                               "Name": "Constant",
                               "Children": [],
@@ -6029,7 +6263,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
+                  "FixedValue": 0.015,
                   "Units": null,
                   "Name": "CriticalNConc",
                   "Children": [],
@@ -6053,265 +6287,6 @@
                   "Units": null,
                   "Name": "CarbonConcentration",
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemands",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Structural",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.AddFunction, Models",
-                          "Name": "AddFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "Structural",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.MaximumFunction, Models",
-                                  "Name": "MaximumTapRootStructuralDM",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 250.0,
-                                      "Units": null,
-                                      "Name": "Constant",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[TapRoot].Live.StructuralWt",
-                                      "Name": "TapRootStructuralDM",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[TapRoot].Live.StructuralWt",
-                                  "Name": "TapRootStructuralDM",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Phenology].Stage",
-                              "Name": "StageEffect",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    5.9,
-                                    6.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    300.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.01,
-                          "Units": null,
-                          "Name": "multiplier",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "Capacity",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Maxium",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[TapRoot].Live.StructuralWt",
-                                  "Name": "Structural",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.84,
-                                  "Units": null,
-                                  "Name": "Factor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TapRoot].Live.StorageWt",
-                              "Name": "Current",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.LessThanFunction, Models",
-                              "Name": "Photoperiod",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].DeltaPhotoperiod.Value()",
-                                  "Name": "DeltaPhotoperiod",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": -0.02,
-                                  "Units": null,
-                                  "Name": "Zero",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Decreasing",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Increasing",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Phenology].ThermalTimeAfterCutting.Value()",
-                              "Name": "RegrowthEffect",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    200.0,
-                                    250.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    0.0,
-                                    2.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6415,6 +6390,312 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemands",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.AddFunction, Models",
+                          "Name": "AddFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "Structural",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MaximumFunction, Models",
+                                  "Name": "MaximumTapRootStructuralDM",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 250.0,
+                                      "Units": null,
+                                      "Name": "Constant",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[TapRoot].Live.StructuralWt",
+                                      "Name": "TapRootStructuralDM",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[TapRoot].Live.StructuralWt",
+                                  "Name": "TapRootStructuralDM",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Units": null,
+                          "Name": "multiplier",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Storage",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "Name": "Capacity",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Maxium",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[TapRoot].Live.StructuralWt",
+                                  "Name": "Structural",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 2.0,
+                                  "Units": null,
+                                  "Name": "Factor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[TapRoot].Live.StorageWt",
+                              "Name": "Current",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookup, Models",
+                          "Name": "MultiplyFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "Emergence",
+                              "End": "EndJuvenile",
+                              "Name": "Juvenile",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "Constant",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "EndJuvenile",
+                              "End": "StartFlowering",
+                              "Name": "Vegetative",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "MultiplyFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.LessThanFunction, Models",
+                                      "Name": "Photoperiod",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].DeltaPhotoperiod.Value()",
+                                          "Name": "DeltaPhotoperiod",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": -0.02,
+                                          "Units": null,
+                                          "Name": "Zero",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 1.0,
+                                          "Units": null,
+                                          "Name": "Decreasing",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 0.0,
+                                          "Units": null,
+                                          "Name": "Increasing",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "XProperty": "[Phenology].ThermalTimeAfterCutting.Value()",
+                                      "Name": "RegrowthEffect",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            200.0,
+                                            250.0,
+                                            300.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            0.0,
+                                            1.0,
+                                            1.5
+                                          ],
+                                          "Name": "XYPairs",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.PhaseLookupValue, Models",
+                              "Start": "StartFlowering",
+                              "End": "Maturity",
+                              "Name": "Reproductive",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "Constant",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "\r\nThe extinction coefficient is used to calculate a LAI value (needed by MicroClimate) from the canopy cover\r\n",
+                              "Name": "Description",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6675,8 +6956,16 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X= 0, 50, 100",
-                    "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X = 0, 50,100"
+                    "[Leaf].Area.DeltaLAI.LAER.Vegetative.LAER.Decreasing.XYPairs.Y = 0, 0.0056, 0.015",
+                    "[Leaf].Area.DeltaLAI.LAER.Vegetative.LAER.Increasing.XYPairs.Y = 0, 0, 0.019,0.022",
+                    "[Leaf].Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.XYPairs.X = 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 15, 15.5, 16, 16.5",
+                    "[Leaf].Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.XYPairs.Y = 2.82, 2.82, 2.82, 2.45, 2.13, 1.84, 1.6, 1.41, 1.0, 0.9, 0.9, 0.9, 0.9",
+                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 250, 250",
+                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y =1.5, 1.5, 0",
+                    "[TapRoot].DMDemands.Storage.MultiplyFunction.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X = 0, 150, 200,300",
+                    "[TapRoot].DMDemands.Storage.MultiplyFunction.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y = 0, 0, 1, 1.5",
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 200, 250",
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y =2, 2, 0"
                   ],
                   "Name": "FD2",
                   "Children": [],
@@ -6687,8 +6976,16 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X= 0, 400, 450",
-                    "[TapRoot].DMDemands.Storage.MultiplyFunction.RegrowthEffect.XYPairs.X = 0, 400,450"
+                    "[Leaf].Area.DeltaLAI.LAER.Vegetative.LAER.Decreasing.XYPairs.Y = 0.012, 0.012, 0.012",
+                    "[Leaf].Area.DeltaLAI.LAER.Vegetative.LAER.Increasing.XYPairs.Y = 0, 0, 0.019,0.022",
+                    "[Leaf].Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.XYPairs.X = 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 15, 15.5, 16, 16.5",
+                    "[Leaf].Tallness.DeltaHeight.Heightchron.Vegetative.Heightchron.Heightchron.XYPairs.Y= 1.6, 1.44, 1.3, 1.17, 1.07, 0.97, 0.87, 0.76, 0.75, 0.75, 0.75,0.75, 0.75",
+                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 350, 350",
+                    "[TapRoot].DMRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y =1.5, 1.5, 0",
+                    "[TapRoot].DMDemands.Storage.MultiplyFunction.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X = 0, 250, 300,350",
+                    "[TapRoot].DMDemands.Storage.MultiplyFunction.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y = 0, 0, 1, 1.5",
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.X =0, 300, 350",
+                    "[TapRoot].NRetranslocationFactor.Vegetative.MultiplyFunction.RegrowthEffect.XYPairs.Y =2, 2, 0"
                   ],
                   "Name": "FD10",
                   "Children": [],
@@ -6699,7 +6996,8 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    ""
+                    "[Leaf].Area.DeltaLAI.LAER.Vegetative.LAER.Decreasing.XYPairs.Y = 0, 0.0056, 0.015",
+                    "[Leaf].Area.DeltaLAI.LAER.Vegetative.LAER.Increasing.XYPairs.Y = 0, 0, 0.019,0.022"
                   ],
                   "Name": "FD5",
                   "Children": [],
@@ -14573,40 +14871,16 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Operations, Models",
-                      "Operation": [
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-12-20",
-                          "Action": "[Irrigation].Apply(50);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2002-01-29",
-                          "Action": "[Irrigation].Apply(50);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2002-02-28",
-                          "Action": "[Irrigation].Apply(50);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2002-03-17",
-                          "Action": "[Irrigation].Apply(30);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2002-04-07",
-                          "Action": "[Irrigation].Apply(30);",
-                          "Enabled": true
-                        }
+                      "$type": "Models.Report.Report, Models",
+                      "VariableNames": [
+                        "[Lucerne].TapRoot.DMDemand.Storage",
+                        "[Clock].Today",
+                        "[Lucerne].Leaf.Photosynthesis.Value()"
                       ],
-                      "Name": "UncertainIrrigation",
+                      "EventNames": [
+                        "[Clock].DoReport"
+                      ],
+                      "Name": "Report1",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -14683,16 +14957,40 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Report.Report, Models",
-                      "VariableNames": [
-                        "[Lucerne].TapRoot.DMDemand.Storage",
-                        "[Clock].Today",
-                        "[Lucerne].Leaf.Photosynthesis.Value()"
+                      "$type": "Models.Operations, Models",
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2001-12-20",
+                          "Action": "[Irrigation].Apply(50);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2002-01-29",
+                          "Action": "[Irrigation].Apply(50);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2002-02-28",
+                          "Action": "[Irrigation].Apply(50);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2002-03-17",
+                          "Action": "[Irrigation].Apply(30);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2002-04-07",
+                          "Action": "[Irrigation].Apply(30);",
+                          "Enabled": true
+                        }
                       ],
-                      "EventNames": [
-                        "[Clock].DoReport"
-                      ],
-                      "Name": "Report1",
+                      "Name": "UncertainIrrigation",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -15921,7 +16219,6 @@
                       "LegendPosition": 0,
                       "DisabledSeries": [
                         "SL",
-                        "SS",
                         "LS"
                       ],
                       "Name": "AboveGroundWt",
@@ -16028,9 +16325,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Defoliation",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -16058,8 +16355,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -16278,11 +16575,6 @@
                       ],
                       "LegendPosition": 1,
                       "DisabledSeries": [
-                        "SL",
-                        "SS",
-                        "LS",
-                        "Iversen_91DefoliationSL",
-                        "Iversen_91DefoliationSS",
                         "Iversen_91DefoliationLS"
                       ],
                       "Name": "RootWt1",
@@ -16293,9 +16585,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -16324,7 +16616,7 @@
                           "YAxis": 0,
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "SimulationName",
-                          "FactorToVaryMarkers": null,
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -16568,7 +16860,7 @@
                         {
                           "$type": "Models.Graph.Axis, Models",
                           "Type": 0,
-                          "Title": "RootWt (Kg/ha)",
+                          "Title": "",
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
@@ -17160,6 +17452,75 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 1,
+                      "DisabledSeries": [
+                        "SL",
+                        "LS"
+                      ],
+                      "Name": "ThermalTimeAfterCutting",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Phenology.ThermalTimeAfterCutting",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -22776,7 +23137,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2016-05-16",
+                                  "Date": "2016-05-18",
                                   "Action": " [Mower].Script.Cut();",
                                   "Enabled": true
                                 },
@@ -23058,7 +23419,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Date": "2016-10-07",
+                                  "Date": "2016-10-08",
                                   "Action": " [Mower].Script.Cut();",
                                   "Enabled": true
                                 },
@@ -25360,19 +25721,9 @@
                         "Iversen_121DefoliationSSFDFD2",
                         "Iversen_121DefoliationLLFDFD2",
                         "Iversen_121DefoliationHHFDFD2",
-                        "Iversen_121DefoliationSSFDFD5",
-                        "Iversen_121DefoliationHHFDFD5",
                         "Iversen_121DefoliationSSFDFD10",
                         "Iversen_121DefoliationLLFDFD10",
-                        "Iversen_121DefoliationHHFDFD10",
-                        "Iversen_121DefoliationSSFDFD2SS",
-                        "Iversen_121DefoliationLLFDFD2LL",
-                        "Iversen_121DefoliationHHFDFD2HH",
-                        "Iversen_121DefoliationSSFDFD5SS",
-                        "Iversen_121DefoliationHHFDFD5HH",
-                        "Iversen_121DefoliationSSFDFD10SS",
-                        "Iversen_121DefoliationLLFDFD10LL",
-                        "Iversen_121DefoliationHHFDFD10HH"
+                        "Iversen_121DefoliationHHFDFD10"
                       ],
                       "Name": "AboveGroundWt",
                       "Children": [
@@ -25414,7 +25765,7 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Defoliation",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -25469,7 +25820,16 @@
                         }
                       ],
                       "LegendPosition": 1,
-                      "DisabledSeries": [],
+                      "DisabledSeries": [
+                        "Iversen_121DefoliationSSFDFD2SS",
+                        "Iversen_121DefoliationLLFDFD2LL",
+                        "Iversen_121DefoliationHHFDFD2HH",
+                        "Iversen_121DefoliationSSFDFD5SS",
+                        "Iversen_121DefoliationHHFDFD5HH",
+                        "Iversen_121DefoliationSSFDFD10SS",
+                        "Iversen_121DefoliationLLFDFD10LL",
+                        "Iversen_121DefoliationHHFDFD10HH"
+                      ],
                       "Name": "LeafWt",
                       "Children": [
                         {
@@ -25478,7 +25838,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": "Defoliation",
                           "Marker": 11,
@@ -25491,7 +25851,7 @@
                           "YFieldName": "LeafWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -25508,7 +25868,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": null,
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": "Defoliation",
                           "FactorToVaryLines": null,
                           "Marker": 0,
@@ -25574,9 +25934,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Defoliation",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -25587,7 +25947,7 @@
                           "YFieldName": "StemWt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -25604,8 +25964,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "FD",
-                          "FactorToVaryMarkers": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -25662,12 +26022,10 @@
                       ],
                       "LegendPosition": 1,
                       "DisabledSeries": [
-                        "HHFD2",
-                        "SSFD5",
-                        "HHFD5",
-                        "SSFD10",
-                        "LLFD10",
-                        "HHFD10"
+                        "Iversen_121DefoliationSSFDFD2",
+                        "Iversen_121DefoliationHHFDFD2",
+                        "Iversen_121DefoliationSSFDFD10",
+                        "Iversen_121DefoliationHHFDFD10"
                       ],
                       "Name": "RootWt",
                       "Children": [
@@ -25677,9 +26035,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -990142,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "FD",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 4,
@@ -25707,10 +26065,10 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": "FD",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
-                          "Marker": 11,
+                          "Marker": 4,
                           "MarkerSize": 0,
                           "Line": 4,
                           "LineThickness": 0,
@@ -25773,7 +26131,7 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 11,
@@ -25905,9 +26263,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "FD",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -25935,8 +26293,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": "FD",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
@@ -25982,7 +26340,7 @@
                         {
                           "$type": "Models.Graph.Axis, Models",
                           "Type": 0,
-                          "Title": "RootWt (Kg/ha)",
+                          "Title": "",
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
@@ -25993,12 +26351,12 @@
                       ],
                       "LegendPosition": 1,
                       "DisabledSeries": [
-                        "LLFD2",
-                        "HHFD2",
-                        "LLFD5",
-                        "HHFD5",
-                        "LLFD10",
-                        "HHFD10"
+                        "Iversen_121DefoliationSSFDFD2",
+                        "Iversen_121DefoliationLLFDFD2",
+                        "Iversen_121DefoliationHHFDFD2",
+                        "Iversen_121DefoliationSSFDFD10",
+                        "Iversen_121DefoliationLLFDFD10",
+                        "Iversen_121DefoliationHHFDFD10"
                       ],
                       "Name": "RootN",
                       "Children": [
@@ -26008,9 +26366,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -990142,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "FD",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 4,
@@ -26038,8 +26396,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": "FD",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
@@ -26104,9 +26462,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "FD",
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -26134,8 +26492,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": "FD",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
@@ -26384,14 +26742,14 @@
                       ],
                       "LegendPosition": 0,
                       "DisabledSeries": [
-                        "SSFD2",
-                        "LLFD2",
-                        "HHFD2",
-                        "LLFD5",
-                        "HHFD5",
-                        "SSFD10",
-                        "LLFD10",
-                        "HHFD10"
+                        "Iversen_121DefoliationSSFDFD2",
+                        "Iversen_121DefoliationLLFDFD2",
+                        "Iversen_121DefoliationHHFDFD2",
+                        "Iversen_121DefoliationSSFDFD5",
+                        "Iversen_121DefoliationHHFDFD5",
+                        "Iversen_121DefoliationSSFDFD10",
+                        "Iversen_121DefoliationLLFDFD10",
+                        "Iversen_121DefoliationHHFDFD10"
                       ],
                       "Name": "LAI",
                       "Children": [
@@ -26401,8 +26759,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": "FD",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": "SimulationName",
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -26431,9 +26789,9 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Defoliation",
-                          "FactorToVaryMarkers": "FD",
-                          "FactorToVaryLines": "Defoliation",
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "SimulationName",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -26876,6 +27234,80 @@
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Lucerne.TapRoot.Live.StructuralWt",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 1,
+                      "DisabledSeries": [
+                        "Iversen_121DefoliationSSFDFD2",
+                        "Iversen_121DefoliationLLFDFD2",
+                        "Iversen_121DefoliationHHFDFD2",
+                        "Iversen_121DefoliationHHFDFD5",
+                        "Iversen_121DefoliationSSFDFD10",
+                        "Iversen_121DefoliationLLFDFD10",
+                        "Iversen_121DefoliationHHFDFD10"
+                      ],
+                      "Name": "ThermalTimeAfterCutting",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "SimulationName",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Phenology.ThermalTimeAfterCutting",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
