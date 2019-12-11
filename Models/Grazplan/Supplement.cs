@@ -1010,6 +1010,7 @@ namespace Models.GrazPlan
             }
         }
 
+
         /// <summary>
         /// Gets the amount and attributes of supplementary feed present in each paddock
         /// </summary>
@@ -1222,6 +1223,9 @@ namespace Models.GrazPlan
         /// <param name="feedSuppFirst">Feed supplement before pasture. Bail feeding.</param>
         public void Feed(string supplement, double amount, string paddock, bool feedSuppFirst = false)
         {
+            if (feedSuppFirst)
+                throw new NotImplementedException("The feedSuppFirst argument to Supplement.Feed is not yet implemented. See GitHub issue #4440.");
+
             string firstly = feedSuppFirst ? " (Feeding supplement before pasture)" : string.Empty;
             OutputSummary.WriteMessage(this, "Feeding " + amount.ToString() + "kg of " + supplement + " into " + paddock + firstly);
             theModel.FeedOut(supplement, amount, paddock, feedSuppFirst);

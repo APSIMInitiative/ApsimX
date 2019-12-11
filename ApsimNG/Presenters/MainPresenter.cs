@@ -1208,16 +1208,24 @@
         /// <param name="e">Event arguments.</param>
         private void OnUpgrade(object sender, EventArgs e)
         {
-            // Get the version of the current assembly.
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Revision == 0)
+            try
             {
-                ShowError("You are on a custom build. You cannot upgrade.");
+                // Get the version of the current assembly.
+                Version version = Assembly.GetExecutingAssembly().GetName().Version;
+                if (version.Revision == 0)
+                {
+                    ShowError("You are on a custom build. You cannot upgrade.");
+                }
+
+                if (AllowClose())
+                {
+                    UpgradeView form = new UpgradeView(view as ViewBase);
+                    form.Show();
+                }
             }
-            if (this.AllowClose())
+            catch (Exception err)
             {
-                UpgradeView form = new UpgradeView(view as ViewBase);
-                form.Show();
+                ShowError(err);
             }
         }
 
