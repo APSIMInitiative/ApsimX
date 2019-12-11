@@ -1220,20 +1220,24 @@ namespace Models.PMF.Organs
                 if (requiredN <= 0.0001)
                     return nProvided;
 
-                // take from decreasing dltLai 
-                if (!forLeaf && MathUtilities.IsPositive(DltLAI))
+                // decrease dltLai which will reduce the amount of new leaf that is produced
+                if (MathUtilities.IsPositive(DltLAI))
                 {
+                    // Only half of the requiredN can be accounted for by reducing DltLAI
+                    // If the RequiredN is large enough, it will result in 0 new growth
+                    // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
                     double n = DltLAI * NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
                     // dh - we don't make this check in old apsim
-                    //laiN = Math.Min(laiN, BAT.StructuralAllocation[leafIndex]);
                     if (MathUtilities.IsPositive(laiN))
                     {
                         DltLAI = (n - laiN) / NewLeafSLN.Value();
-                        // fixme
-                        BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
-                        requiredN -= laiN;
-                        nProvided += laiN;
+                        if (forLeaf)
+                        {
+                            // should we update the StructuralDemand?
+                            //BAT.StructuralDemand[leafIndex] = nDemands.Structural.Value();
+                            requiredN -= laiN;
+                        }
                     }
                 }
 
