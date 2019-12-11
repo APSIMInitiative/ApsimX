@@ -1,7 +1,4 @@
-ApsimVersion = 7.5,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,
-Title,Genotype,BiomassWt,GrainNo,GrainSize,GrainGreenWt,LAI,GrainGreenN,NWSTEM,NWTASSEL,biomass_n,Stage,stem_wt,stemflower_wt,tassel_wt,LeafNo,DaysAfterSowing
-(),(),(),(),(),(),(),(),(),(),(),(),(),(),(),(),()
+SimulationName,Genotype,BiomassWt,GrainNo,GrainSize,GrainGreenWt,LAI,GrainGreenN,NWSTEM,NWTASSEL,biomass_n,Stage,stem_wt,stemflower_wt,tassel_wt,LeafNo,DaysAfterSowing
 Maize_Exp1 3N Yr1_1,DEA,994.6933333,2051.322044,224.4,460.3166667,1.046666667,4.453282778,0.54834108,0.049919633,6.371289717,10,264.1566667,433.9966667,11.34666667,,121
 Maize_Exp1 3N Yr1_2,DEA,1154.406667,2717.770658,223.683333,607.92,1.59,6.252537289,0.580146172,0.062445694,8.264305363,10,257.57,442.3166667,9.76,,119
 Maize_Exp1 3N Yr1_3,DEA,1647.783333,3302.672692,258.166667,852.64,2.64,11.32757348,1.762715238,0.089496094,16.10279344,10,392.55,638.5366667,12.60666667,,124
