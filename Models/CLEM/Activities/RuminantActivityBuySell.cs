@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs sales and purchases of ruminants. It requires activities such as RuminantActivityManage, RuminantActivityTrade and RuminantActivitySellDryBreeders to identify individuals to be bought or sold. It will use a pricing schedule if supplied for the herd and can include additional trucking rules and emissions settings.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantbuysell.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuySell.htm")]
     public class RuminantActivityBuySell : CLEMRuminantActivityBase
     {
         /// <summary>
@@ -131,7 +131,7 @@ namespace Models.CLEM.Activities
                     aESum += ind.AdultEquivalent;
                     saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                     saleWeight += ind.Weight;
-                    ruminantHerd.RemoveRuminant(ind);
+                    ruminantHerd.RemoveRuminant(ind, this);
                 }
             }
             else
@@ -156,7 +156,7 @@ namespace Models.CLEM.Activities
                                 load450kgs += ind.Weight / 450.0;
                                 saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                                 saleWeight += ind.Weight;
-                                ruminantHerd.RemoveRuminant(ind);
+                                ruminantHerd.RemoveRuminant(ind, this);
 
                                 //TODO: work out what to do with suckling calves still with mothers if mother sold.
                             }
@@ -252,17 +252,16 @@ namespace Models.CLEM.Activities
                     if (newind.SaleFlag == HerdChangeReason.SirePurchase)
                     {
                         value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase,  RuminantFilterParameters.BreedingSire, "true");
-//                        value = newind.BreedParams.SirePrice;
                     }
                     else
                     {
                         value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
                     }
-                    if (cost + value <= fundsAvailable & fundsexceeded == false)
+                    if (cost + value <= fundsAvailable && fundsexceeded == false)
                     {
                         ruminantHerd.PurchaseIndividuals.Remove(newind);
                         newind.ID = ruminantHerd.NextUniqueID;
-                        ruminantHerd.AddRuminant(newind);
+                        ruminantHerd.AddRuminant(newind, this);
                         cost += value;
                     }
                     else
@@ -275,7 +274,7 @@ namespace Models.CLEM.Activities
                 {
                     ruminantHerd.PurchaseIndividuals.Remove(newind);
                     newind.ID = ruminantHerd.NextUniqueID;
-                    ruminantHerd.AddRuminant(newind);
+                    ruminantHerd.AddRuminant(newind, this);
                 }
             }
 
@@ -353,16 +352,15 @@ namespace Models.CLEM.Activities
                                 if (ind.SaleFlag == HerdChangeReason.SirePurchase)
                                 {
                                     value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.BreedingSire, "true");
-//                                    value = ind.BreedParams.SirePrice;
                                 }
                                 else
                                 {
                                     value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
                                 }
-                                if (cost + value <= fundsAvailable & fundsexceeded == false)
+                                if (cost + value <= fundsAvailable && fundsexceeded == false)
                                 {
                                     ind.ID = ruminantHerd.NextUniqueID;
-                                    ruminantHerd.AddRuminant(ind);
+                                    ruminantHerd.AddRuminant(ind, this);
                                     ruminantHerd.PurchaseIndividuals.Remove(ind);
                                     cost += value;
                                 }
@@ -375,7 +373,7 @@ namespace Models.CLEM.Activities
                             else // no financial transactions
                             {
                                 ind.ID = ruminantHerd.NextUniqueID;
-                                ruminantHerd.AddRuminant(ind);
+                                ruminantHerd.AddRuminant(ind, this);
                                 ruminantHerd.PurchaseIndividuals.Remove(ind);
                             }
 
@@ -395,7 +393,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // create trucking emissions
-                if(trucking != null & trucks > 0 )
+                if(trucking != null && trucks > 0 )
                 {
                     trucking.ReportEmissions(trucks, false);
                     SetStatusSuccess();
@@ -467,7 +465,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") | a.SaleFlag.ToString().Contains("Sale")) & a.Breed == this.PredictedHerdBreed).ToList();
+            List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") || a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
             int head = herd.Count();
             double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;

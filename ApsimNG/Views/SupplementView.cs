@@ -60,7 +60,7 @@ namespace UserInterface.Views
         private Button btnReset = null;
         private Button btnDelete = null;
         private Button btnAdd = null;
-        private IconView lbDefaultNames = null;
+        private IconView lblDefaultNames = null;
         private Gtk.TreeView lvSupps = null;
 
         private ListStore suppList = new ListStore(typeof(string));
@@ -88,9 +88,9 @@ namespace UserInterface.Views
             btnReset = (Button)builder.GetObject("btnReset");
             btnDelete = (Button)builder.GetObject("btnDelete");
             btnAdd = (Button)builder.GetObject("btnAdd");
-            lbDefaultNames = (IconView)builder.GetObject("lbDefaultNames");
+            lblDefaultNames = (IconView)builder.GetObject("lbDefaultNames");
             lvSupps = (Gtk.TreeView)builder.GetObject("lvSupps");
-            _mainWidget = table1;
+            mainWidget = table1;
 
             entryLookup.Add(tbDM, FoodSupplement.SuppAttribute.spaDMP);
             entryLookup.Add(tbDMD, FoodSupplement.SuppAttribute.spaDMD);
@@ -103,17 +103,17 @@ namespace UserInterface.Views
             entryLookup.Add(tbSulph, FoodSupplement.SuppAttribute.spaSU);
 
             lvSupps.Model = suppList;
-            lbDefaultNames.Model = defNameList;
-            lbDefaultNames.TextColumn = 0;
-            lbDefaultNames.ItemActivated += lbDefaultNames_Click;
-            lbDefaultNames.LeaveNotifyEvent += lbDefaultNames_Leave;
+            lblDefaultNames.Model = defNameList;
+            lblDefaultNames.TextColumn = 0;
+            lblDefaultNames.ItemActivated += LbDefaultNames_Click;
+            lblDefaultNames.LeaveNotifyEvent += LbDefaultNames_Leave;
 
             CellRendererText textRender = new Gtk.CellRendererText();
             TreeViewColumn column = new TreeViewColumn("Supplement Names", textRender, "text", 0);
             lvSupps.AppendColumn(column);
             lvSupps.HeadersVisible = false;
 
-            tbName.Changed += tbName_Validating;
+            tbName.Changed += TbName_Validating;
             tbDM.Changed += RealEditValidator;
             tbDMD.Changed += RealEditValidator;
             tbME.Changed += RealEditValidator;
@@ -123,23 +123,23 @@ namespace UserInterface.Views
             tbADIP2CP.Changed += RealEditValidator;
             tbPhos.Changed += RealEditValidator;
             tbSulph.Changed += RealEditValidator;
-            tbAmount.Changed += tbAmount_Validating;
-            btnAdd.Clicked += btnAdd_Click;
-            btnDelete.Clicked += btnDelete_Click;
-            btnReset.Clicked += btnReset_Click;
-            btnResetAll.Clicked += btnResetAll_Click;
-            cbxRoughage.Toggled += cbxRoughage_CheckedChanged;
-            lbDefaultNames.LeaveNotifyEvent += lbDefaultNames_Leave;
-            lbDefaultNames.Visible = false;
-            lvSupps.CursorChanged += lvSupps_SelectedIndexChanged;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            tbAmount.Changed += TbAmount_Validating;
+            btnAdd.Clicked += BtnAdd_Click;
+            btnDelete.Clicked += BtnDelete_Click;
+            btnReset.Clicked += BtnReset_Click;
+            btnResetAll.Clicked += BtnResetAll_Click;
+            cbxRoughage.Toggled += CbxRoughage_CheckedChanged;
+            lblDefaultNames.LeaveNotifyEvent += LbDefaultNames_Leave;
+            lblDefaultNames.Visible = false;
+            lvSupps.CursorChanged += LvSupps_SelectedIndexChanged;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            lbDefaultNames.ItemActivated -= lbDefaultNames_Click;
-            lbDefaultNames.LeaveNotifyEvent -= lbDefaultNames_Leave;
-            tbName.Changed -= tbName_Validating;
+            lblDefaultNames.ItemActivated -= LbDefaultNames_Click;
+            lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
+            tbName.Changed -= TbName_Validating;
             tbDM.Changed -= RealEditValidator;
             tbDMD.Changed -= RealEditValidator;
             tbME.Changed -= RealEditValidator;
@@ -149,16 +149,16 @@ namespace UserInterface.Views
             tbADIP2CP.Changed -= RealEditValidator;
             tbPhos.Changed -= RealEditValidator;
             tbSulph.Changed -= RealEditValidator;
-            tbAmount.Changed -= tbAmount_Validating;
-            btnAdd.Clicked -= btnAdd_Click;
-            btnDelete.Clicked -= btnDelete_Click;
-            btnReset.Clicked -= btnReset_Click;
-            btnResetAll.Clicked -= btnResetAll_Click;
-            cbxRoughage.Toggled -= cbxRoughage_CheckedChanged;
-            lbDefaultNames.LeaveNotifyEvent -= lbDefaultNames_Leave;
-            lvSupps.CursorChanged -= lvSupps_SelectedIndexChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            tbAmount.Changed -= TbAmount_Validating;
+            btnAdd.Clicked -= BtnAdd_Click;
+            btnDelete.Clicked -= BtnDelete_Click;
+            btnReset.Clicked -= BtnReset_Click;
+            btnResetAll.Clicked -= BtnResetAll_Click;
+            cbxRoughage.Toggled -= CbxRoughage_CheckedChanged;
+            lblDefaultNames.LeaveNotifyEvent -= LbDefaultNames_Leave;
+            lvSupps.CursorChanged -= LvSupps_SelectedIndexChanged;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         private void RealEditValidator(object sender, EventArgs e)
@@ -216,8 +216,8 @@ namespace UserInterface.Views
                         if (SuppAttrChanged != null)
                         {
                             TSuppAttrArgs args = new TSuppAttrArgs();
-                            args.attr = (int)tagEnum;
-                            args.attrVal = value * scale;
+                            args.Attr = (int)tagEnum;
+                            args.AttrVal = value * scale;
                             if (SuppAttrChanged != null)
                                 SuppAttrChanged.Invoke(sender, args);
                         }
@@ -226,34 +226,34 @@ namespace UserInterface.Views
             }
         }
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        private void BtnAdd_Click(object sender, EventArgs e)
         {
             TreeIter first;
             if (defNameList.GetIterFirst(out first))
-                lbDefaultNames.SelectPath(defNameList.GetPath(first));
-            lbDefaultNames.Visible = true;
-            lbDefaultNames.GrabFocus();
+                lblDefaultNames.SelectPath(defNameList.GetPath(first));
+            lblDefaultNames.Visible = true;
+            lblDefaultNames.GrabFocus();
         }
 
-        private void btnDelete_Click(object sender, EventArgs e)
+        private void BtnDelete_Click(object sender, EventArgs e)
         {
             if (SupplementDeleted != null)
                 SupplementDeleted.Invoke(sender, e);
         }
 
-        private void btnReset_Click(object sender, EventArgs e)
+        private void BtnReset_Click(object sender, EventArgs e)
         {
             if (SupplementReset != null)
                 SupplementReset.Invoke(sender, e);
         }
 
-        private void btnResetAll_Click(object sender, EventArgs e)
+        private void BtnResetAll_Click(object sender, EventArgs e)
         {
             if (AllSupplementsReset != null)
                 AllSupplementsReset.Invoke(sender, e);
         }
 
-        private void lvSupps_SelectedIndexChanged(object sender, EventArgs e)
+        private void LvSupps_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!internalSelect && SupplementSelected != null)
             {
@@ -262,7 +262,7 @@ namespace UserInterface.Views
                 lvSupps.GetCursor(out selPath, out selCol);
 
                 TIntArgs args = new TIntArgs();
-                args.value = selPath.Indices[0];
+                args.Value = selPath.Indices[0];
                 if (SupplementSelected != null)
                     SupplementSelected.Invoke(sender, args);
             }
@@ -423,16 +423,16 @@ namespace UserInterface.Views
             }
         }
 
-        private void cbxRoughage_CheckedChanged(object sender, EventArgs e)
+        private void CbxRoughage_CheckedChanged(object sender, EventArgs e)
         {
             TSuppAttrArgs args = new TSuppAttrArgs();
-            args.attr = -2;
-            args.attrVal = cbxRoughage.Active ? 1 : 0;
+            args.Attr = -2;
+            args.AttrVal = cbxRoughage.Active ? 1 : 0;
             if (SuppAttrChanged != null)
                 SuppAttrChanged.Invoke(sender, args);
         }
 
-        private void tbAmount_Validating(object sender, EventArgs e)
+        private void TbAmount_Validating(object sender, EventArgs e)
         {
             double value;
             bool cancel = false;
@@ -452,15 +452,15 @@ namespace UserInterface.Views
                 if (SuppAttrChanged != null)
                 {
                     TSuppAttrArgs args = new TSuppAttrArgs();
-                    args.attr = -1;
-                    args.attrVal = value;
+                    args.Attr = -1;
+                    args.AttrVal = value;
                     if (SuppAttrChanged != null)
                         SuppAttrChanged.Invoke(sender, args);
                 }
             }
         }
 
-        private void tbName_Validating(object sender, EventArgs e)
+        private void TbName_Validating(object sender, EventArgs e)
         {
             bool cancel = false;
             if (string.IsNullOrWhiteSpace(tbName.Text) && SupplementNames.Length > 0)
@@ -477,14 +477,14 @@ namespace UserInterface.Views
                 if (SuppAttrChanged != null)
                 {
                     TStringArgs args = new TStringArgs();
-                    args.name = tbName.Text;
+                    args.Name = tbName.Text;
                     if (SuppNameChanged != null)
                         SuppNameChanged.Invoke(sender, args);
                 }
             }
         }
 
-        private void lbDefaultNames_Click(object sender, ItemActivatedArgs e)
+        private void LbDefaultNames_Click(object sender, ItemActivatedArgs e)
         {
             if (SupplementAdded != null && e.Path.Indices[0] > 0)
             {
@@ -492,17 +492,17 @@ namespace UserInterface.Views
                 if (defNameList.GetIter(out iter, e.Path))
                 {
                     TStringArgs args = new TStringArgs();
-                    args.name = (string)defNameList.GetValue(iter, 0);
+                    args.Name = (string)defNameList.GetValue(iter, 0);
                     if (SupplementAdded != null)
                         SupplementAdded.Invoke(sender, args);
                 }
             }
-            lbDefaultNames.Visible = false;
+            lblDefaultNames.Visible = false;
         }
 
-        private void lbDefaultNames_Leave(object sender, EventArgs e)
+        private void LbDefaultNames_Leave(object sender, EventArgs e)
         {
-            lbDefaultNames.Visible = false;
+            lblDefaultNames.Visible = false;
         }
 
     }

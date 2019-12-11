@@ -1,9 +1,4 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="Probability.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
     using System;
     using System.Data;
@@ -11,8 +6,9 @@ namespace Models.PostSimulationTools
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Storage;
-    using System.Collections.Generic;
     using System.Linq;
+    using Models.Core.Run;
+    using System.Threading;
 
     /// <summary>
     /// # [Name]
@@ -24,6 +20,9 @@ namespace Models.PostSimulationTools
     [Serializable]
     public class Probability : Model, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// Gets or sets the name of the predicted/observed table name.
         /// </summary>
@@ -45,15 +44,14 @@ namespace Models.PostSimulationTools
         [Display(Type = DisplayType.FieldName)]
         public string FieldToSplitOn { get; set; } = "SimulationName";
 
-        /// <summary>
-        /// The main run method called to fill tables in the specified DataStore.
-        /// </summary>
-        /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(IStorageReader dataStore)
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void Run()
         {
-            dataStore.DeleteDataInTable(this.Name);
-
-            DataTable simulationData = dataStore.GetData(TableName, fieldNames: dataStore.GetTableColumns(TableName));
+            if (string.IsNullOrWhiteSpace(TableName))
+                throw new Exception(string.Format("Error in probability model {0}: TableName is null", Name));
+            else if (!dataStore.Reader.TableNames.Contains(TableName))
+                throw new Exception(string.Format("Error in probability model {0}: table '{1}' does not exist in the database.", Name, TableName));
+            DataTable simulationData = dataStore.Reader.GetData(TableName, fieldNames: dataStore.Reader.ColumnNames(TableName));
             if (simulationData != null)
             {
                 IndexedDataTable simData = new IndexedDataTable(simulationData, new string[] { FieldToSplitOn });
@@ -93,7 +91,7 @@ namespace Models.PostSimulationTools
                 // Write the stats data to the DataStore
                 DataTable t = probabilityData.ToTable();
                 t.TableName = this.Name;
-                dataStore.WriteTable(t);
+                dataStore.Writer.WriteTable(t);
             }
         }
     }

@@ -65,6 +65,10 @@ namespace Models.PMF
         /// <summary>Gets or sets the total crop supply.</summary>
         /// <value>crop supply from uptake, fixation, reallocation and remobilisation</value>
         public double TotalPlantSupply { get { return TotalReallocationSupply + TotalUptakeSupply + TotalFixationSupply + TotalRetranslocationSupply; } }
+
+        /// <value>SupplyDemandRatioN</value>
+        public double SupplyDemandRatioN { get; set; }
+
         //Biomass Allocation Variables
         /// <summary>Gets or sets the reallocation.</summary>
         /// <value>The amount of biomass reallocated from each organ as it dies</value>

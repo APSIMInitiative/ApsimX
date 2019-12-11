@@ -3,7 +3,7 @@
 //     Copyright (c) APSIM Initiative
 // </copyright>
 // -----------------------------------------------------------------------
-namespace EventArguments
+namespace UserInterface.EventArguments
 {
     /// <summary>
     /// Event arguments used when handling a copy event.

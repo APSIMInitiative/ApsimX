@@ -8,7 +8,7 @@ namespace ApsimNG.Classes.DirectedGraph
 {
     class BezierCurve
     {
-        private double[] FactorialLookup;
+        private double[] factorialLookup;
 
         public BezierCurve()
         {
@@ -16,12 +16,12 @@ namespace ApsimNG.Classes.DirectedGraph
         }
 
         // just check if n is appropriate, then return the result
-        private double factorial(int n)
+        private double Factorial(int n)
         {
             if (n < 0) { throw new Exception("n is less than 0"); }
             if (n > 32) { throw new Exception("n is greater than 32"); }
 
-            return FactorialLookup[n]; /* returns the value n! as a SUMORealing point number */
+            return factorialLookup[n]; /* returns the value n! as a SUMORealing point number */
         }
 
         // create lookup table for fast factorial calculation
@@ -62,15 +62,15 @@ namespace ApsimNG.Classes.DirectedGraph
             a[30] = 265252859812191058636308480000000.0;
             a[31] = 8222838654177922817725562880000000.0;
             a[32] = 263130836933693530167218012160000000.0;
-            FactorialLookup = a;
+            factorialLookup = a;
         }
 
         private double Ni(int n, int i)
         {
             double ni;
-            double a1 = factorial(n);
-            double a2 = factorial(i);
-            double a3 = factorial(n - i);
+            double a1 = Factorial(n);
+            double a2 = Factorial(i);
+            double a3 = Factorial(n - i);
             ni = a1 / (a2 * a3);
             return ni;
         }

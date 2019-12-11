@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using ApsimNG.Cloud;
-using Microsoft.WindowsAzure.Storage;
+using Microsoft.Azure.Storage;
 using Microsoft.Azure.Batch;
 using UserInterface.Interfaces;
 using System.IO;
 using System.ComponentModel;
 using Models.Core;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -53,7 +53,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// This worker repeatedly fetches information about all Azure jobs on the batch account.
         /// </summary>
-        private BackgroundWorker FetchJobs;
+        private BackgroundWorker fetchJobs;
 
         /// <summary>
         /// Mutual exclusion semaphore controlling access to the section of code relating to the log file.        
@@ -76,11 +76,11 @@ namespace UserInterface.Presenters
             logFileMutex = new object();            
             currentlyDownloading = new List<Guid>();
 
-            FetchJobs = new BackgroundWorker()
+            fetchJobs = new BackgroundWorker()
             {
                 WorkerSupportsCancellation = true
             };
-            FetchJobs.DoWork += FetchJobs_DoWork;
+            fetchJobs.DoWork += FetchJobs_DoWork;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            FetchJobs.CancelAsync();
+            fetchJobs.CancelAsync();
             view.Detach();
         }
 
@@ -156,14 +156,14 @@ namespace UserInterface.Presenters
                 storageAuth = StorageCredentials.FromConfiguration();
                 batchAuth = BatchCredentials.FromConfiguration();
 
-                storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
+                storageAccount = new CloudStorageAccount(new Microsoft.Azure.Storage.Auth.StorageCredentials(storageAuth.Account, storageAuth.Key), true);
                 var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchAuth.Url, batchAuth.Account, batchAuth.Key);
                 batchCli = BatchClient.Open(sharedCredentials);
 
                 blobCli = storageAccount.CreateCloudBlobClient();
-                blobCli.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
+                blobCli.DefaultRequestOptions.RetryPolicy = new Microsoft.Azure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);
 
-                if (!FetchJobs.IsBusy) FetchJobs.RunWorkerAsync();
+                if (!fetchJobs.IsBusy) fetchJobs.RunWorkerAsync();
             }
             else
             {
@@ -475,9 +475,9 @@ namespace UserInterface.Presenters
                 return;
             }
 
-            bool restart = FetchJobs.IsBusy;
+            bool restart = fetchJobs.IsBusy;
             // cancel the fetch jobs worker
-            if (restart) FetchJobs.CancelAsync();
+            if (restart) fetchJobs.CancelAsync();
             //while (FetchJobs.IsBusy);
             view.HideLoadingProgressBar();
 
@@ -525,7 +525,7 @@ namespace UserInterface.Presenters
             try
             {
                 if (restart)
-                    FetchJobs.RunWorkerAsync();
+                    fetchJobs.RunWorkerAsync();
             }
             catch
             {
@@ -545,12 +545,12 @@ namespace UserInterface.Presenters
 
         private void FetchJobs_DoWork(object sender, DoWorkEventArgs args)
         {
-            while (!FetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
+            while (!fetchJobs.CancellationPending) // this check is performed regularly inside the ListJobs() function as well.
             {
                 // update the list of jobs. this will take a bit of time                
                 var newJobs = ListJobs();
 
-                if (FetchJobs.CancellationPending) return;
+                if (fetchJobs.CancellationPending) return;
                 if (newJobs == null) return;
 
                 if (newJobs.Count > 0)
@@ -657,7 +657,7 @@ namespace UserInterface.Presenters
 
             foreach (var cloudJob in cloudJobs)
             {
-                if (FetchJobs.CancellationPending) return null;
+                if (fetchJobs.CancellationPending) return null;
                 try
                 {
                     view.JobLoadProgress = 100.0 * i / length;

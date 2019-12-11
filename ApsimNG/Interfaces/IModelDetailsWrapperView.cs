@@ -42,6 +42,6 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Add a view to the right hand panel.
         /// </summary>
-        void AddLowerView(object Control);
+        void AddLowerView(object control);
     }
 }

@@ -15,7 +15,7 @@
         private Button btnCancel = null;
         private Button btnFindPrevious = null;
         private Button btnFindNext = null;
-        private IBrowserWidget browser { get; set; }
+        private IBrowserWidget browser = null;
 
 
         public FindInBrowserForm()
@@ -29,11 +29,11 @@
             btnFindPrevious = (Button)builder.GetObject("btnFindPrevious");
             btnFindNext = (Button)builder.GetObject("btnFindNext");
 
-			txtLookFor.Changed += txtLookFor_Changed;
-            btnFindNext.Clicked += btnFindNext_Click;
-            btnFindPrevious.Clicked += btnFindPrevious_Click;
-            btnCancel.Clicked += btnCancel_Click;
-            chkHighlightAll.Clicked += chkHighlightAll_Click;
+			txtLookFor.Changed += TxtLookFor_Changed;
+            btnFindNext.Clicked += BtnFindNext_Click;
+            btnFindPrevious.Clicked += BtnFindPrevious_Click;
+            btnCancel.Clicked += BtnCancel_Click;
+            chkHighlightAll.Clicked += ChkHighlightAll_Click;
 			chkHighlightAll.Visible = false; // Hide this for now...
 			chkHighlightAll.NoShowAll = true;
             window1.DeleteEvent += Window1_DeleteEvent;
@@ -46,11 +46,11 @@
 
         private void Window1_Destroyed(object sender, EventArgs e)
         {
-			txtLookFor.Changed -= txtLookFor_Changed;
-            btnFindNext.Clicked -= btnFindNext_Click;
-            btnFindPrevious.Clicked -= btnFindPrevious_Click;
-            btnCancel.Clicked -= btnCancel_Click;
-            chkHighlightAll.Clicked -= chkHighlightAll_Click;
+			txtLookFor.Changed -= TxtLookFor_Changed;
+            btnFindNext.Clicked -= BtnFindNext_Click;
+            btnFindPrevious.Clicked -= BtnFindPrevious_Click;
+            btnCancel.Clicked -= BtnCancel_Click;
+            chkHighlightAll.Clicked -= ChkHighlightAll_Click;
             window1.DeleteEvent -= Window1_DeleteEvent;
             window1.Destroyed -= Window1_Destroyed;
         }
@@ -89,26 +89,26 @@
             txtLookFor.GrabFocus();
         }
 
-		void txtLookFor_Changed(object sender, EventArgs e)
+		void TxtLookFor_Changed(object sender, EventArgs e)
         {
             // No, this isn't quite right. It keeps searching forward, rather than resting on the current selection
             // when the current selection matches. Disabling until a better way is found
 			// Find();
         }
 
-        private void btnFindPrevious_Click(object sender, EventArgs e)
+        private void BtnFindPrevious_Click(object sender, EventArgs e)
         {
             FindNext(false, "Text not found");
         }
 
-        private void btnFindNext_Click(object sender, EventArgs e)
+        private void BtnFindNext_Click(object sender, EventArgs e)
         {
             FindNext(true, "Text not found");
         }
 
         public void FindNext(bool searchForward, string messageIfNotFound)
         {
-			chkHighlightAll_Click(this, new EventArgs());
+			ChkHighlightAll_Click(this, new EventArgs());
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
                 ShowMsg("No string specified to for search!");
@@ -128,22 +128,22 @@
 				FindNext(true,"");
 		}
 
-		private bool _isHighlighted = false;
+		private bool isHighlighted = false;
 
-        private void chkHighlightAll_Click(object sender, EventArgs e)
+        private void ChkHighlightAll_Click(object sender, EventArgs e)
         {
 			if (browser is TWWebBrowserWK)
 			{
 				bool highlight = chkHighlightAll.Active;
-				if (highlight != _isHighlighted)
+				if (highlight != isHighlighted)
 				{
 					(browser as TWWebBrowserWK).Highlight(txtLookFor.Text, chkMatchCase.Active, highlight);
-					_isHighlighted = highlight;
+					isHighlighted = highlight;
 				}
 			}
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void BtnCancel_Click(object sender, EventArgs e)
         {
 			// if (browser is TWWebBrowserWK)
 			//	(browser as TWWebBrowserWK).Highlight("", false, false);

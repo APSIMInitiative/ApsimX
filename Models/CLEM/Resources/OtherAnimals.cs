@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all other animals types (not ruminants) for the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/other animals/otheranimals.htm")]
+    [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimals.htm")]
     public class OtherAnimals: ResourceBaseWithTransactions
     {
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

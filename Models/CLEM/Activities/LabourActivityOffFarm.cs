@@ -21,23 +21,13 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages labour supplied and income derived from an off-farm task.")]
-    [HelpUri(@"content/features/activities/labour/offfarmwork.htm")]
+    [HelpUri(@"Content/Features/Activities/Labour/OffFarmWork.htm")]
+    [Version(1, 0, 2, "Labour required and pricing  now implement in LabourRequirement component and LabourPricing from Resources used.")]
     [Version(1, 0, 1, "")]
-    public class LabourActivityOffFarm: CLEMActivityBase
+    public class LabourActivityOffFarm: CLEMActivityBase, IValidatableObject
     {
-        /// <summary>
-        /// Daily labour rate
-        /// </summary>
-        [Description("Daily labour rate")]
-        [Required]
-        public double DailyRate { get; set; }
-
-        /// <summary>
-        /// Days worked
-        /// </summary>
-        [Description("Days work required")]
-        [Required]
-        public double DaysWorkRequiredInMonth { get; set; }
+        private FinanceType bankType { get; set; }
+        private LabourRequirement labourRequired { get; set; }
 
         /// <summary>
         /// Bank account name to pay to
@@ -46,21 +36,53 @@ namespace Models.CLEM.Activities
         [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
         public string BankAccountName { get; set; }
 
-        private FinanceType bankType { get; set; }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // locate BankType resource
+            // locate resources
             bankType = Resources.GetResourceItem(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
+            labourRequired = Apsim.Children(this, typeof(LabourRequirement)).FirstOrDefault() as LabourRequirement;
+        }
 
-            if(bankType==null && Resources.GetResourceGroupByType(typeof(Finance))==null)
+        /// <summary>
+        /// Validate this component before simulation
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (bankType == null && Resources.GetResourceGroupByType(typeof(Finance)) != null)
             {
-                Summary.WriteWarning(this, "No bank account has been specified for [a="+this.Name+"]. No funds will be earned!");
+                Summary.WriteWarning(this, "No bank account has been specified for [a=" + this.Name + "]. No funds will be earned!");
             }
+
+            // get check labour required
+            if (labourRequired == null)
+            {
+                string[] memberNames = new string[] { "Labour requirement" };
+                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourRequirement] component to set the labour needed.\nThis activity will be ignored without this component.", this.Name), memberNames));
+            }
+            else
+            {
+                // check labour required is using fixed type
+                if(labourRequired.UnitType != LabourUnitType.Fixed)
+                {
+                    string[] memberNames = new string[] { "Labour requirement" };
+                    results.Add(new ValidationResult(String.Format("The UnitType of the [r=LabourRequirement] in [a={0}] must be [Fixed] for this activity.", this.Name), memberNames));
+                }
+            }
+
+            // check pricing
+            if(!Resources.Labour().PricingAvailable)
+            {
+                string[] memberNames = new string[] { "Labour pricing" };
+                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourPricing] component to set the labour rates.\nThis activity will be ignored without this component.", this.Name), memberNames));
+            }
+            return results;
         }
 
         /// <summary>
@@ -70,7 +92,12 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded = DaysWorkRequiredInMonth;
+            double daysNeeded = 0;
+            // get fixed days per LabourRequirement
+            if(labourRequired != null)
+            {
+                daysNeeded = labourRequired.LabourPerUnit;
+            }
             return daysNeeded;
         }
 
@@ -88,11 +115,11 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            // days provided from labour set in the all requests in the resourceResquestList
+            // days provided from labour set in the requests in the resourceResquestList
             // receive payment for labour if bank type exists
             if (bankType != null)
             {
-                bankType.Add(ResourceRequestList.Sum(a => a.Provided) * DailyRate, this, "Off farm labour");
+                bankType.Add(ResourceRequestList.Sum(a => a.Value), this, "Off farm labour");
             }
         }
 
@@ -150,7 +177,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Earn ";
-            html += "<span class=\"setvalue\">" + DailyRate.ToString("#,##0.00") + "</span> per day for <span class=\"setvalue\">" + DaysWorkRequiredInMonth.ToString("#0") + "</span> days paid to ";
+            html += "Earnings will be paid to ";
             if (BankAccountName == null || BankAccountName == "")
             {
                 html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
@@ -159,6 +186,7 @@ namespace Models.CLEM.Activities
             {
                 html += "<span class=\"resourcelink\">" + BankAccountName + "</span>";
             }
+            html += " based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>";
             html += "</div>";
 
             return html;

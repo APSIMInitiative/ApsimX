@@ -1,4 +1,4 @@
-using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Functions;
@@ -10,6 +10,7 @@ using Models.Soils.Arbitrator;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.Linq;
 
 namespace Models.PMF.Organs
 {
@@ -20,7 +21,7 @@ namespace Models.PMF.Organs
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PerennialLeaf : Model, IOrgan, ICanopy, ILeaf, IArbitration, IHasWaterDemand, IRemovableBiomass
+    public class PerennialLeaf : Model, IOrgan, ICanopy, IArbitration, IHasWaterDemand, IOrganDamage
     {
         /// <summary>The met data</summary>
         [Link]
@@ -29,7 +30,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Carbon concentration</summary>
         /// [Units("-")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction CarbonConcentration = null;
 
         /// <summary>Gets the cohort live.</summary>
@@ -76,7 +77,7 @@ namespace Models.PMF.Organs
         protected ISummary Summary = null;
 
         /// <summary>Link to biomass removal model</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         public BiomassRemoval biomassRemovalModel = null;
 
         /// <summary>The dry matter supply</summary>
@@ -105,34 +106,6 @@ namespace Models.PMF.Organs
         [XmlIgnore]
         public Biomass Detached { get; set; }
 
-        #region Leaf Interface
-        /// <summary>
-        /// Number of initiated cohorts that have not appeared yet
-        /// </summary>
-        public int ApicalCohortNo { get; set; }
-        /// <summary>
-        /// reset leaf numbers
-        /// </summary>
-        public void Reset() { }
-        /// <summary></summary>
-        public bool CohortsInitialised { get; set; }
-        /// <summary></summary>
-        public int TipsAtEmergence { get; set; }
-        /// <summary></summary>
-        public int CohortsAtInitialisation { get; set; }
-        /// <summary></summary>
-        public int AppearedCohortNo { get; set; }
-        /// <summary></summary>
-        public double PlantAppearedLeafNo { get; set; }
-        /// <summary></summary>
-        /// <param name="proprtionRemoved"></param>
-        public void DoThin(double proprtionRemoved) { }
-        /// <summary></summary>
-        public int InitialisedCohortNo { get; set; }
-        /// <summary></summary>
-        public void RemoveHighestLeaf() { }
-        #endregion
-
         #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
@@ -146,10 +119,7 @@ namespace Models.PMF.Organs
         [Description("Daily maximum stomatal conductance(m/s)")]
         public double Gsmax
         {
-            get
-            {
-                return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value();
-            }
+            get { return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value(); }
         }
 
         /// <summary>Gets or sets the gsmax.</summary>
@@ -159,8 +129,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the R50.</summary>
         [Description("R50")]
         public double R50 { get; set; }
-
-
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -173,10 +141,26 @@ namespace Models.PMF.Organs
                     lai = lai + L.Area;
                 return lai;
             }
+            set
+            {
+                var totalLeafArea = Leaves.Sum(x => x.Area);
+                if (totalLeafArea > 0)
+                {
+                    var delta = totalLeafArea - value;
+                    var prop = delta / totalLeafArea;
+                    foreach (var L in Leaves)
+                    {
+                        var amountToRemove = L.Area * prop;
+                        L.Area -= amountToRemove;
+                        L.AreaDead += amountToRemove;
+                    }
+                }
+            }
         }
 
         /// <summary>Gets the LAI live + dead (m^2/m^2)</summary>
         public double LAITotal { get { return LAI + LAIDead; } }
+        
         /// <summary>Gets the SLA</summary>
         public double SpecificLeafArea { get { return MathUtilities.Divide(LAI, Live.Wt, 0.0); } }
 
@@ -208,33 +192,28 @@ namespace Models.PMF.Organs
         public double Height { get; set; }
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth { get { return Height; } }//  Fixme.  This needs to be replaced with something that give sensible numbers for tree crops
+        public double Depth { get { return Height; } }
+        
+        /// <summary>Gets the width of the canopy (mm).</summary>
+        public double Width { get { return 0; } }
 
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
         public double FRGR { get; set; }
-
+         
         private double _PotentialEP = 0;
         /// <summary>Sets the potential evapotranspiration. Set by MICROCLIMATE.</summary>
         [Units("mm")]
         public double PotentialEP
         {
             get { return _PotentialEP; }
-            set
-            {
-                _PotentialEP = value;
-                MicroClimatePresent = true;
-            }
+            set { _PotentialEP = value;}
         }
 
         /// <summary>Sets the actual water demand.</summary>
         [Units("mm")]
         public double WaterDemand { get; set; }
 
-        /// <summary>
-        /// Flag to test if Microclimate is present
-        /// </summary>
-        public bool MicroClimatePresent { get; set; }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
@@ -242,53 +221,53 @@ namespace Models.PMF.Organs
 
         #region Parameters
         /// <summary>The FRGR function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction FRGRFunction = null;   
         /// <summary>The effect of CO2 on stomatal conductance</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction StomatalConductanceCO2Modifier = null;
 
 
 
         /// <summary>The DM demand function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
         /// <summary>The N demand function</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The extinction coefficient function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction ExtinctionCoefficient = null;
         /// <summary>The extinction coefficient function for dead leaves</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction ExtinctionCoefficientDead = null;
         /// <summary>The photosynthesis</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction Photosynthesis = null;
         /// <summary>The height function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction HeightFunction = null;
         /// <summary>Leaf Residence Time</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction LeafResidenceTime = null;
         /// <summary>Leaf Development Rate</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction LeafDevelopmentRate = null;
         /// <summary>Leaf Death</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction LeafKillFraction = null;
         /// <summary>Minimum LAI</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction MinimumLAI = null;
         /// <summary>Leaf Detachment Time</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction LeafDetachmentTime = null;
         /// <summary>SpecificLeafArea</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction SpecificLeafAreaFunction = null;
 
         /// <summary>The structure</summary>
@@ -370,15 +349,12 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (MicroClimatePresent)
-                {
-                    double TotalRadn = 0;
-                    for (int i = 0; i < LightProfile.Length; i++)
-                        TotalRadn += LightProfile[i].amount;
-                    return TotalRadn;
-                }
-                else
-                   return CoverGreen * MetData.Radn;
+                if (LightProfile == null)
+                    return 0;
+                double TotalRadn = 0;
+                 for (int i = 0; i < LightProfile.Length; i++)
+                     TotalRadn += LightProfile[i].amount;
+                 return TotalRadn;
             }
         }
 
@@ -486,41 +462,41 @@ namespace Models.PMF.Organs
 
         #region Class Parameter Function Links
         /// <summary>The n reallocation factor</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         IFunction NReallocationFactor = null;
 
         /// <summary>The n retranslocation factor</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         IFunction NRetranslocationFactor = null;
 
         /// <summary>The dm retranslocation factor</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         IFunction DMRetranslocationFactor = null;
 
         /// <summary>The initial wt function</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2")]
         IFunction InitialWtFunction = null;
         /// <summary>The dry matter content</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("g/g")]
         IFunction DryMatterContent = null;
         /// <summary>The maximum n conc</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         public IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
         [Units("g/g")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction MinimumNConc = null;
         /// <summary>The proportion of biomass repired each day</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction MaintenanceRespirationFunction = null;
         /// <summary>Dry matter conversion efficiency</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         public IFunction DMConversionEfficiency = null;
         #endregion
 
@@ -756,7 +732,6 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowPlant2Type data)
         {
-                MicroClimatePresent = false;
                 Clear();
         }
 
@@ -776,9 +751,6 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsEmerged)
             {
-                if (MicroClimatePresent == false)
-                    throw new Exception(this.Name + " is trying to calculate water demand but no MicroClimate module is present.  Include a microclimate node in your zone");
-
                 Detached.Clear();
                 FRGR = FRGRFunction.Value();
                 Height = HeightFunction.Value();
@@ -796,7 +768,7 @@ namespace Models.PMF.Organs
                 foreach (PerrenialLeafCohort L in Leaves)
                     L.Age+=LDR;
 
-                StartLive = Live;
+                StartLive = ReflectionUtilities.Clone(Live) as Biomass;
                 StartNReallocationSupply = NSupply.Reallocation;
                 StartNRetranslocationSupply = NSupply.Retranslocation;
             }

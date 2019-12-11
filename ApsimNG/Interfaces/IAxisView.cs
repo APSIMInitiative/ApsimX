@@ -74,6 +74,12 @@ namespace UserInterface.Interfaces
         bool CrossesAtZero { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the axis is a date time axis.
+        /// This is not editable by the user.
+        /// </summary>
+        bool IsDateAxis { get; set; }
+
+        /// <summary>
         /// Sets the text in the minimum textbox.
         /// </summary>
         /// <param name="value">Value to display.</param>

@@ -3,13 +3,16 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Models.Core.Run;
     using Models.Factorial;
     using Models.Interfaces;
     using Models.Sensitivity;
+    using Models.Storage;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Threading;
@@ -22,16 +25,16 @@
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.DualGridView")]
-    [PresenterName("UserInterface.Presenters.TablePresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Folder))]
-    public class Sobol : Model, ISimulationGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
+    public class Sobol : Model, ISimulationDescriptionGenerator, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
-        /// <summary>A list of factors that we are to run</summary>
-        private List<List<FactorValue>> allCombinations = new List<List<FactorValue>>();
+        [Link]
+        private IDataStore dataStore = null;
 
-        /// <summary>A number of the currently running sim</summary>
-        private int simulationNumber;
+        /// <summary>A list of factors that we are to run</summary>
+        private List<List<CompositeFactor>> allCombinations = new List<List<CompositeFactor>>();
 
         /// <summary>Parameter values coming back from R</summary>
         public DataTable ParameterValues { get; set; }
@@ -43,6 +46,7 @@
         public DataTable X2 { get; set; }
 
         /// <summary>The number of paths to run</summary>
+        [Description("Number of paths:")]
         public int NumPaths { get; set; } = 1000;
 
         /// <summary>
@@ -52,10 +56,6 @@
         /// Needs to be public so that it gets written to .apsimx file
         /// </remarks>
         public List<Parameter> Parameters { get; set; }
-
-        /// <summary>List of simulation names from last run</summary>
-        [XmlIgnore]
-        public List<string> simulationNames { get; set; }
 
         /// <summary>
         /// This ID is used to identify temp files used by this Sobol model.
@@ -71,8 +71,7 @@
         public Sobol()
         {
             Parameters = new List<Parameter>();
-            allCombinations = new List<List<FactorValue>>();
-            simulationNames = new List<string>();
+            allCombinations = new List<List<CompositeFactor>>();
         }
 
         /// <summary>
@@ -94,7 +93,7 @@
                 constantRow["Value"] = NumPaths;
                 constant.Rows.Add(constantRow);
 
-                tables.Add(constant);
+                //tables.Add(constant);
 
                 // Add a parameter table
                 DataTable table = new DataTable();
@@ -118,10 +117,8 @@
             }
             set
             {
-                NumPaths = Convert.ToInt32(value[0].Rows[0][1]);
-
                 Parameters.Clear();
-                foreach (DataRow row in value[1].Rows)
+                foreach (DataRow row in value[0].Rows)
                 {
                     Parameter param = new Parameter();
                     if (!Convert.IsDBNull(row["Name"]))
@@ -129,122 +126,57 @@
                     if (!Convert.IsDBNull(row["Path"]))
                         param.Path = row["Path"].ToString();
                     if (!Convert.IsDBNull(row["LowerBound"]))
-                        param.LowerBound = Convert.ToDouble(row["LowerBound"]);
+                        param.LowerBound = Convert.ToDouble(row["LowerBound"], CultureInfo.InvariantCulture);
                     if (!Convert.IsDBNull(row["UpperBound"]))
-                        param.UpperBound = Convert.ToDouble(row["UpperBound"]);
+                        param.UpperBound = Convert.ToDouble(row["UpperBound"], CultureInfo.InvariantCulture);
                     if (param.Name != null || param.Path != null)
                         Parameters.Add(param);
                 }
             }
         }
 
-        private Stream serialisedBase;
-        private Simulations parentSimulations;
-
-        /// <summary>Simulation runs are about to begin.</summary>
-        [EventSubscribe("BeginRun")]
-        private void OnBeginRun()
+        /// <summary>Gets a list of simulation descriptions.</summary>
+        public List<SimulationDescription> GenerateSimulationDescriptions()
         {
-            Initialise();
-            simulationNumber = 1;
-        }
+            var baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
 
-        /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun(bool fullFactorial = true)
-        {
-            if (allCombinations.Count == 0)
-                return null;
-
-            var combination = allCombinations[0];
-            allCombinations.RemoveAt(0);
-
-            Simulation newSimulation = Apsim.DeserialiseFromStream(serialisedBase) as Simulation;
-            newSimulation.Name = Name + "Simulation" + simulationNumber;
-            newSimulation.Parent = null;
-            newSimulation.FileName = parentSimulations.FileName;
-            Apsim.ParentAllChildren(newSimulation);
-
-            // Make substitutions.
-            parentSimulations.MakeSubsAndLoad(newSimulation);
-
-            foreach (FactorValue value in combination)
-                value.ApplyToSimulation(newSimulation);
-
-            PushFactorsToReportModels(newSimulation, combination);
-
-            simulationNumber++;
-            return newSimulation;
-        }
-
-        /// <summary>Find all report models and give them the factor values.</summary>
-        /// <param name="factorValues">The factor values to send to each report model.</param>
-        /// <param name="simulation">The simulation to search for report models.</param>
-        private void PushFactorsToReportModels(Simulation simulation, List<FactorValue> factorValues)
-        {
-            List<string> names = new List<string>();
-            List<string> values = new List<string>();
-            names.Add("SimulationName");
-            values.Add(simulation.Name);
-
-            foreach (FactorValue factor in factorValues)
-            {
-                names.Add(factor.Name);
-                values.Add(factor.Values[0].ToString());
-            }
-
-            foreach (Report.Report report in Apsim.ChildrenRecursively(simulation, typeof(Report.Report)))
-            {
-                report.ExperimentFactorNames = names;
-                report.ExperimentFactorValues = values;
-            }
-        }
-
-        /// <summary>
-        /// Generates an .apsimx file for each simulation in the experiment and returns an error message (if it fails).
-        /// </summary>
-        /// <param name="path">Full path including filename and extension.</param>
-        /// <returns>Empty string if successful, error message if it fails.</returns>
-        public void GenerateApsimXFile(string path)
-        {
-            Simulation sim = NextSimulationToRun();
-            while (sim != null)
-            {
-                Simulations sims = Simulations.Create(new List<IModel> { sim, new Models.Storage.DataStore() });
-
-                string st = FileFormat.WriteToString(sims);
-                File.WriteAllText(Path.Combine(path, sim.Name + ".apsimx"), st);
-                sim = NextSimulationToRun();
-            }
-        }
-
-        /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
-        {
-            return simulationNames;
-        }
-
-        /// <summary>Gets a list of factors</summary>
-        public List<ISimulationGeneratorFactors> GetFactors()
-        {
-            var factors = new List<ISimulationGeneratorFactors>();
-            foreach (Parameter param in Parameters)
-            {
-                factors.Add(new SimulationGeneratorFactors(new string[] { "Parameter" }, new string[] { param.Name },
-                "Parameter", param.Name));
-            }
-            return factors;
-        }
-
-        /// <summary>
-        /// Initialise the experiment ready for creating simulations.
-        /// </summary>
-        private void Initialise()
-        {
-            parentSimulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-            Simulation baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
-            serialisedBase = Apsim.SerialiseToStream(baseSimulation) as Stream;
-            allCombinations.Clear();
+            // Calculate all combinations.
             CalculateFactors();
+
+            // Loop through all combinations and add a simulation description to the
+            // list of simulations descriptions being returned to the caller.
+            var simulationDescriptions = new List<SimulationDescription>();
+            int simulationNumber = 1;
+            foreach (var combination in allCombinations)
+            {
+                // Create a simulation.
+                var simulationName = Name + "Simulation" + simulationNumber;
+                var simDescription = new SimulationDescription(baseSimulation, simulationName);
+                simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
+
+                // Apply each composite factor of this combination to our simulation description.
+                combination.ForEach(c => c.ApplyToSimulation(simDescription));
+                
+                // Add simulation description to the return list of descriptions
+                simulationDescriptions.Add(simDescription);
+
+                simulationNumber++;
+            }
+
+            return simulationDescriptions;
+        }
+
+        /// <summary>
+        /// Invoked when a run is beginning.
+        /// </summary>
+        /// <param name="sender">Sender of event</param>
+        /// <param name="e">Event arguments.</param>
+        [EventSubscribe("BeginRun")]
+        private void OnBeginRun(object sender, EventArgs e)
+        {
+            R r = new R();
+            r.InstallPackage("boot");
+            r.InstallPackage("sensitivity");
         }
 
         /// <summary>
@@ -252,69 +184,72 @@
         /// </summary>
         private void CalculateFactors()
         {
+            allCombinations.Clear();
             if (allCombinations.Count == 0)
             {
-                // Write a script to get random numbers from R.
-                string script = string.Format
-                    ("library('boot')" + Environment.NewLine +
-                     "library('sensitivity')" + Environment.NewLine +
-                     "n <- {0}" + Environment.NewLine +
-                     "nparams <- {1}" + Environment.NewLine +
-                     "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
-                     "X2 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine
-                     ,
-                    NumPaths, Parameters.Count);
-
-                for (int i = 0; i < Parameters.Count; i++)
+                if (ParameterValues.Rows.Count == 0)
                 {
-                    script += string.Format("X1[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine +
-                                            "X2[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine
-                                            ,
-                                            i + 1, Parameters[i].LowerBound,
-                                            Parameters[i].UpperBound - Parameters[i].LowerBound);
+                    // Write a script to get random numbers from R.
+                    string script = string.Format
+                        ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+                        $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                         $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                         "n <- {0}" + Environment.NewLine +
+                         "nparams <- {1}" + Environment.NewLine +
+                         "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
+                         "X2 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine
+                         ,
+                        NumPaths, Parameters.Count);
+
+                    for (int i = 0; i < Parameters.Count; i++)
+                    {
+                        script += string.Format("X1[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine +
+                                                "X2[, {0}] <- {1}+runif(n)*{2}" + Environment.NewLine
+                                                ,
+                                                i + 1, Parameters[i].LowerBound,
+                                                Parameters[i].UpperBound - Parameters[i].LowerBound);
+                    }
+
+                    string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
+                    string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
+
+                    script += string.Format("write.table(X1, \"{0}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
+                                            "write.table(X2, \"{1}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
+                                            "sa <- sobolSalt(model = NULL, X1, X2, scheme=\"A\", nboot = 100)" + Environment.NewLine +
+                                            "write.csv(sa$X,row.names=FALSE)" + Environment.NewLine,
+                                            sobolx1FileName.Replace("\\", "/"),
+                                            sobolx2FileName.Replace("\\", "/"));
+
+                    // Run the script
+                    ParameterValues = RunR(script);
+
+                    // Read in the 2 data frames (X1, X2) that R wrote.
+                    if (!File.Exists(sobolx1FileName))
+                    {
+                        string rFileName = GetTempFileName("sobolscript", ".r");
+                        if (!File.Exists(rFileName))
+                            throw new Exception("Cannot find file: " + rFileName);
+                        string message = "Cannot find : " + sobolx1FileName + Environment.NewLine +
+                                     "Script:" + Environment.NewLine +
+                                     File.ReadAllText(rFileName);
+                        throw new Exception(message);
+                    }
+                    X1 = ApsimTextFile.ToTable(sobolx1FileName);
+                    X2 = ApsimTextFile.ToTable(sobolx2FileName);
                 }
-
-                string sobolx1FileName = GetTempFileName("sobolx1", ".csv");
-                string sobolx2FileName = GetTempFileName("sobolx2", ".csv");
-
-                script += string.Format("write.table(X1, \"{0}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
-                                        "write.table(X2, \"{1}\",sep=\",\",row.names=FALSE)" + Environment.NewLine +
-                                        "sa <- sobolSalt(model = NULL, X1, X2, scheme=\"A\", nboot = 100)" + Environment.NewLine +
-                                        "write.csv(sa$X,row.names=FALSE)" + Environment.NewLine,
-                                        sobolx1FileName.Replace("\\", "/"),
-                                        sobolx2FileName.Replace("\\", "/"));
-
-                // Run the script
-                ParameterValues = RunR(script);
-
-                // Read in the 2 data frames (X1, X2) that R wrote.
-                if (!File.Exists(sobolx1FileName))
-                {
-                    string rFileName = GetTempFileName("sobolscript", ".r");
-                    if (!File.Exists(rFileName))
-                        throw new Exception("Cannot find file: " + rFileName);
-                    string message = "Cannot find : " + sobolx1FileName + Environment.NewLine +
-                                 "Script:" + Environment.NewLine +
-                                 File.ReadAllText(rFileName);
-                    throw new Exception(message);
-                }
-                X1 = ApsimTextFile.ToTable(sobolx1FileName);
-                X2 = ApsimTextFile.ToTable(sobolx2FileName);
 
                 int simulationNumber = 1;
-                simulationNames.Clear();
                 foreach (DataRow parameterRow in ParameterValues.Rows)
                 {
-                    List<FactorValue> factors = new List<FactorValue>();
+                    var factors = new List<CompositeFactor>();
                     for (int p = 0; p < Parameters.Count; p++)
                     {
-                        object value = Convert.ToDouble(parameterRow[p]);
-                        FactorValue f = new FactorValue(null, Parameters[p].Name, Parameters[p].Path, value);
+                        object value = Convert.ToDouble(parameterRow[p], CultureInfo.InvariantCulture);
+                        var f = new CompositeFactor(Parameters[p].Name, Parameters[p].Path, value);
                         factors.Add(f);
                     }
 
                     string newSimulationName = Name + "Simulation" + simulationNumber;
-                    simulationNames.Add(newSimulationName);
                     allCombinations.Add(factors);
                     simulationNumber++;
                 }
@@ -332,12 +267,10 @@
             }
         }
 
-        /// <summary>Main run method for performing our post simulation calculations</summary>
-        /// <param name="dataStore">The data store.</param>
-        public void Run(IStorageReader dataStore)
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void Run()
         {
-            string sql = "SELECT * FROM REPORT WHERE SimulationName LIKE '" + Name + "%' ORDER BY SimulationID";
-            DataTable predictedData = dataStore.RunQuery(sql);
+            DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {
                 IndexedDataTable variableValues = new IndexedDataTable(null);
@@ -389,8 +322,9 @@
                         DataTableUtilities.DataTableToText(X2, 0, ",", true, writer, excelFriendly: false, decimalFormatString: "F6");
 
                     string script = string.Format(
-                         "library('boot')" + Environment.NewLine +
-                         "library('sensitivity')" + Environment.NewLine +
+                         $".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+                         $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                         $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                          "params <- c({0})" + Environment.NewLine +
                          "n <- {1}" + Environment.NewLine +
                          "nparams <- {2}" + Environment.NewLine +
@@ -402,12 +336,16 @@
                          "{{" + Environment.NewLine +
                          "  sa$y <- variableValues[[columnName]]" + Environment.NewLine +
                          "  tell(sa)" + Environment.NewLine +
-                         "  colnames(sa$T) <- paste(columnName, colnames(sa$T), sep=\".\")" + Environment.NewLine +
+                         "  sa$S$Parameter <- params" + Environment.NewLine +
                          "  sa$T$Parameter <- params" + Environment.NewLine +
+                         "  sa$S$ColumnName <- columnName" + Environment.NewLine +
+                         "  sa$T$ColumnName <- columnName" + Environment.NewLine +
+                         "  sa$S$Indices <- \"FirstOrder\"" + Environment.NewLine +
+                         "  sa$T$Indices <- \"Total\"" + Environment.NewLine +
                          "  if (!exists(\"allData\"))" + Environment.NewLine +
-                         "    allData <- sa$T" + Environment.NewLine +
+                         "    allData <- rbind(sa$S, sa$T)" + Environment.NewLine +
                          "  else" + Environment.NewLine +
-                         "    allData <- merge(allData, sa$T)" + Environment.NewLine +
+                         "    allData <- rbind(allData, sa$S, sa$T)" + Environment.NewLine +
                          "}}" + Environment.NewLine +
                          "write.table(allData, sep=\",\", row.names=FALSE)" + Environment.NewLine
                         ,
@@ -444,8 +382,7 @@
                  }
                 var resultsRawTable = results.ToTable();
                 resultsRawTable.TableName = Name + "Statistics";
-                dataStore.DeleteDataInTable(resultsRawTable.TableName);
-                dataStore.WriteTable(resultsRawTable);
+                dataStore.Writer.WriteTable(resultsRawTable);
 
                 if (errorsFromR.Count > 0)
                 {
@@ -463,10 +400,8 @@
             string rFileName = GetTempFileName("sobolscript", ".r");
             File.WriteAllText(rFileName, script);
             R r = new R();
-            Console.WriteLine(r.GetPackage("boot"));
-            Console.WriteLine(r.GetPackage("sensitivity"));
 
-            string result = r.Run(rFileName, "");
+            string result = r.Run(rFileName);
             string tempFile = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), "csv");
             if (!File.Exists(tempFile))
                 File.Create(tempFile).Close();
@@ -507,8 +442,9 @@
         private string GetSobolRScript()
         {
             string script = string.Format
-                ("library('boot')" + Environment.NewLine + 
-                 "library('sensitivity')" + Environment.NewLine +
+                ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+                 $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                 $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
                  "n <- {0}" + Environment.NewLine +
                  "nparams <- {1}" + Environment.NewLine +
                  "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +

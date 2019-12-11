@@ -1,0 +1,2949 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 282,
+  "Version": 57,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Folder, Models",
+      "ShowPageOfGraphs": true,
+      "Name": "Cropping Examples",
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "#CLEM Cropping Examples\nNOTE: These are fictional examples showing how to set up cropping simulations.  Yield data is dummy data.\n\n##Single Cropping Example\n - Maize is grown on half of the Field \n - The Maize is sold\n\n##Mixed Cropping Example\n - Tomatoes and Cumcumber are grown together on 0.8 hectares of land at the same time\n - The Tomatoes are processed into tomato paste\n - The tomato paste is sold\n\n##Rotation Cropping Example\n - A rotation between Sorghum and wheat is performed\n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n#Help\nThe CLEM help system provides a model overview, user guide (how to) and a full description of every CLEM component, as well as in depth discussions on modelling various farm systems and what components to use. The Help documentation can be accessed by clicking the Help button beside the component name in the right hand information pane after selecting any CLEM component from your simulation tree or at [CLEM Help online](http://www.apsim.info/CLEM/Content/Home.htm).",
+          "Name": "Cropping examples description",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
+          "Name": "Single and Mixed Cropping",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "#Single crop and Mixed cropping example\nThis simulation demonstrates how production of a single crop and a mixed crop is performed in CLEM.\n##This simulation provides the following crops\n- A Maize crop growing on half the available 2 hectares of land\n- A mixed crop of tomatoes and cucumbers growing on 0.8 hectares of land\n\n##The simulation also show you how to \n- Process the tomatoes into tomato paste\n- Sell maize and tomato paste\n- Add labour requirements to an activity (e.g. Harvest Maize)\n\n### Reports and Graph Results\n - examples of reports and graphs\n",
+              "Name": "Single  and Mixed Cropping Example",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Clock, Models",
+              "StartDate": "2001-01-01T00:00:00",
+              "EndDate": "2010-12-31T00:00:00",
+              "Name": "clock",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Summary, Models",
+              "CaptureErrors": true,
+              "CaptureWarnings": true,
+              "CaptureSummaryText": true,
+              "Name": "summaryfile",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.ZoneCLEM, Models",
+              "RandomSeed": 1,
+              "ClimateRegion": 0,
+              "EcologicalIndicatorsCalculationMonth": 12,
+              "Area": 0.0,
+              "Slope": 0.0,
+              "Name": "CLEM",
+              "Children": [
+                {
+                  "$type": "Models.CLEM.FileCrop, Models",
+                  "FileName": "FileCrop_Example.prn",
+                  "ExcelWorkSheetName": null,
+                  "Name": "FileCrop_Maize",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.FileCrop, Models",
+                  "FileName": "FileVegetables_Example2.prn",
+                  "ExcelWorkSheetName": null,
+                  "Name": "FileCrop_Vegetables",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+                  "Name": "Resources",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Resources.Land, Models",
+                      "UnitsOfArea": "hectares",
+                      "UnitsOfAreaToHaConversion": 1.0,
+                      "Name": "Land",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.LandType, Models",
+                          "LandArea": 2.0,
+                          "PortionBuildings": 0.0,
+                          "ProportionOfTotalArea": 1.0,
+                          "SoilType": "4",
+                          "Name": "Field",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Resources.Finance, Models",
+                      "CurrencyName": null,
+                      "Name": "Finances",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.FinanceType, Models",
+                          "OpeningBalance": 10000.0,
+                          "EnforceWithdrawalLimit": true,
+                          "WithdrawalLimit": 0.0,
+                          "InterestRateCharged": 0.0,
+                          "InterestRatePaid": 0.0,
+                          "Name": "General account",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Resources.Labour, Models",
+                      "AllowAging": true,
+                      "Name": "Labour",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.LabourType, Models",
+                          "InitialAge": 42.0,
+                          "Gender": 0,
+                          "Individuals": 1,
+                          "Hired": false,
+                          "Name": "Male",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Resources.LabourType, Models",
+                          "InitialAge": 35.0,
+                          "Gender": 1,
+                          "Individuals": 1,
+                          "Hired": false,
+                          "Name": "Female",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Resources.LabourAvailabilityList, Models",
+                          "Name": "LabourAvailabilityList",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Resources.LabourAvailabilityItem, Models",
+                              "Value": 28.0,
+                              "Name": "Male",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.LabourAvailabilityItem, Models",
+                              "Value": 28.0,
+                              "Name": "Female",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Resources.ProductStore, Models",
+                      "Name": "ProductStore",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.ProductStoreType, Models",
+                          "Units": "kg",
+                          "StartingAmount": 0.0,
+                          "Name": "Maize",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Resources.ResourcePricing, Models",
+                              "PacketSize": 10.0,
+                              "UseWholePackets": true,
+                              "PricePerPacket": 100.0,
+                              "Name": "Pricing",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Resources.ProductStoreType, Models",
+                          "Units": "kg",
+                          "StartingAmount": 0.0,
+                          "Name": "Tomatoes",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Resources.ProductStoreType, Models",
+                          "Units": "kg",
+                          "StartingAmount": 0.0,
+                          "Name": "TomatoPaste",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Resources.ResourcePricing, Models",
+                              "PacketSize": 10.0,
+                              "UseWholePackets": false,
+                              "PricePerPacket": 200.0,
+                              "Name": "Pricing",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Resources.ProductStoreType, Models",
+                          "Units": null,
+                          "StartingAmount": 0.0,
+                          "Name": "Cucumbers",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+                  "LastShortfallResourceRequest": null,
+                  "LastActivityPerformed": null,
+                  "Name": "Activities",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Activities.CropActivityManageCrop, Models",
+                      "LandItemNameToUse": "Land.Field",
+                      "AreaRequested": 1.0,
+                      "UseAreaAvailable": false,
+                      "OnPartialResourcesAvailableAction": 2,
+                      "Name": "Manage Maize",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.CropActivityManageProduct, Models",
+                          "ModelNameFileCrop": "FileCrop_Maize",
+                          "CropName": "Maize_sole_fertilised",
+                          "StoreItemName": "ProductStore.Maize",
+                          "ProportionKept": 1.0,
+                          "TreesPerHa": 0.0,
+                          "UnitsToHaConverter": 0.0,
+                          "OnPartialResourcesAvailableAction": 2,
+                          "Name": "Grow maize crop",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                              "OnPartialResourcesAvailableAction": 2,
+                              "Name": "Harvest maize",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                  "OffsetMonthHarvestStart": 0,
+                                  "OffsetMonthHarvestStop": 0,
+                                  "Name": "ActivityTimerCropHarvest",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                  "LabourPerUnit": 5.0,
+                                  "UnitSize": 1.0,
+                                  "WholeUnitBlocks": false,
+                                  "UnitType": 1,
+                                  "MinimumPerPerson": 1.0,
+                                  "MaximumPerPerson": 100.0,
+                                  "LabourShortfallAffectsActivity": true,
+                                  "ApplyToAll": false,
+                                  "Name": "HarvestMaize",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                      "Name": "Male",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                          "Parameter": 1,
+                                          "Operator": 0,
+                                          "Value": "Male",
+                                          "Name": "LabourFilter",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "Male",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Female",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.ResourceActivitySell, Models",
+                      "AccountName": "Finances.General account",
+                      "ResourceTypeName": "ProductStore.Maize",
+                      "AmountReserved": 0.0,
+                      "OnPartialResourcesAvailableAction": 2,
+                      "Name": "Sell Maize",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.CropActivityManageCrop, Models",
+                      "LandItemNameToUse": "Land.Field",
+                      "AreaRequested": 0.8,
+                      "UseAreaAvailable": false,
+                      "OnPartialResourcesAvailableAction": 2,
+                      "Name": "Manage Vegetables",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.CropActivityManageProduct, Models",
+                          "ModelNameFileCrop": "FileCrop_Vegetables",
+                          "CropName": "Tomatoes",
+                          "StoreItemName": "ProductStore.Tomatoes",
+                          "ProportionKept": 0.8,
+                          "TreesPerHa": 0.0,
+                          "UnitsToHaConverter": 0.0,
+                          "OnPartialResourcesAvailableAction": 2,
+                          "Name": "Grow tomatoes",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                              "LabourPerUnit": 7.0,
+                              "UnitSize": 1.0,
+                              "WholeUnitBlocks": false,
+                              "UnitType": 1,
+                              "MinimumPerPerson": 1.0,
+                              "MaximumPerPerson": 100.0,
+                              "LabourShortfallAffectsActivity": true,
+                              "ApplyToAll": false,
+                              "Name": "LabourRequirement",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                  "Name": "Female",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                      "Parameter": 1,
+                                      "Operator": 0,
+                                      "Value": "Female",
+                                      "Name": "LabourFilter",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                      "Name": "Male",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                          "Parameter": 1,
+                                          "Operator": 0,
+                                          "Value": "Male",
+                                          "Name": "LabourFilter",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Activities.CropActivityManageProduct, Models",
+                              "ModelNameFileCrop": "FileCrop_Vegetables",
+                              "CropName": "Cucumber",
+                              "StoreItemName": "ProductStore.Cucumbers",
+                              "ProportionKept": 0.8,
+                              "TreesPerHa": 0.0,
+                              "UnitsToHaConverter": 0.0,
+                              "OnPartialResourcesAvailableAction": 2,
+                              "Name": "Grow cucumbers",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                  "LabourPerUnit": 7.0,
+                                  "UnitSize": 1.0,
+                                  "WholeUnitBlocks": false,
+                                  "UnitType": 1,
+                                  "MinimumPerPerson": 1.0,
+                                  "MaximumPerPerson": 100.0,
+                                  "LabourShortfallAffectsActivity": true,
+                                  "ApplyToAll": false,
+                                  "Name": "LabourRequirement",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                      "Name": "Female",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                          "Parameter": 1,
+                                          "Operator": 0,
+                                          "Value": "Female",
+                                          "Name": "LabourFilter",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "Male",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "The crop yield from external data is reduced by 20% to account for the mixed cropping method",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Tomato Paste",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.ResourceActivityProcess, Models",
+                          "ResourceTypeProcessedName": "ProductStore.Tomatoes",
+                          "ResourceTypeCreatedName": "ProductStore.TomatoPaste",
+                          "ConversionRate": 0.1,
+                          "Reserve": 0.0,
+                          "OnPartialResourcesAvailableAction": 2,
+                          "Name": "Make tomato paste",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Activities.ResourceActivityFee, Models",
+                              "AccountName": "Finances.General account",
+                              "PaymentStyle": 1,
+                              "Amount": 0.5,
+                              "BankAccount": null,
+                              "Name": "Buy jars",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                              "LabourPerUnit": 10.0,
+                              "UnitSize": 1.0,
+                              "WholeUnitBlocks": true,
+                              "UnitType": 0,
+                              "MinimumPerPerson": 1.0,
+                              "MaximumPerPerson": 100.0,
+                              "LabourShortfallAffectsActivity": false,
+                              "ApplyToAll": false,
+                              "Name": "LabourRequirement",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                  "Name": "Female",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                      "Parameter": 1,
+                                      "Operator": 0,
+                                      "Value": "Female",
+                                      "Name": "LabourFilter",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                      "Name": "Male",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                          "Parameter": 1,
+                                          "Operator": 0,
+                                          "Value": "Male",
+                                          "Name": "LabourFilter",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Activities.ResourceActivitySell, Models",
+                          "AccountName": "Finances.General account",
+                          "ResourceTypeName": "ProductStore.TomatoPaste",
+                          "AmountReserved": 0.0,
+                          "OnPartialResourcesAvailableAction": 2,
+                          "Name": "Sell tomato paste",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.CLEMFolder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Reports",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
+                      "VariableNames": null,
+                      "EventNames": null,
+                      "Name": "ReportActivitiesPerformed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportLabourRequirements, Models",
+                      "Name": "ReportLabourRequirements",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
+                        "ProductStore"
+                      ],
+                      "EventNames": null,
+                      "Name": "ProductsLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
+                        "Finances"
+                      ],
+                      "EventNames": null,
+                      "Name": "FinancesLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
+                        "Labour"
+                      ],
+                      "EventNames": null,
+                      "Name": "LabourLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
+                      "VariableNames": [
+                        "[Clock].Today as Date",
+                        "Labour",
+                        "ProductStore",
+                        "Finances"
+                      ],
+                      "EventNames": [
+                        ""
+                      ],
+                      "Name": "ReportResourceBalances",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceShortfalls, Models",
+                      "VariableNames": [
+                        "Finances",
+                        "Labour",
+                        "ProductStore",
+                        "HumanFoodStore"
+                      ],
+                      "EventNames": null,
+                      "Name": "ReportResourceShortfalls",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Graphs_General Account",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": true
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 2,
+                          "Title": "Income, Expenses",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "Account balance",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "ReportResourceBalances",
+                          "XFieldName": "Date",
+                          "YFieldName": "General account",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Balance",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 1,
+                          "Line": 1,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Income",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 2,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 1,
+                          "Line": 1,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Expenses",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "$Dollars",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "Income sources",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Sell Maize\"",
+                          "Name": "Sales of maize",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Sell tomato paste\"",
+                          "Name": "Sales of tomato paste",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": true
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "Sale, Expenses - $Dollars",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "Tomato paste _ Sales vs Expenses",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 0,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Sell tomato paste\"",
+                          "Name": "Tomato paste Sales",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Reason = \"Buy jars\"",
+                          "Name": "Tomato paste Expenses _jars",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Graphs_ProductStore",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": true
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "Kgs",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "Maize grain",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "ProductsLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity  = \"Grow maize crop\" ",
+                          "Name": "Harvest Maize",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 1,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "ProductsLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Sell Maize\"",
+                          "Name": "Sales Maize",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": true
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "kgs",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "Tomatoes and Cucumbers",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "ProductsLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Grow tomatoes\"",
+                          "Name": "Tomatoes Harvested",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 1,
+                          "MarkerSize": 1,
+                          "Line": 1,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "ProductsLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Reason = \"Process Tomatoes\"",
+                          "Name": "Tomatoes Processed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 1,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "ProductsLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Grow cucumbers\"",
+                          "Name": "Cucumbers Harvested",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Simulation, Models",
+          "Descriptors": null,
+          "Name": "Rotation cropping",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "##Rotation Cropping Example\nThis simulation demonstrates how rotation cropping is performed in CLEM - on the same land grown and harvested in rotation\n\n###This simulation shows an example of the resources and activities needed to Manage and Sell Wheat and Sorghum crops grown in rotation of the same field.\n\n###Resources needed are: \n - Land - one field of 80 hectares\n - Finances - a General account\n - Labour - a Male available 8 days per month\n - Product Stores - for Wheat and Sorghum along with Sale Prices\n\n###The simulation also show you how to: \n - Prepare, Plant, Weed, Harvest, Sell and Transport Wheat and Sorghum Crops grown on the same piece of land.\n - Apply Timers for Activities to happen\n - Provide Labour to the Activities. (ie. Plant Wheat, Weed Sorghum\n\n### Reports and Graph Results\n - examples of reports and graphs\n\n\n",
+              "Name": "Rotation Cropping Example",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Clock, Models",
+              "StartDate": "1903-01-01T00:00:00",
+              "EndDate": "1906-12-31T00:00:00",
+              "Name": "clock",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Summary, Models",
+              "CaptureErrors": true,
+              "CaptureWarnings": true,
+              "CaptureSummaryText": true,
+              "Name": "summaryfile",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.ZoneCLEM, Models",
+              "RandomSeed": 1,
+              "ClimateRegion": 0,
+              "EcologicalIndicatorsCalculationMonth": 12,
+              "Area": 0.0,
+              "Slope": 0.0,
+              "Name": "CLEM",
+              "Children": [
+                {
+                  "$type": "Models.CLEM.FileCrop, Models",
+                  "FileName": "FileCrop_SorgWheat3.prn",
+                  "ExcelWorkSheetName": null,
+                  "Name": "FileCrop",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+                  "Name": "Resources",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Resources.Land, Models",
+                      "UnitsOfArea": "hectares",
+                      "UnitsOfAreaToHaConversion": 1.0,
+                      "Name": "Land",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.LandType, Models",
+                          "LandArea": 80.0,
+                          "PortionBuildings": 0.0,
+                          "ProportionOfTotalArea": 1.0,
+                          "SoilType": "1",
+                          "Name": "Padd1",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Resources.Finance, Models",
+                      "CurrencyName": null,
+                      "Name": "Finances",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.FinanceType, Models",
+                          "OpeningBalance": 1000.0,
+                          "EnforceWithdrawalLimit": false,
+                          "WithdrawalLimit": 0.0,
+                          "InterestRateCharged": 0.0,
+                          "InterestRatePaid": 0.0,
+                          "Name": "General account",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Resources.Labour, Models",
+                      "AllowAging": true,
+                      "Name": "Labour",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.LabourType, Models",
+                          "InitialAge": 42.0,
+                          "Gender": 0,
+                          "Individuals": 1,
+                          "Hired": false,
+                          "Name": "Male",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Resources.LabourAvailabilityList, Models",
+                          "Name": "LabourAvailabilityList",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Resources.LabourAvailabilityItem, Models",
+                              "Value": 8.0,
+                              "Name": "MaleAvailability",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                  "Parameter": 1,
+                                  "Operator": 0,
+                                  "Value": "Male",
+                                  "Name": "LabourFilter1",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Resources.ProductStore, Models",
+                      "Name": "ProductStore",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.ProductStoreType, Models",
+                          "Units": "kg",
+                          "StartingAmount": 0.0,
+                          "Name": "Wheat",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Resources.ResourcePricing, Models",
+                              "PacketSize": 1000.0,
+                              "UseWholePackets": false,
+                              "PricePerPacket": 234.0,
+                              "Name": "WheatPrice",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Resources.ProductStoreType, Models",
+                          "Units": "kg",
+                          "StartingAmount": 0.0,
+                          "Name": "Sorghum",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Resources.ResourcePricing, Models",
+                              "PacketSize": 1000.0,
+                              "UseWholePackets": false,
+                              "PricePerPacket": 219.0,
+                              "Name": "SorghumPrice",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+                  "LastShortfallResourceRequest": null,
+                  "LastActivityPerformed": null,
+                  "Name": "Activities",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                      "OnPartialResourcesAvailableAction": 0,
+                      "Name": "Manage crops",
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Activities.CropActivityManageCrop, Models",
+                          "LandItemNameToUse": "Land.Padd1",
+                          "AreaRequested": 80.0,
+                          "UseAreaAvailable": false,
+                          "OnPartialResourcesAvailableAction": 2,
+                          "Name": "Manage rotation",
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Activities.CropActivityManageProduct, Models",
+                              "ModelNameFileCrop": "FileCrop",
+                              "CropName": "Wheat",
+                              "StoreItemName": "ProductStore.Wheat",
+                              "ProportionKept": 1.0,
+                              "TreesPerHa": 0.0,
+                              "UnitsToHaConverter": 0.0,
+                              "OnPartialResourcesAvailableAction": 0,
+                              "Name": "Manage Wheat",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                                  "OnPartialResourcesAvailableAction": 2,
+                                  "Name": "Prepare wheat",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                      "OffsetMonthHarvestStart": -11,
+                                      "OffsetMonthHarvestStop": -11,
+                                      "Name": "PrepareWheat",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                      "LabourPerUnit": 1.0,
+                                      "UnitSize": 40.0,
+                                      "WholeUnitBlocks": true,
+                                      "UnitType": 1,
+                                      "MinimumPerPerson": 1.0,
+                                      "MaximumPerPerson": 100.0,
+                                      "LabourShortfallAffectsActivity": false,
+                                      "ApplyToAll": false,
+                                      "Name": "LabourRequirement",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "LabourFilterGroup",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                                  "OnPartialResourcesAvailableAction": 0,
+                                  "Name": "Plant wheat",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                      "OffsetMonthHarvestStart": -8,
+                                      "OffsetMonthHarvestStop": -8,
+                                      "Name": "PlantWheat",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                      "LabourPerUnit": 1.0,
+                                      "UnitSize": 40.0,
+                                      "WholeUnitBlocks": true,
+                                      "UnitType": 1,
+                                      "MinimumPerPerson": 1.0,
+                                      "MaximumPerPerson": 100.0,
+                                      "LabourShortfallAffectsActivity": false,
+                                      "ApplyToAll": false,
+                                      "Name": "LabourRequirement",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "LabourFilterGroup",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                                  "OnPartialResourcesAvailableAction": 2,
+                                  "Name": "Weed spray wheat",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                      "OffsetMonthHarvestStart": -6,
+                                      "OffsetMonthHarvestStop": -2,
+                                      "Name": "SprayWheat",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                      "LabourPerUnit": 1.0,
+                                      "UnitSize": 560.0,
+                                      "WholeUnitBlocks": false,
+                                      "UnitType": 1,
+                                      "MinimumPerPerson": 1.0,
+                                      "MaximumPerPerson": 100.0,
+                                      "LabourShortfallAffectsActivity": false,
+                                      "ApplyToAll": false,
+                                      "Name": "LabourRequirement",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "LabourFilterGroup",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                                  "OnPartialResourcesAvailableAction": 2,
+                                  "Name": "Harvest wheat",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                      "OffsetMonthHarvestStart": 0,
+                                      "OffsetMonthHarvestStop": 0,
+                                      "Name": "HarvestWheat",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                      "LabourPerUnit": 1.0,
+                                      "UnitSize": 40.0,
+                                      "WholeUnitBlocks": true,
+                                      "UnitType": 1,
+                                      "MinimumPerPerson": 1.0,
+                                      "MaximumPerPerson": 100.0,
+                                      "LabourShortfallAffectsActivity": false,
+                                      "ApplyToAll": false,
+                                      "Name": "LabourRequirement",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "LabourFilterGroup",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.CropActivityFee, Models",
+                                      "AccountName": "Finances.General account",
+                                      "PaymentStyle": 1,
+                                      "Amount": 40.0,
+                                      "BankAccount": null,
+                                      "OnPartialResourcesAvailableAction": 0,
+                                      "Name": "Wheat harvest costs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.CropActivityFee, Models",
+                                      "AccountName": "Finances.General account",
+                                      "PaymentStyle": 1,
+                                      "Amount": 175.0,
+                                      "BankAccount": null,
+                                      "OnPartialResourcesAvailableAction": 0,
+                                      "Name": "Wheat variable costs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                                  "OnPartialResourcesAvailableAction": 2,
+                                  "Name": "Transport wheat",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                      "OffsetMonthHarvestStart": 0,
+                                      "OffsetMonthHarvestStop": 0,
+                                      "Name": "TransportWheat",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                      "LabourPerUnit": 1.0,
+                                      "UnitSize": 90.0,
+                                      "WholeUnitBlocks": false,
+                                      "UnitType": 6,
+                                      "MinimumPerPerson": 1.0,
+                                      "MaximumPerPerson": 100.0,
+                                      "LabourShortfallAffectsActivity": false,
+                                      "ApplyToAll": false,
+                                      "Name": "LabourRequirement",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "LabourFilterGroup",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Activities.CropActivityManageProduct, Models",
+                              "ModelNameFileCrop": "FileCrop",
+                              "CropName": "Sorghum",
+                              "StoreItemName": "ProductStore.Sorghum",
+                              "ProportionKept": 1.0,
+                              "TreesPerHa": 0.0,
+                              "UnitsToHaConverter": 0.0,
+                              "OnPartialResourcesAvailableAction": 2,
+                              "Name": "Manage Sorghum",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                                  "OnPartialResourcesAvailableAction": 2,
+                                  "Name": "Plant sorghum",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                      "OffsetMonthHarvestStart": -5,
+                                      "OffsetMonthHarvestStop": -5,
+                                      "Name": "PlantSorghum",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                      "LabourPerUnit": 1.0,
+                                      "UnitSize": 40.0,
+                                      "WholeUnitBlocks": false,
+                                      "UnitType": 1,
+                                      "MinimumPerPerson": 1.0,
+                                      "MaximumPerPerson": 100.0,
+                                      "LabourShortfallAffectsActivity": false,
+                                      "ApplyToAll": false,
+                                      "Name": "LabourRequirement",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "LabourFilterGroup",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                                  "OnPartialResourcesAvailableAction": 2,
+                                  "Name": "Spray weeds sorghum ",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                      "OffsetMonthHarvestStart": -3,
+                                      "OffsetMonthHarvestStop": -2,
+                                      "Name": "SpraySorghum",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                      "LabourPerUnit": 1.0,
+                                      "UnitSize": 40.0,
+                                      "WholeUnitBlocks": false,
+                                      "UnitType": 1,
+                                      "MinimumPerPerson": 1.0,
+                                      "MaximumPerPerson": 100.0,
+                                      "LabourShortfallAffectsActivity": false,
+                                      "ApplyToAll": false,
+                                      "Name": "LabourRequirement",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "LabourFilterGroup",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                                  "OnPartialResourcesAvailableAction": 2,
+                                  "Name": "Harvest sorghum ",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                      "OffsetMonthHarvestStart": 0,
+                                      "OffsetMonthHarvestStop": 0,
+                                      "Name": "HarvestSorghum",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                      "LabourPerUnit": 1.0,
+                                      "UnitSize": 40.0,
+                                      "WholeUnitBlocks": false,
+                                      "UnitType": 1,
+                                      "MinimumPerPerson": 1.0,
+                                      "MaximumPerPerson": 100.0,
+                                      "LabourShortfallAffectsActivity": false,
+                                      "ApplyToAll": false,
+                                      "Name": "LabourRequirement",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "LabourFilterGroup",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.CropActivityFee, Models",
+                                      "AccountName": "Finances.General account",
+                                      "PaymentStyle": 1,
+                                      "Amount": 55.0,
+                                      "BankAccount": null,
+                                      "OnPartialResourcesAvailableAction": 0,
+                                      "Name": "Sorghum harvest costs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.CropActivityFee, Models",
+                                      "AccountName": "Finances.General account",
+                                      "PaymentStyle": 1,
+                                      "Amount": 218.0,
+                                      "BankAccount": null,
+                                      "OnPartialResourcesAvailableAction": 0,
+                                      "Name": "Sorghum variable costs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Activities.CropActivityTask, Models",
+                                  "OnPartialResourcesAvailableAction": 2,
+                                  "Name": "Transport sorghum",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
+                                      "OffsetMonthHarvestStart": 0,
+                                      "OffsetMonthHarvestStop": 0,
+                                      "Name": "TransportSorghum",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.CLEM.Activities.LabourRequirement, Models",
+                                      "LabourPerUnit": 1.0,
+                                      "UnitSize": 90000.0,
+                                      "WholeUnitBlocks": false,
+                                      "UnitType": 6,
+                                      "MinimumPerPerson": 1.0,
+                                      "MaximumPerPerson": 100.0,
+                                      "LabourShortfallAffectsActivity": false,
+                                      "ApplyToAll": false,
+                                      "Name": "LabourRequirement",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
+                                          "Name": "LabourFilterGroup",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
+                                              "Parameter": 1,
+                                              "Operator": 0,
+                                              "Value": "Male",
+                                              "Name": "LabourFilter",
+                                              "Children": [],
+                                              "IncludeInDocumentation": true,
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Activities.ResourceActivitySell, Models",
+                          "AccountName": "Finances.General account",
+                          "ResourceTypeName": "ProductStore.Wheat",
+                          "AmountReserved": 0.0,
+                          "OnPartialResourcesAvailableAction": 0,
+                          "Name": "Sell wheat",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Activities.ResourceActivitySell, Models",
+                          "AccountName": "Finances.General account",
+                          "ResourceTypeName": "ProductStore.Sorghum",
+                          "AmountReserved": 0.0,
+                          "OnPartialResourcesAvailableAction": 0,
+                          "Name": "Sell sorghum",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.CLEMFolder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Reports",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
+                      "VariableNames": null,
+                      "EventNames": null,
+                      "Name": "ReportActivitiesPerformed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "Labour",
+                        "ProductStore",
+                        "Finances"
+                      ],
+                      "EventNames": [
+                        ""
+                      ],
+                      "Name": "ReportResourceBalances",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceShortfalls, Models",
+                      "VariableNames": [
+                        "[Clock].Today as Date",
+                        "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
+                        "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
+                        "[Activities].LastShortfallResourceRequest.Reason as Reason",
+                        "[Activities].LastShortfallResourceRequest.Required as Required",
+                        "[Activities].LastShortfallResourceRequest.Available as Available"
+                      ],
+                      "EventNames": [
+                        "[Activities].ResourceShortfallOccurred"
+                      ],
+                      "Name": "ReportResourceShortfalls",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
+                        "Labour"
+                      ],
+                      "EventNames": null,
+                      "Name": "LabourLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
+                        "Finances"
+                      ],
+                      "EventNames": null,
+                      "Name": "FinancesLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "VariableNames": [
+                        "ProductStore"
+                      ],
+                      "EventNames": null,
+                      "Name": "ProductStoreLedger",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportLabourRequirements, Models",
+                      "Name": "ReportLabourRequirements",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowPageOfGraphs": true,
+                  "Name": "Graphs",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": true
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "Income and Expenses",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 0,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Sell wheat\"",
+                          "Name": "Wheat income",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Reason = \"Wheat harvest costs\"",
+                          "Name": "Wheat harvest costs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 2,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Reason = \"Wheat variable costs\"",
+                          "Name": "Wheat variable costs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 0,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Sell sorghum\"",
+                          "Name": "Sorghum income",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Reason = \"Sorghum harvest costs\"",
+                          "Name": "Sorghum harvest costs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 2,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "FinancesLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Reason = \"Sorghum variable costs\"",
+                          "Name": "Sorghum variable costs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "Kgs",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "Crop Yields",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 0,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 1,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "ProductStoreLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Manage Wheat\"",
+                          "Name": "Wheat yield",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 0,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 1,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "ProductStoreLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Gain",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Manage Sorghum\"",
+                          "Name": "Sorghum yield",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": true
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "Hours Labour",
+                          "Inverted": true,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "DisabledSeries": [],
+                      "Name": "Labour requirements",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 0,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "LabourLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Prepare wheat\"",
+                          "Name": "Prepare Wheat",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 0,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 8,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "LabourLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Plant wheat\"",
+                          "Name": "Plant Wheat",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 0,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -11094807,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "LabourLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Harvest wheat\"",
+                          "Name": "Harvest Wheat",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 1,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "LabourLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Transport wheat\"",
+                          "Name": "Transport Wheat",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "LabourLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Plant sorghum\"",
+                          "Name": "Plant Sorghum",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "LabourLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Spray weeds sorghum\"",
+                          "Name": "Spray Sorghum",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -990142,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "LabourLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Harvest sorghum\"",
+                          "Name": "Harvest Sorghum",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -3376729,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 1,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "LabourLedger",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Loss",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": true,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": "Activity = \"Transport sorghum\"",
+                          "Name": "Transport Sorghum",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

@@ -17,13 +17,8 @@
     /// Presenter for the <see cref="BiomassRemoval"/> class.
     /// Displays the properties for all <see cref="OrganBiomassRemovalType"/> children.
     /// </summary>
-    class BiomassRemovalPresenter : GridPresenter, IPresenter
+    class BiomassRemovalPresenter : PropertyPresenter, IPresenter
     {
-        /// <summary>
-        /// The BiomassRemoval model.
-        /// </summary>
-        private BiomassRemoval model;
-
         /// <summary>
         /// Attaches the model to the view.
         /// </summary>
@@ -36,27 +31,6 @@
                 throw new Exception(string.Format("{0} cannot be used to display a model of type {1}.", GetType().Name, model.GetType().Name));
 
             base.Attach(model, view, explorerPresenter);
-            this.model = model as BiomassRemoval;
-            grid.CanGrow = false;
-            DataTable data = new DataTable();
-            List<IModel> removalTypes = Apsim.Children(model as IModel, typeof(OrganBiomassRemovalType)).ToList();
-            bool hasData = removalTypes.Any();
-            data.Columns.Add(hasData ? "Description" : "No values are currently available", typeof(string));
-            data.Columns.Add(hasData ? "Value" : " ", typeof(object));
-
-            foreach (IModel child in removalTypes)
-            {
-                data.Rows.Add(child.Name, " ");
-                grid.SetRowAsSeparator(data.Rows.Count - 1);
-
-                PropertyPresenter propertyHandler = new PropertyPresenter();
-                propertyHandler.FindAllProperties(child as Model);
-                propertyHandler.FillTable(data);
-            }
-
-            grid.DataSource = data;
-            grid.GetColumn(0).ReadOnly = true;
-            grid.CellsChanged += OnGridChanged;
         }
 
         /// <summary>
@@ -64,68 +38,70 @@
         /// </summary>
         public override void Detach()
         {
-            grid.CellsChanged -= OnGridChanged;
             base.Detach();
         }
 
         /// <summary>
-        /// Each row in the grid displays a property of a RemovalType model.
-        /// This method finds the index of the model whose data is being 
-        /// displayed on a given row.
+        /// Overrides the property presenter's FindAllProperties method.
+        /// Finds properties for all child models of type <see cref="OrganBiomassRemovalType"/>.
         /// </summary>
-        /// <param name="row">Index of the row.</param>
-        /// <returns>Index of the model, or -1 if not found.</returns>
-        private int GetModelIndex(int row)
+        /// <param name="model">Base model.</param>
+        protected override void FindAllProperties(IModel model)
         {
-            if (row >= grid.DataSource.Rows.Count)
-                throw new Exception(string.Format("Attempted to get the removal type for row {0}, but the grid only contains {1} rows.", row + 1, grid.DataSource.Rows.Count));
-            if (row < 0)
-                throw new Exception(string.Format("Attempted to get the removal type for row {0}", row));
+            List<IModel> children = Apsim.Children(model, typeof(OrganBiomassRemovalType));
+            if (children == null)
+                return;
 
-            // Step backwards through the rows in the grid until we find a separator row.
-            for (int i = row; i >= 0; i--)
-                if (grid.IsSeparator(i))
-                    return i;
-            return -1;
+            foreach (IModel child in children)
+                base.FindAllProperties(child);
         }
 
         /// <summary>
-        /// Invoked whenever the user modifies the contents of the grid.
+        /// Fills the table with data to be displayed by the grid view.
+        /// Differs to the base class method in that at the start of each
+        /// new model's properties it inserts a separator row showing the
+        /// name of the new model.
         /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnGridChanged(object sender, GridCellsChangedArgs args)
+        /// <param name="table"></param>
+        protected override void FillTable(DataTable table)
         {
-            try
-            {
-                if (args.InvalidValue)
-                    throw new Exception("The value you entered was not valid for its datatype.");
-                foreach (IGridCell cell in args.ChangedCells)
-                {
-                    int index = GetModelIndex(cell.RowIndex);
-                    IModel removalType = Apsim.Child(model, grid.GetCell(0, index).Value.ToString());
-                    if (removalType != null)
-                    {
-                        List<MemberInfo> members = PropertyPresenter.GetMembers(removalType);
-                        MemberInfo member = members[cell.RowIndex - index - 1];
-                        IVariable property = null;
-                        if (member is PropertyInfo)
-                            property = new VariableProperty(model, member as PropertyInfo);
-                        else if (member is FieldInfo)
-                            property = new VariableField(model, member as FieldInfo);
-                        else
-                            throw new Exception(string.Format("Unable to find property {0} in model {1}", grid.GetCell(0, cell.RowIndex).Value.ToString(), removalType.Name));
-                        object value = PropertyPresenter.FormatValueForProperty(property, cell.Value);
+            // Model to which the previous property belonged
+            IModel previous = null;
 
-                        ChangeProperty command = new ChangeProperty(removalType, property.Name, value);
-                        presenter.CommandHistory.Add(command);
-                    }
-                }
-            }
-            catch (Exception err)
+            foreach (IVariable property in properties)
             {
-                presenter.MainPresenter.ShowError(err);
+                IModel current = property.Object as IModel;
+
+                if (property.Object != previous)
+                {
+                    // If this property's model is different to the
+                    // previous property's model, insert a separator
+                    // row showing the name of the new model.
+                    table.Rows.Add(current.Name, " ");
+                    grid.SetRowAsSeparator(table.Rows.Count - 1);
+                }
+
+                AddPropertyToTable(table, property);
+
+                previous = current;
             }
+        }
+
+        protected override IVariable GetProperty(int row, int column)
+        {
+            if (row >= grid.DataSource.Rows.Count)
+                throw new Exception($"Attempted to get the property in row '{row}', but the grid only contains '{grid.DataSource.Rows.Count}' rows.");
+            if (row < 0)
+                throw new Exception($"Attempted to get the property in row '{row}'");
+
+            // The index of the property will be the row number minus
+            // the number of separator rows before this row.
+            int numSeparators = 0;
+            for (int i = 0; i < row; i++)
+                if (grid.IsSeparator(i))
+                    numSeparators++;
+
+            return properties[row - numSeparators];
         }
     }
 }

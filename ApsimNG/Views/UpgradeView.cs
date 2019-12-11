@@ -8,6 +8,7 @@ namespace UserInterface.Views
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Reflection;
     using APSIM.Shared.Utilities;
@@ -22,7 +23,7 @@ namespace UserInterface.Views
         public class Upgrade
         {
             public DateTime ReleaseDate { get; set; }
-            public int issueNumber { get; set; }
+            public int IssueNumber { get; set; }
             public string IssueTitle { get; set; }
             public string IssueURL { get; set; }
             public string ReleaseURL { get; set; }
@@ -55,24 +56,15 @@ namespace UserInterface.Views
         private Entry lastNameBox = null;
         private Entry organisationBox = null;
         private Entry emailBox = null;
-        private Entry address1Box = null;
-        private Entry address2Box = null;
-        private Entry cityBox = null;
-        private Entry stateBox = null;
-        private Entry countryBox = null;
-        private Entry postcodeBox = null;
+        private ComboBox countryBox = null;
         private Label label1 = null;
-        private Alignment HTMLalign = null;
+        private Alignment htmlAlign = null;
         private CheckButton checkbutton1 = null;
         private Gtk.TreeView listview1 = null;
-        private Alignment alignment3 = null;
-        private Alignment alignment4 = null;
-        private Alignment alignment5 = null;
-        private Alignment alignment6 = null;
         private Alignment alignment7 = null;
         private CheckButton oldVersions = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
-        private HTMLView HTMLview;
+        private HTMLView htmlView;
 
         /// <summary>
         /// Constructor
@@ -89,23 +81,22 @@ namespace UserInterface.Views
             lastNameBox = (Entry)builder.GetObject("lastNameBox");
             organisationBox = (Entry)builder.GetObject("organisationBox");
             emailBox = (Entry)builder.GetObject("emailBox");
-            address1Box = (Entry)builder.GetObject("address1Box");
-            address2Box = (Entry)builder.GetObject("address2Box");
-            cityBox = (Entry)builder.GetObject("cityBox");
-            stateBox = (Entry)builder.GetObject("stateBox");
-            countryBox = (Entry)builder.GetObject("countryBox");
-            postcodeBox = (Entry)builder.GetObject("postcodeBox");
+            countryBox = (ComboBox)builder.GetObject("countryBox");
             label1 = (Label)builder.GetObject("label1");
-            HTMLalign = (Alignment)builder.GetObject("HTMLalign");
+            htmlAlign = (Alignment)builder.GetObject("HTMLalign");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             listview1 = (Gtk.TreeView)builder.GetObject("listview1");
-            alignment3 = (Alignment)builder.GetObject("alignment3");
-            alignment4 = (Alignment)builder.GetObject("alignment4");
-            alignment5 = (Alignment)builder.GetObject("alignment5");
-            alignment6 = (Alignment)builder.GetObject("alignment6");
             alignment7 = (Alignment)builder.GetObject("alignment7");
             oldVersions = (CheckButton)builder.GetObject("checkbutton2");
             listview1.Model = listmodel;
+
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            if (version.Revision == 0)
+            {
+                button1.Sensitive = false;
+                table2.Hide();
+                checkbutton1.Hide();
+            }
 
             CellRendererText textRender = new Gtk.CellRendererText();
             textRender.Editable = false;
@@ -120,15 +111,27 @@ namespace UserInterface.Views
             column1.Sizing = TreeViewColumnSizing.Autosize;
             column1.Resizable = true;
 
+            // Populate the combo box with a list of valid country names.
+            ListStore countries = new ListStore(typeof(string));
+            foreach (string country in Constants.Countries)
+                countries.AppendValues(country);
+            countryBox.Model = countries;
+
+            // Add a cell renderer to the combo box.
+            CellRendererText cell = new CellRendererText();
+            countryBox.PackStart(cell, false);
+            countryBox.AddAttribute(cell, "text", 0);
+
             // Make the tab order a little more sensible than the defaults
             table1.FocusChain = new Widget[] { alignment7, button1, button2 };
-            table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, organisationBox, emailBox,
-                          alignment3, alignment4, cityBox, alignment5, countryBox, alignment6 };
+            table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, emailBox, organisationBox, countryBox };
 
-            HTMLview = new HTMLView(new ViewBase(null));
-            HTMLalign.Add(HTMLview.MainWidget);
+            htmlView = new HTMLView(new ViewBase(null));
+            htmlAlign.Add(htmlView.MainWidget);
             tabbedExplorerView = owner as IMainView;
+
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
+            window1.Modal = true;
             oldVersions.Toggled += OnShowOldVersionsToggled;
             button1.Clicked += OnUpgrade;
             button2.Clicked += OnViewMoreDetail;
@@ -148,13 +151,20 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnShown(object sender, EventArgs e)
         {
-            window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
-            while (Gtk.Application.EventsPending())
-                Gtk.Application.RunIteration();
-            PopulateForm();
-            window1.GdkWindow.Cursor = null;
-            if (loadFailure)
-                window1.Destroy();
+            try
+            {
+                window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                while (Gtk.Application.EventsPending())
+                    Gtk.Application.RunIteration();
+                PopulateForm();
+                window1.GdkWindow.Cursor = null;
+                if (loadFailure)
+                    window1.Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -164,39 +174,30 @@ namespace UserInterface.Views
         {
             listmodel.Clear();
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Major == 0)
-                label1.Text = "You are currently using a custom build of APSIM. You cannot upgrade this to a newer version.";
-            else
+            try
             {
-                try
-                {
-                    PopulateUpgradeList();
-                }
-                catch (Exception)
-                {
-                    MasterView.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
-                    loadFailure = true;
-                    return;
-                }
-                if (upgrades.Length > 0)
-                {
-                    label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
-                    label1.Text = label1.Text + Environment.NewLine + "Select an upgrade below.";
-                }
-                else
-                    label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
+                PopulateUpgradeList();
             }
+            catch (Exception)
+            {
+                MasterView.ShowMsgDialog("Cannot download the upgrade list.\nEither the server is down or your network connection is broken.", "Error", MessageType.Error, ButtonsType.Ok, window1);
+                loadFailure = true;
+                return;
+            }
+            if (upgrades.Length > 0)
+            {
+                label1.Text = "You are currently using version " + version.ToString() + ". Newer versions are listed below.";
+                label1.Text = label1.Text + Environment.NewLine + "Select an upgrade below.";
+            }
+            else
+                label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
+
 
             firstNameBox.Text = Utility.Configuration.Settings.FirstName;
             lastNameBox.Text = Utility.Configuration.Settings.LastName;
-            organisationBox.Text = Utility.Configuration.Settings.Organisation;
-            address1Box.Text = Utility.Configuration.Settings.Address1;
-            address2Box.Text = Utility.Configuration.Settings.Address2;
-            cityBox.Text = Utility.Configuration.Settings.City;
-            stateBox.Text = Utility.Configuration.Settings.State;
-            postcodeBox.Text = Utility.Configuration.Settings.Postcode;
-            countryBox.Text = Utility.Configuration.Settings.Country;
             emailBox.Text = Utility.Configuration.Settings.Email;
+            organisationBox.Text = Utility.Configuration.Settings.Organisation;
+            countryBox.Active = Constants.Countries.ToList().IndexOf(Utility.Configuration.Settings.Country);
 
             WebClient web = new WebClient();
 
@@ -204,16 +205,26 @@ namespace UserInterface.Views
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
-            try
+            if (version.Revision == 0)
             {
-                // web.DownloadFile(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
-                // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
-                HTMLview.SetContents(@"https://www.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                button1.Sensitive = false;
+                table2.Hide();
+                checkbutton1.Hide();
+                htmlView.SetContents("<center><span style=\"color:red\"><b>WARNING!</b></span><br/>You are currently using a custom build<br/><b>Upgrade is not available!</b></center>", false, false);
             }
-            catch (Exception)
+            else
             {
-                ViewBase.MasterView.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
-                loadFailure = true;
+                try
+                {
+                    // web.DownloadFile(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
+                    // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
+                    htmlView.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                }
+                catch (Exception)
+                {
+                    ViewBase.MasterView.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
+                    loadFailure = true;
+                }
             }
 
         }
@@ -226,12 +237,12 @@ namespace UserInterface.Views
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             // version = new Version(0, 0, 0, 652);  
             if (oldVersions.Active && allUpgrades.Length < 1)
-                allUpgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=-1");
+                allUpgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=-1");
             else if (!oldVersions.Active && upgrades.Length < 1)
-                upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://www.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
+                upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
-                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
+                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
                 listmodel.AppendValues(versionNumber, upgrade.IssueTitle, "");
             }
             if (listmodel.IterNChildren() > 0)
@@ -253,9 +264,19 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnViewMoreDetail(object sender, EventArgs e)
         {
-            int selIndex = GetSelIndex();
-            if (selIndex >= 0)
-                Process.Start(upgrades[selIndex].IssueURL);
+            try
+            {
+                int selIndex = GetSelIndex();
+                if (selIndex >= 0)
+                {
+                    Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
+                    Process.Start(upgradeList[selIndex].IssueURL);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         Gtk.MessageDialog waitDlg = null;
@@ -264,8 +285,15 @@ namespace UserInterface.Views
 
         private void OnShowOldVersionsToggled(object sender, EventArgs args)
         {
-            listmodel.Clear();
-            PopulateUpgradeList();
+            try
+            {
+                listmodel.Clear();
+                PopulateUpgradeList();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -275,24 +303,34 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnUpgrade(object sender, EventArgs e)
         {
-            int selIndex = GetSelIndex();
-            if (selIndex >= 0)
+            try
             {
-                try
+                int selIndex = GetSelIndex();
+                if (selIndex >= 0)
                 {
                     if (!checkbutton1.Active)
                         throw new Exception("You must agree to the license terms before upgrading.");
 
-                    if (String.IsNullOrWhiteSpace(firstNameBox.Text) || String.IsNullOrWhiteSpace(lastNameBox.Text) ||
-                        String.IsNullOrWhiteSpace(emailBox.Text) || String.IsNullOrWhiteSpace(countryBox.Text))
-                        throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
+                    AssertInputsAreValid();
 
-                    Upgrade upgrade = upgrades[selIndex];
-                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.issueNumber;
+                    Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
+                    Upgrade upgrade = upgradeList[selIndex];
+                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
 
                     if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo, window1) == Gtk.ResponseType.Yes)
                     {
+                        // Write to the registration database.
+                        AssertInputsAreValid();
+                        try
+                        {
+                            WriteUpgradeRegistration(versionNumber);
+                        }
+                        catch (Exception err)
+                        {
+                            throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
+                        }
+
                         window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
@@ -322,6 +360,7 @@ namespace UserInterface.Views
                                 Gtk.MessageType.Info, Gtk.ButtonsType.Cancel, "Downloading file. Please wait...");
                             waitDlg.Title = "APSIM Upgrade";
                             web.DownloadFileCompleted += Web_DownloadFileCompleted;
+                            web.DownloadProgressChanged += OnDownloadProgressChanged;
                             web.DownloadFileAsync(new Uri(sourceURL), tempSetupFileName);
                             if (waitDlg.Run() == (int)ResponseType.Cancel)
                                 web.CancelAsync();
@@ -334,6 +373,7 @@ namespace UserInterface.Views
                         {
                             if (waitDlg != null)
                             {
+                                web.DownloadProgressChanged -= OnDownloadProgressChanged;
                                 waitDlg.Destroy();
                                 waitDlg = null;
                             }
@@ -343,11 +383,52 @@ namespace UserInterface.Views
 
                     }
                 }
-                catch (Exception err)
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Throws if user has not provided info in a mandatory field.
+        /// </summary>
+        private void AssertInputsAreValid()
+        {
+            if (string.IsNullOrWhiteSpace(firstNameBox.Text) || 
+                string.IsNullOrWhiteSpace(lastNameBox.Text) ||
+                string.IsNullOrWhiteSpace(emailBox.Text) || 
+                string.IsNullOrWhiteSpace(countryBox.ActiveText))
+                throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
+        }
+
+        /// <summary>
+        /// Invoked when the download progress changes.
+        /// Updates the progress bar.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            try
+            {
+                Gtk.Application.Invoke(delegate
                 {
-                    window1.GdkWindow.Cursor = null;
-                    ViewBase.MasterView.ShowMsgDialog(err.Message, "Error", MessageType.Error, ButtonsType.Ok, window1);
-                }
+                    try
+                    {
+                        double progress = 100.0 * e.BytesReceived / e.TotalBytesToReceive;
+                        waitDlg.Text = string.Format("Downloading file: {0:0.}%. Please wait...", progress);
+                    }
+                    catch (Exception err)
+                    {
+                        ShowError(err);
+                    }
+                });
+            }
+            catch (Exception err)
+            {
+                err = new Exception("Error updating download progress", err);
+                ShowError(err);
             }
         }
 
@@ -364,9 +445,6 @@ namespace UserInterface.Views
                 {
                     if (e.Error != null) // On Linux, we get to this point even when errors have occurred
                         throw e.Error;
-
-                    // Write to the registration database.
-                    WriteUpgradeRegistration(versionNumber);
 
                     if (File.Exists(tempSetupFileName))
                     {
@@ -428,29 +506,49 @@ namespace UserInterface.Views
         /// </summary>
         private void WriteUpgradeRegistration(string version)
         {
-            string url = "https://www.apsim.info/APSIM.Registration.Service/Registration.svc/Add";
+            string url = "https://apsimdev.apsim.info/APSIM.Registration.Service/Registration.svc/AddRegistration";
             url += "?firstName=" + firstNameBox.Text;
 
-            url = addToURL(url, "lastName", lastNameBox.Text);
-            url = addToURL(url, "organisation", organisationBox.Text);
-            url = addToURL(url, "address1", address1Box.Text);
-            url = addToURL(url, "address2", address2Box.Text);
-            url = addToURL(url, "city", cityBox.Text);
-            url = addToURL(url, "state", stateBox.Text);
-            url = addToURL(url, "postcode", postcodeBox.Text);
-            url = addToURL(url, "country", countryBox.Text);
-            url = addToURL(url, "email", emailBox.Text);
-            url = addToURL(url, "product", "APSIM Next Generation " + version);
+            url = AddToURL(url, "lastName", lastNameBox.Text);
+            url = AddToURL(url, "organisation", organisationBox.Text);
+            url = AddToURL(url, "country", countryBox.ActiveText);
+            url = AddToURL(url, "email", emailBox.Text);
+            url = AddToURL(url, "product", "APSIM Next Generation");
+            url = AddToURL(url, "version", version);
+            url = AddToURL(url, "platform", GetPlatform());
+            url = AddToURL(url, "type", "Upgrade");
 
-            WebUtilities.CallRESTService<object>(url);
+            try
+            {
+                WebUtilities.CallRESTService<object>(url);
+            }
+            catch
+            {
+                // Retry once.
+                WebUtilities.CallRESTService<object>(url);
+            }
         }
 
         /// <summary>Add a key / value pair to url if not empty</summary>
-        private string addToURL(string url, string key, string value)
+        private string AddToURL(string url, string key, string value)
         {
             if (value == null || value == string.Empty)
                 value = "-";
             return url + "&" + key + "=" + value;
+        }
+
+        /// <summary>
+        /// Gets the platform name used when writing to registration database.
+        /// </summary>
+        private string GetPlatform()
+        {
+            if (ProcessUtilities.CurrentOS.IsWindows)
+                return "Windows";
+            else if (ProcessUtilities.CurrentOS.IsMac)
+                return "Mac";
+            else if (ProcessUtilities.CurrentOS.IsLinux)
+                return "Linux";
+            return "?";
         }
 
         /// <summary>
@@ -460,16 +558,18 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnFormClosing(object sender, EventArgs e)
         {
-            Utility.Configuration.Settings.FirstName = firstNameBox.Text;
-            Utility.Configuration.Settings.LastName = lastNameBox.Text;
-            Utility.Configuration.Settings.Organisation = organisationBox.Text;
-            Utility.Configuration.Settings.Address1 = address1Box.Text;
-            Utility.Configuration.Settings.Address2 = address2Box.Text;
-            Utility.Configuration.Settings.City = cityBox.Text;
-            Utility.Configuration.Settings.State = stateBox.Text;
-            Utility.Configuration.Settings.Postcode = postcodeBox.Text;
-            Utility.Configuration.Settings.Country = countryBox.Text;
-            Utility.Configuration.Settings.Email = emailBox.Text;
+            try
+            {
+                Utility.Configuration.Settings.FirstName = firstNameBox.Text;
+                Utility.Configuration.Settings.LastName = lastNameBox.Text;
+                Utility.Configuration.Settings.Email = emailBox.Text;
+                Utility.Configuration.Settings.Organisation = organisationBox.Text;
+                Utility.Configuration.Settings.Country = countryBox.ActiveText;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

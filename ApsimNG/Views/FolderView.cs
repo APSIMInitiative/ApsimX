@@ -36,14 +36,14 @@ namespace UserInterface.Views
             vport.Add(table);
             vport.ShadowType = ShadowType.None;
             scroller.Add(vport);
-            _mainWidget = scroller;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget = scroller;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Sets the controls to show.</summary>

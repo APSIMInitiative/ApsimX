@@ -16,6 +16,7 @@ mkdir .\DebPackage\DEBIAN
 mkdir .\DebPackage\data\usr\local\bin
 mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
+mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\UnderReview
 
 rem Create the main execution script; must have Unix newline
 rem For some reason, running dos2unix on a file inside a mounted volume in a docker container
@@ -51,6 +52,7 @@ for /r %apsimx%\DeploymentSupport %%D in (*.dll) do (
 
 rem Copy the binaries and examples to their destinations
 xcopy /S /I /Y /Q %apsimx%\Examples .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
+xcopy /S /I /Y /Q %apsimx%\Tests\UnderReview .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\UnderReview
 xcopy /I /Y /Q %apsimx%\Bin\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %apsimx%\Bin\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
 xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
@@ -96,6 +98,10 @@ for /F "tokens=1" %%i in ('md5sum "usr/local/lib/apsim/%APSIM_VERSION%/Examples/
 
 for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/*) do (
 for /F "tokens=1" %%i in ('md5sum "usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/%%a"') do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Examples/WeatherFiles/%%a >> ..\DEBIAN\md5sums
+)
+
+for /r usr/local/lib/apsim/%APSIM_VERSION%/UnderReview %%a in (*.*) do (
+for /F "tokens=1" %%i in ('md5sum "%%a"') do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/UnderReview/%%~nxa >> ..\DEBIAN\md5sums
 )
 
 rem Create the tarballs and ar them together

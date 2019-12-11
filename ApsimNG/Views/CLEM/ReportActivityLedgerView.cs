@@ -28,7 +28,7 @@ namespace UserInterface.Views
             notebook1 = (Notebook)builder.GetObject("notebook1");
             alignment1 = (Alignment)builder.GetObject("alignment1");
             alignment2 = (Alignment)builder.GetObject("alignment2");
-            _mainWidget = notebook1;
+            mainWidget = notebook1;
 
             dataStoreView1 = new DataStoreView(this);
             alignment1.Add(dataStoreView1.MainWidget);
@@ -36,14 +36,14 @@ namespace UserInterface.Views
             displayView1 = new ActivityLedgerGridView(this);
             alignment2.Add(displayView1.MainWidget);
 
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
             dataStoreView1 = null;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>Provides access to the DataGrid.</summary>

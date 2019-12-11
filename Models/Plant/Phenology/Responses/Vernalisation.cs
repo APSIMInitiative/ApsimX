@@ -19,13 +19,13 @@ namespace Models.PMF.Phen
         [Link]
         Phenology phenology = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         AirTemperatureFunction vernalisingDays = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         AirTemperatureFunction DevernalisingDays = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         Constant DaysToStabilise = null;
 
         private int startStageIndex;

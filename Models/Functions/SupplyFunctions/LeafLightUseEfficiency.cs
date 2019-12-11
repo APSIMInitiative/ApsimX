@@ -49,7 +49,7 @@ namespace Models.Functions.SupplyFunctions
                 fCO2 = Math.Max(fCO2, CO2PhotoCmp);
 
                 //--------------------------------------------------------------------------------------------------------------
-                //Original SPASS version based on Goudriaan & van Laar (1994)
+                //Original SPASS version based on Goudriaan && van Laar (1994)
                 //LUEref is the LUE at reference temperature of 20C and CO2=340ppm, i.e., LUEref = 0.6 kgCO2/ha/h / J/m2/s
                 //EffPAR   = LUEref * (fCO2-fCO2PhotoCmp)/(fCO2+2*fCO2PhotoCmp);
 
@@ -66,7 +66,7 @@ namespace Models.Functions.SupplyFunctions
                 CO2PhotoCmp = 0.0;
 
                 //--------------------------------------------------------------------------------------------------------------
-                //Original SPASS version based on Goudriaan & van Laar (1994)
+                //Original SPASS version based on Goudriaan && van Laar (1994)
                 //LUEref is the LUE at reference temperature of 20C and CO2=340ppm, i.e., LUEref = 0.5 kgCO2/ha/h / J/m2/s
                 EffPAR   = LUEref * (fCO2-CO2PhotoCmp)/(fCO2+2*CO2PhotoCmp);
 

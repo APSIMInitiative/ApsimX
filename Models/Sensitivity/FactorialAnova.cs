@@ -11,6 +11,8 @@
     using Newtonsoft.Json;
     using System.Xml.Serialization;
     using Utilities;
+    using Models.Storage;
+    using Models.Core.Run;
 
     /// <summary>
     /// # [Name]
@@ -23,6 +25,9 @@
     [ValidParent(ParentType = typeof(Folder))]
     public class FactorialAnova : Model, ICustomDocumentation, IModelAsTable, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// List of analysis outputs
         /// </summary>
@@ -114,11 +119,10 @@
         }
 
         /// <summary>Main run method for performing our post simulation calculations</summary>
-        /// <param name="dataStore">The data store.</param>
-        public void Run(IStorageReader dataStore)
+        public void Run()
         {
-            string sql = "SELECT * FROM Report";
-            DataTable predictedData = dataStore.RunQuery(sql);
+            string sql = "SELECT * FROM [Report]";
+            DataTable predictedData = dataStore.Reader.GetDataUsingSql(sql);
             if (predictedData != null)
             {
                 IndexedDataTable predictedDataIndexed = new IndexedDataTable(predictedData, null);
@@ -163,8 +167,7 @@
 
                 DataTable results = RunR(script);
                 results.TableName = Name + "Statistics";
-                dataStore.DeleteDataInTable(results.TableName);
-                dataStore.WriteTable(results);
+                dataStore.Writer.WriteTable(results);
             }
         }
 

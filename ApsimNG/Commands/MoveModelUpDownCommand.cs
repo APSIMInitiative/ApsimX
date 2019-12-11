@@ -42,8 +42,8 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Perform the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Do(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history.</param>
+        public void Do(CommandHistory commandHistory)
         {
             IModel parent = modelToMove.Parent as IModel;
 
@@ -53,36 +53,36 @@ namespace UserInterface.Commands
             if (moveUp)
             {
                 if (modelIndex != 0)
-                    MoveModelUp(CommandHistory, parent, modelIndex);
+                    MoveModelUp(commandHistory, parent, modelIndex);
             }
             else
             {
                 if (modelIndex != parent.Children.Count - 1)
-                    MoveModelDown(CommandHistory, parent, modelIndex);
+                    MoveModelDown(commandHistory, parent, modelIndex);
             }
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Undo(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history.</param>
+        public void Undo(CommandHistory commandHistory)
         {
             if (modelWasMoved)
             {
                 Model parent = modelToMove.Parent as Model;
                 int modelIndex = parent.Children.IndexOf(modelToMove as Model);
                 if (moveUp)
-                    MoveModelDown(CommandHistory, parent, modelIndex);
+                    MoveModelDown(commandHistory, parent, modelIndex);
                 else
-                    MoveModelUp(CommandHistory, parent, modelIndex);
+                    MoveModelUp(commandHistory, parent, modelIndex);
             }
         }
 
 
         /// <summary>Moves the model down.</summary>
-        /// <param name="CommandHistory">The command history.</param>
+        /// <param name="commandHistory">The command history.</param>
         /// <param name="parent">The parent.</param>
         /// <param name="modelIndex">Index of the model.</param>
-        private void MoveModelDown(CommandHistory CommandHistory, IModel parent, int modelIndex)
+        private void MoveModelDown(CommandHistory commandHistory, IModel parent, int modelIndex)
         {
             if (explorerView != null)
                 explorerView.Tree.MoveDown(Apsim.FullPath(modelToMove));
@@ -92,10 +92,10 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Moves the model up.</summary>
-        /// <param name="CommandHistory">The command history.</param>
+        /// <param name="commandHistory">The command history.</param>
         /// <param name="parent">The parent.</param>
         /// <param name="modelIndex">Index of the model.</param>
-        private void MoveModelUp(CommandHistory CommandHistory, IModel parent, int modelIndex)
+        private void MoveModelUp(CommandHistory commandHistory, IModel parent, int modelIndex)
         {
             if (explorerView != null)
                 explorerView.Tree.MoveUp(Apsim.FullPath(modelToMove));

@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/resourcesholder.htm")]
+    [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
     public class ResourcesHolder: CLEMModel, IValidatableObject
     {
         // Scoping rules of Linking in Apsim means that you can only link to 
@@ -50,11 +50,12 @@ namespace Models.CLEM.Resources
 
         private IModel GetGroupByName(string name)
         {
-            return ResourceGroupList.Find(x => x.Name == name);
+            return ResourceGroupList.Find(x => x.Name == name & x.Enabled);
         }
 
         private IModel GetGroupByType(Type type)
         {
+            ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
             return ResourceGroupList.Find(x => x.GetType() == type);
         }
 
@@ -66,9 +67,9 @@ namespace Models.CLEM.Resources
         public bool ResourceItemsExist(Type resourceGroupType)
         {
             Model resourceGroup = Apsim.Children(this, resourceGroupType).FirstOrDefault() as Model;
-            if (resourceGroup != null)
+            if (resourceGroup != null && resourceGroup.Enabled)
             {
-                return resourceGroup.Children.Count() > 0;
+                return resourceGroup.Children.Where(a => a.Enabled).Count() > 0;
             }
             return false;
         }
@@ -81,7 +82,7 @@ namespace Models.CLEM.Resources
         public bool ResourceGroupExist(Type resourceGroupType)
         {
             Model resourceGroup = Apsim.Children(this, resourceGroupType).FirstOrDefault() as Model;
-            return (resourceGroup != null);
+            return (resourceGroup != null && resourceGroup.Enabled);
         }
 
         /// <summary>
@@ -91,7 +92,8 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public object GetResourceGroupByName(string name)
         {
-            return ResourceGroupList.Find(x => x.Name == name);
+            ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
+            return ResourceGroupList.Find(x => x.Name == name & x.Enabled);
         }
 
         /// <summary>
@@ -101,7 +103,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public object GetResourceGroupByType(Type resourceGroupType)
         {
-            return ResourceGroupList.Find(x => x.GetType() == resourceGroupType);
+            return ResourceGroupList.Find(x => x.GetType() == resourceGroupType & x.Enabled);
         }
 
         /// <summary>
@@ -195,7 +197,7 @@ namespace Models.CLEM.Resources
             Model resourceGroup = Apsim.Children(this, resourceGroupType).FirstOrDefault() as Model;
             if (resourceGroup != null)
             {
-                Model resource = resourceGroup.Children.Where(a => a.Name == resourceItemName).FirstOrDefault();
+                Model resource = resourceGroup.Children.Where(a => a.Name == resourceItemName & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
                     string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", resourceItemName, resourceGroupType.ToString(), requestingModel.Name);
@@ -256,7 +258,7 @@ namespace Models.CLEM.Resources
             Model resourceGroup = this.GetResourceGroupByName(names[0]) as Model;
             if (resourceGroup != null)
             {
-                Model resource = resourceGroup.Children.Where(a => a.Name == names[1]).FirstOrDefault();
+                Model resource = resourceGroup.Children.Where(a => a.Name == names[1] & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
                     string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", names[1], names[0], requestingModel.Name);
@@ -340,7 +342,7 @@ namespace Models.CLEM.Resources
         /// Get the Resource Group for Labour Family
         /// </summary>
         /// <returns></returns>
-        public Labour LabourFamily()
+        public Labour Labour()
         {
             return GetGroupByType(typeof(Labour)) as Labour;
         }
@@ -401,7 +403,7 @@ namespace Models.CLEM.Resources
             foreach (ResourceRequest request in shortfallRequests)
             {
                 // Check if transmutation would be successful 
-                if (request.AllowTransmutation & (queryOnly || request.TransmutationPossible))
+                if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                 {
                     // get resource type
                     IModel model = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IModel;
@@ -410,11 +412,28 @@ namespace Models.CLEM.Resources
                         // check if transmutations provided
                         foreach (Transmutation trans in Apsim.Children(model, typeof(Transmutation)))
                         {
+                            double unitsNeeded = 0;
                             // check if resources available for activity and transmutation
-                            double unitsNeeded = Math.Ceiling((request.Required - request.Available) / trans.AmountPerUnitPurchase);
                             foreach (ITransmutationCost transcost in Apsim.Children(trans, typeof(IModel)).Where(a => a is ITransmutationCost).Cast<ITransmutationCost>())
                             {
-                                double transmutationCost = unitsNeeded * transcost.CostPerUnit;
+                                double unitsize = trans.AmountPerUnitPurchase;
+                                if (transcost is TransmutationCostUsePricing)
+                                {
+                                    // use pricing details if needed
+                                    unitsize = (transcost as TransmutationCostUsePricing).Pricing.PacketSize;
+                                }
+                                unitsNeeded = Math.Ceiling((request.Required - request.Available) / unitsize);
+
+                                double transmutationCost;
+                                if (transcost is TransmutationCostUsePricing)
+                                {
+                                    // use pricing details if needed
+                                    transmutationCost = unitsNeeded * (transcost as TransmutationCostUsePricing).Pricing.PricePerPacket;
+                                }
+                                else
+                                {
+                                    transmutationCost = unitsNeeded * transcost.CostPerUnit;
+                                }
 
                                 // get transcost resource
                                 IResourceType transResource = null;
@@ -427,11 +446,13 @@ namespace Models.CLEM.Resources
                                 {
                                     //remove cost
                                     // create new request for this transmutation cost
-                                    ResourceRequest transRequest = new ResourceRequest();
-                                    transRequest.Reason = trans.Name + " " + trans.Parent.Name;
-                                    transRequest.Required = transmutationCost;
-                                    transRequest.ResourceType = transcost.ResourceType;
-                                    transRequest.ActivityModel = request.ActivityModel;
+                                    ResourceRequest transRequest = new ResourceRequest
+                                    {
+                                        Reason = trans.Name + " " + trans.Parent.Name,
+                                        Required = transmutationCost,
+                                        ResourceType = transcost.ResourceType,
+                                        ActivityModel = request.ActivityModel
+                                    };
 
                                     // used to pass request, but this is not the transmutation cost
 
@@ -448,7 +469,7 @@ namespace Models.CLEM.Resources
                                 }
                                 else
                                 {
-                                    double activityCost = requests.Where(a => a.ResourceType == transcost.ResourceType & a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
+                                    double activityCost = requests.Where(a => a.ResourceType == transcost.ResourceType && a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
                                     if (transmutationCost + activityCost <= transResource.Amount)
                                     {
                                         request.TransmutationPossible = true;
@@ -477,11 +498,11 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-
-            var t = this.Children.GroupBy(a => a.GetType());
+            
+            var t = this.Children.Where(a => a.GetType().FullName != "Models.Memo").GroupBy(a => a.GetType()).Where(b => b.Count() > 1);
 
             // check that only one instance of each resource group is present
-            foreach (var item in this.Children.GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
+            foreach (var item in this.Children.Where(a => a.GetType().FullName != "Models.Memo").GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
             {
                 string[] memberNames = new string[] { item.Key.FullName };
                 results.Add(new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), memberNames));

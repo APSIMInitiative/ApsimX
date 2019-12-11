@@ -1,4 +1,5 @@
 ﻿using System;
+using Gdk;
 using Gtk;
 using UserInterface.EventArguments;
 
@@ -7,7 +8,10 @@ namespace UserInterface.Views
     /// <summary>An interface for a drop down</summary>
     public interface IEditView
     {
-        /// <summary>Invoked when the user changes the selection</summary>
+        /// <summary>Invoked when the edit box loses focus.</summary>
+        event EventHandler Leave;
+
+        /// <summary>Invoked when the user changes the text in the edit box.</summary>
         event EventHandler Changed;
 
         /// <summary>
@@ -45,9 +49,12 @@ namespace UserInterface.Views
     /// <summary>A drop down view.</summary>
     public class EditView : ViewBase, IEditView
     {
-        /// <summary>Invoked when the user changes the selection</summary>
+        /// <summary>Invoked when the edit box loses focus.</summary>
+        public event EventHandler Leave;
+        
+        /// <summary>Invoked when the user changes the text in the edit box.</summary>
         public event EventHandler Changed;
-
+        
         /// <summary>
         /// Invoked when the user needs intellisense items.
         /// Currently this is only triggered by pressing control-space.
@@ -55,15 +62,30 @@ namespace UserInterface.Views
         public event EventHandler<NeedContextItemsArgs> IntellisenseItemsNeeded;
 
         private Entry textentry1;
-        
+
+        /// <summary>Constructor</summary>
+        public EditView() { }
+
         /// <summary>Constructor</summary>
         public EditView(ViewBase owner) : base(owner)
         {
-            textentry1 = new Entry();
-            _mainWidget = textentry1;
-            textentry1.FocusOutEvent += OnSelectionChanged;
+            Initialise(owner, new Entry());
+        }
+
+        /// <summary>Constructor</summary>
+        public EditView(ViewBase owner, Entry e) : base(owner)
+        {
+            Initialise(owner, e);
+        }
+
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            textentry1 = (Gtk.Entry)gtkControl;
+            mainWidget = textentry1;
+            textentry1.Changed += OnChanged;
+            textentry1.FocusOutEvent += OnLeave;
             textentry1.KeyPressEvent += OnKeyPress;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -79,9 +101,12 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textentry1.FocusOutEvent -= OnSelectionChanged;
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            textentry1.FocusOutEvent -= OnLeave;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            textentry1.Changed -= OnChanged;
+            textentry1.FocusOutEvent -= OnLeave;
+            textentry1.KeyPressEvent -= OnKeyPress;
+            owner = null;
         }
 
         private string lastText = String.Empty;
@@ -114,12 +139,12 @@ namespace UserInterface.Views
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
-        private void OnSelectionChanged(object sender, EventArgs e)
+        private void OnLeave(object sender, EventArgs e)
         {
-            if (Changed != null && textentry1.Text != lastText)
+            if (Leave != null && textentry1.Text != lastText)
             {
                 lastText = textentry1.Text;
-                Changed.Invoke(this, e);
+                Leave.Invoke(this, e);
             }
         }
 
@@ -133,16 +158,11 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
-            if ((args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask && args.Event.Key == Gdk.Key.space)
+            bool controlSpace = (args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask && args.Event.Key == Gdk.Key.space;
+            bool controlShiftSpace = controlSpace && (args.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
+            bool isPeriod = args.Event.Key == Gdk.Key.period;
+            if (isPeriod || controlSpace || controlShiftSpace)
             {
-                /*
-                Point p = textEditor.TextArea.LocationToPoint(textEditor.Caret.Location);
-                p.Y += (int)textEditor.LineHeight;
-                // Need to convert to screen coordinates....
-                int x, y, frameX, frameY;
-                MasterView.MainWindow.GetOrigin(out frameX, out frameY);
-                textEditor.TextArea.TranslateCoordinates(_mainWidget.Toplevel, p.X, p.Y, out x, out y);
-                */
                 if (IntellisenseItemsNeeded != null)
                 {
                     int x, y;
@@ -152,7 +172,10 @@ namespace UserInterface.Views
                     {
                         Coordinates = coordinates,
                         Code = textentry1.Text,
-                        Offset = Offset
+                        ControlSpace = controlSpace,
+                        ControlShiftSpace = controlShiftSpace,
+                        Offset = Offset,
+                        ColNo = this.textentry1.CursorPosition
                     };
                     lastText = textentry1.Text;
                     IntellisenseItemsNeeded.Invoke(this, e);
@@ -160,8 +183,23 @@ namespace UserInterface.Views
             }
             else if ((args.Event.Key & Gdk.Key.Return) == Gdk.Key.Return)
             {
-                OnSelectionChanged(this, EventArgs.Empty);
+                OnLeave(this, EventArgs.Empty);
             }
+        }
+
+        /// <summary>
+        /// User has left the edit box.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void OnLeave(object o, FocusOutEventArgs args)
+        {
+            OnLeave(o, new EventArgs());
+        }
+
+        private void OnChanged(object sender, EventArgs e)
+        {
+            Changed?.Invoke(this, e);
         }
 
         /// <summary>
@@ -176,8 +214,8 @@ namespace UserInterface.Views
                 return;
             if (string.IsNullOrEmpty(triggerWord))
             {
-                textentry1.Text = text;
-                textentry1.Position = text.Length;
+                textentry1.Text += text;
+                textentry1.Position = textentry1.Text.Length;
             }
             else if (!textentry1.Text.Contains(triggerWord))
                 textentry1.Text += text;
@@ -190,7 +228,7 @@ namespace UserInterface.Views
                 {
                     string textBeforeWord = textBeforeCursor.Substring(0, index);
                     string textAfterWord = textBeforeCursor.Substring(index + triggerWord.Length);
-                    textentry1.Text = textBeforeWord + text + textAfterWord + textAfterCursor;
+                    textentry1.Text = textBeforeWord + triggerWord + text + textAfterWord + textAfterCursor;
                     textentry1.Position = textBeforeWord.Length + text.Length;
                 }
                 else
@@ -239,7 +277,7 @@ namespace UserInterface.Views
         public void EndEdit()
         {
             if (textentry1.IsFocus)
-                OnSelectionChanged(this, null);
+                OnLeave(this, (EventArgs)null);
         }
     }
 }

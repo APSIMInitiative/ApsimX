@@ -52,6 +52,10 @@ namespace Models.CLEM
         /// </summary>
         Born,
         /// <summary>
+        /// Individual sold as marked for sale
+        /// </summary>
+        MarkedSale,
+        /// <summary>
         /// Trade individual sold weight/age
         /// </summary>
         TradeSale,
@@ -286,6 +290,21 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Ruminant feeding styles
+    /// </summary>
+    public enum LabourFeedActivityTypes
+    {
+        /// <summary>
+        /// Feed specified amount daily to each individual
+        /// </summary>
+        SpecifiedDailyAmountPerIndividual,
+        /// <summary>
+        /// Feed specified amount daily per AE
+        /// </summary>
+        SpecifiedDailyAmountPerAE,
+    }
+
+    /// <summary>
     /// Possible actions when only partial requested resources are available
     /// </summary>
     public enum OnPartialResourcesAvailableActionTypes
@@ -366,4 +385,22 @@ namespace Models.CLEM
         FileReader
     }
 
+    /// <summary>
+    /// Style of weaning rules
+    /// </summary>
+    public enum WeaningStyle
+    {
+        /// <summary>
+        /// Age or weight achieved
+        /// </summary>
+        AgeOrWeight,
+        /// <summary>
+        /// Age achieved
+        /// </summary>
+        AgeOnly,
+        /// <summary>
+        /// Weight achieved
+        /// </summary>
+        WeightOnly
+    }
 }

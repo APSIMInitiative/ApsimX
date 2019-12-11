@@ -49,8 +49,8 @@ namespace UserInterface.Views
         private bool selfCursorMove = false;
 
         private ScrolledWindow scrolledwindow1 = null;
-        public Gtk.TreeView gridview = null;
-        public Gtk.TreeView fixedcolview = null;
+        public Gtk.TreeView Grid { get; set; }
+        public Gtk.TreeView Fixedcolview { get; set; }
         private HBox hbox1 = null;
         private Gtk.Image image1 = null;
         /// <summary>
@@ -72,22 +72,22 @@ namespace UserInterface.Views
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.GridView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
             scrolledwindow1 = (ScrolledWindow)builder.GetObject("scrolledwindow1");
-            gridview = (Gtk.TreeView)builder.GetObject("gridview");
-            fixedcolview = (Gtk.TreeView)builder.GetObject("fixedcolview");
+            Grid = (Gtk.TreeView)builder.GetObject("gridview");
+            Fixedcolview = (Gtk.TreeView)builder.GetObject("fixedcolview");
             splitter = (HPaned)builder.GetObject("hpaned1");
             image1 = (Gtk.Image)builder.GetObject("image1");
-            _mainWidget = hbox1;
-            gridview.Model = gridmodel;
-            gridview.Selection.Mode = SelectionMode.Multiple;
-            fixedcolview.Model = gridmodel;
-            fixedcolview.Selection.Mode = SelectionMode.Multiple;
-            gridview.EnableSearch = false;
-            fixedcolview.EnableSearch = false;
+            mainWidget = hbox1;
+            Grid.Model = gridmodel;
+            Grid.Selection.Mode = SelectionMode.Multiple;
+            Fixedcolview.Model = gridmodel;
+            Fixedcolview.Selection.Mode = SelectionMode.Multiple;
+            Grid.EnableSearch = false;
+            Fixedcolview.EnableSearch = false;
             image1.Pixbuf = null;
             image1.Visible = false;
             splitter.Child1.Hide();
             splitter.Child1.NoShowAll = true;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         /// <summary>
@@ -117,10 +117,10 @@ namespace UserInterface.Views
         {
             if (numberLockedCols > 0)
             {
-                gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
-                gridview.Selection.Changed -= Gridview_CursorChanged;
-                fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
-                fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
+                Grid.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
+                Grid.Selection.Changed -= Gridview_CursorChanged;
+                Fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
+                Fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
             }
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -145,8 +145,8 @@ namespace UserInterface.Views
                 table.Dispose();
             }
 
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         /// <summary>
@@ -154,9 +154,9 @@ namespace UserInterface.Views
         /// </summary>
         private void ClearGridColumns()
         {
-            while (gridview.Columns.Length > 0)
+            while (Grid.Columns.Length > 0)
             {
-                TreeViewColumn col = gridview.GetColumn(0);
+                TreeViewColumn col = Grid.GetColumn(0);
                 foreach (CellRenderer render in col.CellRenderers)
                 {
                     if (render is CellRendererText)
@@ -171,11 +171,11 @@ namespace UserInterface.Views
                     }
                     render.Destroy();
                 }
-                gridview.RemoveColumn(gridview.GetColumn(0));
+                Grid.RemoveColumn(Grid.GetColumn(0));
             }
-            while (fixedcolview.Columns.Length > 0)
+            while (Fixedcolview.Columns.Length > 0)
             {
-                TreeViewColumn col = fixedcolview.GetColumn(0);
+                TreeViewColumn col = Fixedcolview.GetColumn(0);
                 foreach (CellRenderer render in col.CellRenderers)
                 {
                     if (render is CellRendererText)
@@ -185,7 +185,7 @@ namespace UserInterface.Views
                     }
                 }
 
-                fixedcolview.RemoveColumn(fixedcolview.GetColumn(0));
+                Fixedcolview.RemoveColumn(Fixedcolview.GetColumn(0));
             }
         }
 
@@ -200,10 +200,10 @@ namespace UserInterface.Views
             if (!selfCursorMove)
             {
                 selfCursorMove = true;
-                TreeSelection fixedSel = fixedcolview.Selection;
+                TreeSelection fixedSel = Fixedcolview.Selection;
                 TreePath[] selPaths = fixedSel.GetSelectedRows();
 
-                TreeSelection gridSel = gridview.Selection;
+                TreeSelection gridSel = Grid.Selection;
                 gridSel.UnselectAll();
                 foreach (TreePath path in selPaths)
                 {
@@ -222,13 +222,13 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Gridview_CursorChanged(object sender, EventArgs e)
         {
-            if (fixedcolview.Visible && !selfCursorMove)
+            if (Fixedcolview.Visible && !selfCursorMove)
             {
                 selfCursorMove = true;
-                TreeSelection gridSel = gridview.Selection;
+                TreeSelection gridSel = Grid.Selection;
                 TreePath[] selPaths = gridSel.GetSelectedRows();
 
-                TreeSelection fixedSel = fixedcolview.Selection;
+                TreeSelection fixedSel = Fixedcolview.Selection;
                 fixedSel.UnselectAll();
                 foreach (TreePath path in selPaths)
                 {
@@ -261,7 +261,7 @@ namespace UserInterface.Views
             }
 
             ClearGridColumns();
-            fixedcolview.Visible = false;
+            Fixedcolview.Visible = false;
             colLookup.Clear();
             // Begin by creating a new ListStore with the appropriate number of
             // columns. Use the string column type for everything.
@@ -273,10 +273,10 @@ namespace UserInterface.Views
             }
 
             gridmodel = new ListStore(colTypes);
-            gridview.ModifyBase(StateType.Active, fixedcolview.Style.Base(StateType.Selected));
-            gridview.ModifyText(StateType.Active, fixedcolview.Style.Text(StateType.Selected));
-            fixedcolview.ModifyBase(StateType.Active, gridview.Style.Base(StateType.Selected));
-            fixedcolview.ModifyText(StateType.Active, gridview.Style.Text(StateType.Selected));
+            Grid.ModifyBase(StateType.Active, Fixedcolview.Style.Base(StateType.Selected));
+            Grid.ModifyText(StateType.Active, Fixedcolview.Style.Text(StateType.Selected));
+            Fixedcolview.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
+            Fixedcolview.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
 
             image1.Visible = false;
             // Now set up the grid columns
@@ -288,7 +288,7 @@ namespace UserInterface.Views
                 pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
                 pixbufRender.Xalign = 0.5f;
 
-                if (i == 0)
+                if (i == 0 || i == nCols-1)
                 {
                     colLookup.Add(textRender, i);
                 }
@@ -298,6 +298,7 @@ namespace UserInterface.Views
                 }
 
                 textRender.FixedHeightFromFont = 1; // 1 line high
+
                 pixbufRender.Height = 19; //TODO change based on zoom rate of UI //previously 23 before smaller UI font
                 textRender.Editable = !isReadOnly;
                 textRender.Xalign = ((i == 0) || (i == 1) && isPropertyMode) ? 0.0f : 1.0f; // For right alignment of text cell contents; left align the first column
@@ -305,7 +306,7 @@ namespace UserInterface.Views
                 TreeViewColumn column = new TreeViewColumn();
                 column.Title = this.DataSource.Columns[i].Caption;
 
-                if (i==0)
+                if (i==0 || i == nCols - 1)
                 {
                     column.PackStart(textRender, true);     // 0
                 }
@@ -313,10 +314,8 @@ namespace UserInterface.Views
                 {
                     column.PackStart(pixbufRender, false);  // 3
                 }
-//                column.Sizing = TreeViewColumnSizing.Autosize;
-//                column.Resizable = true;
 
-                if (i == 0)
+                if (i == 0 || i == nCols - 1)
                 {
                     column.SetCellDataFunc(textRender, OnSetCellData);
                 }
@@ -333,7 +332,7 @@ namespace UserInterface.Views
                     column.Alignment = 0.5f; // For centered alignment of the column header
                 }
 
-                gridview.AppendColumn(column);
+                Grid.AppendColumn(column);
 
                 // Gtk Treeview doesn't support "frozen" columns, so we fake it by creating a second, identical, TreeView to display
                 // the columns we want frozen
@@ -351,36 +350,36 @@ namespace UserInterface.Views
                 }
                 fixedColumn.Alignment = 0.0f; // For centered alignment of the column header
                 fixedColumn.Visible = false;
-                fixedcolview.AppendColumn(fixedColumn);
+                Fixedcolview.AppendColumn(fixedColumn);
             }
 
             if (!isPropertyMode)
             {
                 // Add an empty column at the end; auto-sizing will give this any "leftover" space
                 TreeViewColumn fillColumn = new TreeViewColumn();
-                gridview.AppendColumn(fillColumn);
+                Grid.AppendColumn(fillColumn);
                 fillColumn.Sizing = TreeViewColumnSizing.Autosize;
             }
 
             int nRows = DataSource != null ? this.DataSource.Rows.Count : 0;
 
-            gridview.Model = null;
-            fixedcolview.Model = null;
+            Grid.Model = null;
+            Fixedcolview.Model = null;
             for (int row = 0; row < nRows; row++)
             {
                 // We could store data into the grid model, but we don't.
                 // Instead, we retrieve the data from our datastore when the OnSetCellData function is called
                 gridmodel.Append();
             }
-            gridview.Model = gridmodel;
+            Grid.Model = gridmodel;
 
-            SetColumnHeaders(gridview);
-            SetColumnHeaders(fixedcolview);
+            SetColumnHeaders(Grid);
+            SetColumnHeaders(Fixedcolview);
 
-            gridview.EnableSearch = false;
-            fixedcolview.EnableSearch = false;
+            Grid.EnableSearch = false;
+            Fixedcolview.EnableSearch = false;
 
-            gridview.Show();
+            Grid.Show();
 
             if (MasterView.MainWindow != null)
             {
@@ -405,23 +404,38 @@ namespace UserInterface.Views
             {
                 object dataVal = this.DataSource.Rows[rowNo][colNo];
                 cell.Visible = true;
+                string iconName = "blank";
                 switch (dataVal.ToString())
                 {
                     case "Success":
-                    case "Partial":
-                    case "Ignore":
-                    case "Critical":
-                    case "Calculation":
-                    case "NotNeeded":
-                    case "Timer":
-                    case "NoTask":
-                        (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+dataVal.ToString()+".png");
+                        iconName = "Success";
                         break;
-                    default:
-                        // use blank image as setting visible to false did not work.
-                        (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.blank.png");
+                    case "Partial":
+                        iconName = "Partial";
+                        break;
+                    case "Ignored":
+                        iconName = "NoTask";
+                        break;
+                    case "Critical":
+                        iconName = "Critical";
+                        break;
+                    case "Timer":
+                        iconName = "Timer";
+                        break;
+                    case "Calculation":
+                        iconName = "Calculation";
+                        break;
+                    case "NotNeeded":
+                        iconName = "NotNeeded";
+                        break;
+                    case "Warning":
+                        iconName = "Ignored";
+                        break;
+                    case "NoTask":
+                        iconName = "NoTask";
                         break;
                 }
+                (cell as CellRendererPixbuf).Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages."+iconName+".png");
             }
         }
 
@@ -472,7 +486,7 @@ namespace UserInterface.Views
                 }
 
                 newLabel.UseMarkup = true;
-                newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(gridview.Columns[i].Title) + "</b>";
+                newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(Grid.Columns[i].Title) + "</b>";
                 if (this.DataSource.Columns[i].Caption != this.DataSource.Columns[i].ColumnName)
                 {
                     newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
@@ -490,7 +504,7 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Fixedcolview_Vadjustment_Changed1(object sender, EventArgs e)
         {
-            gridview.Vadjustment.Value = fixedcolview.Vadjustment.Value;
+            Grid.Vadjustment.Value = Fixedcolview.Vadjustment.Value;
         }
 
         /// <summary>
@@ -500,7 +514,7 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Gridview_Vadjustment_Changed(object sender, EventArgs e)
         {
-            fixedcolview.Vadjustment.Value = gridview.Vadjustment.Value;
+            Fixedcolview.Vadjustment.Value = Grid.Vadjustment.Value;
         }
 
         /// <summary>
@@ -597,7 +611,7 @@ namespace UserInterface.Views
             {
                 if (value != isReadOnly)
                 {
-                    foreach (TreeViewColumn col in gridview.Columns)
+                    foreach (TreeViewColumn col in Grid.Columns)
                     {
                         foreach (CellRenderer render in col.CellRenderers)
                         {
@@ -638,31 +652,31 @@ namespace UserInterface.Views
         /// <param name="number"></param>
         public void LockLeftMostColumns(int number)
         {
-            if (number == numberLockedCols || !gridview.IsMapped)
+            if (number == numberLockedCols || !Grid.IsMapped)
             {
                 return;
             }
 
             for (int i = 0; i < gridmodel.NColumns; i++)
             {
-                if (fixedcolview.Columns.Length > i)
+                if (Fixedcolview.Columns.Length > i)
                 {
-                    fixedcolview.Columns[i].Visible = i < number;
+                    Fixedcolview.Columns[i].Visible = i < number;
                 }
 
-                if (gridview.Columns.Length > i)
+                if (Grid.Columns.Length > i)
                 {
-                    gridview.Columns[i].Visible = i >= number;
+                    Grid.Columns[i].Visible = i >= number;
                 }
             }
             if (number > 0)
             {
                 if (numberLockedCols == 0)
                 {
-                    gridview.Vadjustment.ValueChanged += Gridview_Vadjustment_Changed;
-                    gridview.Selection.Changed += Gridview_CursorChanged;
-                    fixedcolview.Vadjustment.ValueChanged += Fixedcolview_Vadjustment_Changed1;
-                    fixedcolview.Selection.Changed += Fixedcolview_CursorChanged;
+                    Grid.Vadjustment.ValueChanged += Gridview_Vadjustment_Changed;
+                    Grid.Selection.Changed += Gridview_CursorChanged;
+                    Fixedcolview.Vadjustment.ValueChanged += Fixedcolview_Vadjustment_Changed1;
+                    Fixedcolview.Selection.Changed += Fixedcolview_CursorChanged;
                     Gridview_CursorChanged(this, EventArgs.Empty);
                     Gridview_Vadjustment_Changed(this, EventArgs.Empty);
                 }
@@ -676,29 +690,29 @@ namespace UserInterface.Views
                     //GridviewVadjustmentChanged(this, EventArgs.Empty);
                 }
 
-                fixedcolview.Model = gridmodel;
-                fixedcolview.Visible = true;
+                Fixedcolview.Model = gridmodel;
+                Fixedcolview.Visible = true;
                 splitter.Child1.NoShowAll = false;
                 splitter.ShowAll();
                 splitter.PositionSet = true;
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
                 if (splitter.Allocation.Width > 1)
                 {
-                    splitter.Position = Math.Min(fixedcolview.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                    splitter.Position = Math.Min(Fixedcolview.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
                 }
                 else
                 {
-                    splitter.Position = fixedcolview.SizeRequest().Width + splitterWidth;
+                    splitter.Position = Fixedcolview.SizeRequest().Width + splitterWidth;
                 }
 
             }
             else
             {
-                gridview.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
-                gridview.Selection.Changed -= Gridview_CursorChanged;
-                fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
-                fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
-                fixedcolview.Visible = false;
+                Grid.Vadjustment.ValueChanged -= Gridview_Vadjustment_Changed;
+                Grid.Selection.Changed -= Gridview_CursorChanged;
+                Fixedcolview.Vadjustment.ValueChanged -= Fixedcolview_Vadjustment_Changed1;
+                Fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
+                Fixedcolview.Visible = false;
                 splitter.Position = 0;
                 splitter.Child1.HideAll();
             }
@@ -732,11 +746,11 @@ namespace UserInterface.Views
 
             if (gridmodel.IterNChildren() == 0)
             {
-                gridview.Visible = false;
+                Grid.Visible = false;
             }
             else
             {
-                gridview.Visible = true;
+                Grid.Visible = true;
             }
         }
 
@@ -756,8 +770,8 @@ namespace UserInterface.Views
             {
                 table.Dispose();
             }
-            _mainWidget.Destroyed -= MainWidgetDestroyed;
-            _owner = null;
+            mainWidget.Destroyed -= MainWidgetDestroyed;
+            owner = null;
         }
 
         /// <summary>

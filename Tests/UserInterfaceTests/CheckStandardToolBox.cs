@@ -16,16 +16,18 @@ public class Script
         mainPresenter.OnStandardToolboxClick(null, null);
     
         // Get the presenter for this tab.
-        ExplorerPresenter presenter = mainPresenter.presenters1[0] as ExplorerPresenter;
+        ExplorerPresenter presenter = mainPresenter.Presenters1[0] as ExplorerPresenter;
 		if (presenter != null)
 		{
 			// Loop through all nodes in the standard toolbox and select each in turn.
-			while (presenter.SelectNextNode());
+			while (presenter.SelectNextNode())
+			{
+				presenter.HideRightHandPanel();
+				presenter.ShowRightHandPanel();
+			}
         }
 		
         // Close the user interface.
         mainPresenter.Close(askToSave:false);
     }
-
-
 }

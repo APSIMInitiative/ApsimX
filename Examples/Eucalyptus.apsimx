@@ -1,11 +1,13 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
-  "Version": 47,
+  "Version": 57,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -14,7 +16,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Name": "Eucalyptus",
+      "Descriptors": null,
+      "Name": "Simulation",
       "Children": [
         {
           "$type": "Models.Weather, Models",
@@ -325,50 +328,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "Name": "SoilNitrogen",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.SoilOrganicMatter, Models",
                   "RootCN": 60.0,
-                  "RootWt": 1.0,
-                  "SoilCN": 14.5,
                   "EnrACoeff": 7.4,
                   "EnrBCoeff": 0.2,
                   "Thickness": [
@@ -402,6 +363,16 @@
                     0.1
                   ],
                   "OCMetadata": null,
+                  "SoilCN": [
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5,
+                    14.5
+                  ],
                   "FBiom": [
                     0.04,
                     0.03,
@@ -421,6 +392,16 @@
                     0.99,
                     0.99,
                     0.99
+                  ],
+                  "RootWt": [
+                    0.29406966149543889,
+                    0.25310810327374095,
+                    0.18750709470737725,
+                    0.11372880185366477,
+                    0.068980005216630655,
+                    0.041838488071023888,
+                    0.025376325771097264,
+                    0.015391519611026323
                   ],
                   "OCUnits": 0,
                   "Name": "SoilOrganicMatter",
@@ -550,6 +531,237 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "DirectedGraphInfo": {
+                    "$type": "Models.Graph.DirectedGraph, Models",
+                    "Nodes": [
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Inert",
+                        "Location": "65, 426",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "SurfaceResidue",
+                        "Location": "345, 45",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMLignin",
+                        "Location": "265, 151",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCellulose",
+                        "Location": "444, 154",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "FOMCarbohydrate",
+                        "Location": "50, 200",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Microbial",
+                        "Location": "218, 299",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Humic",
+                        "Location": "458, 293",
+                        "Colour": "0, 158, 115",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Urea",
+                        "Location": "529, 419",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NO3",
+                        "Location": "185, 435",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "NH4",
+                        "Location": "357, 422",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "Atmosphere",
+                        "Location": "63, 290",
+                        "Colour": "White",
+                        "OutlineColour": "White",
+                        "Transparent": true
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "PlantAvailableNO3",
+                        "Location": "702, 339",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      },
+                      {
+                        "$type": "Models.Graph.Node, Models",
+                        "Name": "PlantAvailableNH4",
+                        "Location": "675, 205",
+                        "Colour": "86, 180, 233",
+                        "OutlineColour": "Black",
+                        "Transparent": false
+                      }
+                    ],
+                    "Arcs": [
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Microbial",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "SurfaceResidue",
+                        "DestinationName": "Humic",
+                        "Location": "349, 151",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Microbial",
+                        "Location": "259, 221",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMLignin",
+                        "DestinationName": "Humic",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Microbial",
+                        "Location": "370, 184",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCellulose",
+                        "DestinationName": "Humic",
+                        "Location": "463, 224",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Microbial",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "FOMCarbohydrate",
+                        "DestinationName": "Humic",
+                        "Location": "204, 215",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Microbial",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Microbial",
+                        "DestinationName": "Humic",
+                        "Location": "321, 241",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Humic",
+                        "DestinationName": "Microbial",
+                        "Location": "319, 267",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "Urea",
+                        "DestinationName": "NH4",
+                        "Location": "433, 416",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NO3",
+                        "DestinationName": "Atmosphere",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Text": null
+                      },
+                      {
+                        "$type": "Models.Graph.Arc, Models",
+                        "SourceName": "NH4",
+                        "DestinationName": "NO3",
+                        "Location": "0, 0",
+                        "Colour": "Black",
+                        "Text": null
+                      }
+                    ]
+                  },
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -590,6 +802,8 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "Eucalyptus",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
               "ResourceName": "Eucalyptus",
               "Name": "Eucalyptus",
               "IncludeInDocumentation": true,
@@ -599,6 +813,8 @@
             {
               "$type": "Models.PMF.Plant, Models",
               "CropType": "SCRUM",
+              "IsEnding": false,
+              "DaysAfterEnding": 0,
               "ResourceName": "SCRUM",
               "Name": "SCRUM",
               "IncludeInDocumentation": false,
@@ -607,8 +823,6 @@
             },
             {
               "$type": "Models.Report.Report, Models",
-              "ExperimentFactorNames": null,
-              "ExperimentFactorValues": null,
               "VariableNames": [
                 "[Clock].Today",
                 "[Eucalyptus].Age.Value()",
@@ -634,14 +848,6 @@
                 "[Clock].DoReport"
               ],
               "Name": "Report",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.SoluteManager, Models",
-              "Name": "SoluteManager",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -675,7 +881,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Plant Chickpea;\r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n        \r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"N Concentration in irrigation water (ppm)\")]\r\n        public double NConc { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = WaterDeficit * 10000.0 * NConc/1000000.0;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                    fertiliser.Apply(Amount: amount, Type: Fertiliser.Types.NO3N);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Plant Chickpea;\r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n        \r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [Description(\"N Concentration in irrigation water (ppm)\")]\r\n        public double NConc { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = WaterDeficit * 10000.0 * NConc/1000000.0;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                    fertiliser.Apply(Amount: amount, Type: Fertiliser.Types.NO3N);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
               "Parameters": [
                 {
                   "Key": "FASW",
@@ -737,11 +943,11 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Crop.IsReadyForHarvesting)\r\n            {\r\n                Crop.Harvest();\r\n                Crop.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Description(\"Crop\")]\r\n        public IPlant Crop { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Crop.IsReadyForHarvesting)\r\n            {\r\n                Crop.Harvest();\r\n                Crop.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
               "Parameters": [
                 {
                   "Key": "Crop",
-                  "Value": ".Simulations.Eucalyptus.Plantation.SCRUM"
+                  "Value": ".Simulations.Simulation.Plantation.SCRUM"
                 }
               ],
               "Name": "Harvesting",
@@ -765,7 +971,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -774,7 +982,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,
@@ -857,7 +1067,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -866,7 +1078,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
@@ -919,7 +1133,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -928,7 +1144,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
@@ -981,7 +1199,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -990,7 +1210,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 0,
@@ -1043,7 +1265,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -1052,7 +1276,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             },
             {
               "$type": "Models.Graph.Axis, Models",
@@ -1061,7 +1287,9 @@
               "Inverted": false,
               "Minimum": "NaN",
               "Maximum": "NaN",
-              "Interval": "NaN"
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
             }
           ],
           "LegendPosition": 3,

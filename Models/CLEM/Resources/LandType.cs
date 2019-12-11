@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
@@ -20,14 +18,20 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Land))]
     [Description("This resource represents a land type (e.g. Clay region.) This is not necessarily a paddock, but Bunded and interbund land areas must be separated into individual land types.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/land/landtype.htm")]
+    [HelpUri(@"Content/Features/Resources/Land/LandType.htm")]
     public class LandType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units")]
+        public string Units { get { return (Parent as Land).UnitsOfArea; } }
+
         /// <summary>
         /// Total Area
         /// </summary>
         [Description("Land area")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double LandArea { get; set; }
 
         /// <summary>
@@ -36,28 +40,22 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValueAttribute(0.0)]
         [Description("Proportion taken up with buildings etc.")]
         [Required, Proportion]
-        public double PortionBuildings
-        {
-            get; set;
-        }
+        public double PortionBuildings { get; set; }
 
         /// <summary>
         /// Allocate only proportion of Land area
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1.0)]
         [Description("Allocate only proportion of Land area")]
-        [Required, Proportion]
-        public double ProportionOfTotalArea
-        {
-            get; set;
-        }
+        [Required, Proportion, GreaterThanValue(0)]
+        public double ProportionOfTotalArea { get; set; }
 
         /// <summary>
         /// Soil Type (1-5) 
         /// </summary>
-        [Description("Soil type index")]
+        [Description("Land type id")]
         [Required]
-        public int SoilType { get; set; }
+        public string SoilType { get; set; }
 
         /// <summary>
         /// Area not currently being used (ha)
@@ -143,7 +141,7 @@ namespace Models.CLEM.Resources
             }
             double addAmount = (double)resourceAmount;
             double amountAdded = addAmount;
-            if (this.areaAvailable + addAmount > this.UsableArea )
+            if (this.areaAvailable + addAmount > this.UsableArea)
             {
                 amountAdded = this.UsableArea - this.areaAvailable;
                 string message = "Tried to add more available land to [r=" + this.Name + "] than exists.";
@@ -152,14 +150,15 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                this.areaAvailable = this.areaAvailable + addAmount;
+                this.areaAvailable += addAmount;
             }
-            ResourceTransaction details = new ResourceTransaction();
-            details.Gain = amountAdded;
-            details.Activity = activity.Name;
-            details.ActivityType = activity.GetType().Name;
-            details.Reason = reason;
-            details.ResourceType = this.Name;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                Gain = amountAdded,
+                Activity = activity,
+                Reason = reason,
+                ResourceType = this
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -209,12 +208,13 @@ namespace Models.CLEM.Resources
             }
 
             request.Provided = amountRemoved;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = amountRemoved;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this,
+                Loss = amountRemoved,
+                Activity = request.ActivityModel,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -245,11 +245,11 @@ namespace Models.CLEM.Resources
 
             // find activity in list
             LandActivityAllocation allocation = AllocatedActivitiesList.Where(a => a.Activity.Name == activity.Name).FirstOrDefault();
-            if(allocation!= null)
+            if (allocation != null)
             {
                 // modify - remove if added by activity and add if removed or taken for the activity
-                allocation.LandAllocated += amountChanged * (added?-1:1);
-                if(allocation.LandAllocated < 0.00001)
+                allocation.LandAllocated += amountChanged * (added ? -1 : 1);
+                if (allocation.LandAllocated < 0.00001)
                 {
                     AllocatedActivitiesList.Remove(allocation);
                 }
@@ -257,14 +257,14 @@ namespace Models.CLEM.Resources
             else
             {
                 // if resource was removed by activity it is added to the activty 
-                if(!added & amountChanged > 0)
+                if (!added && amountChanged > 0)
                 {
                     AllocatedActivitiesList.Add(new LandActivityAllocation()
                     {
                         LandName = this.Name,
                         Activity = activity,
                         LandAllocated = amountChanged,
-                        ActivityName = (activity.Name == this.Name)?"Buildings":activity.Name
+                        ActivityName = (activity.Name == this.Name) ? "Buildings" : activity.Name
                     });
                 }
             }
@@ -300,18 +300,50 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
+            if (LandArea == 0)
+            {
+                html += "<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land";
+            }
+            else if (ProportionOfTotalArea == 0)
+            {
+                html += "The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned";
+            }
+            else
+            {
+                html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
+                string units = (this as IResourceType).Units;
+                if (units != "NA")
+                {
+                    if (units == null || units == "")
+                    {
+                        html += "";
+                    }
+                    else
+                    {
+                        html += " <span class=\"setvalue\">" + units + "</span>";
+                    }
+                }
+            }
+
             if (PortionBuildings > 0)
             {
                 html += " of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings";
             }
             html += "</div>";
             html += "\n<div class=\"activityentry\">";
-            html += "This land has soil of index <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
+            html += "This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
             html += "\n</div>";
             return html;
         }
 
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        {
+            return "";
+        }
     }
 
     /// <summary>

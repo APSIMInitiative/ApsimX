@@ -20,9 +20,9 @@
 
     public class ModelDetailsWrapperPresenter : IPresenter
     {
-        private ExplorerPresenter ExplorerPresenter;
+        private ExplorerPresenter explorerPresenter;
 
-        private IModelDetailsWrapperView View;
+        private IModelDetailsWrapperView view;
 
         /// <summary>Gets or sets the APSIMX simulations object</summary>
         public Simulations ApsimXFile { get; set; }
@@ -33,54 +33,66 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.ApsimXFile = model as Simulations;
-            this.ExplorerPresenter = explorerPresenter;
-            this.View = view as IModelDetailsWrapperView;
+            this.explorerPresenter = explorerPresenter;
+            this.view = view as IModelDetailsWrapperView;
 
             if (model != null)
             {
                 ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                 PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
 
-                View.ModelTypeText = model.GetType().ToString().Substring("Models.".Length);
+                this.view.ModelTypeText = model.GetType().ToString().Substring("Models.".Length);
                 DescriptionAttribute descAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (descAtt != null)
                 {
-                    View.ModelDescriptionText = descAtt.ToString();
+                    this.view.ModelDescriptionText = descAtt.ToString();
                 }
                 else
                 {
-                    View.ModelDescriptionText = "";
+                    this.view.ModelDescriptionText = "";
                 }
                 // Set CLEM specific colours for title
-                if (View.ModelTypeText.Contains(".Resources."))
+                if (this.view.ModelTypeText.Contains(".Resources."))
                 {
-                    View.ModelTypeTextColour = "996633";
+                    this.view.ModelTypeTextColour = "996633";
                 }
-                else if (View.ModelTypeText.Contains("Activities."))
+                else if (this.view.ModelTypeText.Contains(".Activities.LabourRequirement"))
                 {
-                    View.ModelTypeTextColour = "009999";
+                    this.view.ModelTypeTextColour = "cc33cc";
+                }
+                else if (this.view.ModelTypeText.Contains(".Activities."))
+                {
+                    this.view.ModelTypeTextColour = "009999";
+                }
+                else if (this.view.ModelTypeText.Contains(".Groupings."))
+                {
+                    this.view.ModelTypeTextColour = "cc33cc";
+                }
+                else if (this.view.ModelTypeText.Contains(".File"))
+                {
+                    this.view.ModelTypeTextColour = "008000";
                 }
 
                 HelpUriAttribute helpAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(HelpUriAttribute), false) as HelpUriAttribute;
-                View.ModelHelpURL = "";
+                this.view.ModelHelpURL = "";
                 if (helpAtt!=null)
                 {
-                    View.ModelHelpURL = helpAtt.ToString();
+                    this.view.ModelHelpURL = helpAtt.ToString();
                 }
 
                 var vs = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
                 if (vs.Count() > 0)
                 {
-                    VersionAttribute verAtt = vs.ToList<Attribute>().Last() as VersionAttribute;
+                    VersionAttribute verAtt = vs.ToList<Attribute>().Cast<VersionAttribute>().OrderBy(a => a.ToString()).Last() as VersionAttribute;
                     if (verAtt != null)
                     {
                         string v = "Version ";
                         v += verAtt.ToString();
-                        View.ModelVersionText = v;
+                        this.view.ModelVersionText = v;
                     }
                     else
                     {
-                        View.ModelVersionText = "";
+                        this.view.ModelVersionText = "";
                     }
                 }
 
@@ -107,20 +119,20 @@
         {
             try
             {
-                object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.View }, null, null); 
+                object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null); 
                 this.currentLowerPresenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName) as IPresenter;
                 if (newView != null && this.currentLowerPresenter != null)
                 {
-                    this.View.AddLowerView(newView);
-                    this.currentLowerPresenter.Attach(model, newView, ExplorerPresenter);
+                    this.view.AddLowerView(newView);
+
                     // Resolve links in presenter.
-                    // Not sure if this is needed AL
-                    // ApsimXFile.Links.Resolve(currentLowerPresenter);
+                    explorerPresenter.ApsimXFile.Links.Resolve(currentLowerPresenter);
+                    this.currentLowerPresenter.Attach(model, newView, explorerPresenter);
                 }
             }
             catch (Exception err)
             {
-                ExplorerPresenter.MainPresenter.ShowError(err);
+                explorerPresenter.MainPresenter.ShowError(err);
             }
         }
 

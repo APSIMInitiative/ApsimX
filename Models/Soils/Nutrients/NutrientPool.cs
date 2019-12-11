@@ -20,15 +20,15 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
-    public class NutrientPool : Model
+    public class NutrientPool : Model, INutrientPool
     {
         [Link]
         Soil soil = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction InitialCarbon = null;
 
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction InitialNitrogen = null;
 
         /// <summary>Initial carbon/nitrogen ratio</summary>

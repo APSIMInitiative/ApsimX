@@ -26,7 +26,12 @@ namespace UserInterface.Intellisense
         /// <summary>
         /// List of assemblies which in which we will search for completion options.
         /// </summary>
-        private static IUnresolvedAssembly[] unresolvedAssemblies = GetAssemblies();
+        private static IUnresolvedAssembly[] unresolvedAssemblies;
+
+        /// <summary>
+        /// Controls access to the initialisation of this class.
+        /// </summary>
+        private static object initMutex = new object();
 
         /// <summary>
         /// Default construtor. If null is passed in, the default assemblies list will be used.
@@ -34,6 +39,7 @@ namespace UserInterface.Intellisense
         /// <param name="assemblies"></param>
         public CSharpCompletion(IReadOnlyList<Assembly> assemblies = null)
         {
+            Init();
             projectContent = new CSharpProjectContent();
             if (assemblies != null)
             {
@@ -41,6 +47,19 @@ namespace UserInterface.Intellisense
             }
             
             projectContent = projectContent.AddAssemblyReferences((IEnumerable<IUnresolvedAssembly>)unresolvedAssemblies);
+        }
+
+        /// <summary>
+        /// Initialises the completion object by loading required assemblies.
+        /// </summary>
+        public static void Init()
+        {
+            lock (initMutex)
+            {
+                if (unresolvedAssemblies == null)
+                    unresolvedAssemblies = GetAssemblies(); // This takes a long time
+            }
+
         }
 
         /// <summary>
@@ -271,6 +290,7 @@ namespace UserInterface.Intellisense
 		            typeof(IProjectContent).Assembly,
                     typeof(Models.Core.IModel).Assembly, // Models.exe
                     typeof(APSIM.Shared.Utilities.StringUtilities).Assembly, // APSIM.Shared.dll
+                    typeof(MathNet.Numerics.Combinatorics).Assembly, // MathNet.Numerics
                 };
             assemblies = assemblies.Where(v => !v.IsDynamic).ToList();
 

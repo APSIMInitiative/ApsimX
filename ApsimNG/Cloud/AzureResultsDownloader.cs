@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.WindowsAzure.Storage;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage;
 using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Common;
 using System.IO;
@@ -15,7 +15,7 @@ using UserInterface.Presenters;
 using System.Text.RegularExpressions;
 using System.Data;
 using System.Data.SQLite;
-
+using System.Globalization;
 
 namespace ApsimNG.Cloud
 {
@@ -127,7 +127,7 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Mutual exclusion sempahore for reading the .db files.
         /// </summary>
-        private object dbMutex;
+        private object databaseMutex;
 
         /// <summary>
         /// Constructor. Requires Azure credentials to already be set in ApsimNG.Properties.Settings. 
@@ -150,7 +150,7 @@ namespace ApsimNG.Cloud
             outputPath = path;
             rawResultsPath = outputPath + "\\" + jobName.ToString() + "_Results";
             tempPath = Path.GetTempPath() + "\\" + jobId;
-            dbMutex = new object();
+            databaseMutex = new object();
             presenter = explorer;
             unzipResults = unzipResultFiles;
             try
@@ -167,11 +167,11 @@ namespace ApsimNG.Cloud
             name = jobName;
             StorageCredentials storageCredentials = StorageCredentials.FromConfiguration();
             BatchCredentials batchCredentials = BatchCredentials.FromConfiguration();
-            storageAccount = new CloudStorageAccount(new Microsoft.WindowsAzure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
+            storageAccount = new CloudStorageAccount(new Microsoft.Azure.Storage.Auth.StorageCredentials(storageCredentials.Account, storageCredentials.Key), true);
             var sharedCredentials = new Microsoft.Azure.Batch.Auth.BatchSharedKeyCredentials(batchCredentials.Url, batchCredentials.Account, batchCredentials.Key);
             batchClient = BatchClient.Open(sharedCredentials);
             blobClient = storageAccount.CreateCloudBlobClient();
-            blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);        
+            blobClient.DefaultRequestOptions.RetryPolicy = new Microsoft.Azure.Storage.RetryPolicies.LinearRetry(TimeSpan.FromSeconds(3), 10);        
         }
 
         /// <summary>
@@ -470,16 +470,16 @@ namespace ApsimNG.Cloud
         /// <returns></returns>
         private string ReadSqliteDB(string path, bool printHeader, string delim)
         {
-            lock(dbMutex)
+            lock(databaseMutex)
             {
-                SQLiteConnection m_dbConnection;
+                SQLiteConnection dbConnection;
                 Dictionary<string, string> simNames = new Dictionary<string, string>();
 
-                m_dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;", true);                
+                dbConnection = new SQLiteConnection("Data Source=" + path + ";Version=3;", true);                
 
                 try
                 {
-                    m_dbConnection.Open();                    
+                    dbConnection.Open();                    
                 }
                 catch (Exception err)
                 {
@@ -493,7 +493,7 @@ namespace ApsimNG.Cloud
                 string sql = "SELECT * FROM _Simulations";
                 try
                 {
-                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteCommand command = new SQLiteCommand(sql, dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -512,7 +512,7 @@ namespace ApsimNG.Cloud
                 List<string> tables = new List<string>();
                 try
                 {
-                    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                    SQLiteCommand command = new SQLiteCommand(sql, dbConnection);
                     SQLiteDataReader reader = command.ExecuteReader();
                     while (reader.Read()) tables.Add(reader[0].ToString());
                     command.Dispose();
@@ -534,7 +534,7 @@ namespace ApsimNG.Cloud
                     {
                         DataTable reportTable = new DataTable();
                         sql = "SELECT * FROM " + tableName;
-                        SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+                        SQLiteCommand command = new SQLiteCommand(sql, dbConnection);
                         SQLiteDataReader reader = command.ExecuteReader();
                         reportTable.Load(reader);
                         reportTable.Merge(master);
@@ -547,7 +547,7 @@ namespace ApsimNG.Cloud
                 {
                     presenter.ShowError(new Exception("Error reading or merging table: ", err));
                 }
-                m_dbConnection.Close();
+                dbConnection.Close();
                 // Generate the CSV file data                
                 // enumerate delimited column names
                 string csvData = "File Name" + delim + "Sim Name" + delim + master.Columns.Cast<DataColumn>().Select(x => x.ColumnName).Aggregate((a, b) => a + delim + b) + "\n";
@@ -579,7 +579,7 @@ namespace ApsimNG.Cloud
                 (
                     delegate (Match m)
                     {
-                        return string.Format("{0:0}", (DateTime.Parse(m.Value) - new DateTime(1900, 1, 1)).TotalDays + 2);
+                        return string.Format("{0:0}", (DateTime.Parse(m.Value) - new DateTime(1900, 1, 1)).TotalDays + 2, CultureInfo.InvariantCulture);
                     }
                 )
             );

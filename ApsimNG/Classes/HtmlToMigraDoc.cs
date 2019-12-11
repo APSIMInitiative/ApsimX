@@ -576,10 +576,10 @@
             if (doc.Styles["HorizontalRule"] == null)
             { 
                 var hr = doc.AddStyle("HorizontalRule", "Normal");
-                var hrBorder = new MigraDoc.DocumentObjectModel.Border();
-                hrBorder.Width = "1pt";
-                hrBorder.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
-                hr.ParagraphFormat.Borders.Bottom = hrBorder;
+                var border = new MigraDoc.DocumentObjectModel.Border();
+                border.Width = "1pt";
+                border.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
+                hr.ParagraphFormat.Borders.Bottom = border;
                 hr.ParagraphFormat.LineSpacing = 0;
                 hr.ParagraphFormat.SpaceBefore = 15;
             }

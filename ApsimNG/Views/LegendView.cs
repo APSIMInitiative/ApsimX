@@ -26,12 +26,12 @@ namespace UserInterface.Views
     /// </summary>
     public class LegendView : ViewBase, ILegendView
     {
-        private string OriginalText;
+        private string originalText;
 
         public event PositionChangedDelegate OnPositionChanged;
         public event EventHandler DisabledSeriesChanged;
 
-        private ComboBox combobox1 = null;
+        private ComboBox combobox1 = null; // fixme - should use IDropDownView, and make public.
         private HBox hbox1 = null;
         private Gtk.TreeView listview = null;
 
@@ -51,7 +51,7 @@ namespace UserInterface.Views
             hbox1 = (HBox)builder.GetObject("hbox1");
             combobox1 = (ComboBox)builder.GetObject("combobox1");
             listview = (Gtk.TreeView)builder.GetObject("listview");
-            _mainWidget = hbox1;
+            mainWidget = hbox1;
             combobox1.Model = comboModel;
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
@@ -69,7 +69,7 @@ namespace UserInterface.Views
             listview.AppendColumn(column);
             listToggle.Activatable = true;
             listToggle.Toggled += OnItemChecked;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -82,8 +82,8 @@ namespace UserInterface.Views
             listModel.Dispose();
             listRender.Destroy();
             listToggle.Destroy();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            owner = null;
         }
 
         private bool settingCombo = false;
@@ -107,7 +107,7 @@ namespace UserInterface.Views
                 else // Could not find a matching entry
                     combobox1.Active = 0;
             }
-            OriginalText = title;
+            originalText = title;
             settingCombo = false;
         }
 
@@ -118,9 +118,9 @@ namespace UserInterface.Views
         {
             TreeIter iter;
             if (combobox1.GetActiveIter(out iter))
-                OriginalText = (string)combobox1.Model.GetValue(iter, 0);
+                originalText = (string)combobox1.Model.GetValue(iter, 0);
             else
-                OriginalText = null;
+                originalText = null;
         }
 
         /// <summary>
@@ -134,11 +134,11 @@ namespace UserInterface.Views
             string curText = null;
             if (combobox1.GetActiveIter(out iter))
                 curText = (string)combobox1.Model.GetValue(iter, 0);
-            if (OriginalText == null)
-                OriginalText = curText;
-            if (curText != OriginalText && OnPositionChanged != null)
+            if (originalText == null)
+                originalText = curText;
+            if (curText != originalText && OnPositionChanged != null)
             {
-                OriginalText = curText;
+                originalText = curText;
                 OnPositionChanged.Invoke(curText);
             }
         }

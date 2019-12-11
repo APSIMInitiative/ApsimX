@@ -7,12 +7,16 @@ namespace Models.Report
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Newtonsoft.Json;
+    using Models.Core.Run;
+    using Models.Storage;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Linq;
     using System.Xml.Serialization;
+    using Models.CLEM;
 
     /// <summary>
     /// A report class for writing output to the data store.
@@ -24,17 +28,16 @@ namespace Models.Report
     [ValidParent(ParentType = typeof(Zones.CircularZone))]
     [ValidParent(ParentType = typeof(Zones.RectangularZone))]
     [ValidParent(ParentType = typeof(Simulation))]
+    [ValidParent(ParentType = typeof(CLEMFolder))]
     public class Report : Model
     {
         /// <summary>The columns to write to the data store.</summary>
         [NonSerialized]
         private List<IReportColumn> columns = null;
 
-        /// <summary>An array of column names to write to storage.</summary>
-        private IEnumerable<string> columnNames = null;
-
-        /// <summary>An array of columns units to write to storage.</summary>
-        private IEnumerable<string> columnUnits = null;
+        /// <summary>The data to write to the data store.</summary>
+        [NonSerialized]
+        private ReportData dataToWriteToDb = null;
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -46,7 +49,7 @@ namespace Models.Report
 
         /// <summary>Link to a storage service.</summary>
         [Link]
-        private IStorageWriter storage = null;
+        private IDataStore storage = null;
 
         /// <summary>Link to a locator service.</summary>
         [Link]
@@ -62,12 +65,6 @@ namespace Models.Report
         /// </summary>
         [XmlIgnore] public int ActiveTabIndex = 0;
 
-        /// <summary>Experiment factor names</summary>
-        public List<string> ExperimentFactorNames { get; set; }
-
-        /// <summary>Experiment factor values</summary>
-        public List<string> ExperimentFactorValues { get; set; }
-
         /// <summary>
         /// Gets or sets variable names for outputting
         /// </summary>
@@ -82,15 +79,68 @@ namespace Models.Report
         [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
+        /// <summary>
+        /// Date of the day after last time report did write to storage.
+        /// </summary>
+        [JsonIgnore]
+        public DateTime DayAfterLastOutput { get; set; }
+
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            // sanitise the variable names and remove duplicates
+            DayAfterLastOutput = clock.Today;
+            dataToWriteToDb = null;
+
+            // Tidy up variable/event names.
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
+
+            // Locate reporting variables.
+            FindVariableMembers();
+
+            // Silently do nothing if no event names present.
+            if (EventNames == null || EventNames.Length < 1)
+                return;
+
+            // Subscribe to events.
+            foreach (string eventName in EventNames)
+                events.Subscribe(eventName, DoOutputEvent);
+        }
+
+        /// <summary>
+        /// Sanitises the event names and removes duplicates/comments.
+        /// </summary>
+        /// <returns></returns>
+        protected string[] TidyUpEventNames()
+        {
+            List<string> eventNames = new List<string>();
+            for (int i = 0; i < EventNames?.Length; i++)
+            {
+                string eventName = EventNames[i];
+
+                // If there is a comment in this line, ignore everything after (and including) the comment.
+                int commentIndex = eventName.IndexOf("//");
+                if (commentIndex >= 0)
+                    eventName = eventName.Substring(0, commentIndex);
+
+                if (!string.IsNullOrWhiteSpace(eventName))
+                    eventNames.Add(eventName.Trim());
+            }
+
+            return eventNames.ToArray();
+        }
+
+        /// <summary>
+        /// Sanitises the variable names and removes duplicates/comments.
+        /// </summary>
+        protected string[] TidyUpVariableNames()
+        {
             List<string> variableNames = new List<string>();
-            variableNames.Add("Parent.Name as Zone");
+            IModel zone = Apsim.Parent(this, typeof(Zone));
+            variableNames.Add($"[{zone.Name}].Name as Zone");
             for (int i = 0; i < this.VariableNames.Length; i++)
             {
                 bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
@@ -108,38 +158,67 @@ namespace Models.Report
                         variableNames.Add(variable.Trim());
                 }
             }
-            this.VariableNames = variableNames.ToArray();
-            this.FindVariableMembers();
 
-            // Subscribe to events.
-            if (EventNames != null)
-            {
-                foreach (string eventName in EventNames)
-                {
-                    if (eventName != string.Empty)
-                        events.Subscribe(eventName.Trim(), DoOutputEvent);
-                }
-            }
+            return variableNames.ToArray();
+        }
+
+        /// <summary>Invoked when a simulation is completed.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            if (dataToWriteToDb != null)
+                storage.Writer.WriteTable(dataToWriteToDb);
+            dataToWriteToDb = null;
         }
 
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
         public void DoOutput()
         {
-            object[] valuesToWrite = new object[columns.Count];
+            if (dataToWriteToDb == null)
+            {
+                string folderName = null;
+                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
+                if (folderDescriptor != null)
+                    folderName = folderDescriptor.Value;
+                dataToWriteToDb = new ReportData()
+                {
+                    FolderName = folderName,
+                    SimulationName = simulation.Name,
+                    TableName = Name,
+                    ColumnNames = columns.Select(c => c.Name).ToList(),
+                    ColumnUnits = columns.Select(c => c.Units).ToList()
+                };
+            }
+
+            // Create a row ready for writing.
+            List<object> valuesToWrite = new List<object>();
             for (int i = 0; i < columns.Count; i++)
-                valuesToWrite[i] = columns[i].GetValue();
-            storage.WriteRow(simulation.Name, Name, columnNames, columnUnits, valuesToWrite);
+                valuesToWrite.Add(columns[i].GetValue());
+
+            // Add row to our table that will be written to the db file
+            dataToWriteToDb.Rows.Add(valuesToWrite);
+
+            // Write the table if we reach our threshold number of rows.
+            if (dataToWriteToDb.Rows.Count == 100)
+            {
+                storage.Writer.WriteTable(dataToWriteToDb);
+                dataToWriteToDb = null;
+            }
+
+            DayAfterLastOutput = clock.Today.AddDays(1);
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>
         /// <param name="storage">The data store.</param>
         /// <param name="fileName">Name of the file.</param>
-        public static void WriteAllTables(IStorageReader storage, string fileName)
+        public static void WriteAllTables(IDataStore storage, string fileName)
         {
             // Write out each table for this simulation.
-            foreach (string tableName in storage.TableNames)
+            foreach (string tableName in storage.Reader.TableNames)
             {
-                DataTable data = storage.GetData(tableName);
+                DataTable data = storage.Reader.GetData(tableName);
                 if (data != null && data.Rows.Count > 0)
                 {
                     SortColumnsOfDataTable(data);
@@ -189,19 +268,58 @@ namespace Models.Report
             foreach (string fullVariableName in this.VariableNames)
             {
                 if (fullVariableName != string.Empty)
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage, locator, events));
+                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
             }
-            columnNames = columns.Select(c => c.Name);
-            columnUnits = columns.Select(c => c.Units);
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>
         private void AddExperimentFactorLevels()
         {
-            if (ExperimentFactorValues != null)
+            if (simulation.Descriptors != null)
             {
-                for (int i = 0; i < ExperimentFactorNames.Count; i++)
-                    this.columns.Add(new ReportColumnConstantValue(ExperimentFactorNames[i], ExperimentFactorValues[i]));
+                foreach (var descriptor in simulation.Descriptors)
+                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                StoreFactorsInDataStore();
+            }
+        }
+
+        /// <summary>Store descriptors in DataStore.</summary>
+        private void StoreFactorsInDataStore()
+        {
+            if (storage != null && simulation != null && simulation.Descriptors != null)
+            {
+                var table = new DataTable("_Factors");
+                table.Columns.Add("ExperimentName", typeof(string));
+                table.Columns.Add("SimulationName", typeof(string));
+                table.Columns.Add("FolderName", typeof(string));
+                table.Columns.Add("FactorName", typeof(string));
+                table.Columns.Add("FactorValue", typeof(string));
+
+                var experimentDescriptor = simulation.Descriptors.Find(d => d.Name == "Experiment");
+                var simulationDescriptor = simulation.Descriptors.Find(d => d.Name == "SimulationName");
+                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
+
+                foreach (var descriptor in simulation.Descriptors)
+                {
+                    if (descriptor.Name != "Experiment" &&
+                        descriptor.Name != "SimulationName" &&
+                        descriptor.Name != "FolderName" &&
+                        descriptor.Name != "Zone")
+                    {
+                        var row = table.NewRow();
+                        if (experimentDescriptor != null)
+                            row[0] = experimentDescriptor.Value;
+                        if (simulationDescriptor != null)
+                            row[1] = simulationDescriptor.Value;
+                        if (folderDescriptor != null)
+                            row[2] = folderDescriptor.Value;
+                        row[3] = descriptor.Name;
+                        row[4] = descriptor.Value;
+                        table.Rows.Add(row);
+                    }
+                }
+                storage.Writer.WriteTable(table);
             }
         }
     }

@@ -78,5 +78,10 @@ namespace UserInterface.Interfaces
         /// Gets or sets the cell value
         /// </summary>
         object Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cell readonly status
+        /// </summary>
+        bool IsRowReadonly { get; set; }
     }
 }

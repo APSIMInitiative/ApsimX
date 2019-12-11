@@ -21,9 +21,14 @@ namespace UserInterface.Interfaces
         int Width { get; set; }
 
         /// <summary>
+        /// Gets or sets the minimum column width in pixels.
+        /// </summary>
+        int MinimumWidth { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the column is left aligned. If not then right is assumed.
         /// </summary>
-        bool LeftAlignment { get; set; }
+        bool LeftJustification { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the column is read only.
@@ -64,5 +69,8 @@ namespace UserInterface.Interfaces
         /// Gets or sets the text of the header
         /// </summary>
         string HeaderText { get; set; }
+
+        /// <summary>Gets or sets the left justification of the header</summary>
+        bool HeaderLeftJustification { get; set; }
     }
 }

@@ -1,4 +1,10 @@
 // -----------------------------------------------------------------------
+// <copyright file="stock_padd.cs" company="APSIM Initiative">
+//     Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+
+// -----------------------------------------------------------------------
 // GrazPlan animal model paddock and forage objects
 // -----------------------------------------------------------------------
 
@@ -6,12 +12,14 @@ namespace Models.GrazPlan
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Models.Core;
+    using Models.Interfaces;
     using Models.PMF.Interfaces;
 
     /*
-     GRAZPLAN animal biology model for AusFarm - PaddockList & ForageList classes                                                                   
+     GRAZPLAN animal biology model for AusFarm - PaddockList && ForageList classes                                                                   
                                                                                
      * PaddockList contains information about paddocks within the animal      
        biology model. Paddocks have the following attributes:                  
@@ -314,8 +322,8 @@ namespace Models.GrazPlan
 
             double[] result = new double[GrazType.DigClassNo + 1];
 
-            highClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - maxDMD + EPSILON) / CLASSWIDTH));
-            lowClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - minDMD - EPSILON) / CLASSWIDTH));
+            highClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - maxDMD + EPSILON) / CLASSWIDTH), CultureInfo.InvariantCulture);
+            lowClass = 1 + Convert.ToInt32(Math.Truncate((HIGHESTDMD - minDMD - EPSILON) / CLASSWIDTH), CultureInfo.InvariantCulture);
             if (highClass != lowClass)
                 relDMD = Math.Max(0.0, Math.Min((meanDMD - GrazType.ClassDig[lowClass]) / (GrazType.ClassDig[highClass] - GrazType.ClassDig[lowClass]), 1.0));
             else
@@ -733,13 +741,13 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the crop, pasture component
         /// </summary>
-        public object ForageObj { get; set; }
+        public IPlantDamage ForageObj { get; set; }
 
         /// <summary>
         /// Update the forage data for this crop/agpasture object
         /// </summary>
         /// <param name="forageObj">The crop/pasture object</param>
-        public void UpdateForages(object forageObj)
+        public void UpdateForages(IPlantDamage forageObj)
         {
             // ensure this forage is in the list
             // the forage key in this case is component name
@@ -795,7 +803,7 @@ namespace Models.GrazPlan
                 throw new Exception("Stock: Unit (" + units + ") not recognised");
 
             if (forage != null)
-                forage.SetAvailForage(GrazType.scaleGrazingInputs(grazingInput, scaleInput));
+                forage.SetAvailForage(GrazType.ScaleGrazingInputs(grazingInput, scaleInput));
             else
                 throw new Exception("Stock: Forage not recognised");
         }
@@ -806,7 +814,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
         /// <returns>The grazing inputs</returns>
-        private GrazType.GrazingInputs Crop2GrazingInputs(object forageObj)
+        private GrazType.GrazingInputs Crop2GrazingInputs(IPlantDamage forageObj)
         {
             GrazType.GrazingInputs result = new GrazType.GrazingInputs();
             GrazType.zeroGrazingInputs(ref result);
@@ -829,7 +837,7 @@ namespace Models.GrazPlan
             }
 
             // calculate the total live and dead biomass
-            foreach (IRemovableBiomass biomass in Apsim.Children((IModel)forageObj, typeof(IRemovableBiomass)))
+            foreach (IOrganDamage biomass in forageObj.Organs)
             {
                 if (biomass.IsAboveGround)
                 {
@@ -838,7 +846,7 @@ namespace Models.GrazPlan
                         result.TotalGreen += (greenPropn * biomass.Live.Wt);   // g/m^2
                         result.TotalDead += biomass.Dead.Wt;
 
-                        dmd = ((biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt));    // storage and metab are 100% dmd
+                        dmd = (biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt);    // storage and metab are 100% dmd
                         dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
                         totalDMD += dmd;
                         totalN += (greenPropn * biomass.Live.N) + biomass.Dead.N;
@@ -897,11 +905,11 @@ namespace Models.GrazPlan
                 double totalRemoved = 0.0;
                 for (int i = 0; i < removed.Herbage.Length; i++)
                     totalRemoved += removed.Herbage[i];
-                double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead));
+                double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead + GrazType.Ungrazeable * 10.0)); //  calculations in kg /ha, needs more checking, would be good to use a variable for the unit conversion on ungrazeable
 
                 // calculations of proportions each organ of the total plant removed (in the native units)
                 double totalDM = 0;
-                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                foreach (IOrganDamage organ in ForageObj.Organs)
                 {
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
@@ -909,17 +917,17 @@ namespace Models.GrazPlan
                     }
                 }
 
-                foreach (IRemovableBiomass organ in Apsim.Children((IModel)this.ForageObj, typeof(IRemovableBiomass)))
+                foreach (IOrganDamage organ in ForageObj.Organs)
                 {
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
                         double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
-                        double prpnToRemove = propnRemoved * propnOfPlantDM / (1.0 - propnOfPlantDM);
+                        double prpnToRemove = propnRemoved * propnOfPlantDM;
                         prpnToRemove = Math.Min(prpnToRemove, 1.0);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnToRemove;
                         removal.FractionLiveToRemove = prpnToRemove;
-                        organ.RemoveBiomass("Graze", removal);
+                        ForageObj.RemoveBiomass(organ.Name, "Graze", removal);
                     }
                 }
                 
@@ -1037,7 +1045,7 @@ namespace Models.GrazPlan
         /// <param name="hostID">Component ID</param>
         /// <param name="driverID">Driver ID</param>
         /// <param name="forageObj">The forage object</param>
-        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, object forageObj)
+        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, IPlantDamage forageObj)
         {
             ForageProvider forageProvider;
 
@@ -1192,6 +1200,11 @@ namespace Models.GrazPlan
         /// Gets or sets the urine destination
         /// </summary>
         public object AddUrineObj { get; set; }
+
+        /// <summary>
+        /// Gets or sets the soil of the paddock
+        /// </summary>
+        public ISoil Soil { get; set; }
 
         /// <summary>
         /// Gets or sets the paddock area (ha)

@@ -14,11 +14,11 @@ namespace Models.CLEM.Resources
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This represents a list of labour availability settings")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/labour/labouravailability.htm")]
+    [HelpUri(@"Content/Features/Resources/Labour/LabourAvailability.htm")]
     public class LabourAvailabilityList: LabourSpecifications
     {
 
@@ -55,7 +55,6 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             html += "</table>";
-            html += "\n</div>";
             return html;
         }
 

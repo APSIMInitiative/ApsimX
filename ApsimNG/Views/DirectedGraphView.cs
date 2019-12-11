@@ -55,7 +55,6 @@ namespace UserInterface.Views
         public DirectedGraphView(ViewBase owner = null) : base(owner)
         {
             drawable = new DrawingArea();
-            
             drawable.AddEvents(
             (int)Gdk.EventMask.PointerMotionMask
             | (int)Gdk.EventMask.ButtonPressMask
@@ -73,10 +72,11 @@ namespace UserInterface.Views
             };
             
             scroller.AddWithViewport(drawable);
-
-            _mainWidget = scroller;
-            drawable.ModifyBg(StateType.Normal, new Gdk.Color(255, 255, 255));
+            
+            mainWidget = scroller;
             drawable.Realized += OnRealized;
+            DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
+            DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
         }
 
         /// <summary>The description (nodes & arcs) of the directed graph.</summary>
@@ -112,17 +112,24 @@ namespace UserInterface.Views
         /// <summary>The drawing canvas is being exposed to user.</summary>
         private void OnDrawingAreaExpose(object sender, ExposeEventArgs args)
         {
-            DrawingArea area = (DrawingArea)sender;
+            try
+            {
+                DrawingArea area = (DrawingArea)sender;
 
-            Cairo.Context context = Gdk.CairoHelper.Create(area.GdkWindow);
+                Cairo.Context context = Gdk.CairoHelper.Create(area.GdkWindow);
 
-            foreach (DGArc tmpArc in arcs)
-                tmpArc.Paint(context);
-            foreach (DGNode tmpNode in nodes)
-                tmpNode.Paint(context);
+                foreach (DGArc tmpArc in arcs)
+                    tmpArc.Paint(context);
+                foreach (DGNode tmpNode in nodes)
+                    tmpNode.Paint(context);
 
-            ((IDisposable)context.Target).Dispose();
-            ((IDisposable)context).Dispose();
+                ((IDisposable)context.Target).Dispose();
+                ((IDisposable)context).Dispose();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Mouse button has been pressed</summary>

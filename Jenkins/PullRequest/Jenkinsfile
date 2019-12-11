@@ -14,13 +14,10 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
+							if errorlevel 1 exit /b 1
 							call runTests Prototypes
 						'''
 					}
@@ -36,16 +33,14 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
+							if errorlevel 1 exit /b 1
 							call runTests Validation
 							if errorlevel 1 exit /b 1
 							call performanceTests
+							if errorlevel 1 exit /b 1
 						'''
 					}
 				}
@@ -60,13 +55,10 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
+							if errorlevel 1 exit /b 1
 							call runTests Examples
 						'''
 					}
@@ -82,13 +74,10 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
+							if errorlevel 1 exit /b 1
 							call runTests UI
 						'''
 					}
@@ -104,13 +93,10 @@ pipeline {
 								git config --system core.longpaths true
 								git clone https://github.com/APSIMInitiative/ApsimX ApsimX
 							)
-							if not exist APSIM.Shared (
-								git clone https://github.com/APSIMInitiative/APSIM.Shared APSIM.Shared
-							)
-							git -C APSIM.Shared pull origin master
 							cd ApsimX\\Jenkins
 							call cleanup
 							call build
+							if errorlevel 1 exit /b 1
 							call runTests Unit
 						'''
 					}

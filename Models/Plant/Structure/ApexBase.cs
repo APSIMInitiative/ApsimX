@@ -76,7 +76,7 @@
         [Link]
         private Structure structure = null;
 
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private IFunction stemSenescenceAge = null;
 
         /// <summary>The apex group.</summary>
@@ -119,23 +119,51 @@
         /// <param name="age">Threshold age</param>
         public double NumByAge(double age)
         {
+            //Calculation the infertile tiller number and 
+            //Scale up to population scale
+            
+            //Leaf cohort model is a single plant model. Structure model is a population model.Apex model need to scale up from single plant level to population scale.
+            //In the population scale, all tillers in the population were split into two groups(i.e.strong and weak) according to appeared tip number.The age for infertile tiller also indicated the probability of tiller senescence for the non-integer value.
+
+            //Case | Tips | Age of infertile | Infertile tillers | Notes
+            //-------- | ----- | ----------------- | -------------------------  | ---------------------------------------------
+            //1 | 7 | 3 | N1 + N2 + N3 |
+            //2 | 7 | 3.4 | N1 + N2 + N3 + N4 * 0.4 | Non - integer in the age of infertile indicates partial senescence for tillers with age 4(40 %)
+            //3 | 7.2 | 3 | (N1 + N2 + N3) * 0.8 + (N1 + N2) * 0.2 | We assume there are 20 % tillers are stronger another 50 % tillers(i.e.one more leaves).Consequently, the tillers can be split into two groups by 20 % (stronger)and 80 % (weaker).For 20 % tillers, the Age of infertile equals to 2.For 80 % tillers, the Age of infertile equals to 3.
+            //4 | 7.2 | 3 .4 | (N1 + N2 + N3 + N4\*0.4)\*0.8 + (N1 + N2 + N3\*0.4)\*0.2 | We still split all tillers into two groups(i.e.stronger and weaker) as Case 3.In each group, the method in Case 2 is used to calculate the infertile tillers.
+
+            //In the codes, the total number of infertile tillers is calculated through looping all apex groups. 
+
+            //Case | Tips | Age of infertile | weakTillerRatio | strongTillerRatio | weakAge | strongAge | ageFraction
+            //-------- | ----- | --------------------- | -----------------------  | --------------------  | ------------- | --------------  | -------------
+            //1 | 7 | 3 | 1 | 0 | 4 | 3 | 0
+            //1 | 7 | 3.4 | 1 | 0 | 4 | 3 | 0.4
+            //1 | 7.2 | 3 | 0.8 | 0 .2 | 4 | 3 | 0
+            //1 | 7.2 | 3.4 | 0.8 | 0 .2 | 4 | 3 | 0.4
+
             double num = 0;
-            double sAge = structure.LeafTipsAppeared - age;
+            double strongTillerRatio = structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared);
+            double weakTillerRatio = 1 - strongTillerRatio;
+            double weakAge = Math.Floor(age) + 1;
+            double strongAge = weakAge - 1;
+            double ageFraction = age - Math.Truncate(age);
+
             for (int i = apexGroupAge.Count; i > 0; i--)
             {
-                if (i == apexGroupAge.Count)
+                if (apexGroupAge[i - 1] < weakAge)
                 {
-                    num += apexGroupSize[i - 1] * (structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared)); 
-                } else if (apexGroupAge[i - 1] <= (int)age)
+                    num += weakTillerRatio * apexGroupSize[i - 1];
+                } else if (Math.Abs(apexGroupAge[i - 1] - weakAge) < Double.Epsilon)
                 {
-                    num += apexGroupSize[i - 1];
+                    num += weakTillerRatio * apexGroupSize[i - 1] * ageFraction;
                 }
-                else
+                if (apexGroupAge[i - 1] < strongAge)
                 {
-                    // double diff = 1 - (structure.LeafTipsAppeared - Math.Floor(structure.LeafTipsAppeared));
-                    double diff = age - (int)age;
-                    num += diff * apexGroupSize[i - 1];
-                    break;
+                    num += strongTillerRatio * apexGroupSize[i - 1];
+                }
+                else if (Math.Abs(apexGroupAge[i - 1] - strongAge) < Double.Epsilon)
+                {
+                    num += strongTillerRatio * apexGroupSize[i - 1] * ageFraction;
                 }
             }
             return num;
@@ -211,14 +239,14 @@
                         double remove = Math.Min(apexGroupSize[i], remainingRemoveApex);
                         apexGroupSize[i] -= remove;
                         remainingRemoveApex -= remove;
-                        if (remainingRemoveApex <= 0.0)
+                        if (remainingRemoveApex <= 0.00001)
                             break;
                     }
 
-                    if (remainingRemoveApex > 0.0)
+                    if (remainingRemoveApex > 0.00001)
                         throw new Exception("There are not enough apex to remove from plant.");
                 }
-                if (phenology.Stage > 4 & !SenescenceByAge)
+                if (phenology.Stage > 4 && !SenescenceByAge)
                 {
                     double senescenceNum = NumByAge(stemSenescenceAge.Value());
                     Number -= senescenceNum;

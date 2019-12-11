@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs grazing of all herds within a specified pasture (paddock) in the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantgraze.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase
     {
         /// <summary>
@@ -69,7 +69,7 @@ namespace Models.CLEM.Activities
             GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
 
             //Create list of children by breed
-            foreach (RuminantType herdType in Resources.RuminantHerd().Children)
+            foreach (RuminantType herdType in Apsim.Children(Resources.RuminantHerd(), typeof(RuminantType)))
             {
                 RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
                 {
@@ -106,22 +106,11 @@ namespace Models.CLEM.Activities
         {
             // This method does not take any resources but is used to arbitrate resources for all breed grazing activities it contains
 
-            // determine pasture quality from all pools (DMD) at start of grazing
-            double pastureDMD = GrazeFoodStoreModel.DMD;
-
-            // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
-            // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
-            // NABSA uses Diet_DMD, but we cant adjust Potential using diet before anything consumed.
-            double potentialIntakeLimiter = 1.0;
-            if ((0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100) >= 0)
-            {
-                potentialIntakeLimiter = 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
-            }
-
             // check nested graze breed requirements for this pasture
             double totalNeeded = 0;
             foreach (RuminantActivityGrazePastureHerd item in ActivityList)
             {
+                double potentialIntakeLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
                 item.ResourceRequestList = null;
                 item.PotentialIntakePastureQualityLimiter = potentialIntakeLimiter;
                 item.GetResourcesNeededForActivity();
@@ -220,7 +209,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            if (Status != ActivityStatus.Partial & Status != ActivityStatus.Critical)
+            if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
             {
                 Status = ActivityStatus.NoTask;
             }

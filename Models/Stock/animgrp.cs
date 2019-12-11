@@ -1,8 +1,15 @@
+// -----------------------------------------------------------------------
+// <copyright file="animgrp.cs" company="CSIRO">
+//      Copyright (c) APSIM Initiative
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace Models.GrazPlan
 {
     using StdUnits;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     /// <summary>
     /// Record containing the different sources from which an animal acquires energy, protein etc                                
@@ -11,23 +18,27 @@ namespace Models.GrazPlan
     public struct DietRecord
     {
         /// <summary>
-        /// 
+        /// Herbage value
         /// </summary>
         public double Herbage;
+        
         /// <summary>
-        /// 
+        /// Supplement value
         /// </summary>
         public double Supp;
+        
         /// <summary>
-        /// 
+        /// Milk value
         /// </summary>
         public double Milk;
+        
         /// <summary>
         /// "Solid" is herbage and supplement taken together
         /// </summary>
         public double Solid;
+        
         /// <summary>
-        /// 
+        /// Total value
         /// </summary>
         public double Total;
     }
@@ -42,38 +53,45 @@ namespace Models.GrazPlan
         /// Basal metab.+movement+digestion+cold
         /// </summary>
         public double Maint;
+        
         /// <summary>
         /// Pregnancy
         /// </summary>
         public double Preg;
+        
         /// <summary>
         /// Lactation
         /// </summary>
         public double Lact;
+        
         /// <summary>
         /// Wool growth (sheep only)
         /// </summary>
         public double Wool;
+        
         /// <summary>
         /// Weight gain (after efficiency losses)
         /// </summary>
         public double Gain;
+        
         /// <summary>
         /// Basal metabolism
         /// </summary>
         public double Metab;
+        
         /// <summary>
         /// Heat production in the cold
         /// </summary>
         public double Cold;
+        
         /// <summary>
-        /// 
+        /// Total value
         /// </summary>
         public double Total;
     }
 
     /// <summary>
-    /// 
+    /// The Animal outputs object
     /// </summary>
     [Serializable]
     public class AnimalOutput
@@ -82,117 +100,145 @@ namespace Models.GrazPlan
         /// Potential intake, after correction for legume content of the diet
         /// </summary>
         public double IntakeLimitLegume;
+        
         /// <summary>
         /// Intakes for interface with pasture model
         /// </summary>
         public GrazType.GrazingOutputs IntakePerHead = new GrazType.GrazingOutputs();
+        
         // ...... Intake-related values - exclude grain that passes the gut undamaged. ......
         /// <summary>
         /// Intakes summarised for use in the nutrition model
         /// </summary>
         public GrazType.IntakeRecord PaddockIntake = new GrazType.IntakeRecord();
+        
         /// <summary>
         /// Intakes summarised for use in the nutrition model
         /// </summary>
         public GrazType.IntakeRecord SuppIntake = new GrazType.IntakeRecord();
+        
         /// <summary>
         /// Daily dry matter intake (kg) - not milk
         /// </summary>
         public DietRecord DM_Intake = new DietRecord();
+        
         /// <summary>
         /// Daily crude protein intake (kg)
         /// </summary>
         public DietRecord CP_Intake = new DietRecord();
+        
         /// <summary>
         /// Daily phosphorus intake (kg)
         /// </summary>
         public DietRecord Phos_Intake = new DietRecord();
+        
         /// <summary>
         /// Daily sulphur intake (kg)
         /// </summary>
         public DietRecord Sulf_Intake = new DietRecord();
+        
         /// <summary>
         /// Metabolizable energy intake (MJ)
         /// </summary>
         public DietRecord ME_Intake = new DietRecord();
+        
         /// <summary>
         /// Digestibility of diet components (0-1)
         /// </summary>
         public DietRecord Digestibility = new DietRecord();
+        
         /// <summary>
         /// Crude protein concentrations (0-1)
         /// </summary>
         public DietRecord ProteinConc = new DietRecord();
+        
         /// <summary>
         /// ME:dry matter ratios (MJ/kg)
         /// </summary>
         public DietRecord ME_2_DM = new DietRecord();
+        
         /// <summary>
         /// Proportion of each component in the diet 
         /// </summary>
         public DietRecord DietPropn = new DietRecord();
+        
         /// <summary>
         /// Degradability of protein in diet (0-1), corrected 
         /// </summary>
         public DietRecord CorrDgProt = new DietRecord();
-        //..................................................................}
+        
+        // ..................................................................
         /// <summary>
         /// Microbial crude protein (kg)
         /// </summary>
         public double MicrobialCP;
+        
         /// <summary>
         /// Digestible protein leaving the stomach (kg): total
         /// </summary>
         public double DPLS;
+        
         /// <summary>
         /// Digestible protein leaving the stomach (kg): from milk
         /// </summary>
         public double DPLS_Milk;
+        
         /// <summary>
         /// Digestible protein leaving the stomach (kg): from MCP
         /// </summary>
         public double DPLS_MCP;
+        
         /// <summary>
         /// DPLS available for wool growth (kg)
         /// </summary>
         public double DPLS_Avail_Wool;
+        
         /// <summary>
         /// Intake of undegradable protein (kg)
         /// </summary>
         public double UDP_Intake;
+
         /// <summary>
         /// Digestibility of UDP (0-1)
         /// </summary>
         public double UDP_Dig;
+        
         /// <summary>
         /// Requirement for UDP (kg)
         /// </summary>
         public double UDP_Reqd;
+        
         /// <summary>
         /// Daily intake for RDP (kg)
         /// </summary>
         public double RDP_Intake;
+        
         /// <summary>
         /// Daily requirement for RDP (kg)
         /// </summary>
         public double RDP_Reqd;
-        // Allocation of energy and protein to various uses.                          
+        
+        //// Allocation of energy and protein to various uses.                          
         /// <summary>
         /// Allocation of energy
         /// </summary>
         public PhysiolRecord EnergyUse = new PhysiolRecord();
+        
         /// <summary>
         /// Allocation of protein
         /// </summary>
         public PhysiolRecord ProteinUse = new PhysiolRecord();
+        
         /// <summary>
-        /// 
+        /// Physiology record
         /// </summary>
         public PhysiolRecord Phos_Use = new PhysiolRecord();
+        
         /// <summary>
-        /// 
+        /// Sulphur use
         /// </summary>
         public PhysiolRecord Sulf_Use = new PhysiolRecord();
+        
         /// <summary>
         /// Efficiencies of ME use (0-1)
         /// </summary>
@@ -202,18 +248,22 @@ namespace Models.GrazPlan
         /// Endogenous faecal losses      (N,S,P)
         /// </summary>
         public GrazType.DM_Pool EndoFaeces = new GrazType.DM_Pool();
+        
         /// <summary>
         /// Total organic faecal losses   (DM,N,S,P)
         /// </summary>
         public GrazType.DM_Pool OrgFaeces = new GrazType.DM_Pool();
+        
         /// <summary>
         /// Total inorganic faecal losses (N,S,P)
         /// </summary>
         public GrazType.DM_Pool InOrgFaeces = new GrazType.DM_Pool();
+        
         /// <summary>
         /// Total urinary losses of       (N,S,P)
         /// </summary>
         public GrazType.DM_Pool Urine = new GrazType.DM_Pool();
+        
         /// <summary>
         /// N in dermal losses (kg)
         /// </summary>
@@ -223,22 +273,27 @@ namespace Models.GrazPlan
         /// 
         /// </summary>
         public double GainEContent;
+        
         /// <summary>
         /// 
         /// </summary>
         public double GainPContent;
+        
         /// <summary>
         /// Increase in conceptus weight (kg/d)
         /// </summary>
         public double ConceptusGrowth;
+        
         /// <summary>
         /// Net energy retained in wool (MJ)
         /// </summary>
         public double TotalWoolEnergy;
+        
         /// <summary>
         /// Thermoneutral heat production (MJ)
         /// </summary>
         public double Therm0HeatProdn;
+        
         /// <summary>
         /// Lower critical temperature from the chilling submodel (oC)      
         /// </summary>
@@ -252,7 +307,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Copy a AnimalOutput object
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The clone of an animal output</returns>
         public AnimalOutput Copy()
         {
             return ObjectCopier.Clone(this);
@@ -268,28 +323,39 @@ namespace Models.GrazPlan
         /// <summary>
         /// Age in days
         /// </summary>
-        public int iAgeDays;
+        public int AgeDays;
+        
         /// <summary>
         /// Number of males
         /// </summary>
-        public int iNoMales;
+        public int NumMales;
+        
         /// <summary>
         /// Number of females
         /// </summary>
-        public int iNoFemales;
+        public int NumFemales;
     }
+
     #region AgeList
-    // ======================================================================
+    
     /// <summary>
     /// An agelist
     /// </summary>
     [Serializable]
     public class AgeList
     {
+        /// <summary>
+        /// Array of agelist objects  
+        /// </summary>
         private AgeListElement[] FData;
-        private void setCount(int iValue)
+
+        /// <summary>
+        /// Set the count of age lists
+        /// </summary>
+        /// <param name="value">The count</param>
+        private void SetCount(int value)
         {
-            Array.Resize(ref FData, iValue);
+            Array.Resize(ref this.FData, value);
         }
 
         /// <summary>
@@ -300,183 +366,192 @@ namespace Models.GrazPlan
             int idx, jdx;
 
             idx = 0;
-            while (idx < Count)
+            while (idx < this.Count)
             {
-                if ((FData[idx].iNoMales > 0) || (FData[idx].iNoFemales > 0))
+                if ((this.FData[idx].NumMales > 0) || (this.FData[idx].NumFemales > 0))
                     idx++;
                 else
                 {
-                    for (jdx = idx + 1; jdx <= Count - 1; jdx++)
-                        FData[jdx - 1] = FData[jdx];
-                    setCount(Count - 1);
+                    for (jdx = idx + 1; jdx <= this.Count - 1; jdx++)
+                        this.FData[jdx - 1] = this.FData[jdx];
+                    this.SetCount(this.Count - 1);
                 }
             }
         }
+        
         /// <summary>
         /// Random number factory instance
         /// </summary>
         public MyRandom RandFactory;
+        
         /// <summary>
         /// AgeList constructor
         /// </summary>
-        /// <param name="RandomFactory">An instance of a random number object</param>
-        public AgeList(MyRandom RandomFactory)
+        /// <param name="randomFactory">An instance of a random number object</param>
+        public AgeList(MyRandom randomFactory)
         {
-            RandFactory = RandomFactory;
-            setCount(0);
+            this.RandFactory = randomFactory;
+            this.SetCount(0);
         }
+        
         /// <summary>
-        /// CreateCopy
+        /// Create a copy
         /// </summary>
-        /// <param name="srcList"></param>
-        /// <param name="RandomFactory"></param>
-        public AgeList(AgeList srcList, MyRandom RandomFactory)
+        /// <param name="srcList">The source agelist</param>
+        /// <param name="randomFactory">The random number object</param>
+        public AgeList(AgeList srcList, MyRandom randomFactory)
         {
-            int Idx;
+            int idx;
 
-            RandFactory = RandomFactory;
-            setCount(srcList.Count);
-            for (Idx = 0; Idx <= srcList.Count - 1; Idx++)
-                FData[Idx] = srcList.FData[Idx];
+            this.RandFactory = randomFactory;
+            this.SetCount(srcList.Count);
+            for (idx = 0; idx <= srcList.Count - 1; idx++)
+                this.FData[idx] = srcList.FData[idx];
         }
+
         /* constructor Load(  Stream    : TStream;
                            bUseSmall : Boolean;
                            RandomFactory: MyRandom );
         procedure   Store( Stream    : TStream  ); */
+
         /// <summary>
-        /// Items in the age list
+        /// Gets the count of items in the age list
         /// </summary>
         public int Count
         {
-            get { return FData.Length; }
+            get { return this.FData.Length; }
         }
+        
         /// <summary>
-        /// { Used instead of Add or Insert to add data to the age list.  The Input     
+        /// Used instead of Add or Insert to add data to the age list.  The Input     
         /// method ensures that there are no duplicate ages in the list and that it   
         /// is maintained in increasing order of age                                  
         /// </summary>
-        /// <param name="A"></param>
-        /// <param name="NM"></param>
-        /// <param name="NF"></param>
-        public void Input(int A, int NM, int NF)
+        /// <param name="ageDays">Age in days</param>
+        /// <param name="numMales">Number of males</param>
+        /// <param name="numFemales">Number of females</param>
+        public void Input(int ageDays, int numMales, int numFemales)
         {
-            int iPos, Idx;
+            int posIdx, idx;
 
-            iPos = 0;
-            while ((iPos < Count) && (FData[iPos].iAgeDays < A))
-                iPos++;
-            if ((iPos < Count) && (FData[iPos].iAgeDays == A))                     // If we find A already in the list, then   
-            {                                                                     //   increment the corresponding numbers of 
-                FData[iPos].iNoMales += NM;                                      //   animals                                
-                FData[iPos].iNoFemales += NF;
+            posIdx = 0;
+            while ((posIdx < this.Count) && (this.FData[posIdx].AgeDays < ageDays))
+                posIdx++;
+            if ((posIdx < this.Count) && (this.FData[posIdx].AgeDays == ageDays)) 
+            {
+                // If we find A already in the list, then increment the corresponding numbers of animals 
+                this.FData[posIdx].NumMales += numMales;                                                      
+                this.FData[posIdx].NumFemales += numFemales;
             }
-            else                                                                      // Otherwise insert a new element in the    
-            {                                                                     //   correct place                          
-                setCount(Count + 1);
-                for (Idx = Count - 1; Idx >= iPos + 1; Idx--)
-                    FData[Idx] = FData[Idx - 1];
-                FData[iPos].iAgeDays = A;
-                FData[iPos].iNoMales = NM;
-                FData[iPos].iNoFemales = NF;
+            else                                                           
+            {
+                // Otherwise insert a new element in the correct place
+                this.SetCount(this.Count + 1);
+                for (idx = this.Count - 1; idx >= posIdx + 1; idx--)
+                    this.FData[idx] = this.FData[idx - 1];
+                this.FData[posIdx].AgeDays = ageDays;
+                this.FData[posIdx].NumMales = numMales;
+                this.FData[posIdx].NumFemales = numFemales;
             }
         }
+        
         /// <summary>
         /// Change the numbers of male and female animals to new values.              
-        /// Parameters:                                                               
-        ///   NM   New total number of male animals to place in the list              
-        ///   NF   New total number of female animals to place in the list            
         /// </summary>
-        /// <param name="NM"></param>
-        /// <param name="NF"></param>
-        public void Resize(int NM, int NF)
+        /// <param name="numMales">New total number of male animals to place in the list</param>
+        /// <param name="numFemales">New total number of female animals to place in the list</param>
+        public void Resize(int numMales, int numFemales)
         {
             int CurrM = 0;
             int CurrF = 0;
             int MLeft;
             int FLeft;
-            int Idx;
+            int idx;
 
-            Pack();                                                                     // Ensure there are no empty list members   }
+            this.Pack();                                                                // Ensure there are no empty list members   
 
-            if (Count == 0)                                                        // Hard to do anything with no age info     }
-                Input(365 * 3, NM, NF);
-            else if (Count == 1)
+            if (this.Count == 0)                                                        // Hard to do anything with no age info     
+                Input(365 * 3, numMales, numFemales);
+            else if (this.Count == 1)
             {
-                FData[0].iNoMales = NM;
-                FData[0].iNoFemales = NF;
+                this.FData[0].NumMales = numMales;
+                this.FData[0].NumFemales = numFemales;
             }
             else
             {
-                GetOlder(-1, ref CurrM, ref CurrF);                                           // Work out number of animals currently in  }
-                MLeft = NM;                                                            //   the list                               }
-                FLeft = NF;
-                for (Idx = 0; Idx <= Count - 1; Idx++)
+                this.GetOlder(-1, ref CurrM, ref CurrF);                                // Work out number of animals currently in the list 
+                MLeft = numMales;                                                                                      
+                FLeft = numFemales;
+                for (idx = 0; idx <= this.Count - 1; idx++)
                 {
-                    if ((NM == 0) || (CurrM > 0))
-                        FData[Idx].iNoMales = Convert.ToInt32(Math.Truncate(NM * StdMath.XDiv(FData[Idx].iNoMales, CurrM)));
+                    if ((numMales == 0) || (CurrM > 0))
+                        this.FData[idx].NumMales = Convert.ToInt32(Math.Truncate(numMales * StdMath.XDiv(this.FData[idx].NumMales, CurrM)), CultureInfo.InvariantCulture);
                     else
-                        FData[Idx].iNoMales = Convert.ToInt32(Math.Truncate(NM * StdMath.XDiv(FData[Idx].iNoFemales, CurrF)));
-                    if ((NF == 0) || (CurrF > 0))
-                        FData[Idx].iNoFemales = Convert.ToInt32(Math.Truncate(NF * StdMath.XDiv(FData[Idx].iNoFemales, CurrF)));
+                        this.FData[idx].NumMales = Convert.ToInt32(Math.Truncate(numMales * StdMath.XDiv(this.FData[idx].NumFemales, CurrF)), CultureInfo.InvariantCulture);
+                    if ((numFemales == 0) || (CurrF > 0))
+                        this.FData[idx].NumFemales = Convert.ToInt32(Math.Truncate(numFemales * StdMath.XDiv(this.FData[idx].NumFemales, CurrF)), CultureInfo.InvariantCulture);
                     else
-                        FData[Idx].iNoFemales = Convert.ToInt32(Math.Truncate(NF * StdMath.XDiv(FData[Idx].iNoMales, CurrM)));
-                    MLeft -= FData[Idx].iNoMales;
-                    FLeft -= FData[Idx].iNoFemales;
+                        this.FData[idx].NumFemales = Convert.ToInt32(Math.Truncate(numFemales * StdMath.XDiv(this.FData[idx].NumMales, CurrM)), CultureInfo.InvariantCulture);
+                    MLeft -= this.FData[idx].NumMales;
+                    FLeft -= this.FData[idx].NumFemales;
                 }
 
-                Idx = Count - 1;                                                         // Add the "odd" animals into the oldest    }
-                while ((MLeft > 0) || (FLeft > 0))                                      //   groups as evenly as possible           }
+                idx = this.Count - 1;                                                   // Add the "odd" animals into the oldest groups as evenly as possible   
+                while ((MLeft > 0) || (FLeft > 0))                                                      
                 {
                     if (MLeft > 0)
                     {
-                        FData[Idx].iNoMales++;
+                        this.FData[idx].NumMales++;
                         MLeft--;
                     }
                     if (FLeft > 0)
                     {
-                        FData[Idx].iNoFemales++;
+                        this.FData[idx].NumFemales++;
                         FLeft--;
                     }
 
-                    Idx--;
-                    if (Idx < 0)
-                        Idx = Count - 1;
+                    idx--;
+                    if (idx < 0)
+                        idx = this.Count - 1;
                 }
             }
-            Pack();
+            this.Pack();
         }
+        
         /// <summary>
         /// Set the count of items to 0
         /// </summary>
         public void Clear()
         {
-            setCount(0);
+            this.SetCount(0);
         }
+        
         /// <summary>
         /// Add all elements of OtherAges into the object.  Unlike AnimalGroup.Merge,
-        /// AgeList.Merge does not free OtherAges.                                   
+        /// AgeList.Merge does not free otherAges.                                   
         /// </summary>
-        /// <param name="OtherAges"></param>
-        public void Merge(AgeList OtherAges)
+        /// <param name="otherAges">The other agelist</param>
+        public void Merge(AgeList otherAges)
         {
-            int Idx;
+            int idx;
 
-            for (Idx = 0; Idx <= OtherAges.Count - 1; Idx++)
+            for (idx = 0; idx <= otherAges.Count - 1; idx++)
             {
-                Input(OtherAges.FData[Idx].iAgeDays,
-                       OtherAges.FData[Idx].iNoMales,
-                       OtherAges.FData[Idx].iNoFemales);
+                Input(otherAges.FData[idx].AgeDays,
+                       otherAges.FData[idx].NumMales,
+                       otherAges.FData[idx].NumFemales);
             }
         }
+        
         /// <summary>
         /// Split the age group by age. If ByAge=TRUE, oldest animals are placed in the result.
         /// If ByAge=FALSE, the age structures are made the same as far as possible.
         /// </summary>
-        /// <param name="NM"></param>
-        /// <param name="NF"></param>
+        /// <param name="numMale">Number of male</param>
+        /// <param name="numFemale">Number of female</param>
         /// <param name="ByAge">Split by age</param>
         /// <returns></returns>
-        public AgeList Split(int NM, int NF, bool ByAge)
+        public AgeList Split(int numMale, int numFemale, bool ByAge)
         {
             int[,] TransferNo;                                          // 0,x =male, 1,x =female                         
             int[] TotalNo = new int[2];
@@ -484,102 +559,108 @@ namespace Models.GrazPlan
             int[] TransfersDone = new int[2];
             double[] TransferPropn = new double[2];
             int iAnimal, iFirst, iLast;
-            int idx, Jdx;
+            int idx, jdx;
 
-            AgeList Result = new AgeList(RandFactory);                // Create a list with the same age          
-            for (idx = 0; idx <= Count - 1; idx++)                      //   structure but no animals               
-                Result.Input(this.FData[idx].iAgeDays, 0, 0);
+            AgeList result = new AgeList(RandFactory);                  // Create a list with the same age          
+            for (idx = 0; idx <= this.Count - 1; idx++)                 // structure but no animals               
+                result.Input(this.FData[idx].AgeDays, 0, 0);
 
-            TransfersReqd[0] = NM;
-            TransfersReqd[1] = NF;
-            TransferNo = new int[2, Count];                             // Assume that this zeros TransferNo        
+            TransfersReqd[0] = numMale;
+            TransfersReqd[1] = numFemale;
+            TransferNo = new int[2, this.Count];                        // Assume that this zeros TransferNo        
 
-            for (Jdx = 0; Jdx <= 1; Jdx++)
-                TransfersDone[Jdx] = 0;
+            for (jdx = 0; jdx <= 1; jdx++)
+                TransfersDone[jdx] = 0;
 
-            if (ByAge)                                                  // If ByAge=TRUE, oldest animals are placed 
-            {                                                           //   in Result                           
-                for (idx = Count - 1; idx >= 0; idx--)
-                {
-                    TransferNo[0, idx] = Math.Min(TransfersReqd[0] - TransfersDone[0], FData[idx].iNoMales);
-                    TransferNo[1, idx] = Math.Min(TransfersReqd[1] - TransfersDone[1], FData[idx].iNoFemales);
-                    for (Jdx = 0; Jdx <= 1; Jdx++)
-                        TransfersDone[Jdx] += TransferNo[Jdx, idx];
-                }
-            }
-            else                                                                  // If ByAge=FALSE, the age structures are   
-            {                                                                     //   made the same as far as possible       
-                GetOlder(-1, ref TotalNo[0], ref TotalNo[1]);
-
-                for (Jdx = 0; Jdx <= 1; Jdx++)
-                {
-                    TransfersReqd[Jdx] = Math.Min(TransfersReqd[Jdx], TotalNo[Jdx]);
-                    TransferPropn[Jdx] = StdMath.XDiv(TransfersReqd[Jdx], TotalNo[Jdx]);
-                }
-
-                for (idx = 0; idx <= Count - 1; idx++)
-                {
-                    TransferNo[0, idx] = Convert.ToInt32(Math.Round(TransferPropn[0] * FData[idx].iNoMales));
-                    TransferNo[1, idx] = Convert.ToInt32(Math.Round(TransferPropn[1] * FData[idx].iNoFemales));
-                    for (Jdx = 0; Jdx <= 1; Jdx++)
-                        TransfersDone[Jdx] += TransferNo[Jdx, idx];
-                }
-
-                for (Jdx = 0; Jdx <= 1; Jdx++)                                          // Randomly allocate roundoff errors        
-                {
-                    while (TransfersDone[Jdx] < TransfersReqd[Jdx])                     // Too few transfers                        
-                    {
-                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(RandFactory.RandomValue() * (TotalNo[Jdx] - TransfersDone[Jdx])),
-                                        (TotalNo[Jdx] - TransfersDone[Jdx]) - 1));
-                        idx = -1;
-                        iLast = 0;
-                        do
-                        {
-                            idx++;
-                            iFirst = iLast;
-                            if (Jdx == 0)
-                                iLast = iFirst + (FData[idx].iNoMales - TransferNo[Jdx, idx]);
-                            else
-                                iLast = iFirst + (FData[idx].iNoFemales - TransferNo[Jdx, idx]);
-                            //until (Idx = Count-1) or ((iAnimal >= iFirst) and (iAnimal < iLast));
-                        } while ((idx != Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
-
-                        TransferNo[Jdx, idx]++;
-                        TransfersDone[Jdx]++;
-                    }
-
-                    while (TransfersDone[Jdx] > TransfersReqd[Jdx])           // Too many transfers                       
-                    {
-                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(RandFactory.RandomValue() * TransfersDone[Jdx]),
-                                        TransfersDone[Jdx] - 1));
-                        idx = -1;
-                        iLast = 0;
-                        do
-                        {
-                            idx++;
-                            iFirst = iLast;
-                            iLast = iFirst + TransferNo[Jdx, idx];
-                            //until (Idx = Count-1) or ((iAnimal >= iFirst) and (iAnimal < iLast));
-                        } while ((idx != Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
-
-                        TransferNo[Jdx, idx]--;
-                        TransfersDone[Jdx]--;
-                    }
-                }
-            }
-
-            for (idx = 0; idx <= Count - 1; idx++)                                                // Carry out transfers                      
+            if (ByAge)                                                  
             {
-                this.FData[idx].iNoMales -= TransferNo[0, idx];
-                Result.FData[idx].iNoMales += TransferNo[0, idx];
-                this.FData[idx].iNoFemales -= TransferNo[1, idx];
-                Result.FData[idx].iNoFemales += TransferNo[1, idx];
+                // If ByAge=TRUE, oldest animals are placed in Result
+                for (idx = this.Count - 1; idx >= 0; idx--)
+                {
+                    TransferNo[0, idx] = Math.Min(TransfersReqd[0] - TransfersDone[0], this.FData[idx].NumMales);
+                    TransferNo[1, idx] = Math.Min(TransfersReqd[1] - TransfersDone[1], this.FData[idx].NumFemales);
+                    for (jdx = 0; jdx <= 1; jdx++)
+                        TransfersDone[jdx] += TransferNo[jdx, idx];
+                }
+            }
+            else                                                                      
+            {
+                // If ByAge=FALSE, the age structures are made the same as far as possible
+                this.GetOlder(-1, ref TotalNo[0], ref TotalNo[1]);
+
+                for (jdx = 0; jdx <= 1; jdx++)
+                {
+                    TransfersReqd[jdx] = Math.Min(TransfersReqd[jdx], TotalNo[jdx]);
+                    TransferPropn[jdx] = StdMath.XDiv(TransfersReqd[jdx], TotalNo[jdx]);
+                }
+
+                for (idx = 0; idx <= this.Count - 1; idx++)
+                {
+                    TransferNo[0, idx] = Convert.ToInt32(Math.Round(TransferPropn[0] * this.FData[idx].NumMales), CultureInfo.InvariantCulture);
+                    TransferNo[1, idx] = Convert.ToInt32(Math.Round(TransferPropn[1] * this.FData[idx].NumFemales), CultureInfo.InvariantCulture);
+                    for (jdx = 0; jdx <= 1; jdx++)
+                        TransfersDone[jdx] += TransferNo[jdx, idx];
+                }
+
+                for (jdx = 0; jdx <= 1; jdx++)                                                  
+                {
+                    // Randomly allocate roundoff errors
+                    while (TransfersDone[jdx] < TransfersReqd[jdx])                     // Too few transfers                        
+                    {
+                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(this.RandFactory.RandomValue() * (TotalNo[jdx] - TransfersDone[jdx])),
+                                        (TotalNo[jdx] - TransfersDone[jdx]) - 1), CultureInfo.InvariantCulture);
+                        idx = -1;
+                        iLast = 0;
+                        do
+                        {
+                            idx++;
+                            iFirst = iLast;
+                            if (jdx == 0)
+                                iLast = iFirst + (this.FData[idx].NumMales - TransferNo[jdx, idx]);
+                            else
+                                iLast = iFirst + (this.FData[idx].NumFemales - TransferNo[jdx, idx]);
+                            //// until (Idx = Count-1) or ((iAnimal >= iFirst) and (iAnimal < iLast));
+                        }
+                        while ((idx != this.Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
+
+                        TransferNo[jdx, idx]++;
+                        TransfersDone[jdx]++;
+                    }
+
+                    while (TransfersDone[jdx] > TransfersReqd[jdx])                                  
+                    {
+                        // Too many transfers
+                        iAnimal = Convert.ToInt32(Math.Min(Math.Truncate(this.RandFactory.RandomValue() * TransfersDone[jdx]),
+                                        TransfersDone[jdx] - 1), CultureInfo.InvariantCulture);
+                        idx = -1;
+                        iLast = 0;
+                        do
+                        {
+                            idx++;
+                            iFirst = iLast;
+                            iLast = iFirst + TransferNo[jdx, idx];
+                            //// until (Idx = Count-1) or ((iAnimal >= iFirst) and (iAnimal < iLast));
+                        }
+                        while ((idx != this.Count - 1) && ((iAnimal < iFirst) || (iAnimal >= iLast)));
+
+                        TransferNo[jdx, idx]--;
+                        TransfersDone[jdx]--;
+                    }
+                }
+            }
+
+            for (idx = 0; idx <= this.Count - 1; idx++)                                                // Carry out transfers                      
+            {
+                this.FData[idx].NumMales -= TransferNo[0, idx];
+                result.FData[idx].NumMales += TransferNo[0, idx];
+                this.FData[idx].NumFemales -= TransferNo[1, idx];
+                result.FData[idx].NumFemales += TransferNo[1, idx];
             }
 
             this.Pack();                                                                // Clear away empty entries in both lists   
-            Result.Pack();
+            result.Pack();
 
-            return Result;
+            return result;
         }
 
         /// <summary>
@@ -588,64 +669,62 @@ namespace Models.GrazPlan
         /// <param name="NoDays"></param>
         public void AgeBy(int NoDays)
         {
-            int Idx;
-
-            for (Idx = 0; Idx <= Count - 1; Idx++)
-                FData[Idx].iAgeDays += NoDays;
+            for (int idx = 0; idx <= this.Count - 1; idx++)
+                this.FData[idx].AgeDays += NoDays;
         }
 
         /// <summary>
         /// Compute the mean age of all animals in the list                           
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The mean age</returns>
         public int MeanAge()
         {
             double AxN, N;
             double dN;
-            int Idx;
-            int Result;
+            int idx;
+            int result;
 
-            if (Count == 1)
-                Result = FData[0].iAgeDays;
-            else if (Count == 0)
-                Result = 0;
+            if (this.Count == 1)
+                result = this.FData[0].AgeDays;
+            else if (this.Count == 0)
+                result = 0;
             else
             {
                 AxN = 0;
                 N = 0;
-                for (Idx = 0; Idx <= Count - 1; Idx++)
+                for (idx = 0; idx <= this.Count - 1; idx++)
                 {
-                    dN = FData[Idx].iNoMales + FData[Idx].iNoFemales;
-                    AxN = AxN + dN * FData[Idx].iAgeDays;
+                    dN = this.FData[idx].NumMales + this.FData[idx].NumFemales;
+                    AxN = AxN + dN * this.FData[idx].AgeDays;
                     N = N + dN;
                 }
                 if (N > 0.0)
-                    Result = Convert.ToInt32(Math.Round(AxN / N));
+                    result = Convert.ToInt32(Math.Round(AxN / N), CultureInfo.InvariantCulture);
                 else
-                    Result = 0;
+                    result = 0;
             }
-            return Result;
+            return result;
         }
 
         /// <summary>
-        /// Returns the number of male and female animals (NM and NF, respectively)     
-        /// which are aged greater than A days                                        
+        /// Returns the number of male and female animals      
+        /// which are aged greater than ageDays days                                        
         /// </summary>
-        /// <param name="A"></param>
-        /// <param name="NM"></param>
-        /// <param name="NF"></param>
-        public void GetOlder(int A, ref int NM, ref int NF)
+        /// <param name="ageDays">Age in days</param>
+        /// <param name="numMale">Number of male</param>
+        /// <param name="numFemale">Number of female</param>
+        public void GetOlder(int ageDays, ref int numMale, ref int numFemale)
         {
-            int Idx;
+            int idx;
 
-            NM = 0;
-            NF = 0;
-            for (Idx = 0; Idx <= Count - 1; Idx++)
+            numMale = 0;
+            numFemale = 0;
+            for (idx = 0; idx <= Count - 1; idx++)
             {
-                if (FData[Idx].iAgeDays > A)
+                if (this.FData[idx].AgeDays > ageDays)
                 {
-                    NM += FData[Idx].iNoMales;
-                    NF += FData[Idx].iNoFemales;
+                    numMale += this.FData[idx].NumMales;
+                    numFemale += this.FData[idx].NumFemales;
                 }
             }
         }
@@ -663,10 +742,12 @@ namespace Models.GrazPlan
         /// Standard reference weight
         /// </summary>
         public double StdRefWt;
+        
         /// <summary>
         /// Base weight
         /// </summary>
         public double BaseWeight;
+        
         /// <summary>
         /// Fleece weight
         /// </summary>
@@ -683,30 +764,37 @@ namespace Models.GrazPlan
         /// Latitude (degrees, +ve=north)
         /// </summary>
         public double Latitude;
+        
         /// <summary>
         /// Date at which environment prevails
         /// </summary>
         public int TheDay;
+        
         /// <summary>
         /// Maximum air temperature (deg C)
         /// </summary>
         public double MaxTemp;
+        
         /// <summary>
         /// Minimum air temperature (deg C)
         /// </summary>
         public double MinTemp;
+        
         /// <summary>
         /// Mean of MaxTemp and MinTemp
         /// </summary>
         public double MeanTemp;
+        
         /// <summary>
         /// Precipitation (mm)
         /// </summary>
         public double Precipitation;
+        
         /// <summary>
         /// Average daily windspeed (m/s)
         /// </summary>
         public double WindSpeed;
+        
         /// <summary>
         /// Daylength including civil twilight (hr)
         /// </summary>
@@ -722,39 +810,47 @@ namespace Models.GrazPlan
         /// <summary>
         /// Base weight without wool
         /// </summary>
-        public double fBaseWeight;
+        public double BaseWeight;
+        
         /// <summary>
         /// Weight of wool
         /// </summary>
-        public double fWoolWt;
+        public double WoolWt;
+        
         /// <summary>
         /// Wool microns
         /// </summary>
-        public double fWoolMicron;
+        public double WoolMicron;
+        
         /// <summary>
         /// Depth of coat
         /// </summary>
-        public double fCoatDepth;
+        public double CoatDepth;
+        
         /// <summary>
         /// Foetal weight
         /// </summary>
-        public double fFoetalWt;
+        public double FoetalWt;
+        
         /// <summary>
-        /// 
+        /// Lactation adjustment
         /// </summary>
-        public double fLactAdjust;
+        public double LactAdjust;
+        
         /// <summary>
-        /// 
+        /// Lactation ratio
         /// </summary>
-        public double fLactRatio;
+        public double LactRatio;
+        
         /// <summary>
-        /// 
+        /// Phosphorous value
         /// </summary>
-        public double fBasePhos;
+        public double BasePhos;
+        
         /// <summary>
-        /// 
+        /// Sulphur value
         /// </summary>
-        public double fBaseSulf;
+        public double BaseSulf;
     }
 
     /// <summary>
@@ -767,10 +863,12 @@ namespace Models.GrazPlan
         /// Organic faeces pool
         /// </summary>
         public GrazType.DM_Pool OrgFaeces = new GrazType.DM_Pool();
+        
         /// <summary>
         /// Inorganic faeces pool
         /// </summary>
         public GrazType.DM_Pool InOrgFaeces = new GrazType.DM_Pool();
+        
         /// <summary>
         /// Urine pool
         /// </summary>
@@ -779,40 +877,49 @@ namespace Models.GrazPlan
         /// <summary>
         /// Number in the time step by all animals (not including unweaned young)
         /// </summary>
-        public double dDefaecations;
+        public double Defaecations;
+        
         /// <summary>
         /// Volume per defaecation, m^3 (fresh basis)
         /// </summary>
-        public double dDefaecationVolume;
+        public double DefaecationVolume;
+        
         /// <summary>
         /// Area per defaecation, m^2 (fresh basis)
         /// </summary>
-        public double dDefaecationArea;
+        public double DefaecationArea;
+        
         /// <summary>
         /// Eccentricity of faeces
         /// </summary>
-        public double dDefaecationEccentricity;
+        public double DefaecationEccentricity;
+        
         /// <summary>
         /// Proportion of faecal inorganic N that is nitrate
         /// </summary>
-        public double dFaecalNO3Propn;
+        public double FaecalNO3Propn;
+        
         /// <summary>
         /// Number in the time step by all animals (not including unweaned young)
         /// </summary>
-        public double dUrinations;
+        public double Urinations;
+        
         /// <summary>
         /// Fluid volume per urination, m^3
         /// </summary>
-        public double dUrinationVolume;
+        public double UrinationVolume;
+        
         /// <summary>
         /// Area covered by each urination at the soil surface, m^2
         /// </summary>
-        public double dUrinationArea;
+        public double UrinationArea;
+        
         /// <summary>
         /// Eccentricity of urinations
         /// </summary>
         public double dUrinationEccentricity;
     }
+
     #region AnimalGroup
     // =============================================================================================
     /// <summary>
@@ -826,78 +933,97 @@ namespace Models.GrazPlan
         /// model used in GrazFeed and the "dynamic" version used elsewhere           
         /// </summary>
         public const bool AnimalsDynamicGlb = true;
+        
         /// <summary>
         /// Represents no difference
         /// </summary>
         public DifferenceRecord NODIFF = new DifferenceRecord() { StdRefWt = 0, BaseWeight = 0, FleeceWt = 0 };
+        
         /// <summary>
         /// 
         /// </summary>
         public const int LatePregLength = 42;
+        
         /// <summary>
         /// Depth of wool left after shearing (cm)
         /// </summary>
         public const double STUBBLE_MM = 0.5;
+        
         /// <summary>
         /// This animal's parameters
         /// </summary>
         protected AnimalParamSet AParams;
+        
         /// <summary>
         /// Paramters of the animal mated to
         /// </summary>
         protected AnimalParamSet FMatedTo;
+        
         /// <summary>
         /// Distribution of ages
         /// </summary>
         protected AgeList Ages;
+        
         /// <summary>
         /// Mean age of all animals (days)
         /// </summary>
         protected int MeanAge;
+        
         /// <summary>
         /// Number of male animals in the group 
         /// </summary>
         protected int NoMales;
+        
         /// <summary>
         /// Number of female animals in the group
         /// </summary>
         protected int NoFemales;
+        
         /// <summary>
         /// All weights in kg
         /// </summary>
         protected double TotalWeight;
+        
         /// <summary>
         /// Greasy fleece weight (including stubble)
         /// </summary>
         protected double WoolWt;
+        
         /// <summary>
         /// Growth of greasy fleece (kg/d)           
         /// </summary>
         protected double DeltaWoolWt;
+        
         /// <summary>
         /// Average fibre diameter (microns)         
         /// </summary>
         protected double WoolMicron;
+        
         /// <summary>
         /// Diameter of new wool (microns)           
         /// </summary>
         protected double DeltaWoolMicron;
+        
         /// <summary>
         /// Reproduction status
         /// </summary>
         protected GrazType.ReproType ReproStatus;
+        
         /// <summary>
         /// Lactation status
         /// </summary>
         protected GrazType.LactType LactStatus;
+        
         /// <summary>
         /// Number of foetuses
         /// </summary>
         protected int FNoFoetuses;
+        
         /// <summary>
         /// Number of offspring
         /// </summary>
         protected int FNoOffspring;
+        
         /// <summary>
         /// Previous offspring
         /// </summary>
@@ -917,18 +1043,22 @@ namespace Models.GrazPlan
         /// Day in the mating cycle; -1 if not mating
         /// </summary>
         protected int MateCycle;
+        
         /// <summary>
         /// Days left in joining period
         /// </summary>
         protected int DaysToMate;
+        
         /// <summary>
         /// Days since conception
         /// </summary>
         protected int FoetalAge;
+        
         /// <summary>
         /// Weight of foetus 
         /// </summary>
         protected double FoetalWt;
+        
         /// <summary>
         /// Base weight 42 days before parturition   
         /// </summary>
@@ -938,205 +1068,245 @@ namespace Models.GrazPlan
         /// Fleece-free, conceptus-free weight (kg)
         /// </summary>
         protected double BasalWeight;
+        
         /// <summary>
         /// Change in BaseWeight (kg/d)
         /// </summary>
         protected double DeltaBaseWeight;
+        
         /// <summary>
         /// Highest previous weight (kg)
         /// </summary>
         protected double MaxPrevWt;
+        
         /// <summary>
         /// Hair or fleece depth (cm)
         /// </summary>
         protected double FCoatDepth;
+        
         /// <summary>
         /// Value of Condition at parturition
         /// </summary>
         protected double ConditionAtBirthing;
+        
         /// <summary>
         /// Phosphorus in base weight (kg)
         /// </summary>
         protected double BasePhos;
+        
         /// <summary>
         /// Sulphur in base weight (kg)
         /// </summary>
         protected double BaseSulf;
+        
         /// <summary>
         /// Relative size
         /// </summary>
         protected double Size;
+        
         /// <summary>
         /// Relative condition
         /// </summary>
         protected double Condition;
+        
         /// <summary>
         /// Weight of these animals at birth (kg)
         /// </summary>
         protected double BirthWt;
+        
         /// <summary>
         /// Standard reference weight of the group
         /// </summary>
         protected double StdRefWt;
+        
         /// <summary>
         /// Normal weight (kg)
         /// </summary>
         protected double NormalWt;
+        
         /// <summary>
         /// Days since parturition (if lactating)
         /// </summary>
         protected int DaysLactating;
+        
         /// <summary>
         /// Milk production (MJ)
         /// </summary>
         protected double Milk_MJProdn;
+        
         /// <summary>
         /// Protein in milk production (kg)
         /// </summary>
         protected double Milk_ProtProdn;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double Milk_PhosProdn;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double Milk_SulfProdn;
+        
         /// <summary>
         /// Weight of milk (4% fat equiv.)
         /// </summary>
         protected double Milk_Weight;
+        
         /// <summary>
         /// Proportion of potential milk production  
         /// </summary>
         protected double PropnOfMaxMilk;
+        
         /// <summary>
         /// Scales max. intake etc for underweight in lactating animals  
         /// </summary>
         protected double LactAdjust;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double LactRatio;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double DryOffTime;
+        
         /// <summary>
         /// Potential intake (uncorrected for legume)
         /// </summary>
         protected double IntakeLimit;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double FeedingLevel;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double Start_FU;
+        
         /// <summary>
         /// Fraction of base weight gain from solid intake. 
         /// </summary>
         protected double BWGain_Solid;
+        
         /// <summary>
         /// Additional distance walked -dairy cattle
         /// </summary>
         protected double FDistanceWalked;
+        
         /// <summary>
         /// Overall stocking pressure
         /// </summary>
         protected double FAnimalsPerHa;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double Steepness;
+        
         /// <summary>
         /// The grazing inputs
         /// </summary>
         protected GrazType.GrazingInputs Inputs = new GrazType.GrazingInputs();
+        
         /// <summary>
         /// The animal's environment
         /// </summary>
         protected AnimalWeather TheEnv;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double WaterLog;
+        
         /// <summary>
         /// The ration being fed
         /// </summary>
         protected SupplementRation TheRation;
+        
         /// <summary>
         /// 
         /// </summary>
         protected FoodSupplement FIntakeSupp;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double Supp_FWI;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double[] NetSupp_DMI;
+        
         /// <summary>
         /// Sub time step value
         /// </summary>
         protected double[] TimeStepNetSupp_DMI;
+        
         /// <summary>
         /// Chill index
         /// </summary>
         protected double ChillIndex;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double ImplantEffect;
+        
         /// <summary>
         /// 
         /// </summary>
         protected double FIntakeModifier;
 
-        // Model logic ...................................................
+        //// Model logic ...................................................
         /// <summary>
         /// 
         /// </summary>
         /// <param name="ClssAttr"></param>
         /// <param name="NetClassIntake"></param>
-        /// <param name="SummaryIntake"></param>
-        private void AddDietElement(ref GrazType.IntakeRecord ClssAttr, double NetClassIntake, ref GrazType.IntakeRecord SummaryIntake)
+        /// <param name="summaryIntake"></param>
+        private void AddDietElement(ref GrazType.IntakeRecord ClssAttr, double NetClassIntake, ref GrazType.IntakeRecord summaryIntake)
         {
             if (NetClassIntake > 0.0)
             {
-                SummaryIntake.Biomass = SummaryIntake.Biomass + NetClassIntake;
-                SummaryIntake.Digestibility = SummaryIntake.Digestibility + NetClassIntake * ClssAttr.Digestibility;
-                SummaryIntake.CrudeProtein = SummaryIntake.CrudeProtein + NetClassIntake * ClssAttr.CrudeProtein;
-                SummaryIntake.Degradability = SummaryIntake.Degradability + NetClassIntake * ClssAttr.CrudeProtein * ClssAttr.Degradability;
-                SummaryIntake.PhosContent = SummaryIntake.PhosContent + NetClassIntake * ClssAttr.PhosContent;
-                SummaryIntake.SulfContent = SummaryIntake.SulfContent + NetClassIntake * ClssAttr.SulfContent;
-                SummaryIntake.AshAlkalinity = SummaryIntake.AshAlkalinity + NetClassIntake * ClssAttr.AshAlkalinity;
+                summaryIntake.Biomass = summaryIntake.Biomass + NetClassIntake;
+                summaryIntake.Digestibility = summaryIntake.Digestibility + NetClassIntake * ClssAttr.Digestibility;
+                summaryIntake.CrudeProtein = summaryIntake.CrudeProtein + NetClassIntake * ClssAttr.CrudeProtein;
+                summaryIntake.Degradability = summaryIntake.Degradability + NetClassIntake * ClssAttr.CrudeProtein * ClssAttr.Degradability;
+                summaryIntake.PhosContent = summaryIntake.PhosContent + NetClassIntake * ClssAttr.PhosContent;
+                summaryIntake.SulfContent = summaryIntake.SulfContent + NetClassIntake * ClssAttr.SulfContent;
+                summaryIntake.AshAlkalinity = summaryIntake.AshAlkalinity + NetClassIntake * ClssAttr.AshAlkalinity;
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="SummaryIntake"></param>
-        private void SummariseIntakeRecord(ref GrazType.IntakeRecord SummaryIntake)
-        {
-            double fTrivialIntake = 1.0E-6; // (kg/head)
 
-            if (SummaryIntake.Biomass < fTrivialIntake)
-                SummaryIntake = new GrazType.IntakeRecord();
+        /// <summary>
+        /// Summarise the intake record
+        /// </summary>
+        /// <param name="summaryIntake">The intake record</param>
+        private void SummariseIntakeRecord(ref GrazType.IntakeRecord summaryIntake)
+        {
+            double trivialIntake = 1.0E-6; // (kg/head)
+
+            if (summaryIntake.Biomass < trivialIntake)
+                summaryIntake = new GrazType.IntakeRecord();
             else
             {
-                SummaryIntake.Digestibility = SummaryIntake.Digestibility / SummaryIntake.Biomass;
-                if (SummaryIntake.CrudeProtein > 0.0)
-                    SummaryIntake.Degradability = SummaryIntake.Degradability / SummaryIntake.CrudeProtein;
+                summaryIntake.Digestibility = summaryIntake.Digestibility / summaryIntake.Biomass;
+                if (summaryIntake.CrudeProtein > 0.0)
+                    summaryIntake.Degradability = summaryIntake.Degradability / summaryIntake.CrudeProtein;
                 else
-                    SummaryIntake.Degradability = 0.75;
+                    summaryIntake.Degradability = 0.75;
 
-                SummaryIntake.CrudeProtein = SummaryIntake.CrudeProtein / SummaryIntake.Biomass;
-                SummaryIntake.PhosContent = SummaryIntake.PhosContent / SummaryIntake.Biomass;
-                SummaryIntake.SulfContent = SummaryIntake.SulfContent / SummaryIntake.Biomass;
-                SummaryIntake.AshAlkalinity = SummaryIntake.AshAlkalinity / SummaryIntake.Biomass;
+                summaryIntake.CrudeProtein = summaryIntake.CrudeProtein / summaryIntake.Biomass;
+                summaryIntake.PhosContent = summaryIntake.PhosContent / summaryIntake.Biomass;
+                summaryIntake.SulfContent = summaryIntake.SulfContent / summaryIntake.Biomass;
+                summaryIntake.AshAlkalinity = summaryIntake.AshAlkalinity / summaryIntake.Biomass;
             }
         }
 
@@ -1152,96 +1322,99 @@ namespace Models.GrazPlan
         /// These results are all stored in the TimeStepState static variable for     
         /// reference by other routines.                                              
         /// </summary>
-        /// <param name="HerbageRI"></param>
-        /// <param name="SeedRI"></param>
-        /// <param name="SuppRI"></param>
+        /// <param name="herbageRI">"Relative intakes" of each herbage digestibility class</param>
+        /// <param name="seedRI">"Relative intakes" of seeds</param>
+        /// <param name="suppRI">"Relative intakes" of supplement</param>
         /// <param name="timeStepState"></param>
-        protected void DescribeTheDiet(ref double[] HerbageRI,      // "Relative intakes" of each herbage       
-                                   ref double[,] SeedRI,            //   digestibility class, seeds &           
-                                   ref double SuppRI,               //   supplement                             
+        protected void DescribeTheDiet(
+                                   ref double[] herbageRI,         
+                                   ref double[,] seedRI,           
+                                   ref double suppRI,                                             
                                    ref AnimalOutput timeStepState)
         {
-
             GrazType.IntakeRecord suppInput = new GrazType.IntakeRecord();
-            double fGutPassage;
-            double fSupp_ME2DM;                                              // Used to compute ME_2_DM.Supp          
-            int Species, Clss, Rp, Idx;
+            double gutPassage;
+            double supp_ME2DM;                                              // Used to compute ME_2_DM.Supp          
+            int species, classIdx, ripeIdx, idx;
 
-            for (Clss = 1; Clss <= GrazType.DigClassNo; Clss++)
-                timeStepState.IntakePerHead.Herbage[Clss] = IntakeLimit * HerbageRI[Clss];
-            for (Species = 1; Species <= GrazType.MaxPlantSpp; Species++)
+            for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
+                timeStepState.IntakePerHead.Herbage[classIdx] = this.IntakeLimit * herbageRI[classIdx];
+            for (species = 1; species <= GrazType.MaxPlantSpp; species++)
             {
-                for (Rp = GrazType.UNRIPE; Rp <= GrazType.RIPE; Rp++)
-                    timeStepState.IntakePerHead.Seed[Species, Rp] = IntakeLimit * SeedRI[Species, Rp];
+                for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
+                    timeStepState.IntakePerHead.Seed[species, ripeIdx] = this.IntakeLimit * seedRI[species, ripeIdx];
             }
-            timeStepState.PaddockIntake = new GrazType.IntakeRecord();                        // Summarise herbage+seed intake         
-            for (Clss = 1; Clss <= GrazType.DigClassNo; Clss++)
-                AddDietElement(ref Inputs.Herbage[Clss], timeStepState.IntakePerHead.Herbage[Clss], ref timeStepState.PaddockIntake);
-            for (Species = 1; Species <= GrazType.MaxPlantSpp; Species++)
+            timeStepState.PaddockIntake = new GrazType.IntakeRecord();              // Summarise herbage+seed intake         
+            for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
+                this.AddDietElement(ref this.Inputs.Herbage[classIdx], timeStepState.IntakePerHead.Herbage[classIdx], ref timeStepState.PaddockIntake);
+            for (species = 1; species <= GrazType.MaxPlantSpp; species++)
             {
-                for (Rp = GrazType.UNRIPE; Rp <= GrazType.RIPE; Rp++)
-                    AddDietElement(ref Inputs.Seeds[Species, Rp], timeStepState.IntakePerHead.Seed[Species, Rp], ref timeStepState.PaddockIntake);
+                for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
+                    this.AddDietElement(ref this.Inputs.Seeds[species, ripeIdx], timeStepState.IntakePerHead.Seed[species, ripeIdx], ref timeStepState.PaddockIntake);
             }
 
-            SummariseIntakeRecord(ref timeStepState.PaddockIntake);
+            this.SummariseIntakeRecord(ref timeStepState.PaddockIntake);
             if (timeStepState.PaddockIntake.Biomass == 0.0) // i.e. less than fTrivialIntake
                 timeStepState.IntakePerHead = new GrazType.GrazingOutputs();
 
-            timeStepState.SuppIntake = new GrazType.IntakeRecord();                             // Summarise supplement intake           
-            fSupp_ME2DM = 0.0;
-            if ((TheRation.TotalAmount > 0.0) && (SuppRI * IntakeLimit > 0.0))
+            timeStepState.SuppIntake = new GrazType.IntakeRecord();                 // Summarise supplement intake           
+            supp_ME2DM = 0.0;
+            if ((this.TheRation.TotalAmount > 0.0) && (suppRI * this.IntakeLimit > 0.0))
             {
-                for (Idx = 0; Idx <= TheRation.Count - 1; Idx++)                                      // The supplements must be treated       
-                {                                                                    //   separately because of the non-      
-                    suppInput.Digestibility = TheRation[Idx].DMDigestibility;            //   linearity in the gut passage term   
-                    suppInput.CrudeProtein = TheRation[Idx].CrudeProt;
-                    suppInput.Degradability = TheRation[Idx].DegProt;
-                    suppInput.PhosContent = TheRation[Idx].Phosphorus;
-                    suppInput.SulfContent = TheRation[Idx].Sulphur;
-                    suppInput.AshAlkalinity = TheRation[Idx].AshAlkalinity;
+                // The supplements must be treated separately because of the non-linearity in the gut passage term
+                for (idx = 0; idx <= this.TheRation.Count - 1; idx++)                                 
+                {                                                                   
+                    suppInput.Digestibility = this.TheRation[idx].DMDigestibility;           
+                    suppInput.CrudeProtein = this.TheRation[idx].CrudeProt;
+                    suppInput.Degradability = this.TheRation[idx].DegProt;
+                    suppInput.PhosContent = this.TheRation[idx].Phosphorus;
+                    suppInput.SulfContent = this.TheRation[idx].Sulphur;
+                    suppInput.AshAlkalinity = this.TheRation[idx].AshAlkalinity;
 
-                    if (Animal == GrazType.AnimalType.Cattle)
-                        fGutPassage = TheRation[Idx].MaxPassage * StdMath.RAMP(TheRation.TotalAmount / IntakeLimit, 0.20, 0.75);
+                    if (this.Animal == GrazType.AnimalType.Cattle)
+                        gutPassage = this.TheRation[idx].MaxPassage * StdMath.RAMP(this.TheRation.TotalAmount / IntakeLimit, 0.20, 0.75);
                     else
-                        fGutPassage = 0.0;
-                    TimeStepNetSupp_DMI[Idx] = (1.0 - fGutPassage) * TheRation.GetFWFract(Idx) * (IntakeLimit * SuppRI);
+                        gutPassage = 0.0;
+                    this.TimeStepNetSupp_DMI[idx] = (1.0 - gutPassage) * this.TheRation.GetFWFract(idx) * (IntakeLimit * suppRI);
 
-                    AddDietElement(ref suppInput, TimeStepNetSupp_DMI[Idx], ref timeStepState.SuppIntake);
-                    fSupp_ME2DM = fSupp_ME2DM + TimeStepNetSupp_DMI[Idx] * TheRation[Idx].ME2DM;
+                    this.AddDietElement(ref suppInput, this.TimeStepNetSupp_DMI[idx], ref timeStepState.SuppIntake);
+                    supp_ME2DM = supp_ME2DM + this.TimeStepNetSupp_DMI[idx] * this.TheRation[idx].ME2DM;
                 }
 
-                SummariseIntakeRecord(ref timeStepState.SuppIntake);
-                if (timeStepState.SuppIntake.Biomass == 0.0) // i.e. less than fTrivialIntake
+                this.SummariseIntakeRecord(ref timeStepState.SuppIntake);
+                if (timeStepState.SuppIntake.Biomass == 0.0) 
                 {
-                    for (Idx = 0; Idx <= TheRation.Count - 1; Idx++)
-                        TimeStepNetSupp_DMI[Idx] = 0.0;
-                    fSupp_ME2DM = 0.0;
+                    // i.e. less than fTrivialIntake
+                    for (idx = 0; idx <= this.TheRation.Count - 1; idx++)
+                        this.TimeStepNetSupp_DMI[idx] = 0.0;
+                    supp_ME2DM = 0.0;
                 }
                 else
-                    fSupp_ME2DM = StdMath.XDiv(fSupp_ME2DM, timeStepState.SuppIntake.Biomass);
+                    supp_ME2DM = StdMath.XDiv(supp_ME2DM, timeStepState.SuppIntake.Biomass);
             }
             else
-                for (Idx = 0; Idx <= TheRation.Count - 1; Idx++)
-                    TimeStepNetSupp_DMI[Idx] = 0.0;
+                for (idx = 0; idx <= this.TheRation.Count - 1; idx++)
+                    this.TimeStepNetSupp_DMI[idx] = 0.0;
 
-
-            timeStepState.DM_Intake.Herbage = timeStepState.PaddockIntake.Biomass;                              // Dry matter intakes                    
+            timeStepState.DM_Intake.Herbage = timeStepState.PaddockIntake.Biomass;                                  // Dry matter intakes                    
             timeStepState.DM_Intake.Supp = timeStepState.SuppIntake.Biomass;
             timeStepState.DM_Intake.Solid = timeStepState.DM_Intake.Herbage + timeStepState.DM_Intake.Supp;
-            timeStepState.DM_Intake.Total = timeStepState.DM_Intake.Solid;                                    // Milk doesn't count for DM intake      
+            timeStepState.DM_Intake.Total = timeStepState.DM_Intake.Solid;                                          // Milk doesn't count for DM intake      
 
-            timeStepState.Digestibility.Herbage = timeStepState.PaddockIntake.Digestibility;                      // Digestibilities                       
+            timeStepState.Digestibility.Herbage = timeStepState.PaddockIntake.Digestibility;                        // Digestibilities                       
             timeStepState.Digestibility.Supp = timeStepState.SuppIntake.Digestibility;
-            timeStepState.Digestibility.Solid = StdMath.XDiv(timeStepState.Digestibility.Supp * timeStepState.DM_Intake.Supp +
+            timeStepState.Digestibility.Solid = StdMath.XDiv(
+                                           timeStepState.Digestibility.Supp * timeStepState.DM_Intake.Supp +
                                            timeStepState.Digestibility.Herbage * timeStepState.DM_Intake.Herbage,
                                            timeStepState.DM_Intake.Solid);
 
-            if (LactStatus == GrazType.LactType.Suckling)                                             // Milk terms                            
+            if (this.LactStatus == GrazType.LactType.Suckling)                                                                         
             {
-                timeStepState.CP_Intake.Milk = Mothers.Milk_ProtProdn / NoOffspring;
-                timeStepState.Phos_Intake.Milk = Mothers.Milk_PhosProdn / NoOffspring;
-                timeStepState.Sulf_Intake.Milk = Mothers.Milk_SulfProdn / NoOffspring;
-                timeStepState.ME_Intake.Milk = Mothers.Milk_MJProdn / NoOffspring;
+                // Milk terms
+                timeStepState.CP_Intake.Milk = this.Mothers.Milk_ProtProdn / this.NoOffspring;
+                timeStepState.Phos_Intake.Milk = this.Mothers.Milk_PhosProdn / this.NoOffspring;
+                timeStepState.Sulf_Intake.Milk = this.Mothers.Milk_SulfProdn / this.NoOffspring;
+                timeStepState.ME_Intake.Milk = this.Mothers.Milk_MJProdn / this.NoOffspring;
             }
             else
             {
@@ -1251,7 +1424,7 @@ namespace Models.GrazPlan
                 timeStepState.ME_Intake.Milk = 0.0;
             }
 
-            timeStepState.CP_Intake.Herbage = timeStepState.PaddockIntake.Biomass * timeStepState.PaddockIntake.CrudeProtein; // Crude protein intakes and contents    
+            timeStepState.CP_Intake.Herbage = timeStepState.PaddockIntake.Biomass * timeStepState.PaddockIntake.CrudeProtein;   // Crude protein intakes and contents    
             timeStepState.CP_Intake.Supp = timeStepState.SuppIntake.Biomass * timeStepState.SuppIntake.CrudeProtein;
             timeStepState.CP_Intake.Solid = timeStepState.CP_Intake.Herbage + timeStepState.CP_Intake.Supp;
             timeStepState.CP_Intake.Total = timeStepState.CP_Intake.Solid + timeStepState.CP_Intake.Milk;
@@ -1269,8 +1442,8 @@ namespace Models.GrazPlan
             timeStepState.Sulf_Intake.Solid = timeStepState.Sulf_Intake.Herbage + timeStepState.Sulf_Intake.Supp;
             timeStepState.Sulf_Intake.Total = timeStepState.Sulf_Intake.Solid + timeStepState.Sulf_Intake.Milk;
 
-            timeStepState.ME_2_DM.Herbage = GrazType.HerbageE2DM * timeStepState.Digestibility.Herbage - 2.0;          // Metabolizable energy intakes and      
-            timeStepState.ME_2_DM.Supp = fSupp_ME2DM;                                        //   contents                            
+            timeStepState.ME_2_DM.Herbage = GrazType.HerbageE2DM * timeStepState.Digestibility.Herbage - 2.0;                   // Metabolizable energy intakes and contents     
+            timeStepState.ME_2_DM.Supp = supp_ME2DM;                                                                                                        
             timeStepState.ME_Intake.Supp = timeStepState.ME_2_DM.Supp * timeStepState.DM_Intake.Supp;
             timeStepState.ME_Intake.Herbage = timeStepState.ME_2_DM.Herbage * timeStepState.DM_Intake.Herbage;
             timeStepState.ME_Intake.Solid = timeStepState.ME_Intake.Herbage + timeStepState.ME_Intake.Supp;
@@ -1281,15 +1454,15 @@ namespace Models.GrazPlan
         /// <summary>
         /// Compute RDP intake and requirement for a given MEI and feeding level      
         /// </summary>
-        /// <param name="Latitude"></param>
-        /// <param name="Day"></param>
+        /// <param name="latitude">The latitude</param>
+        /// <param name="Day">Day</param>
         /// <param name="IntakeScale"></param>
         /// <param name="FL"></param>
         /// <param name="CorrDg"></param>
         /// <param name="RDPI"></param>
         /// <param name="RDPR"></param>
         /// <param name="UDPIs"></param>
-        protected void ComputeRDP(double Latitude,
+        protected void ComputeRDP(double latitude,
                                      int Day,
                                      double IntakeScale,            // Assumed scaling factor for intake        
                                      double FL,                     // Assumed feeding level                    
@@ -1298,36 +1471,37 @@ namespace Models.GrazPlan
                                      ref DietRecord UDPIs)
         {
             DietRecord RDPIs;
-            double SuppFME_Intake;                                                 // Fermentable ME intake of supplement      
-            int Idx;
+            double suppFME_Intake;                                                                      // Fermentable ME intake of supplement      
+            int idx;
 
-            CorrDg.Herbage = AnimalState.PaddockIntake.Degradability                           // Correct the protein degradability        
-                              * (1.0 - (AParams.DgProtC[1] - AParams.DgProtC[2] * AnimalState.Digestibility.Herbage)// for feeding level                     
+            CorrDg.Herbage = this.AnimalState.PaddockIntake.Degradability                               // Correct the protein degradability        
+                              * (1.0 - (AParams.DgProtC[1] - this.AParams.DgProtC[2] * this.AnimalState.Digestibility.Herbage)// for feeding level                     
                                        * Math.Max(FL, 0.0));
-            CorrDg.Supp = AnimalState.SuppIntake.Degradability
-                              * (1.0 - AParams.DgProtC[3] * Math.Max(FL, 0.0));
+            CorrDg.Supp = this.AnimalState.SuppIntake.Degradability
+                              * (1.0 - this.AParams.DgProtC[3] * Math.Max(FL, 0.0));
 
-            RDPIs.Herbage = IntakeScale * AnimalState.CP_Intake.Herbage * AnimalState.CorrDgProt.Herbage;
-            RDPIs.Supp = IntakeScale * AnimalState.CP_Intake.Supp * AnimalState.CorrDgProt.Supp;
+            RDPIs.Herbage = IntakeScale * this.AnimalState.CP_Intake.Herbage * this.AnimalState.CorrDgProt.Herbage;
+            RDPIs.Supp = IntakeScale * this.AnimalState.CP_Intake.Supp * this.AnimalState.CorrDgProt.Supp;
             RDPIs.Solid = RDPIs.Herbage + RDPIs.Supp;
-            RDPIs.Milk = 0.0;                                                   // This neglects any degradation of milk    
-            UDPIs.Herbage = IntakeScale * AnimalState.CP_Intake.Herbage - RDPIs.Herbage;       //   CPI late in lactation when the rumen   
-            UDPIs.Supp = IntakeScale * AnimalState.CP_Intake.Supp - RDPIs.Supp;          //   has begun to develop                   
-            UDPIs.Milk = AnimalState.CP_Intake.Milk;
+            RDPIs.Milk = 0.0;                                                                           // This neglects any degradation of milk    
+            UDPIs.Herbage = IntakeScale * this.AnimalState.CP_Intake.Herbage - RDPIs.Herbage;           // CPI late in lactation when the rumen   
+            UDPIs.Supp = IntakeScale * this.AnimalState.CP_Intake.Supp - RDPIs.Supp;                    // has begun to develop                   
+            UDPIs.Milk = this.AnimalState.CP_Intake.Milk;
             UDPIs.Solid = UDPIs.Herbage + UDPIs.Supp;
             RDPI = RDPIs.Solid + RDPIs.Milk;
 
-            SuppFME_Intake = StdMath.DIM(IntakeScale * AnimalState.ME_Intake.Supp,                    // Fermentable ME intake of supplement      
-                                   GrazType.ProteinE2DM * UDPIs.Supp);                      //   leaves out the ME derived from         
-            for (Idx = 0; Idx <= TheRation.Count - 1; Idx++)                                    //   undegraded protein and oils            
-                SuppFME_Intake = StdMath.DIM(SuppFME_Intake,
-                                       GrazType.FatE2DM * TheRation[Idx].EtherExtract * IntakeScale * NetSupp_DMI[Idx]);
+            suppFME_Intake = StdMath.DIM(IntakeScale * this.AnimalState.ME_Intake.Supp,                 // Fermentable ME intake of supplement      
+                                   GrazType.ProteinE2DM * UDPIs.Supp);                                  // leaves out the ME derived from         
+            for (idx = 0; idx <= TheRation.Count - 1; idx++)                                            // undegraded protein and oils            
+                suppFME_Intake = StdMath.DIM(suppFME_Intake,
+                                       GrazType.FatE2DM * TheRation[idx].EtherExtract * IntakeScale * NetSupp_DMI[idx]);
 
-            RDPR = (AParams.DgProtC[4] + AParams.DgProtC[5] * (1.0 - Math.Exp(-AParams.DgProtC[6] * (FL + 1.0))))       // RDP requirement                          
-                    * (IntakeScale * AnimalState.ME_Intake.Herbage
-                        * (1.0 + AParams.DgProtC[7] * (Latitude / 40.0)
-                                            * Math.Sin(GrazEnv.DAY2RAD * StdDate.DOY(Day, true))) + SuppFME_Intake);
+            RDPR = (this.AParams.DgProtC[4] + this.AParams.DgProtC[5] * (1.0 - Math.Exp(-this.AParams.DgProtC[6] * (FL + 1.0))))       // RDP requirement                          
+                    * (IntakeScale * this.AnimalState.ME_Intake.Herbage
+                        * (1.0 + AParams.DgProtC[7] * (latitude / 40.0)
+                                            * Math.Sin(GrazEnv.DAY2RAD * StdDate.DOY(Day, true))) + suppFME_Intake);
         }
+        
         /// <summary>
         /// Set the standard reference weight of a group of animals based on breed  
         /// and sex                                                                   
@@ -1335,17 +1509,17 @@ namespace Models.GrazPlan
         protected void ComputeSRW()
         {
             double SRW;                                                             // Breed standard reference weight (i.e.    
-            //  normal weight of a mature, empty female)
+                                                                                    // normal weight of a mature, empty female)
 
             if (Mothers != null)                                                    // For lambs and calves, take both parents' 
-                SRW = AParams.BreedSRW;     // 0.5 * (BreedSRW + MaleSRW)           //   breed SRW's into account               
+                SRW = AParams.BreedSRW;     // 0.5 * (BreedSRW + MaleSRW)           // breed SRW's into account               
             else
                 SRW = AParams.BreedSRW;
 
             if (NoMales == 0)                                                       // Now take into account different SRWs of  
-                StdRefWt = SRW;                                                     //   males and females and different        
-            else                                                                    //   scalars for entire and castrated males 
-                StdRefWt = SRW * StdUnits.StdMath.XDiv(NoFemales + NoMales * AParams.SRWScalars[(int)ReproStatus],       //TODO: check this
+                StdRefWt = SRW;                                                     // males and females and different        
+            else                                                                    // scalars for entire and castrated males 
+                StdRefWt = SRW * StdUnits.StdMath.XDiv(NoFemales + NoMales * AParams.SRWScalars[(int)ReproStatus],       // TODO: check this
                                         NoFemales + NoMales);
         }
 
@@ -1355,17 +1529,17 @@ namespace Models.GrazPlan
         /// <returns></returns>
         protected double fBirthWtForSize()
         {
-            return AParams.StdBirthWt(NoFoetuses) * ((1.0 - AParams.PregC[4]) + AParams.PregC[4] * Size);
+            return this.AParams.StdBirthWt(NoFoetuses) * ((1.0 - this.AParams.PregC[4]) + this.AParams.PregC[4] * Size);
         }
+        
         /// <summary>
-        ///  "Normal weight" of the foetus and the weight of the conceptus in pregnant }
-        /// animals.                                                                  }
+        ///  "Normal weight" of the foetus and the weight of the conceptus in pregnant animals.         
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The normal weight</returns>
         protected double FoetalNormWt()
         {
-            if ((ReproStatus == GrazType.ReproType.EarlyPreg) || (ReproStatus == GrazType.ReproType.LatePreg))
-                return fBirthWtForSize() * fGompertz(FoetalAge, AParams.PregC[1], AParams.PregC[2], AParams.PregC[3]);
+            if ((this.ReproStatus == GrazType.ReproType.EarlyPreg) || (this.ReproStatus == GrazType.ReproType.LatePreg))
+                return fBirthWtForSize() * fGompertz(FoetalAge, this.AParams.PregC[1], this.AParams.PregC[2], this.AParams.PregC[3]);
             else
                 return 0.0;
         }
@@ -1386,12 +1560,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// Weight of the conceptus, i.e. foetus(es) plus uterus etc                  
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Conceptus weight</returns>
         protected double ConceptusWt()
         {
             if ((ReproStatus == GrazType.ReproType.EarlyPreg) || (ReproStatus == GrazType.ReproType.LatePreg))
                 return NoFoetuses
-                          * (AParams.PregC[5] * fBirthWtForSize() * fGompertz(FoetalAge, AParams.PregC[1], AParams.PregC[6], AParams.PregC[7])
+                          * (this.AParams.PregC[5] * fBirthWtForSize() * fGompertz(FoetalAge, this.AParams.PregC[1], this.AParams.PregC[6], this.AParams.PregC[7])
                              + FoetalWt - FoetalNormWt());
             else
                 return 0.0;
@@ -1403,35 +1577,37 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="SRW"></param>
         /// <param name="BW"></param>
-        /// <param name="AgeDays"></param>
-        /// <param name="Params"></param>
-        /// <returns></returns>
-        protected double MaxNormWtFunc(double SRW, double BW,
-                                int AgeDays,
-                                AnimalParamSet Params)
+        /// <param name="ageDays"></param>
+        /// <param name="parameters"></param>
+        /// <returns>Maximum normal weight</returns>
+        public static double MaxNormWtFunc(double SRW, double BW,
+                                int ageDays,
+                                AnimalParamSet parameters)
         {
             double GrowthRate;
 
-            GrowthRate = Params.GrowthC[1] / Math.Pow(SRW, Params.GrowthC[2]);
-            return SRW - (SRW - BW) * Math.Exp(-GrowthRate * AgeDays);
+            GrowthRate = parameters.GrowthC[1] / Math.Pow(SRW, parameters.GrowthC[2]);
+            return SRW - (SRW - BW) * Math.Exp(-GrowthRate * ageDays);
         }
+        
         /// <summary>
         /// Normal weight equation                                                 
         /// </summary>
-        /// <param name="iAgeDays"></param>
-        /// <param name="fMaxOldWt"></param>
-        /// <param name="fWeighting"></param>
+        /// <param name="ageDays"></param>
+        /// <param name="maxOldWt"></param>
+        /// <param name="weighting"></param>
         /// <returns></returns>
-        protected double NormalWeightFunc(int iAgeDays, double fMaxOldWt, double fWeighting)
+        protected double NormalWeightFunc(int ageDays, double maxOldWt, double weighting)
         {
             double fMaxNormWt;
 
-            fMaxNormWt = MaxNormWtFunc(StdRefWt, BirthWt, iAgeDays, AParams);
-            if (fMaxOldWt < fMaxNormWt)                                           // Delayed deveopment of frame size         
-                return fWeighting * fMaxNormWt + (1.0 - fWeighting) * fMaxOldWt;
+            fMaxNormWt = MaxNormWtFunc(StdRefWt, BirthWt, ageDays, AParams);
+            if (maxOldWt < fMaxNormWt)                                           // Delayed deveopment of frame size         
+                return weighting * fMaxNormWt + (1.0 - weighting) * maxOldWt;
             else
                 return fMaxNormWt;
         }
+        
         /// <summary>
         /// Calculate normal weight, size and condition of a group of animals.      
         /// </summary>
@@ -1442,43 +1618,42 @@ namespace Models.GrazPlan
             Size = NormalWt / StdRefWt;
             Condition = BaseWeight / NormalWt;
         }
+        
         /// <summary>
         /// Compute coat depth from GFW and fibre diameter                              
         /// </summary>
         protected void Calc_CoatDepth()
         {
-            double FibreCount;
-            double FibreArea;
+            double fibreCount;
+            double fibreArea;
 
-            //WITH AParams DO
-            if (Animal == GrazType.AnimalType.Cattle)
-                FCoatDepth = 1.0;
+            // WITH AParams DO
+            if (this.Animal == GrazType.AnimalType.Cattle)
+                this.FCoatDepth = 1.0;
             else
             {
-                FibreCount = AParams.WoolC[11] * AParams.ChillC[1] * Math.Pow(NormalWt, 2.0 / 3.0);
-                FibreArea = Math.PI / 4.0 * Math.Pow(WoolMicron * 1E-6, 2.0);
-                FCoatDepth = 100.0 * AParams.WoolC[3] * WoolWt / (FibreCount * AParams.WoolC[10] * FibreArea);
+                fibreCount = this.AParams.WoolC[11] * this.AParams.ChillC[1] * Math.Pow(this.NormalWt, 2.0 / 3.0);
+                fibreArea = Math.PI / 4.0 * Math.Pow(this.WoolMicron * 1E-6, 2.0);
+                this.FCoatDepth = 100.0 * this.AParams.WoolC[3] * this.WoolWt / (fibreCount * this.AParams.WoolC[10] * fibreArea);
             }
         }
 
         /// <summary>
         /// In sheep, the coat depth is used to set the total wool weight (this is the  
         /// way that shearing is done)                                                  
-        /// Parameter:                                                                  
-        ///   CM  Coat depth for which a greasy wool weight is to be calculated (cm)    
         /// </summary>
-        /// <param name="CM"></param>
-        /// <returns></returns>
-        protected double CoatDepth2Wool(double CM)
+        /// <param name="coatDepth">Coat depth for which a greasy wool weight is to be calculated (cm)</param>
+        /// <returns>Wool weight</returns>
+        protected double CoatDepth2Wool(double coatDepth)
         {
-            double FibreCount;
-            double FibreArea;
+            double fibreCount;
+            double fibreArea;
 
-            if (Animal == GrazType.AnimalType.Sheep)
+            if (this.Animal == GrazType.AnimalType.Sheep)
             {
-                FibreCount = AParams.WoolC[11] * AParams.ChillC[1] * Math.Pow(NormalWt, 2.0 / 3.0);
-                FibreArea = Math.PI / 4.0 * Math.Pow(WoolMicron * 1E-6, 2);
-                return (FibreCount * AParams.WoolC[10] * FibreArea) * CM / (100.0 * AParams.WoolC[3]);
+                fibreCount = AParams.WoolC[11] * AParams.ChillC[1] * Math.Pow(this.NormalWt, 2.0 / 3.0);
+                fibreArea = Math.PI / 4.0 * Math.Pow(WoolMicron * 1E-6, 2);
+                return (fibreCount * AParams.WoolC[10] * fibreArea) * coatDepth / (100.0 * AParams.WoolC[3]);
             }
             else
                 return 0.0;
@@ -1487,7 +1662,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the conception rates array
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Conception rates</returns>
         protected double[] getConceptionRates()
         {
             const double STD_LATITUDE = -35.0;      // Latitude (in degrees) for which the DayLengthConst[] parameters are set    
@@ -1496,7 +1671,7 @@ namespace Models.GrazPlan
             double fPropn;
             int N;
 
-            double[] Result = new double[4];        //TConceptionArray
+            double[] result = new double[4];        // TConceptionArray
 
             iDOY = StdDate.DOY(TheEnv.TheDay, true);
             fDLFactor = (1.0 - Math.Sin(GrazEnv.DAY2RAD * (iDOY + 10)))
@@ -1510,51 +1685,53 @@ namespace Models.GrazPlan
                     fPropn = 0.0;
 
                 if (N == 1)
-                    Result[N] = fPropn;
+                    result[N] = fPropn;
                 else
                 {
-                    Result[N] = fPropn * Result[N - 1];
-                    Result[N - 1] = Result[N - 1] - Result[N];
+                    result[N] = fPropn * result[N - 1];
+                    result[N - 1] = result[N - 1] - result[N];
                 }
             }
 
             for (N = 1; N <= AParams.MaxYoung - 1; N++)
             {
-                Result[N] = StdMath.DIM(Result[N], Result[N + 1]);
+                result[N] = StdMath.DIM(result[N], result[N + 1]);
             }
 
-            return Result;
+            return result;
         }
+
         /// <summary>
         /// Make the animals pregnant
         /// </summary>
-        /// <param name="ConceptionRate"></param>
-        /// <param name="NewGroups"></param>
-        protected void makePregnantAnimals(double[] ConceptionRate, ref AnimalList NewGroups)
+        /// <param name="conceptionRate">Conception rates</param>
+        /// <param name="newGroups">The new animal groups</param>
+        protected void makePregnantAnimals(double[] conceptionRate, ref AnimalList newGroups)
         {
-            int iInitialNumber;
-            DifferenceRecord FertileDiff;
-            AnimalGroup PregGroup;
-            int NPreg, N;
+            int initialNumber;
+            DifferenceRecord fertileDiff;
+            AnimalGroup pregGroup;
+            int numPreg, n;
 
             // A weight differential between conceiving and barren animals
-            FertileDiff = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
-            FertileDiff.BaseWeight = AParams.FertWtDiff;
+            fertileDiff = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
+            fertileDiff.BaseWeight = AParams.FertWtDiff;
 
-            iInitialNumber = NoAnimals;
-            for (N = 1; N <= AParams.MaxYoung; N++)
+            initialNumber = NoAnimals;
+            for (n = 1; n <= AParams.MaxYoung; n++)
             {
-                NPreg = Math.Min(NoAnimals, RandFactory.RndPropn(iInitialNumber, ConceptionRate[N]));
-                PregGroup = Split(NPreg, false, FertileDiff, NODIFF);
-                if (PregGroup != null)
+                numPreg = Math.Min(NoAnimals, RandFactory.RndPropn(initialNumber, conceptionRate[n]));
+                pregGroup = Split(numPreg, false, fertileDiff, NODIFF);
+                if (pregGroup != null)
                 {
-                    PregGroup.Pregnancy = 1;
-                    PregGroup.NoFoetuses = N;
-                    CheckAnimList(ref NewGroups);
-                    NewGroups.Add(PregGroup);
+                    pregGroup.Pregnancy = 1;
+                    pregGroup.NoFoetuses = n;
+                    CheckAnimList(ref newGroups);
+                    newGroups.Add(pregGroup);
                 }
             }
         }
+
         /// <summary>
         /// Used in createYoung() to set up the genotypic parameters of the lambs     
         /// or calves that are about to be born/created.                              
@@ -1567,12 +1744,12 @@ namespace Models.GrazPlan
             if (FMatedTo != null)
             {
                 Array.Resize(ref mateBlend, 2);
-                mateBlend[0].Breed = AParams;
+                mateBlend[0].Breed = this.AParams;
                 mateBlend[0].fPropn = 0.5;
                 mateBlend[1].Breed = FMatedTo;
                 mateBlend[1].fPropn = 0.5;
 
-                return AnimalParamSet.CreateFactory("", mateBlend);
+                return AnimalParamSet.CreateFactory(string.Empty, mateBlend);
             }
             else
                 return new AnimalParamSet(null, AParams);
@@ -1581,61 +1758,63 @@ namespace Models.GrazPlan
         /// <summary>
         ///  Carry out one cycle's worth of conceptions                                
         /// </summary>
-        /// <param name="NewGroups"></param>
-        private void Conceive(ref AnimalList NewGroups)
+        /// <param name="newGroups"></param>
+        private void Conceive(ref AnimalList newGroups)
         {
             if ((ReproStatus == GrazType.ReproType.Empty)
-               && (!((AParams.Animal == GrazType.AnimalType.Sheep) && (LactStatus == GrazType.LactType.Lactating)))
+               && (!((this.AParams.Animal == GrazType.AnimalType.Sheep) && (LactStatus == GrazType.LactType.Lactating)))
                && (MateCycle == 0))
-                makePregnantAnimals(getConceptionRates(), ref NewGroups);
+                makePregnantAnimals(getConceptionRates(), ref newGroups);
         }
+
         /// <summary>
         /// Death rate calculation
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The death rate</returns>
         private double DeathRateFunc()
         {
-            double GrowthRate;
-            double DeltaNormalWt;
-            double Result;
+            double growthRate;
+            double deltaNormalWt;
+            double result;
 
-            GrowthRate = AParams.GrowthC[1] / Math.Pow(StdRefWt, AParams.GrowthC[2]);
-            DeltaNormalWt = (StdRefWt - BirthWt) * (Math.Exp(-GrowthRate * (MeanAge - 1)) - Math.Exp(-GrowthRate * MeanAge));
+            growthRate = this.AParams.GrowthC[1] / Math.Pow(StdRefWt, AParams.GrowthC[2]);
+            deltaNormalWt = (StdRefWt - BirthWt) * (Math.Exp(-growthRate * (MeanAge - 1)) - Math.Exp(-growthRate * MeanAge));
 
-            Result = 1.0 - fExpectedSurvival(1);
-            if ((LactStatus != GrazType.LactType.Suckling) && (Condition < AParams.MortCondConst) && (DeltaBaseWeight < 0.2 * DeltaNormalWt))
-                Result = Result + AParams.MortIntensity * (AParams.MortCondConst - Condition);
-            return Result;
+            result = 1.0 - ExpectedSurvival(1);
+            if ((LactStatus != GrazType.LactType.Suckling) && (this.Condition < this.AParams.MortCondConst) && (DeltaBaseWeight < 0.2 * deltaNormalWt))
+                result = result + this.AParams.MortIntensity * (this.AParams.MortCondConst - this.Condition);
+            return result;
         }
+
         /// <summary>
         /// Exposure calculations
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Exposure value</returns>
         private double ExposureFunc()
         {
-            double ExposureOdds;
-            double Exp_ExpOdds;
-            double Result;
+            double exposureOdds;
+            double exp_ExpOdds;
+            double result;
 
-            ExposureOdds = AParams.ExposureConsts[0] - AParams.ExposureConsts[1] * Condition + AParams.ExposureConsts[2] * ChillIndex;
+            exposureOdds = this.AParams.ExposureConsts[0] - this.AParams.ExposureConsts[1] * Condition + this.AParams.ExposureConsts[2] * ChillIndex;
             if (NoOffspring > 1)
-                ExposureOdds = ExposureOdds + AParams.ExposureConsts[3];
-            Exp_ExpOdds = Math.Exp(ExposureOdds);
-            Result = Exp_ExpOdds / (1.0 + Exp_ExpOdds);
-            return Result;
+                exposureOdds = exposureOdds + this.AParams.ExposureConsts[3];
+            exp_ExpOdds = Math.Exp(exposureOdds);
+            result = exp_ExpOdds / (1.0 + exp_ExpOdds);
+            return result;
         }
 
         /// <summary>
         /// Mortality submodel                                                        
         /// </summary>
-        /// <param name="Chill"></param>
-        /// <param name="NewGroups"></param>
-        protected void Kill(double Chill, ref AnimalList NewGroups)
+        /// <param name="chill"></param>
+        /// <param name="newGroups"></param>
+        protected void Kill(double chill, ref AnimalList newGroups)
         {
-            double DeathRate;
+            double deathRate;
             DifferenceRecord Diffs;
-            int MaleLosses;
-            int FemaleLosses;
+            int maleLosses;
+            int femaleLosses;
             int NoLosses;
             int YoungLosses;
             int YoungToKill;
@@ -1645,23 +1824,23 @@ namespace Models.GrazPlan
             Diffs = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
             Diffs.BaseWeight = -AParams.MortWtDiff * BaseWeight;
 
-            DeathRate = DeathRateFunc();
-            FemaleLosses = RandFactory.RndPropn(NoFemales, DeathRate);
-            MaleLosses = RandFactory.RndPropn(NoMales, DeathRate);
-            NoLosses = MaleLosses + FemaleLosses;
+            deathRate = DeathRateFunc();
+            femaleLosses = RandFactory.RndPropn(NoFemales, deathRate);
+            maleLosses = RandFactory.RndPropn(NoMales, deathRate);
+            NoLosses = maleLosses + femaleLosses;
             if ((Animal == GrazType.AnimalType.Sheep) && (Young != null) && (Young.MeanAge == 1))
                 YoungLosses = RandFactory.RndPropn(Young.NoAnimals, ExposureFunc());
             else
                 YoungLosses = 0;
             FDeaths = NoLosses;
             if ((Young == null) && (NoLosses > 0))
-                SplitSex(MaleLosses, FemaleLosses, false, Diffs);
+                SplitSex(maleLosses, femaleLosses, false, Diffs);
 
-            else if ((Young != null) && (FemaleLosses + YoungLosses > 0))
+            else if ((Young != null) && (femaleLosses + YoungLosses > 0))
             {
-                if (FemaleLosses > 0)                                               // For now, unweaned young of dying animals 
+                if (femaleLosses > 0)                                               // For now, unweaned young of dying animals 
                 {                                                                   //   die with them                       
-                    DeadGroup = Split(FemaleLosses, false, Diffs, NODIFF);
+                    DeadGroup = Split(femaleLosses, false, Diffs, NODIFF);
                     YoungToKill = StdMath.IDIM(YoungLosses, DeadGroup.Young.NoAnimals);
                     DeadGroup = null;
                 }
@@ -1676,19 +1855,19 @@ namespace Models.GrazPlan
                     {
                         SplitGroup = Split(YoungToKill % NoFemales, false, NODIFF, NODIFF);
                         LoseYoung(SplitGroup, 1);
-                        CheckAnimList(ref NewGroups);
-                        NewGroups.Add(SplitGroup);
+                        CheckAnimList(ref newGroups);
+                        newGroups.Add(SplitGroup);
                     }
-                } //_ IF (YoungToKill > 0) 
-            } // ELSE IF (Young <> NIL) and (NoLosses + YoungLosses > 0) 
+                } //// _ IF (YoungToKill > 0) 
+            } //// ELSE IF (Young <> NIL) and (NoLosses + YoungLosses > 0) 
         }
 
         /// <summary>
         /// Decrease the number of young by N per mother                               
         /// </summary>
-        /// <param name="aGroup"></param>
-        /// <param name="N"></param>
-        protected void LoseYoung(AnimalGroup aGroup, int N)
+        /// <param name="animalGrp"></param>
+        /// <param name="number">Number of animals</param>
+        protected void LoseYoung(AnimalGroup animalGrp, int number)
         {
             DifferenceRecord YoungDiffs;
             int iMaleYoung;
@@ -1697,21 +1876,21 @@ namespace Models.GrazPlan
             int iMalesToLose;
             int iFemalesToLose;
 
-            if (N == aGroup.NoOffspring)
+            if (number == animalGrp.NoOffspring)
             {
-                aGroup.Young = null;
-                aGroup.SetNoOffspring(0);
+                animalGrp.Young = null;
+                animalGrp.SetNoOffspring(0);
             }
-            else if (N > 0)
+            else if (number > 0)
             {
                 YoungDiffs = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
-                YoungDiffs.BaseWeight = -aGroup.Young.AParams.MortWtDiff * aGroup.Young.BaseWeight;
+                YoungDiffs.BaseWeight = -animalGrp.Young.AParams.MortWtDiff * animalGrp.Young.BaseWeight;
 
-                iMaleYoung = aGroup.Young.NoMales;
-                iFemaleYoung = aGroup.Young.NoFemales;
-                iYoungToLose = N * aGroup.NoFemales;
+                iMaleYoung = animalGrp.Young.NoMales;
+                iFemaleYoung = animalGrp.Young.NoFemales;
+                iYoungToLose = number * animalGrp.NoFemales;
 
-                iMalesToLose = Convert.ToInt32(Math.Round(iYoungToLose * StdMath.XDiv(iMaleYoung, iMaleYoung + iFemaleYoung)));
+                iMalesToLose = Convert.ToInt32(Math.Round(iYoungToLose * StdMath.XDiv(iMaleYoung, iMaleYoung + iFemaleYoung)), CultureInfo.InvariantCulture);
                 iMalesToLose = Math.Min(iMalesToLose, iMaleYoung);
 
                 iFemalesToLose = iYoungToLose - iMalesToLose;
@@ -1721,48 +1900,48 @@ namespace Models.GrazPlan
                     iFemalesToLose = iFemaleYoung;
                 }
 
-                aGroup.Young.SplitSex(iMalesToLose, iFemalesToLose, false, YoungDiffs);
-                aGroup.FNoOffspring -= N;
-                aGroup.Young.FNoOffspring -= N;
+                animalGrp.Young.SplitSex(iMalesToLose, iFemalesToLose, false, YoungDiffs);
+                animalGrp.FNoOffspring -= number;
+                animalGrp.Young.FNoOffspring -= number;
             }
         }
 
         /// <summary>
         /// Pregnancy toxaemia and dystokia                                           
         /// </summary>
-        /// <param name="NewGroups"></param>
-        protected void KillEndPreg(ref AnimalList NewGroups)
+        /// <param name="newGroups">The new groups</param>
+        protected void KillEndPreg(ref AnimalList newGroups)
         {
             double DystokiaRate;
             double ToxaemiaRate;
             AnimalGroup DystGroup;
-            int NoLosses;
+            int numLosses;
 
             if ((Animal == GrazType.AnimalType.Sheep) && (FoetalAge == AParams.Gestation - 1))
-                if (NoFoetuses == 1)                                                // Calculate loss of young due to           
-                {                                                                  // dystokia and move the corresponding      
-                    DystokiaRate = StdMath.SIG((FoetalWt / AParams.StdBirthWt(1)) *                    // number of mothers into a new animal      
-                                           Math.Max(Size, 1.0),                            // group                                    
+                if (NoFoetuses == 1)                                                    // Calculate loss of young due to           
+                {                                                                       // dystokia and move the corresponding      
+                    DystokiaRate = StdMath.SIG((FoetalWt / AParams.StdBirthWt(1)) *     // number of mothers into a new animal      
+                                           Math.Max(Size, 1.0),                         // group                                    
                                          AParams.DystokiaSigs);
-                    NoLosses = RandFactory.RndPropn(NoFemales, DystokiaRate);
-                    if (NoLosses > 0)
+                    numLosses = RandFactory.RndPropn(NoFemales, DystokiaRate);
+                    if (numLosses > 0)
                     {
-                        DystGroup = Split(NoLosses, false, NODIFF, NODIFF);
+                        DystGroup = Split(numLosses, false, NODIFF, NODIFF);
                         DystGroup.Pregnancy = 0;
-                        CheckAnimList(ref NewGroups);
-                        NewGroups.Add(DystGroup);
-                    } // IF (NoLosses > 0)
-                } //IF (NoYoung = 1) 
+                        CheckAnimList(ref newGroups);
+                        newGroups.Add(DystGroup);
+                    } ////  IF (NoLosses > 0)
+                } //// IF (NoYoung = 1) 
 
                 else if (NoFoetuses >= 2)                                          // Deaths of sheep with multiple young      
-                {                                                                  //   due to pregnancy toxaemia              
+                {                                                                  // due to pregnancy toxaemia              
                     ToxaemiaRate = StdMath.SIG((MidLatePregWt - BaseWeight) / NormalWt,
                                          AParams.ToxaemiaSigs);
-                    NoLosses = RandFactory.RndPropn(NoFemales, ToxaemiaRate);
-                    FDeaths += NoLosses;
-                    if (NoLosses > 0)
-                        Split(NoLosses, false, NODIFF, NODIFF);
-                } // ELSE IF (NoFoetuses >= 2) 
+                    numLosses = RandFactory.RndPropn(NoFemales, ToxaemiaRate);
+                    FDeaths += numLosses;
+                    if (numLosses > 0)
+                        Split(numLosses, false, NODIFF, NODIFF);
+                } //// ELSE IF (NoFoetuses >= 2) 
         }
 
         /// <summary>
@@ -1782,7 +1961,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Number of offspring that are actually suckling
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The number of suckling young</returns>
         protected int NoSuckling()
         {
             if ((Young != null) && (Young.LactStatus == GrazType.LactType.Suckling))
@@ -1791,7 +1970,13 @@ namespace Models.GrazPlan
                 return 0;
         }
 
-        //TODO: check that this function returns changed values
+        
+        /// <summary>
+        /// TODO: check that this function returns changed values
+        /// </summary>
+        /// <param name="AG"></param>
+        /// <param name="X"></param>
+        /// <param name="Diffs"></param>
         private void AdjustRecords(AnimalGroup AG, double X, DifferenceRecord Diffs)
         {
             AG.BaseWeight = AG.BaseWeight + X * Diffs.BaseWeight;
@@ -1800,7 +1985,7 @@ namespace Models.GrazPlan
             AG.StdRefWt = AG.StdRefWt + X * Diffs.StdRefWt;
             AG.Calc_Weights();
             AG.TotalWeight = AG.BaseWeight + AG.ConceptusWt();                            // TotalWeight is meant to be the weight  
-            if (AParams.Animal == GrazType.AnimalType.Sheep)                                     // "on the scales", including conceptus   
+            if (AParams.Animal == GrazType.AnimalType.Sheep)                              // "on the scales", including conceptus   
                 AG.TotalWeight = AG.TotalWeight + AG.WoolWt;                              // and/or fleece.                         
         }
 
@@ -1820,7 +2005,7 @@ namespace Models.GrazPlan
             if ((NMale > NoMales) || (NFemale > NoFemales))
                 throw new Exception("AnimalGroup: Error in SplitSex method");
 
-            AnimalGroup Result = Copy();                                                           // Create the new animal group              
+            AnimalGroup Result = Copy();                                                 // Create the new animal group              
             if ((NMale == NoMales) && (NFemale == NoFemales))
             {
                 NoMales = 0;
@@ -1829,18 +2014,18 @@ namespace Models.GrazPlan
             }
             else
             {
-                PropnGoing = StdMath.XDiv(NMale + NFemale, NoMales + NoFemales);                 // Adjust weights etc                       
+                PropnGoing = StdMath.XDiv(NMale + NFemale, NoMales + NoFemales);        // Adjust weights etc                       
                 AdjustRecords(this, -PropnGoing, Diffs);
                 AdjustRecords(Result, 1.0 - PropnGoing, Diffs);
 
-                Result.NoMales = NMale;                                              // Set up numbers in the two groups and     
-                Result.NoFemales = NFemale;                                            //   split up the age list                  
-                Result.Ages = Ages.Split(NMale, NFemale, ByAge);
+                Result.NoMales = NMale;                                                 // Set up numbers in the two groups and     
+                Result.NoFemales = NFemale;                                             // split up the age list                  
+                Result.Ages = this.Ages.Split(NMale, NFemale, ByAge);
                 Result.MeanAge = Result.Ages.MeanAge();
 
-                NoMales = NoMales - NMale;
-                NoFemales = NoFemales - NFemale;
-                MeanAge = Ages.MeanAge();
+                this.NoMales = this.NoMales - NMale;
+                this.NoFemales = this.NoFemales - NFemale;
+                this.MeanAge = this.Ages.MeanAge();
             }
             return Result;
         }
@@ -1849,54 +2034,57 @@ namespace Models.GrazPlan
         /// <summary>
         /// Set the genotype
         /// </summary>
-        /// <param name="aValue"></param>
-        protected void setGenotype(AnimalParamSet aValue)
+        /// <param name="value"></param>
+        protected void setGenotype(AnimalParamSet value)
         {
-            AParams = new AnimalParamSet(null, aValue);
+            this.AParams = new AnimalParamSet(null, value);
         }
+
         /// <summary>
         /// Get the total number of females and males
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Total number of animals</returns>
         protected int GetNoAnimals()
         {
-            return NoMales + NoFemales;
+            return this.NoMales + this.NoFemales;
         }
+
         /// <summary>
         /// Set the number of animals
         /// </summary>
-        /// <param name="N"></param>
-        protected void SetNoAnimals(int N)
+        /// <param name="count">Number of animals</param>
+        protected void SetNoAnimals(int count)
         {
-            if (Mothers != null)
+            if (this.Mothers != null)
             {
-                NoMales = N / 2;
-                NoFemales = N - NoMales;
+                this.NoMales = count / 2;
+                this.NoFemales = count - this.NoMales;
             }
-            else if ((ReproStatus == GrazType.ReproType.Male) || (ReproStatus == GrazType.ReproType.Castrated))
+            else if ((this.ReproStatus == GrazType.ReproType.Male) || (this.ReproStatus == GrazType.ReproType.Castrated))
             {
-                NoMales = N;
-                NoFemales = 0;
+                this.NoMales = count;
+                this.NoFemales = 0;
             }
             else
             {
-                NoMales = 0;
-                NoFemales = N;
+                this.NoMales = 0;
+                this.NoFemales = count;
             }
 
-            if (Ages.Count == 0)
-                Ages.Input(MeanAge, NoMales, NoFemales);
+            if (this.Ages.Count == 0)
+                Ages.Input(this.MeanAge, this.NoMales, this.NoFemales);
             else
-                Ages.Resize(NoMales, NoFemales);
+                Ages.Resize(this.NoMales, this.NoFemales);
         }
+
         /// <summary>
         /// Set the live weight
         /// </summary>
-        /// <param name="LW"></param>
-        protected void SetLiveWt(double LW)
+        /// <param name="liveWeight">Live weight</param>
+        protected void SetLiveWt(double liveWeight)
         {
-            BaseWeight = LW - ConceptusWt() - WoolWt;
-            TotalWeight = LW;
+            BaseWeight = liveWeight - ConceptusWt() - WoolWt;
+            TotalWeight = liveWeight;
             Calc_Weights();
         }
 
@@ -1908,6 +2096,7 @@ namespace Models.GrazPlan
         {
             return StdUnits.StdMath.DIM(WoolWt, CoatDepth2Wool(STUBBLE_MM));
         }
+
         /// <summary>
         /// Set the weight of fleece
         /// </summary>
@@ -1920,46 +2109,47 @@ namespace Models.GrazPlan
         /// <summary>
         /// Total weight of wool including stubble (kg greasy)                        
         /// </summary>
-        /// <param name="WWt"></param>
-        protected void SetWoolWt(double WWt)
+        /// <param name="woolWeight"></param>
+        protected void SetWoolWt(double woolWeight)
         {
-            WoolWt = WWt;
+            WoolWt = woolWeight;
             BaseWeight = TotalWeight - ConceptusWt() - WoolWt;
             Calc_Weights();
         }
+
         /// <summary>
         /// Set the maximum previous weight
         /// </summary>
-        /// <param name="MPW"></param>
-        protected void SetMaxPrevWt(double MPW)
+        /// <param name="maxPrevWeight"></param>
+        protected void SetMaxPrevWt(double maxPrevWeight)
         {
-            MaxPrevWt = MPW;
+            MaxPrevWt = maxPrevWeight;
             Calc_Weights();
         }
 
         /// <summary>
         /// In sheep, the coat depth is used to set the total wool weight 
-        /// Parameter:                                                                  
-        /// CM  New coat depth (cm)                                                     
         /// </summary>
-        /// <param name="CM"></param>
-        protected void SetCoatDepth(double CM)
+        /// <param name="newCoatDepth">New coat depth (cm)</param>
+        protected void SetCoatDepth(double newCoatDepth)
         {
-            FCoatDepth = CM;
-            SetWoolWt(CoatDepth2Wool(CM));
+            FCoatDepth = newCoatDepth;
+            SetWoolWt(CoatDepth2Wool(newCoatDepth));
         }
+
         /// <summary>
         /// Set the animal to be mated to
         /// </summary>
-        /// <param name="aValue"></param>
-        protected void setMatedTo(AnimalParamSet aValue)
+        /// <param name="value"></param>
+        protected void setMatedTo(AnimalParamSet value)
         {
             FMatedTo = null;
-            if (aValue == null)
+            if (value == null)
                 FMatedTo = null;
             else
-                FMatedTo = new AnimalParamSet(aValue);
+                FMatedTo = new AnimalParamSet(value);
         }
+
         /// <summary>
         /// Set the pregnancy progress
         /// </summary>
@@ -1975,8 +2165,8 @@ namespace Models.GrazPlan
                 if (P == 0)
                 {
                     ReproStatus = GrazType.ReproType.Empty;                         // Don't re-set the base weight here as     
-                    FoetalAge = 0;                                                  //   this is usually used at birth, where   
-                    FoetalWt = 0.0;                                                 //   the conceptus is lost                  
+                    FoetalAge = 0;                                                  // this is usually used at birth, where   
+                    FoetalWt = 0.0;                                                 // the conceptus is lost                  
                     MidLatePregWt = 0.0;
                     SetNoFoetuses(0);
                     MateCycle = -1;
@@ -1994,9 +2184,9 @@ namespace Models.GrazPlan
                     MateCycle = -1;
                     DaysToMate = 0;
                     for (Idx = 1; Idx <= 3; Idx++)                                         // This piece of code estimates the weight  
-                    {                                                                      //   of the foetus and implicitly the       
-                        ConditionFactor = (Condition - 1.0)                                //   conceptus while keeping the live       
-                                           * FoetalNormWt() / AParams.StdBirthWt(NoFoetuses);   //   weight constant                        
+                    {                                                                      // of the foetus and implicitly the       
+                        ConditionFactor = (Condition - 1.0)                                // conceptus while keeping the live       
+                                           * FoetalNormWt() / AParams.StdBirthWt(NoFoetuses);   // weight constant                        
                         if (Condition >= 1.0)
                             FoetalWt = FoetalNormWt() * (1.0 + ConditionFactor);
                         else
@@ -2014,18 +2204,18 @@ namespace Models.GrazPlan
         /// <summary>
         /// Normal weight as a function of age and sex                                
         /// </summary>
-        /// <param name="iAgeDays"></param>
-        /// <param name="Repr"></param>
-        /// <param name="Params"></param>
+        /// <param name="ageDays"></param>
+        /// <param name="reprdType"></param>
+        /// <param name="parameters"></param>
         /// <returns></returns>
-        protected double GrowthCurve(int iAgeDays, GrazType.ReproType Repr, AnimalParamSet Params)
+        public static double GrowthCurve(int ageDays, GrazType.ReproType reprdType, AnimalParamSet parameters)
         {
             double SRW;
 
-            SRW = Params.BreedSRW;
-            if ((Repr == GrazType.ReproType.Male) || (Repr == GrazType.ReproType.Castrated))
-                SRW = SRW * Params.SRWScalars[(int)Repr];                                           //TODO: check indexing here
-            return MaxNormWtFunc(SRW, Params.StdBirthWt(1), iAgeDays, Params);
+            SRW = parameters.BreedSRW;
+            if ((reprdType == GrazType.ReproType.Male) || (reprdType == GrazType.ReproType.Castrated))
+                SRW = SRW * parameters.SRWScalars[(int)reprdType];                                           // TODO: check indexing here
+            return MaxNormWtFunc(SRW, parameters.StdBirthWt(1), ageDays, parameters);
         }
 
         /// <summary>
@@ -2034,22 +2224,22 @@ namespace Models.GrazPlan
         /// <param name="L"></param>
         protected void SetLactation(int L)
         {
-            //AnimalGroup MyClass;
+            // AnimalGroup MyClass;
 
             if (L != DaysLactating)
             {
                 if (L == 0)
                 {
-                    LactStatus = GrazType.LactType.Dry;                                                    // Set this before calling setDryoffTime()  
+                    LactStatus = GrazType.LactType.Dry;                                     // Set this before calling setDryoffTime()  
                     if (Young == null)
-                        setDryoffTime(DaysLactating, 0, FPrevOffspring);
-                    else                                                                  // This happens when self-weaning occurs    
+                        SetDryoffTime(DaysLactating, 0, FPrevOffspring);
+                    else                                                                    // This happens when self-weaning occurs    
                     {
-                        setDryoffTime(DaysLactating, 0, NoOffspring);
+                        SetDryoffTime(DaysLactating, 0, NoOffspring);
                         Young.LactStatus = GrazType.LactType.Dry;
                     }
-                    DaysLactating = 0;                                                   // ConditionAtBirthing, PropnOfMaxMilk and  
-                }                                                                     // LactAdjust are left at their final values
+                    DaysLactating = 0;                                                      // ConditionAtBirthing, PropnOfMaxMilk and  
+                }                                                                           // LactAdjust are left at their final values
                 else
                 {
                     LactStatus = GrazType.LactType.Lactating;
@@ -2072,37 +2262,39 @@ namespace Models.GrazPlan
                 LactRatio = 1.0;
             }
         }
+
         /// <summary>
         /// Set the number of foetuses
         /// </summary>
-        /// <param name="iValue"></param>
-        protected void SetNoFoetuses(int iValue)
+        /// <param name="value"></param>
+        protected void SetNoFoetuses(int value)
         {
             int iDaysPreg;
 
-            if (iValue == 0)
+            if (value == 0)
             {
                 Pregnancy = 0;
                 FNoFoetuses = 0;
             }
-            else if ((iValue <= AParams.MaxYoung) && (iValue != NoFoetuses))
+            else if ((value <= AParams.MaxYoung) && (value != NoFoetuses))
             {
                 iDaysPreg = Pregnancy;
                 Pregnancy = 0;
-                FNoFoetuses = iValue;
+                FNoFoetuses = value;
                 Pregnancy = iDaysPreg;
             }
         }
+
         /// <summary>
         ///  On creation, lambs and calves are always suckling their mothers. This may 
         /// change in the course of a simulation (see the YoungStopSuckling function) 
         /// </summary>
-        /// <param name="iValue"></param>
-        protected void SetNoOffspring(int iValue)
+        /// <param name="value"></param>
+        protected void SetNoOffspring(int value)
         {
             int iDaysLact;
 
-            if (iValue != NoOffspring)
+            if (value != NoOffspring)
             {
                 iDaysLact = Lactation;                                                 // Store the current stage of lactation     
                 Lactation = 0;
@@ -2112,13 +2304,13 @@ namespace Models.GrazPlan
                     Young = null;
                 }
 
-                FNoOffspring = iValue;
+                FNoOffspring = value;
 
-                if (iValue == 0)
+                if (value == 0)
                     Young = null;
-                else if (iValue <= AParams.MaxYoung)
-                    SetLactation(iDaysLact);                                            // This creates a new group of (suckling)   
-            }                                                                     //   lambs or calves                        
+                else if (value <= AParams.MaxYoung)
+                    SetLactation(iDaysLact);                                            // This creates a new group of (suckling) lambs or calves  
+            }                                                                                                   
         }
 
         /// <summary>
@@ -2131,11 +2323,12 @@ namespace Models.GrazPlan
         {
             GrazType.DM_Pool Result = new GrazType.DM_Pool();
 
-            Result = MultiplyDMPool(AnimalState.OrgFaeces, NoAnimals);
+            Result = MultiplyDMPool(this.AnimalState.OrgFaeces, NoAnimals);
             if (Young != null)
                 Result = AddDMPool(Result, Young.OrgFaeces);
             return Result;
         }
+
         /// <summary>
         /// Get the inorganic faeces amount
         /// </summary>
@@ -2144,18 +2337,19 @@ namespace Models.GrazPlan
         {
             GrazType.DM_Pool Result = new GrazType.DM_Pool();
 
-            Result = MultiplyDMPool(AnimalState.InOrgFaeces, NoAnimals);
+            Result = MultiplyDMPool(this.AnimalState.InOrgFaeces, NoAnimals);
             if (Young != null)
                 Result = AddDMPool(Result, Young.InOrgFaeces);
             return Result;
         }
+
         /// <summary>
         /// Get the urine amount
         /// </summary>
         /// <returns></returns>
         protected GrazType.DM_Pool GetUrine()
         {
-            GrazType.DM_Pool Result = MultiplyDMPool(AnimalState.Urine, NoAnimals);
+            GrazType.DM_Pool Result = MultiplyDMPool(this.AnimalState.Urine, NoAnimals);
             if (Young != null)
                 Result = AddDMPool(Result, Young.Urine);
             return Result;
@@ -2168,73 +2362,73 @@ namespace Models.GrazPlan
         protected ExcretionInfo getExcretion()
         {
             // these will have to go into the parameter set eventually...
-            double[] dFaecesDensity = { 1000.0, 1000.0 };       // kg/m^3
-            // double[] dFaecesMoisture = { 4.0, 5.0 };            // kg water/kg DM
-            double[] dRefNormalWt = { 50.0, 600.0 };            // kg
-            double[] dFaecesRefLength = { 0.012, 0.30 };        // m
-            double[] dFaecesPower = { 0.00, 1.0 / 3.0 };
-            double[] dFaecesWidthToLength = { 0.80, 1.00 };
-            double[] dFaecesHeightToLength = { 0.70, 0.12 };
-            double[] dFaecalMoistureHerbageMin = { 6.0, 7.5 };  // kg water/kg DM
-            double[] dFaecalMoistureSuppMin = { 3.0, 3.0 };
-            double[] dFaecalMoistureMax = { 0.0, 0.0 };
-            double[] dFaecesNO3Propn = { 0.25, 0.25 };
-            double[] dUrineRefLength = { 0.20, 0.60 };          // m
-            double[] dUrineWidthToLength = { 1.00, 1.00 };
-            double[] dUrineRefVolume = { 0.00015, 0.00200 };    // m^3
-            double[] dDailyUrineRefVol = { 0.0003, 0.0250 };    // m^3/head/d
+            double[] faecesDensity = { 1000.0, 1000.0 };       // kg/m^3
+            // double[] dFaecesMoisture = { 4.0, 5.0 };         // kg water/kg DM
+            double[] refNormalWt = { 50.0, 600.0 };            // kg
+            double[] faecesRefLength = { 0.012, 0.30 };        // m
+            double[] faecesPower = { 0.00, 1.0 / 3.0 };
+            double[] faecesWidthToLength = { 0.80, 1.00 };
+            double[] faecesHeightToLength = { 0.70, 0.12 };
+            double[] faecalMoistureHerbageMin = { 6.0, 7.5 };  // kg water/kg DM
+            double[] faecalMoistureSuppMin = { 3.0, 3.0 };
+            double[] faecalMoistureMax = { 0.0, 0.0 };
+            double[] faecesNO3Propn = { 0.25, 0.25 };
+            double[] urineRefLength = { 0.20, 0.60 };          // m
+            double[] urineWidthToLength = { 1.00, 1.00 };
+            double[] urineRefVolume = { 0.00015, 0.00200 };    // m^3
+            double[] dailyUrineRefVol = { 0.0030, 0.0250 };    // m^3/head/d
 
-            double dFaecalLongAxis;         // metres
-            double dFaecalHeight;           // metres
-            double dFaecalMoistureHerbage;
-            double dFaecalMoistureSupp;
-            double dFaecalFreshWeight;      // kg/head
-            double dUrineLongAxis;          // metres
-            double dVolumePerUrination;     // m^3
-            double dDailyUrineVolume;       // m^3
+            double faecalLongAxis;         // metres
+            double faecalHeight;           // metres
+            double faecalMoistureHerbage;
+            double faecalMoistureSupp;
+            double faecalFreshWeight;      // kg/head
+            double urineLongAxis;          // metres
+            double volumePerUrination;     // m^3
+            double dailyUrineVolume;       // m^3
             FoodSupplement tempSuppt;
 
-            ExcretionInfo Result = new ExcretionInfo();
+            ExcretionInfo result = new ExcretionInfo();
 
-            Result.OrgFaeces = MultiplyDMPool(AnimalState.OrgFaeces, NoAnimals);
-            Result.InOrgFaeces = MultiplyDMPool(AnimalState.InOrgFaeces, NoAnimals);
-            Result.Urine = MultiplyDMPool(AnimalState.Urine, NoAnimals);
+            result.OrgFaeces = MultiplyDMPool(this.AnimalState.OrgFaeces, NoAnimals);
+            result.InOrgFaeces = MultiplyDMPool(this.AnimalState.InOrgFaeces, NoAnimals);
+            result.Urine = MultiplyDMPool(this.AnimalState.Urine, NoAnimals);
 
             // In sheep, we treat each faecal pellet as a separate defaecation.
             // Sheep pellets are assumed to have constant size; cattle pats vary with
             // linear dimension of the animal
 
-            dFaecalLongAxis = dFaecesRefLength[(int)Animal] * Math.Pow(NormalWt / dRefNormalWt[(int)Animal], dFaecesPower[(int)Animal]);
-            dFaecalHeight = dFaecalLongAxis * dFaecesHeightToLength[(int)Animal];
+            faecalLongAxis = faecesRefLength[(int)Animal] * Math.Pow(NormalWt / refNormalWt[(int)Animal], faecesPower[(int)Animal]);
+            faecalHeight = faecalLongAxis * faecesHeightToLength[(int)Animal];
 
             // Faecal moisture content seems to be lower when animals are not at pasture,
             // so estimate it separately for herbage and supplement components of the diet
             tempSuppt = new FoodSupplement();
             TheRation.AverageSuppt(out tempSuppt);
-            dFaecalMoistureHerbage = dFaecalMoistureHerbageMin[(int)Animal] + (dFaecalMoistureMax[(int)Animal] - dFaecalMoistureHerbageMin[(int)Animal]) * AnimalState.Digestibility.Herbage;
-            dFaecalMoistureSupp = dFaecalMoistureSuppMin[(int)Animal] + (dFaecalMoistureMax[(int)Animal] - dFaecalMoistureSuppMin[(int)Animal]) * (1.0 - tempSuppt.DMPropn);
-            dFaecalFreshWeight = AnimalState.DM_Intake.Herbage * (1.0 - AnimalState.Digestibility.Herbage) * (1.0 + dFaecalMoistureHerbage)
-                                      + AnimalState.DM_Intake.Supp * (1.0 - AnimalState.Digestibility.Supp) * (1.0 + dFaecalMoistureSupp);
+            faecalMoistureHerbage = faecalMoistureHerbageMin[(int)Animal] + (faecalMoistureMax[(int)Animal] - faecalMoistureHerbageMin[(int)Animal]) * this.AnimalState.Digestibility.Herbage;
+            faecalMoistureSupp = faecalMoistureSuppMin[(int)Animal] + (faecalMoistureMax[(int)Animal] - faecalMoistureSuppMin[(int)Animal]) * (1.0 - tempSuppt.DMPropn);
+            faecalFreshWeight = this.AnimalState.DM_Intake.Herbage * (1.0 - this.AnimalState.Digestibility.Herbage) * (1.0 + faecalMoistureHerbage)
+                                      + this.AnimalState.DM_Intake.Supp * (1.0 - this.AnimalState.Digestibility.Supp) * (1.0 + faecalMoistureSupp);
             tempSuppt = null;
 
             // Defaecations are assumed to be ellipsoidal prisms:
-            Result.dDefaecationEccentricity = Math.Sqrt(1.0 - StdMath.Sqr(dFaecesWidthToLength[(int)AParams.Animal]));
-            Result.dDefaecationArea = Math.PI / 4.0 * StdMath.Sqr(dFaecalLongAxis) * dFaecesWidthToLength[(int)AParams.Animal];
-            Result.dDefaecationVolume = Result.dDefaecationArea * dFaecalHeight;
-            Result.dDefaecations = NoAnimals * (dFaecalFreshWeight / dFaecesDensity[(int)AParams.Animal]) / Result.dDefaecationVolume;
-            Result.dFaecalNO3Propn = dFaecesNO3Propn[(int)AParams.Animal];
+            result.DefaecationEccentricity = Math.Sqrt(1.0 - StdMath.Sqr(faecesWidthToLength[(int)AParams.Animal]));
+            result.DefaecationArea = Math.PI / 4.0 * StdMath.Sqr(faecalLongAxis) * faecesWidthToLength[(int)AParams.Animal];
+            result.DefaecationVolume = result.DefaecationArea * faecalHeight;
+            result.Defaecations = NoAnimals * (faecalFreshWeight / faecesDensity[(int)AParams.Animal]) / result.DefaecationVolume;
+            result.FaecalNO3Propn = faecesNO3Propn[(int)AParams.Animal];
 
-            dUrineLongAxis = dUrineRefLength[(int)Animal] * Math.Pow(NormalWt / dRefNormalWt[(int)Animal], 1.0 / 3.0);
-            dVolumePerUrination = dUrineRefVolume[(int)Animal] * Math.Pow(NormalWt / dRefNormalWt[(int)Animal], 1.0);
-            dDailyUrineVolume = dDailyUrineRefVol[(int)Animal] * Math.Pow(NormalWt / dRefNormalWt[(int)Animal], 1.0);
+            urineLongAxis = urineRefLength[(int)Animal] * Math.Pow(NormalWt / refNormalWt[(int)Animal], 1.0 / 3.0);
+            volumePerUrination = urineRefVolume[(int)Animal] * Math.Pow(NormalWt / refNormalWt[(int)Animal], 1.0);
+            dailyUrineVolume = dailyUrineRefVol[(int)Animal] * Math.Pow(NormalWt / refNormalWt[(int)Animal], 1.0);
 
             // Urinations are assumed to be ellipsoidal
-            Result.dUrinationEccentricity = Math.Sqrt(1.0 - StdMath.Sqr(dUrineWidthToLength[(int)AParams.Animal]));
-            Result.dUrinationArea = Math.PI / 4.0 * StdMath.Sqr(dUrineLongAxis) * dUrineWidthToLength[(int)AParams.Animal];
-            Result.dUrinationVolume = dVolumePerUrination;
-            Result.dUrinations = NoAnimals * dDailyUrineVolume / Result.dUrinationVolume;
+            result.dUrinationEccentricity = Math.Sqrt(1.0 - StdMath.Sqr(urineWidthToLength[(int)AParams.Animal]));
+            result.UrinationArea = Math.PI / 4.0 * StdMath.Sqr(urineLongAxis) * urineWidthToLength[(int)AParams.Animal];
+            result.UrinationVolume = volumePerUrination;
+            result.Urinations = NoAnimals * dailyUrineVolume / result.UrinationVolume;
 
-            return Result;
+            return result;
         }
 
         /// <summary>
@@ -2245,13 +2439,14 @@ namespace Models.GrazPlan
         {
             return AParams.Animal;
         }
+
         /// <summary>
         /// Get the breed name
         /// </summary>
         /// <returns></returns>
         protected string GetBreed()
         {
-            return AParams.sName;
+            return AParams.Name;
         }
 
         //TODO: Test this function
@@ -2261,7 +2456,7 @@ namespace Models.GrazPlan
         /// <returns></returns>
         protected GrazType.AgeType GetAgeClass()
         {
-            //Array[AnimalType,0..3] of AgeType
+            // Array[AnimalType,0..3] of AgeType
             GrazType.AgeType[,] AgeClassMap = new GrazType.AgeType[2, 4]
                                 { {GrazType.AgeType.Weaner, GrazType.AgeType.Yearling, GrazType.AgeType.Mature, GrazType.AgeType.Mature},         //sheep
                                 {GrazType.AgeType.Weaner, GrazType.AgeType.Yearling, GrazType.AgeType.TwoYrOld, GrazType.AgeType.Mature} };       //cattle
@@ -2270,6 +2465,7 @@ namespace Models.GrazPlan
             else
                 return AgeClassMap[(int)AParams.Animal, Math.Min(MeanAge / 365, 3)];
         }
+
         /// <summary>
         /// Get the weight of the male
         /// </summary>
@@ -2300,6 +2496,7 @@ namespace Models.GrazPlan
             }
             return Result;
         }
+
         /// <summary>
         /// Get the weight of the female
         /// </summary>
@@ -2326,18 +2523,20 @@ namespace Models.GrazPlan
             double Result;
             double MEIPerHead;
 
-            MEIPerHead = AnimalState.ME_Intake.Solid;
+            MEIPerHead = this.AnimalState.ME_Intake.Solid;
             if (Young != null)
                 MEIPerHead = MEIPerHead + NoOffspring * Young.AnimalState.ME_Intake.Solid;
             Result = NoAnimals * MEIPerHead / DSE_REF_MEI;
 
             return Result;
         }
+
         /// <summary>
         /// Get the clean fleece weight
         /// </summary>
         /// <returns></returns>
         protected double GetCFW() { return FleeceCutWeight * AParams.WoolC[3]; }
+        
         /// <summary>
         /// CleanFleeceGrowth
         /// </summary>
@@ -2346,6 +2545,7 @@ namespace Models.GrazPlan
         {
             return DeltaWoolWt * AParams.WoolC[3];
         }
+
         /// <summary>
         /// Get the maximum milk yield
         /// </summary>
@@ -2357,6 +2557,7 @@ namespace Models.GrazPlan
             else
                 return StdMath.XDiv(Milk_Weight, PropnOfMaxMilk);
         }
+
         /// <summary>
         /// Get the milk volume
         /// </summary>
@@ -2368,35 +2569,46 @@ namespace Models.GrazPlan
             else
                 return StdMath.XDiv(Milk_Weight, AParams.LactC[25]);
         }
+
         /// <summary>
         /// Get the methane energy
         /// </summary>
         /// <returns></returns>
         protected double GetMethaneEnergy()
         {
-            return AParams.MethC[1] * AnimalState.DM_Intake.Solid
-                      * (AParams.MethC[2] + AParams.MethC[3] * AnimalState.ME_2_DM.Solid
-                          + (FeedingLevel + 1.0) * (AParams.MethC[4] - AParams.MethC[5] * AnimalState.ME_2_DM.Solid));
+            return this.AParams.MethC[1] * this.AnimalState.DM_Intake.Solid
+                      * (this.AParams.MethC[2] + this.AParams.MethC[3] * this.AnimalState.ME_2_DM.Solid
+                          + (FeedingLevel + 1.0) * (this.AParams.MethC[4] - this.AParams.MethC[5] * this.AnimalState.ME_2_DM.Solid));
         }
+
         /// <summary>
         /// Get the methane weight
         /// </summary>
         /// <returns></returns>
-        protected double GetMethaneWeight() { return AParams.MethC[6] * MethaneEnergy; }
+        protected double GetMethaneWeight()
+        {
+            return AParams.MethC[6] * MethaneEnergy;
+        }
+        
         /// <summary>
         /// Get the methane volume
         /// </summary>
         /// <returns></returns>
-        protected double GetMethaneVolume() { return AParams.MethC[7] * MethaneEnergy; }
+        protected double GetMethaneVolume()
+        {
+            return AParams.MethC[7] * MethaneEnergy;
+        }
 
         /// <summary>
         /// ptr to the hosts random number factory
         /// </summary>
         public MyRandom RandFactory;
+        
         /// <summary>
         /// Pointers to the young of lactating animals, or the mothers of suckling ones
         /// </summary>
         public AnimalGroup Young;
+        
         /// <summary>
         /// Animal output
         /// </summary>
@@ -2483,8 +2695,8 @@ namespace Models.GrazPlan
 
             if (Animal == GrazType.AnimalType.Sheep)
             {
-                WoolMicron = AParams.MaxFleeceDiam;                              // Calculation of FleeceCutWeight depends   
-                FleeceCutWeight = GFW;                                                //   on the values of NormalWt & WoolMicron 
+                WoolMicron = AParams.MaxFleeceDiam;                                   // Calculation of FleeceCutWeight depends   
+                FleeceCutWeight = GFW;                                                // on the values of NormalWt & WoolMicron 
 
                 fWoolAgeFactor = AParams.WoolC[5] + (1.0 - AParams.WoolC[5]) * (1.0 - Math.Exp(-AParams.WoolC[12] * AgeDays));
                 DeltaWoolWt = AParams.FleeceRatio * StdRefWt * fWoolAgeFactor / 365.0;
@@ -2493,13 +2705,13 @@ namespace Models.GrazPlan
             Calc_CoatDepth();
             TotalWeight = BaseWeight + WoolWt;
 
-            if (AgeClass == GrazType.AgeType.Mature)                                                // This will re-calculate size and condition
+            if (AgeClass == GrazType.AgeType.Mature)                                  // This will re-calculate size and condition
                 SetMaxPrevWt(Math.Max(StdRefWt, BaseWeight));
             else
                 SetMaxPrevWt(BaseWeight);
 
             ConditionAtBirthing = Condition;                                         // These terms affect the calculation of  
-            PropnOfMaxMilk = 1.0;                                               //   potential intake                     
+            PropnOfMaxMilk = 1.0;                                                    // potential intake                     
             LactAdjust = 1.0;
 
             BasePhos = BaseWeight * AParams.PhosC[9];
@@ -2538,8 +2750,8 @@ namespace Models.GrazPlan
             FNoOffspring = Parents.NoOffspring;
             Mothers = Parents;
 
-            ComputeSRW();                                                              // Must do this after assigning a value to   
-            Calc_Weights();                                                            //   Mothers                                 */
+            ComputeSRW();                                                              // Must do this after assigning a value to Mothers  
+            Calc_Weights();                                                                                            
         }
 
         /// <summary>
@@ -2571,13 +2783,13 @@ namespace Models.GrazPlan
         {
             if (Total1 + Total2 > 0)
                 Field1 = (Field1 * Total1 + Field2 * Total2) / (Total1 + Total2);  // The result of the averaging process      
-        }                                                                          //   goes "into place"                      
+        }                                                                          // goes "into place"                      
 
         /// <summary>
         /// Merge two animal groups
         /// </summary>
-        /// <param name="OtherGrp"></param>
-        public void Merge(ref AnimalGroup OtherGrp)
+        /// <param name="otherGrp"></param>
+        public void Merge(ref AnimalGroup otherGrp)
         {
             double fWoodFactor;
             double fWoodOther;
@@ -2585,80 +2797,80 @@ namespace Models.GrazPlan
             int Total2;
 
 
-            if ((NoFoetuses != OtherGrp.NoFoetuses)                                   // Necessary conditions for merging         
-               || (NoOffspring != OtherGrp.NoOffspring)
-               || ((Mothers == null) && (ReproStatus != OtherGrp.ReproStatus))
-               || (LactStatus != OtherGrp.LactStatus))
+            if ((NoFoetuses != otherGrp.NoFoetuses)                                   // Necessary conditions for merging         
+               || (NoOffspring != otherGrp.NoOffspring)
+               || ((Mothers == null) && (ReproStatus != otherGrp.ReproStatus))
+               || (LactStatus != otherGrp.LactStatus))
                 throw new Exception("AnimalGroup: Error in Merge method");
 
             Total1 = NoAnimals;
-            Total2 = OtherGrp.NoAnimals;
+            Total2 = otherGrp.NoAnimals;
 
-            NoMales += OtherGrp.NoMales;                                       // Take weighted averages of all            
-            NoFemales += OtherGrp.NoFemales;                                     // appropriate fields                       
-            Ages.Merge(OtherGrp.Ages);
+            NoMales += otherGrp.NoMales;                                       // Take weighted averages of all            
+            NoFemales += otherGrp.NoFemales;                                     // appropriate fields                       
+            Ages.Merge(otherGrp.Ages);
             MeanAge = Ages.MeanAge();
 
-            AverageField(Total1, Total2, ref TotalWeight, OtherGrp.TotalWeight);
-            AverageField(Total1, Total2, ref WoolWt, OtherGrp.WoolWt);
-            AverageField(Total1, Total2, ref DeltaWoolWt, OtherGrp.DeltaWoolWt);
-            AverageField(Total1, Total2, ref WoolMicron, OtherGrp.WoolMicron);
-            AverageField(Total1, Total2, ref FCoatDepth, OtherGrp.FCoatDepth);
-            AverageField(Total1, Total2, ref BasalWeight, OtherGrp.BasalWeight);
-            AverageField(Total1, Total2, ref DeltaBaseWeight, OtherGrp.DeltaBaseWeight);
-            AverageField(Total1, Total2, ref MaxPrevWt, OtherGrp.MaxPrevWt);
-            AverageField(Total1, Total2, ref BirthWt, OtherGrp.BirthWt);
-            AverageField(Total1, Total2, ref StdRefWt, OtherGrp.StdRefWt);
-            AverageField(Total1, Total2, ref IntakeLimit, OtherGrp.IntakeLimit);
+            AverageField(Total1, Total2, ref TotalWeight, otherGrp.TotalWeight);
+            AverageField(Total1, Total2, ref WoolWt, otherGrp.WoolWt);
+            AverageField(Total1, Total2, ref DeltaWoolWt, otherGrp.DeltaWoolWt);
+            AverageField(Total1, Total2, ref WoolMicron, otherGrp.WoolMicron);
+            AverageField(Total1, Total2, ref FCoatDepth, otherGrp.FCoatDepth);
+            AverageField(Total1, Total2, ref BasalWeight, otherGrp.BasalWeight);
+            AverageField(Total1, Total2, ref DeltaBaseWeight, otherGrp.DeltaBaseWeight);
+            AverageField(Total1, Total2, ref MaxPrevWt, otherGrp.MaxPrevWt);
+            AverageField(Total1, Total2, ref BirthWt, otherGrp.BirthWt);
+            AverageField(Total1, Total2, ref StdRefWt, otherGrp.StdRefWt);
+            AverageField(Total1, Total2, ref IntakeLimit, otherGrp.IntakeLimit);
             Calc_Weights();
 
             if ((ReproStatus == GrazType.ReproType.EarlyPreg) || (ReproStatus == GrazType.ReproType.LatePreg))
             {
-                FoetalAge = (FoetalAge * Total1 + OtherGrp.FoetalAge * Total2)
+                FoetalAge = (FoetalAge * Total1 + otherGrp.FoetalAge * Total2)
                              / (Total1 + Total2);
-                AverageField(Total1, Total2, ref FoetalWt, OtherGrp.FoetalWt);
-                AverageField(Total1, Total2, ref MidLatePregWt, OtherGrp.MidLatePregWt);
+                AverageField(Total1, Total2, ref FoetalWt, otherGrp.FoetalWt);
+                AverageField(Total1, Total2, ref MidLatePregWt, otherGrp.MidLatePregWt);
             }
 
             if (LactStatus == GrazType.LactType.Lactating)
             {
-                DaysLactating = (DaysLactating * Total1 + OtherGrp.DaysLactating * Total2)
+                DaysLactating = (DaysLactating * Total1 + otherGrp.DaysLactating * Total2)
                                  / (Total1 + Total2);
-                AverageField(Total1, Total2, ref Milk_MJProdn, OtherGrp.Milk_MJProdn);
-                AverageField(Total1, Total2, ref Milk_ProtProdn, OtherGrp.Milk_ProtProdn);
-                AverageField(Total1, Total2, ref Milk_Weight, OtherGrp.Milk_Weight);
-                AverageField(Total1, Total2, ref LactRatio, OtherGrp.LactRatio);
+                AverageField(Total1, Total2, ref Milk_MJProdn, otherGrp.Milk_MJProdn);
+                AverageField(Total1, Total2, ref Milk_ProtProdn, otherGrp.Milk_ProtProdn);
+                AverageField(Total1, Total2, ref Milk_Weight, otherGrp.Milk_Weight);
+                AverageField(Total1, Total2, ref LactRatio, otherGrp.LactRatio);
             }
-            else if ((FPrevOffspring == 0) && (OtherGrp.FPrevOffspring == 0))
+            else if ((FPrevOffspring == 0) && (otherGrp.FPrevOffspring == 0))
             {
                 FPrevOffspring = 0;
                 DryOffTime = 0;
                 ConditionAtBirthing = 0.0;
-                OtherGrp.ConditionAtBirthing = 0.0;
+                otherGrp.ConditionAtBirthing = 0.0;
             }
             else
             {
                 if ((FPrevOffspring == 0)
-                   || ((OtherGrp.FPrevOffspring > 0) && (OtherGrp.NoFemales > NoFemales)))
-                    FPrevOffspring = OtherGrp.FPrevOffspring;
+                   || ((otherGrp.FPrevOffspring > 0) && (otherGrp.NoFemales > NoFemales)))
+                    FPrevOffspring = otherGrp.FPrevOffspring;
 
                 fWoodFactor = WOOD(DryOffTime, AParams.IntakeC[8], AParams.IntakeC[9]);
-                fWoodOther = WOOD(OtherGrp.DryOffTime, AParams.IntakeC[8], AParams.IntakeC[9]);
+                fWoodOther = WOOD(otherGrp.DryOffTime, AParams.IntakeC[8], AParams.IntakeC[9]);
                 AverageField(Total1, Total2, ref fWoodFactor, fWoodOther);
                 DryOffTime = InverseWOOD(fWoodFactor, AParams.IntakeC[8], AParams.IntakeC[9], true);
 
                 if (ConditionAtBirthing == 0.0)
                     ConditionAtBirthing = 1.0;
-                if (OtherGrp.ConditionAtBirthing == 0.0)
-                    OtherGrp.ConditionAtBirthing = 1.0;
+                if (otherGrp.ConditionAtBirthing == 0.0)
+                    otherGrp.ConditionAtBirthing = 1.0;
             }
-            AverageField(Total1, Total2, ref ConditionAtBirthing, OtherGrp.ConditionAtBirthing);
-            AverageField(Total1, Total2, ref PropnOfMaxMilk, OtherGrp.PropnOfMaxMilk);
-            AverageField(Total1, Total2, ref LactAdjust, OtherGrp.LactAdjust);
+            AverageField(Total1, Total2, ref ConditionAtBirthing, otherGrp.ConditionAtBirthing);
+            AverageField(Total1, Total2, ref PropnOfMaxMilk, otherGrp.PropnOfMaxMilk);
+            AverageField(Total1, Total2, ref LactAdjust, otherGrp.LactAdjust);
 
             if (Young != null)
-                Young.Merge(ref OtherGrp.Young);
-            OtherGrp = null;
+                Young.Merge(ref otherGrp.Young);
+            otherGrp = null;
         }
 
         /// <summary>
@@ -2668,12 +2880,12 @@ namespace Models.GrazPlan
         /// <param name="ByAge"></param>
         /// <param name="Diffs"></param>
         /// <param name="YngDiffs"></param>
-        /// <returns></returns>
+        /// <returns>Animal group</returns>
         public AnimalGroup Split(int Number, bool ByAge, DifferenceRecord Diffs, DifferenceRecord YngDiffs)
         {
             AnimalGroup Result;
             int SplitM, SplitF;
-            string msg = "";
+            string msg = string.Empty;
 
             if ((Number < 0) || (Number > NoAnimals))
             {
@@ -2686,7 +2898,7 @@ namespace Models.GrazPlan
 
             if (Mothers != null)
             {
-                SplitM = Convert.ToInt32(Math.Round(StdMath.XDiv(Number * 1.0 * NoMales, NoAnimals)));
+                SplitM = Convert.ToInt32(Math.Round(StdMath.XDiv(Number * 1.0 * NoMales, NoAnimals)), CultureInfo.InvariantCulture);
                 SplitF = Number - SplitM;
             }
             else if ((ReproStatus == GrazType.ReproType.Male) || (ReproStatus == GrazType.ReproType.Castrated))
@@ -2708,17 +2920,19 @@ namespace Models.GrazPlan
             }
             return Result;
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="MaleScale"></param>
-        /// <param name="NM"></param>
-        /// <param name="NF"></param>
+        /// <param name="numMale"></param>
+        /// <param name="numFemale"></param>
         /// <returns></returns>
-        private double SexAve(double MaleScale, int NM, int NF)
+        private double SexAve(double MaleScale, int numMale, int numFemale)
         {
-            return StdMath.XDiv(MaleScale * NM + NF, NM + NF);
+            return StdMath.XDiv(MaleScale * numMale + numFemale, numMale + numFemale);
         }
+
         /// <summary>
         /// Split the numbers off the group
         /// </summary>
@@ -2734,53 +2948,53 @@ namespace Models.GrazPlan
             double DiffRatio;
             DifferenceRecord YngDiffs;
 
-            YngDiffs = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
-            //WITH Young DO
-            if ((Young.MaleNo > 0) && (Young.FemaleNo > 0))
+            YngDiffs = new DifferenceRecord() { StdRefWt = this.NODIFF.StdRefWt, BaseWeight = this.NODIFF.BaseWeight, FleeceWt = this.NODIFF.FleeceWt };
+            //// WITH Young DO
+            if ((this.Young.MaleNo > 0) && (this.Young.FemaleNo > 0))
             {
-                DiffRatio = (SexAve(AParams.SRWScalars[(int)ReproStatus], NYM, NYF)
-                              - SexAve(AParams.SRWScalars[(int)ReproStatus], Young.NoMales - NYM, Young.NoFemales - NYF))
-                            / SexAve(AParams.SRWScalars[(int)ReproStatus], Young.NoMales, Young.NoFemales);
-                YngDiffs.StdRefWt = StdRefWt * DiffRatio;
-                YngDiffs.BaseWeight = BaseWeight * DiffRatio;
-                YngDiffs.FleeceWt = WoolWt * DiffRatio;
+                DiffRatio = (this.SexAve(this.AParams.SRWScalars[(int)this.ReproStatus], NYM, NYF)
+                              - this.SexAve(this.AParams.SRWScalars[(int)this.ReproStatus], this.Young.NoMales - NYM, this.Young.NoFemales - NYF))
+                            / this.SexAve(this.AParams.SRWScalars[(int)this.ReproStatus], this.Young.NoMales, this.Young.NoFemales);
+                YngDiffs.StdRefWt = this.StdRefWt * DiffRatio;
+                YngDiffs.BaseWeight = this.BaseWeight * DiffRatio;
+                YngDiffs.FleeceWt = this.WoolWt * DiffRatio;
             }
 
-            TempYoung = Young;
-            Young = null;
-            SplitGroup = SplitSex(0, NF, false, NODIFF);
+            TempYoung = this.Young;
+            this.Young = null;
+            SplitGroup = this.SplitSex(0, NF, false, this.NODIFF);
             SplitYoung = TempYoung.SplitSex(NYM, NYF, false, YngDiffs);
-            Young = TempYoung;
-            Young.Mothers = this;
+            this.Young = TempYoung;
+            this.Young.Mothers = this;
             SplitGroup.Young = SplitYoung;
             SplitGroup.Young.Mothers = SplitGroup;
-            CheckAnimList(ref NewGroups);
+            this.CheckAnimList(ref NewGroups);
             NewGroups.Add(SplitGroup);
         }
 
         /// <summary>
-        /// 
+        /// Split young
         /// </summary>
-        /// <param name="NewGroups"></param>
-        public void SplitYoung(ref AnimalList NewGroups)
+        /// <param name="newGroups">New animal groups</param>
+        public void SplitYoung(ref AnimalList newGroups)
         {
-            int NoToSplit;
+            int numToSplit;
 
-            if (Young != null)
+            if (this.Young != null)
             {
                 if (NoOffspring == 1)
                 {
-                    NoToSplit = Young.FemaleNo;
-                    SplitNumbers(ref NewGroups, NoToSplit, 0, NoToSplit);
+                    numToSplit = this.Young.FemaleNo;
+                    this.SplitNumbers(ref newGroups, numToSplit, 0, numToSplit);
                 }
-                else if (NoOffspring == 2)
+                else if (this.NoOffspring == 2)
                 {
-                    NoToSplit = Convert.ToInt32(Math.Min(Young.MaleNo, Young.FemaleNo)) / 2;    // One male, one female                     
-                    if (((Young.FemaleNo - NoToSplit) % 2) != 0)  //if odd                      // Ensures Young.FemaleNo (and hence        
-                        NoToSplit++;                                                            //   Young.MaleNo) is even after the call   
-                    SplitNumbers(ref NewGroups, NoToSplit, NoToSplit, NoToSplit);               //   to SplitBySex                          
-                    NoToSplit = Young.FemaleNo / 2;                                             // Twin females                             
-                    SplitNumbers(ref NewGroups, NoToSplit, 0, 2 * NoToSplit);
+                    numToSplit = Convert.ToInt32(Math.Min(this.Young.MaleNo, this.Young.FemaleNo), CultureInfo.InvariantCulture) / 2;   // One male, one female                     
+                    if (((this.Young.FemaleNo - numToSplit) % 2) != 0)  //if odd                                                        // Ensures Young.FemaleNo (and hence        
+                        numToSplit++;                                                                                                   // Young.MaleNo) is even after the call   
+                    this.SplitNumbers(ref newGroups, numToSplit, numToSplit, numToSplit);                                               // to SplitBySex                          
+                    numToSplit = this.Young.FemaleNo / 2;                                                                               // Twin females                             
+                    this.SplitNumbers(ref newGroups, numToSplit, 0, 2 * numToSplit);
                 }
             }
         }
@@ -2788,27 +3002,27 @@ namespace Models.GrazPlan
         /// <summary>
         /// Is an animal group similar enough to another for them to be merged?       
         /// </summary>
-        /// <param name="AG"></param>
+        /// <param name="animalGrp">An animal group</param>
         /// <returns></returns>
-        public bool Similar(AnimalGroup AG)
+        public bool Similar(AnimalGroup animalGrp)
         {
-            bool Result = ((Genotype.sName == AG.Genotype.sName)
-                  && (ReproStatus == AG.ReproStatus)
-                  && (NoFoetuses == AG.NoFoetuses)
-                  && (NoOffspring == AG.NoOffspring)
-                  && (MateCycle == AG.MateCycle)
-                  && (DaysToMate == AG.DaysToMate)
-                  && (Pregnancy == AG.Pregnancy)
-                  && (LactStatus == AG.LactStatus)
-                  && (Math.Abs(Lactation - AG.Lactation) < 7)
-                  && ((Young == null) == (AG.Young == null))
-                  && (ImplantEffect == AG.ImplantEffect));
+            bool Result = ((Genotype.Name == animalGrp.Genotype.Name)
+                  && (ReproStatus == animalGrp.ReproStatus)
+                  && (NoFoetuses == animalGrp.NoFoetuses)
+                  && (NoOffspring == animalGrp.NoOffspring)
+                  && (MateCycle == animalGrp.MateCycle)
+                  && (DaysToMate == animalGrp.DaysToMate)
+                  && (Pregnancy == animalGrp.Pregnancy)
+                  && (LactStatus == animalGrp.LactStatus)
+                  && (Math.Abs(Lactation - animalGrp.Lactation) < 7)
+                  && ((Young == null) == (animalGrp.Young == null))
+                  && (ImplantEffect == animalGrp.ImplantEffect));
             if (MeanAge < 365)
-                Result = (Result && (MeanAge == AG.MeanAge));
+                Result = (Result && (MeanAge == animalGrp.MeanAge));
             else
-                Result = (Result && (Math.Min(MeanAge / 30, 37) == Math.Min(AG.MeanAge / 30, 37)));
+                Result = (Result && (Math.Min(MeanAge / 30, 37) == Math.Min(animalGrp.MeanAge / 30, 37)));
             if (Young != null)
-                Result = (Result && (Young.ReproStatus == AG.Young.ReproStatus));
+                Result = (Result && (Young.ReproStatus == animalGrp.Young.ReproStatus));
 
             return Result;
         }
@@ -2822,6 +3036,7 @@ namespace Models.GrazPlan
             get { return AParams; }
             set { setGenotype(value); }
         }
+
         /// <summary>
         /// Number of animals in the group
         /// </summary>
@@ -2830,48 +3045,54 @@ namespace Models.GrazPlan
             get { return GetNoAnimals(); }
             set { SetNoAnimals(value); }
         }
+
         /// <summary>
-        /// Number of males
+        /// Gets or sets the number of males
         /// </summary>
         public int MaleNo
         {
             get { return NoMales; }
             set { NoMales = value; }
         }
+
         /// <summary>
-        /// Number of females
+        /// Gets or sets the number of females
         /// </summary>
         public int FemaleNo
         {
             get { return NoFemales; }
             set { NoFemales = value; }
         }
+
         /// <summary>
-        /// Mean age of the group
+        /// Gets or sets the mean age of the group
         /// </summary>
         public int AgeDays
         {
             get { return MeanAge; }
             set { MeanAge = value; }
         }
+
         /// <summary>
-        /// Libe weight of the group
+        /// Gets or sets the live weight of the group
         /// </summary>
         public double LiveWeight
         {
             get { return TotalWeight; }
             set { SetLiveWt(value); }
         }
+
         /// <summary>
-        /// Animal base weight
+        /// Gets or sets the animal base weight
         /// </summary>
         public double BaseWeight
         {
             get { return BasalWeight; }
             set { BasalWeight = value; }
         }
+
         /// <summary>
-        /// Fleece-free, conceptus-free weight, but including the wool stubble        
+        /// Gets or sets the fleece-free, conceptus-free weight, but including the wool stubble        
         /// </summary>
         public double EmptyShornWeight
         {
@@ -2882,71 +3103,114 @@ namespace Models.GrazPlan
                 Calc_Weights();
             }
         }
+
         /// <summary>
-        /// Cut weight of fleece
+        /// Gets or sets the cut weight of fleece
         /// </summary>
         public double FleeceCutWeight
         {
             get { return GetFleeceCutWt(); }
             set { SetFleeceCutWt(value); }
         }
+
         /// <summary>
-        /// Wool weight
+        /// Gets or sets the wool weight
         /// </summary>
         public double WoolWeight
         {
             get { return WoolWt; }
             set { SetWoolWt(value); }
         }
+
         /// <summary>
-        /// Depth of coat
+        /// Gets or sets the depth of coat
         /// </summary>
-        public double CoatDepth { get { return FCoatDepth; } set { SetCoatDepth(value); } }
+        public double CoatDepth
+        {
+            get { return FCoatDepth; }
+            set { SetCoatDepth(value); }
+        }
+        
         /// <summary>
-        /// Maximum previous weight
+        /// Gets or sets the maximum previous weight
         /// </summary>
-        public double MaxPrevWeight { get { return MaxPrevWt; } set { SetMaxPrevWt(value); } }
+        public double MaxPrevWeight
+        {
+            get { return MaxPrevWt; }
+            set { SetMaxPrevWt(value); }
+        }
+        
         /// <summary>
-        /// Wool fibre diameter
+        /// Gets or sets the wool fibre diameter
         /// </summary>
-        public double FibreDiam { get { return WoolMicron; } set { WoolMicron = value; } }
+        public double FibreDiam
+        {
+            get { return WoolMicron; }
+            set { WoolMicron = value; }
+        }
+        
         /// <summary>
-        /// Animal parameters for the animal mated to
+        /// Gets or sets the animal parameters for the animal mated to
         /// </summary>
-        public AnimalParamSet MatedTo { get { return FMatedTo; } set { setMatedTo(value); } }
+        public AnimalParamSet MatedTo
+        {
+            get { return FMatedTo; }
+            set { setMatedTo(value); }
+        }
+        
         /// <summary>
-        /// Stage of pregnancy
+        /// Gets or sets the stage of pregnancy
         /// </summary>
         public int Pregnancy
         {
             get { return FoetalAge; }
             set { SetPregnancy(value); }
         }
+        
         /// <summary>
-        /// Days lactating
+        /// Gets or sets the days lactating
         /// </summary>
         public int Lactation
         {
             get { return DaysLactating; }
             set { SetLactation(value); }
         }
+        
         /// <summary>
-        /// Number of foetuses
+        /// Gets or sets the number of foetuses
         /// </summary>
-        public int NoFoetuses { get { return FNoFoetuses; } set { SetNoFoetuses(value); } }
+        public int NoFoetuses
+        {
+            get { return FNoFoetuses; }
+            set { SetNoFoetuses(value); }
+        }
+        
         /// <summary>
-        /// Number of offspring
+        /// Gets or sets the number of offspring
         /// </summary>
-        public int NoOffspring { get { return FNoOffspring; } set { SetNoOffspring(value); } }
+        public int NoOffspring
+        {
+            get { return FNoOffspring; }
+            set { SetNoOffspring(value); }
+        }
+        
         /// <summary>
-        /// Condition at birth
+        /// Gets or sets the condition at birth
         /// </summary>
-        public double BirthCondition { get { return ConditionAtBirthing; } set { ConditionAtBirthing = value; } }
+        public double BirthCondition
+        {
+            get { return ConditionAtBirthing; }
+            set { ConditionAtBirthing = value; }
+        }
 
         /// <summary>
-        /// The daily deaths
+        /// Gets or sets the daily deaths
         /// </summary>
-        public int Deaths { get { return FDeaths; } set { FDeaths = value; } }
+        public int Deaths
+        {
+            get { return FDeaths; }
+            set { FDeaths = value; }
+        }
 
         /// <summary>
         /// Condition score
@@ -2954,6 +3218,7 @@ namespace Models.GrazPlan
         /// <param name="System"></param>
         /// <returns></returns>
         public double fConditionScore(AnimalParamSet.Cond_System System) { return AnimalParamSet.Condition2CondScore(Condition, System); }
+        
         /// <summary>
         /// Set the condition score
         /// </summary>
@@ -2969,8 +3234,8 @@ namespace Models.GrazPlan
         /// Sets the value of MaxPrevWeight using current base weight, age and a      
         /// (relative) body condition. Intended for use with young animals.           
         /// </summary>
-        /// <param name="fBodyCond"></param>
-        public void setConditionAtWeight(double fBodyCond)
+        /// <param name="bodyCond"></param>
+        public void setConditionAtWeight(double bodyCond)
         {
             double fMaxNormWt;
             double fNewMaxPrevWt;
@@ -2980,8 +3245,8 @@ namespace Models.GrazPlan
                 fNewMaxPrevWt = BaseWeight;
             else
             {
-                fNewMaxPrevWt = (BaseWeight - fBodyCond * AParams.GrowthC[3] * fMaxNormWt)
-                                 / (fBodyCond * (1.0 - AParams.GrowthC[3]));
+                fNewMaxPrevWt = (BaseWeight - bodyCond * AParams.GrowthC[3] * fMaxNormWt)
+                                 / (bodyCond * (1.0 - AParams.GrowthC[3]));
                 fNewMaxPrevWt = Math.Max(BaseWeight, Math.Min(fNewMaxPrevWt, fMaxNormWt));
             }
 
@@ -3003,159 +3268,201 @@ namespace Models.GrazPlan
         /// <summary>
         /// Inverse of the WOOD function, evaluated iteratively                       
         /// </summary>
-        public double InverseWOOD(double Y, double Tmax, double B, bool bDeclining)
+        /// <param name="Y"></param>
+        /// <param name="Tmax"></param>
+        /// <param name="B"></param>
+        /// <param name="declining"></param>
+        public double InverseWOOD(double Y, double Tmax, double B, bool declining)
         {
-            double X0, X1;
-            double Result;
+            double x0, x1;
+            double result;
 
             if (Y <= 0.0)
-                Result = 0.0;
+                result = 0.0;
             else if (Y >= 1.0)
-                Result = Tmax;
+                result = Tmax;
             else
             {
-                if (!bDeclining)                                                   //Initial guess                            
-                    X1 = Math.Min(0.99, Y);
+                if (!declining)                                                   // Initial guess                            
+                    x1 = Math.Min(0.99, Y);
                 else
-                    X1 = Math.Max(1.01, Math.Exp(B * (1.0 - Y)));
+                    x1 = Math.Max(1.01, Math.Exp(B * (1.0 - Y)));
 
                 bool more = true;
-                do                                                                 //Newton-Raphson solution                   
+                do                                                                 // Newton-Raphson solution                   
                 {
-                    X0 = X1;
-                    X1 = X0 - (1.0 - Y / WOOD(X0, 1.0, B)) * X0 / (B * (1.0 - X0));
-                    more = !(Math.Abs(X0 - X1) < 1.0E-5);
-                } while (more);
-                Result = (X0 + X1) / 2.0 * Tmax;
+                    x0 = x1;
+                    x1 = x0 - (1.0 - Y / WOOD(x0, 1.0, B)) * x0 / (B * (1.0 - x0));
+                    more = !(Math.Abs(x0 - x1) < 1.0E-5);
+                }
+                while (more);
+                result = (x0 + x1) / 2.0 * Tmax;
             }
-            return Result;
+            return result;
         }
 
         /// <summary>
         /// Set the drying off time
         /// </summary>
-        /// <param name="iDaysSinceBirth"></param>
-        /// <param name="iDaysSinceDryoff"></param>
-        /// <param name="iPrevSuckling"></param>
-        public void setDryoffTime(int iDaysSinceBirth, int iDaysSinceDryoff, int iPrevSuckling = 1)
+        /// <param name="daysSinceBirth">Days since birth</param>
+        /// <param name="daysSinceDryoff">Days since drying off</param>
+        /// <param name="prevSuckling"></param>
+        public void SetDryoffTime(int daysSinceBirth, int daysSinceDryoff, int prevSuckling = 1)
         {
-            double fLactLength;
-            double fWoodFunc;
+            double lactLength;
+            double woodFunc;
 
-            FPrevOffspring = iPrevSuckling;
+            FPrevOffspring = prevSuckling;
 
-            fLactLength = iDaysSinceBirth - iDaysSinceDryoff;
-            if ((LactStatus != GrazType.LactType.Dry) || (fLactLength <= 0))
+            lactLength = daysSinceBirth - daysSinceDryoff;
+            if ((LactStatus != GrazType.LactType.Dry) || (lactLength <= 0))
                 DryOffTime = 0.0;
-            else if (fLactLength >= AParams.IntakeC[8])
-                DryOffTime = fLactLength + AParams.IntakeC[19] * iDaysSinceDryoff;
+            else if (lactLength >= AParams.IntakeC[8])
+                DryOffTime = lactLength + this.AParams.IntakeC[19] * daysSinceDryoff;
             else
             {
-                fWoodFunc = WOOD(fLactLength, AParams.IntakeC[8], AParams.IntakeC[9]);
-                fLactLength = InverseWOOD(fWoodFunc, AParams.IntakeC[8], AParams.IntakeC[9], true);
-                DryOffTime = fLactLength + AParams.IntakeC[19] * iDaysSinceDryoff;
+                woodFunc = WOOD(lactLength, this.AParams.IntakeC[8], this.AParams.IntakeC[9]);
+                lactLength = InverseWOOD(woodFunc, AParams.IntakeC[8], this.AParams.IntakeC[9], true);
+                DryOffTime = lactLength + this.AParams.IntakeC[19] * daysSinceDryoff;
             }
         }
 
         // Inputs for model dynamics .....................................
         /// <summary>
-        /// Steepness of the paddock
+        /// Gets or sets the steepness of the paddock
         /// </summary>
-        public double PaddSteep { get { return Steepness; } set { Steepness = value; } }
+        public double PaddSteep
+        {
+            get { return Steepness; }
+            set { Steepness = value; }
+        }
+        
         /// <summary>
-        /// The animals environment
+        /// Gets or sets the animals environment
         /// </summary>
-        public AnimalWeather Weather { get { return TheEnv; } set { TheEnv = value; } }
+        public AnimalWeather Weather
+        {
+            get { return TheEnv; }
+            set { TheEnv = value; }
+        }
+        
         /// <summary>
-        /// The herbage being eaten
+        /// Gets or sets the herbage being eaten
         /// </summary>
-        public GrazType.GrazingInputs Herbage { get { return Inputs; } set { Inputs = value; } }
+        public GrazType.GrazingInputs Herbage
+        {
+            get { return Inputs; }
+            set { Inputs = value; }
+        }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the water logging value
         /// </summary>
-        public double WaterLogging { get { return WaterLog; } set { WaterLog = value; } }
+        public double WaterLogging
+        {
+            get { return WaterLog; }
+            set { WaterLog = value; }
+        }
 
         /// <summary>
-        /// 
+        /// Gets the supplement ration used
         /// </summary>
-        public SupplementRation RationFed { get { return TheRation; } }
+        public SupplementRation RationFed
+        {
+            get { return TheRation; }
+        }
+        
         /// <summary>
-        /// Animals per hectare
+        /// Gets or sets the number of animals per hectare
         /// </summary>
-        public double AnimalsPerHa { get { return FAnimalsPerHa; } set { FAnimalsPerHa = value; } }
+        public double AnimalsPerHa
+        {
+            get { return FAnimalsPerHa; }
+            set { FAnimalsPerHa = value; }
+        }
+        
         /// <summary>
-        /// Distance walked
+        /// Gets or sets the distance walked
         /// </summary>
-        public double DistanceWalked { get { return FDistanceWalked; } set { FDistanceWalked = value; } }
+        public double DistanceWalked
+        {
+            get { return FDistanceWalked; }
+            set { FDistanceWalked = value; }
+        }
+        
         /// <summary>
-        /// 
+        /// Gets or sets the intake modifier value
         /// </summary>
-        public double IntakeModifier { get { return FIntakeModifier; } set { FIntakeModifier = value; } }
+        public double IntakeModifier
+        {
+            get { return FIntakeModifier; }
+            set { FIntakeModifier = value; }
+        }
 
         /// <summary>
         /// Used in GrazFeed to initialise the state variables for which yesterday's  
         /// value must be known in order to get today's calculation                   
         /// </summary>
-        /// <param name="PrevGroup"></param>
-        public void SetUpForYesterday(AnimalGroup PrevGroup)
+        /// <param name="prevGroup"></param>
+        public void SetUpForYesterday(AnimalGroup prevGroup)
         {
-            IntakeLimit = PrevGroup.IntakeLimit;
-            FeedingLevel = PrevGroup.FeedingLevel;
-            Milk_MJProdn = PrevGroup.Milk_MJProdn;
-            Milk_ProtProdn = PrevGroup.Milk_ProtProdn;
-            PropnOfMaxMilk = PrevGroup.PropnOfMaxMilk;
-            AnimalState.LowerCritTemp = PrevGroup.AnimalState.LowerCritTemp;
-            if ((Young != null) && (PrevGroup.Young != null))
-                Young.SetUpForYesterday(PrevGroup.Young);
+            IntakeLimit = prevGroup.IntakeLimit;
+            FeedingLevel = prevGroup.FeedingLevel;
+            Milk_MJProdn = prevGroup.Milk_MJProdn;
+            Milk_ProtProdn = prevGroup.Milk_ProtProdn;
+            PropnOfMaxMilk = prevGroup.PropnOfMaxMilk;
+            this.AnimalState.LowerCritTemp = prevGroup.AnimalState.LowerCritTemp;
+            if ((Young != null) && (prevGroup.Young != null))
+                Young.SetUpForYesterday(prevGroup.Young);
         }
 
         // Daily simulation logic ........................................
         /// <summary>
         /// Advance the age of the animals
         /// </summary>
-        /// <param name="AG"></param>
-        /// <param name="NoDays"></param>
-        /// <param name="NewGroups"></param>
-        private void AdvanceAge(AnimalGroup AG, int NoDays, ref AnimalList NewGroups)
+        /// <param name="amimalGrp"></param>
+        /// <param name="numDays"></param>
+        /// <param name="newGroups"></param>
+        private void AdvanceAge(AnimalGroup amimalGrp, int numDays, ref AnimalList newGroups)
         {
-            AG.MeanAge += NoDays;
-            AG.Ages.AgeBy(NoDays);
-            if (AG.Young != null)
-                AG.Young.Age(NoDays, ref NewGroups);
-            if (AG.LactStatus == GrazType.LactType.Lactating)
-                AG.DaysLactating += NoDays;
-            else if (AG.DryOffTime > 0.0)
-                AG.DryOffTime = AG.DryOffTime + AParams.IntakeC[19] * NoDays;
+            amimalGrp.MeanAge += numDays;
+            amimalGrp.Ages.AgeBy(numDays);
+            if (amimalGrp.Young != null)
+                amimalGrp.Young.Age(numDays, ref newGroups);
+            if (amimalGrp.LactStatus == GrazType.LactType.Lactating)
+                amimalGrp.DaysLactating += numDays;
+            else if (amimalGrp.DryOffTime > 0.0)
+                amimalGrp.DryOffTime = amimalGrp.DryOffTime + AParams.IntakeC[19] * numDays;
         }
 
         /// <summary>
-        /// 
+        /// Age the animals
         /// </summary>
-        /// <param name="NoDays"></param>
-        /// <param name="NewGroups"></param>
-        public void Age(int NoDays, ref AnimalList NewGroups)
+        /// <param name="numDays"></param>
+        /// <param name="newGroups"></param>
+        public void Age(int numDays, ref AnimalList newGroups)
         {
-            int NewOffset, I;
+            int newOffset, i;
 
             if (ChillIndex == StdMath.DMISSING)
                 ChillIndex = ChillFunc(TheEnv.MeanTemp, TheEnv.WindSpeed, TheEnv.Precipitation);
             else
                 ChillIndex = 16.0 / 17.0 * ChillIndex + 1.0 / 17.0 * ChillFunc(TheEnv.MeanTemp, TheEnv.WindSpeed, TheEnv.Precipitation);
 
-            if (NewGroups != null)
-                NewOffset = NewGroups.Count;
+            if (newGroups != null)
+                newOffset = newGroups.Count;
             else
-                NewOffset = 0;
+                newOffset = 0;
             if (Mothers == null)                                                    // Deaths must be done before age is        
-                Kill(ChillIndex, ref NewGroups);                                          //   incremented                           
+                Kill(ChillIndex, ref newGroups);                                          //   incremented                           
 
             if (YoungStopSuckling())
                 Lactation = 0;
 
-            AdvanceAge(this, NoDays, ref NewGroups);
-            if (NewGroups != null)
-                for (I = NewOffset; I <= NewGroups.Count - 1; I++)
-                    AdvanceAge(NewGroups.At(I), NoDays, ref NewGroups);
+            AdvanceAge(this, numDays, ref newGroups);
+            if (newGroups != null)
+                for (i = newOffset; i <= newGroups.Count - 1; i++)
+                    AdvanceAge(newGroups.At(i), numDays, ref newGroups);
 
             switch (ReproStatus)
             {
@@ -3168,7 +3475,7 @@ namespace Models.GrazPlan
                         else
                             MateCycle = (MateCycle + 1) % AParams.OvulationPeriod;
                         if (MateCycle == 0)
-                            Conceive(ref NewGroups);
+                            Conceive(ref newGroups);
                     }
                     break;
                 case GrazType.ReproType.EarlyPreg:
@@ -3182,7 +3489,7 @@ namespace Models.GrazPlan
                         if ((Animal == GrazType.AnimalType.Sheep) && (FoetalAge == AParams.Gestation - LatePregLength / 2))
                             MidLatePregWt = BaseWeight;
                         else if (FoetalAge == AParams.Gestation - 1)
-                            KillEndPreg(ref NewGroups);
+                            KillEndPreg(ref newGroups);
                         else if (FoetalAge >= AParams.Gestation)
                         {
                             Lactation = 1;                                // Create lambs or calves                   
@@ -3196,126 +3503,127 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// 
+        /// Make the animal grow
         /// </summary>
         public void Grow()
         {
-            double fRDPScalar;
+            double RDPScalar;
             AnimalStateInfo initState = new AnimalStateInfo();
 
             storeStateInfo(ref initState);
             Calc_IntakeLimit();
             Grazing(1.0, true, false);
             Nutrition();
-            fRDPScalar = RDP_IntakeFactor();
-            if (fRDPScalar < 1.0)
+            RDPScalar = RDP_IntakeFactor();
+            if (RDPScalar < 1.0)
             {
                 revertStateInfo(initState);
-                IntakeLimit = IntakeLimit * fRDPScalar;
-                Grazing(1.0, true, false);                                            // This call resets AnimalState, hence the  
-                Nutrition();                                                              //   separate variable for the RDP factor   
+                IntakeLimit = IntakeLimit * RDPScalar;
+                Grazing(1.0, true, false);                                                  // This call resets AnimalState, hence the  
+                Nutrition();                                                                // separate variable for the RDP factor   
             }
-            completeGrowth(fRDPScalar);
+            completeGrowth(RDPScalar);
         }
 
         /// <summary>
-        /// { Routine to compute the potential intake of a group of animals.  The       
-        /// result is stored as TheAnimals^.IntakeLimit.  A variety of other fields   
-        /// of TheAnimals^ are also updated: the normal weight, mature normal weight, 
+        /// Routine to compute the potential intake of a group of animals.  The       
+        /// result is stored as TheAnimals.IntakeLimit.  A variety of other fields   
+        /// of TheAnimals are also updated: the normal weight, mature normal weight, 
         /// highest previous weight (in young animals), relative size and relative    
         /// condition.                                                                
         /// </summary>
         public void Calc_IntakeLimit()
         {
-            double fLactTime;                                                              // Scaled days since birth of young         
-            double WeightLoss;                                                            // Mean daily weight loss during lactation  
-            //   as a proportion of SRW                 
-            double CriticalLoss;                                                           // Threshold value of WeightLoss            
-            double fTempDiff;
-            double fTempAmpl;
-            double BelowLCT;
+            double lactTime;                                                               // Scaled days since birth of young         
+            double weightLoss;                                                              // Mean daily weight loss during lactation  
+                                                                                            // as a proportion of SRW                 
+            double criticalLoss;                                                            // Threshold value of WeightLoss            
+            double tempDiff;
+            double tempAmpl;
+            double belowLCT;
             double X;
-            double fCondFactor;
-            double fYoungFactor;
-            double fHeatFactor;
-            double fLactFactor;
-            int iLactNo;
+            double condFactor;
+            double youngFactor;
+            double heatFactor;
+            double lactFactor;
+            int lactNum;
 
             Calc_Weights();                                                             // Compute size and condition               
 
-            if (Condition > 1.0)  // and (LactStatus <> Lactating) then  { No longer exclude lactating females. See bug#2223 }
-                fCondFactor = Condition * (AParams.IntakeC[20] - Condition) / (AParams.IntakeC[20] - 1.0);
+            if (Condition > 1.0)  // and (LactStatus <> Lactating) then  // No longer exclude lactating females. See bug#2223 
+                condFactor = Condition * (this.AParams.IntakeC[20] - Condition) / (this.AParams.IntakeC[20] - 1.0);
             else
-                fCondFactor = 1.0;
+                condFactor = 1.0;
 
-            if (LactStatus == GrazType.LactType.Suckling)
-                fYoungFactor = (1.0 - Mothers.PropnOfMaxMilk)
-                                / (1.0 + Math.Exp(-AParams.IntakeC[3] * (MeanAge - AParams.IntakeC[4])));
+            if (this.LactStatus == GrazType.LactType.Suckling)
+                youngFactor = (1.0 - Mothers.PropnOfMaxMilk)
+                                / (1.0 + Math.Exp(-this.AParams.IntakeC[3] * (MeanAge - this.AParams.IntakeC[4])));
             else
-                fYoungFactor = 1.0;
+                youngFactor = 1.0;
 
-            if (TheEnv.MinTemp < AnimalState.LowerCritTemp)                       // Integrate sinusoidal temperature         }
-            {                                                                     //   function over the part below LCT       }
-                fTempDiff = TheEnv.MeanTemp - AnimalState.LowerCritTemp;
-                fTempAmpl = 0.5 * (TheEnv.MaxTemp - TheEnv.MinTemp);
-                X = Math.Acos(Math.Max(-1.0, Math.Min(1.0, fTempDiff / fTempAmpl)));
-                BelowLCT = (-fTempDiff * X + fTempAmpl * Math.Sin(X)) / Math.PI;
-                fHeatFactor = 1.0 + AParams.IntakeC[17] * BelowLCT * StdMath.DIM(1.0, TheEnv.Precipitation / AParams.IntakeC[18]);
+            if (this.TheEnv.MinTemp < this.AnimalState.LowerCritTemp)                                
+            {
+                // Integrate sinusoidal temperature function over the part below LCT       
+                tempDiff = this.TheEnv.MeanTemp - this.AnimalState.LowerCritTemp;
+                tempAmpl = 0.5 * (this.TheEnv.MaxTemp - this.TheEnv.MinTemp);
+                X = Math.Acos(Math.Max(-1.0, Math.Min(1.0, tempDiff / tempAmpl)));
+                belowLCT = (-tempDiff * X + tempAmpl * Math.Sin(X)) / Math.PI;
+                heatFactor = 1.0 + this.AParams.IntakeC[17] * belowLCT * StdMath.DIM(1.0, this.TheEnv.Precipitation / this.AParams.IntakeC[18]);
             }
             else
-                fHeatFactor = 1.0;
+                heatFactor = 1.0;
 
-            if (TheEnv.MinTemp >= AParams.IntakeC[7])                             // High temperatures depress intake         }
-                fHeatFactor = fHeatFactor * (1.0 - AParams.IntakeC[5] * StdMath.DIM(TheEnv.MeanTemp, AParams.IntakeC[6]));
-            if (LactStatus != GrazType.LactType.Lactating)
-                LactAdjust = 1.0;
-#pragma warning disable 162 //unreachable code
-            else if (!AnimalsDynamicGlb)                                        // In the dynamic model, LactAdjust is a    }
-            {                                                                     //   state variable computed in the         }
-                WeightLoss = Size * StdMath.XDiv(ConditionAtBirthing - Condition,           //   lactation routine; for GrazFeed, it is }
-                                             DaysLactating);                           //   estimated with these equations         }
-                CriticalLoss = AParams.IntakeC[14] * Math.Exp(-Math.Pow(AParams.IntakeC[13] * DaysLactating, 2));
-                if (WeightLoss > CriticalLoss)
-                    LactAdjust = (1.0 - AParams.IntakeC[12] * WeightLoss / AParams.IntakeC[13]);
+            if (this.TheEnv.MinTemp >= this.AParams.IntakeC[7])                                 // High temperatures depress intake         
+                heatFactor = heatFactor * (1.0 - this.AParams.IntakeC[5] * StdMath.DIM(this.TheEnv.MeanTemp, this.AParams.IntakeC[6]));
+            if (this.LactStatus != GrazType.LactType.Lactating)
+                this.LactAdjust = 1.0;
+#pragma warning disable 162 // unreachable code
+            else if (!AnimalsDynamicGlb)                                                        // In the dynamic model, LactAdjust is a    
+            {                                                                                   // state variable computed in the         
+                weightLoss = Size * StdMath.XDiv(ConditionAtBirthing - Condition,               // lactation routine; for GrazFeed, it is 
+                                             DaysLactating);                                    // estimated with these equations         
+                criticalLoss = AParams.IntakeC[14] * Math.Exp(-Math.Pow(AParams.IntakeC[13] * DaysLactating, 2));
+                if (weightLoss > criticalLoss)
+                    this.LactAdjust = (1.0 - AParams.IntakeC[12] * weightLoss / AParams.IntakeC[13]);
                 else
-                    LactAdjust = 1.0;
+                    this.LactAdjust = 1.0;
             }
 #pragma warning restore 162
-            if (LactStatus == GrazType.LactType.Lactating)
+            if (this.LactStatus == GrazType.LactType.Lactating)
             {
-                fLactTime = DaysLactating;
-                iLactNo = NoSuckling();
+                lactTime = this.DaysLactating;
+                lactNum = this.NoSuckling();
             }
             else
             {
-                fLactTime = DryOffTime;
-                iLactNo = FPrevOffspring;
+                lactTime = this.DryOffTime;
+                lactNum = this.FPrevOffspring;
             }
 
-            if (((ReproStatus == GrazType.ReproType.Male || ReproStatus == GrazType.ReproType.Castrated)) || (Mothers != null))
-                fLactFactor = 1.0;
+            if (((this.ReproStatus == GrazType.ReproType.Male || this.ReproStatus == GrazType.ReproType.Castrated)) || (this.Mothers != null))
+                lactFactor = 1.0;
             else
-                fLactFactor = 1.0 + AParams.IntakeLactC[iLactNo]
-                                     * ((1.0 - AParams.IntakeC[15]) + AParams.IntakeC[15] * ConditionAtBirthing)
-                                     * WOOD(fLactTime, AParams.IntakeC[8], AParams.IntakeC[9])
-                                     * LactAdjust;
+                lactFactor = 1.0 + this.AParams.IntakeLactC[lactNum]
+                                     * ((1.0 - this.AParams.IntakeC[15]) + this.AParams.IntakeC[15] * this.ConditionAtBirthing)
+                                     * this.WOOD(lactTime, this.AParams.IntakeC[8], this.AParams.IntakeC[9])
+                                     * this.LactAdjust;
 
-            IntakeLimit = AParams.IntakeC[1] * StdRefWt * Size * (AParams.IntakeC[2] - Size)
-                           * fCondFactor * fYoungFactor * fHeatFactor * fLactFactor * FIntakeModifier;
-
+            this.IntakeLimit = this.AParams.IntakeC[1] * this.StdRefWt * this.Size * (this.AParams.IntakeC[2] - this.Size)
+                           * condFactor * youngFactor * heatFactor * lactFactor * this.FIntakeModifier;
         }
+
         /// <summary>
         /// Reset the grazing values
         /// </summary>
         public void Reset_Grazing()
         {
-            AnimalState = new AnimalOutput();
-            Supp_FWI = 0.0;
-            Start_FU = 1.0;
-            Array.Resize(ref NetSupp_DMI, TheRation.Count);
-            Array.Resize(ref TimeStepNetSupp_DMI, TheRation.Count);
-            for (int Idx = 0; Idx < NetSupp_DMI.Length; Idx++)
-                NetSupp_DMI[Idx] = 0.0;
+            this.AnimalState = new AnimalOutput();
+            this.Supp_FWI = 0.0;
+            this.Start_FU = 1.0;
+            Array.Resize(ref this.NetSupp_DMI, this.TheRation.Count);
+            Array.Resize(ref this.TimeStepNetSupp_DMI, this.TheRation.Count);
+            for (int Idx = 0; Idx < this.NetSupp_DMI.Length; Idx++)
+                this.NetSupp_DMI[Idx] = 0.0;
         }
 
         /// <summary>
@@ -3326,13 +3634,14 @@ namespace Models.GrazPlan
         /// <summary>
         /// Update the value for the timestep
         /// </summary>
-        /// <param name="TimeStep"></param>
+        /// <param name="timeStep">The timestep fraction</param>
         /// <param name="full"></param>
-        /// <param name="TS"></param>
-        private void UpdateFloat(double TimeStep, ref double full, double TS)
+        /// <param name="ts"></param>
+        private void UpdateFloat(double timeStep, ref double full, double ts)
         {
-            full = full + TimeStep * TS;
+            full = full + timeStep * ts;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -3345,8 +3654,9 @@ namespace Models.GrazPlan
         {
             full = StdMath.XDiv(full * FullDenom + TS * (DT * TSDenom), FullDenom + (DT * TSDenom));
         }
+
         /// <summary>
-        /// 
+        /// Update the grazing outputs
         /// </summary>
         /// <param name="TimeStep"></param>
         /// <param name="full"></param>
@@ -3363,8 +3673,9 @@ namespace Models.GrazPlan
                     full.Seed[Sp, I] = full.Seed[Sp, I] + TimeStep * TS.Seed[Sp, I];
             }
         }
+
         /// <summary>
-        /// 
+        /// Update the intake record
         /// </summary>
         /// <param name="full"></param>
         /// <param name="TS"></param>
@@ -3386,28 +3697,30 @@ namespace Models.GrazPlan
                                      full.Biomass + DT * TS.Biomass);
             full.Biomass = full.Biomass + DT * TS.Biomass;
         }
+
         /// <summary>
-        /// 
+        /// Update the diet record
         /// </summary>
-        /// <param name="TimeStep"></param>
-        /// <param name="SuppFullDay"></param>
-        /// <param name="full"></param>
-        /// <param name="TS"></param>
-        private void UpdateDietRecord(double TimeStep, bool SuppFullDay, ref DietRecord full, DietRecord TS)
+        /// <param name="timeStep">The fraction of the timestep</param>
+        /// <param name="suppFullDay"></param>
+        /// <param name="full">The full diet</param>
+        /// <param name="TS">The extra diet</param>
+        private void UpdateDietRecord(double timeStep, bool suppFullDay, ref DietRecord full, DietRecord TS)
         {
-            full.Herbage = full.Herbage + TimeStep * TS.Herbage;
-            if (SuppFullDay)
+            full.Herbage = full.Herbage + timeStep * TS.Herbage;
+            if (suppFullDay)
                 full.Supp = full.Supp + TS.Supp;
             else
-                full.Supp = full.Supp + TimeStep * TS.Supp;
-            full.Milk = full.Milk + TimeStep * TS.Milk;
+                full.Supp = full.Supp + timeStep * TS.Supp;
+            full.Milk = full.Milk + timeStep * TS.Milk;
             full.Solid = full.Herbage + full.Supp;
             full.Total = full.Solid + full.Milk;
         }
+
         /// <summary>
-        /// 
+        /// Update the diet
         /// </summary>
-        /// <param name="full"></param>
+        /// <param name="full">The full diet</param>
         /// <param name="FullDenom"></param>
         /// <param name="TS"></param>
         /// <param name="TSDenom"></param>
@@ -3415,124 +3728,124 @@ namespace Models.GrazPlan
         /// <param name="SuppDT"></param>
         private void UpdateDietAve(ref DietRecord full, DietRecord FullDenom, DietRecord TS, DietRecord TSDenom, double HerbDT, double SuppDT)
         {
-            UpdateAve(ref full.Herbage, FullDenom.Herbage, TS.Herbage, TSDenom.Herbage, HerbDT);
-            UpdateAve(ref full.Supp, FullDenom.Supp, TS.Supp, TSDenom.Supp, SuppDT);
+            this.UpdateAve(ref full.Herbage, FullDenom.Herbage, TS.Herbage, TSDenom.Herbage, HerbDT);
+            this.UpdateAve(ref full.Supp, FullDenom.Supp, TS.Supp, TSDenom.Supp, SuppDT);
         }
+
         /// <summary>
-        /// 
+        /// Update the animal state
         /// </summary>
-        /// <param name="TimeStep"></param>
-        /// <param name="SuppFullDay"></param>
-        /// <param name="SuppRI"></param>
-        private void UpdateAnimalState(double TimeStep, bool SuppFullDay, double SuppRI)
+        /// <param name="timeStep"></param>
+        /// <param name="suppFullDay"></param>
+        /// <param name="suppRI"></param>
+        private void UpdateAnimalState(double timeStep, bool suppFullDay, double suppRI)
         {
-            double SuppTS;
+            double suppTS;
 
-            if (SuppFullDay)
-                SuppTS = 1.0;
+            if (suppFullDay)
+                suppTS = 1.0;
             else
-                SuppTS = TimeStep;
+                suppTS = timeStep;
 
-            if (TimeStep == 1)
-                AnimalState = this.TimeStepState.Copy();
+            if (timeStep == 1)
+                this.AnimalState = this.TimeStepState.Copy();
             else
             {
-                UpdateGrazingOutputs(TimeStep, ref AnimalState.IntakePerHead, this.TimeStepState.IntakePerHead);
-                UpdateIntakeRecord(ref AnimalState.PaddockIntake, this.TimeStepState.PaddockIntake, TimeStep);
-                UpdateIntakeRecord(ref AnimalState.SuppIntake, this.TimeStepState.SuppIntake, SuppTS);
+                this.UpdateGrazingOutputs(timeStep, ref this.AnimalState.IntakePerHead, this.TimeStepState.IntakePerHead);
+                this.UpdateIntakeRecord(ref this.AnimalState.PaddockIntake, this.TimeStepState.PaddockIntake, timeStep);
+                this.UpdateIntakeRecord(ref this.AnimalState.SuppIntake, this.TimeStepState.SuppIntake, suppTS);
 
                 // compute these averages *before* cumulating DM_Intake & CP_Intake 
 
-                UpdateDietAve(ref AnimalState.Digestibility, AnimalState.DM_Intake,
+                this.UpdateDietAve(ref this.AnimalState.Digestibility, this.AnimalState.DM_Intake,
                                this.TimeStepState.Digestibility, this.TimeStepState.DM_Intake,
-                               TimeStep, SuppTS);
-                UpdateDietAve(ref AnimalState.ProteinConc, AnimalState.DM_Intake,
+                               timeStep, suppTS);
+                this.UpdateDietAve(ref this.AnimalState.ProteinConc, this.AnimalState.DM_Intake,
                                this.TimeStepState.ProteinConc, this.TimeStepState.DM_Intake,
-                               TimeStep, SuppTS);
-                UpdateDietAve(ref AnimalState.ME_2_DM, AnimalState.DM_Intake,
+                               timeStep, suppTS);
+                this.UpdateDietAve(ref this.AnimalState.ME_2_DM, this.AnimalState.DM_Intake,
                                this.TimeStepState.ME_2_DM, this.TimeStepState.DM_Intake,
-                               TimeStep, SuppTS);
-                UpdateDietAve(ref AnimalState.CorrDgProt, AnimalState.CP_Intake,
+                               timeStep, suppTS);
+                this.UpdateDietAve(ref this.AnimalState.CorrDgProt, this.AnimalState.CP_Intake,
                                this.TimeStepState.CorrDgProt, this.TimeStepState.CP_Intake,
-                               TimeStep, SuppTS);
+                               timeStep, suppTS);
 
-                UpdateDietRecord(TimeStep, SuppFullDay, ref AnimalState.CP_Intake, this.TimeStepState.CP_Intake);
-                UpdateDietRecord(TimeStep, SuppFullDay, ref AnimalState.ME_Intake, this.TimeStepState.ME_Intake);
-                UpdateDietRecord(TimeStep, SuppFullDay, ref AnimalState.DM_Intake, this.TimeStepState.DM_Intake);
+                this.UpdateDietRecord(timeStep, suppFullDay, ref this.AnimalState.CP_Intake, this.TimeStepState.CP_Intake);
+                this.UpdateDietRecord(timeStep, suppFullDay, ref this.AnimalState.ME_Intake, this.TimeStepState.ME_Intake);
+                this.UpdateDietRecord(timeStep, suppFullDay, ref this.AnimalState.DM_Intake, this.TimeStepState.DM_Intake);
 
-                // compute these averages *after* cumulating DM_Intake & CP_Intake 
+                // compute these averages *after* cumulating DM_Intake & CP_Intake
+                this.AnimalState.Digestibility.Solid = StdMath.XDiv(this.AnimalState.Digestibility.Supp * this.AnimalState.DM_Intake.Supp +
+                                             this.AnimalState.Digestibility.Herbage * this.AnimalState.DM_Intake.Herbage,
+                                             this.AnimalState.DM_Intake.Solid);
+                this.AnimalState.ProteinConc.Solid = StdMath.XDiv(this.AnimalState.CP_Intake.Solid, this.AnimalState.DM_Intake.Solid);
+                this.AnimalState.ME_2_DM.Solid = StdMath.XDiv(this.AnimalState.ME_Intake.Solid, this.AnimalState.DM_Intake.Solid);
+            }   ////_ WITH FullState _
 
-                AnimalState.Digestibility.Solid = StdMath.XDiv(AnimalState.Digestibility.Supp * AnimalState.DM_Intake.Supp +
-                                             AnimalState.Digestibility.Herbage * AnimalState.DM_Intake.Herbage,
-                                             AnimalState.DM_Intake.Solid);
-                AnimalState.ProteinConc.Solid = StdMath.XDiv(AnimalState.CP_Intake.Solid, AnimalState.DM_Intake.Solid);
-                AnimalState.ME_2_DM.Solid = StdMath.XDiv(AnimalState.ME_Intake.Solid, AnimalState.DM_Intake.Solid);
-            }   //_ WITH FullState _
-
-            Supp_FWI = Supp_FWI + SuppTS * StdMath.XDiv(IntakeLimit * SuppRI, IntakeSuppt.DMPropn);
-            for (int Idx = 0; Idx < NetSupp_DMI.Length; Idx++)
-                NetSupp_DMI[Idx] = NetSupp_DMI[Idx] + SuppTS * TimeStepNetSupp_DMI[Idx];
+            this.Supp_FWI = this.Supp_FWI + suppTS * StdMath.XDiv(this.IntakeLimit * suppRI, this.IntakeSuppt.DMPropn);
+            for (int idx = 0; idx < this.NetSupp_DMI.Length; idx++)
+                this.NetSupp_DMI[idx] = this.NetSupp_DMI[idx] + suppTS * this.TimeStepNetSupp_DMI[idx];
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="DeltaT">Fraction of an animal's active day</param>
-        /// <param name="Reset">TRUE at the start of the day</param>
-        /// <param name="FeedSuppFirst"></param>
-        /// <param name="pastIntakeRate"></param>
-        /// <param name="fSuppIntakeRate"></param>
-        public void Grazing(double DeltaT,
-                             bool Reset,
-                             bool FeedSuppFirst,
-                             ref GrazType.GrazingOutputs pastIntakeRate,
-                             ref double fSuppIntakeRate)
-        {
-            double[] HerbageRI = new double[GrazType.DigClassNo + 1];
-            double MaintMEIScalar;
-            double WaterLogScalar;
-            double[,] SeedRI = new double[GrazType.MaxPlantSpp + 1, 3];
-            double SuppRI = 0;
 
+        /// <summary>
+        /// Do grazing
+        /// </summary>
+        /// <param name="deltaT">Fraction of an animal's active day</param>
+        /// <param name="reset">TRUE at the start of the day</param>
+        /// <param name="feedSuppFirst">Feed supplement first</param>
+        /// <param name="pastIntakeRate"></param>
+        /// <param name="suppIntakeRate"></param>
+        public void Grazing(double deltaT,
+                             bool reset,
+                             bool feedSuppFirst,
+                             ref GrazType.GrazingOutputs pastIntakeRate,
+                             ref double suppIntakeRate)
+        {
+            double[] herbageRI = new double[GrazType.DigClassNo + 1];
+            double maintMEIScalar;
+            double waterLogScalar;
+            double[,] seedRI = new double[GrazType.MaxPlantSpp + 1, 3];
+            double suppRI = 0;
 
             // Do this before resetting AnimalState!    
-            if ((!AnimalsDynamicGlb || (AnimalState.ME_Intake.Total == 0.0) || (WaterLog == 0.0) || (Steepness > 1.0)))                       // Waterlogging effect only on level ground 
-                WaterLogScalar = 1.0;                                                 // The published model assumes WaterLog=0   
-            else if ((AnimalState.EnergyUse.Gain == 0.0) || (AnimalState.Efficiency.Gain == 0.0))
-                WaterLogScalar = 1.0;
+            if ((!AnimalsDynamicGlb || (this.AnimalState.ME_Intake.Total == 0.0) || (this.WaterLog == 0.0) || (this.Steepness > 1.0)))    // Waterlogging effect only on level ground 
+                waterLogScalar = 1.0;                                                 // The published model assumes WaterLog=0   
+            else if ((this.AnimalState.EnergyUse.Gain == 0.0) || (this.AnimalState.Efficiency.Gain == 0.0))
+                waterLogScalar = 1.0;
             else
             {
-                MaintMEIScalar = Math.Max(0.0, (AnimalState.EnergyUse.Gain / AnimalState.Efficiency.Gain) / AnimalState.ME_Intake.Total);
-                WaterLogScalar = StdMath.DIM(1.0, MaintMEIScalar * WaterLog);
+                maintMEIScalar = Math.Max(0.0, (this.AnimalState.EnergyUse.Gain / this.AnimalState.Efficiency.Gain) / this.AnimalState.ME_Intake.Total);
+                waterLogScalar = StdMath.DIM(1.0, maintMEIScalar * WaterLog);
             }
 
-
-            if (Reset)                                                             // First time step of the day?              
-                Reset_Grazing();
+            if (reset)                                                                  // First time step of the day?              
+                this.Reset_Grazing();
 
             this.TimeStepState = new AnimalOutput();
 
-            CalculateRelIntake(this, DeltaT, FeedSuppFirst,
-                                WaterLogScalar,                                       // The published model assumes WaterLog=0   
-                                ref HerbageRI, ref SeedRI, ref SuppRI);
-            DescribeTheDiet(ref HerbageRI, ref SeedRI, ref SuppRI, ref this.TimeStepState);
-            UpdateAnimalState(DeltaT, FeedSuppFirst, SuppRI);
+            this.CalculateRelIntake(this, deltaT, feedSuppFirst,
+                                waterLogScalar,                                       // The published model assumes WaterLog=0   
+                                ref herbageRI, ref seedRI, ref suppRI);
+            this.DescribeTheDiet(ref herbageRI, ref seedRI, ref suppRI, ref this.TimeStepState);
+            this.UpdateAnimalState(deltaT, feedSuppFirst, suppRI);
 
             pastIntakeRate.CopyFrom(this.TimeStepState.IntakePerHead);
 
-            fSuppIntakeRate = StdMath.XDiv(IntakeLimit * SuppRI, IntakeSuppt.DMPropn);
+            suppIntakeRate = StdMath.XDiv(this.IntakeLimit * suppRI, this.IntakeSuppt.DMPropn);
         }
+
         /// <summary>
-        /// 
+        /// Do grazing
         /// </summary>
-        /// <param name="DeltaT"></param>
-        /// <param name="Reset"></param>
-        /// <param name="FeedSuppFirst"></param>
-        public void Grazing(double DeltaT, bool Reset, bool FeedSuppFirst)
+        /// <param name="deltaT">Fraction of an animal's active day</param>
+        /// <param name="reset">TRUE at the start of the day</param>
+        /// <param name="feedSuppFirst">Feed supplement first</param>
+        public void Grazing(double deltaT, bool reset, bool feedSuppFirst)
         {
             GrazType.GrazingOutputs dummyPastIntake = new GrazType.GrazingOutputs();
-            double fDummySuppIntake = 0.0;
+            double dummySuppIntake = 0.0;
 
-            Grazing(DeltaT, Reset, FeedSuppFirst, ref dummyPastIntake, ref fDummySuppIntake);
+            this.Grazing(deltaT, reset, feedSuppFirst, ref dummyPastIntake, ref dummySuppIntake);
         }
 
         /// <summary>
@@ -3542,37 +3855,37 @@ namespace Models.GrazPlan
         /// </summary>
         private void Efficiencies()
         {
-            double HerbageEfficiency;                                                      // Efficiencies for gain from herbage &     
-            double SuppEfficiency;                                              //   supplement intake                      
+            double herbageEfficiency;                                                       // Efficiencies for gain from herbage &     
+            double suppEfficiency;                                                          // supplement intake                      
 
-            this.AnimalState.DietPropn.Milk = StdMath.XDiv(AnimalState.ME_Intake.Milk, AnimalState.ME_Intake.Total);
-            AnimalState.DietPropn.Solid = 1.0 - AnimalState.DietPropn.Milk;
-            AnimalState.DietPropn.Supp = AnimalState.DietPropn.Solid * StdMath.XDiv(AnimalState.ME_Intake.Supp, AnimalState.ME_Intake.Solid);
-            AnimalState.DietPropn.Herbage = AnimalState.DietPropn.Solid - AnimalState.DietPropn.Supp;
+            this.AnimalState.DietPropn.Milk = StdMath.XDiv(this.AnimalState.ME_Intake.Milk, this.AnimalState.ME_Intake.Total);
+            this.AnimalState.DietPropn.Solid = 1.0 - this.AnimalState.DietPropn.Milk;
+            this.AnimalState.DietPropn.Supp = this.AnimalState.DietPropn.Solid * StdMath.XDiv(this.AnimalState.ME_Intake.Supp, this.AnimalState.ME_Intake.Solid);
+            this.AnimalState.DietPropn.Herbage = this.AnimalState.DietPropn.Solid - this.AnimalState.DietPropn.Supp;
 
-            if (AnimalState.ME_Intake.Total < GrazType.VerySmall)                                    // Efficiencies of various uses of ME       
+            if (this.AnimalState.ME_Intake.Total < GrazType.VerySmall)                             
             {
-                AnimalState.Efficiency.Maint = AParams.EfficC[4];
-                AnimalState.Efficiency.Lact = AParams.EfficC[7];
-                AnimalState.Efficiency.Preg = AParams.EfficC[8];
+                // Efficiencies of various uses of ME
+                this.AnimalState.Efficiency.Maint = this.AParams.EfficC[4];
+                this.AnimalState.Efficiency.Lact = this.AParams.EfficC[7];
+                this.AnimalState.Efficiency.Preg = this.AParams.EfficC[8];
             }
             else
             {
-                AnimalState.Efficiency.Maint = AnimalState.DietPropn.Solid * (AParams.EfficC[1] + AParams.EfficC[2] * AnimalState.ME_2_DM.Solid) +
-                                    AnimalState.DietPropn.Milk * AParams.EfficC[3];
-                AnimalState.Efficiency.Lact = AParams.EfficC[5] + AParams.EfficC[6] * AnimalState.ME_2_DM.Solid;
-                AnimalState.Efficiency.Preg = AParams.EfficC[8];
+                this.AnimalState.Efficiency.Maint = this.AnimalState.DietPropn.Solid * (this.AParams.EfficC[1] + this.AParams.EfficC[2] * this.AnimalState.ME_2_DM.Solid) +
+                                    this.AnimalState.DietPropn.Milk * this.AParams.EfficC[3];
+                this.AnimalState.Efficiency.Lact = this.AParams.EfficC[5] + this.AParams.EfficC[6] * this.AnimalState.ME_2_DM.Solid;
+                this.AnimalState.Efficiency.Preg = this.AParams.EfficC[8];
             }
 
-            HerbageEfficiency = AParams.EfficC[13]
-                                 * (1.0 + AParams.EfficC[14] * Inputs.LegumePropn)
-                                 * (1.0 + AParams.EfficC[15] * (TheEnv.Latitude / 40.0) * Math.Sin(GrazEnv.DAY2RAD * StdDate.DOY(TheEnv.TheDay, true)))
-                                 * AnimalState.ME_2_DM.Herbage;
-            SuppEfficiency = AParams.EfficC[16] * AnimalState.ME_2_DM.Supp;
-            AnimalState.Efficiency.Gain = AnimalState.DietPropn.Herbage * HerbageEfficiency
-                                 + AnimalState.DietPropn.Supp * SuppEfficiency
-                                 + AnimalState.DietPropn.Milk * AParams.EfficC[12];
-
+            herbageEfficiency = this.AParams.EfficC[13]
+                                 * (1.0 + this.AParams.EfficC[14] * this.Inputs.LegumePropn)
+                                 * (1.0 + this.AParams.EfficC[15] * (this.TheEnv.Latitude / 40.0) * Math.Sin(GrazEnv.DAY2RAD * StdDate.DOY(this.TheEnv.TheDay, true)))
+                                 * this.AnimalState.ME_2_DM.Herbage;
+            suppEfficiency = this.AParams.EfficC[16] * this.AnimalState.ME_2_DM.Supp;
+            this.AnimalState.Efficiency.Gain = this.AnimalState.DietPropn.Herbage * herbageEfficiency
+                                 + this.AnimalState.DietPropn.Supp * suppEfficiency
+                                 + this.AnimalState.DietPropn.Milk * this.AParams.EfficC[12];
         }
 
         /// <summary>
@@ -3581,55 +3894,57 @@ namespace Models.GrazPlan
         /// </summary>
         private void Compute_Maintenance()
         {
-            double MetabScale;
-            double GrazeMoved_KM;       // Distance walked during grazing (km)      
-            double EatingEnergy;        // Energy requirement for grazing           
-            double MovingEnergy;        // Energy requirement for movement          
-            double EndoUrineN;
+            double metabScale;
+            double grazeMoved_KM;       // Distance walked during grazing (km)      
+            double eatingEnergy;        // Energy requirement for grazing           
+            double movingEnergy;        // Energy requirement for movement          
+            double endoUrineN;
 
-            if (LactStatus == GrazType.LactType.Suckling)
-                MetabScale = 1.0 + AParams.MaintC[5] * AnimalState.DietPropn.Milk;
-            else if ((ReproStatus == GrazType.ReproType.Male) && (MeanAge >= AParams.Puberty[1]))  //Puberty[true]
-                MetabScale = 1.0 + AParams.MaintC[15];
+            if (this.LactStatus == GrazType.LactType.Suckling)
+                metabScale = 1.0 + this.AParams.MaintC[5] * this.AnimalState.DietPropn.Milk;
+            else if ((this.ReproStatus == GrazType.ReproType.Male) && (this.MeanAge >= this.AParams.Puberty[1]))               // Puberty[true]
+                metabScale = 1.0 + this.AParams.MaintC[15];
             else
-                MetabScale = 1.0;
-            AnimalState.EnergyUse.Metab = MetabScale * AParams.MaintC[2] * Math.Pow(BaseWeight, 0.75)     // Basal metabolism                         
-                               * Math.Max(Math.Exp(-AParams.MaintC[3] * MeanAge), AParams.MaintC[4]);
+                metabScale = 1.0;
+            this.AnimalState.EnergyUse.Metab = metabScale * this.AParams.MaintC[2] * Math.Pow(this.BaseWeight, 0.75) // Basal metabolism                         
+                               * Math.Max(Math.Exp(-this.AParams.MaintC[3] * this.MeanAge), this.AParams.MaintC[4]);
 
-            EatingEnergy = AParams.MaintC[6] * BaseWeight * AnimalState.DM_Intake.Herbage           // Work of eating fibrous diets             
-                                         * StdMath.DIM(AParams.MaintC[7], AnimalState.Digestibility.Herbage);
+            eatingEnergy = this.AParams.MaintC[6] * this.BaseWeight * this.AnimalState.DM_Intake.Herbage             // Work of eating fibrous diets             
+                                         * StdMath.DIM(this.AParams.MaintC[7], this.AnimalState.Digestibility.Herbage);
 
-            if (Inputs.TotalGreen > 100.0)                                     // Energy requirement for movement          
-                GrazeMoved_KM = 1.0 / (AParams.MaintC[8] * Inputs.TotalGreen + AParams.MaintC[9]);
+            if (Inputs.TotalGreen > 100.0)                                                                      // Energy requirement for movement          
+                grazeMoved_KM = 1.0 / (this.AParams.MaintC[8] * this.Inputs.TotalGreen + this.AParams.MaintC[9]);
             else if (Inputs.TotalDead > 100.0)
-                GrazeMoved_KM = 1.0 / (AParams.MaintC[8] * Inputs.TotalDead + AParams.MaintC[9]);
+                grazeMoved_KM = 1.0 / (this.AParams.MaintC[8] * this.Inputs.TotalDead + this.AParams.MaintC[9]);
             else
-                GrazeMoved_KM = 0.0;
-            if (AnimalsPerHa > AParams.MaintC[17])
-                GrazeMoved_KM = GrazeMoved_KM * (AParams.MaintC[17] / AnimalsPerHa);
+                grazeMoved_KM = 0.0;
+            if (this.AnimalsPerHa > this.AParams.MaintC[17])
+                grazeMoved_KM = grazeMoved_KM * (this.AParams.MaintC[17] / this.AnimalsPerHa);
 
-            MovingEnergy = AParams.MaintC[16] * LiveWeight * Steepness * (GrazeMoved_KM + DistanceWalked);
+            movingEnergy = this.AParams.MaintC[16] * this.LiveWeight * this.Steepness * (grazeMoved_KM + this.DistanceWalked);
 
-            AnimalState.EnergyUse.Maint = (AnimalState.EnergyUse.Metab + EatingEnergy + MovingEnergy) / AnimalState.Efficiency.Maint
-                               + AParams.MaintC[1] * AnimalState.ME_Intake.Total;
-            FeedingLevel = AnimalState.ME_Intake.Total / AnimalState.EnergyUse.Maint - 1.0;
+            this.AnimalState.EnergyUse.Maint = (this.AnimalState.EnergyUse.Metab + eatingEnergy + movingEnergy) / this.AnimalState.Efficiency.Maint
+                               + this.AParams.MaintC[1] * this.AnimalState.ME_Intake.Total;
+            this.FeedingLevel = this.AnimalState.ME_Intake.Total / this.AnimalState.EnergyUse.Maint - 1.0;
 
-            //...........................................................................  MAINTENANCE PROTEIN REQUIREMENT          
+            //// ...........................................................................  MAINTENANCE PROTEIN REQUIREMENT          
 
-            AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n] = (AParams.MaintC[10] * AnimalState.DM_Intake.Solid + AParams.MaintC[11] * AnimalState.ME_Intake.Milk) / GrazType.N2Protein;
+            this.AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n] = (this.AParams.MaintC[10] * this.AnimalState.DM_Intake.Solid + this.AParams.MaintC[11] * this.AnimalState.ME_Intake.Milk) / GrazType.N2Protein;
 
-            if (Animal == GrazType.AnimalType.Cattle)
+            if (this.Animal == GrazType.AnimalType.Cattle)
             {
-                EndoUrineN = (AParams.MaintC[12] * Math.Log(BaseWeight) - AParams.MaintC[13]) / GrazType.N2Protein;
-                AnimalState.DermalNLoss = AParams.MaintC[14] * Math.Pow(BaseWeight, 0.75) / GrazType.N2Protein;
+                endoUrineN = (this.AParams.MaintC[12] * Math.Log(this.BaseWeight) - this.AParams.MaintC[13]) / GrazType.N2Protein;
+                this.AnimalState.DermalNLoss = this.AParams.MaintC[14] * Math.Pow(this.BaseWeight, 0.75) / GrazType.N2Protein;
             }
-            else // sheep 
+            else  
             {
-                EndoUrineN = (AParams.MaintC[12] * BaseWeight + AParams.MaintC[13]) / GrazType.N2Protein;
-                AnimalState.DermalNLoss = 0.0;
+                // sheep
+                endoUrineN = (this.AParams.MaintC[12] * this.BaseWeight + this.AParams.MaintC[13]) / GrazType.N2Protein;
+                this.AnimalState.DermalNLoss = 0.0;
             }
-            AnimalState.ProteinUse.Maint = GrazType.N2Protein * (AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n] + EndoUrineN + AnimalState.DermalNLoss);
+            this.AnimalState.ProteinUse.Maint = GrazType.N2Protein * (this.AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n] + endoUrineN + this.AnimalState.DermalNLoss);
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -3640,14 +3955,14 @@ namespace Models.GrazPlan
         /// <returns></returns>
         private double DUDPFunc(bool IsRoughage, double CP, double DG, double ADIP_2_CP)
         {
-            double Result;
+            double result;
             if (IsRoughage)
-                Result = Math.Max(AParams.ProtC[1], Math.Min(AParams.ProtC[3] * CP - AParams.ProtC[4], AParams.ProtC[2]));
+                result = Math.Max(this.AParams.ProtC[1], Math.Min(this.AParams.ProtC[3] * CP - this.AParams.ProtC[4], this.AParams.ProtC[2]));
             else if (DG >= 1.0)
-                Result = 0.0;
+                result = 0.0;
             else
-                Result = AParams.ProtC[9] * (1.0 - ADIP_2_CP / (1.0 - DG));
-            return Result;
+                result = this.AParams.ProtC[9] * (1.0 - ADIP_2_CP / (1.0 - DG));
+            return result;
         }
 
         /// <summary>
@@ -3658,47 +3973,54 @@ namespace Models.GrazPlan
             DietRecord UDPIntakes = new DietRecord();
             DietRecord DUDP = new DietRecord();
             double dgCorrect;
-            int Idx;
+            int idx;
 
+            this.ComputeRDP(this.TheEnv.Latitude, this.TheEnv.TheDay, 1.0, this.FeedingLevel,
+                        ref this.AnimalState.CorrDgProt, ref this.AnimalState.RDP_Intake, ref this.AnimalState.RDP_Reqd, ref UDPIntakes);
+            this.AnimalState.UDP_Intake = UDPIntakes.Solid + UDPIntakes.Milk;
+            dgCorrect = StdMath.XDiv(this.AnimalState.CorrDgProt.Supp, this.AnimalState.SuppIntake.Degradability);
 
-            ComputeRDP(TheEnv.Latitude, TheEnv.TheDay, 1.0, FeedingLevel,
-                        ref AnimalState.CorrDgProt, ref AnimalState.RDP_Intake, ref AnimalState.RDP_Reqd, ref UDPIntakes);
-            AnimalState.UDP_Intake = UDPIntakes.Solid + UDPIntakes.Milk;
-            dgCorrect = StdMath.XDiv(AnimalState.CorrDgProt.Supp, AnimalState.SuppIntake.Degradability);
-
-            AnimalState.MicrobialCP = AParams.ProtC[6] * AnimalState.RDP_Reqd;                                      // Microbial crude protein synthesis        
+            this.AnimalState.MicrobialCP = this.AParams.ProtC[6] * this.AnimalState.RDP_Reqd;                       // Microbial crude protein synthesis        
 
             DUDP.Milk = AParams.ProtC[5];
-            DUDP.Herbage = DUDPFunc(true, AnimalState.ProteinConc.Herbage, AnimalState.CorrDgProt.Herbage, 0.0);
+            DUDP.Herbage = DUDPFunc(true, this.AnimalState.ProteinConc.Herbage, this.AnimalState.CorrDgProt.Herbage, 0.0);
             DUDP.Supp = 0.0;
-            for (Idx = 0; Idx <= TheRation.Count - 1; Idx++)
-                DUDP.Supp = DUDP.Supp + StdMath.XDiv(NetSupp_DMI[Idx], AnimalState.DM_Intake.Supp)                  // Fraction of net supplement intake        
-                                          * DUDPFunc(TheRation[Idx].IsRoughage,                                     // DUDP of this part of the ration          
-                                                      TheRation[Idx].CrudeProt,
-                                                      TheRation[Idx].DegProt * dgCorrect,
-                                                      TheRation[Idx].ADIP2CP);
+            for (idx = 0; idx <= TheRation.Count - 1; idx++)
+                DUDP.Supp = DUDP.Supp + StdMath.XDiv(this.NetSupp_DMI[idx], this.AnimalState.DM_Intake.Supp)        // Fraction of net supplement intake        
+                                          * this.DUDPFunc(this.TheRation[idx].IsRoughage,                           // DUDP of this part of the ration          
+                                                      this.TheRation[idx].CrudeProt,
+                                                      this.TheRation[idx].DegProt * dgCorrect,
+                                                      this.TheRation[idx].ADIP2CP);
 
-            AnimalState.DPLS_MCP = AParams.ProtC[7] * AnimalState.MicrobialCP;                                      // DPLS from microbial crude protein        
-            AnimalState.DPLS_Milk = DUDP.Milk * UDPIntakes.Milk;                                                    // Store DPLS from milk separately          
-            AnimalState.DPLS = DUDP.Herbage * UDPIntakes.Herbage
+            this.AnimalState.DPLS_MCP = this.AParams.ProtC[7] * this.AnimalState.MicrobialCP;                            // DPLS from microbial crude protein        
+            this.AnimalState.DPLS_Milk = DUDP.Milk * UDPIntakes.Milk;                                                    // Store DPLS from milk separately          
+            this.AnimalState.DPLS = DUDP.Herbage * UDPIntakes.Herbage
                             + DUDP.Supp * UDPIntakes.Supp
-                            + AnimalState.DPLS_Milk
-                            + AnimalState.DPLS_MCP;
+                            + this.AnimalState.DPLS_Milk
+                            + this.AnimalState.DPLS_MCP;
             if (UDPIntakes.Solid > 0.0)
-                AnimalState.UDP_Dig = (DUDP.Herbage * UDPIntakes.Herbage + DUDP.Supp * UDPIntakes.Supp) / UDPIntakes.Solid;
+                this.AnimalState.UDP_Dig = (DUDP.Herbage * UDPIntakes.Herbage + DUDP.Supp * UDPIntakes.Supp) / UDPIntakes.Solid;
             else
-                AnimalState.UDP_Dig = DUDP.Herbage;
+                this.AnimalState.UDP_Dig = DUDP.Herbage;
 
-            AnimalState.OrgFaeces.DM = AnimalState.DM_Intake.Solid * (1.0 - AnimalState.Digestibility.Solid);       // Faecal DM & N:                           
-            AnimalState.OrgFaeces.Nu[(int)GrazType.TOMElement.n] = ((1.0 - DUDP.Herbage) * UDPIntakes.Herbage       //   Undigested UDP                         
+            this.AnimalState.OrgFaeces.DM = this.AnimalState.DM_Intake.Solid * (1.0 - this.AnimalState.Digestibility.Solid);       // Faecal DM & N:                           
+            this.AnimalState.OrgFaeces.Nu[(int)GrazType.TOMElement.n] = ((1.0 - DUDP.Herbage) * UDPIntakes.Herbage       //   Undigested UDP                         
                                + (1.0 - DUDP.Supp) * UDPIntakes.Supp
                                + (1.0 - DUDP.Milk) * UDPIntakes.Milk
-                               + AParams.ProtC[8] * AnimalState.MicrobialCP)                                        //   Undigested MCP                         
-                               / GrazType.N2Protein + AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n];        //   Endogenous component                   
-            AnimalState.InOrgFaeces.Nu[(int)GrazType.TOMElement.n] = 0.0;
+                               + AParams.ProtC[8] * this.AnimalState.MicrobialCP)                                        //   Undigested MCP                         
+                               / GrazType.N2Protein + this.AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n];        //   Endogenous component                   
+            this.AnimalState.InOrgFaeces.Nu[(int)GrazType.TOMElement.n] = 0.0;
         }
 
-        private double fDeltaGompertz(double T, double A, double B, double C)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="T"></param>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <param name="C"></param>
+        /// <returns></returns>
+        private double DeltaGompertz(double T, double A, double B, double C)
         {
             return B * C / A * Math.Exp(C * (1.0 - T / A) + B * (1.0 - Math.Exp(C * (1.0 - T / A))));
         }
@@ -3712,37 +4034,37 @@ namespace Models.GrazPlan
         /// </summary>
         private void Compute_Pregnancy()
         {
-            double fBirthWt;                                                  // Reference birth weight (kg)              
-            double fBirthConceptus;                                                  // Reference value of conceptus weight at birth  
-            double fFoetalNWt;                                                  // Normal weight of foetus (kg)             
-            double fFoetalNGrowth;                                                  // Normal growth rate of foetus (kg/day)    
-            double fConditionFactor;                                                  // Effect of maternal condition on foetal growth 
-            double fFoetalCondition;                                                  // Foetal body condition                    
-            double fPrevConceptusWt;
+            double birthWt;                                         // Reference birth weight (kg)              
+            double birthConceptus;                                  // Reference value of conceptus weight at birth  
+            double foetalNWt;                                       // Normal weight of foetus (kg)             
+            double foetalNGrowth;                                   // Normal growth rate of foetus (kg/day)    
+            double conditionFactor;                                 // Effect of maternal condition on foetal growth 
+            double foetalCondition;                                 // Foetal body condition                    
+            double prevConceptusWt;
 
-            fPrevConceptusWt = ConceptusWt();
-            fBirthWt = fBirthWtForSize();
-            fBirthConceptus = NoFoetuses * AParams.PregC[5] * fBirthWt;
+            prevConceptusWt = this.ConceptusWt();
+            birthWt = this.fBirthWtForSize();
+            birthConceptus = NoFoetuses * this.AParams.PregC[5] * birthWt;
 
-            fFoetalNWt = FoetalNormWt();
-            fFoetalNGrowth = fBirthWt * fDeltaGompertz(FoetalAge, AParams.PregC[1], AParams.PregC[2], AParams.PregC[3]);
-            fConditionFactor = (Condition - 1.0) * fFoetalNWt / AParams.StdBirthWt(NoFoetuses);
-            if (Condition >= 1.0)
-                FoetalWt = FoetalWt + fFoetalNGrowth * (1.0 + fConditionFactor);
+            foetalNWt = this.FoetalNormWt();
+            foetalNGrowth = birthWt * this.DeltaGompertz(this.FoetalAge, this.AParams.PregC[1], this.AParams.PregC[2], this.AParams.PregC[3]);
+            conditionFactor = (this.Condition - 1.0) * foetalNWt / AParams.StdBirthWt(this.NoFoetuses);
+            if (this.Condition >= 1.0)
+                this.FoetalWt = this.FoetalWt + foetalNGrowth * (1.0 + conditionFactor);
             else
-                FoetalWt = FoetalWt + fFoetalNGrowth * (1.0 + AParams.PregScale[NoFoetuses] * fConditionFactor);
-            fFoetalCondition = FoetalWeight / fFoetalNWt;
+                this.FoetalWt = this.FoetalWt + foetalNGrowth * (1.0 + this.AParams.PregScale[NoFoetuses] * conditionFactor);
+            foetalCondition = FoetalWeight / foetalNWt;
 
             // ConceptusWt is a function of foetal age. Advance the age temporarily for this calucation.
             FoetalAge++;
-            AnimalState.ConceptusGrowth = ConceptusWt() - fPrevConceptusWt;
+            this.AnimalState.ConceptusGrowth = ConceptusWt() - prevConceptusWt;
             FoetalAge--;
 
-            AnimalState.EnergyUse.Preg = AParams.PregC[8] * fBirthConceptus * fFoetalCondition
-                                * fDeltaGompertz(FoetalAge, AParams.PregC[1], AParams.PregC[9], AParams.PregC[10])
-                                / AnimalState.Efficiency.Preg;
-            AnimalState.ProteinUse.Preg = AParams.PregC[11] * fBirthConceptus * fFoetalCondition
-                                * fDeltaGompertz(FoetalAge, AParams.PregC[1], AParams.PregC[12], AParams.PregC[13]);
+            this.AnimalState.EnergyUse.Preg = this.AParams.PregC[8] * birthConceptus * foetalCondition
+                                * DeltaGompertz(FoetalAge, this.AParams.PregC[1], this.AParams.PregC[9], this.AParams.PregC[10])
+                                / this.AnimalState.Efficiency.Preg;
+            this.AnimalState.ProteinUse.Preg = this.AParams.PregC[11] * birthConceptus * foetalCondition
+                                * DeltaGompertz(FoetalAge, this.AParams.PregC[1], this.AParams.PregC[12], this.AParams.PregC[13]);
 
         }
 
@@ -3757,53 +4079,53 @@ namespace Models.GrazPlan
         /// </summary>
         private void Compute_Lactation()
         {
-            double PotMilkMJ;                                                              // Potential production of milk (MP')       
-            double MaxMilkMJ;                                                              // Milk prodn after energy deficit (MP'')   
-            double EnergySurplus;
-            double AvailMJ;
-            double AvailRatio;
-            double AvailDays;
-            double CondFactor;                                                             // Function of condition affecting milk     
-            //   vs body reserves partition (CFlact)    
-            double MilkLimit;                                                              // Max. milk consumption by young (kg/hd)   
-            double DayRatio;                                                 // Today's value of Milk_MJProd:PotMilkMJ   
+            double potMilkMJ;                                                               // Potential production of milk (MP')       
+            double maxMilkMJ;                                                               // Milk prodn after energy deficit (MP'')   
+            double energySurplus;
+            double availMJ;
+            double availRatio;
+            double availDays;
+            double condFactor;                                                              // Function of condition affecting milk     
+                                                                                            // vs body reserves partition (CFlact)    
+            double milkLimit;                                                               // Max. milk consumption by young (kg/hd)   
+            double dayRatio;                                                                // Today's value of Milk_MJProd:PotMilkMJ   
 
-            CondFactor = 1.0 - AParams.IntakeC[15] + AParams.IntakeC[15] * ConditionAtBirthing;
-            if (!AParams.bUseDairyCurve)                                              // Potential milk production in MJ          
-                PotMilkMJ = AParams.PeakLactC[NoSuckling()]
-                             * Math.Pow(StdRefWt, 0.75) * Size
-                             * CondFactor * LactAdjust
-                             * WOOD(DaysLactating + AParams.LactC[1], AParams.LactC[2], AParams.LactC[3]);
+            condFactor = 1.0 - this.AParams.IntakeC[15] + this.AParams.IntakeC[15] * ConditionAtBirthing;
+            if (!this.AParams.bUseDairyCurve)                                                    // Potential milk production in MJ          
+                potMilkMJ = this.AParams.PeakLactC[this.NoSuckling()]
+                             * Math.Pow(this.StdRefWt, 0.75) * this.Size
+                             * condFactor * this.LactAdjust
+                             * this.WOOD(this.DaysLactating + this.AParams.LactC[1], this.AParams.LactC[2], this.AParams.LactC[3]);
             else
-                PotMilkMJ = AParams.LactC[5] * AParams.LactC[6] * AParams.PeakMilk
-                             * CondFactor * LactAdjust
-                             * WOOD(DaysLactating + AParams.LactC[1], AParams.LactC[2], AParams.LactC[4]);
+                potMilkMJ = this.AParams.LactC[5] * this.AParams.LactC[6] * this.AParams.PeakMilk
+                             * condFactor * this.LactAdjust
+                             * this.WOOD(this.DaysLactating + this.AParams.LactC[1], this.AParams.LactC[2], this.AParams.LactC[4]);
 
-            EnergySurplus = AnimalState.ME_Intake.Total - AnimalState.EnergyUse.Maint - AnimalState.EnergyUse.Preg;
-            AvailMJ = AParams.LactC[5] * AnimalState.Efficiency.Lact * EnergySurplus;
-            AvailRatio = AvailMJ / PotMilkMJ;                                   // Effects of available energy, stage of    
-            AvailDays = Math.Max(DaysLactating, AvailRatio / (2.0 * AParams.LactC[22]));    //   lactation and body condition on        
-            MaxMilkMJ = PotMilkMJ * AParams.LactC[7]                                   //   milk production                        
-                                         / (1.0 + Math.Exp(AParams.LactC[19] - AParams.LactC[20] * AvailRatio
-                                                       - AParams.LactC[21] * AvailDays * (AvailRatio - AParams.LactC[22] * AvailDays)
-                                                       + AParams.LactC[23] * Condition * (AvailRatio - AParams.LactC[24] * Condition)));
-            if (NoSuckling() > 0)
+            energySurplus = this.AnimalState.ME_Intake.Total - this.AnimalState.EnergyUse.Maint - this.AnimalState.EnergyUse.Preg;
+            availMJ = AParams.LactC[5] * this.AnimalState.Efficiency.Lact * energySurplus;
+            availRatio = availMJ / potMilkMJ;                                               // Effects of available energy, stage of    
+            availDays = Math.Max(DaysLactating, availRatio / (2.0 * AParams.LactC[22]));    // lactation and body condition on        
+            maxMilkMJ = potMilkMJ * this.AParams.LactC[7]                                        // milk production                        
+                                         / (1.0 + Math.Exp(this.AParams.LactC[19] - this.AParams.LactC[20] * availRatio
+                                                       - this.AParams.LactC[21] * availDays * (availRatio - this.AParams.LactC[22] * availDays)
+                                                       + this.AParams.LactC[23] * Condition * (availRatio - this.AParams.LactC[24] * Condition)));
+            if (this.NoSuckling() > 0)
             {
-                MilkLimit = AParams.LactC[6]
-                             * NoSuckling()
-                             * Math.Pow(Young.BaseWeight, 0.75)
-                             * (AParams.LactC[12] + AParams.LactC[13] * Math.Exp(-AParams.LactC[14] * DaysLactating));
-                Milk_MJProdn = Math.Min(MaxMilkMJ, MilkLimit);                       // Milk_MJ_Prodn becomes less than MaxMilkMJ
-                PropnOfMaxMilk = Milk_MJProdn / MilkLimit;                           //   when the young are not able to consume 
-            }                                                                     //   the amount of milk the mothers are     
-            else                                                                    //   capable of producing                   
+                milkLimit = this.AParams.LactC[6]
+                             * this.NoSuckling()
+                             * Math.Pow(this.Young.BaseWeight, 0.75)
+                             * (this.AParams.LactC[12] + this.AParams.LactC[13] * Math.Exp(-this.AParams.LactC[14] * DaysLactating));
+                Milk_MJProdn = Math.Min(maxMilkMJ, milkLimit);                              // Milk_MJ_Prodn becomes less than MaxMilkMJ
+                PropnOfMaxMilk = Milk_MJProdn / milkLimit;                                  // when the young are not able to consume 
+            }                                                                               // the amount of milk the mothers are     
+            else                                                                            // capable of producing                   
             {
-                Milk_MJProdn = MaxMilkMJ;
+                Milk_MJProdn = maxMilkMJ;
                 PropnOfMaxMilk = 1.0;
             }
 
-            AnimalState.EnergyUse.Lact = Milk_MJProdn / (AParams.LactC[5] * AnimalState.Efficiency.Lact);
-            AnimalState.ProteinUse.Lact = AParams.LactC[15] * Milk_MJProdn / AParams.LactC[6];
+            this.AnimalState.EnergyUse.Lact = Milk_MJProdn / (AParams.LactC[5] * this.AnimalState.Efficiency.Lact);
+            this.AnimalState.ProteinUse.Lact = AParams.LactC[15] * Milk_MJProdn / AParams.LactC[6];
 
             if (AnimalsDynamicGlb)
                 if (DaysLactating < AParams.LactC[16] * AParams.LactC[2])
@@ -3813,11 +4135,11 @@ namespace Models.GrazPlan
                 }
                 else
                 {
-                    DayRatio = StdMath.XDiv(Milk_MJProdn, PotMilkMJ);
-                    if (DayRatio < LactRatio)
+                    dayRatio = StdMath.XDiv(Milk_MJProdn, potMilkMJ);
+                    if (dayRatio < LactRatio)
                     {
-                        LactAdjust = LactAdjust - AParams.LactC[17] * (LactRatio - DayRatio);
-                        LactRatio = AParams.LactC[18] * DayRatio + (1.0 - AParams.LactC[18]) * LactRatio;
+                        LactAdjust = LactAdjust - AParams.LactC[17] * (LactRatio - dayRatio);
+                        LactRatio = AParams.LactC[18] * dayRatio + (1.0 - AParams.LactC[18]) * LactRatio;
                     }
                 }
         }
@@ -3837,60 +4159,63 @@ namespace Models.GrazPlan
             double ME_To_CFW;                     // kg CFW grown per kg available ME         
             double DayCFWGain;
 
-            AgeFactor = AParams.WoolC[5] + (1.0 - AParams.WoolC[5]) * (1.0 - Math.Exp(-AParams.WoolC[12] * MeanAge));
-            DayLenFactor = 1.0 + AParams.WoolC[6] * (TheEnv.DayLength - 12);
-            DPLS_To_CFW = AParams.WoolC[7] * AParams.FleeceRatio * AgeFactor * DayLenFactor;
-            ME_To_CFW = AParams.WoolC[8] * AParams.FleeceRatio * AgeFactor * DayLenFactor;
-            AnimalState.DPLS_Avail_Wool = StdMath.DIM(AnimalState.DPLS + DPLS_Adjust,
-                                    AParams.WoolC[9] * (AnimalState.ProteinUse.Lact + AnimalState.ProteinUse.Preg));
-            ME_Avail_Wool = StdMath.DIM(AnimalState.ME_Intake.Total, AnimalState.EnergyUse.Lact + AnimalState.EnergyUse.Preg);
-            DayCFWGain = Math.Min(DPLS_To_CFW * AnimalState.DPLS_Avail_Wool, ME_To_CFW * ME_Avail_Wool);
+            AgeFactor = this.AParams.WoolC[5] + (1.0 - this.AParams.WoolC[5]) * (1.0 - Math.Exp(-this.AParams.WoolC[12] * this.MeanAge));
+            DayLenFactor = 1.0 + this.AParams.WoolC[6] * (TheEnv.DayLength - 12);
+            DPLS_To_CFW = this.AParams.WoolC[7] * this.AParams.FleeceRatio * AgeFactor * DayLenFactor;
+            ME_To_CFW = this.AParams.WoolC[8] * this.AParams.FleeceRatio * AgeFactor * DayLenFactor;
+            this.AnimalState.DPLS_Avail_Wool = StdMath.DIM(this.AnimalState.DPLS + DPLS_Adjust,
+                                    this.AParams.WoolC[9] * (this.AnimalState.ProteinUse.Lact + this.AnimalState.ProteinUse.Preg));
+            ME_Avail_Wool = StdMath.DIM(this.AnimalState.ME_Intake.Total, this.AnimalState.EnergyUse.Lact + this.AnimalState.EnergyUse.Preg);
+            DayCFWGain = Math.Min(DPLS_To_CFW * this.AnimalState.DPLS_Avail_Wool, ME_To_CFW * ME_Avail_Wool);
 #pragma warning disable 162 //unreachable code
             if (AnimalsDynamicGlb)
-                AnimalState.ProteinUse.Wool = (1 - AParams.WoolC[4]) * (AParams.WoolC[3] * DeltaWoolWt) +            // Smoothed wool growth                     
-                                   AParams.WoolC[4] * DayCFWGain;
+                this.AnimalState.ProteinUse.Wool = (1 - this.AParams.WoolC[4]) * (this.AParams.WoolC[3] * this.DeltaWoolWt) +            // Smoothed wool growth                     
+                                   this.AParams.WoolC[4] * DayCFWGain;
             else
-                AnimalState.ProteinUse.Wool = DayCFWGain;
+                this.AnimalState.ProteinUse.Wool = DayCFWGain;
 #pragma warning restore 162
-            AnimalState.EnergyUse.Wool = AParams.WoolC[1] * StdMath.DIM(AnimalState.ProteinUse.Wool, AParams.WoolC[2] * Size) /      // Energy use for fleece                    
-                               AParams.WoolC[3];
+            this.AnimalState.EnergyUse.Wool = this.AParams.WoolC[1] * StdMath.DIM(this.AnimalState.ProteinUse.Wool, this.AParams.WoolC[2] * this.Size) /      // Energy use for fleece                    
+                               this.AParams.WoolC[3];
         }
 
+        /// <summary>
+        /// Apply the wool growth
+        /// </summary>
         private void Apply_WoolGrowth()
         {
-            double AgeFactor;
-            double PotCleanGain;
-            double fDiamPower;
-            double Gain_Length;
+            double ageFactor;
+            double potCleanGain;
+            double diamPower;
+            double gain_Length;
 
-            DeltaWoolWt = AnimalState.ProteinUse.Wool / AParams.WoolC[3];                          // Convert clean to greasy fleece           
-            WoolWt = WoolWt + DeltaWoolWt;
-            AnimalState.TotalWoolEnergy = AParams.WoolC[1] * DeltaWoolWt;                              // Reporting only                           
+            this.DeltaWoolWt = this.AnimalState.ProteinUse.Wool / this.AParams.WoolC[3];                // Convert clean to greasy fleece           
+            this.WoolWt = this.WoolWt + this.DeltaWoolWt;
+            this.AnimalState.TotalWoolEnergy = this.AParams.WoolC[1] * this.DeltaWoolWt;                // Reporting only                           
 
             // Changed to always TRUE for use with AgLab API, since we want to
             // be able to report the change in coat depth
-            if (true) // AnimalsDynamicGlb  then                                               // This section deals with fibre diameter   
+            if (true) // AnimalsDynamicGlb  then                                                        // This section deals with fibre diameter   
             {
-                AgeFactor = AParams.WoolC[5] + (1.0 - AParams.WoolC[5]) * (1.0 - Math.Exp(-AParams.WoolC[12] * MeanAge));
-                PotCleanGain = (AParams.WoolC[3] * AParams.FleeceRatio * StdRefWt) * AgeFactor / 365;
-                if (AnimalState.EnergyUse.Gain >= 0.0)
-                    fDiamPower = AParams.WoolC[13];
+                ageFactor = this.AParams.WoolC[5] + (1.0 - this.AParams.WoolC[5]) * (1.0 - Math.Exp(-this.AParams.WoolC[12] * this.MeanAge));
+                potCleanGain = (this.AParams.WoolC[3] * this.AParams.FleeceRatio * this.StdRefWt) * ageFactor / 365;
+                if (this.AnimalState.EnergyUse.Gain >= 0.0)
+                    diamPower = this.AParams.WoolC[13];
                 else
-                    fDiamPower = AParams.WoolC[14];
-                DeltaWoolMicron = AParams.MaxFleeceDiam * Math.Pow(AnimalState.ProteinUse.Wool / PotCleanGain, fDiamPower);
+                    diamPower = this.AParams.WoolC[14];
+                this.DeltaWoolMicron = this.AParams.MaxFleeceDiam * Math.Pow(this.AnimalState.ProteinUse.Wool / potCleanGain, diamPower);
                 if (BaseWeight <= 0)
-                    throw new Exception("Base weight is zero or less for " + NoAnimals.ToString() + " " + sBreed + " animals aged " + AgeDays.ToString() + " days");
-                if (DeltaWoolMicron > 0.0)
-                    Gain_Length = 100.0 * 4.0 / Math.PI * AnimalState.ProteinUse.Wool /                   // Computation of fibre diameter assumes    
-                                           (AParams.WoolC[10] * AParams.WoolC[11] *                    //   that the day's growth is cylindrical   
-                                             AParams.ChillC[1] * Math.Pow(BaseWeight, 2.0 / 3.0) *          //   in shape                               
-                                             StdMath.Sqr(DeltaWoolMicron * 1E-6));
+                    throw new Exception("Base weight is zero or less for " + this.NoAnimals.ToString() + " " + this.Breed + " animals aged " + this.AgeDays.ToString() + " days");
+                if (this.DeltaWoolMicron > 0.0)
+                    gain_Length = 100.0 * 4.0 / Math.PI * this.AnimalState.ProteinUse.Wool /              // Computation of fibre diameter assumes    
+                                           (this.AParams.WoolC[10] * this.AParams.WoolC[11] *             // that the day's growth is cylindrical   
+                                             this.AParams.ChillC[1] * Math.Pow(this.BaseWeight, 2.0 / 3.0) *   // in shape                               
+                                             StdMath.Sqr(this.DeltaWoolMicron * 1E-6));
                 else
-                    Gain_Length = 0.0;
-                WoolMicron = StdMath.XDiv(FCoatDepth * WoolMicron +                      // Running average fibre diameter           
-                                           Gain_Length * DeltaWoolMicron,
-                                         FCoatDepth + Gain_Length);
-                FCoatDepth = FCoatDepth + Gain_Length;
+                    gain_Length = 0.0;
+                this.WoolMicron = StdMath.XDiv(this.FCoatDepth * this.WoolMicron +                      // Running average fibre diameter           
+                                           gain_Length * this.DeltaWoolMicron,
+                                         FCoatDepth + gain_Length);
+                this.FCoatDepth = this.FCoatDepth + gain_Length;
 
             }
         }
@@ -3927,17 +4252,17 @@ namespace Models.GrazPlan
             double Temp2Hr, Wind2Hr;
             int Time;
 
-            AnimalState.Therm0HeatProdn = AnimalState.ME_Intake.Total                      // Thermoneutral heat production            
-                           - AnimalState.Efficiency.Preg * AnimalState.EnergyUse.Preg
-                           - AnimalState.Efficiency.Lact * AnimalState.EnergyUse.Lact
-                           - AnimalState.Efficiency.Gain * (AnimalState.ME_Intake.Total - AnimalState.EnergyUse.Maint - AnimalState.EnergyUse.Preg - AnimalState.EnergyUse.Lact)
-                         + AParams.ChillC[16] * ConceptusWt();
-            SurfaceArea = AParams.ChillC[1] * Math.Pow(BaseWeight, 2.0 / 3.0);
-            BodyRadius = AParams.ChillC[2] * Math.Pow(NormalWt, 1.0 / 3.0);
+            this.AnimalState.Therm0HeatProdn = this.AnimalState.ME_Intake.Total            // Thermoneutral heat production            
+                           - this.AnimalState.Efficiency.Preg * this.AnimalState.EnergyUse.Preg
+                           - this.AnimalState.Efficiency.Lact * this.AnimalState.EnergyUse.Lact
+                           - this.AnimalState.Efficiency.Gain * (this.AnimalState.ME_Intake.Total - this.AnimalState.EnergyUse.Maint - this.AnimalState.EnergyUse.Preg - this.AnimalState.EnergyUse.Lact)
+                         + this.AParams.ChillC[16] * this.ConceptusWt();
+            SurfaceArea = this.AParams.ChillC[1] * Math.Pow(this.BaseWeight, 2.0 / 3.0);
+            BodyRadius = this.AParams.ChillC[2] * Math.Pow(this.NormalWt, 1.0 / 3.0);
 
 
-            // Means and amplitudes for temperature     
-            AveTemp = 0.5 * (TheEnv.MaxTemp + TheEnv.MinTemp);                              //   and windrun                            
+            // Means and amplitudes for temperature and windrun     
+            AveTemp = 0.5 * (TheEnv.MaxTemp + TheEnv.MinTemp);                                                          
             TempRange = (TheEnv.MaxTemp - TheEnv.MinTemp) / 2.0;
             AveWind = 0.4 * TheEnv.WindSpeed;                                               // 0.4 corrects wind to animal height       
             WindRange = 0.35 * AveWind;
@@ -3945,39 +4270,39 @@ namespace Models.GrazPlan
 
 
             TissueInsulation = AParams.ChillC[3] * Math.Min(1.0, 0.4 + 0.02 * MeanAge) *    // Reduce tissue insulation for animals under 1 month old
-                                            (AParams.ChillC[4] + (1.0 - AParams.ChillC[4]) * Condition);  // Tissue insulation calculated as a fn     
-            //   of species and body condition          
+                                            (AParams.ChillC[4] + (1.0 - AParams.ChillC[4]) * Condition);    // Tissue insulation calculated as a fn     
+                                                                                                            // of species and body condition          
             Factor1 = BodyRadius / (BodyRadius + CoatDepth);                                // These factors are used in equation J.8   
             Factor2 = BodyRadius * Math.Log(1.0 / Factor1);
-            WetFactor = AParams.ChillC[5] + (1.0 - AParams.ChillC[5]) *
-                                            Math.Exp(-AParams.ChillC[6] * TheEnv.Precipitation / CoatDepth);
-            HeatPerArea = AnimalState.Therm0HeatProdn / SurfaceArea;                        // These factors are used in equation J.10  
-            LCT_Base = AParams.ChillC[11] - HeatPerArea * TissueInsulation;
-            Factor3 = HeatPerArea / (HeatPerArea - AParams.ChillC[12]);
+            WetFactor = this.AParams.ChillC[5] + (1.0 - this.AParams.ChillC[5]) *
+                                            Math.Exp(-this.AParams.ChillC[6] * TheEnv.Precipitation / CoatDepth);
+            HeatPerArea = this.AnimalState.Therm0HeatProdn / SurfaceArea;                   // These factors are used in equation J.10  
+            LCT_Base = this.AParams.ChillC[11] - HeatPerArea * TissueInsulation;
+            Factor3 = HeatPerArea / (HeatPerArea - this.AParams.ChillC[12]);
 
-            AnimalState.EnergyUse.Cold = 0.0;
-            AnimalState.LowerCritTemp = 0.0;
+            this.AnimalState.EnergyUse.Cold = 0.0;
+            this.AnimalState.LowerCritTemp = 0.0;
             for (Time = 1; Time <= 12; Time++)
             {
                 Temp2Hr = AveTemp + TempRange * HourSines[Time];
                 Wind2Hr = AveWind + WindRange * HourSines[Time];
 
                 Insulation = WetFactor *                                                    // External insulation due to hair cover or 
-                              (Factor1 / (AParams.ChillC[7] + AParams.ChillC[8] * Math.Sqrt(Wind2Hr)) + //   fleece is calculated from Blaxter      
-                               Factor2 * (AParams.ChillC[9] - AParams.ChillC[10] * Math.Sqrt(Wind2Hr))); //   (1977)                                 
+                              (Factor1 / (AParams.ChillC[7] + AParams.ChillC[8] * Math.Sqrt(Wind2Hr)) +     // fleece is calculated from Blaxter (1977)      
+                               Factor2 * (AParams.ChillC[9] - AParams.ChillC[10] * Math.Sqrt(Wind2Hr)));                                     
 
-                LCT = LCT_Base + (AParams.ChillC[12] - HeatPerArea) * Insulation;
+                LCT = LCT_Base + (this.AParams.ChillC[12] - HeatPerArea) * Insulation;
                 if ((Time >= 7) && (Time <= 11) && (Temp2Hr > 10.0))                        // Night-time, i.e. 7 pm to 5 am            
-                    LCT = LCT + PropnClearSky * AParams.ChillC[13] * Math.Exp(-AParams.ChillC[14] * StdMath.Sqr(StdMath.DIM(Temp2Hr, AParams.ChillC[15])));
+                    LCT = LCT + PropnClearSky * this.AParams.ChillC[13] * Math.Exp(-AParams.ChillC[14] * StdMath.Sqr(StdMath.DIM(Temp2Hr, AParams.ChillC[15])));
 
                 EnergyRate = SurfaceArea * StdMath.DIM(LCT, Temp2Hr)
                                                 / (Factor3 * TissueInsulation + Insulation);
-                AnimalState.EnergyUse.Cold = AnimalState.EnergyUse.Cold + 1.0 / 12.0 * EnergyRate;
-                AnimalState.LowerCritTemp = AnimalState.LowerCritTemp + 1.0 / 12.0 * LCT;
+                this.AnimalState.EnergyUse.Cold = this.AnimalState.EnergyUse.Cold + 1.0 / 12.0 * EnergyRate;
+                this.AnimalState.LowerCritTemp = this.AnimalState.LowerCritTemp + 1.0 / 12.0 * LCT;
 
-            } //_ FOR Time _
+            } ////_ FOR Time _
 
-            AnimalState.EnergyUse.Maint = AnimalState.EnergyUse.Maint + AnimalState.EnergyUse.Cold;
+            this.AnimalState.EnergyUse.Maint = this.AnimalState.EnergyUse.Maint + this.AnimalState.EnergyUse.Cold;
         }
 
         /// <summary>
@@ -3986,15 +4311,15 @@ namespace Models.GrazPlan
         /// </summary>
         private void Adjust_K_Gain()
         {
-            if (AnimalState.ME_Intake.Total < AnimalState.EnergyUse.Maint + AnimalState.EnergyUse.Preg + AnimalState.EnergyUse.Lact)
-            {                                                                                                           // Efficiency of energy use for weight      
-                if (LactStatus == GrazType.LactType.Lactating)                                                          //   change                                 
-                    AnimalState.Efficiency.Gain = AnimalState.Efficiency.Lact / AParams.EfficC[10];                     // Lactating animals in -ve energy balance 
+            if (this.AnimalState.ME_Intake.Total < this.AnimalState.EnergyUse.Maint + this.AnimalState.EnergyUse.Preg + this.AnimalState.EnergyUse.Lact)
+            {                                                                                                           // Efficiency of energy use for weight change     
+                if (LactStatus == GrazType.LactType.Lactating)
+                    this.AnimalState.Efficiency.Gain = this.AnimalState.Efficiency.Lact / this.AParams.EfficC[10];                     // Lactating animals in -ve energy balance 
                 else
-                    AnimalState.Efficiency.Gain = AnimalState.Efficiency.Maint / AParams.EfficC[11];                    // Dry animals in -ve energy balance        
+                    this.AnimalState.Efficiency.Gain = this.AnimalState.Efficiency.Maint / this.AParams.EfficC[11];                    // Dry animals in -ve energy balance        
             }
             else if (LactStatus == GrazType.LactType.Lactating)
-                AnimalState.Efficiency.Gain = AParams.EfficC[9] * AnimalState.Efficiency.Lact;                          // Lactating animals in +ve energy balance  
+                this.AnimalState.Efficiency.Gain = this.AParams.EfficC[9] * this.AnimalState.Efficiency.Lact;                          // Lactating animals in +ve energy balance  
         }
 
         /// <summary>
@@ -4015,78 +4340,78 @@ namespace Models.GrazPlan
             double EmptyBodyGain;
 
 
-            AnimalState.EnergyUse.Gain = AnimalState.Efficiency.Gain * (AnimalState.ME_Intake.Total - (AnimalState.EnergyUse.Maint + AnimalState.EnergyUse.Preg + AnimalState.EnergyUse.Lact))
-                             - AnimalState.EnergyUse.Wool;
+            this.AnimalState.EnergyUse.Gain = this.AnimalState.Efficiency.Gain * (this.AnimalState.ME_Intake.Total - (this.AnimalState.EnergyUse.Maint + this.AnimalState.EnergyUse.Preg + this.AnimalState.EnergyUse.Lact))
+                             - this.AnimalState.EnergyUse.Wool;
 
-            Eff_DPLS = AParams.GainC[2] / (1.0 + (AParams.GainC[2] / AParams.GainC[3] - 1.0) *           // Efficiency of use of protein from milk   
-                                                StdMath.XDiv(AnimalState.DPLS_Milk, AnimalState.DPLS));            //   is higher than from solid sources      
-            DPLS_Used = (AnimalState.ProteinUse.Maint + AnimalState.ProteinUse.Preg + AnimalState.ProteinUse.Lact) / Eff_DPLS;
-            if (Animal == GrazType.AnimalType.Sheep)                                               // Efficiency of use of protein for wool is 
-                DPLS_Used = DPLS_Used + AnimalState.ProteinUse.Wool / AParams.GainC[1];                         //   0.6 regardless of source               
-            AnimalState.ProteinUse.Gain = Eff_DPLS * (AnimalState.DPLS - DPLS_Used);
+            Eff_DPLS = this.AParams.GainC[2] / (1.0 + (this.AParams.GainC[2] / this.AParams.GainC[3] - 1.0) *               // Efficiency of use of protein from milk   
+                                                StdMath.XDiv(this.AnimalState.DPLS_Milk, this.AnimalState.DPLS));           // is higher than from solid sources      
+            DPLS_Used = (this.AnimalState.ProteinUse.Maint + this.AnimalState.ProteinUse.Preg + this.AnimalState.ProteinUse.Lact) / Eff_DPLS;
+            if (Animal == GrazType.AnimalType.Sheep)                                                                        // Efficiency of use of protein for wool is 
+                DPLS_Used = DPLS_Used + this.AnimalState.ProteinUse.Wool / AParams.GainC[1];                                // 0.6 regardless of source               
+            this.AnimalState.ProteinUse.Gain = Eff_DPLS * (this.AnimalState.DPLS - DPLS_Used);
 
 
-            fGainSize = NormalWeightFunc(MeanAge, MaxPrevWt, 0.0) / StdRefWt;
+            fGainSize = this.NormalWeightFunc(this.MeanAge, this.MaxPrevWt, 0.0) / this.StdRefWt;
             GainSigs[0] = AParams.GainC[5];
             GainSigs[1] = AParams.GainC[4];
             SizeFactor1 = StdMath.SIG(fGainSize, GainSigs);
-            SizeFactor2 = StdMath.RAMP(fGainSize, AParams.GainC[6], AParams.GainC[7]);
+            SizeFactor2 = StdMath.RAMP(fGainSize, this.AParams.GainC[6], this.AParams.GainC[7]);
 
-            AnimalState.GainEContent = AParams.GainC[8]                                             // Generalization of the SCA equations      
-                               - SizeFactor1 * (AParams.GainC[9] - AParams.GainC[10] * (FeedingLevel - 1.0))
-                               + SizeFactor2 * AParams.GainC[11] * (Condition - 1.0);
-            AnimalState.GainPContent = AParams.GainC[12]
-                               + SizeFactor1 * (AParams.GainC[13] - AParams.GainC[14] * (FeedingLevel - 1.0))
-                               - SizeFactor2 * AParams.GainC[15] * (Condition - 1.0);
+            this.AnimalState.GainEContent = this.AParams.GainC[8]                                             // Generalization of the SCA equations      
+                               - SizeFactor1 * (this.AParams.GainC[9] - this.AParams.GainC[10] * (this.FeedingLevel - 1.0))
+                               + SizeFactor2 * this.AParams.GainC[11] * (this.Condition - 1.0);
+            this.AnimalState.GainPContent = this.AParams.GainC[12]
+                               + SizeFactor1 * (this.AParams.GainC[13] - this.AParams.GainC[14] * (this.FeedingLevel - 1.0))
+                               - SizeFactor2 * this.AParams.GainC[15] * (Condition - 1.0);
 
-            AnimalState.UDP_Reqd = StdMath.DIM(DPLS_Used +
-                                     (AnimalState.EnergyUse.Gain / AnimalState.GainEContent) * AnimalState.GainPContent / Eff_DPLS,
-                                    AnimalState.DPLS_MCP)
-                               / AnimalState.UDP_Dig;
+            this.AnimalState.UDP_Reqd = StdMath.DIM(DPLS_Used +
+                                     (this.AnimalState.EnergyUse.Gain / this.AnimalState.GainEContent) * this.AnimalState.GainPContent / Eff_DPLS,
+                                    this.AnimalState.DPLS_MCP)
+                               / this.AnimalState.UDP_Dig;
 
-            NetProtein = AnimalState.ProteinUse.Gain - AnimalState.GainPContent * AnimalState.EnergyUse.Gain / AnimalState.GainEContent;
+            NetProtein = this.AnimalState.ProteinUse.Gain - this.AnimalState.GainPContent * this.AnimalState.EnergyUse.Gain / this.AnimalState.GainEContent;
 
-            if ((NetProtein < 0) && (AnimalState.ProteinUse.Lact > GrazType.VerySmall))               // Deficiency of protein, i.e. protein is   
-            {                                                                   //   more limiting than ME                  
-                MilkScalar = Math.Max(0.0, 1.0 + AParams.GainC[16] * NetProtein /          // Redirect protein from milk to weight     
-                                                                AnimalState.ProteinUse.Lact);    //   change                                 
-                AnimalState.EnergyUse.Gain = AnimalState.EnergyUse.Gain + (1.0 - MilkScalar) * Milk_MJProdn;
-                AnimalState.ProteinUse.Gain = AnimalState.ProteinUse.Gain + (1.0 - MilkScalar) * AnimalState.ProteinUse.Lact;
-                NetProtein = AnimalState.ProteinUse.Gain - AnimalState.GainPContent * AnimalState.EnergyUse.Gain / AnimalState.GainEContent;
+            if ((NetProtein < 0) && (this.AnimalState.ProteinUse.Lact > GrazType.VerySmall))                // Deficiency of protein, i.e. protein is   
+            {                                                                                               //  more limiting than ME                  
+                MilkScalar = Math.Max(0.0, 1.0 + AParams.GainC[16] * NetProtein /                           // Redirect protein from milk to weight change    
+                                                                this.AnimalState.ProteinUse.Lact);                                           
+                this.AnimalState.EnergyUse.Gain = this.AnimalState.EnergyUse.Gain + (1.0 - MilkScalar) * Milk_MJProdn;
+                this.AnimalState.ProteinUse.Gain = this.AnimalState.ProteinUse.Gain + (1.0 - MilkScalar) * this.AnimalState.ProteinUse.Lact;
+                NetProtein = this.AnimalState.ProteinUse.Gain - this.AnimalState.GainPContent * this.AnimalState.EnergyUse.Gain / this.AnimalState.GainEContent;
 
                 Milk_MJProdn = MilkScalar * Milk_MJProdn;
-                AnimalState.EnergyUse.Lact = MilkScalar * AnimalState.EnergyUse.Lact;
-                AnimalState.ProteinUse.Lact = MilkScalar * AnimalState.ProteinUse.Lact;
+                this.AnimalState.EnergyUse.Lact = MilkScalar * this.AnimalState.EnergyUse.Lact;
+                this.AnimalState.ProteinUse.Lact = MilkScalar * this.AnimalState.ProteinUse.Lact;
             }
-            Milk_ProtProdn = AnimalState.ProteinUse.Lact;
+            Milk_ProtProdn = this.AnimalState.ProteinUse.Lact;
             Milk_Weight = Milk_MJProdn / (AParams.LactC[5] * AParams.LactC[6]);
 
             if (NetProtein >= 0)
-                AnimalState.ProteinUse.Gain = AnimalState.GainPContent * AnimalState.EnergyUse.Gain / AnimalState.GainEContent;
+                this.AnimalState.ProteinUse.Gain = this.AnimalState.GainPContent * this.AnimalState.EnergyUse.Gain / this.AnimalState.GainEContent;
             else
-                AnimalState.EnergyUse.Gain = AnimalState.EnergyUse.Gain + AParams.GainC[17] * AnimalState.GainEContent *
-                                                    NetProtein / AnimalState.GainPContent;
+                this.AnimalState.EnergyUse.Gain = this.AnimalState.EnergyUse.Gain + AParams.GainC[17] * this.AnimalState.GainEContent *
+                                                    NetProtein / this.AnimalState.GainPContent;
 
-            if ((AnimalState.ProteinUse.Gain < 0) && (Animal == GrazType.AnimalType.Sheep))                      // If protein is being catabolised, it can  
-            {                                                                   //   be utilized to increase wool growth    
-                PrevWoolEnergy = AnimalState.EnergyUse.Wool;                                     // Maintain the energy balance by           
-                Compute_Wool(Math.Abs(AnimalState.ProteinUse.Gain));                                 //   transferring any extra energy use for  
-                AnimalState.EnergyUse.Gain = AnimalState.EnergyUse.Gain - (AnimalState.EnergyUse.Wool - PrevWoolEnergy);  //   wool out of weight change              
+            if ((this.AnimalState.ProteinUse.Gain < 0) && (Animal == GrazType.AnimalType.Sheep))                    // If protein is being catabolised, it can  
+            {                                                                                                       // be utilized to increase wool growth    
+                PrevWoolEnergy = this.AnimalState.EnergyUse.Wool;                                                   // Maintain the energy balance by           
+                Compute_Wool(Math.Abs(this.AnimalState.ProteinUse.Gain));                                           // transferring any extra energy use for  
+                this.AnimalState.EnergyUse.Gain = this.AnimalState.EnergyUse.Gain - (this.AnimalState.EnergyUse.Wool - PrevWoolEnergy);  // wool out of weight change              
             }
 
-            EmptyBodyGain = AnimalState.EnergyUse.Gain / AnimalState.GainEContent;
+            EmptyBodyGain = this.AnimalState.EnergyUse.Gain / this.AnimalState.GainEContent;
 
             DeltaBaseWeight = AParams.GainC[18] * EmptyBodyGain;
             BaseWeight = BaseWeight + DeltaBaseWeight;
 
-            AnimalState.ProteinUse.Total = AnimalState.ProteinUse.Maint + AnimalState.ProteinUse.Gain +
-                                 AnimalState.ProteinUse.Preg + AnimalState.ProteinUse.Lact +
-                                 AnimalState.ProteinUse.Wool;
-            AnimalState.Urine.Nu[(int)GrazType.TOMElement.n] = StdMath.DIM(AnimalState.CP_Intake.Total / GrazType.N2Protein,                    // Urinary loss of N                        
-                                      (AnimalState.ProteinUse.Total - AnimalState.ProteinUse.Maint) / GrazType.N2Protein //   This is retention of N                 
-                                      + AnimalState.OrgFaeces.Nu[(int)GrazType.TOMElement.n]                             //   This is other excretion                
-                                      + AnimalState.InOrgFaeces.Nu[(int)GrazType.TOMElement.n]
-                                      + AnimalState.DermalNLoss);
+            this.AnimalState.ProteinUse.Total = this.AnimalState.ProteinUse.Maint + this.AnimalState.ProteinUse.Gain +
+                                 this.AnimalState.ProteinUse.Preg + this.AnimalState.ProteinUse.Lact +
+                                 this.AnimalState.ProteinUse.Wool;
+            this.AnimalState.Urine.Nu[(int)GrazType.TOMElement.n] = StdMath.DIM(this.AnimalState.CP_Intake.Total / GrazType.N2Protein,   // Urinary loss of N                        
+                                      (this.AnimalState.ProteinUse.Total - this.AnimalState.ProteinUse.Maint) / GrazType.N2Protein       // This is retention of N                 
+                                      + this.AnimalState.OrgFaeces.Nu[(int)GrazType.TOMElement.n]                                   // This is other excretion                
+                                      + this.AnimalState.InOrgFaeces.Nu[(int)GrazType.TOMElement.n]
+                                      + this.AnimalState.DermalNLoss);
         }
 
         /// <summary>
@@ -4103,35 +4428,35 @@ namespace Models.GrazPlan
         /// </summary>
         private void Compute_Phosphorus()
         {
-            double AvailPhos;
-            double ExcretePhos;
-            int P = (int)GrazType.TOMElement.p;
+            double availPhos;
+            double excretePhos;
+            int p = (int)GrazType.TOMElement.p;
 
-            AvailPhos = AParams.PhosC[1] * AnimalState.Phos_Intake.Solid + AParams.PhosC[2] * AnimalState.Phos_Intake.Milk;
-            AnimalState.EndoFaeces.Nu[P] = AParams.PhosC[3] * BaseWeight;
+            availPhos = this.AParams.PhosC[1] * this.AnimalState.Phos_Intake.Solid + this.AParams.PhosC[2] * this.AnimalState.Phos_Intake.Milk;
+            this.AnimalState.EndoFaeces.Nu[p] = this.AParams.PhosC[3] * BaseWeight;
 
             if (((ReproStatus == GrazType.ReproType.EarlyPreg) || (ReproStatus == GrazType.ReproType.LatePreg)) || (LactStatus == GrazType.LactType.Lactating))
-                AnimalState.EndoFaeces.Nu[P] = AParams.PhosC[11] * AnimalState.DM_Intake.Total + AParams.PhosC[12] * BaseWeight;
+                this.AnimalState.EndoFaeces.Nu[p] = this.AParams.PhosC[11] * this.AnimalState.DM_Intake.Total + this.AParams.PhosC[12] * BaseWeight;
             else
-                AnimalState.EndoFaeces.Nu[P] = AParams.PhosC[9] * AnimalState.DM_Intake.Total + AParams.PhosC[10] * BaseWeight;
+                this.AnimalState.EndoFaeces.Nu[p] = this.AParams.PhosC[9] * this.AnimalState.DM_Intake.Total + this.AParams.PhosC[10] * BaseWeight;
 
-            AnimalState.Phos_Use.Maint = Math.Min(AvailPhos, AnimalState.EndoFaeces.Nu[P]);
-            AnimalState.Phos_Use.Preg = Math.Max(AParams.PhosC[4], AParams.PhosC[5] * FoetalAge - AParams.PhosC[6]) * AnimalState.ConceptusGrowth;
-            AnimalState.Phos_Use.Lact = AParams.PhosC[7] * Milk_Weight;
-            AnimalState.Phos_Use.Wool = AParams.PhosC[8] * DeltaWoolWt;
-            AnimalState.Phos_Use.Gain = DeltaBaseWeight *
-                                 (AParams.PhosC[13] + AParams.PhosC[14] * Math.Pow(StdRefWt / BaseWeight, AParams.PhosC[15]));
-            AnimalState.Phos_Use.Gain = Math.Min(AvailPhos - (AnimalState.Phos_Use.Maint + AnimalState.Phos_Use.Preg + AnimalState.Phos_Use.Lact + AnimalState.Phos_Use.Wool),
-                                    AnimalState.Phos_Use.Gain);
-            //WITH AnimalState.Phos_Use DO
-            AnimalState.Phos_Use.Total = AnimalState.Phos_Use.Maint + AnimalState.Phos_Use.Preg + AnimalState.Phos_Use.Lact + AnimalState.Phos_Use.Wool + AnimalState.Phos_Use.Gain;
-            BasePhos = BasePhos - AnimalState.EndoFaeces.Nu[P] + AnimalState.Phos_Use.Maint + AnimalState.Phos_Use.Gain;
-            Milk_PhosProdn = AnimalState.Phos_Use.Lact;
+            this.AnimalState.Phos_Use.Maint = Math.Min(availPhos, this.AnimalState.EndoFaeces.Nu[p]);
+            this.AnimalState.Phos_Use.Preg = Math.Max(AParams.PhosC[4], this.AParams.PhosC[5] * FoetalAge - this.AParams.PhosC[6]) * this.AnimalState.ConceptusGrowth;
+            this.AnimalState.Phos_Use.Lact = this.AParams.PhosC[7] * Milk_Weight;
+            this.AnimalState.Phos_Use.Wool = this.AParams.PhosC[8] * DeltaWoolWt;
+            this.AnimalState.Phos_Use.Gain = DeltaBaseWeight *
+                                 (this.AParams.PhosC[13] + this.AParams.PhosC[14] * Math.Pow(StdRefWt / BaseWeight, this.AParams.PhosC[15]));
+            this.AnimalState.Phos_Use.Gain = Math.Min(availPhos - (this.AnimalState.Phos_Use.Maint + this.AnimalState.Phos_Use.Preg + this.AnimalState.Phos_Use.Lact + this.AnimalState.Phos_Use.Wool),
+                                    this.AnimalState.Phos_Use.Gain);
+            //// WITH AnimalState.Phos_Use DO
+            this.AnimalState.Phos_Use.Total = this.AnimalState.Phos_Use.Maint + this.AnimalState.Phos_Use.Preg + this.AnimalState.Phos_Use.Lact + this.AnimalState.Phos_Use.Wool + this.AnimalState.Phos_Use.Gain;
+            BasePhos = BasePhos - this.AnimalState.EndoFaeces.Nu[p] + this.AnimalState.Phos_Use.Maint + this.AnimalState.Phos_Use.Gain;
+            Milk_PhosProdn = this.AnimalState.Phos_Use.Lact;
 
-            ExcretePhos = AnimalState.EndoFaeces.Nu[P] + AnimalState.Phos_Intake.Total - AnimalState.Phos_Use.Total;
-            AnimalState.OrgFaeces.Nu[P] = 0.0;
-            AnimalState.InOrgFaeces.Nu[P] = ExcretePhos - AnimalState.OrgFaeces.Nu[P];
-            AnimalState.Urine.Nu[P] = 0.0;
+            excretePhos = this.AnimalState.EndoFaeces.Nu[p] + this.AnimalState.Phos_Intake.Total - this.AnimalState.Phos_Use.Total;
+            this.AnimalState.OrgFaeces.Nu[p] = 0.0;
+            this.AnimalState.InOrgFaeces.Nu[p] = excretePhos - this.AnimalState.OrgFaeces.Nu[p];
+            this.AnimalState.Urine.Nu[p] = 0.0;
         }
 
         /// <summary>
@@ -4139,27 +4464,27 @@ namespace Models.GrazPlan
         /// </summary>
         private void Compute_Sulfur()
         {
-            double ExcreteSulf;
-            int S = (int)GrazType.TOMElement.s;
+            double excreteSulf;
+            int s = (int)GrazType.TOMElement.s;
 
-            AnimalState.EndoFaeces.Nu[S] = AParams.SulfC[1] * AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n];
+            this.AnimalState.EndoFaeces.Nu[s] = this.AParams.SulfC[1] * this.AnimalState.EndoFaeces.Nu[(int)GrazType.TOMElement.n];
 
-            AnimalState.Sulf_Use.Maint = AnimalState.EndoFaeces.Nu[S];
-            AnimalState.Sulf_Use.Preg = AParams.SulfC[1] * AnimalState.ProteinUse.Preg / GrazType.N2Protein;
-            AnimalState.Sulf_Use.Lact = AParams.SulfC[2] * AnimalState.ProteinUse.Lact / GrazType.N2Protein;
-            AnimalState.Sulf_Use.Wool = AParams.SulfC[3] * AnimalState.ProteinUse.Wool / GrazType.N2Protein;
-            //WITH AnimalState.Sulf_Use DO
-            AnimalState.Sulf_Use.Gain = Math.Min(AParams.SulfC[1] * AnimalState.ProteinUse.Gain / GrazType.N2Protein,
-                                    AnimalState.Sulf_Intake.Total - (AnimalState.Sulf_Use.Maint + AnimalState.Sulf_Use.Preg + AnimalState.Sulf_Use.Lact + AnimalState.Sulf_Use.Wool));
-            //WITH AnimalState.Sulf_Use DO
-            AnimalState.Sulf_Use.Total = AnimalState.Sulf_Use.Maint + AnimalState.Sulf_Use.Preg + AnimalState.Sulf_Use.Lact + AnimalState.Sulf_Use.Wool + AnimalState.Sulf_Use.Gain;
+            this.AnimalState.Sulf_Use.Maint = this.AnimalState.EndoFaeces.Nu[s];
+            this.AnimalState.Sulf_Use.Preg = this.AParams.SulfC[1] * this.AnimalState.ProteinUse.Preg / GrazType.N2Protein;
+            this.AnimalState.Sulf_Use.Lact = this.AParams.SulfC[2] * this.AnimalState.ProteinUse.Lact / GrazType.N2Protein;
+            this.AnimalState.Sulf_Use.Wool = this.AParams.SulfC[3] * this.AnimalState.ProteinUse.Wool / GrazType.N2Protein;
+            ////WITH AnimalState.Sulf_Use DO
+            this.AnimalState.Sulf_Use.Gain = Math.Min(this.AParams.SulfC[1] * this.AnimalState.ProteinUse.Gain / GrazType.N2Protein,
+                                    this.AnimalState.Sulf_Intake.Total - (this.AnimalState.Sulf_Use.Maint + this.AnimalState.Sulf_Use.Preg + this.AnimalState.Sulf_Use.Lact + this.AnimalState.Sulf_Use.Wool));
+            ////WITH AnimalState.Sulf_Use DO
+            this.AnimalState.Sulf_Use.Total = this.AnimalState.Sulf_Use.Maint + this.AnimalState.Sulf_Use.Preg + this.AnimalState.Sulf_Use.Lact + this.AnimalState.Sulf_Use.Wool + this.AnimalState.Sulf_Use.Gain;
 
-            ExcreteSulf = AnimalState.EndoFaeces.Nu[S] + AnimalState.Sulf_Intake.Total - AnimalState.Sulf_Use.Total;
-            AnimalState.OrgFaeces.Nu[S] = Math.Min(ExcreteSulf, AParams.SulfC[4] * AnimalState.DM_Intake.Total);
-            AnimalState.InOrgFaeces.Nu[S] = 0;
-            AnimalState.Urine.Nu[S] = ExcreteSulf - AnimalState.OrgFaeces.Nu[S];
-            BaseSulf = BaseSulf + AnimalState.Sulf_Use.Gain;
-            Milk_SulfProdn = AnimalState.Sulf_Use.Lact;
+            excreteSulf = this.AnimalState.EndoFaeces.Nu[s] + this.AnimalState.Sulf_Intake.Total - this.AnimalState.Sulf_Use.Total;
+            this.AnimalState.OrgFaeces.Nu[s] = Math.Min(excreteSulf, this.AParams.SulfC[4] * this.AnimalState.DM_Intake.Total);
+            this.AnimalState.InOrgFaeces.Nu[s] = 0;
+            this.AnimalState.Urine.Nu[s] = excreteSulf - this.AnimalState.OrgFaeces.Nu[s];
+            BaseSulf = BaseSulf + this.AnimalState.Sulf_Use.Gain;
+            Milk_SulfProdn = this.AnimalState.Sulf_Use.Lact;
 
         }
 
@@ -4168,53 +4493,53 @@ namespace Models.GrazPlan
         /// </summary>
         private void Compute_AshAlk()
         {
-            double fIntakeMoles;                                                             // These are all on a per-head basis        
-            double fAccumMoles;
+            double intakeMoles;                                                             // These are all on a per-head basis        
+            double accumMoles;
 
-            fIntakeMoles = AnimalState.PaddockIntake.AshAlkalinity * AnimalState.PaddockIntake.Biomass
-                             + AnimalState.SuppIntake.AshAlkalinity * AnimalState.SuppIntake.Biomass;
-            fAccumMoles = AParams.AshAlkC[1] * (WeightChange + AnimalState.ConceptusGrowth);
+            intakeMoles = this.AnimalState.PaddockIntake.AshAlkalinity * this.AnimalState.PaddockIntake.Biomass
+                             + this.AnimalState.SuppIntake.AshAlkalinity * this.AnimalState.SuppIntake.Biomass;
+            accumMoles = AParams.AshAlkC[1] * (WeightChange + this.AnimalState.ConceptusGrowth);
             if (Animal == GrazType.AnimalType.Sheep)
-                fAccumMoles = fAccumMoles + AParams.AshAlkC[2] * GreasyFleeceGrowth;
+                accumMoles = accumMoles + this.AParams.AshAlkC[2] * GreasyFleeceGrowth;
 
-            AnimalState.OrgFaeces.AshAlk = AParams.AshAlkC[3] * AnimalState.OrgFaeces.DM;
-            AnimalState.Urine.AshAlk = fIntakeMoles - fAccumMoles - AnimalState.OrgFaeces.AshAlk;
+            this.AnimalState.OrgFaeces.AshAlk = this.AParams.AshAlkC[3] * this.AnimalState.OrgFaeces.DM;
+            this.AnimalState.Urine.AshAlk = intakeMoles - accumMoles - this.AnimalState.OrgFaeces.AshAlk;
         }
 
         /// <summary>
-        /// 
+        /// Nutrition function
         /// </summary>
         public void Nutrition()
         {
-            Efficiencies();
-            Compute_Maintenance();
-            Compute_DPLS();
+            this.Efficiencies();
+            this.Compute_Maintenance();
+            this.Compute_DPLS();
 
-            if ((ReproStatus == GrazType.ReproType.EarlyPreg) || (ReproStatus == GrazType.ReproType.LatePreg))
-                Compute_Pregnancy();
+            if ((this.ReproStatus == GrazType.ReproType.EarlyPreg) || (this.ReproStatus == GrazType.ReproType.LatePreg))
+                this.Compute_Pregnancy();
 
-            if (LactStatus == GrazType.LactType.Lactating)
-                Compute_Lactation();
-
-            if (Animal == GrazType.AnimalType.Sheep)
-                Compute_Wool(0.0);
-
-            Adjust_K_Gain();
-            Compute_Chilling();
-
-            Adjust_K_Gain();
-            Compute_Gain();
+            if (this.LactStatus == GrazType.LactType.Lactating)
+                this.Compute_Lactation();
 
             if (Animal == GrazType.AnimalType.Sheep)
-                Apply_WoolGrowth();
-            Compute_Phosphorus();                                                     // These must be done after DeltaFleeceWt   
-            Compute_Sulfur();                                                         //   is known                               
-            Compute_AshAlk();
+                this.Compute_Wool(0.0);
 
-            TotalWeight = BaseWeight + ConceptusWt();                                // TotalWeight is meant to be the weight    
-            if (Animal == GrazType.AnimalType.Sheep)                                                //   "on the scales", including conceptus   
-                TotalWeight = TotalWeight + WoolWt;                                  //   and/or fleece.                         
-            AnimalState.IntakeLimitLegume = IntakeLimit * (1.0 + AParams.GrazeC[2] * Inputs.LegumePropn);
+            this.Adjust_K_Gain();
+            this.Compute_Chilling();
+
+            this.Adjust_K_Gain();
+            this.Compute_Gain();
+
+            if (this.Animal == GrazType.AnimalType.Sheep)
+                this.Apply_WoolGrowth();
+            this.Compute_Phosphorus();                                                       // These must be done after DeltaFleeceWt   
+            this.Compute_Sulfur();                                                           // is known                               
+            this.Compute_AshAlk();
+
+            this.TotalWeight = this.BaseWeight + this.ConceptusWt();                    // TotalWeight is meant to be the weight    
+            if (this.Animal == GrazType.AnimalType.Sheep)                               // "on the scales", including conceptus   
+                this.TotalWeight = this.TotalWeight + this.WoolWt;                      // and/or fleece.                         
+            this.AnimalState.IntakeLimitLegume = this.IntakeLimit * (1.0 + this.AParams.GrazeC[2] * this.Inputs.LegumePropn);
         }
 
         /// <summary>
@@ -4223,60 +4548,61 @@ namespace Models.GrazPlan
         /// <returns></returns>
         public double RDP_IntakeFactor()
         {
-            DietRecord TempCorrDg = new DietRecord();
-            DietRecord TempUDP = new DietRecord();
-            double TempRDPI = 0.0;
-            double TempRDPR = 0.0;
-            double TempFL;
-            double OldResult, TempResult;
-            int Idx;
-            //    testResult                    : float;
-            double Result;
+            DietRecord tempCorrDg = new DietRecord();
+            DietRecord tempUDP = new DietRecord();
+            double tempRDPI = 0.0;
+            double tempRDPR = 0.0;
+            double tempFL;
+            double oldResult, tempResult;
+            int idx;
+            
+            // testResult : float;
+            double result;
 
-            if ((AnimalState.DM_Intake.Solid < GrazType.VerySmall) || (AnimalState.RDP_Intake >= AnimalState.RDP_Reqd))
-                Result = 1.0;
+            if ((this.AnimalState.DM_Intake.Solid < GrazType.VerySmall) || (this.AnimalState.RDP_Intake >= this.AnimalState.RDP_Reqd))
+                result = 1.0;
             else
             {
-                Result = AnimalState.RDP_Intake / AnimalState.RDP_Reqd;
-                if ((AParams.IntakeC[16] > 0.0) && (AParams.IntakeC[16] < 1.0))
-                    Result = 1.0 + AParams.IntakeC[16] * (Result - 1.0);
-                Idx = 0;
+                result = this.AnimalState.RDP_Intake / this.AnimalState.RDP_Reqd;
+                if ((AParams.IntakeC[16] > 0.0) && (this.AParams.IntakeC[16] < 1.0))
+                    result = 1.0 + this.AParams.IntakeC[16] * (result - 1.0);
+                idx = 0;
                 do
                 {
-                    OldResult = Result;
-                    TempFL = (OldResult * AnimalState.ME_Intake.Total) / AnimalState.EnergyUse.Maint - 1.0;
-                    ComputeRDP(TheEnv.Latitude, TheEnv.TheDay, OldResult, TempFL,
-                                ref TempCorrDg, ref TempRDPI, ref TempRDPR, ref TempUDP);
-                    TempResult = StdMath.XDiv(TempRDPI, TempRDPR);
-                    if ((AParams.IntakeC[16] > 0.0) && (AParams.IntakeC[16] < 1.0))
-                        TempResult = 1.0 + AParams.IntakeC[16] * (TempResult - 1.0);
-                    Result = Math.Max(0.0, Math.Min(1.0 - 0.5 * (1.0 - OldResult), TempResult));
-                    Idx++;
+                    oldResult = result;
+                    tempFL = (oldResult * this.AnimalState.ME_Intake.Total) / this.AnimalState.EnergyUse.Maint - 1.0;
+                    this.ComputeRDP(this.TheEnv.Latitude, this.TheEnv.TheDay, oldResult, tempFL,
+                                ref tempCorrDg, ref tempRDPI, ref tempRDPR, ref tempUDP);
+                    tempResult = StdMath.XDiv(tempRDPI, tempRDPR);
+                    if ((this.AParams.IntakeC[16] > 0.0) && (this.AParams.IntakeC[16] < 1.0))
+                        tempResult = 1.0 + this.AParams.IntakeC[16] * (tempResult - 1.0);
+                    result = Math.Max(0.0, Math.Min(1.0 - 0.5 * (1.0 - oldResult), tempResult));
+                    idx++;
                 }
-                while ((Idx < 5) && (Math.Abs(Result - OldResult) >= 0.001));  //UNTIL (Idx >= 5) or (Abs(Result-OldResult) < 0.001);
+                while ((idx < 5) && (Math.Abs(result - oldResult) >= 0.001));  //UNTIL (Idx >= 5) or (Abs(Result-OldResult) < 0.001);
             }
-            return Result;
+            return result;
         }
 
         /* FUNCTION  Phos_IntakeFactor : Float; */
 
         /// <summary>
-        /// 
+        /// Complete growth function
         /// </summary>
-        /// <param name="fRDPFactor"></param>
-        public void completeGrowth(double fRDPFactor)
+        /// <param name="RDPFactor"></param>
+        public void completeGrowth(double RDPFactor)
         {
-            double fLifeWG, fDayWG;
+            double lifeWG, dayWG;
 
-            AnimalState.RDP_IntakeEffect = fRDPFactor;
+            this.AnimalState.RDP_IntakeEffect = RDPFactor;
 
-            if ((NoMales == 0) || (NoFemales == 0))
-                BWGain_Solid = 0.0;
+            if ((this.NoMales == 0) || (this.NoFemales == 0))
+                this.BWGain_Solid = 0.0;
             else
             {
-                fLifeWG = StdMath.DIM(BaseWeight - WeightChange, BirthWt);
-                fDayWG = Math.Max(WeightChange, 0.0);
-                BWGain_Solid = StdMath.XDiv(fLifeWG * BWGain_Solid + fDayWG * StdMath.XDiv(AnimalState.ME_Intake.Solid, AnimalState.ME_Intake.Total), fLifeWG + fDayWG);
+                lifeWG = StdMath.DIM(BaseWeight - WeightChange, this.BirthWt);
+                dayWG = Math.Max(WeightChange, 0.0);
+                BWGain_Solid = StdMath.XDiv(lifeWG * BWGain_Solid + dayWG * StdMath.XDiv(this.AnimalState.ME_Intake.Solid, this.AnimalState.ME_Intake.Total), lifeWG + dayWG);
             }
         }
 
@@ -4284,95 +4610,109 @@ namespace Models.GrazPlan
         /// Records state information prior to the grazing and nutrition calculations     
         /// so that it can be restored if there is an RDP insufficiency.                
         /// </summary>
-        /// <param name="Info"></param>
-        public void storeStateInfo(ref AnimalStateInfo Info)
+        /// <param name="animalInfo"></param>
+        public void storeStateInfo(ref AnimalStateInfo animalInfo)
         {
-            Info.fBaseWeight = BasalWeight;
-            Info.fWoolWt = WoolWt;
-            Info.fWoolMicron = WoolMicron;
-            Info.fCoatDepth = FCoatDepth;
-            Info.fFoetalWt = FoetalWt;
-            Info.fLactAdjust = LactAdjust;
-            Info.fLactRatio = LactRatio;
-            Info.fBasePhos = BasePhos;
-            Info.fBaseSulf = BaseSulf;
+            animalInfo.BaseWeight = BasalWeight;
+            animalInfo.WoolWt = WoolWt;
+            animalInfo.WoolMicron = WoolMicron;
+            animalInfo.CoatDepth = FCoatDepth;
+            animalInfo.FoetalWt = FoetalWt;
+            animalInfo.LactAdjust = LactAdjust;
+            animalInfo.LactRatio = LactRatio;
+            animalInfo.BasePhos = BasePhos;
+            animalInfo.BaseSulf = BaseSulf;
         }
 
         /// <summary>
         /// Restores state information about animal groups if there is an RDP insufficiency.                                                              
         /// </summary>
-        /// <param name="Info"></param>
-        public void revertStateInfo(AnimalStateInfo Info)
+        /// <param name="animalInfo"></param>
+        public void revertStateInfo(AnimalStateInfo animalInfo)
         {
-            BasalWeight = Info.fBaseWeight;
-            WoolWt = Info.fWoolWt;
-            WoolMicron = Info.fWoolMicron;
-            FCoatDepth = Info.fCoatDepth;
-            FoetalWt = Info.fFoetalWt;
-            LactAdjust = Info.fLactAdjust;
-            LactRatio = Info.fLactRatio;
-            BasePhos = Info.fBasePhos;
-            BaseSulf = Info.fBaseSulf;
+            BasalWeight = animalInfo.BaseWeight;
+            WoolWt = animalInfo.WoolWt;
+            WoolMicron = animalInfo.WoolMicron;
+            FCoatDepth = animalInfo.CoatDepth;
+            FoetalWt = animalInfo.FoetalWt;
+            LactAdjust = animalInfo.LactAdjust;
+            LactRatio = animalInfo.LactRatio;
+            BasePhos = animalInfo.BasePhos;
+            BaseSulf = animalInfo.BaseSulf;
         }
+
         /*function  YoungSuppIntakePropn  : Float;
         function  MotherSuppIntakePropn : Float; */
         /// <summary>
         /// Test to see whether urea intake in the supplement has exceeded the limit of 
         /// 3 g per 10 kg liveweight.                                                   
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if exceeded</returns>
         public bool ExceededUreaLimit()
         {
             int i;
 
-            bool Result = false;
+            bool result = false;
             if (TheRation.TotalAmount > 0.0)
             {
                 for (i = 0; i <= TheRation.Count - 1; i++)
                 {
                     // If there's that much CP, it must be urea...
                     if ((TheRation[i].CrudeProt > 1.5) && (TheRation[i].Amount > 3.0e-4 * LiveWeight))
-                        Result = true;
+                        result = true;
                 }
             }
-            return Result;
+            return result;
         }
 
         // Outputs to other models .......................................
         /// <summary>
-        /// 
+        /// Add grazing outputs
         /// </summary>
-        /// <param name="GO"></param>
-        public void AddGrazingOutputs(ref GrazType.GrazingOutputs GO)
+        /// <param name="grazingOutputs"></param>
+        public void AddGrazingOutputs(ref GrazType.GrazingOutputs grazingOutputs)
         {
             int Clss, Sp, Rp;
 
             for (Clss = 1; Clss <= GrazType.DigClassNo; Clss++)
-                GO.Herbage[Clss] = GO.Herbage[Clss] + NoAnimals * AnimalState.IntakePerHead.Herbage[Clss];
+                grazingOutputs.Herbage[Clss] = grazingOutputs.Herbage[Clss] + NoAnimals * this.AnimalState.IntakePerHead.Herbage[Clss];
             for (Sp = 1; Sp <= GrazType.MaxPlantSpp; Sp++)
             {
                 for (Rp = GrazType.UNRIPE; Rp <= GrazType.RIPE; Rp++)
-                    GO.Seed[Sp, Rp] = GO.Seed[Sp, Rp] + NoAnimals * AnimalState.IntakePerHead.Seed[Sp, Rp];
+                    grazingOutputs.Seed[Sp, Rp] = grazingOutputs.Seed[Sp, Rp] + NoAnimals * this.AnimalState.IntakePerHead.Seed[Sp, Rp];
             }
         }
+
         /// <summary>
         /// Organic faeces
         /// </summary>
-        public GrazType.DM_Pool OrgFaeces { get { return GetOrgFaeces(); } }
+        public GrazType.DM_Pool OrgFaeces
+        {
+            get { return this.GetOrgFaeces(); }
+        }
+        
         /// <summary>
-        /// Inorganic faeces
+        /// Gets the inorganic faeces
         /// </summary>
-        public GrazType.DM_Pool InOrgFaeces { get { return GetInOrgFaeces(); } }
+        public GrazType.DM_Pool InOrgFaeces
+        {
+            get { return this.GetInOrgFaeces(); }
+        }
+        
         /// <summary>
-        /// Urine
+        /// Gets the urine value
         /// </summary>
-        public GrazType.DM_Pool Urine { get { return GetUrine(); } }
+        public GrazType.DM_Pool Urine
+        {
+            get { return this.GetUrine(); }
+        }
+        
         /// <summary>
-        /// Excretion information
+        /// Gets the excretion information
         /// </summary>
         public ExcretionInfo Excretion
         {
-            get { return getExcretion(); }
+            get { return this.getExcretion(); }
         }
 
         // Management events .............................................
@@ -4380,53 +4720,56 @@ namespace Models.GrazPlan
         /// <summary>
         ///  Commence joining                                                          
         /// </summary>
-        /// <param name="MaleParams"></param>
-        /// <param name="MatingPeriod"></param>
-        public void Join(AnimalParamSet MaleParams, int MatingPeriod)
+        /// <param name="maleParams"></param>
+        /// <param name="matingPeriod"></param>
+        public void Join(AnimalParamSet maleParams, int matingPeriod)
         {
-            if ((ReproStatus == GrazType.ReproType.Empty) && (MeanAge > AParams.Puberty[0]))
+            if ((this.ReproStatus == GrazType.ReproType.Empty) && (this.MeanAge > this.AParams.Puberty[0]))
             {
-                if (MaleParams.Animal != AParams.Animal)
-                    throw new Exception("Attempt to mate female " + GrazType.AnimalText[(int)AParams.Animal].ToLower() + " with male " + GrazType.AnimalText[(int)MaleParams.Animal].ToLower());
+                if (maleParams.Animal != this.AParams.Animal)
+                    throw new Exception("Attempt to mate female " + GrazType.AnimalText[(int)this.AParams.Animal].ToLower() + " with male " + GrazType.AnimalText[(int)maleParams.Animal].ToLower());
 
-                FMatedTo = new AnimalParamSet(null, MaleParams);
-                DaysToMate = MatingPeriod;
-                if (DaysToMate > 0)
-                    MateCycle = AParams.OvulationPeriod / 2;
+                this.FMatedTo = new AnimalParamSet(null, maleParams);
+                this.DaysToMate = matingPeriod;
+                if (this.DaysToMate > 0)
+                    this.MateCycle = this.AParams.OvulationPeriod / 2;
                 else
-                    MateCycle = -1;
+                    this.MateCycle = -1;
             }
         }
         /*procedure Mate(     MaleParams    : AnimalParamSet;
                             fPregRate     : Single;
                             var NewGroups : AnimalList ); */
+        
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="AL"></param>
-        private void CheckAnimList(ref AnimalList AL)
+        /// <param name="animalList"></param>
+        private void CheckAnimList(ref AnimalList animalList)
         {
-            if (AL == null)
-                AL = new AnimalList();
+            if (animalList == null)
+                animalList = new AnimalList();
         }
+        
         /// <summary>
-        /// 
+        /// Export the animal group
         /// </summary>
-        /// <param name="WeanedGroup"></param>
-        /// <param name="WeanedOff"></param>
-        private void ExportWeaners(ref AnimalGroup WeanedGroup, ref AnimalList WeanedOff)
+        /// <param name="weanedGroup"></param>
+        /// <param name="weanedOff"></param>
+        private void ExportWeaners(ref AnimalGroup weanedGroup, ref AnimalList weanedOff)
         {
-            if (WeanedGroup != null)
+            if (weanedGroup != null)
             {
-                WeanedGroup.LactStatus = GrazType.LactType.Dry;
-                WeanedGroup.FNoOffspring = 0;
-                WeanedGroup.Mothers = null;
-                CheckAnimList(ref WeanedOff);
-                WeanedOff.Add(WeanedGroup);
+                weanedGroup.LactStatus = GrazType.LactType.Dry;
+                weanedGroup.FNoOffspring = 0;
+                weanedGroup.Mothers = null;
+                this.CheckAnimList(ref weanedOff);
+                weanedOff.Add(weanedGroup);
             }
         }
+        
         /// <summary>
-        /// 
+        /// Export the group with young
         /// </summary>
         /// <param name="MotherGroup"></param>
         /// <param name="YoungGroup"></param>
@@ -4469,18 +4812,18 @@ namespace Models.GrazPlan
         {
             // becoming : single twin triplet
 
-            //[0..3,1..3] first element [0] in 2nd dimension is a dummy
-            double[,] PropnRemainingLambsAs = new double[4, 4]  {  {0, 0,    0,     0      },               // starting out: empty
-                                                                   {0, 1,    0,     0      },               //               single
-                                                                   {0, 1.0/2.0,  1.0/2.0,   0      },       //               twin
-                                                                   {0, 1.0/4.0,  1.0/2.0,   1.0/4.0    }};  //               triplet
+            // [0..3,1..3] first element [0] in 2nd dimension is a dummy
+            double[,] PropnRemainingLambsAs = new double[4, 4]  {  {0, 0,    0,     0      }, // starting out: empty
+                                                                   {0, 1,    0,     0      },               // single
+                                                                   {0, 1.0/2.0,  1.0/2.0,   0      },       // twin
+                                                                   {0, 1.0/4.0,  1.0/2.0,   1.0/4.0    }};  // triplet
 
-            bool bDoFemales;
-            int iKeptLambs;
-            int[] iLambsByParity = new int[4];
-            int[] iEwesByParity = new int[4];
-            AnimalGroup StillMothers;
-            AnimalGroup StillYoung;
+            bool doFemales;
+            int keptLambs;
+            int[] lambsByParity = new int[4];
+            int[] ewesByParity = new int[4];
+            AnimalGroup stillMothers;
+            AnimalGroup stillYoung;
             int NY;
 
             if ((this.NoOffspring > 3) || (this.NoOffspring < 0))
@@ -4490,31 +4833,31 @@ namespace Models.GrazPlan
             {
                 if ((YoungGroup.NoMales > 0) && (YoungGroup.NoFemales > 0))
                     throw new Exception("Weaning-by-sex logic: only one sex at a time");
-                bDoFemales = (YoungGroup.ReproStatus == GrazType.ReproType.Empty);
+                doFemales = (YoungGroup.ReproStatus == GrazType.ReproType.Empty);
 
                 // Compute numbers of mothers & offspring that remain feeding/suckling
                 // with each parity
-                iKeptLambs = YoungGroup.NoAnimals;
+                keptLambs = YoungGroup.NoAnimals;
                 for (NY = 3; NY >= 2; NY--)
                 {
-                    iLambsByParity[NY] = Convert.ToInt32(Math.Truncate((PropnRemainingLambsAs[this.NoOffspring, NY] * iKeptLambs) + 0.5));
-                    iEwesByParity[NY] = (iLambsByParity[NY] / NY);
-                    iLambsByParity[NY] = NY * iEwesByParity[NY];
+                    lambsByParity[NY] = Convert.ToInt32(Math.Truncate((PropnRemainingLambsAs[this.NoOffspring, NY] * keptLambs) + 0.5), CultureInfo.InvariantCulture);
+                    ewesByParity[NY] = (lambsByParity[NY] / NY);
+                    lambsByParity[NY] = NY * ewesByParity[NY];
                 }
-                iLambsByParity[1] = iKeptLambs - iLambsByParity[2] - iLambsByParity[3];
-                iEwesByParity[1] = Math.Min(iLambsByParity[1], this.NoFemales - iEwesByParity[2] - iEwesByParity[3]); //allow for previous rounding
+                lambsByParity[1] = keptLambs - lambsByParity[2] - lambsByParity[3];
+                ewesByParity[1] = Math.Min(lambsByParity[1], this.NoFemales - ewesByParity[2] - ewesByParity[3]); // allow for previous rounding
 
                 // Split off the mothers & offspring that remain feeding/suckling
                 for (NY = 3; NY >= 1; NY--)
                 {
-                    if (iEwesByParity[NY] > 0)
+                    if (ewesByParity[NY] > 0)
                     {
-                        StillMothers = this.Split(iEwesByParity[NY], false, NODIFF, NODIFF);
-                        if (bDoFemales)
-                            StillYoung = YoungGroup.SplitSex(0, iLambsByParity[NY], false, NODIFF);
+                        stillMothers = this.Split(ewesByParity[NY], false, this.NODIFF, this.NODIFF);
+                        if (doFemales)
+                            stillYoung = YoungGroup.SplitSex(0, lambsByParity[NY], false, this.NODIFF);
                         else
-                            StillYoung = YoungGroup.SplitSex(iLambsByParity[NY], 0, false, NODIFF);
-                        ExportWithYoung(ref StillMothers, ref StillYoung, NY, ref NewGroups);
+                            stillYoung = YoungGroup.SplitSex(lambsByParity[NY], 0, false, this.NODIFF);
+                        this.ExportWithYoung(ref stillMothers, ref stillYoung, NY, ref NewGroups);
                     }
                 }
                 if (YoungGroup.NoAnimals != 0)
@@ -4527,77 +4870,77 @@ namespace Models.GrazPlan
         /// <summary>
         /// Wean male or female lambs/calves
         /// </summary>
-        /// <param name="WeanFemales"></param>
-        /// <param name="WeanMales"></param>
-        /// <param name="NewGroups"></param>
-        /// <param name="WeanedOff"></param>
-        public void Wean(bool WeanFemales, bool WeanMales, ref AnimalList NewGroups, ref AnimalList WeanedOff)
+        /// <param name="weanFemales"></param>
+        /// <param name="weanMales"></param>
+        /// <param name="newGroups"></param>
+        /// <param name="weanedOff"></param>
+        public void Wean(bool weanFemales, bool weanMales, ref AnimalList newGroups, ref AnimalList weanedOff)
         {
-            int TotalYoung;
-            int MalePropn;
-            double FemaleDiff;
-            DifferenceRecord Diffs;
-            AnimalGroup MaleYoung;
-            AnimalGroup FemaleYoung;
+            int totalYoung;
+            int malePropn;
+            double femaleDiff;
+            DifferenceRecord diffs;
+            AnimalGroup maleYoung;
+            AnimalGroup femaleYoung;
 
-
-            if (NoAnimals == 0)
+            if (this.NoAnimals == 0)
             {
-                Young = null;
-                Lactation = 0;
+                this.Young = null;
+                this.Lactation = 0;
             }
 
-            else if ((Young != null) && ((WeanMales && (Young.NoMales > 0))
-                                       || (WeanFemales && (Young.NoFemales > 0))))
+            else if ((Young != null) && ((weanMales && (this.Young.NoMales > 0))
+                                       || (weanFemales && (this.Young.NoFemales > 0))))
             {
-                TotalYoung = Young.NoAnimals;
-                MalePropn = Young.NoMales / TotalYoung;
+                totalYoung = this.Young.NoAnimals;
+                malePropn = this.Young.NoMales / totalYoung;
 
-                if (Young.NoMales == 0)                                              // Divide the male from the female lambs or 
-                {                                                                   //    calves                              
-                    FemaleYoung = Young;
-                    MaleYoung = null;
+                if (this.Young.NoMales == 0)
+                {                                                                   
+                    // Divide the male from the female lambs or calves                              
+                    femaleYoung = this.Young;
+                    maleYoung = null;
                 }
-                else if (Young.NoFemales == 0)
+                else if (this.Young.NoFemales == 0)
                 {
-                    MaleYoung = Young;
-                    FemaleYoung = null;
+                    maleYoung = this.Young;
+                    femaleYoung = null;
                 }
                 else
                 {
                     // TODO: this code had a nasty With block. It may need testing
-                    FemaleDiff = StdMath.XDiv(Young.FemaleWeight - Young.MaleWeight, Young.LiveWeight);
-                    Diffs = new DifferenceRecord() { StdRefWt = NODIFF.StdRefWt, BaseWeight = NODIFF.BaseWeight, FleeceWt = NODIFF.FleeceWt };
-                    Diffs.BaseWeight = FemaleDiff * Young.BaseWeight;
-                    Diffs.FleeceWt = FemaleDiff * Young.WoolWt;
-                    Diffs.StdRefWt = Young.StdRefWt * StdMath.XDiv(Young.NoAnimals, AParams.SRWScalars[(int)Young.ReproStatus] * Young.MaleNo + Young.FemaleNo)
-                                                 * (1.0 - AParams.SRWScalars[(int)Young.ReproStatus]);
+                    femaleDiff = StdMath.XDiv(this.Young.FemaleWeight - this.Young.MaleWeight, this.Young.LiveWeight);
+                    diffs = new DifferenceRecord() { StdRefWt = this.NODIFF.StdRefWt, BaseWeight = this.NODIFF.BaseWeight, FleeceWt = this.NODIFF.FleeceWt };
+                    diffs.BaseWeight = femaleDiff * this.Young.BaseWeight;
+                    diffs.FleeceWt = femaleDiff * this.Young.WoolWt;
+                    diffs.StdRefWt = this.Young.StdRefWt * StdMath.XDiv(this.Young.NoAnimals, this.AParams.SRWScalars[(int)this.Young.ReproStatus] * this.Young.MaleNo + this.Young.FemaleNo)
+                                                 * (1.0 - this.AParams.SRWScalars[(int)this.Young.ReproStatus]);
 
-                    MaleYoung = Young;
-                    FemaleYoung = MaleYoung.SplitSex(0, Young.NoFemales, false, Diffs);
+                    maleYoung = this.Young;
+                    femaleYoung = maleYoung.SplitSex(0, this.Young.NoFemales, false, diffs);
                 }
-                if (FemaleYoung != null)
-                    FemaleYoung.ReproStatus = GrazType.ReproType.Empty;
+                if (femaleYoung != null)
+                    femaleYoung.ReproStatus = GrazType.ReproType.Empty;
 
-                Young = null;                                                    // Detach weaners from their mothers        
-                FPrevOffspring = FNoOffspring;
-                FNoOffspring = FPrevOffspring;
+                this.Young = null;                                                                      // Detach weaners from their mothers        
+                this.FPrevOffspring = this.FNoOffspring;
+                this.FNoOffspring = this.FPrevOffspring;
 
-                if (WeanMales)                                                       // Export the weaned lambs or calves        
-                    ExportWeaners(ref MaleYoung, ref WeanedOff);
-                if (WeanFemales)
-                    ExportWeaners(ref FemaleYoung, ref WeanedOff);
+                if (weanMales)                                                                          // Export the weaned lambs or calves        
+                    this.ExportWeaners(ref maleYoung, ref weanedOff);
+                if (weanFemales)
+                    this.ExportWeaners(ref femaleYoung, ref weanedOff);
 
-                if (!WeanMales)                                                   // Export ewes or cows which still have     
-                    SplitMothers(ref MaleYoung, TotalYoung, MalePropn, ref NewGroups);               //   lambs or calves                        
-                if (!WeanFemales)
-                    SplitMothers(ref FemaleYoung, TotalYoung, 1.0 - MalePropn, ref NewGroups);
+                if (!weanMales)                                                                         // Export ewes or cows which still have     
+                    this.SplitMothers(ref maleYoung, totalYoung, malePropn, ref newGroups);             // lambs or calves                        
+                if (!weanFemales)
+                    this.SplitMothers(ref femaleYoung, totalYoung, 1.0 - malePropn, ref newGroups);
 
-                if (AParams.Animal == GrazType.AnimalType.Sheep)                                        // Sheep don't continue lactation           
-                    SetLactation(0);
+                if (this.AParams.Animal == GrazType.AnimalType.Sheep)                                   // Sheep don't continue lactation           
+                    this.SetLactation(0);
 
-                FNoOffspring = 0;
-            } //_ IF (Young <> NIL) etc _
+                this.FNoOffspring = 0;
+            } //// _ IF (Young <> NIL) etc _
         }
 
         /// <summary>
@@ -4606,13 +4949,13 @@ namespace Models.GrazPlan
         /// <param name="CFW_Head"></param>
         public void Shear(ref double CFW_Head)
         {
-            double GreasyFleece;
+            double greasyFleece;
 
-            GreasyFleece = FleeceCutWeight;
-            WoolWt = WoolWt - GreasyFleece;
-            TotalWeight = TotalWeight - GreasyFleece;
-            Calc_CoatDepth();
-            CFW_Head = AParams.WoolC[3] * GreasyFleece;
+            greasyFleece = this.FleeceCutWeight;
+            this.WoolWt = this.WoolWt - greasyFleece;
+            this.TotalWeight = this.TotalWeight - greasyFleece;
+            this.Calc_CoatDepth();
+            CFW_Head = this.AParams.WoolC[3] * greasyFleece;
         }
 
         /// <summary>
@@ -4620,9 +4963,10 @@ namespace Models.GrazPlan
         /// </summary>
         public void DryOff()
         {
-            if ((Young == null) && (LactStatus == GrazType.LactType.Lactating))
+            if ((this.Young == null) && (this.LactStatus == GrazType.LactType.Lactating))
                 SetLactation(0);
         }
+        
         /// <summary>
         /// Castrate the animals
         /// </summary>
@@ -4635,17 +4979,18 @@ namespace Models.GrazPlan
                 Calc_Weights();
             }
         }
+        
         /// <summary>
         /// Implant hormones
         /// </summary>
-        /// <param name="bInsert"></param>
-        public void ImplantHormone(bool bInsert)
+        /// <param name="doInsert"></param>
+        public void ImplantHormone(bool doInsert)
         {
             double fOldEffect;
 
             fOldEffect = ImplantEffect;
-            if (bInsert)
-                ImplantEffect = AParams.GrowthC[4];
+            if (doInsert)
+                ImplantEffect = this.AParams.GrowthC[4];
             else
                 ImplantEffect = 1.0;
             if (ImplantEffect != fOldEffect)
@@ -4654,41 +4999,76 @@ namespace Models.GrazPlan
 
         // Information properties ........................................
         /// <summary>
-        /// Get the animal
+        /// Gets the animal
         /// </summary>
-        public GrazType.AnimalType Animal { get { return GetAnimal(); } }
+        public GrazType.AnimalType Animal
+        {
+            get { return this.GetAnimal(); }
+        }
+        
         /// <summary>
-        /// The breed name
+        /// Gets the breed name
         /// </summary>
-        public string sBreed { get { return GetBreed(); } }
+        public string Breed
+        {
+            get { return this.GetBreed(); }
+        }
+        
         /// <summary>
-        /// Standard reference weight
+        /// Gets the standard reference weight
         /// </summary>
-        public double StdReferenceWt { get { return StdRefWt; } }
+        public double StdReferenceWt
+        {
+            get { return this.StdRefWt; }
+        }
+        
         /// <summary>
-        /// Age class of the animals
+        /// Gets the age class of the animals
         /// </summary>
-        public GrazType.AgeType AgeClass { get { return GetAgeClass(); } }
+        public GrazType.AgeType AgeClass
+        {
+            get { return this.GetAgeClass(); }
+        }
+        
         /// <summary>
-        /// Reproductive state
+        /// Gets the reproductive state
         /// </summary>
-        public GrazType.ReproType ReproState { get { return ReproStatus; } }
+        public GrazType.ReproType ReproState
+        {
+            get { return this.ReproStatus; }
+        }
+        
         /// <summary>
-        /// The mother's group
+        /// Gets the mother's group
         /// </summary>
-        public AnimalGroup MotherGroup { get { return Mothers; } }
+        public AnimalGroup MotherGroup
+        {
+            get { return this.Mothers; }
+        }
+        
         /// <summary>
-        /// Relative size of the animal
+        /// Gets the relative size of the animal
         /// </summary>
-        public double RelativeSize { get { return Size; } }
+        public double RelativeSize
+        {
+            get { return this.Size; }
+        }
+        
         /// <summary>
         /// Body condition
         /// </summary>
-        public double BodyCondition { get { return Condition; } }
+        public double BodyCondition
+        {
+            get { return this.Condition; }
+        }
+        
         /// <summary>
-        /// Weight change
+        /// Gets the weight change
         /// </summary>
-        public double WeightChange { get { return DeltaBaseWeight; } }
+        public double WeightChange
+        {
+            get { return this.DeltaBaseWeight; }
+        }
 
         /// <summary>
         /// Owing to the requirements of the calculation order, the stored value of   
@@ -4696,318 +5076,406 @@ namespace Models.GrazPlan
         /// compute tomorrow's value of Condition before we can compute the rate of   
         /// change in condition score                                                 
         /// </summary>
-        /// <param name="System"></param>
-        /// <returns></returns>
-        public double ConditionScoreChange(AnimalParamSet.Cond_System System = AnimalParamSet.Cond_System.csSYSTEM1_5)
+        /// <param name="condSystem"></param>
+        /// <returns>Condition score change</returns>
+        public double ConditionScoreChange(AnimalParamSet.Cond_System condSystem = AnimalParamSet.Cond_System.csSYSTEM1_5)
         {
-            double fNewCondition;
+            double newCondition;
 
-            fNewCondition = BaseWeight / NormalWeightFunc(MeanAge + 1, Math.Max(BaseWeight, MaxPrevWt), AParams.GrowthC[3]);
-            return AnimalParamSet.Condition2CondScore(fNewCondition, System) - AnimalParamSet.Condition2CondScore(Condition, System);
+            newCondition = this.BaseWeight / this.NormalWeightFunc(this.MeanAge + 1, Math.Max(this.BaseWeight, this.MaxPrevWt), this.AParams.GrowthC[3]);
+            return AnimalParamSet.Condition2CondScore(newCondition, condSystem) - AnimalParamSet.Condition2CondScore(this.Condition, condSystem);
         }
 
         /// <summary>
-        /// Clean fleece weight
+        /// Gets the clean fleece weight
         /// </summary>
-        public double CleanFleeceWeight { get { return GetCFW(); } }
+        public double CleanFleeceWeight
+        {
+            get { return this.GetCFW(); }
+        }
+        
         /// <summary>
-        /// Clean fleece growth
+        /// Gets the clean fleece growth
         /// </summary>
-        public double CleanFleeceGrowth { get { return GetDeltaCFW(); } }
+        public double CleanFleeceGrowth
+        {
+            get { return this.GetDeltaCFW(); }
+        }
+        
         /// <summary>
-        /// Greasy fleece growth
+        /// Gets the greasy fleece growth
         /// </summary>
-        public double GreasyFleeceGrowth { get { return DeltaWoolWt; } }
+        public double GreasyFleeceGrowth
+        {
+            get { return this.DeltaWoolWt; }
+        }
+        
         /// <summary>
-        /// The days fibre diameter
+        /// Gets the days fibre diameter
         /// </summary>
-        public double DayFibreDiam { get { return DeltaWoolMicron; } }
+        public double DayFibreDiam
+        {
+            get { return this.DeltaWoolMicron; }
+        }
+        
         /// <summary>
-        /// Milk yield
+        /// Gets the milk yield
         /// </summary>
-        public double MilkYield { get { return Milk_Weight; } }
+        public double MilkYield
+        {
+            get { return this.Milk_Weight; }
+        }
+        
         /// <summary>
-        /// Milk volume
+        /// Gets the milk volume
         /// </summary>
-        public double MilkVolume { get { return GetMilkVolume(); } }
+        public double MilkVolume
+        {
+            get { return this.GetMilkVolume(); }
+        }
+        
         /// <summary>
-        /// Milk yield
+        /// Gets the milk yield
         /// </summary>
-        public double MaxMilkYield { get { return GetMaxMilkYield(); } }
+        public double MaxMilkYield
+        {
+            get { return this.GetMaxMilkYield(); }
+        }
+        
         /// <summary>
-        /// Milk energy
+        /// Gets the milk energy
         /// </summary>
-        public double MilkEnergy { get { return Milk_MJProdn; } }
+        public double MilkEnergy
+        {
+            get { return this.Milk_MJProdn; }
+        }
+        
         /// <summary>
-        /// Milk protein
+        /// Gets the milk protein
         /// </summary>
-        public double MilkProtein { get { return Milk_ProtProdn; } }
+        public double MilkProtein
+        {
+            get { return this.Milk_ProtProdn; }
+        }
+        
         /// <summary>
-        /// Foetal weight
+        /// Gets the foetal weight
         /// </summary>
-        public double FoetalWeight { get { return FoetalWt; } }
+        public double FoetalWeight
+        {
+            get { return this.FoetalWt; }
+        }
+        
         /// <summary>
-        /// Conceptus weight
+        /// Gets the conceptus weight
         /// </summary>
-        public double ConceptusWeight { get { return ConceptusWt(); } }
+        public double ConceptusWeight
+        {
+            get { return this.ConceptusWt(); }
+        }
+        
         /// <summary>
-        /// Male weight
+        /// Gets the male weight
         /// </summary>
-        public double MaleWeight { get { return GetMaleWeight(); } }
+        public double MaleWeight
+        {
+            get { return this.GetMaleWeight(); }
+        }
+        
         /// <summary>
-        /// Female weight
+        /// Gets the female weight
         /// </summary>
-        public double FemaleWeight { get { return GetFemaleWeight(); } }
+        public double FemaleWeight
+        {
+            get { return this.GetFemaleWeight(); }
+        }
+        
         /// <summary>
-        /// DSE
+        /// Gets the DSE
         /// </summary>
-        public double DrySheepEquivs { get { return GetDSEs(); } }
+        public double DrySheepEquivs
+        {
+            get { return this.GetDSEs(); }
+        }
+        
         /// <summary>
-        /// Potential intake
+        /// Gets or sets the potential intake
         /// </summary>
-        public double PotIntake { get { return IntakeLimit; } set { IntakeLimit = value; } }
+        public double PotIntake
+        {
+            get { return this.IntakeLimit; }
+            set { this.IntakeLimit = value; }
+        }
+        
         /// <summary>
-        /// Fresh weight supplement intake
+        /// Gets the fresh weight supplement intake
         /// </summary>
-        public double SupptFW_Intake { get { return Supp_FWI; } }
+        public double SupptFW_Intake
+        {
+            get { return this.Supp_FWI; }
+        }
+        
         /// <summary>
-        /// Intake of supplement
+        /// Gets the intake of supplement
         /// </summary>
-        public FoodSupplement IntakeSuppt { get { return FIntakeSupp; } }
+        public FoodSupplement IntakeSuppt
+        {
+            get { return this.FIntakeSupp; }
+        }
+        
         /// <summary>
-        /// Methane energy
+        /// Gets the methane energy
         /// </summary>
-        public double MethaneEnergy { get { return GetMethaneEnergy(); } }
+        public double MethaneEnergy
+        {
+            get { return this.GetMethaneEnergy(); }
+        }
+        
         /// <summary>
-        /// Methane weight
+        /// Gets the methane weight
         /// </summary>
-        public double MethaneWeight { get { return GetMethaneWeight(); } }
+        public double MethaneWeight
+        {
+            get { return this.GetMethaneWeight(); }
+        }
+        
         /// <summary>
-        /// Methane volume
+        /// Gets the methane volume
         /// </summary>
-        public double MethaneVolume { get { return GetMethaneVolume(); } }
+        public double MethaneVolume
+        {
+            get { return this.GetMethaneVolume(); }
+        }
+        
         /// <summary>
-        /// Exceeded urea warning
+        /// Gets the exceeded urea warning
         /// </summary>
-        public bool UreaWarning { get { return ExceededUreaLimit(); } }
+        public bool UreaWarning
+        {
+            get { return this.ExceededUreaLimit(); }
+        }
 
         /// <summary>
-        ///  Returns the weight change required for these animals to have a given      
-        ///  change in body condition                                                  
+        /// Returns the weight change required for these animals to have a given      
+        /// change in body condition                                                  
         /// </summary>
-        /// <param name="fDeltaBC">desired rate of change in body condition (/d)</param>
-        /// <returns></returns>
-        public double WeightChangeAtCondition(double fDeltaBC)
+        /// <param name="deltaBC">desired rate of change in body condition (/d)</param>
+        /// <returns>Weight change</returns>
+        public double WeightChangeAtCondition(double deltaBC)
         {
-            double fMaxPrevW;
-            double[] fBC = new double[2];
-            double fMaxN1;
+            double maxPrevW;
+            double[] bodyCond = new double[2];
+            double maxN1;
             double fA, fB;
 
-            fMaxPrevW = Math.Max(BaseWeight, MaxPrevWt);
-            fBC[0] = BaseWeight / NormalWeightFunc(MeanAge, fMaxPrevW, AParams.GrowthC[3]); // Today's value of body condition          
-            fBC[1] = fBC[0] + fDeltaBC;                                           // Desired body condition tomorrow          
-            fMaxN1 = MaxNormWtFunc(StdRefWt, BirthWt, MeanAge + 1, AParams);      // Maximum normal weight tomorrow           
+            maxPrevW = Math.Max(this.BaseWeight, this.MaxPrevWt);
+            bodyCond[0] = this.BaseWeight / this.NormalWeightFunc(this.MeanAge, maxPrevW, this.AParams.GrowthC[3]);   // Today's value of body condition          
+            bodyCond[1] = bodyCond[0] + deltaBC;                                                            // Desired body condition tomorrow          
+            maxN1 = MaxNormWtFunc(this.StdRefWt, this.BirthWt, this.MeanAge + 1, this.AParams);        // Maximum normal weight tomorrow           
 
-            fA = fBC[1] * AParams.GrowthC[3] * fMaxN1;
-            fB = fBC[1] * (1.0 - AParams.GrowthC[3]);
+            fA = bodyCond[1] * this.AParams.GrowthC[3] * maxN1;
+            fB = bodyCond[1] * (1.0 - this.AParams.GrowthC[3]);
 
-            return Math.Min(fBC[1] * fMaxN1, Math.Max(fA / (1.0 - fB), fA + fB * fMaxPrevW)) - BaseWeight;
+            return Math.Min(bodyCond[1] * maxN1, Math.Max(fA / (1.0 - fB), fA + fB * maxPrevW)) - this.BaseWeight;
         }
+
         /// <summary>
-        /// 
+        /// Returns the number of male and female animals  
+        /// which are aged greater than a number of days
         /// </summary>
-        /// <param name="iAgeDays"></param>
-        /// <param name="NM"></param>
-        /// <param name="NF"></param>
-        public void GetOlder(int iAgeDays, ref int NM, ref int NF)
+        /// <param name="ageDays">Days of age</param>
+        /// <param name="numMale">Number of male</param>
+        /// <param name="numFemale">Number of female</param>
+        public void GetOlder(int ageDays, ref int numMale, ref int numFemale)
         {
-            Ages.GetOlder(iAgeDays, ref NM, ref NF);
+            this.Ages.GetOlder(ageDays, ref numMale, ref numFemale);
         }
 
         /// <summary>
         /// Integration of the age-dependent mortality function                       
         /// </summary>
-        /// <param name="iOverDays"></param>
-        /// <returns></returns>
-        public double fExpectedSurvival(int iOverDays)
+        /// <param name="overDays">Number of days</param>
+        /// <returns>Integrated value</returns>
+        public double ExpectedSurvival(int overDays)
         {
-            double fDayDeath;
-            int iDayCount;
-            int iAge;
+            double dayDeath;
+            int dayCount;
+            int age;
 
-            iAge = MeanAge;
-            double Result = 1.0;
+            age = this.MeanAge;
+            double result = 1.0;
 
-            while (iOverDays > 0)
+            while (overDays > 0)
             {
-                if ((LactStatus == GrazType.LactType.Suckling) || (iAge >= Math.Round(AParams.MortAge[2])))
+                if ((this.LactStatus == GrazType.LactType.Suckling) || (age >= Math.Round(this.AParams.MortAge[2])))
                 {
-                    fDayDeath = AParams.MortRate[1];
-                    iDayCount = iOverDays;
+                    dayDeath = this.AParams.MortRate[1];
+                    dayCount = overDays;
                 }
-                else if (iAge < Math.Round(AParams.MortAge[1]))
+                else if (age < Math.Round(this.AParams.MortAge[1]))
                 {
-                    fDayDeath = AParams.MortRate[2];
-                    iDayCount = Convert.ToInt32(Math.Min(iOverDays, Math.Round(AParams.MortAge[1]) - iAge));
+                    dayDeath = this.AParams.MortRate[2];
+                    dayCount = Convert.ToInt32(Math.Min(overDays, Math.Round(this.AParams.MortAge[1]) - age), CultureInfo.InvariantCulture);
                 }
                 else
                 {
-                    fDayDeath = AParams.MortRate[1] + (AParams.MortRate[2] - AParams.MortRate[1])
-                                                       * StdMath.RAMP(iAge, AParams.MortAge[2], AParams.MortAge[1]);
-                    iDayCount = 1;
+                    dayDeath = this.AParams.MortRate[1] + (this.AParams.MortRate[2] - this.AParams.MortRate[1])
+                                                       * StdMath.RAMP(age, this.AParams.MortAge[2], this.AParams.MortAge[1]);
+                    dayCount = 1;
                 }
 
-                Result = Result * Math.Pow(1.0 - fDayDeath, iDayCount);
-                iOverDays -= iDayCount;
-                iAge += iDayCount;
+                result = result * Math.Pow(1.0 - dayDeath, dayCount);
+                overDays -= dayCount;
+                age += dayCount;
             }
-            return Result;
+            return result;
         }
+
         /// <summary>
-        /// 
+        /// Combine two pools
         /// </summary>
-        /// <param name="Pool1"></param>
-        /// <param name="Pool2"></param>
-        /// <returns></returns>
-        public GrazType.DM_Pool AddDMPool(GrazType.DM_Pool Pool1, GrazType.DM_Pool Pool2)
+        /// <param name="pool1">Pool one</param>
+        /// <param name="pool2">Pool two</param>
+        /// <returns>Combined pool</returns>
+        public GrazType.DM_Pool AddDMPool(GrazType.DM_Pool pool1, GrazType.DM_Pool pool2)
         {
             int N = (int)GrazType.TOMElement.n;
             int P = (int)GrazType.TOMElement.p;
             int S = (int)GrazType.TOMElement.s;
 
-            GrazType.DM_Pool Result = new GrazType.DM_Pool();
-            Result.DM = Pool1.DM + Pool2.DM;
-            Result.Nu[N] = Pool1.Nu[N] + Pool2.Nu[N];
-            Result.Nu[S] = Pool1.Nu[S] + Pool2.Nu[S];
-            Result.Nu[P] = Pool1.Nu[P] + Pool2.Nu[P];
-            Result.AshAlk = Pool1.AshAlk + Pool2.AshAlk;
+            GrazType.DM_Pool result = new GrazType.DM_Pool();
+            result.DM = pool1.DM + pool2.DM;
+            result.Nu[N] = pool1.Nu[N] + pool2.Nu[N];
+            result.Nu[S] = pool1.Nu[S] + pool2.Nu[S];
+            result.Nu[P] = pool1.Nu[P] + pool2.Nu[P];
+            result.AshAlk = pool1.AshAlk + pool2.AshAlk;
 
-            return Result;
+            return result;
         }
+
         /// <summary>
-        /// 
+        /// Multiply pools
         /// </summary>
-        /// <param name="Src"></param>
-        /// <param name="X"></param>
-        /// <returns></returns>
-        public GrazType.DM_Pool MultiplyDMPool(GrazType.DM_Pool Src, double X)
+        /// <param name="srcPool"></param>
+        /// <param name="factor"></param>
+        /// <returns>The product</returns>
+        public GrazType.DM_Pool MultiplyDMPool(GrazType.DM_Pool srcPool, double factor)
         {
             int N = (int)GrazType.TOMElement.n;
             int P = (int)GrazType.TOMElement.p;
             int S = (int)GrazType.TOMElement.s;
 
-            GrazType.DM_Pool Result = new GrazType.DM_Pool();
-            Result.DM = Src.DM * X;
-            Result.Nu[N] = Src.Nu[N] * X;
-            Result.Nu[S] = Src.Nu[S] * X;
-            Result.Nu[P] = Src.Nu[P] * X;
-            Result.AshAlk = Src.AshAlk * X;
+            GrazType.DM_Pool result = new GrazType.DM_Pool();
+            result.DM = srcPool.DM * factor;
+            result.Nu[N] = srcPool.Nu[N] * factor;
+            result.Nu[S] = srcPool.Nu[S] * factor;
+            result.Nu[P] = srcPool.Nu[P] * factor;
+            result.AshAlk = srcPool.AshAlk * factor;
 
-            return Result;
+            return result;
         }
 
         /// <summary>
         /// Supplement relative intake.
         /// </summary>
-        /// <param name="TheAnimals"></param>
-        /// <param name="fTimeStepLength"></param>
-        /// <param name="fSuppDWPerHead"></param>
-        /// <param name="aSupp"></param>
-        /// <param name="fSuppRQ"></param>
-        /// <param name="bEatenFirst"></param>
-        /// <param name="fSuppRI"></param>
-        /// <param name="fFracUnsat"></param>
-        private void EatSupplement(AnimalGroup TheAnimals,
-                                    double fTimeStepLength,
-                                    double fSuppDWPerHead,
-                                    FoodSupplement aSupp,
-                                    double fSuppRQ,
-                                    bool bEatenFirst,
-                                    ref double fSuppRI,
-                                    ref double fFracUnsat)
+        /// <param name="theAnimals">The animal group</param>
+        /// <param name="timeStepLength"></param>
+        /// <param name="suppDWPerHead"></param>
+        /// <param name="supp"></param>
+        /// <param name="suppRQ"></param>
+        /// <param name="eatenFirst"></param>
+        /// <param name="suppRI"></param>
+        /// <param name="fracUnsat"></param>
+        private void EatSupplement(AnimalGroup theAnimals,
+                                    double timeStepLength,
+                                    double suppDWPerHead,
+                                    FoodSupplement supp,
+                                    double suppRQ,
+                                    bool eatenFirst,
+                                    ref double suppRI,
+                                    ref double fracUnsat)
         {
-            double fSuppRelFill;
+            double suppRelFill;
 
-            if (TheAnimals.IntakeLimit < GrazType.VerySmall)
-                fSuppRelFill = 0.0;
+            if (theAnimals.IntakeLimit < GrazType.VerySmall)
+                suppRelFill = 0.0;
             else
             {
-                if (bEatenFirst)                                                     // Relative fill of supplement           
-                    fSuppRelFill = Math.Min(fFracUnsat,
-                                          fSuppDWPerHead / (TheAnimals.IntakeLimit * fSuppRQ));
+                if (eatenFirst)                                                     // Relative fill of supplement           
+                    suppRelFill = Math.Min(fracUnsat,
+                                          suppDWPerHead / (theAnimals.IntakeLimit * suppRQ));
                 else
-                    fSuppRelFill = Math.Min(fFracUnsat,
-                                          fSuppDWPerHead / (TheAnimals.IntakeLimit * fTimeStepLength * fSuppRQ));
+                    suppRelFill = Math.Min(fracUnsat,
+                                          suppDWPerHead / (theAnimals.IntakeLimit * timeStepLength * suppRQ));
 
-                if ((aSupp.ME2DM > 0.0) && (!aSupp.IsRoughage))
+                if ((supp.ME2DM > 0.0) && (!supp.IsRoughage))
                 {
-                    if (TheAnimals.LactStatus == GrazType.LactType.Lactating)
-                        fSuppRelFill = Math.Min(fSuppRelFill, TheAnimals.AParams.GrazeC[20] / aSupp.ME2DM);
+                    if (theAnimals.LactStatus == GrazType.LactType.Lactating)
+                        suppRelFill = Math.Min(suppRelFill, theAnimals.AParams.GrazeC[20] / supp.ME2DM);
                     else
-                        fSuppRelFill = Math.Min(fSuppRelFill, TheAnimals.AParams.GrazeC[11] / aSupp.ME2DM);
+                        suppRelFill = Math.Min(suppRelFill, theAnimals.AParams.GrazeC[11] / supp.ME2DM);
                 }
             }
 
-            fSuppRI = fSuppRQ * fSuppRelFill;
-            fFracUnsat = StdMath.DIM(fFracUnsat, fSuppRelFill);
+            suppRI = suppRQ * suppRelFill;
+            fracUnsat = StdMath.DIM(fracUnsat, suppRelFill);
         }
 
         /// <summary>
         /// "Relative fill" of pasture [F(d)]                                     
         /// </summary>
-        /// <param name="TheAnimals"></param>
+        /// <param name="TheAnimals">The animal group</param>
         /// <param name="FU"></param>
         /// <param name="ClassFeed"></param>
         /// <param name="TotalFeed"></param>
         /// <param name="HR"></param>
         /// <returns></returns>
-        private double fRelativeFill(AnimalGroup TheAnimals, double FU, double ClassFeed, double TotalFeed, double HR)
+        private double RelativeFill(AnimalGroup TheAnimals, double FU, double ClassFeed, double TotalFeed, double HR)
         {
 
-            double fHeightFactor,
-            fSizeFactor,
-            fScaledFeed,
-            fPropnFactor,
-            fRateTerm,
-            fTimeTerm;
+            double heightFactor,
+            sizeFactor,
+            scaledFeed,
+            propnFactor,
+            rateTerm,
+            timeTerm;
 
-            double Result;
+            double result;
 
             // Equation numbers refer to June 2008 revision of Freer, Moore, and Donnelly 
-            fHeightFactor = Math.Max(0.0, (1.0 - TheAnimals.AParams.GrazeC[12]) + TheAnimals.AParams.GrazeC[12] * HR);          // Eq. 18 : HF 
-            fSizeFactor = 1.0 + StdMath.DIM(TheAnimals.AParams.GrazeC[7], TheAnimals.Size);                                     // Eq. 19 : ZF }
-            fScaledFeed = fHeightFactor * fSizeFactor * ClassFeed;                                                              // Part of Eqs. 16, 16 : HF * ZF * B }
-            fPropnFactor = 1.0 + TheAnimals.AParams.GrazeC[13] * StdMath.XDiv(ClassFeed, TotalFeed);                            // Part of Eqs. 16, 17 : 1 + Cr13 * Phi }
-            fRateTerm = 1.0 - Math.Exp(-fPropnFactor * TheAnimals.AParams.GrazeC[4] * fScaledFeed);                             // Eq. 16 }
-            fTimeTerm = 1.0 + TheAnimals.AParams.GrazeC[5] * Math.Exp(-fPropnFactor * Math.Pow(TheAnimals.AParams.GrazeC[6] * fScaledFeed, 2)); // Eq. 17 }
-            Result = FU * fRateTerm * fTimeTerm;                                                                                // Eq. 14 }
+            heightFactor = Math.Max(0.0, (1.0 - TheAnimals.AParams.GrazeC[12]) + TheAnimals.AParams.GrazeC[12] * HR);       // Eq. 18 : HF 
+            sizeFactor = 1.0 + StdMath.DIM(TheAnimals.AParams.GrazeC[7], TheAnimals.Size);                                  // Eq. 19 : ZF 
+            scaledFeed = heightFactor * sizeFactor * ClassFeed;                                                             // Part of Eqs. 16, 16 : HF * ZF * B 
+            propnFactor = 1.0 + TheAnimals.AParams.GrazeC[13] * StdMath.XDiv(ClassFeed, TotalFeed);                         // Part of Eqs. 16, 17 : 1 + Cr13 * Phi 
+            rateTerm = 1.0 - Math.Exp(-propnFactor * TheAnimals.AParams.GrazeC[4] * scaledFeed);                            // Eq. 16 
+            timeTerm = 1.0 + TheAnimals.AParams.GrazeC[5] * Math.Exp(-propnFactor * Math.Pow(TheAnimals.AParams.GrazeC[6] * scaledFeed, 2)); // Eq. 17 
+            result = FU * rateTerm * timeTerm;                                                                              // Eq. 14 
 
-            return Result;
+            return result;
         }
 
         /// <summary>
-        /// 
+        /// Eat some pasture
         /// </summary>
-        /// <param name="TheAnimals"></param>
-        /// <param name="ClassFeed"></param>
-        /// <param name="TotalFeed"></param>
+        /// <param name="theAnimals">The animal group</param>
+        /// <param name="classFeed"></param>
+        /// <param name="totalFeed"></param>
         /// <param name="HR"></param>
         /// <param name="RelQ"></param>
         /// <param name="RI"></param>
         /// <param name="FU"></param>
-        private void EatPasture(AnimalGroup TheAnimals, double ClassFeed,
-                                    double TotalFeed,
+        private void EatPasture(AnimalGroup theAnimals, double classFeed,
+                                    double totalFeed,
                                     double HR,
                                     double RelQ,
                                     ref double RI,
                                     ref double FU)
         {
-            double fRelFill;
+            double relFill;
 
-            fRelFill = fRelativeFill(TheAnimals, FU, ClassFeed, TotalFeed, HR);
-            RI = RI + fRelFill * RelQ;
-            FU = StdMath.DIM(FU, fRelFill);
+            relFill = this.RelativeFill(theAnimals, FU, classFeed, totalFeed, HR);
+            RI = RI + relFill * RelQ;
+            FU = StdMath.DIM(FU, relFill);
         }
 
         /// <summary>
@@ -5021,175 +5489,183 @@ namespace Models.GrazPlan
         {
             X1 = StdMath.XDiv(X1 * Y1 + X2 * Y2, Y1 + Y2);
         }
+
         /// <summary>
         /// Calculate relative intake
         /// </summary>
-        /// <param name="TheAnimals"></param>
-        /// <param name="fTimeStepLength"></param>
-        /// <param name="bFeedSuppFirst"></param>
-        /// <param name="fWaterLogScalar"></param>
-        /// <param name="fHerbageRI"></param>
-        /// <param name="fSeedRI"></param>
-        /// <param name="fSuppRelIntake"></param>
-        public void CalculateRelIntake(AnimalGroup TheAnimals,
-                              double fTimeStepLength,
-                              bool bFeedSuppFirst,
-                              double fWaterLogScalar,
-                              ref double[] fHerbageRI,
-                              ref double[,] fSeedRI,
-                              ref double fSuppRelIntake)
+        /// <param name="theAnimals">The Animal group</param>
+        /// <param name="timeStepLength"></param>
+        /// <param name="feedSuppFirst"></param>
+        /// <param name="waterLogScalar"></param>
+        /// <param name="herbageRI"></param>
+        /// <param name="seedRI"></param>
+        /// <param name="suppRelIntake"></param>
+        public void CalculateRelIntake(AnimalGroup theAnimals,
+                              double timeStepLength,
+                              bool feedSuppFirst,
+                              double waterLogScalar,
+                              ref double[] herbageRI,
+                              ref double[,] seedRI,
+                              ref double suppRelIntake)
         {
             const double CLASSWIDTH = 0.1;
 
-            double[] fAvailFeed = new double[GrazType.DigClassNo + 2]; //1..DigClassNo+1    // Grazeable DM in each quality class    
-            double[] fHeightRatio = new double[GrazType.DigClassNo + 2];                    // "Height ratio"                        
-            double fLegume;                                                                 // Legume fraction                       
-            double fLegumeTrop;                                                             // Legume tropicality }
-            double fSelectFactor;                                                           // SF, adjusted for legume content       
-            double[] fRelQ = new double[GrazType.DigClassNo + 2];                           // Function of herbage class digestib'ty 
-            double fSuppRelQ;                                                               // Function of supplement digestibility  
-            double fSuppFWPerHead;
-            double fSuppDWPerHead;
-            double fTotalFeed;
+            double[] availFeed = new double[GrazType.DigClassNo + 2]; // 1..DigClassNo+1   // Grazeable DM in each quality class    
+            double[] heightRatio = new double[GrazType.DigClassNo + 2];                    // "Height ratio"                        
+            double legume;                                                                 // Legume fraction                       
+            double legumeTrop;                                                             // Legume tropicality }
+            double selectFactor;                                                           // SF, adjusted for legume content       
+            double[] relQ = new double[GrazType.DigClassNo + 2];                           // Function of herbage class digestib'ty 
+            double suppRelQ;                                                               // Function of supplement digestibility  
+            double suppFWPerHead;
+            double suppDWPerHead;
+            double totalFeed;
 
-            double fOMD_Supp;
-            double fProteinFactor;                                                      // DOM/protein and lactation factors for 
-            double fMilkFactor;                                                         //   modifying substitution rate         
-            double fSubstSuppRelQ;
+            double OMD_Supp;
+            double proteinFactor;                                                          // DOM/protein and lactation factors for 
+            double milkFactor;                                                             // modifying substitution rate         
+            double substSuppRelQ;
 
-            double[] fRelIntake = new double[GrazType.DigClassNo + 2];
-            double fSuppEntry;
-            double fFillRemaining;                                                      // Proportion of maximum relative fill  that is yet to be satisfied         
-            bool bSuppRemains;                                                          // TRUE if the animals have yet to select a supplement that is present        
-            double fLegumeAdjust;
-            int iSpecies,
-            iClass,
-            iRipe;
+            double[] relIntake = new double[GrazType.DigClassNo + 2];
+            double suppEntry;
+            double fillRemaining;                                                          // Proportion of maximum relative fill  that is yet to be satisfied         
+            bool suppRemains;                                                              // TRUE if the animals have yet to select a supplement that is present        
+            double legumeAdjust;
+            int speciesIdx,
+            classIdx,
+            ripeIdx;
 
-
-            for (iClass = 1; iClass <= GrazType.DigClassNo; iClass++)                   // Start by aggregating herbage and seed into selection classes              
+            // Start by aggregating herbage and seed into selection classes              
+            for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)                   
             {
-                fAvailFeed[iClass] = TheAnimals.Inputs.Herbage[iClass].Biomass;
-                fHeightRatio[iClass] = TheAnimals.Inputs.Herbage[iClass].HeightRatio;
+                availFeed[classIdx] = theAnimals.Inputs.Herbage[classIdx].Biomass;
+                heightRatio[classIdx] = theAnimals.Inputs.Herbage[classIdx].HeightRatio;
             }
-            fAvailFeed[GrazType.DigClassNo + 1] = 0.0;
-            fHeightRatio[GrazType.DigClassNo + 1] = 1.0;
+            availFeed[GrazType.DigClassNo + 1] = 0.0;
+            heightRatio[GrazType.DigClassNo + 1] = 1.0;
 
-            for (iSpecies = 1; iSpecies <= GrazType.MaxPlantSpp; iSpecies++)
+            for (speciesIdx = 1; speciesIdx <= GrazType.MaxPlantSpp; speciesIdx++)
             {
-                for (iRipe = GrazType.UNRIPE; iRipe <= GrazType.RIPE; iRipe++)
+                for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
                 {
-                    iClass = TheAnimals.Inputs.SeedClass[iSpecies, iRipe];
-                    if ((iClass > 0) && (TheAnimals.Inputs.Seeds[iSpecies, iRipe].Biomass > GrazType.VerySmall))
+                    classIdx = theAnimals.Inputs.SeedClass[speciesIdx, ripeIdx];
+                    if ((classIdx > 0) && (theAnimals.Inputs.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VerySmall))
                     {
-                        fWeightAverage(ref fHeightRatio[iClass],
-                                        fAvailFeed[iClass],
-                                        TheAnimals.Inputs.Seeds[iSpecies, iRipe].HeightRatio,
-                                        TheAnimals.Inputs.Seeds[iSpecies, iRipe].Biomass);
-                        fAvailFeed[iClass] = fAvailFeed[iClass] + TheAnimals.Inputs.Seeds[iSpecies, iRipe].Biomass;
+                        fWeightAverage(ref heightRatio[classIdx],
+                                        availFeed[classIdx],
+                                        theAnimals.Inputs.Seeds[speciesIdx, ripeIdx].HeightRatio,
+                                        theAnimals.Inputs.Seeds[speciesIdx, ripeIdx].Biomass);
+                        availFeed[classIdx] = availFeed[classIdx] + theAnimals.Inputs.Seeds[speciesIdx, ripeIdx].Biomass;
                     }
                 }
             }
 
-            fTotalFeed = 0.0;
-            for (iClass = 1; iClass <= GrazType.DigClassNo + 1; iClass++)
-                fTotalFeed = fTotalFeed + fAvailFeed[iClass];
+            totalFeed = 0.0;
+            for (classIdx = 1; classIdx <= GrazType.DigClassNo + 1; classIdx++)
+                totalFeed = totalFeed + availFeed[classIdx];
 
-            fLegume = TheAnimals.Inputs.LegumePropn;
-            fLegumeTrop = TheAnimals.Inputs.LegumeTrop;
+            legume = theAnimals.Inputs.LegumePropn;
+            legumeTrop = theAnimals.Inputs.LegumeTrop;
 
-            TheAnimals.TheRation.AverageSuppt(out TheAnimals.FIntakeSupp);
-            fSuppFWPerHead = TheAnimals.TheRation.TotalAmount;
-            fSuppDWPerHead = fSuppFWPerHead * TheAnimals.FIntakeSupp.DMPropn;
+            theAnimals.TheRation.AverageSuppt(out theAnimals.FIntakeSupp);
+            suppFWPerHead = theAnimals.TheRation.TotalAmount;
+            suppDWPerHead = suppFWPerHead * theAnimals.FIntakeSupp.DMPropn;
 
-            fHerbageRI = new double[GrazType.DigClassNo + 1];                               // Sundry initializations                
-            fSeedRI = new double[GrazType.MaxPlantSpp + 1, GrazType.RIPE + 1];
-            fSuppRelIntake = 0.0;
-            fRelIntake = new double[GrazType.DigClassNo + 2];
+            herbageRI = new double[GrazType.DigClassNo + 1];                                // Sundry initializations                
+            seedRI = new double[GrazType.MaxPlantSpp + 1, GrazType.RIPE + 1];
+            suppRelIntake = 0.0;
+            relIntake = new double[GrazType.DigClassNo + 2];
 
-            fSelectFactor = (1.0 - fLegume * (1.0 - fLegumeTrop)) * TheAnimals.Inputs.SelectFactor;         // Herbage relative quality calculation  
-            for (iClass = 1; iClass <= GrazType.DigClassNo; iClass++)
-                fRelQ[iClass] = 1.0 - TheAnimals.AParams.GrazeC[3] * StdMath.DIM(TheAnimals.AParams.GrazeC[1] - fSelectFactor, TheAnimals.Inputs.Herbage[iClass].Digestibility); // Eq. 21 
-            fRelQ[GrazType.DigClassNo + 1] = 1; //fixes range check error. Set this to the value that was calc'd when range check error was in place
+            selectFactor = (1.0 - legume * (1.0 - legumeTrop)) * theAnimals.Inputs.SelectFactor;         // Herbage relative quality calculation  
+            for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
+                relQ[classIdx] = 1.0 - theAnimals.AParams.GrazeC[3] * StdMath.DIM(theAnimals.AParams.GrazeC[1] - selectFactor, theAnimals.Inputs.Herbage[classIdx].Digestibility); // Eq. 21 
+            relQ[GrazType.DigClassNo + 1] = 1;                                             // fixes range check error. Set this to the value that was calc'd when range check error was in place
 
-            bSuppRemains = (fSuppFWPerHead > GrazType.VerySmall);                              // Compute relative quality of           
-            if (bSuppRemains)                                                        //    supplement (if present)            
+            suppRemains = (suppFWPerHead > GrazType.VerySmall);                           // Compute relative quality of supplement (if present)
+            if (suppRemains)                                                                           
             {
-                fSuppRelQ = Math.Min(TheAnimals.AParams.GrazeC[14],
-                                   1.0 - TheAnimals.AParams.GrazeC[3] * (TheAnimals.AParams.GrazeC[1] - TheAnimals.FIntakeSupp.DMDigestibility));
+                suppRelQ = Math.Min(theAnimals.AParams.GrazeC[14],
+                                   1.0 - theAnimals.AParams.GrazeC[3] * (theAnimals.AParams.GrazeC[1] - theAnimals.FIntakeSupp.DMDigestibility));
 
-                if (TheAnimals.LactStatus == GrazType.LactType.Lactating)
-                    fMilkFactor = TheAnimals.AParams.GrazeC[15] * Math.Exp(-StdMath.Sqr(TheAnimals.DaysLactating / TheAnimals.AParams.GrazeC[8]));
+                if (theAnimals.LactStatus == GrazType.LactType.Lactating)
+                    milkFactor = theAnimals.AParams.GrazeC[15] * Math.Exp(-StdMath.Sqr(theAnimals.DaysLactating / theAnimals.AParams.GrazeC[8]));
                 else
-                    fMilkFactor = 0.0;
+                    milkFactor = 0.0;
 
-                fOMD_Supp = Math.Min(1.0, 1.05 * TheAnimals.FIntakeSupp.DMDigestibility - 0.01);
-                if (fOMD_Supp > 0.0)
-                    fProteinFactor = TheAnimals.AParams.GrazeC[16] * StdMath.RAMP(TheAnimals.FIntakeSupp.CrudeProt / fOMD_Supp, TheAnimals.AParams.GrazeC[9], TheAnimals.AParams.GrazeC[10]);
+                OMD_Supp = Math.Min(1.0, 1.05 * theAnimals.FIntakeSupp.DMDigestibility - 0.01);
+                if (OMD_Supp > 0.0)
+                    proteinFactor = theAnimals.AParams.GrazeC[16] * StdMath.RAMP(theAnimals.FIntakeSupp.CrudeProt / OMD_Supp, theAnimals.AParams.GrazeC[9], theAnimals.AParams.GrazeC[10]);
                 else
-                    fProteinFactor = 0.0;
+                    proteinFactor = 0.0;
 
-                fSubstSuppRelQ = fSuppRelQ - fMilkFactor - fProteinFactor;
+                substSuppRelQ = suppRelQ - milkFactor - proteinFactor;
             }
             else
             {
-                fSuppRelQ = 0.0;
-                fSubstSuppRelQ = 0.0;
+                suppRelQ = 0.0;
+                substSuppRelQ = 0.0;
             }
 
-            fFillRemaining = TheAnimals.Start_FU;
+            fillRemaining = theAnimals.Start_FU;
 
-            if (bSuppRemains && (bFeedSuppFirst || (fTotalFeed <= GrazType.VerySmall)))     // Case where supplement is fed first    
+            if (suppRemains && (feedSuppFirst || (totalFeed <= GrazType.VerySmall)))         
             {
-                EatSupplement(TheAnimals, fTimeStepLength, fSuppDWPerHead, TheAnimals.FIntakeSupp, fSuppRelQ, true, ref fSuppRelIntake, ref fFillRemaining);
-                TheAnimals.Start_FU = fFillRemaining;
-                bSuppRemains = false;
+                // Case where supplement is fed first
+                EatSupplement(theAnimals, timeStepLength, suppDWPerHead, theAnimals.FIntakeSupp, suppRelQ, true, ref suppRelIntake, ref fillRemaining);
+                theAnimals.Start_FU = fillRemaining;
+                suppRemains = false;
             }
 
-            if (fTotalFeed > GrazType.VerySmall)                                            // Case where there is pasture available 
-            {                                                                      //   to the animals                      
-                iClass = 1;
-                while ((iClass <= GrazType.DigClassNo + 1) && (fFillRemaining >= GrazType.VerySmall))
+            if (totalFeed > GrazType.VerySmall)                                             
+            {
+                // Case where there is pasture available to the animals
+                classIdx = 1;
+                while ((classIdx <= GrazType.DigClassNo + 1) && (fillRemaining >= GrazType.VerySmall))
                 {
-                    fSuppEntry = Math.Min(1.0, 0.5 + (fSubstSuppRelQ - fRelQ[iClass])
-                                                   / (CLASSWIDTH * TheAnimals.AParams.GrazeC[3]));
-                    if (bSuppRemains && (fSuppEntry > 0.0))
+                    suppEntry = Math.Min(1.0, 0.5 + (substSuppRelQ - relQ[classIdx])
+                                                   / (CLASSWIDTH * theAnimals.AParams.GrazeC[3]));
+                    if (suppRemains && (suppEntry > 0.0))
                     {
                         // This gives a continuous response to changes in supplement DMD
-                        EatPasture(TheAnimals, (1.0 - fSuppEntry) * fAvailFeed[iClass], fTotalFeed, fHeightRatio[iClass], fRelQ[iClass], ref fRelIntake[iClass], ref fFillRemaining);
-                        EatSupplement(TheAnimals, fTimeStepLength, fSuppDWPerHead, TheAnimals.FIntakeSupp, fSuppRelQ, false, ref fSuppRelIntake, ref fFillRemaining);
-                        EatPasture(TheAnimals, fSuppEntry * fAvailFeed[iClass], fTotalFeed, fHeightRatio[iClass], fRelQ[iClass], ref fRelIntake[iClass], ref fFillRemaining);
+                        this.EatPasture(theAnimals, (1.0 - suppEntry) * availFeed[classIdx], totalFeed, heightRatio[classIdx], relQ[classIdx], ref relIntake[classIdx], ref fillRemaining);
+                        this.EatSupplement(theAnimals, timeStepLength, suppDWPerHead, theAnimals.FIntakeSupp, suppRelQ, false, ref suppRelIntake, ref fillRemaining);
+                        this.EatPasture(theAnimals, suppEntry * availFeed[classIdx], totalFeed, heightRatio[classIdx], relQ[classIdx], ref relIntake[classIdx], ref fillRemaining);
 
-                        bSuppRemains = false;
+                        suppRemains = false;
                     }
                     else
-                        EatPasture(TheAnimals, fAvailFeed[iClass], fTotalFeed,
-                                    fHeightRatio[iClass], fRelQ[iClass],
-                                    ref fRelIntake[iClass], ref fFillRemaining);
-                    iClass++;
+                        this.EatPasture(theAnimals, 
+                                    availFeed[classIdx], 
+                                    totalFeed,
+                                    heightRatio[classIdx], 
+                                    relQ[classIdx],
+                                    ref relIntake[classIdx], 
+                                    ref fillRemaining);
+                    classIdx++;
                 }
 
-                if (bSuppRemains)                                                     // Still supplement left?                
-                    EatSupplement(TheAnimals, fTimeStepLength, fSuppDWPerHead, TheAnimals.FIntakeSupp, fSuppRelQ, false, ref fSuppRelIntake, ref fFillRemaining);
+                // Still supplement left? 
+                if (suppRemains)                                                                          
+                    this.EatSupplement(theAnimals, timeStepLength, suppDWPerHead, theAnimals.FIntakeSupp, suppRelQ, false, ref suppRelIntake, ref fillRemaining);
 
-                fLegumeAdjust = TheAnimals.AParams.GrazeC[2] * StdMath.Sqr(1.0 - fFillRemaining) * fLegume;        // Adjustment to intake rate for         
-                for (iClass = 1; iClass <= GrazType.DigClassNo; iClass++)                                         //   waterlogging and legume content     
-                    fRelIntake[iClass] = fRelIntake[iClass] * fWaterLogScalar * (1.0 + fLegumeAdjust);
+                legumeAdjust = theAnimals.AParams.GrazeC[2] * StdMath.Sqr(1.0 - fillRemaining) * legume;         // Adjustment to intake rate for waterlogging and legume content        
+                for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)                                                
+                    relIntake[classIdx] = relIntake[classIdx] * waterLogScalar * (1.0 + legumeAdjust);
             }
 
-
-            for (iClass = 1; iClass <= GrazType.DigClassNo; iClass++)                                             // Distribute relative intakes between herbage and seed                     
+            for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)                                                                    
             {
-                fHerbageRI[iClass] = fRelIntake[iClass] * StdMath.XDiv(TheAnimals.Inputs.Herbage[iClass].Biomass, fAvailFeed[iClass]);
+                // Distribute relative intakes between herbage and seed
+                herbageRI[classIdx] = relIntake[classIdx] * StdMath.XDiv(theAnimals.Inputs.Herbage[classIdx].Biomass, availFeed[classIdx]);
             }
 
-            for (iSpecies = 1; iSpecies <= GrazType.MaxPlantSpp; iSpecies++)
+            for (speciesIdx = 1; speciesIdx <= GrazType.MaxPlantSpp; speciesIdx++)
             {
-                for (iRipe = GrazType.UNRIPE; iRipe <= GrazType.RIPE; iRipe++)
+                for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
                 {
-                    iClass = TheAnimals.Inputs.SeedClass[iSpecies, iRipe];
-                    if ((iClass > 0) && (TheAnimals.Inputs.Seeds[iSpecies, iRipe].Biomass > GrazType.VerySmall))
-                        fSeedRI[iSpecies, iRipe] = fRelIntake[iClass] * TheAnimals.Inputs.Seeds[iSpecies, iRipe].Biomass / fAvailFeed[iClass];
+                    classIdx = theAnimals.Inputs.SeedClass[speciesIdx, ripeIdx];
+                    if ((classIdx > 0) && (theAnimals.Inputs.Seeds[speciesIdx, ripeIdx].Biomass > GrazType.VerySmall))
+                        seedRI[speciesIdx, ripeIdx] = relIntake[classIdx] * theAnimals.Inputs.Seeds[speciesIdx, ripeIdx].Biomass / availFeed[classIdx];
                 }
             }
         }
@@ -5199,40 +5675,40 @@ namespace Models.GrazPlan
         /// This weight range is a consequence of the normal weight function          
         /// (AnimalGroup.NormalWeightFunc)                                           
         /// </summary>
-        /// <param name="Repr"></param>
-        /// <param name="iAgeDays"></param>
-        /// <param name="fBodyCond"></param>
-        /// <param name="Params"></param>
-        /// <param name="fLowBaseWt"></param>
-        /// <param name="fHighBaseWt"></param>
-        public void WeightRangeForCond(GrazType.ReproType Repr,
-                                      int iAgeDays,
-                                      double fBodyCond,
-                                      AnimalParamSet Params,
-                                      ref double fLowBaseWt,
-                                      ref double fHighBaseWt)
+        /// <param name="reprod"></param>
+        /// <param name="ageDays">Age in days</param>
+        /// <param name="bodyCond">Body condition</param>
+        /// <param name="paramSet">Animal params</param>
+        /// <param name="lowBaseWt"></param>
+        /// <param name="highBaseWt"></param>
+        public void WeightRangeForCond(GrazType.ReproType reprod,
+                                      int ageDays,
+                                      double bodyCond,
+                                      AnimalParamSet paramSet,
+                                      ref double lowBaseWt,
+                                      ref double highBaseWt)
         {
-            double fMaxNormWt;
+            double maxNormWt;
 
-            fMaxNormWt = GrowthCurve(iAgeDays, Repr, Params);
-            fHighBaseWt = fBodyCond * fMaxNormWt;
-            if (fBodyCond >= 1.0)
-                fLowBaseWt = fHighBaseWt;
+            maxNormWt = GrowthCurve(ageDays, reprod, paramSet);
+            highBaseWt = bodyCond * maxNormWt;
+            if (bodyCond >= 1.0)
+                lowBaseWt = highBaseWt;
             else
-                fLowBaseWt = fHighBaseWt * Params.GrowthC[3] / (1.0 - fBodyCond * (1.0 - Params.GrowthC[3]));
+                lowBaseWt = highBaseWt * paramSet.GrowthC[3] / (1.0 - bodyCond * (1.0 - paramSet.GrowthC[3]));
         }
 
         /// <summary>
         /// Chill index
         /// </summary>
-        /// <param name="T"></param>
-        /// <param name="W"></param>
-        /// <param name="R"></param>
-        /// <returns></returns>
-        private double ChillFunc(double T, double W, double R)
+        /// <param name="temp">Temperature value</param>
+        /// <param name="wind">Wind speed</param>
+        /// <param name="precip">The rainfall</param>
+        /// <returns>Chill value</returns>
+        private double ChillFunc(double temp, double wind, double precip)
         {
-            return 481.0 + (11.7 + 3.1 * Math.Sqrt(W)) * (40.0 - T)
-                               + 418 * (1.0 - Math.Exp(-0.04 * Math.Min(80, R)));
+            return 481.0 + (11.7 + 3.1 * Math.Sqrt(wind)) * (40.0 - temp)
+                               + 418 * (1.0 - Math.Exp(-0.04 * Math.Min(80, precip)));
         }
     }
     #endregion AnimalGroup
@@ -5246,20 +5722,33 @@ namespace Models.GrazPlan
         /// <summary>
         /// Days of weight gain
         /// </summary>
-        public const int GAINDAYCOUNT = 28;       //for the AnimalList
+        public const int GAINDAYCOUNT = 28;       // for the AnimalList
+        
         /// <summary>
-        /// keep count of how many valid entries have been made
+        /// Keep count of how many valid entries have been made
         /// </summary>
         private int FValidGainsCount;
+
+        /// <summary>
+        /// Weight gain information
+        /// </summary>
         private double[] FGains = new double[GAINDAYCOUNT - 1];
-        private AnimalGroup GetAt(int Posn)
+
+        /// <summary>
+        /// Get the animal group at an index
+        /// </summary>
+        /// <param name="posn">Position index</param>
+        /// <returns>The Animal group</returns>
+        private AnimalGroup GetAt(int posn)
         {
-            return base[Posn];
+            return base[posn];
         }
+        
         /// <summary>
         /// Random number container
         /// </summary>
         public MyRandom RandFactory;
+        
         /// <summary>
         /// Copy an AnimalList
         /// </summary>
@@ -5273,6 +5762,7 @@ namespace Models.GrazPlan
                 Result.Add(At(I).Copy());
             return Result;
         }
+        
         /// <summary>
         /// Remove all animals
         /// </summary>
@@ -5296,92 +5786,97 @@ namespace Models.GrazPlan
         public void Merge()
         {
             AnimalGroup AG;
-            int I, J;
+            int i, j;
 
-            for (I = 0; I <= Count - 1; I++)                                                  // Remove empty groups                      
+            for (i = 0; i <= Count - 1; i++)                                                  // Remove empty groups                      
             {
-                if ((At(I) != null) && (At(I).NoAnimals == 0))
+                if ((At(i) != null) && (At(i).NoAnimals == 0))
                 {
-                    SetAt(I, null);
+                    SetAt(i, null);
                 }
                 else
                 {
-                    for (J = I + 1; J <= Count - 1; J++)
-                        if ((At(I) != null) && (At(J) != null) && At(I).Similar(At(J))) // Merge similar groups                     
+                    for (j = i + 1; j <= Count - 1; j++)
+                        if ((At(i) != null) && (At(j) != null) && At(i).Similar(At(j)))     // Merge similar groups                     
                         {
-                            AG = At(J);
-                            this[J] = null;
-                            At(I).Merge(ref AG);
+                            AG = At(j);
+                            this[j] = null;
+                            At(i).Merge(ref AG);
                         }
                 }
             }
             throw new Exception("Pack() not implemented int AnimalList.Merge() yet!");
         }
+
         /// <summary>
         /// Get the animal group at this position
         /// </summary>
-        /// <param name="Posn"></param>
-        /// <returns></returns>
-        public AnimalGroup At(int Posn)
+        /// <param name="posn">Position index</param>
+        /// <returns>The Animal group</returns>
+        public AnimalGroup At(int posn)
         {
-            return GetAt(Posn);
+            return this.GetAt(posn);
         }
+
         /// <summary>
         /// Set the animal group at this position
         /// </summary>
-        /// <param name="Posn"></param>
-        /// <param name="AG"></param>
-        public void SetAt(int Posn, AnimalGroup AG)
+        /// <param name="posn">Position index</param>
+        /// <param name="animalGrp">The Animal group</param>
+        public void SetAt(int posn, AnimalGroup animalGrp)
         {
-            base[Posn] = AG;
+            base[posn] = animalGrp;
         }
+
         /// <summary>
-        /// Days of weight gain
+        /// Gets the days of weight gain
         /// </summary>
         public int ValidGainDays
         {
-            get { return FValidGainsCount; }
+            get { return this.FValidGainsCount; }
         }
+
         /// <summary>
         /// Add a daily weight gain value in kg. Uses an array as a cheap fifo queue.
         /// Use gain = MISSING when a value is unavailable.
         /// </summary>
         /// <param name="gain"></param>
-        public void addWtGain(double gain)
+        public void AddWtGain(double gain)
         {
-            //shuffle values down and drop the last one off
+            // shuffle values down and drop the last one off
             for (int i = GAINDAYCOUNT - 1; i >= 1; i--)
-                FGains[i] = FGains[i - 1];
-            FGains[0] = gain;                   //most recent is at [0]
+                this.FGains[i] = this.FGains[i - 1];
+            this.FGains[0] = gain;                   // most recent is at [0]
             if (gain == StdMath.DMISSING)
-                FValidGainsCount = 0;           //reset
+                this.FValidGainsCount = 0;           // reset
             else
-                FValidGainsCount++;
+                this.FValidGainsCount++;
         }
+
         /// <summary>
         /// Calc the average weight gain over the last number of days.
         /// </summary>
-        /// <param name="days"></param>
-        /// <returns></returns>
-        public double avGainOver(int days)
+        /// <param name="days">Number days</param>
+        /// <returns>Average weight gain</returns>
+        public double AvGainOver(int days)
         {
             int i;
             double sum;
-            int iCount;
+            int count;
 
             sum = 0;
             if (days > GAINDAYCOUNT)
                 days = GAINDAYCOUNT;
-            iCount = 0;                         //keep iCount in case there are less days available
+            count = 0;                         // keep iCount in case there are less days available
             for (i = 0; i <= days - 1; i++)
             {
                 if (FGains[i] != StdMath.DMISSING)
                 {
                     sum = sum + FGains[i];
-                    iCount++;
+                    count++;
                 }
             }
-            return sum / iCount;
+            return sum / count;
         }
     }
     #endregion AnimalList

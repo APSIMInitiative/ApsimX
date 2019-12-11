@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkVBox" id="vbox">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="spacing">10</property>
+    <child>
+      <object class="GtkLabel" id="label1">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="xalign">0</property>
+        <property name="xpad">2</property>
+        <property name="label" translatable="yes">A factor specification can be one of:
+
+1. A property set with multiple values e.g.
+[SowingRule].Script.SowingDate = 2003-11-01, 2003-12-20
+
+2. A property set with a range e.g.
+[FertiliserRule].Script.ApplicationAmount = 0 to 200 step 20
+ 
+3. A path to a model that will be replaced with a child of this factor that has a matching type e.g.
+[Weather]
+
+4. Can be left blank if there are 1 or more child 'CompositeFactor' nodes.</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEntry" id="specificationEditBox">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="invisible_char">●</property>
+        <property name="primary_icon_activatable">False</property>
+        <property name="secondary_icon_activatable">False</property>
+        <property name="primary_icon_sensitive">True</property>
+        <property name="secondary_icon_sensitive">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+  </object>
+</interface>

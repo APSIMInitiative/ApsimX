@@ -54,25 +54,32 @@ namespace Models.Core
 
             this.Object = model;
             this.property = property;
+            this.lowerArraySpecifier = 0;
+            this.upperArraySpecifier = 0;
+
             if (arraySpecifier != null)
             {
                 // Can be either a number or a range e.g. 1:3
                 int posColon = arraySpecifier.IndexOf(':');
                 if (posColon == -1)
                 {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier);
+                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier, CultureInfo.InvariantCulture);
                     this.upperArraySpecifier = this.lowerArraySpecifier;
                 }
                 else
                 {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon));
-                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1));
+                    string start = arraySpecifier.Substring(0, posColon);
+                    if (!string.IsNullOrEmpty(start))
+                        lowerArraySpecifier = Convert.ToInt32(start, CultureInfo.InvariantCulture);
+                    else
+                        lowerArraySpecifier = -1;
+
+                    string end = arraySpecifier.Substring(posColon + 1);
+                    if (!string.IsNullOrEmpty(end))
+                        upperArraySpecifier = Convert.ToInt32(end, CultureInfo.InvariantCulture);
+                    else
+                        upperArraySpecifier = -1;
                 }
-            }
-            else
-            {
-                this.lowerArraySpecifier = 0;
-                this.upperArraySpecifier = 0;
             }
         }
 
@@ -116,15 +123,30 @@ namespace Models.Core
                     return null;
                 }
 
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    string cropName = (this.Object as ISoilCrop).Name;
+                    string cropName = (this.Object as SoilCrop).Name;
                     if (cropName.EndsWith("Soil"))
                         cropName = cropName.Replace("Soil", "");
                     return cropName + " " + descriptionAttribute.ToString();
                 }
 
                 return descriptionAttribute.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets a tooltip for the property.
+        /// </summary>
+        public string Tooltip
+        {
+            get
+            {
+                TooltipAttribute attribute = property.GetCustomAttribute<TooltipAttribute>();
+                if (attribute == null)
+                    return null;
+
+                return attribute.Tooltip;
             }
         }
 
@@ -355,7 +377,9 @@ namespace Models.Core
 
                 object obj = null;
                 obj = this.property.GetValue(this.Object, null);
-                if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
+                if ((lowerArraySpecifier != 0 || upperArraySpecifier != 0)
+                    && obj != null 
+                    && obj is IList)
                 {
                     IList array = obj as IList;
                     if (array.Count == 0)
@@ -374,15 +398,21 @@ namespace Models.Core
                             throw new Exception("Unknown type of array");
                     }
 
-                    int numElements = this.upperArraySpecifier - this.lowerArraySpecifier + 1;
+                    int startIndex = lowerArraySpecifier;
+                    if (startIndex == -1)
+                        startIndex = 1;
+
+                    int endIndex = upperArraySpecifier;
+                    if (endIndex == -1)
+                        endIndex = array.Count;
+
+                    int numElements = endIndex - startIndex + 1;
                     Array values = Array.CreateInstance(elementType, numElements);
-                    for (int i = this.lowerArraySpecifier; i <= this.upperArraySpecifier; i++)
+                    for (int i = startIndex; i <= endIndex; i++)
                     {
-                        int index = i - this.lowerArraySpecifier;
+                        int index = i - startIndex;
                         if (i < 1 || i > array.Count)
-                        {
                             throw new Exception("Array index out of bounds while getting variable: " + this.Name);
-                        }
 
                         values.SetValue(array[i - 1], index);
                     }
@@ -416,13 +446,30 @@ namespace Models.Core
                         {
                             throw err.InnerException;
                         }
-                        IList array = obj as IList;
-
-                        if (obj != null && obj is IList)
+                        for (int i = lowerArraySpecifier; i <= upperArraySpecifier; i++)
                         {
-                            array[lowerArraySpecifier - 1] = value;
-                            this.property.SetValue(this.Object, obj, null);
+                            IList array = obj as IList;
+                            if (array != null)
+                            {
+                                object newValue = value;
+                                if (newValue != null)
+                                {
+                                    IList list = value as IList;
+                                    if (list != null)
+                                    {
+                                        if ((i - 1) < list.Count)
+                                            newValue = list[i - 1];
+                                        else if (list.Count == 1)
+                                            newValue = list[0];
+                                        else
+                                            throw new Exception(string.Format("Array index {0} out of bounds. Array length = {1}", i - 1, list.Count));
+                                    }
+                                }
+
+                                array[i - 1] = newValue; // this will modify obj as well
+                            }
                         }
+                        this.property.SetValue(this.Object, obj, null);
                     }
                     else
                         this.property.SetValue(this.Object, value, null);
@@ -580,9 +627,9 @@ namespace Models.Core
         {
             get
             {
-                if (this.Object is ISoilCrop)
+                if (this.Object is SoilCrop)
                 {
-                    ISoilCrop soilCrop = this.Object as ISoilCrop;
+                    SoilCrop soilCrop = this.Object as SoilCrop;
                     if (soilCrop.Name.EndsWith("Soil"))
                         return soilCrop.Name.Substring(0, soilCrop.Name.Length - 4);
                     return soilCrop.Name;
@@ -641,6 +688,10 @@ namespace Models.Core
                 {
                     this.Value = MathUtilities.StringsToDoubles(stringValues);
                 }
+                else if (this.DataType == typeof(float[]))
+                {
+                    this.Value = MathUtilities.StringsToDoubles(stringValues).Cast<float>().ToArray();
+                }
                 else if (this.DataType == typeof(int[]))
                 {
                     this.Value = MathUtilities.StringsToDoubles(stringValues);
@@ -660,6 +711,10 @@ namespace Models.Core
                 {
                     this.Value = Convert.ToDouble(value, CultureInfo.InvariantCulture);
                 }
+                else if (this.DataType == typeof(float)) // yuck!
+                {
+                    this.Value = float.Parse(value, CultureInfo.InvariantCulture.NumberFormat);
+                }
                 else if (this.DataType == typeof(int))
                 {
                     this.Value = Convert.ToInt32(value, CultureInfo.InvariantCulture);
@@ -670,7 +725,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(bool))
                 {
-                    this.property.SetValue(this.Object, Convert.ToBoolean(value), null);
+                    this.property.SetValue(this.Object, Convert.ToBoolean(value, CultureInfo.InvariantCulture), null);
                 }
                 else if (this.DataType == typeof(DateTime))
                 {

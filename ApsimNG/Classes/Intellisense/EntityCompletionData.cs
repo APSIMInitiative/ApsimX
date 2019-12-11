@@ -29,7 +29,7 @@ namespace UserInterface.Intellisense
         /// <summary>
         /// Generates tooltips using C# syntax.
         /// </summary>
-        private static readonly CSharpAmbience csharpAmbience = new CSharpAmbience();
+        private static readonly CSharpAmbience CsharpAmbience = new CSharpAmbience();
 
         /// <summary>
         /// Gets or sets the entity which this completion data represents.
@@ -197,7 +197,7 @@ namespace UserInterface.Intellisense
         /// </summary>
         private static string GetText(IEntity entity)
         {
-            IAmbience ambience = csharpAmbience;
+            IAmbience ambience = CsharpAmbience;
             ambience.ConversionFlags = ConversionFlags.StandardConversionFlags;
             if (entity is ITypeDefinition)
             {

@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs milking based upon the current herd filtering.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantmilking.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMilking.htm")]
     public class RuminantActivityMilking: CLEMRuminantActivityBase
     {
         private object milkStore;
@@ -39,7 +39,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, true);
+            this.InitialiseHerd(true, true);
 
             // find milk store
             milkStore = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -67,17 +67,24 @@ namespace Models.CLEM.Activities
         {
             // take all milk
             List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true).ToList();
-            double milkTotal = herd.Sum(a => a.MilkAmount);
+            double milkTotal = herd.Sum(a => a.MilkCurrentlyAvailable);
             if (milkTotal > 0)
             {
-                // only provide what labour would allow
                 double labourLimit = this.LabourLimitProportion;
+                // only provide what labour would allow
                 (milkStore as IResourceType).Add(milkTotal * labourLimit, this, this.PredictedHerdName);
+
+                // record milk taken with female for accounting
+                foreach (RuminantFemale female in herd)
+                {
+                    female.TakeMilk(female.MilkCurrentlyAvailable * labourLimit, MilkUseReason.Milked);
+                }
             }
             else
             {
                 this.Status = ActivityStatus.NotNeeded;
             }
+
         }
 
         /// <summary>
@@ -96,7 +103,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override double GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
             int head = herd.Count();
             double daysNeeded = 0;
             switch (requirement.UnitType)

@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Xml.Serialization;
 
     ///<summary>
@@ -112,7 +113,13 @@
                 if (simulation != null)
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
                 else
-                    return this.FileName;
+                {
+                    Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+                    if (simulations != null)
+                        return PathUtilities.GetAbsolutePath(this.FileName, simulations.FileName);
+                    else
+                        return this.FileName;
+                }
             }
             set
             {
@@ -136,10 +143,10 @@
         {
             get
             {
-                if (this.reader != null)
-                    return this.reader.FirstDate;
-                else
+                if (this.reader == null && !this.OpenDataFile())
                     return new DateTime(0);
+
+                return this.reader.FirstDate;
             }
         }
 
@@ -150,10 +157,10 @@
         {
             get
             {
-                if (this.reader != null)
-                    return this.reader.LastDate;
-                else
+                if (this.reader == null && !this.OpenDataFile())
                     return new DateTime(0);
+
+                return this.reader.LastDate;
             }
         }
 
@@ -197,6 +204,30 @@
                 return SVPfrac * VPDmaxt + (1 - SVPfrac) * VPDmint;
             }
         }
+
+        private int WinterSolsticeDOY
+        {
+            get {
+                if (Latitude <= 0)
+                    return 173;
+                else
+                    return 356;
+                }
+        }
+        
+        /// <summary>
+        /// Number of days lapsed since the winter solstice
+        /// </summary>
+        [Units("d")]
+        [XmlIgnore]
+        public int DaysSinceWinterSolstice { get; set; }
+
+        /// <summary>
+        /// Maximum clear sky radiation (MJ/m2)
+        /// </summary>
+        [Units("MJ/M2")]
+        [XmlIgnore]
+        public double Qmax { get; set; }
 
         /// <summary>
         /// Gets or sets the rainfall (mm)
@@ -271,10 +302,10 @@
         {
             get
             {
-                if (this.reader == null || this.reader.Constant("Latitude") == null)
+                if (this.reader == null && !this.OpenDataFile())
                     return 0;
-                else
-                    return this.reader.ConstantAsDouble("Latitude");
+
+                return this.reader.ConstantAsDouble("Latitude");
             }
         }
 
@@ -376,8 +407,15 @@
             this.windIndex = 0;
             this.DiffuseFractionIndex = 0;
             this.dayLengthIndex = 0;
-            this.CO2 = 350;
-            this.AirPressure = 1010;
+            if (CO2 == 0)
+                this.CO2 = 350;
+            if (AirPressure == 0)
+                this.AirPressure = 1010;
+            if (reader != null)
+            {
+                reader.Close();
+                reader = null;
+            }
         }
 
         /// <summary>
@@ -438,49 +476,49 @@
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
 
             if (this.radiationIndex != -1)
-                this.Radn = Convert.ToSingle(values[this.radiationIndex]);
+                this.Radn = Convert.ToSingle(values[this.radiationIndex], CultureInfo.InvariantCulture);
             else
                 this.Radn = this.reader.ConstantAsDouble("radn");
 
             if (this.maximumTemperatureIndex != -1)
-                this.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex]);
+                this.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
             else
                 this.MaxT = this.reader.ConstantAsDouble("maxt");
 
             if (this.minimumTemperatureIndex != -1)
-                this.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex]);
+                this.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
             else
                 this.MinT = this.reader.ConstantAsDouble("mint");
 
             if (this.rainIndex != -1)
-                this.Rain = Convert.ToSingle(values[this.rainIndex]);
+                this.Rain = Convert.ToSingle(values[this.rainIndex], CultureInfo.InvariantCulture);
             else
                 this.Rain = this.reader.ConstantAsDouble("rain");
 				
             if (this.evaporationIndex == -1)
                 this.PanEvap = double.NaN;
             else
-                this.PanEvap = Convert.ToSingle(values[this.evaporationIndex]);
+                this.PanEvap = Convert.ToSingle(values[this.evaporationIndex], CultureInfo.InvariantCulture);
 
             if (this.rainfallHoursIndex == -1)
                 this.RainfallHours = double.NaN;
             else
-                this.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex]);
+                this.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
 
             if (this.vapourPressureIndex == -1)
                 this.VP = Math.Max(0, MetUtilities.svp(this.MinT));
             else
-                this.VP = Convert.ToSingle(values[this.vapourPressureIndex]);
+                this.VP = Convert.ToSingle(values[this.vapourPressureIndex], CultureInfo.InvariantCulture);
 
             if (this.windIndex == -1)
                 this.Wind = 3.0;
             else
-                this.Wind = Convert.ToSingle(values[this.windIndex]);
+                this.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
 
             if (this.DiffuseFractionIndex == -1)
                 this.DiffuseFraction = -1;
             else
-                this.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex]);
+                this.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
 
             if (this.dayLengthIndex == -1)  // Daylength is not a column - check for a constant
             {
@@ -490,11 +528,17 @@
                    this.DayLength = -1;
             }
             else
-                this.DayLength = Convert.ToSingle(values[this.dayLengthIndex]);
+                this.DayLength = Convert.ToSingle(values[this.dayLengthIndex], CultureInfo.InvariantCulture);
 
 
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
+
+            if (clock.Today.DayOfYear == WinterSolsticeDOY)
+                DaysSinceWinterSolstice = 0;
+            else DaysSinceWinterSolstice += 1;
+
+            Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha,VP);
         }
 
         /// <summary>
@@ -503,12 +547,19 @@
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
+            if (!System.IO.File.Exists(this.FullFileName) &&
+                System.IO.Path.GetExtension(FullFileName) == string.Empty)
+                FileName += ".met";
+
             if (System.IO.File.Exists(this.FullFileName))
             {
                 if (this.reader == null)
                 {
                     this.reader = new ApsimTextFile();
                     this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+
+                    if (this.reader.Headings == null)
+                        throw new Exception("Cannot find the expected header in weather file: " + this.FullFileName);
 
                     this.maximumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Maxt");
                     this.minimumTemperatureIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Mint");

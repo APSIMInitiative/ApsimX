@@ -7,6 +7,7 @@ using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Resources
 {
@@ -18,12 +19,20 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
+    [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/ruminant/ruminanttype.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         [Link]
         private ResourcesHolder Resources = null;
+
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get {return "NA"; }  }
 
         /// <summary>
         /// Breed
@@ -57,15 +66,10 @@ namespace Models.CLEM.Resources
             if(Apsim.Children(this, typeof(AnimalPricing)).Count() > 0)
             {
                 PriceList = (Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault() as AnimalPricing).Clone();
-//                SirePrice = PriceList.BreedingSirePrice;
             }
 
-            // get advanced conception parameters
-            List<RuminantConceptionAdvanced> concepList = Apsim.Children(this, typeof(RuminantConceptionAdvanced)).Cast<RuminantConceptionAdvanced>().ToList();
-            if(concepList.Count == 1)
-            {
-                AdvancedConceptionParameters = concepList.FirstOrDefault();
-            }
+            // get conception parameters and rate calculation method
+            ConceptionModel = Apsim.Children(this, typeof(Model)).Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
         }
 
         /// <summary>
@@ -74,8 +78,8 @@ namespace Models.CLEM.Resources
         /// <returns>boolean</returns>
         public bool PricingAvailable() {  return (PriceList != null); }
 
-        private List<string> WarningsMultipleEntry = new List<string>();
-        private List<string> WarningsNotFound = new List<string>();
+        private readonly List<string> WarningsMultipleEntry = new List<string>();
+        private readonly List<string> WarningsNotFound = new List<string>();
 
         /// <summary>
         /// Get value of a specific individual
@@ -88,7 +92,7 @@ namespace Models.CLEM.Resources
                 List<Ruminant> animalList = new List<Ruminant>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
                     if (animalList.Filter(item).Count() == 1)
                     {
@@ -96,7 +100,12 @@ namespace Models.CLEM.Resources
                     }
                 }
                 // no price match found.
-                Summary.WriteWarning(this, "No "+purchaseStyle.ToString()+" price entry was found for indiviudal [" + ind.ID + "] with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight + "])");
+                string warning = "No " + purchaseStyle.ToString() + " price entry was found for an indiviudal with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight.ToString("##0") + "])";
+                if (!Warnings.Exists(warning))
+                {
+                    Warnings.Add(warning);
+                    Summary.WriteWarning(this, warning);
+                }
             }
             return 0;
         }
@@ -116,15 +125,15 @@ namespace Models.CLEM.Resources
                 //find first pricing entry matching specific criteria
                 AnimalPriceGroup matchIndividual = null;
                 AnimalPriceGroup matchCriteria = null;
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle | a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1 & matchIndividual == null)
+                    if (animalList.Filter(item).Count() == 1 && matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
 
                     // check that pricing item meets the specified criteria.
-                    if (Apsim.Children(item, typeof(RuminantFilter)).Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() & a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    if (Apsim.Children(item, typeof(RuminantFilter)).Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {
@@ -155,7 +164,7 @@ namespace Models.CLEM.Resources
                     }
                     else
                     {
-                        Summary.WriteWarning(this, "\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for ["+ind.Breed+"]");
+                        warningString += "\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
                     }
                     if (!WarningsNotFound.Contains(criteria))
                     {
@@ -217,10 +226,12 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            if (Apsim.Children(this, typeof(RuminantConceptionAdvanced)).Cast<RuminantConceptionAdvanced>().ToList().Count() > 1)
+            // ensure at least one conception model is associated
+            int conceptionModelCount = Apsim.Children(this, typeof(Model)).Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
+            if (conceptionModelCount > 1)
             {
-                string[] memberNames = new string[] { "RuminantType.RuminantConceptionAdvanced" };
-                results.Add(new ValidationResult(String.Format("Only one Advanced Conception Parameters is permitted within a Ruminant Type [{0}]", Name), memberNames));
+                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
+                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
             }
 
             if (Apsim.Children(this, typeof(AnimalPricing)).Count() > 1)
@@ -248,8 +259,48 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Count();
+                if (Resources.RuminantHerd().Herd != null)
+                {
+                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Count();
+                }
+                return 0;
             }
+        }
+
+        /// <summary>
+        /// Current number of individuals of this herd.
+        /// </summary>
+        public double AmountAE
+        {
+            get
+            {
+                if (Resources.RuminantHerd().Herd != null)
+                {
+                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
+                }
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Returns the most recent conception status
+        /// </summary>
+        [XmlIgnore]
+        public ConceptionStatusChangedEventArgs LastConceptionStatus { get; set; }
+
+        /// <summary>
+        /// The conception status of a female changed for advanced reporting
+        /// </summary>
+        public event EventHandler ConceptionStatusChanged;
+
+        /// <summary>
+        /// Conception status changed 
+        /// </summary>
+        /// <param name="e"></param>
+        public void OnConceptionStatusChanged(ConceptionStatusChangedEventArgs e)
+        {
+            LastConceptionStatus = e;
+            ConceptionStatusChanged?.Invoke(this, e);
         }
 
         #region Grow Activity
@@ -346,6 +397,7 @@ namespace Models.CLEM.Resources
         [Description("Parameter for energy for growth #2")]
         [Required, GreaterThanValue(0)]
         public double GrowthEnergyIntercept2 { get; set; }
+
         /// <summary>
         /// Growth efficiency
         /// </summary>
@@ -353,6 +405,14 @@ namespace Models.CLEM.Resources
         [Description("Growth efficiency")]
         [Required, GreaterThanValue(0)]
         public double GrowthEfficiency { get; set; }
+
+        /// <summary>
+        /// Natural weaning age
+        /// </summary>
+        [Category("Advanced", "Growth")]
+        [Description("Natural weaning age (0 to use gestation length)")]
+        [Required]
+        public double NaturalWeaningAge { get; set; }
 
         /// <summary>
         /// Standard Reference Weight of female
@@ -392,14 +452,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double SRWGrowthScalar { get; set; }
         /// <summary>
-        /// Intake coefficient in relation to Live Weight
+        /// Intake coefficient in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
         [Description("Intake coefficient in relation to Live Weight")]
         [Required, GreaterThanValue(0)]
         public double IntakeCoefficient { get; set; }
         /// <summary>
-        /// Intake intercept In relation to SRW
+        /// Intake intercept in relation to live weight
         /// </summary>
         [Category("Advanced", "Diet")]
         [Description("Intake intercept in relation to SRW")]
@@ -449,20 +509,6 @@ namespace Models.CLEM.Resources
         [Required, Proportion]
         public double GreenDietZero { get; set; }
         /// <summary>
-        /// Coefficient to adjust intake for herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeTropicalQuality { get; set; }
-        /// <summary>
-        /// Coefficient to adjust intake for tropical herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for tropical herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeCoefficientQuality { get; set; }
-        /// <summary>
         /// Coefficient to adjust intake for herbage biomass
         /// </summary>
         [Category("Advanced", "Diet")]
@@ -472,7 +518,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Enforce strict feeding limits
         /// </summary>
-        [Category("Advanced", "Diet")]
+        [Category("Basic", "Diet")]
         [Description("Enforce strict feeding limits")]
         [Required]
         public bool StrictFeedingLimits { get; set; }
@@ -624,7 +670,7 @@ namespace Models.CLEM.Resources
         /// Advanced conception parameters if present
         /// </summary>
         [XmlIgnore]
-        public RuminantConceptionAdvanced AdvancedConceptionParameters { get; set; }
+        public IConceptionModel ConceptionModel { get; set; }
 
         /// <summary>
         /// Milk curve shape suckling
@@ -669,6 +715,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MilkPeakDay { get; set; }
         /// <summary>
+        /// Proportion offspring born male
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0.5)]
+        [Category("Advanced", "Breeding")]
+        [Description("Proportion of offspring male")]
+        [Required, Proportion]
+        public double ProportionOffspringMale { get; set; }
+        /// <summary>
         /// Inter-parturition interval intercept of PW (months)
         /// </summary>
         [Category("Advanced", "Breeding")]
@@ -697,6 +751,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MinimumAge1stMating { get; set; }
         /// <summary>
+        /// Maximum age for mating (months)
+        /// </summary>
+        [Category("Basic", "Breeding")]
+        [Description("Maximum female age for mating")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(120)]
+        public double MaximumAgeMating { get; set; }
+        /// <summary>
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>
         [Category("Basic", "Breeding")]
@@ -711,12 +773,12 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MinimumDaysBirthToConception { get; set; }
         /// <summary>
-        /// Rate at which twins are concieved
+        /// Rate at which multiple births are concieved (twins, triplets, ...)
         /// </summary>
         [Category("Basic", "Breeding")]
-        [Description("Rate at which twins are concieved")]
-        [Required, Proportion]
-        public double TwinRate { get; set; }
+        [Description("Rate at which multiple births occur (twins,triplets,...")]
+        [Proportion]
+        public double[] MultipleBirthRate { get; set; }
         /// <summary>
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>
@@ -724,27 +786,7 @@ namespace Models.CLEM.Resources
         [Description("Proportion of SRW for zero Calving/lambing rate")]
         [Required, Proportion]
         public double CriticalCowWeight { get; set; }
-        /// <summary>
-        /// Conception rate coefficient of breeder PW
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Conception rate coefficient of breeder")]
-        [Required]
-        public double ConceptionRateCoefficent { get; set; }
-        /// <summary>
-        /// Conception rate intercept of breeder PW
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Conception rate intercept of breeder")]
-        [Required, GreaterThanValue(0)]
-        public double ConceptionRateIntercept { get; set; }
-        /// <summary>
-        /// Conception rate assymtote
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Conception rate assymtote")]
-        [Required, GreaterThanValue(0)]
-        public double ConceptionRateAsymptote { get; set; }
+
         /// <summary>
         /// Maximum number of matings per male per day
         /// </summary>
@@ -759,26 +801,12 @@ namespace Models.CLEM.Resources
         [Description("Mortality rate from conception to birth (proportion)")]
         [Required, Proportion]
         public double PrenatalMortality { get; set; }
-        /// <summary>
-        /// Maximum conception rate from uncontrolled breeding 
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Maximum conception rate from uncontrolled breeding")]
-        [Required, Proportion]
-        public double MaximumConceptionUncontrolledBreeding { get; set; }
 
         #endregion
 
         #region other
 
-        // add again if next methane equation requires an intercept value
-
-        ///// <summary>
-        ///// Methane production from intake intercept
-        ///// </summary>
-        //[Description("Methane production from intake intercept")]
-        //[Required]
-        //public double MethaneProductionIntercept { get; set; }
+        // add intercept again if next methane equation requires an intercept value
 
         /// <summary>
         /// Methane production from intake coefficient

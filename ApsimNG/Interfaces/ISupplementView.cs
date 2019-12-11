@@ -11,18 +11,18 @@ namespace UserInterface.Interfaces
 
     public class TSuppAttrArgs : EventArgs
     {
-        public int attr;
-        public double attrVal;
+        public int Attr { get; set; }
+        public double AttrVal { get; set; }
     }
 
     public class TStringArgs : EventArgs
     {
-        public string name;
+        public string Name { get; set; }
     }
 
     public class TIntArgs : EventArgs
     {
-        public int value;
+        public int Value { get; set; }
     }
 
     /// <summary>

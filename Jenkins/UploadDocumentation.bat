@@ -12,11 +12,38 @@ if not exist %apsimx%\Documentation\PDF (
 	exit 1
 )
 
-for /r %apsimx%\Documentation\PDF %%D in (*.pdf) do (
+rem Upload under review models' documentation
+call :upload "%apsimx%\Documentation\PDF\UnderReview" ftp://apsimdev.apsim.info/APSIM/ApsimXFiles/UnderReview/
+if errorlevel 1 exit /b 1
+call :upload "%apsimx%\Documentation\PDF" ftp://apsimdev.apsim.info/APSIM/ApsimXFiles/
+endlocal
+exit /b
+
+rem -------------------------------------------------------------------
+rem ---------------------- Upload subroutine --------------------------
+rem -------------------------------------------------------------------
+rem
+rem This subroutine will upload all PDF files in a directory (not
+rem recursively) to a given URI.
+rem
+rem 2 arguments:
+rem
+rem 1. Directory to search under (required)
+rem 2. Upload URI (required)
+rem
+rem -------------------------------------------------------------------
+:upload
+pushd "%1"
+for %%D in (*.pdf) do (
 	set "NEW_NAME=%%~nD%ISSUE_NUMBER%%%~xD"
 	rename "%%D" "!NEW_NAME!"
 	set "FILE=%%~dpD!NEW_NAME!"
 	echo  Uploading "!FILE!"
-	@curl -s -u !APSIM_SITE_CREDS! -T !FILE! ftp://www.apsim.info/APSIM/ApsimXFiles/
+	@curl -s -u !APSIM_SITE_CREDS! -T "!FILE!" %2
+	if errorlevel 1 (
+		echo error
+		exit /b 1
+	)
 )
-endlocal
+popd
+exit /b

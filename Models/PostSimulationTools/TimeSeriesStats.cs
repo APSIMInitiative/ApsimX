@@ -1,9 +1,4 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="TimeSeriesStats.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.PostSimulationTools
+﻿namespace Models.PostSimulationTools
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +6,8 @@ namespace Models.PostSimulationTools
     using Models.Core;
     using APSIM.Shared.Utilities;
     using Storage;
+    using Models.Core.Run;
+    using System.Threading;
 
     /// <summary>
     /// # [Name]
@@ -22,6 +19,9 @@ namespace Models.PostSimulationTools
     [Serializable]
     public class TimeSeriesStats : Model, IPostSimulationTool
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// Gets or sets the name of the predicted/observed table name.
         /// </summary>
@@ -29,14 +29,9 @@ namespace Models.PostSimulationTools
         [Display(Type = DisplayType.TableName)]
         public string TableName { get; set; }
 
-        /// <summary>
-        /// The main run method called to fill tables in the specified DataStore.
-        /// </summary>
-        /// <param name="dataStore">The DataStore to work with</param>
-        public void Run(IStorageReader dataStore)
+        /// <summary>Main run method for performing our calculations and storing data.</summary>
+        public void Run()
         {
-            dataStore.DeleteDataInTable(this.Name);
-
             DataTable statsData = new DataTable();
             statsData.Columns.Add("SimulationName", typeof(string));
             statsData.Columns.Add("VariableName", typeof(string));
@@ -50,7 +45,7 @@ namespace Models.PostSimulationTools
             statsData.Columns.Add("SDSD", typeof(double));
             statsData.Columns.Add("LCS", typeof(double));
 
-            DataTable simulationData = dataStore.GetData(this.TableName);
+            DataTable simulationData = dataStore.Reader.GetData(this.TableName);
             if (simulationData != null)
             {
                 DataView view = new DataView(simulationData);
@@ -69,7 +64,7 @@ namespace Models.PostSimulationTools
                                 observedColumn.DataType == typeof(double))
                             {
                                 // Calculate stats for each simulation and store them in a rows in our stats table.
-                                string[] simulationNames = dataStore.SimulationNames;
+                                var simulationNames = dataStore.Reader.SimulationNames;
                                 foreach (string simulationName in simulationNames)
                                 {
                                     string seriesName = simulationName;
@@ -88,7 +83,7 @@ namespace Models.PostSimulationTools
 
                 // Write the stats data to the DataStore
                 statsData.TableName = this.Name;
-                dataStore.WriteTable(statsData);
+                dataStore.Writer.WriteTable(statsData);
             }
         }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using EventArguments;
+using UserInterface.EventArguments;
 
 namespace UserInterface.Views
 {

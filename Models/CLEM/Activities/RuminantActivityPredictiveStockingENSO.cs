@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
+using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -23,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking based on predicted seasonal outlooks. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/activities/ruminant/ruminantpredictivestockingenso.htm")]
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStockingENSO.htm")]
     public class RuminantActivityPredictiveStockingENSO: CLEMActivityBase
     {
         [Link]
@@ -172,8 +173,8 @@ namespace Models.CLEM.Activities
                         for (int i = 1; i < items.Count(); i++)
                         {
                             ForecastSequence.Add(
-                                new DateTime(Convert.ToInt16(items[0]), Convert.ToInt16(i), 1),
-                                Convert.ToDouble(items[i])
+                                new DateTime(Convert.ToInt16(items[0]), Convert.ToInt16(i, CultureInfo.InvariantCulture), 1),
+                                Convert.ToDouble(items[i], CultureInfo.InvariantCulture)
                                 );
                         }
                     }
@@ -200,9 +201,9 @@ namespace Models.CLEM.Activities
             // http://www.bom.gov.au/climate/influences/timeline/
 
             DateTime date = new DateTime(Clock.Today.Year, Clock.Today.Month, 1);
-            int monthsAvailable = ForecastSequence.Where(a => a.Key >= date & a.Key <= date.AddMonths(-6)).Count();
+            int monthsAvailable = ForecastSequence.Where(a => a.Key >= date && a.Key <= date.AddMonths(-6)).Count();
             // get sum of previous 6 months
-            double ensoValue = ForecastSequence.Where(a => a.Key >= date & a.Key <= date.AddMonths(-6)).Sum(a => a.Value);
+            double ensoValue = ForecastSequence.Where(a => a.Key >= date && a.Key <= date.AddMonths(-6)).Sum(a => a.Value);
             // get average SIOIndex
             ensoValue /= monthsAvailable;
             if(ensoValue <= MeanSOIForElNino)
@@ -238,8 +239,8 @@ namespace Models.CLEM.Activities
                     // total adult equivalents of all breeds on pasture for utilisation
                     double totalAE = newgroup.Sum(a => a.AdultEquivalent);
                     // determine AE marked for sale and purchase of managed herd
-                    double markedForSaleAE = newgroup.Where(a => a.ReadyForSale & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
-                    double purchaseAE = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key & a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
+                    double markedForSaleAE = newgroup.Where(a => a.ReadyForSale && a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
+                    double purchaseAE = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key && a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
 
                     double herdChange = 1.0;
                     switch (forecastEnsoState)
@@ -285,8 +286,8 @@ namespace Models.CLEM.Activities
 
             // remove potential purchases from list
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            List<Ruminant> purchases = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == paddockName & a.HerdName == HerdName).ToList();
-            while(purchases.Count()>0 & aEforSale>0)
+            List<Ruminant> purchases = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == paddockName && a.HerdName == HerdName).ToList();
+            while(purchases.Count()>0 && aEforSale>0)
             {
                 aEforSale -= purchases[0].AdultEquivalent;
                 purchases.RemoveAt(0);
@@ -304,9 +305,9 @@ namespace Models.CLEM.Activities
             // remove steers
             if (this.SellSteers)
             {
-                List<RuminantMale> steers = ruminantHerd.Herd.Where(a => a.Location == paddockName & a.HerdName == HerdName & a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire == false).ToList();
+                List<RuminantMale> steers = ruminantHerd.Herd.Where(a => a.Location == paddockName && a.HerdName == HerdName && a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.BreedingSire == false).ToList();
                 int cnt = 0;
-                while (cnt < steers.Count() & aEforSale > 0)
+                while (cnt < steers.Count() && aEforSale > 0)
                 {
                     aEforSale -= steers[cnt].AdultEquivalent;
                     steers[cnt].SaleFlag = HerdChangeReason.DestockSale;
@@ -326,9 +327,9 @@ namespace Models.CLEM.Activities
             if (this.SellDryCows)
             {
                 // find dry cows not already marked for sale
-                List<RuminantFemale> drybreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName & a.HerdName == HerdName & a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.DryBreeder == true).ToList();
+                List<RuminantFemale> drybreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName && a.HerdName == HerdName && a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.DryBreeder == true).ToList();
                 int cnt = 0;
-                while (cnt < drybreeders.Count() & aEforSale > 0)
+                while (cnt < drybreeders.Count() && aEforSale > 0)
                 {
                     aEforSale -= drybreeders[cnt].AdultEquivalent;
                     drybreeders[cnt].SaleFlag = HerdChangeReason.DestockSale;
@@ -345,7 +346,7 @@ namespace Models.CLEM.Activities
             }
 
             // remove wet breeders with no calf
-            // currently ignore pregant
+            // currently ignore pregnant
             // is lactating with no calves are sold.
 
             // TODO manage calves from sold wet breeders. eg move to yards
@@ -353,9 +354,9 @@ namespace Models.CLEM.Activities
             {
                 // remove wet cows
                 // find wet cows not already marked for sale
-                List<RuminantFemale> wetbreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName & a.HerdName == HerdName & a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspring.Count() == 0).ToList();
+                List<RuminantFemale> wetbreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName & a.HerdName == HerdName & a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
                 int cnt = 0;
-                while (cnt < wetbreeders.Count() & aEforSale > 0)
+                while (cnt < wetbreeders.Count() && aEforSale > 0)
                 {
                     aEforSale -= wetbreeders[cnt].AdultEquivalent;
                     wetbreeders[cnt].SaleFlag = HerdChangeReason.DestockSale;
@@ -388,22 +389,18 @@ namespace Models.CLEM.Activities
                 double weight = exampleRuminant.StandardReferenceWeight - ((1 - exampleRuminant.BreedParams.SRWBirth) * exampleRuminant.StandardReferenceWeight) * Math.Exp(-(exampleRuminant.BreedParams.AgeGrowthRateCoefficient * (exampleRuminant.Age * 30.4)) / (Math.Pow(exampleRuminant.StandardReferenceWeight, exampleRuminant.BreedParams.SRWGrowthScalar)));
                 double numberToBuy = aEtoBuy * Math.Pow(weight, 0.75) / Math.Pow(exampleRuminant.BreedParams.BaseAnimalEquivalent, 0.75); // convert to AE
 
-                for (int i = 0; i < Convert.ToInt32(numberToBuy); i++)
+                for (int i = 0; i < Convert.ToInt32(numberToBuy, CultureInfo.InvariantCulture); i++)
                 {
-                    Resources.RuminantHerd().PurchaseIndividuals.Add(new RuminantMale()
+                    Resources.RuminantHerd().PurchaseIndividuals.Add(new RuminantMale(192, Sex.Male, weight, exampleRuminant.BreedParams)
                     {
-                        Age = 192, // 16 months
-                        Gender = Sex.Male,
+                        // Age = 192, or 16 months
                         HerdName = exampleRuminant.HerdName,
-                        HighWeight = weight,
                         Number = 1,
                         SaleFlag = HerdChangeReason.RestockPurchase,
                         Breed = exampleRuminant.Breed,
-                        BreedParams = exampleRuminant.BreedParams,
                         BreedingSire = false,
                         Draught = false,
                         Location = paddockName,
-                        Weight = weight
                     }
                     );
                 }

@@ -31,15 +31,15 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Perform the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Do(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history.</param>
+        public void Do(CommandHistory commandHistory)
         {
             explorerView.Tree.SelectedNode = newPath;
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Undo(CommandHistory CommandHistory)
+        /// <param name="commandHistory">The command history.</param>
+        public void Undo(CommandHistory commandHistory)
         {
             // OldNodePath can be null on the very first time the GUI is opened. We
             // don't want to select a null node.

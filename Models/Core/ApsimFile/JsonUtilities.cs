@@ -197,6 +197,23 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Returns a node of a given path. The path should be period-delimited
+        /// names of subsequent child models. The first name in the path should be
+        /// the name of a child model of `node`.
+        /// model of `node`.
+        /// </summary>
+        /// <param name="node">The node to start searching from.</param>
+        /// <param name="path">The path.</param>
+        /// <returns></returns>
+        public static JObject FindFromPath(JObject node, string path)
+        {
+            foreach (string name in path.Split('.'))
+                node = ChildWithName(node, name);
+
+            return node;
+        }
+
+        /// <summary>
         /// Return the parent APSIM model token for the specified model token.
         /// </summary>
         /// <param name="modelToken">The model token to find the parent for.</param>
@@ -230,6 +247,19 @@ namespace Models.Core.ApsimFile
                 propertyToken.Remove(); // remove from parent.
                 modelToken[newPropertyName] = valueToken;
             }
+        }
+
+        /// <summary>
+        /// Renames a child node if it exists.
+        /// </summary>
+        /// <param name="node">Parent node.</param>
+        /// <param name="childName">Name of the child to be renamed.</param>
+        /// <param name="newName">New name of the child.</param>
+        public static void RenameChildModel(JObject node, string childName, string newName)
+        {
+            JObject child = ChildWithName(node, childName);
+            if (child != null)
+                child["Name"] = newName;
         }
 
         /// <summary>
@@ -315,6 +345,55 @@ namespace Models.Core.ApsimFile
                 constantModel["FixedValue"] = fixedValue;
                 children.Add(constantModel);
             }
+        }
+
+        /// <summary>
+        /// Adds the given model as a child of node.
+        /// </summary>
+        /// <param name="node">Node to which the model will be added.</param>
+        /// <param name="model">Child model to be added to node.</param>
+        /// <remarks>
+        /// If we ever rename the Children property of IModel, this (along with
+        /// many other things) will break horribly.
+        /// </remarks>
+        public static void AddModel(JObject node, IModel model)
+        {
+            var children = node["Children"] as JArray;
+            if (children == null)
+            {
+                children = new JArray();
+                node["Children"] = children;
+            }
+            string json = FileFormat.WriteToString(model);
+            JObject child = JObject.Parse(json);
+            children.Add(child);
+        }
+        
+        /// <summary>
+        /// Adds a model of a given type as a child of node.
+        /// </summary>
+        /// <param name="node">Node to which the model will be added.</param>
+        /// <param name="t">Type of the child model to be added to node.</param>
+        public static void AddModel(JObject node, Type t)
+        {
+            AddModel(node, t, t.Name);
+        }
+
+        /// <summary>
+        /// Adds a model of a given type as a child of node.
+        /// </summary>
+        /// <param name="node">Node to which the model will be added.</param>
+        /// <param name="t">Type of the child model to be added to node.</param>
+        /// <param name="name">Name of the model to be added.</param>
+        public static void AddModel(JObject node, Type t, string name)
+        {
+            if (!(typeof(IModel).IsAssignableFrom(t)))
+                throw new Exception(string.Format("Unable to add model of type {0} as a child node - it is not an IModel.", t.FullName));
+            if (name == null)
+                throw new Exception(string.Format("Unable to add model of type {0} to node of type {1}: Provided name is null.", t.FullName, node["$type"]));
+            IModel model = (IModel)t.Assembly.CreateInstance(t.FullName);
+            model.Name = name;
+            AddModel(node, model);
         }
 
         /// <summary>

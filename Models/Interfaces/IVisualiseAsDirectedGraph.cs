@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="INutrient.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-using Models.Graph;
+﻿using Models.Graph;
 
 namespace Models.Interfaces
 {

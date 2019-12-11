@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity folder holds groups of activities and is used to arrange activities and apply timers to groups")]
-    [HelpUri(@"content/features/activities/activitiesfolder.htm")]
+    [HelpUri(@"Content/Features/Activities/ActivitiesFolder.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityFolder : CLEMActivityBase
     {
@@ -110,7 +110,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "\n<div class=folder>"+this.Name+" folder</div>";
+            return "\n<div class=folder>"+this.Name+ " folder " + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
         }
 
         /// <summary>
@@ -128,7 +128,15 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"activityborder\">";
+            double opacity = 1;
+            if (!this.Enabled)
+            {
+                if (this.Parent.Enabled)
+                {
+                    opacity = 0.4;
+                }
+            }
+            return "\n<div class=\"activityborder\" style=\"opacity: " + opacity.ToString() + ";\">";
         }
 
     }

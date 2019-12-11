@@ -23,7 +23,7 @@ namespace Models.Functions
         public string WhenToHold { get; set; }
 
         /// <summary>The value to hold after event</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         IFunction ValueToHold = null;
 
         /// <summary>The phenology</summary>
@@ -34,9 +34,9 @@ namespace Models.Functions
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnCommencing(object sender, EventArgs e)
         {
-            _Value = ValueToHold.Value();
+            GetValue();
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -50,7 +50,7 @@ namespace Models.Functions
                 //Do nothing, hold value constant
             }
             else
-                _Value = ValueToHold.Value();
+                GetValue();
         }
 
         /// <summary>Gets the value.</summary>
@@ -79,6 +79,20 @@ namespace Models.Functions
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }
+
+        /// <summary>Get value</summary>
+        private void GetValue()
+        {
+            try
+            {
+                _Value = ValueToHold.Value();
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
     }
 
 }

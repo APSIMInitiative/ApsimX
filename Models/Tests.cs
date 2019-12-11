@@ -30,7 +30,7 @@ namespace Models
         /// <summary>
         /// A collection of validated stats.
         /// </summary>
-        [APSIM.Shared.Soils.Description("An array of validated regression stats.")]
+        [Models.Core.Description("An array of validated regression stats.")]
         public MathUtilities.RegrStats[] AcceptedStats { get; set; }
 
         /// <summary>
@@ -54,10 +54,10 @@ namespace Models
             PredictedObserved PO = Parent as PredictedObserved;
             if (PO == null)
                 return;
-            IStorageReader DS = PO.Parent as IStorageReader;
+            IDataStore DS = PO.Parent as IDataStore;
             MathUtilities.RegrStats[] stats;
             List<string> statNames = (new MathUtilities.RegrStats()).GetType().GetFields().Select(f => f.Name).ToList(); // use reflection, get names of stats available
-            DataTable POtable = DS.GetData(PO.Name);
+            DataTable POtable = DS.Reader.GetData(PO.Name);
             List<string> columnNames;
             string sigIdent = "X";
 

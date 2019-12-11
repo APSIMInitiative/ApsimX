@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer defines a range between months upon which to perform activities.")]
-    [HelpUri(@"content/features/timers/monthrange.htm")]
+    [HelpUri(@"Content/Features/Timers/MonthRange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
@@ -66,22 +66,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                bool due = IsMonthInRange(Clock.Today);
-                if (due)
-                {
-                    // report activity performed.
-                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
-                    {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = this.Name
-                        }
-                    };
-                    activitye.Activity.SetGuID(this.UniqueID);
-                    this.OnActivityPerformed(activitye);
-                }
-                return due;
+                return IsMonthInRange(Clock.Today);
             }
         }
 
@@ -106,7 +91,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                if ((date.Month >= EndMonth) | (date.Month <= StartMonth))
+                if ((date.Month >= EndMonth) || (date.Month <= StartMonth))
                 {
                     due = true;
                 }
@@ -118,7 +103,7 @@ namespace Models.CLEM.Activities
         /// Activity has occurred 
         /// </summary>
         /// <param name="e"></param>
-        protected virtual void OnActivityPerformed(EventArgs e)
+        public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
@@ -131,13 +116,33 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">";
             html += "\n<div class=\"filter\">";
-            html += "Perform between <span class=\"setvalueextra\">";
-            html += new DateTime(2000, StartMonth, 1).ToString("MMMM");
-            html += "</span> and <span class=\"setvalueextra\">";
-            html += new DateTime(2000, EndMonth, 1).ToString("MMMM");
-            html += "</span></div>";
+            html += "Perform between ";
+            if (StartMonth == 0)
+            {
+                html += "<span class=\"errorlink\">NOT SET</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += new DateTime(2000, StartMonth, 1).ToString("MMMM") + "</span>";
+            }
+            html += " and <span class=\"setvalueextra\">";
+            if (EndMonth == 0)
+            {
+                html += "<span class=\"errorlink\">NOT SET</span>";
+            }
+            else
+            {
+                html += "<span class=\"setvalueextra\">";
+                html += new DateTime(2000, EndMonth, 1).ToString("MMMM") + "</span>";
+            }
+            html += "</div>";
+            if (!this.Enabled)
+            {
+                html += " - DISABLED!";
+            }
             html += "\n</div>";
             return html;
         }

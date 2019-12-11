@@ -681,6 +681,8 @@
               <Salb>0.15</Salb>
               <Thickness>
                 <double>30</double>
+                <double>30</double>
+                <double>30</double>
                 <double>170</double>
                 <double>200</double>
                 <double>200</double>

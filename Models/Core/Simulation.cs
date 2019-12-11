@@ -1,17 +1,13 @@
-﻿using System.Reflection;
-using System;
-using Models;
-using System.Diagnostics;
-using System.Xml;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using System.IO;
-using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.JobRunning;
+using Models.Core.Run;
 using Models.Factorial;
-using System.ComponentModel;
-using Models.Core.Runners;
+using Models.Storage;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Models.Core.ApsimFile;
+using System.Threading;
+using System.Xml.Serialization;
 
 namespace Models.Core
 {
@@ -25,13 +21,22 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, ISimulationGenerator
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator
     {
+        [Link]
+        private ISummary summary = null;
+
         [NonSerialized]
         private ScopingRules scope = null;
 
-        /// <summary>Has this simulation been run?</summary>
-        private bool hasRun;
+        /// <summary>Invoked when simulation is about to commence.</summary>
+        public event EventHandler Commencing;
+
+        /// <summary>Invoked to signal start of simulation.</summary>
+        public event EventHandler<CommenceArgs> DoCommence;
+
+        /// <summary>Invoked when the simulation is completed.</summary>
+        public event EventHandler Completed;
 
         /// <summary>Return total area.</summary>
         public double Area
@@ -41,6 +46,7 @@ namespace Models.Core
                 return Apsim.Children(this, typeof(Zone)).Sum(z => (z as Zone).Area);
             }
         }
+
 
         /// <summary>
         /// An enum that is used to indicate message severity when writing messages to the .db
@@ -101,6 +107,10 @@ namespace Models.Core
             }
         }
 
+        /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
+        [JsonIgnore]
+        public List<SimulationDescription.Descriptor> Descriptors { get; set; }
+
         /// <summary>Gets the value of a variable or model.</summary>
         /// <param name="namePath">The name of the object to return</param>
         /// <returns>The found object or null if not found</returns>
@@ -130,6 +140,10 @@ namespace Models.Core
         [XmlIgnore]
         public string FileName { get; set; }
 
+        /// <summary>Collection of models that will be used in resolving links. Can be null.</summary>
+        [JsonIgnore]
+        public List<object> Services { get; set; } = new List<object>();
+
         /// <summary>
         /// Simulation has completed. Clear scope and locator
         /// </summary>
@@ -150,81 +164,124 @@ namespace Models.Core
             Locater.Clear();
         }
 
-
-        /// <summary>Simulation runs are about to begin.</summary>
-        [EventSubscribe("BeginRun")]
-        private void OnBeginRun()
-        {
-            hasRun = false;
-        }
-
         /// <summary>Gets the next job to run</summary>
-        public Simulation NextSimulationToRun(bool doFullFactorial = true)
+        public List<SimulationDescription> GenerateSimulationDescriptions()
         {
-            if (Parent is ISimulationGenerator || hasRun)
-                return null;
-            hasRun = true;
+            var simulationDescription = new SimulationDescription(this);
 
-            Simulation simulationToRun;
-            if (this.Parent == null)
-                simulationToRun = this;
-            else
-            {
-                Simulations simulationEngine = Apsim.Parent(this, typeof(Simulations)) as Simulations;
-                simulationToRun = Apsim.Clone(this) as Simulation;
+            // Add a folderName descriptor.
+            var folderNode = Apsim.Parent(this, typeof(Folder));
+            if (folderNode != null)
+                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
 
-                // We are breaking.NET naming rules with our manager scripts.All our manager scripts are class 
-                // Script in the Models namespace.This is OK until we do a clone(binary serialise/deserialise). 
-                // When this happens, the serialisation engine seems to choose the first assembly it can find 
-                // that has the 'right' code.It seems that if the script c# is close to an existing assembly then 
-                // it chooses that assembly. In the attached .apsimx, it chooses the wrong temporary assembly for 
-                // SowingRule2. It chooses SowingRule assembly even though the script for the 2 manager files is 
-                // different. I'm not sure how to fix this yet. A brute force way is to recompile all manager 
-                // scripts after cloning.
-                // https://github.com/APSIMInitiative/ApsimX/issues/2603
+            simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
 
-                simulationEngine.MakeSubsAndLoad(simulationToRun);
-            }
-            return simulationToRun;
-        }
+            foreach (var zone in Apsim.ChildrenRecursively(this, typeof(Zone)))
+                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
 
-        /// <summary>Gets a list of simulation names</summary>
-        public IEnumerable<string> GetSimulationNames(bool fullFactorial = true)
-        {
-            if (Parent is ISimulationGenerator)
-                return new string[0];
-            return new string[] { Name };
-        }
-
-        /// <summary>Gets a list of factors</summary>
-        public List<ISimulationGeneratorFactors> GetFactors()
-        {
-            List<ISimulationGeneratorFactors> factors = new List<ISimulationGeneratorFactors>();
-            // Add top level simulation zone. This is needed if Report is in top level.
-            factors.Add(new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
-                                                       new string[] { Name, Name },
-                                                       "Simulation", Name));
-            factors[0].AddFactor("Zone", Name);
-            foreach (IModel zone in Apsim.ChildrenRecursively(this).Where(c => ScopingRules.IsScopedModel(c)))
-            {
-                var factor = new SimulationGeneratorFactors(new string[] { "SimulationName", "Zone" },
-                                                            new string[] { Name, zone.Name }, 
-                                                            "Simulation", Name);
-                factors.Add(factor);
-                factor.AddFactor("Zone", zone.Name);
-            }
-            return factors;
+            return new List<SimulationDescription>() { simulationDescription };
         }
 
         /// <summary>
-        /// Generates an .apsimx file for this simulation.
+        /// Runs the simulation on the current thread and waits for the simulation
+        /// to complete before returning to caller. Simulation is NOT cloned before
+        /// running. Use instance of Runner to get more options for running a 
+        /// simulation or groups of simulations. 
         /// </summary>
-        /// <param name="path">Directory to write the file to.</param>
-        public void GenerateApsimXFile(string path)
+        /// <param name="cancelToken">Is cancellation pending?</param>
+        public void Run(CancellationTokenSource cancelToken = null)
         {
-            IModel obj = Simulations.Create(new List<IModel> { this, new Models.Storage.DataStore() });
-            string st = FileFormat.WriteToString(obj);
-            File.WriteAllText(Path.Combine(path, Name + ".apsimx"), st);
+            // If the cancelToken is null then give it a default one. This can happen 
+            // when called from the unit tests.
+            if (cancelToken == null)
+                cancelToken = new CancellationTokenSource();
+
+            // Remove disabled models.
+            RemoveDisabledModels(this);
+
+            // If this simulation was not created from deserialisation then we need
+            // to parent all child models correctly and call OnCreated for each model.
+            bool hasBeenDeserialised = Children.Count > 0 && Children[0].Parent == this;
+            if (!hasBeenDeserialised)
+            {
+                // Parent all models.
+                Apsim.ParentAllChildren(this);
+
+                // Call OnCreated in all models.
+                Apsim.ChildrenRecursively(this).ForEach(m => m.OnCreated());
+            }
+
+            if (Services == null || Services.Count < 1)
+            {
+                Services = new List<object>();
+                IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+                if (storage != null)
+                    Services.Add(Apsim.Find(this, typeof(IDataStore)));
+            }
+
+            var links = new Links(Services);
+            var events = new Events(this);
+
+            try
+            {
+                // Connect all events.
+                events.ConnectEvents();
+
+                // Resolve all links
+                links.Resolve(this, true);
+
+                // Invoke our commencing event to let all models know we're about to start.
+                Commencing?.Invoke(this, new EventArgs());
+
+                // Begin running the simulation.
+                DoCommence?.Invoke(this, new CommenceArgs() { CancelToken = cancelToken });
+            }
+            catch (Exception err)
+            {
+                // Exception occurred. Write error to summary.
+                string errorMessage = "ERROR in file: " + FileName + Environment.NewLine +
+                                      "Simulation name: " + Name + Environment.NewLine;
+                errorMessage += err.ToString();
+
+                summary?.WriteError(this, errorMessage);
+
+                // Rethrow exception
+                throw new Exception(errorMessage, err);
+            }
+            finally
+            {
+                // Signal that the simulation is complete.
+                Completed?.Invoke(this, new EventArgs());
+
+                // Disconnect our events.
+                events.DisconnectEvents();
+
+                // Unresolve all links.
+                links.Unresolve(this, true);
+            }
+        }
+
+        /// <summary>
+        /// Remove all disabled child models from the specified model.
+        /// </summary>
+        /// <param name="model"></param>
+        private void RemoveDisabledModels(IModel model)
+        {
+            model.Children.RemoveAll(child => !child.Enabled);
+            model.Children.ForEach(child => RemoveDisabledModels(child));
+        }
+
+        /// <summary>Gets the simulation fraction complete.</summary>
+        public double FractionComplete
+        {
+            get
+            {
+                Clock c = Apsim.Child(this, typeof(Clock)) as Clock;
+                if (c == null)
+                    return 0;
+                else
+                    return c.FractionComplete;
+            }
         }
     }
 }

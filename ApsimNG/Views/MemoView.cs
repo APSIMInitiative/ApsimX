@@ -9,11 +9,12 @@ namespace UserInterface.Views
     {
         event EventHandler<EditorArgs> MemoLeave;
         event EventHandler<EditorArgs> MemoChange;
+        event EventHandler StartEdit;
 
         /// <summary>
         /// Add an action (on context menu) on the memo.
         /// </summary>
-        void AddContextAction(string ButtonText, System.EventHandler OnClick);
+        void AddContextAction(string buttonText, EventHandler onClick);
 
         /// <summary>
         /// Return the current cursor position in the memo.
@@ -36,16 +37,18 @@ namespace UserInterface.Views
     {
         public event EventHandler<EditorArgs> MemoLeave;
         public event EventHandler<EditorArgs> MemoChange;
+        public event EventHandler StartEdit;
 
         private VBox vbox1 = null;
-        public TextView textView = null;
-        private Label label1 = null;
+        private HBox hbox1 = null;
+        public TextView TextView { get; set; } = null;
+        private LinkButton editLabel = null;
         private Button helpBtn = null;
-
+        
         private class MenuInfo
         {
-            public string menuText;
-            public EventHandler action;
+            public string MenuText { get; set; }
+            public EventHandler Action { get; set; }
         }
 
         List<MenuInfo> menuItemList = new List<MenuInfo>();
@@ -54,20 +57,24 @@ namespace UserInterface.Views
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MemoView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
-            textView = (TextView)builder.GetObject("textView");
-            label1 = (Label)builder.GetObject("label1");
+            hbox1 = (HBox)builder.GetObject("hbox1");
+            TextView = (TextView)builder.GetObject("textView");
+            editLabel = (LinkButton)builder.GetObject("label1");
+
             helpBtn = (Button)builder.GetObject("buttonHelp");
             helpBtn.Image = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.help.png", 20, 20));
             helpBtn.ImagePosition = PositionType.Right;
             helpBtn.Image.Visible = true;
             helpBtn.Clicked += HelpBtn_Clicked;
-            _mainWidget = vbox1;
-            textView.ModifyFont(Pango.FontDescription.FromString("monospace"));
-            textView.FocusOutEvent += richTextBox1_Leave;
-            textView.Buffer.Changed += richTextBox1_TextChanged;
-            textView.PopulatePopup += TextView_PopulatePopup;
-            textView.ButtonPressEvent += TextView_ButtonPressEvent;
-            _mainWidget.Destroyed += _mainWidget_Destroyed;
+            mainWidget = vbox1;
+            TextView.ModifyFont(Pango.FontDescription.FromString("monospace"));
+            TextView.FocusOutEvent += RichTextBox1_Leave;
+            TextView.Buffer.Changed += RichTextBox1_TextChanged;
+            TextView.PopulatePopup += TextView_PopulatePopup;
+            TextView.ButtonPressEvent += TextView_ButtonPressEvent;
+            editLabel.Clicked += Memo_StartEdit;
+
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         // Let a right click move the cursor if we're about to display a popup menu,
@@ -78,20 +85,21 @@ namespace UserInterface.Views
             if (menuItemList.Count > 0 && args.Event.Button == 3)
             {
                 int x, y;
-                textView.WindowToBufferCoords(TextWindowType.Text, (int)(args.Event.X), (int)(args.Event.Y), out x, out y);
-                TextIter where = textView.GetIterAtLocation(x, y);
-                textView.Buffer.PlaceCursor(where);
+                TextView.WindowToBufferCoords(TextWindowType.Text, (int)(args.Event.X), (int)(args.Event.Y), out x, out y);
+                TextIter where = TextView.GetIterAtLocation(x, y);
+                TextView.Buffer.PlaceCursor(where);
             }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textView.FocusOutEvent -= richTextBox1_Leave;
-            textView.Buffer.Changed -= richTextBox1_TextChanged;
-            textView.PopulatePopup -= TextView_PopulatePopup;
+            TextView.FocusOutEvent -= RichTextBox1_Leave;
+            TextView.Buffer.Changed -= RichTextBox1_TextChanged;
+            TextView.PopulatePopup -= TextView_PopulatePopup;
             menuItemList.Clear();
-            _mainWidget.Destroyed -= _mainWidget_Destroyed;
-            _owner = null;
+            mainWidget.Destroyed -= _mainWidget_Destroyed;
+            editLabel.Clicked -= Memo_StartEdit;
+            owner = null;
         }
 
         /// <summary>
@@ -99,8 +107,8 @@ namespace UserInterface.Views
         /// </summary>
         public string MemoText
         {
-            get { return textView.Buffer.Text; }
-            set { textView.Buffer.Text = value; }
+            get { return TextView.Buffer.Text; }
+            set { TextView.Buffer.Text = value; }
         }
 
         /// <summary>
@@ -110,15 +118,15 @@ namespace UserInterface.Views
         {
             get
             {
-                string contents = textView.Buffer.Text;
+                string contents = TextView.Buffer.Text;
                 return contents.Split(new string[] { Environment.NewLine, "\r\n", "\n" }, StringSplitOptions.None);
             }
             set
             {
-                textView.Buffer.Clear();
-                TextIter iter = textView.Buffer.EndIter;
+                TextView.Buffer.Clear();
+                TextIter iter = TextView.Buffer.EndIter;
                 foreach (string line in value)
-                    textView.Buffer.Insert(ref iter, line + Environment.NewLine);
+                    TextView.Buffer.Insert(ref iter, line + Environment.NewLine);
             }
         }
 
@@ -127,8 +135,8 @@ namespace UserInterface.Views
         /// </summary>
         public bool ReadOnly 
         {
-            get { return !textView.Editable; }
-            set { textView.Editable = !value; }
+            get { return !TextView.Editable; }
+            set { TextView.Editable = !value; }
         }
 
         /// <summary>
@@ -136,14 +144,14 @@ namespace UserInterface.Views
         /// </summary>
         public string LabelText 
         {
-            get { return label1.Text; }
-            set { label1.Text = value; }
+            get { return editLabel.Label; }
+            set { editLabel.Label = value; }
         }
 
         public bool WordWrap
         {
-            get { return textView.WrapMode == WrapMode.Word; }
-            set { textView.WrapMode = value ? WrapMode.Word : WrapMode.None;  }
+            get { return TextView.WrapMode == WrapMode.Word; }
+            set { TextView.WrapMode = value ? WrapMode.Word : WrapMode.None;  }
         }
 
         /// <summary>
@@ -151,24 +159,45 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void richTextBox1_Leave(object sender, FocusOutEventArgs e)
+        private void RichTextBox1_Leave(object sender, FocusOutEventArgs e)
         {
             if (MemoLeave != null)
             {
                 EditorArgs args = new EditorArgs();
-                args.TextString = textView.Buffer.Text;
+                args.TextString = TextView.Buffer.Text;
                 MemoLeave(this, args);
             }
         }
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        /// <summary>
+        /// The Edit option has been clicked and noe start the editing of the markdown.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Memo_StartEdit(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.CompareOrdinal(editLabel.Label, "Hide editor") == 0)
+                    editLabel.Label = "Edit text";
+                else
+                    editLabel.Label = "Hide editor";
+                StartEdit?.Invoke(this, e);
+            }
+            catch(Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        private void RichTextBox1_TextChanged(object sender, EventArgs e)
         {
             try
             {
                 if (MemoChange != null)
                 {
                     EditorArgs args = new EditorArgs();
-                    args.TextString = textView.Buffer.Text;
+                    args.TextString = TextView.Buffer.Text;
                     MemoChange(this, args);
                 }
             }
@@ -184,8 +213,8 @@ namespace UserInterface.Views
         public void AddContextAction(string buttonText, System.EventHandler onClick)
         {
             MenuInfo item = new MenuInfo();
-            item.menuText = buttonText;
-            item.action = onClick;
+            item.MenuText = buttonText;
+            item.Action = onClick;
             menuItemList.Add(item);
         }
 
@@ -200,8 +229,8 @@ namespace UserInterface.Views
                 }
                 foreach (MenuInfo item in menuItemList)
                 {
-                    MenuItem menuItem = new MenuItem(item.menuText);
-                    menuItem.Activated += item.action;
+                    MenuItem menuItem = new MenuItem(item.MenuText);
+                    menuItem.Activated += item.Action;
                     menuItem.Visible = true;
                     args.Menu.Append(menuItem);
                 }
@@ -216,10 +245,19 @@ namespace UserInterface.Views
         {
             get
             {
-                TextIter cursorIter = textView.Buffer.GetIterAtMark(textView.Buffer.InsertMark);
+                TextIter cursorIter = TextView.Buffer.GetIterAtMark(TextView.Buffer.InsertMark);
                 int lineNumber = cursorIter.Line;
                 return new Point(cursorIter.Offset, cursorIter.Line);
             }
+        }
+
+        /// <summary>
+        /// Return the height of the header panel
+        /// </summary>
+        /// <returns></returns>
+        public int HeaderHeight()
+        {
+            return hbox1.Allocation.Height;
         }
 
         /// <summary>

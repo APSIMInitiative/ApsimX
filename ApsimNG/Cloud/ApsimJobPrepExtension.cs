@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.Batch;
-using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.Azure.Storage.Blob;
 
 namespace ApsimNG.Cloud
 {
@@ -42,7 +42,7 @@ namespace ApsimNG.Cloud
         /// <returns></returns>
         private static IEnumerable<ResourceFile> GetResourceFiles(APSIMJob job, CloudBlobClient blobClient)
         {
-            yield return new ResourceFile(job.ModelZipFileSas, BatchConstants.MODEL_ZIPFILE_NAME);
+            yield return ResourceFile.FromUrl(job.ModelZipFileSas, BatchConstants.ModelZipFileName);
 
             var toolsRef = blobClient.GetContainerReference("tools");
             foreach(CloudBlockBlob listBlobItem in toolsRef.ListBlobs())
@@ -53,7 +53,7 @@ namespace ApsimNG.Cloud
                     SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(2),
                     Permissions = SharedAccessBlobPermissions.Read,
                 });
-                yield return new ResourceFile(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
+                yield return ResourceFile.FromUrl(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
             }
 
             var apsimRef = blobClient.GetContainerReference("apsim");
@@ -67,7 +67,7 @@ namespace ApsimNG.Cloud
                         SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(2),
                         Permissions = SharedAccessBlobPermissions.Read
                     });
-                    yield return new ResourceFile(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
+                    yield return ResourceFile.FromUrl(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
                 }
             }
         }

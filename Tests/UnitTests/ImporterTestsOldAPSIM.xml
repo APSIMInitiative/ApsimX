@@ -1,0 +1,1786 @@
+<folder version="36" creator="Apsim 7.6-r3376" name="BP14">
+  <simulation name="Sorghum_BP14_M35-1_stress">
+    <metfile name="met">
+      <filename name="filename" input="yes">C:\2011jana\sorghum2010\Field2010\RemsBP14\PATANCHERU.met</filename>
+    </metfile>
+    <clock>
+      <start_date type="date" description="Enter the start date of the simulation">15/06/2010</start_date>
+      <end_date type="date" description="Enter the end date of the simulation">25/04/2011</end_date>
+    </clock>
+    <summaryfile />
+    <area name="paddock">
+      <surfaceom name="surface organic matter">
+        <PoolName type="text" description="Organic Matter pool name">chickpea</PoolName>
+        <type type="list" listvalues="bambatsi,barley,base_type,broccoli,camaldulensis,canola,centro,chickpea,chikenmanure_base,cm,cmA,cmB,constants,cotton,cowpea,danthonia,fababean,fieldpea,fym,gbean,globulus,goatmanure,grandis,grass,horsegram,inert,lablab,lentil,lucerne,lupin,maize,manB,manure,medic,millet,mucuna,nativepasture,navybean,oats,orobanche,peanut,pigeonpea,potato,rice,sorghum,soybean,stylo,sugar,sunflower,sweetcorn,sweetsorghum,tillage,tithonia,vetch,weed,wheat" description="Organic Matter type">chickpea</type>
+        <mass type="text" description="Initial surface residue (kg/ha)">1000</mass>
+        <cnr type="text" description="C:N ratio of initial residue">80</cnr>
+        <standing_fraction type="text" description="Fraction of residue standing">0</standing_fraction>
+      </surfaceom>
+      <fertiliser />
+      <folder name="Manager folder">
+        <manager name="Sow on a fixed date">
+          <ui>
+            <category type="category" description="Sowing criteria" />
+            <date type="text" description="Enter sowing date (dd-mmm) : ">15/11/2010</date>
+            <category type="category" description="Sowing parameters" />
+            <crop type="crop" description="Enter name of crop to sow : ">sorghum</crop>
+            <density type="text" description="Enter sowing density  (plants/m2) : ">12</density>
+            <depth type="text" description="Enter sowing depth  (mm) : ">35</depth>
+            <cultivar type="cultivars" description="Enter cultivar : ">M35-1</cultivar>
+            <ftn type="text" description="Enter Fertile Tiller Number :">0</ftn>
+            <row_spacing type="text" description="Enter row spacing (mm) : ">600</row_spacing>
+            <skiprow type="list" listvalues="solid, single, double" description="Skip row : ">solid</skiprow>
+          </ui>
+          <script>
+            <text>
+              if (today = date('[date]') then
+              [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [skiprow], tiller_no_fertile = [ftn]
+              endif
+            </text>
+            <event>start_of_day</event>
+          </script>
+        </manager>
+        <manager name="Harvesting rule">
+          <ui>
+            <category description="Harvesting criteria" type="category" />
+            <crop type="crop" description="Enter name of crop to harvest when ripe : ">sorghum</crop>
+          </ui>
+          <script name="end_of_day">
+            <text>
+
+              if [crop].StageName = 'harvest_ripe' or [crop].plant_status = 'dead' then
+              [crop]  harvest
+              [crop]  end_crop
+              endif
+
+            </text>
+            <event>end_of_day</event>
+          </script>
+        </manager>
+      </folder>
+      <Soil name="BP14">
+        <SoilType type="text" description="Soil description">BW8</SoilType>
+        <LocalName type="text" description="LocalName">ICRISAT</LocalName>
+        <Site type="text" description="Site">ICRISAT</Site>
+        <NearestTown type="text" description="Nearest town">ICRISAT</NearestTown>
+        <Region type="text" description="Region">Patancheru</Region>
+        <State type="text" description="State">AP</State>
+        <Country type="text" description="Country">India</Country>
+        <Latitude type="text" description="Latitude (WGS84)">0</Latitude>
+        <Longitude type="text" description="Longitude (WGS84)">0</Longitude>
+        <DataSource type="multiedit" description="Data source">
+          UNK
+        </DataSource>
+        <Comments type="multiedit" description="Comments">UNK</Comments>
+        <Water>
+          <SoilCrop name="sorghum">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+            </Thickness>
+            <LL>
+              <double>0.21</double>
+              <double>0.22</double>
+              <double>0.23</double>
+              <double>0.24</double>
+              <double>0.24</double>
+              <double>0.25</double>
+              <double>0.26</double>
+              <double>0.27</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <BD>
+            <double>1.32</double>
+            <double>1.49</double>
+            <double>1.54</double>
+            <double>1.54</double>
+            <double>1.49</double>
+            <double>1.47</double>
+            <double>1.38</double>
+            <double>1.37</double>
+            <double>1.33</double>
+            <double>1.35</double>
+          </BD>
+          <AirDry>
+            <double>0.18</double>
+            <double>0.2</double>
+            <double>0.2</double>
+            <double>0.2</double>
+            <double>0.19</double>
+            <double>0.18</double>
+            <double>0.18</double>
+            <double>0.18</double>
+            <double>0.18</double>
+            <double>0.18</double>
+          </AirDry>
+          <LL15>
+            <double>0.21</double>
+            <double>0.22</double>
+            <double>0.23</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.25</double>
+            <double>0.26</double>
+            <double>0.27</double>
+            <double>0.28</double>
+            <double>0.28</double>
+          </LL15>
+          <DUL>
+            <double>0.42</double>
+            <double>0.39</double>
+            <double>0.36</double>
+            <double>0.36</double>
+            <double>0.36</double>
+            <double>0.37</double>
+            <double>0.39</double>
+            <double>0.39</double>
+            <double>0.39</double>
+            <double>0.39</double>
+          </DUL>
+          <SAT>
+            <double>0.5</double>
+            <double>0.44</double>
+            <double>0.42</double>
+            <double>0.42</double>
+            <double>0.44</double>
+            <double>0.45</double>
+            <double>0.48</double>
+            <double>0.48</double>
+            <double>0.5</double>
+            <double>0.49</double>
+          </SAT>
+        </Water>
+        <SoilWater>
+          <SummerCona type="text" description="SummerCona">3.5</SummerCona>
+          <SummerU type="text" description="SummerU">6</SummerU>
+          <SummerDate type="text" description="SummerDate">1-Dec</SummerDate>
+          <WinterCona type="text" description="WinterCona">3.5</WinterCona>
+          <WinterU type="text" description="WinterU">6</WinterU>
+          <WinterDate type="text" description="WinterDate">1-Apr</WinterDate>
+          <DiffusConst type="text" description="DiffusConst">40</DiffusConst>
+          <DiffusSlope type="text" description="DiffusSlope">16</DiffusSlope>
+          <Salb type="text" description="Salb">0.11</Salb>
+          <CN2Bare type="text" description="Cn2Bare">85</CN2Bare>
+          <CNRed type="text" description="CnRed">0.8</CNRed>
+          <CNCov type="text" description="CnCov">.8</CNCov>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <SWCON>
+            <double>0.16</double>
+            <double>0.11</double>
+            <double>0.14</double>
+            <double>0.14</double>
+            <double>0.11</double>
+            <double>0.11</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.12</double>
+          </SWCON>
+        </SoilWater>
+        <SoilOrganicMatter>
+          <RootCN type="text" description="RootCn">70</RootCN>
+          <RootWt type="text" description="RootWt">1000</RootWt>
+          <SoilCN type="text" description="SoilCn">2000</SoilCN>
+          <EnrACoeff type="text" description="EnrACoeff">7.4</EnrACoeff>
+          <EnrBCoeff type="text" description="EnrBCoeff">0.2</EnrBCoeff>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <OC>
+            <double>2.2</double>
+            <double>1.3</double>
+            <double>1.4</double>
+            <double>0.98</double>
+            <double>0.5</double>
+            <double>0.32</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
+          </OC>
+          <OCUnits>WalkleyBlack</OCUnits>
+          <FBiom>
+            <double>0.05</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.39</double>
+            <double>0.47</double>
+            <double>0.52</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+          </FInert>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <EC>
+            <double>0.15</double>
+            <double>0.17</double>
+            <double>0.18</double>
+            <double>0.32</double>
+            <double>0.59</double>
+            <double>0.71</double>
+            <double>0.63</double>
+            <double>0.63</double>
+            <double>0.63</double>
+            <double>0.63</double>
+          </EC>
+          <PH>
+            <double>7.7</double>
+            <double>8.3</double>
+            <double>8.4</double>
+            <double>8.5</double>
+            <double>8.5</double>
+            <double>8.5</double>
+            <double>8.6</double>
+            <double>8.6</double>
+            <double>8.6</double>
+            <double>8.6</double>
+          </PH>
+          <ParticleSizeSand>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+          </ParticleSizeSand>
+          <ParticleSizeSilt>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+          </ParticleSizeSilt>
+          <ParticleSizeClay>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+          </ParticleSizeClay>
+        </Analysis>
+        <Sample name="Initial nitrogen">
+          <Date type="date" description="Sample date:" />
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <NO3>
+            <double>80.61</double>
+            <double>53.03</double>
+            <double>49.62</double>
+            <double>63.44</double>
+            <double>51.66</double>
+            <double>31.21</double>
+            <double>16.29</double>
+            <double>16.29</double>
+            <double>16.29</double>
+            <double>16.29</double>
+          </NO3>
+          <NO3Units>kgha</NO3Units>
+          <NH4>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+          </NH4>
+          <NH4Units>kgha</NH4Units>
+          <SW>
+            <double>0.47</double>
+            <double>0.42</double>
+            <double>0.41</double>
+            <double>0.41</double>
+            <double>0.43</double>
+            <double>0.42</double>
+            <double>0.45</double>
+            <double>0.45</double>
+            <double>0.46</double>
+            <double>0.46</double>
+          </SW>
+        </Sample>
+      </Soil>
+      <outputfile>
+        <filename output="yes">Sorghum_BP14_M35-1_stress.out</filename>
+        <title>Sorghum_BP14_M35-1_stress</title>
+        <variables name="Variables">
+          <variable>dd/mm/yyyy</variable>
+          <variable>DaysAfterSowing</variable>
+          <variable>stage</variable>
+          <variable>TT</variable>
+          <variable>LeafNo</variable>
+          <variable>biomass</variable>
+          <variable>yield</variable>
+          <variable>lai</variable>
+          <variable>ep</variable>
+          <variable>transpiration</variable>
+          <variable>transpiration_tot</variable>
+          <variable>es</variable>
+          <variable>transp_eff</variable>
+          <variable>vpd</variable>
+          <variable>GrainNo</variable>
+          <variable>GrainSize</variable>
+          <variable>esw</variable>
+          <variable>sw()</variable>
+          <variable>mint</variable>
+          <variable>maxt</variable>
+          <variable>rain</variable>
+          <variable>InCropRain</variable>
+          <variable>WaterSD</variable>
+        </variables>
+      </outputfile>
+      <manager name="Calculator">
+        <script name="init">
+          <text>
+            ftn = 0
+            InCropRain = 0
+            tt = 0
+          </text>
+          <event>init</event>
+        </script>
+        <script name="start_of_day">
+          <text>
+          </text>
+          <event>start_of_day</event>
+        </script>
+        <script name="end_of_day">
+          <text>
+            <![CDATA[if (paddock_is_fallow() = 0) then
+   outputfile do_output
+endif
+
+InCropRain = InCropRain + rain
+
+TT = TT + DeltaTT
+
+if (day > 152) then
+     current_season = year
+else
+     current_season = year -1
+endif
+]]>
+          </text>
+          <event>end_of_day</event>
+        </script>
+      </manager>
+      <irrigation name="Irrigation">
+        <automatic_irrigation type="list" listvalues="on,off" description="Automatic irrigation">off</automatic_irrigation>
+        <asw_depth type="text" description="Depth to which ASW is calculated. (mm)">600</asw_depth>
+        <crit_fr_asw type="text" description="Fraction of ASW below which irrigation is applied (0-1.0)">0.5</crit_fr_asw>
+        <irrigation_efficiency type="text" description="Efficiency of the irrigation. (0-1.0)">1</irrigation_efficiency>
+        <irrigation_allocation type="list" listvalues="on,off" description="Allocation limits">off</irrigation_allocation>
+        <allocation type="text" description="Allocation in mm">0</allocation>
+        <default_no3_conc type="text" description="Nitrate concentration (ppm N)">0.0</default_no3_conc>
+        <default_nh4_conc type="text" description="Ammonium concentration (ppm N)">0.0</default_nh4_conc>
+        <default_cl_conc type="text" description="Chloride concentration (ppm Cl)">0.0</default_cl_conc>
+      </irrigation>
+      <operations name="Operations Schedule">
+        <operation condition="start_of_day">
+          <date>12/11/2010</date>
+          <action>fertiliser apply amount = 40 (kg/ha), depth = 50 (mm), type = NO3_N ()</action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>15/12/2010</date>
+          <action>fertiliser apply amount = 46 (kg/ha), depth = 50 (mm), type = NO3_N ()</action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>16/11/2010</date>
+          <action>Irrigation apply amount = 15</action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>30/11/2010</date>
+          <action>Irrigation apply amount = 8</action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>4/12/2010</date>
+          <action>Irrigation apply amount = 15</action>
+        </operation>
+      </operations>
+      <Sorghum>
+        <sorghumConstants name="standard">
+          <crop_type type="text" description="crop_type">sorghum</crop_type>
+          <default_crop_class type="text" description="default_crop_class">plant</default_crop_class>
+          <stage_names type="text" description="stage_names">sowing germination emergence end_of_juvenile floral_initiation flag_leaf flowering start_grain_fill end_grain_fill maturity harvest_ripe end_crop</stage_names>
+          <stage_code type="text" description="stage_code">1   2   3    4      5     6     7    8    9    10   11   12</stage_code>
+          <pesw_germ type="text" description="pesw_germ">0</pesw_germ>
+          <shoot_lag type="text" description="shoot_lag">15</shoot_lag>
+          <shoot_rate type="text" description="shoot_rate">0.6</shoot_rate>
+          <twilight type="text" description="twilight">-2.2</twilight>
+          <x_temp type="text" description="x_temp">11 30  42</x_temp>
+          <y_tt type="text" description="y_tt">0  19   0</y_tt>
+          <x_temp_fm type="text" description="x_temp_fm">5.7 23.5</x_temp_fm>
+          <y_tt_fm type="text" description="y_tt_fm">0   17.8</y_tt_fm>
+          <SorghumCanopy type="text" description="SorghumCanopy">Canopy --------------------------------------------------</SorghumCanopy>
+          <leaf_no_at_emerg type="text" description="leaf_no_at_emerg">1</leaf_no_at_emerg>
+          <leaf_no_seed type="text" description="leaf_no_seed">4</leaf_no_seed>
+          <leaf_no_min type="text" description="leaf_no_min">10</leaf_no_min>
+          <leaf_no_max type="text" description="leaf_no_max">40</leaf_no_max>
+          <leaf_init_rate type="text" description="leaf_init_rate">21.6</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">41</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate2">20</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <leaf_app_rate type="text" description="leaf_app_rate">41</leaf_app_rate>
+          <rue type="text" description="rue">0   0  1.25  1.25  1.25 1.25  1.25 1.25 1.25 1.25    0    0</rue>
+          <row_spacing_default type="text" description="row_spacing_default">750</row_spacing_default>
+          <x_row_spacing type="text" description="x_row_spacing">0.20   0.50   1.00</x_row_spacing>
+          <y_extinct_coef type="text" description="y_extinct_coef">0.70   0.40   0.40</y_extinct_coef>
+          <x_ave_temp type="text" description="x_ave_temp">8 20 35 50</x_ave_temp>
+          <y_stress_photo type="text" description="y_stress_photo">0  1  1  0</y_stress_photo>
+          <leaf_no_correction type="text" description="leaf_no_correction">1.52</leaf_no_correction>
+          <x_lai type="text" description="x_lai">0.1    4</x_lai>
+          <y_lai_sla_max type="text" description="y_lai_sla_max">50000 25000</y_lai_sla_max>
+          <lai_sla_min type="text" description="lai_sla_min">8000  8000</lai_sla_min>
+          <sla_max type="text" description="sla_max">45000</sla_max>
+          <sla_min type="text" description="sla_min">8000</sla_min>
+          <initial_tpla type="text" description="initial_tpla">200</initial_tpla>
+          <tiller_coef type="text" description="tiller_coef">0.66</tiller_coef>
+          <tpla_inflection_ratio type="text" description="tpla_inflection_ratio">0.66</tpla_inflection_ratio>
+          <height_max type="text" description="height_max">3500</height_max>
+          <HeightC type="text" description="HeightC">7.8</HeightC>
+          <HeightR type="text" description="HeightR">0.277</HeightR>
+          <HeightNonLin type="text" description="HeightNonLin">9.3</HeightNonLin>
+          <x_stem_wt type="text" description="x_stem_wt">0    80</x_stem_wt>
+          <y_height type="text" description="y_height">0  1800</y_height>
+          <Biomass type="text" description="Biomass">Biomass --------------------------------------------------</Biomass>
+          <dm_leaf_init type="text" description="dm_leaf_init">0.1</dm_leaf_init>
+          <dm_root_init type="text" description="dm_root_init">0.1</dm_root_init>
+          <dm_stem_init type="text" description="dm_stem_init">0.1</dm_stem_init>
+          <stem_trans_frac type="text" description="stem_trans_frac">0.2</stem_trans_frac>
+          <leaf_trans_frac type="text" description="leaf_trans_frac">0.15</leaf_trans_frac>
+          <retransRate type="text" description="retransRate">0.15</retransRate>
+          <ratio_root_shoot type="text" description="ratio_root_shoot">0   0   1    1     0.33  0.33  0.087  0    0     0    0    0</ratio_root_shoot>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <frac_stem2flower type="text" description="frac_stem2flower">0.3</frac_stem2flower>
+          <grn_water_cont type="text" description="grn_water_cont">0.13</grn_water_cont>
+          <GrainTempWindow type="text" description="GrainTempWindow">-150 50</GrainTempWindow>
+          <GrainTempOrdinals type="text" description="GrainTempOrdinals">36 40</GrainTempOrdinals>
+          <Roots type="text" description="Roots">ROOTS --------------------------------------------------</Roots>
+          <root_depth_rate type="text" description="root_depth_rate">0 27.0  27.0  27.0 27.0  27.0   27.0   0      0       0    0    0</root_depth_rate>
+          <x_sw_ratio type="text" description="x_sw_ratio">0   0.25</x_sw_ratio>
+          <y_sw_fac_root type="text" description="y_sw_fac_root">0   1</y_sw_fac_root>
+          <initial_root_depth type="text" description="initial_root_depth">50</initial_root_depth>
+          <specific_root_length type="text" description="specific_root_length">100000</specific_root_length>
+          <x_plant_rld type="text" description="x_plant_rld">0.0  0.1</x_plant_rld>
+          <y_rel_root_rate type="text" description="y_rel_root_rate">1.0  1.0</y_rel_root_rate>
+          <transp_eff_cf type="text" description="transp_eff_cf">0.009 0.009 0.009 0.009 0.009 0.009  0.009  0.009  0.009  0.009   0.009   0.009</transp_eff_cf>
+          <svp_fract type="text" description="svp_fract">0.75</svp_fract>
+          <x_sw_demand_ratio type="text" description="x_sw_demand_ratio">0.1 1.1</x_sw_demand_ratio>
+          <y_swdef_leaf type="text" description="y_swdef_leaf">0   1</y_swdef_leaf>
+          <x_sw_avail_ratio type="text" description="x_sw_avail_ratio">0 0.2 1.0</x_sw_avail_ratio>
+          <y_swdef_pheno type="text" description="y_swdef_pheno">0 1.0 1.0</y_swdef_pheno>
+          <Nitrogen type="text" description="Nitrogen">Nitrogen --------------------------------------------------</Nitrogen>
+          <no3_diffn_const type="text" description="no3_diffn_const">2</no3_diffn_const>
+          <maxUptakeRate type="text" description="maxUptakeRate">0.029</maxUptakeRate>
+          <initialRootNConc type="text" description="initialRootNConc">0.02</initialRootNConc>
+          <targetRootNConc type="text" description="targetRootNConc">0.002</targetRootNConc>
+          <initialLeafSLN type="text" description="initialLeafSLN">1.5</initialLeafSLN>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.5</targetLeafSLN>
+          <newLeafSLN type="text" description="newLeafSLN">1</newLeafSLN>
+          <senescedLeafSLN type="text" description="senescedLeafSLN">0.3</senescedLeafSLN>
+          <initialStemNConc type="text" description="initialStemNConc">0.01</initialStemNConc>
+          <x_stem_n type="text" description="x_stem_n">3         5       7         10</x_stem_n>
+          <targetStemNConc type="text" description="targetStemNConc">0.055   0.016   0.01      0.005</targetStemNConc>
+          <structStemNConc type="text" description="structStemNConc">0.012  0.012   0.005   0.0015</structStemNConc>
+          <initialRachisNConc type="text" description="initialRachisNConc">0</initialRachisNConc>
+          <targetRachisNConc type="text" description="targetRachisNConc">0.01</targetRachisNConc>
+          <structRachisNConc type="text" description="structRachisNConc">0.003</structRachisNConc>
+          <stemDilnNSlope type="text" description="stemDilnNSlope">0.0062</stemDilnNSlope>
+          <stemDilnNInt type="text" description="stemDilnNInt">-0.001</stemDilnNInt>
+          <rachisDilnNSlope type="text" description="rachisDilnNSlope">0.0062</rachisDilnNSlope>
+          <rachisDilnNInt type="text" description="rachisDilnNInt">-0.001</rachisDilnNInt>
+          <leafDilnNSlope type="text" description="leafDilnNSlope">0.0043</leafDilnNSlope>
+          <leafDilnNInt type="text" description="leafDilnNInt">-0.0017</leafDilnNInt>
+          <grainFillRate type="text" description="grainFillRate">0.001</grainFillRate>
+          <grainFillIntercept type="text" description="grainFillIntercept">0.0000319</grainFillIntercept>
+          <grainFillSlope type="text" description="grainFillSlope">0.4026</grainFillSlope>
+          <targetGrainNConc type="text" description="targetGrainNConc">0.0175</targetGrainNConc>
+          <nUptakeCease type="text" description="nUptakeCease">570</nUptakeCease>
+          <nSupplyFrac type="text" description="nSupplyFrac">5</nSupplyFrac>
+          <Senescence type="text" description="Senescence">Senescence --------------------------------------------------</Senescence>
+          <dm_root_sen_frac type="text" description="dm_root_sen_frac">0.002</dm_root_sen_frac>
+          <lai_sen_light type="text" description="lai_sen_light">4</lai_sen_light>
+          <sen_light_slope type="text" description="sen_light_slope">0.008</sen_light_slope>
+          <x_temp_senescence type="text" description="x_temp_senescence">0.0 6.0</x_temp_senescence>
+          <y_senescence_fac type="text" description="y_senescence_fac">1   0</y_senescence_fac>
+          <sen_rate_water type="text" description="sen_rate_water">0.05</sen_rate_water>
+          <dead_detach_frac type="text" description="dead_detach_frac">0 0 0 0 0</dead_detach_frac>
+          <dm_leaf_detach_frac type="text" description="dm_leaf_detach_frac">0</dm_leaf_detach_frac>
+          <sen_light_time_const type="text" description="sen_light_time_const">10</sen_light_time_const>
+          <sen_radn_crit type="text" description="sen_radn_crit">2</sen_radn_crit>
+          <frost_kill type="text" description="frost_kill">1</frost_kill>
+          <sen_water_time_const type="text" description="sen_water_time_const">10</sen_water_time_const>
+          <sen_threshold type="text" description="sen_threshold">0.25</sen_threshold>
+          <spla_slope type="text" description="spla_slope">81.5</spla_slope>
+          <tt_emerg_limit type="text" description="tt_emerg_limit">150</tt_emerg_limit>
+          <days_germ_limit type="text" description="days_germ_limit">40</days_germ_limit>
+          <swdf_photo_limit type="text" description="swdf_photo_limit">99</swdf_photo_limit>
+          <swdf_photo_rate type="text" description="swdf_photo_rate">0</swdf_photo_rate>
+          <swdf_pheno_limit type="text" description="swdf_pheno_limit">99</swdf_pheno_limit>
+          <x_weighted_temp type="text" description="x_weighted_temp">55.0  60.0</x_weighted_temp>
+          <y_plant_death type="text" description="y_plant_death">0.0   1.0</y_plant_death>
+          <stress_determinants type="text" description="stress_determinants">leaf stem grain</stress_determinants>
+          <Phosphorous type="text" description="Phosphorous">Phosphorous --------------------------------------------------</Phosphorous>
+          <yield_parts type="text" description="yield_parts">grain</yield_parts>
+          <retrans_parts type="text" description="retrans_parts">leaf stem  flower</retrans_parts>
+          <pfact_photo_slope type="text" description="pfact_photo_slope">2.5</pfact_photo_slope>
+          <pfact_expansion_slope type="text" description="pfact_expansion_slope">2.5</pfact_expansion_slope>
+          <pfact_pheno_slope type="text" description="pfact_pheno_slope">6</pfact_pheno_slope>
+          <pfact_grain_slope type="text" description="pfact_grain_slope">20</pfact_grain_slope>
+          <p_uptake_factor type="text" description="p_uptake_factor">1.5</p_uptake_factor>
+          <x_p_stage_code type="text" description="x_p_stage_code">3       4      5      6      7      8      10</x_p_stage_code>
+          <y_p_conc_max_leaf type="text" description="y_p_conc_max_leaf">0.0059  0.0054 0.0040 0.0029 0.0026 0.0025 0.0022</y_p_conc_max_leaf>
+          <y_p_conc_min_leaf type="text" description="y_p_conc_min_leaf">0.003   0.003  0.0029 0.0011 0.0011 0.0008 0.0006</y_p_conc_min_leaf>
+          <y_p_conc_sen_leaf type="text" description="y_p_conc_sen_leaf">0.0005  0.0005 0.0005 0.0005 0.0005 0.0005 0.0005</y_p_conc_sen_leaf>
+          <y_p_conc_max_stem type="text" description="y_p_conc_max_stem">0.0057  0.0038 0.0037 0.0018 0.0016 0.0013 0.0013</y_p_conc_max_stem>
+          <y_p_conc_min_stem type="text" description="y_p_conc_min_stem">0.003   0.003  0.002  0.0006 0.0006 0.0002 0.0002</y_p_conc_min_stem>
+          <y_p_conc_sen_stem type="text" description="y_p_conc_sen_stem">0.0002  0.0002 0.0002 0.0002 0.0002 0.0002 0.0002</y_p_conc_sen_stem>
+          <y_p_conc_max_root type="text" description="y_p_conc_max_root">0.0010  0.0010 0.0010 0.0010 0.0010 0.0010 0.0010</y_p_conc_max_root>
+          <y_p_conc_min_root type="text" description="y_p_conc_min_root">0.0010  0.0010 0.0010 0.0010 0.0010 0.0010 0.0010</y_p_conc_min_root>
+          <y_p_conc_sen_root type="text" description="y_p_conc_sen_root">0.0010  0.0010 0.0010 0.0010 0.0010 0.0010 0.0010</y_p_conc_sen_root>
+          <y_p_conc_max_flower type="text" description="y_p_conc_max_flower">0.0057  0.0038 0.0037 0.0018 0.0016 0.0013 0.0013</y_p_conc_max_flower>
+          <y_p_conc_min_flower type="text" description="y_p_conc_min_flower">0.003   0.003  0.002  0.0006 0.0006 0.0002 0.0002</y_p_conc_min_flower>
+          <y_p_conc_sen_flower type="text" description="y_p_conc_sen_flower">0.0002  0.0002 0.0002 0.0002 0.0002 0.0002 0.0002</y_p_conc_sen_flower>
+          <y_p_conc_max_grain type="text" description="y_p_conc_max_grain">0.001   0.001  0.001  0.001  0.052  0.0044  0.0034</y_p_conc_max_grain>
+          <y_p_conc_min_grain type="text" description="y_p_conc_min_grain">0.001   0.001  0.001  0.001  0.001  0.0015  0.0015</y_p_conc_min_grain>
+          <y_p_conc_sen_grain type="text" description="y_p_conc_sen_grain">0.001   0.001  0.001  0.001  0.001  0.0015  0.0015</y_p_conc_sen_grain>
+          <y_p_conc_max_energy type="text" description="y_p_conc_max_energy">0.001   0.001  0.001  0.001  0.001  0.001  0.001</y_p_conc_max_energy>
+          <y_p_conc_min_energy type="text" description="y_p_conc_min_energy">0.001   0.001  0.001  0.001  0.001  0.001  0.001</y_p_conc_min_energy>
+          <y_p_conc_sen_energy type="text" description="y_p_conc_sen_energy">0.001   0.001  0.001  0.001  0.001  0.001  0.001</y_p_conc_sen_energy>
+          <p_conc_init_leaf type="text" description="p_conc_init_leaf">0.0059</p_conc_init_leaf>
+          <p_conc_init_stem type="text" description="p_conc_init_stem">0.0057</p_conc_init_stem>
+          <p_conc_init_root type="text" description="p_conc_init_root">0.01</p_conc_init_root>
+          <p_conc_init_flower type="text" description="p_conc_init_flower">0.0057</p_conc_init_flower>
+          <p_conc_init_grain type="text" description="p_conc_init_grain">0.0052</p_conc_init_grain>
+          <p_conc_init_energy type="text" description="p_conc_init_energy">0</p_conc_init_energy>
+          <Bounds type="text" description="Bounds">Bounds --------------------------------------------------</Bounds>
+          <ll_ub type="text" description="ll_ub">1000</ll_ub>
+          <kl_ub type="text" description="kl_ub">1</kl_ub>
+          <minsw type="text" description="minsw">0.00001</minsw>
+          <latitude_ub type="text" description="latitude_ub">90</latitude_ub>
+          <latitude_lb type="text" description="latitude_lb">-90</latitude_lb>
+          <maxt_ub type="text" description="maxt_ub">55</maxt_ub>
+          <maxt_lb type="text" description="maxt_lb">0</maxt_lb>
+          <mint_ub type="text" description="mint_ub">40</mint_ub>
+          <mint_lb type="text" description="mint_lb">-10</mint_lb>
+          <radn_ub type="text" description="radn_ub">50</radn_ub>
+          <radn_lb type="text" description="radn_lb">1</radn_lb>
+          <dlayer_ub type="text" description="dlayer_ub">1000</dlayer_ub>
+          <dlayer_lb type="text" description="dlayer_lb">0</dlayer_lb>
+          <dul_dep_ub type="text" description="dul_dep_ub">1000</dul_dep_ub>
+          <dul_dep_lb type="text" description="dul_dep_lb">0</dul_dep_lb>
+          <sw_dep_ub type="text" description="sw_dep_ub">1000</sw_dep_ub>
+          <sw_dep_lb type="text" description="sw_dep_lb">0</sw_dep_lb>
+          <sw_ub type="text" description="sw_ub">1</sw_ub>
+          <sw_lb type="text" description="sw_lb">0</sw_lb>
+          <no3_ub type="text" description="no3_ub">10000</no3_ub>
+          <no3_lb type="text" description="no3_lb">0</no3_lb>
+          <no3_min_ub type="text" description="no3_min_ub">10000</no3_min_ub>
+          <no3_min_lb type="text" description="no3_min_lb">0</no3_min_lb>
+          <nh4_ub type="text" description="nh4_ub">10000</nh4_ub>
+          <nh4_lb type="text" description="nh4_lb">0</nh4_lb>
+          <nh4_min_ub type="text" description="nh4_min_ub">10000</nh4_min_ub>
+          <nh4_min_lb type="text" description="nh4_min_lb">0</nh4_min_lb>
+          <head_grain_no_max_ub type="text" description="head_grain_no_max_ub">45000</head_grain_no_max_ub>
+          <grain_gth_rate_ub type="text" description="grain_gth_rate_ub">20</grain_gth_rate_ub>
+          <tt_emerg_to_endjuv_ub type="text" description="tt_emerg_to_endjuv_ub">500</tt_emerg_to_endjuv_ub>
+          <pp_endjuv_to_init_ub type="text" description="pp_endjuv_to_init_ub">200</pp_endjuv_to_init_ub>
+          <tt_flower_to_maturity_ub type="text" description="tt_flower_to_maturity_ub">1000</tt_flower_to_maturity_ub>
+          <tt_maturity_to_ripe_ub type="text" description="tt_maturity_to_ripe_ub">1000</tt_maturity_to_ripe_ub>
+          <tt_flower_to_start_grain_ub type="text" description="tt_flower_to_start_grain_ub">1000</tt_flower_to_start_grain_ub>
+          <tt_flag_to_flower_ub type="text" description="tt_flag_to_flower_ub">1000</tt_flag_to_flower_ub>
+          <x_co2_te_modifier type="text" description="x_co2_te_modifier">350</x_co2_te_modifier>
+          <y_co2_te_modifier type="text" description="y_co2_te_modifier">1</y_co2_te_modifier>
+        </sorghumConstants>
+        <sorghumGenotype name="Buster">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">11.5</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">160</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">819</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.9</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.018</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00083</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+        </sorghumGenotype>
+        <sorghumGenotype name="M35-1new">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.82</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.011</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.018</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 units="oCd" description="Growing deg day required to develop the most leaf ligules. (deg day).">42.0</leaf_app_rate1>
+          <leaf_app_rate2 units="oCd" description="Growing deg day required to develop last leaf ligules. (deg day).">22.9</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+        </sorghumGenotype>
+        <sorghumGenotype name="R16">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.89</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.020</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">54.1</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">32.9</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.67</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="S35">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.83</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.019</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">50.5</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">28.7</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.70</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="B35">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.71</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.020</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">45.5</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">31.5</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.65</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="K359W">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.82</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.017</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">43.7</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">35.0</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.64</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="S357001">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.77</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.017</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">51.8</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">27.5</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.69</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="M35-1">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.82</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.011</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.018</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">45.4</leaf_app_rate1>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+        </sorghumGenotype>
+      </Sorghum>
+    </area>
+  </simulation>
+  <simulation name="Sorghum_BP14_M35-1_control">
+    <metfile name="met">
+      <filename name="filename" input="yes">C:\2011jana\sorghum2010\Field2010\RemsBP14\PATANCHERU.met</filename>
+    </metfile>
+    <clock>
+      <start_date type="date" description="Enter the start date of the simulation">15/06/2010</start_date>
+      <end_date type="date" description="Enter the end date of the simulation">25/04/2011</end_date>
+    </clock>
+    <summaryfile />
+    <area name="paddock">
+      <surfaceom name="surface organic matter">
+        <PoolName type="text" description="Organic Matter pool name">chickpea</PoolName>
+        <type type="list" listvalues="bambatsi,barley,base_type,broccoli,camaldulensis,canola,centro,chickpea,chikenmanure_base,cm,cmA,cmB,constants,cotton,cowpea,danthonia,fababean,fieldpea,fym,gbean,globulus,goatmanure,grandis,grass,horsegram,inert,lablab,lentil,lucerne,lupin,maize,manB,manure,medic,millet,mucuna,nativepasture,navybean,oats,orobanche,peanut,pigeonpea,potato,rice,sorghum,soybean,stylo,sugar,sunflower,sweetcorn,sweetsorghum,tillage,tithonia,vetch,weed,wheat" description="Organic Matter type">chickpea</type>
+        <mass type="text" description="Initial surface residue (kg/ha)">1000</mass>
+        <cnr type="text" description="C:N ratio of initial residue">80</cnr>
+        <standing_fraction type="text" description="Fraction of residue standing">0</standing_fraction>
+      </surfaceom>
+      <fertiliser />
+      <folder name="Manager folder">
+        <manager name="Sow on a fixed date">
+          <ui>
+            <category type="category" description="Sowing criteria" />
+            <date type="text" description="Enter sowing date (dd-mmm) : ">15/11/2010</date>
+            <category type="category" description="Sowing parameters" />
+            <crop type="crop" description="Enter name of crop to sow : ">sorghum</crop>
+            <density type="text" description="Enter sowing density  (plants/m2) : ">12</density>
+            <depth type="text" description="Enter sowing depth  (mm) : ">35</depth>
+            <cultivar type="cultivars" description="Enter cultivar : ">M35-1</cultivar>
+            <ftn type="text" description="Enter Fertile Tiller Number :">0.1</ftn>
+            <row_spacing type="text" description="Enter row spacing (mm) : ">600</row_spacing>
+            <skiprow type="list" listvalues="solid, single, double" description="Skip row : ">solid</skiprow>
+          </ui>
+          <script>
+            <text>
+              if (today = date('[date]') then
+              [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [skiprow], tiller_no_fertile = [ftn]
+              endif
+            </text>
+            <event>start_of_day</event>
+          </script>
+        </manager>
+        <manager name="Harvesting rule">
+          <ui>
+            <category description="Harvesting criteria" type="category" />
+            <crop type="crop" description="Enter name of crop to harvest when ripe : ">sorghum</crop>
+          </ui>
+          <script name="end_of_day">
+            <text>
+
+              if [crop].StageName = 'harvest_ripe' or [crop].plant_status = 'dead' then
+              [crop]  harvest
+              [crop]  end_crop
+              endif
+
+            </text>
+            <event>end_of_day</event>
+          </script>
+        </manager>
+      </folder>
+      <Soil name="BP14">
+        <SoilType type="text" description="Soil description">BW8</SoilType>
+        <LocalName type="text" description="LocalName">ICRISAT</LocalName>
+        <Site type="text" description="Site">ICRISAT</Site>
+        <NearestTown type="text" description="Nearest town">ICRISAT</NearestTown>
+        <Region type="text" description="Region">Patancheru</Region>
+        <State type="text" description="State">AP</State>
+        <Country type="text" description="Country">India</Country>
+        <Latitude type="text" description="Latitude (WGS84)">0</Latitude>
+        <Longitude type="text" description="Longitude (WGS84)">0</Longitude>
+        <DataSource type="multiedit" description="Data source">
+          UNK
+        </DataSource>
+        <Comments type="multiedit" description="Comments">UNK</Comments>
+        <Water>
+          <SoilCrop name="sorghum">
+            <Thickness>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+              <double>150</double>
+            </Thickness>
+            <LL>
+              <double>0.21</double>
+              <double>0.22</double>
+              <double>0.23</double>
+              <double>0.24</double>
+              <double>0.24</double>
+              <double>0.25</double>
+              <double>0.26</double>
+              <double>0.27</double>
+              <double>0.28</double>
+              <double>0.28</double>
+            </LL>
+            <KL>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.08</double>
+              <double>0.06</double>
+              <double>0.04</double>
+              <double>0.02</double>
+            </KL>
+            <XF>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+              <double>1</double>
+            </XF>
+          </SoilCrop>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <BD>
+            <double>1.32</double>
+            <double>1.49</double>
+            <double>1.54</double>
+            <double>1.54</double>
+            <double>1.49</double>
+            <double>1.47</double>
+            <double>1.38</double>
+            <double>1.37</double>
+            <double>1.33</double>
+            <double>1.35</double>
+          </BD>
+          <AirDry>
+            <double>0.18</double>
+            <double>0.2</double>
+            <double>0.2</double>
+            <double>0.2</double>
+            <double>0.19</double>
+            <double>0.18</double>
+            <double>0.18</double>
+            <double>0.18</double>
+            <double>0.18</double>
+            <double>0.18</double>
+          </AirDry>
+          <LL15>
+            <double>0.21</double>
+            <double>0.22</double>
+            <double>0.23</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.25</double>
+            <double>0.26</double>
+            <double>0.27</double>
+            <double>0.28</double>
+            <double>0.28</double>
+          </LL15>
+          <DUL>
+            <double>0.42</double>
+            <double>0.39</double>
+            <double>0.36</double>
+            <double>0.36</double>
+            <double>0.36</double>
+            <double>0.37</double>
+            <double>0.39</double>
+            <double>0.39</double>
+            <double>0.39</double>
+            <double>0.39</double>
+          </DUL>
+          <SAT>
+            <double>0.5</double>
+            <double>0.44</double>
+            <double>0.42</double>
+            <double>0.42</double>
+            <double>0.44</double>
+            <double>0.45</double>
+            <double>0.48</double>
+            <double>0.48</double>
+            <double>0.5</double>
+            <double>0.49</double>
+          </SAT>
+        </Water>
+        <SoilWater>
+          <SummerCona type="text" description="SummerCona">3.5</SummerCona>
+          <SummerU type="text" description="SummerU">6</SummerU>
+          <SummerDate type="text" description="SummerDate">1-Dec</SummerDate>
+          <WinterCona type="text" description="WinterCona">3.5</WinterCona>
+          <WinterU type="text" description="WinterU">6</WinterU>
+          <WinterDate type="text" description="WinterDate">1-Apr</WinterDate>
+          <DiffusConst type="text" description="DiffusConst">40</DiffusConst>
+          <DiffusSlope type="text" description="DiffusSlope">16</DiffusSlope>
+          <Salb type="text" description="Salb">0.11</Salb>
+          <CN2Bare type="text" description="Cn2Bare">85</CN2Bare>
+          <CNRed type="text" description="CnRed">0.8</CNRed>
+          <CNCov type="text" description="CnCov">.8</CNCov>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <SWCON>
+            <double>0.16</double>
+            <double>0.11</double>
+            <double>0.14</double>
+            <double>0.14</double>
+            <double>0.11</double>
+            <double>0.11</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.1</double>
+            <double>0.12</double>
+          </SWCON>
+        </SoilWater>
+        <SoilOrganicMatter>
+          <RootCN type="text" description="RootCn">70</RootCN>
+          <RootWt type="text" description="RootWt">1000</RootWt>
+          <SoilCN type="text" description="SoilCn">2000</SoilCN>
+          <EnrACoeff type="text" description="EnrACoeff">7.4</EnrACoeff>
+          <EnrBCoeff type="text" description="EnrBCoeff">0.2</EnrBCoeff>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <OC>
+            <double>2.2</double>
+            <double>1.3</double>
+            <double>1.4</double>
+            <double>0.98</double>
+            <double>0.5</double>
+            <double>0.32</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
+            <double>0.24</double>
+          </OC>
+          <OCUnits>WalkleyBlack</OCUnits>
+          <FBiom>
+            <double>0.05</double>
+            <double>0.02</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+            <double>0.01</double>
+          </FBiom>
+          <FInert>
+            <double>0.39</double>
+            <double>0.47</double>
+            <double>0.52</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+            <double>0.62</double>
+          </FInert>
+        </SoilOrganicMatter>
+        <Analysis>
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <EC>
+            <double>0.15</double>
+            <double>0.17</double>
+            <double>0.18</double>
+            <double>0.32</double>
+            <double>0.59</double>
+            <double>0.71</double>
+            <double>0.63</double>
+            <double>0.63</double>
+            <double>0.63</double>
+            <double>0.63</double>
+          </EC>
+          <PH>
+            <double>7.7</double>
+            <double>8.3</double>
+            <double>8.4</double>
+            <double>8.5</double>
+            <double>8.5</double>
+            <double>8.5</double>
+            <double>8.6</double>
+            <double>8.6</double>
+            <double>8.6</double>
+            <double>8.6</double>
+          </PH>
+          <ParticleSizeSand>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+            <double>19</double>
+          </ParticleSizeSand>
+          <ParticleSizeSilt>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+            <double>31</double>
+          </ParticleSizeSilt>
+          <ParticleSizeClay>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+            <double>50</double>
+          </ParticleSizeClay>
+        </Analysis>
+        <Sample name="Initial nitrogen">
+          <Date type="date" description="Sample date:" />
+          <Thickness>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+            <double>150</double>
+          </Thickness>
+          <NO3>
+            <double>80.61</double>
+            <double>53.03</double>
+            <double>49.62</double>
+            <double>63.44</double>
+            <double>51.66</double>
+            <double>31.21</double>
+            <double>16.29</double>
+            <double>16.29</double>
+            <double>16.29</double>
+            <double>16.29</double>
+          </NO3>
+          <NO3Units>kgha</NO3Units>
+          <NH4>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+            <double>5</double>
+          </NH4>
+          <NH4Units>kgha</NH4Units>
+          <SW>
+            <double>0.47</double>
+            <double>0.42</double>
+            <double>0.41</double>
+            <double>0.41</double>
+            <double>0.43</double>
+            <double>0.42</double>
+            <double>0.45</double>
+            <double>0.45</double>
+            <double>0.46</double>
+            <double>0.46</double>
+          </SW>
+        </Sample>
+      </Soil>
+      <outputfile>
+        <filename output="yes">Sorghum_BP14_M35-1_control.out</filename>
+        <title>Sorghum_BP14_M35-1_control</title>
+        <variables name="Variables">
+          <variable>dd/mm/yyyy</variable>
+          <variable>DaysAfterSowing</variable>
+          <variable>stage</variable>
+          <variable>TT</variable>
+          <variable>LeafNo</variable>
+          <variable>biomass</variable>
+          <variable>yield</variable>
+          <variable>lai</variable>
+          <variable>ep</variable>
+          <variable>transpiration</variable>
+          <variable>transpiration_tot</variable>
+          <variable>es</variable>
+          <variable>transp_eff</variable>
+          <variable>vpd</variable>
+          <variable>GrainNo</variable>
+          <variable>GrainSize</variable>
+          <variable>esw</variable>
+          <variable>sw()</variable>
+          <variable>mint</variable>
+          <variable>maxt</variable>
+          <variable>rain</variable>
+          <variable>InCropRain</variable>
+          <variable>WaterSD</variable>
+          <variable>biomass_wt</variable>
+          <variable>GrainGreenWt</variable>
+          <variable>StemGreenWt</variable>
+          <variable>LeafGreenWt</variable>
+          <variable>TPLA</variable>
+          <variable>SPLA</variable>
+          <variable>ll_dep()</variable>
+          <variable>dul_dep()</variable>
+          <variable>sw_dep()</variable>
+          <variable>vpd</variable>
+        </variables>
+      </outputfile>
+      <manager name="Calculator">
+        <script name="init">
+          <text>
+            ftn = 0
+            InCropRain = 0
+            tt = 0
+          </text>
+          <event>init</event>
+        </script>
+        <script name="start_of_day">
+          <text>
+          </text>
+          <event>start_of_day</event>
+        </script>
+        <script name="end_of_day">
+          <text>
+            <![CDATA[if (paddock_is_fallow() = 0) then
+   outputfile do_output
+endif
+
+InCropRain = InCropRain + rain
+
+TT = TT + DeltaTT
+
+if (day > 152) then
+     current_season = year
+else
+     current_season = year -1
+endif
+]]>
+          </text>
+          <event>end_of_day</event>
+        </script>
+      </manager>
+      <irrigation name="Irrigation">
+        <automatic_irrigation type="list" listvalues="on,off" description="Automatic irrigation">off</automatic_irrigation>
+        <asw_depth type="text" description="Depth to which ASW is calculated. (mm)">1500</asw_depth>
+        <crit_fr_asw type="text" description="Fraction of ASW below which irrigation is applied (0-1.0)">0.8</crit_fr_asw>
+        <irrigation_efficiency type="text" description="Efficiency of the irrigation. (0-1.0)">1</irrigation_efficiency>
+        <irrigation_allocation type="list" listvalues="on,off" description="Allocation limits">off</irrigation_allocation>
+        <allocation type="text" description="Allocation in mm">0</allocation>
+        <default_no3_conc type="text" description="Nitrate concentration (ppm N)">0.0</default_no3_conc>
+        <default_nh4_conc type="text" description="Ammonium concentration (ppm N)">0.0</default_nh4_conc>
+        <default_cl_conc type="text" description="Chloride concentration (ppm Cl)">0.0</default_cl_conc>
+      </irrigation>
+      <operations name="Operations Schedule">
+        <operation condition="start_of_day">
+          <date>12/11/2010</date>
+          <action>fertiliser apply amount = 40 (kg/ha), depth = 50 (mm), type = NO3_N ()</action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>15/12/2010</date>
+          <action>fertiliser apply amount = 46 (kg/ha), depth = 50 (mm), type = NO3_N ()</action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>16/11/2010</date>
+          <action>Irrigation apply amount = 15</action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>30/11/2010</date>
+          <action>Irrigation apply amount = 8</action>
+        </operation>
+        <operation condition="start_of_day">
+          <date>4/12/2010</date>
+          <action>Irrigation apply amount = 15</action>
+        </operation>
+      </operations>
+      <Sorghum>
+        <sorghumConstants name="standard">
+          <crop_type type="text" description="crop_type">sorghum</crop_type>
+          <default_crop_class type="text" description="default_crop_class">plant</default_crop_class>
+          <stage_names type="text" description="stage_names">sowing germination emergence end_of_juvenile floral_initiation flag_leaf flowering start_grain_fill end_grain_fill maturity harvest_ripe end_crop</stage_names>
+          <stage_code type="text" description="stage_code">1   2   3    4      5     6     7    8    9    10   11   12</stage_code>
+          <pesw_germ type="text" description="pesw_germ">0</pesw_germ>
+          <shoot_lag type="text" description="shoot_lag">15</shoot_lag>
+          <shoot_rate type="text" description="shoot_rate">0.6</shoot_rate>
+          <twilight type="text" description="twilight">-2.2</twilight>
+          <x_temp type="text" description="x_temp">11 30  42</x_temp>
+          <y_tt type="text" description="y_tt">0  19   0</y_tt>
+          <x_temp_fm type="text" description="x_temp_fm">5.7 23.5</x_temp_fm>
+          <y_tt_fm type="text" description="y_tt_fm">0   17.8</y_tt_fm>
+          <SorghumCanopy type="text" description="SorghumCanopy">Canopy --------------------------------------------------</SorghumCanopy>
+          <leaf_no_at_emerg type="text" description="leaf_no_at_emerg">1</leaf_no_at_emerg>
+          <leaf_no_seed type="text" description="leaf_no_seed">4</leaf_no_seed>
+          <leaf_no_min type="text" description="leaf_no_min">10</leaf_no_min>
+          <leaf_no_max type="text" description="leaf_no_max">40</leaf_no_max>
+          <leaf_init_rate type="text" description="leaf_init_rate">21.6</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">41</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate2">20</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <leaf_app_rate type="text" description="leaf_app_rate">41</leaf_app_rate>
+          <rue type="text" description="rue">0   0  1.25  1.25  1.25 1.25  1.25 1.25 1.25 1.25    0    0</rue>
+          <row_spacing_default type="text" description="row_spacing_default">750</row_spacing_default>
+          <x_row_spacing type="text" description="x_row_spacing">0.20   0.50   1.00</x_row_spacing>
+          <y_extinct_coef type="text" description="y_extinct_coef">0.70   0.40   0.40</y_extinct_coef>
+          <x_ave_temp type="text" description="x_ave_temp">8 20 35 50</x_ave_temp>
+          <y_stress_photo type="text" description="y_stress_photo">0  1  1  0</y_stress_photo>
+          <leaf_no_correction type="text" description="leaf_no_correction">1.52</leaf_no_correction>
+          <x_lai type="text" description="x_lai">0.1    4</x_lai>
+          <y_lai_sla_max type="text" description="y_lai_sla_max">50000 25000</y_lai_sla_max>
+          <lai_sla_min type="text" description="lai_sla_min">8000  8000</lai_sla_min>
+          <sla_max type="text" description="sla_max">45000</sla_max>
+          <sla_min type="text" description="sla_min">8000</sla_min>
+          <initial_tpla type="text" description="initial_tpla">200</initial_tpla>
+          <tiller_coef type="text" description="tiller_coef">0.66</tiller_coef>
+          <tpla_inflection_ratio type="text" description="tpla_inflection_ratio">0.66</tpla_inflection_ratio>
+          <height_max type="text" description="height_max">3500</height_max>
+          <HeightC type="text" description="HeightC">7.8</HeightC>
+          <HeightR type="text" description="HeightR">0.277</HeightR>
+          <HeightNonLin type="text" description="HeightNonLin">9.3</HeightNonLin>
+          <x_stem_wt type="text" description="x_stem_wt">0    80</x_stem_wt>
+          <y_height type="text" description="y_height">0  1800</y_height>
+          <Biomass type="text" description="Biomass">Biomass --------------------------------------------------</Biomass>
+          <dm_leaf_init type="text" description="dm_leaf_init">0.1</dm_leaf_init>
+          <dm_root_init type="text" description="dm_root_init">0.1</dm_root_init>
+          <dm_stem_init type="text" description="dm_stem_init">0.1</dm_stem_init>
+          <stem_trans_frac type="text" description="stem_trans_frac">0.2</stem_trans_frac>
+          <leaf_trans_frac type="text" description="leaf_trans_frac">0.15</leaf_trans_frac>
+          <retransRate type="text" description="retransRate">0.15</retransRate>
+          <ratio_root_shoot type="text" description="ratio_root_shoot">0   0   1    1     0.33  0.33  0.087  0    0     0    0    0</ratio_root_shoot>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <frac_stem2flower type="text" description="frac_stem2flower">0.3</frac_stem2flower>
+          <grn_water_cont type="text" description="grn_water_cont">0.13</grn_water_cont>
+          <GrainTempWindow type="text" description="GrainTempWindow">-150 50</GrainTempWindow>
+          <GrainTempOrdinals type="text" description="GrainTempOrdinals">36 40</GrainTempOrdinals>
+          <Roots type="text" description="Roots">ROOTS --------------------------------------------------</Roots>
+          <root_depth_rate type="text" description="root_depth_rate">0 27.0  27.0  27.0 27.0  27.0   27.0   0      0       0    0    0</root_depth_rate>
+          <x_sw_ratio type="text" description="x_sw_ratio">0   0.25</x_sw_ratio>
+          <y_sw_fac_root type="text" description="y_sw_fac_root">0   1</y_sw_fac_root>
+          <initial_root_depth type="text" description="initial_root_depth">50</initial_root_depth>
+          <specific_root_length type="text" description="specific_root_length">100000</specific_root_length>
+          <x_plant_rld type="text" description="x_plant_rld">0.0  0.1</x_plant_rld>
+          <y_rel_root_rate type="text" description="y_rel_root_rate">1.0  1.0</y_rel_root_rate>
+          <transp_eff_cf type="text" description="transp_eff_cf">0.009 0.009 0.009 0.009 0.009 0.009  0.009  0.009  0.009  0.009   0.009   0.009</transp_eff_cf>
+          <svp_fract type="text" description="svp_fract">0.75</svp_fract>
+          <x_sw_demand_ratio type="text" description="x_sw_demand_ratio">0.1 1.1</x_sw_demand_ratio>
+          <y_swdef_leaf type="text" description="y_swdef_leaf">0   1</y_swdef_leaf>
+          <x_sw_avail_ratio type="text" description="x_sw_avail_ratio">0 0.2 1.0</x_sw_avail_ratio>
+          <y_swdef_pheno type="text" description="y_swdef_pheno">0 1.0 1.0</y_swdef_pheno>
+          <Nitrogen type="text" description="Nitrogen">Nitrogen --------------------------------------------------</Nitrogen>
+          <no3_diffn_const type="text" description="no3_diffn_const">2</no3_diffn_const>
+          <maxUptakeRate type="text" description="maxUptakeRate">0.029</maxUptakeRate>
+          <initialRootNConc type="text" description="initialRootNConc">0.02</initialRootNConc>
+          <targetRootNConc type="text" description="targetRootNConc">0.002</targetRootNConc>
+          <initialLeafSLN type="text" description="initialLeafSLN">1.5</initialLeafSLN>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.5</targetLeafSLN>
+          <newLeafSLN type="text" description="newLeafSLN">1</newLeafSLN>
+          <senescedLeafSLN type="text" description="senescedLeafSLN">0.3</senescedLeafSLN>
+          <initialStemNConc type="text" description="initialStemNConc">0.01</initialStemNConc>
+          <x_stem_n type="text" description="x_stem_n">3         5       7         10</x_stem_n>
+          <targetStemNConc type="text" description="targetStemNConc">0.055   0.016   0.01      0.005</targetStemNConc>
+          <structStemNConc type="text" description="structStemNConc">0.012  0.012   0.005   0.0015</structStemNConc>
+          <initialRachisNConc type="text" description="initialRachisNConc">0</initialRachisNConc>
+          <targetRachisNConc type="text" description="targetRachisNConc">0.01</targetRachisNConc>
+          <structRachisNConc type="text" description="structRachisNConc">0.003</structRachisNConc>
+          <stemDilnNSlope type="text" description="stemDilnNSlope">0.0062</stemDilnNSlope>
+          <stemDilnNInt type="text" description="stemDilnNInt">-0.001</stemDilnNInt>
+          <rachisDilnNSlope type="text" description="rachisDilnNSlope">0.0062</rachisDilnNSlope>
+          <rachisDilnNInt type="text" description="rachisDilnNInt">-0.001</rachisDilnNInt>
+          <leafDilnNSlope type="text" description="leafDilnNSlope">0.0043</leafDilnNSlope>
+          <leafDilnNInt type="text" description="leafDilnNInt">-0.0017</leafDilnNInt>
+          <grainFillRate type="text" description="grainFillRate">0.001</grainFillRate>
+          <grainFillIntercept type="text" description="grainFillIntercept">0.0000319</grainFillIntercept>
+          <grainFillSlope type="text" description="grainFillSlope">0.4026</grainFillSlope>
+          <targetGrainNConc type="text" description="targetGrainNConc">0.0175</targetGrainNConc>
+          <nUptakeCease type="text" description="nUptakeCease">570</nUptakeCease>
+          <nSupplyFrac type="text" description="nSupplyFrac">5</nSupplyFrac>
+          <Senescence type="text" description="Senescence">Senescence --------------------------------------------------</Senescence>
+          <dm_root_sen_frac type="text" description="dm_root_sen_frac">0.002</dm_root_sen_frac>
+          <lai_sen_light type="text" description="lai_sen_light">4</lai_sen_light>
+          <sen_light_slope type="text" description="sen_light_slope">0.008</sen_light_slope>
+          <x_temp_senescence type="text" description="x_temp_senescence">0.0 6.0</x_temp_senescence>
+          <y_senescence_fac type="text" description="y_senescence_fac">1   0</y_senescence_fac>
+          <sen_rate_water type="text" description="sen_rate_water">0.05</sen_rate_water>
+          <dead_detach_frac type="text" description="dead_detach_frac">0 0 0 0 0</dead_detach_frac>
+          <dm_leaf_detach_frac type="text" description="dm_leaf_detach_frac">0</dm_leaf_detach_frac>
+          <sen_light_time_const type="text" description="sen_light_time_const">10</sen_light_time_const>
+          <sen_radn_crit type="text" description="sen_radn_crit">2</sen_radn_crit>
+          <frost_kill type="text" description="frost_kill">1</frost_kill>
+          <sen_water_time_const type="text" description="sen_water_time_const">10</sen_water_time_const>
+          <sen_threshold type="text" description="sen_threshold">0.25</sen_threshold>
+          <spla_slope type="text" description="spla_slope">81.5</spla_slope>
+          <tt_emerg_limit type="text" description="tt_emerg_limit">150</tt_emerg_limit>
+          <days_germ_limit type="text" description="days_germ_limit">40</days_germ_limit>
+          <swdf_photo_limit type="text" description="swdf_photo_limit">99</swdf_photo_limit>
+          <swdf_photo_rate type="text" description="swdf_photo_rate">0</swdf_photo_rate>
+          <swdf_pheno_limit type="text" description="swdf_pheno_limit">99</swdf_pheno_limit>
+          <x_weighted_temp type="text" description="x_weighted_temp">55.0  60.0</x_weighted_temp>
+          <y_plant_death type="text" description="y_plant_death">0.0   1.0</y_plant_death>
+          <stress_determinants type="text" description="stress_determinants">leaf stem grain</stress_determinants>
+          <Phosphorous type="text" description="Phosphorous">Phosphorous --------------------------------------------------</Phosphorous>
+          <yield_parts type="text" description="yield_parts">grain</yield_parts>
+          <retrans_parts type="text" description="retrans_parts">leaf stem  flower</retrans_parts>
+          <pfact_photo_slope type="text" description="pfact_photo_slope">2.5</pfact_photo_slope>
+          <pfact_expansion_slope type="text" description="pfact_expansion_slope">2.5</pfact_expansion_slope>
+          <pfact_pheno_slope type="text" description="pfact_pheno_slope">6</pfact_pheno_slope>
+          <pfact_grain_slope type="text" description="pfact_grain_slope">20</pfact_grain_slope>
+          <p_uptake_factor type="text" description="p_uptake_factor">1.5</p_uptake_factor>
+          <x_p_stage_code type="text" description="x_p_stage_code">3       4      5      6      7      8      10</x_p_stage_code>
+          <y_p_conc_max_leaf type="text" description="y_p_conc_max_leaf">0.0059  0.0054 0.0040 0.0029 0.0026 0.0025 0.0022</y_p_conc_max_leaf>
+          <y_p_conc_min_leaf type="text" description="y_p_conc_min_leaf">0.003   0.003  0.0029 0.0011 0.0011 0.0008 0.0006</y_p_conc_min_leaf>
+          <y_p_conc_sen_leaf type="text" description="y_p_conc_sen_leaf">0.0005  0.0005 0.0005 0.0005 0.0005 0.0005 0.0005</y_p_conc_sen_leaf>
+          <y_p_conc_max_stem type="text" description="y_p_conc_max_stem">0.0057  0.0038 0.0037 0.0018 0.0016 0.0013 0.0013</y_p_conc_max_stem>
+          <y_p_conc_min_stem type="text" description="y_p_conc_min_stem">0.003   0.003  0.002  0.0006 0.0006 0.0002 0.0002</y_p_conc_min_stem>
+          <y_p_conc_sen_stem type="text" description="y_p_conc_sen_stem">0.0002  0.0002 0.0002 0.0002 0.0002 0.0002 0.0002</y_p_conc_sen_stem>
+          <y_p_conc_max_root type="text" description="y_p_conc_max_root">0.0010  0.0010 0.0010 0.0010 0.0010 0.0010 0.0010</y_p_conc_max_root>
+          <y_p_conc_min_root type="text" description="y_p_conc_min_root">0.0010  0.0010 0.0010 0.0010 0.0010 0.0010 0.0010</y_p_conc_min_root>
+          <y_p_conc_sen_root type="text" description="y_p_conc_sen_root">0.0010  0.0010 0.0010 0.0010 0.0010 0.0010 0.0010</y_p_conc_sen_root>
+          <y_p_conc_max_flower type="text" description="y_p_conc_max_flower">0.0057  0.0038 0.0037 0.0018 0.0016 0.0013 0.0013</y_p_conc_max_flower>
+          <y_p_conc_min_flower type="text" description="y_p_conc_min_flower">0.003   0.003  0.002  0.0006 0.0006 0.0002 0.0002</y_p_conc_min_flower>
+          <y_p_conc_sen_flower type="text" description="y_p_conc_sen_flower">0.0002  0.0002 0.0002 0.0002 0.0002 0.0002 0.0002</y_p_conc_sen_flower>
+          <y_p_conc_max_grain type="text" description="y_p_conc_max_grain">0.001   0.001  0.001  0.001  0.052  0.0044  0.0034</y_p_conc_max_grain>
+          <y_p_conc_min_grain type="text" description="y_p_conc_min_grain">0.001   0.001  0.001  0.001  0.001  0.0015  0.0015</y_p_conc_min_grain>
+          <y_p_conc_sen_grain type="text" description="y_p_conc_sen_grain">0.001   0.001  0.001  0.001  0.001  0.0015  0.0015</y_p_conc_sen_grain>
+          <y_p_conc_max_energy type="text" description="y_p_conc_max_energy">0.001   0.001  0.001  0.001  0.001  0.001  0.001</y_p_conc_max_energy>
+          <y_p_conc_min_energy type="text" description="y_p_conc_min_energy">0.001   0.001  0.001  0.001  0.001  0.001  0.001</y_p_conc_min_energy>
+          <y_p_conc_sen_energy type="text" description="y_p_conc_sen_energy">0.001   0.001  0.001  0.001  0.001  0.001  0.001</y_p_conc_sen_energy>
+          <p_conc_init_leaf type="text" description="p_conc_init_leaf">0.0059</p_conc_init_leaf>
+          <p_conc_init_stem type="text" description="p_conc_init_stem">0.0057</p_conc_init_stem>
+          <p_conc_init_root type="text" description="p_conc_init_root">0.01</p_conc_init_root>
+          <p_conc_init_flower type="text" description="p_conc_init_flower">0.0057</p_conc_init_flower>
+          <p_conc_init_grain type="text" description="p_conc_init_grain">0.0052</p_conc_init_grain>
+          <p_conc_init_energy type="text" description="p_conc_init_energy">0</p_conc_init_energy>
+          <Bounds type="text" description="Bounds">Bounds --------------------------------------------------</Bounds>
+          <ll_ub type="text" description="ll_ub">1000</ll_ub>
+          <kl_ub type="text" description="kl_ub">1</kl_ub>
+          <minsw type="text" description="minsw">0.00001</minsw>
+          <latitude_ub type="text" description="latitude_ub">90</latitude_ub>
+          <latitude_lb type="text" description="latitude_lb">-90</latitude_lb>
+          <maxt_ub type="text" description="maxt_ub">55</maxt_ub>
+          <maxt_lb type="text" description="maxt_lb">0</maxt_lb>
+          <mint_ub type="text" description="mint_ub">40</mint_ub>
+          <mint_lb type="text" description="mint_lb">-10</mint_lb>
+          <radn_ub type="text" description="radn_ub">50</radn_ub>
+          <radn_lb type="text" description="radn_lb">1</radn_lb>
+          <dlayer_ub type="text" description="dlayer_ub">1000</dlayer_ub>
+          <dlayer_lb type="text" description="dlayer_lb">0</dlayer_lb>
+          <dul_dep_ub type="text" description="dul_dep_ub">1000</dul_dep_ub>
+          <dul_dep_lb type="text" description="dul_dep_lb">0</dul_dep_lb>
+          <sw_dep_ub type="text" description="sw_dep_ub">1000</sw_dep_ub>
+          <sw_dep_lb type="text" description="sw_dep_lb">0</sw_dep_lb>
+          <sw_ub type="text" description="sw_ub">1</sw_ub>
+          <sw_lb type="text" description="sw_lb">0</sw_lb>
+          <no3_ub type="text" description="no3_ub">10000</no3_ub>
+          <no3_lb type="text" description="no3_lb">0</no3_lb>
+          <no3_min_ub type="text" description="no3_min_ub">10000</no3_min_ub>
+          <no3_min_lb type="text" description="no3_min_lb">0</no3_min_lb>
+          <nh4_ub type="text" description="nh4_ub">10000</nh4_ub>
+          <nh4_lb type="text" description="nh4_lb">0</nh4_lb>
+          <nh4_min_ub type="text" description="nh4_min_ub">10000</nh4_min_ub>
+          <nh4_min_lb type="text" description="nh4_min_lb">0</nh4_min_lb>
+          <head_grain_no_max_ub type="text" description="head_grain_no_max_ub">45000</head_grain_no_max_ub>
+          <grain_gth_rate_ub type="text" description="grain_gth_rate_ub">20</grain_gth_rate_ub>
+          <tt_emerg_to_endjuv_ub type="text" description="tt_emerg_to_endjuv_ub">500</tt_emerg_to_endjuv_ub>
+          <pp_endjuv_to_init_ub type="text" description="pp_endjuv_to_init_ub">200</pp_endjuv_to_init_ub>
+          <tt_flower_to_maturity_ub type="text" description="tt_flower_to_maturity_ub">1000</tt_flower_to_maturity_ub>
+          <tt_maturity_to_ripe_ub type="text" description="tt_maturity_to_ripe_ub">1000</tt_maturity_to_ripe_ub>
+          <tt_flower_to_start_grain_ub type="text" description="tt_flower_to_start_grain_ub">1000</tt_flower_to_start_grain_ub>
+          <tt_flag_to_flower_ub type="text" description="tt_flag_to_flower_ub">1000</tt_flag_to_flower_ub>
+          <x_co2_te_modifier type="text" description="x_co2_te_modifier">350</x_co2_te_modifier>
+          <y_co2_te_modifier type="text" description="y_co2_te_modifier">1</y_co2_te_modifier>
+          <TAir type="text" description="TAir">1.5 4.0 1.0</TAir>
+        </sorghumConstants>
+        <sorghumGenotype name="Buster">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">11.5</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">160</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">819</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.9</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.018</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00083</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+        </sorghumGenotype>
+        <sorghumGenotype name="M35-1new">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.82</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.011</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.018</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 units="oCd" description="Growing deg day required to develop the most leaf ligules. (deg day).">42.0</leaf_app_rate1>
+          <leaf_app_rate2 units="oCd" description="Growing deg day required to develop last leaf ligules. (deg day).">22.9</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+        </sorghumGenotype>
+        <sorghumGenotype name="R16">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.89</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.020</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">54.1</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">32.9</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.67</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="S35">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.83</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.019</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">50.5</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">28.7</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.70</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="B35">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.71</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.020</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">45.5</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">31.5</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.65</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="K359W">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.82</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.017</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">43.7</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">35.0</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.64</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="S357001">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.77</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.017</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.0073</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">51.8</leaf_app_rate1>
+          <leaf_app_rate2 type="text" description="leaf_app_rate1">27.5</leaf_app_rate2>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <tpla_inflection_ratio description="inflection coefficient of TPLA curve">0.69</tpla_inflection_ratio>
+        </sorghumGenotype>
+        <sorghumGenotype name="M35-1">
+          <tt_emerg_to_endjuv type="text" description="tt_emerg_to_endjuv">100</tt_emerg_to_endjuv>
+          <photoperiod_crit1 type="text" description="photoperiod_crit1">11.5</photoperiod_crit1>
+          <photoperiod_crit2 type="text" description="photoperiod_crit2">13.5</photoperiod_crit2>
+          <photoperiod_slope type="text" description="photoperiod_slope">61.0</photoperiod_slope>
+          <tt_endjuv_to_init type="text" description="tt_endjuv_to_init">252</tt_endjuv_to_init>
+          <tt_flag_to_flower type="text" description="tt_flag_to_flower">170</tt_flag_to_flower>
+          <tt_flower_to_start_grain type="text" description="tt_flower_to_start_grain">80</tt_flower_to_start_grain>
+          <tt_flower_to_maturity type="text" description="tt_flower_to_maturity">746</tt_flower_to_maturity>
+          <tt_maturity_to_ripe type="text" description="tt_maturity_to_ripe">1</tt_maturity_to_ripe>
+          <main_stem_coef type="text" description="main_stem_coef">2.82</main_stem_coef>
+          <tpla_prod_coef type="text" description="tpla_prod_coef">0.011</tpla_prod_coef>
+          <dm_per_seed type="text" description="dm_per_seed">0.00143</dm_per_seed>
+          <maxGFRate type="text" description="maxGFRate">0.09</maxGFRate>
+          <partition_rate_leaf type="text" description="partition_rate_leaf">0.018</partition_rate_leaf>
+          <nUptakeCease type="text" description="nUptakeCease">10</nUptakeCease>
+          <leaf_init_rate type="text" description="leaf_init_rate">29.5</leaf_init_rate>
+          <leaf_app_rate1 type="text" description="leaf_app_rate1">45.4</leaf_app_rate1>
+          <leaf_no_rate_change type="text" description="leaf_no_rate_change">3.5</leaf_no_rate_change>
+          <targetLeafSLN type="text" description="targetLeafSLN">1.2</targetLeafSLN>
+          <maxTranspRate type="text" description="maxTranspRate">0.80</maxTranspRate>
+        </sorghumGenotype>
+      </Sorghum>
+    </area>
+  </simulation>
+</folder>

@@ -29,7 +29,7 @@ namespace UserInterface.Commands
     /// </summary>
     public class ExportNodeCommand : ICommand
     {
-        private ExplorerPresenter ExplorerPresenter;
+        private ExplorerPresenter explorerPresenter;
 
         /// <summary>A .bib file instance.</summary>
         private BibTeX bibTeX;
@@ -50,20 +50,20 @@ namespace UserInterface.Commands
         /// <param name="nodePath">The node path.</param>
         public ExportNodeCommand(ExplorerPresenter explorerPresenter, string nodePath)
         {
-            this.ExplorerPresenter = explorerPresenter;
+            this.explorerPresenter = explorerPresenter;
         }
 
         /// <summary>
         /// Perform the command
         /// </summary>
-        public void Do(CommandHistory CommandHistory)
+        public void Do(CommandHistory commandHistory)
         {
             string bibFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "APSIM.bib");
             bibTeX = new BibTeX(bibFile);
             citations = new List<BibTeX.Citation>();
 
             // Get the model we are to export.
-            string modelName = Path.GetFileNameWithoutExtension(ExplorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
+            string modelName = Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
             modelName = modelName.Replace("validation", string.Empty);
             DoExportPDF(modelName);
             citations.Clear();
@@ -72,7 +72,7 @@ namespace UserInterface.Commands
         /// <summary>
         /// Undo the command
         /// </summary>
-        public void Undo(CommandHistory CommandHistory)
+        public void Undo(CommandHistory commandHistory)
         {
         }
         
@@ -149,11 +149,12 @@ namespace UserInterface.Commands
             section.AddImage(png1);
 
             Paragraph version = new Paragraph();
-            version.AddText(ExplorerPresenter.ApsimXFile.ApsimVersion);
+            version.AddText(explorerPresenter.ApsimXFile.ApsimVersion);
             section.Add(version);
             // Convert all models in file to tags.
             List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
-            foreach (IModel child in ExplorerPresenter.ApsimXFile.Children)
+            // No need to resolve links here - they will be resolved in each simulation individually.
+            foreach (IModel child in explorerPresenter.ApsimXFile.Children)
             {
                 AutoDocumentation.DocumentModel(child, tags, headingLevel:1, indent:0);
                 if (child.Name == "TitlePage")
@@ -164,7 +165,7 @@ namespace UserInterface.Commands
                     // Document model description.
                     int modelDescriptionIndex = tags.Count;
                     tags.Add(new AutoDocumentation.Heading("Model description", 1));
-                    ExplorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
+                    explorerPresenter.ApsimXFile.DocumentModel(modelNameToExport, tags, 1);
 
                     // If no model was documented then remove the 'Model description' tag.
                     if (modelDescriptionIndex == tags.Count - 1)
@@ -190,7 +191,7 @@ namespace UserInterface.Commands
             TagsToMigraDoc(section, tags, workingDirectory);
 
             // Write the PDF file.
-            FileNameWritten = Path.Combine(Path.GetDirectoryName(ExplorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
+            FileNameWritten = Path.Combine(Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false);
             pdfRenderer.Document = document;
             pdfRenderer.RenderDocument();
@@ -204,7 +205,7 @@ namespace UserInterface.Commands
         /// <param name="tags">Document tags to add to.</param>
         private void AddStatistics(List<AutoDocumentation.ITag> tags)
         {
-            IModel dataStore = Apsim.Child(ExplorerPresenter.ApsimXFile, "DataStore");
+            IModel dataStore = Apsim.Child(explorerPresenter.ApsimXFile, "DataStore");
             if (dataStore != null)
             {
                 List<IModel> tests = Apsim.FindAll(dataStore, typeof(Tests));
@@ -225,7 +226,7 @@ namespace UserInterface.Commands
             // Look for some instructions on which models in the example file we should write.
             // Instructions will be in a memo in the validation .apsimx file 
 
-            IModel userDocumentation = Apsim.Get(ExplorerPresenter.ApsimXFile, ".Simulations.UserDocumentation") as IModel;
+            IModel userDocumentation = Apsim.Get(explorerPresenter.ApsimXFile, ".Simulations.UserDocumentation") as IModel;
             string exampleFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "Examples", modelName + ".apsimx");
 
             if (userDocumentation != null && userDocumentation.Children.Count > 0 && File.Exists(exampleFileName))
@@ -234,7 +235,7 @@ namespace UserInterface.Commands
                 tags.Add(new AutoDocumentation.Heading("User documentation", 1));
 
                 // Open the related example .apsimx file and get its presenter.
-                ExplorerPresenter examplePresenter = ExplorerPresenter.MainPresenter.OpenApsimXFileInTab(exampleFileName, onLeftTabControl: true);
+                ExplorerPresenter examplePresenter = explorerPresenter.MainPresenter.OpenApsimXFileInTab(exampleFileName, onLeftTabControl: true);
 
                 Memo instructionsMemo = userDocumentation.Children[0] as Memo;
                 string[] instructions = instructionsMemo.Text.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -301,7 +302,7 @@ namespace UserInterface.Commands
 
                           "APSIM is freely available for non-commercial purposes. Non-commercial use of APSIM means public-good research & development and educational activities. " +
                           "It includes the support of policy development and/or implementation by, or on behalf of, government bodies and industry-good work where the research outcomes " +
-                          "are to be made publicly available. For more information visit <a href=\"https://www.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
+                          "are to be made publicly available. For more information visit <a href=\"https://apsimdev.apsim.info/Products/Licensing.aspx\">the licensing page on the APSIM web site</a>";
 
             tags.Add(new AutoDocumentation.Heading("APSIM Description", 1));
             tags.Add(new AutoDocumentation.Paragraph(text, 0));
@@ -371,15 +372,15 @@ namespace UserInterface.Commands
             Directory.CreateDirectory(graphDirectory);
 
             // Determine the name of the .png file to write.
-            string PNGFileName = Path.Combine(graphDirectory,
+            string pngFileName = Path.Combine(graphDirectory,
                                               graphAndTable.xyPairs.Parent.Parent.Name + graphAndTable.xyPairs.Parent.Name + ".png");
             int count = 0;
             // If there are multiple graphs with the same name, they may overwrite each other.
             // Therefore, we attempt to generate a unique name. After 20 attempts, we give up.
-            while (File.Exists(PNGFileName) && count < 20)
+            while (File.Exists(pngFileName) && count < 20)
             {
                 count++;
-                PNGFileName = Path.Combine(graphDirectory, graphAndTable.xyPairs.Parent.Parent.Name + graphAndTable.xyPairs.Parent.Name + Guid.NewGuid() + ".png");
+                pngFileName = Path.Combine(graphDirectory, graphAndTable.xyPairs.Parent.Parent.Name + graphAndTable.xyPairs.Parent.Name + Guid.NewGuid() + ".png");
             }
             // Setup graph.
             GraphView graph = new GraphView();
@@ -388,15 +389,16 @@ namespace UserInterface.Commands
             graph.Height = 250;
 
             // Create a line series.
-            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null,
+            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null,
                                      Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
                                      System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
                                      Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
 
+            graph.ForegroundColour = OxyPlot.OxyColors.Black;
+            graph.BackColor = OxyPlot.OxyColors.White;
             // Format the axes.
             graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
             graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
-            graph.BackColor = OxyPlot.OxyColors.White;
             graph.FontSize = 10;
             graph.Refresh();
 
@@ -409,8 +411,8 @@ namespace UserInterface.Commands
             }
             graph.Export(ref image, new Rectangle(0, 0, image.Width, image.Height), false);
             graph.MainWidget.Destroy();
-            image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-            MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = row.Cells[0].AddImage(PNGFileName);
+            image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
+            MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = row.Cells[0].AddImage(pngFileName);
             sectionImage.LockAspectRatio = true;
             sectionImage.Width = "8cm";
 
@@ -452,9 +454,10 @@ namespace UserInterface.Commands
                     gfx.FillRectangle(brush, 0, 0, image.Width, image.Height);
                 }
                 GraphPresenter graphPresenter = new GraphPresenter();
-                ExplorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
+                explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                 GraphView graphView = new GraphView();
                 graphView.BackColor = OxyPlot.OxyColors.White;
+                graphView.ForegroundColour = OxyPlot.OxyColors.Black;
                 graphView.FontSize = 22;
                 graphView.MarkerSize = 8;
                 graphView.Width = image.Width / numColumns;
@@ -467,7 +470,7 @@ namespace UserInterface.Commands
                 {
                     if (graphPage.graphs[i].IncludeInDocumentation)
                     {
-                        graphPresenter.Attach(graphPage.graphs[i], graphView, ExplorerPresenter);
+                        graphPresenter.Attach(graphPage.graphs[i], graphView, explorerPresenter);
                         Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height,
                                                     graphView.Width, graphView.Height);
                         graphView.Export(ref image, r, false);
@@ -481,13 +484,13 @@ namespace UserInterface.Commands
                     }
                 }
 
-                string PNGFileName = Path.Combine(workingDirectory,
+                string pngFileName = Path.Combine(workingDirectory,
                                                   graphPage.graphs[0].Parent.Parent.Name +
                                                   graphPage.graphs[0].Parent.Name + 
                                                   graphPage.name + ".png");
-                image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
+                image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
 
-                MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = section.AddImage(PNGFileName);
+                MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = section.AddImage(pngFileName);
                 sectionImage.LockAspectRatio = true;
                 sectionImage.Width = "19cm";
             }
@@ -626,15 +629,16 @@ namespace UserInterface.Commands
                 else if (tag is Graph)
                 {
                     GraphPresenter graphPresenter = new GraphPresenter();
-                    ExplorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
+                    explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     GraphView graphView = new GraphView();
                     graphView.BackColor = OxyPlot.OxyColors.White;
+                    graphView.ForegroundColour = OxyPlot.OxyColors.Black;
                     graphView.FontSize = 12;
                     graphView.Width = 500;
                     graphView.Height = 500;
-                    graphPresenter.Attach(tag, graphView, ExplorerPresenter);
-                    string PNGFileName = graphPresenter.ExportToPNG(workingDirectory);
-                    section.AddImage(PNGFileName);
+                    graphPresenter.Attach(tag, graphView, explorerPresenter);
+                    string pngFileName = graphPresenter.ExportToPNG(workingDirectory);
+                    section.AddImage(pngFileName);
                     string caption = (tag as Graph).Caption;
                     if (caption != null)
                         section.AddParagraph(caption);
@@ -645,10 +649,10 @@ namespace UserInterface.Commands
                 {
                     MapPresenter mapPresenter = new MapPresenter();
                     MapView mapView = new MapView(null);
-                    mapPresenter.Attach(tag, mapView, ExplorerPresenter);
-                    string PNGFileName = mapPresenter.ExportToPNG(workingDirectory);
-                    if (!String.IsNullOrEmpty(PNGFileName))
-                        section.AddImage(PNGFileName);
+                    mapPresenter.Attach(tag, mapView, explorerPresenter);
+                    string pngFileName = mapPresenter.ExportToPNG(workingDirectory);
+                    if (!String.IsNullOrEmpty(pngFileName))
+                        section.AddImage(pngFileName);
                     mapPresenter.Detach();
                     mapView.MainWidget.Destroy();
                 }
@@ -657,9 +661,9 @@ namespace UserInterface.Commands
                     AutoDocumentation.Image imageTag = tag as AutoDocumentation.Image;
                     if (imageTag.image.Width > 700)
                         imageTag.image = ImageUtilities.ResizeImage(imageTag.image, 700, 500);
-                    string PNGFileName = Path.Combine(workingDirectory, imageTag.name);
-                    imageTag.image.Save(PNGFileName, System.Drawing.Imaging.ImageFormat.Png);
-                    section.AddImage(PNGFileName);
+                    string pngFileName = Path.Combine(workingDirectory, imageTag.name);
+                    imageTag.image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
+                    section.AddImage(pngFileName);
                     figureNumber++;
                 }
                 else if (tag is AutoDocumentation.ModelView)
@@ -669,21 +673,21 @@ namespace UserInterface.Commands
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     if (viewName != null && presenterName != null)
                     {
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { null }, null, null) as ViewBase;
+                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { ViewBase.MasterView }, null, null) as ViewBase;
                         IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
                         if (view != null && presenter != null)
                         {
-                            ExplorerPresenter.ApsimXFile.Links.Resolve(presenter);
-                            presenter.Attach(modelView.model, view, ExplorerPresenter);
+                            explorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                            presenter.Attach(modelView.model, view, explorerPresenter);
 
-                            Gtk.Window popupWin;
+                            Gtk.Window popupWin = null;
                             if (view is MapView)
                             {
-                                popupWin = (view as MapView).GetPopupWin();
-                                popupWin.SetSizeRequest(515, 500);
+                                popupWin = (view as MapView)?.GetPopupWin();
+                                popupWin?.SetSizeRequest(515, 500);
                             }
-                            else
+                            if (popupWin == null)
                             {
                                 popupWin = new Gtk.Window(Gtk.WindowType.Popup);
                                 popupWin.SetSizeRequest(800, 800);
@@ -693,8 +697,8 @@ namespace UserInterface.Commands
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
 
-                            string PNGFileName = (presenter as IExportable).ExportToPNG(workingDirectory);
-                            section.AddImage(PNGFileName);
+                            string pngFileName = (presenter as IExportable).ExportToPNG(workingDirectory);
+                            section.AddImage(pngFileName);
                             presenter.Detach();
                             view.MainWidget.Destroy();
                             popupWin.Destroy();

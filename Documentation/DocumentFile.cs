@@ -35,7 +35,7 @@ public class Script
 			{
 				masterPresenter.OpenApsimXFileInTab(fileName, true);
 				// Get the presenter for this tab.
-				ExplorerPresenter presenter = masterPresenter.presenters1[0] as ExplorerPresenter;
+				ExplorerPresenter presenter = masterPresenter.Presenters1[0] as ExplorerPresenter;
 				if (presenter != null)
 				{
 					presenter.SelectNode(".Simulations");

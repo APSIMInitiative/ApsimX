@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Resources
 {
@@ -20,9 +21,15 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This resource represents a labour type (e.g. Joe, 36 years old, male).")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/resources/labour/labourtype.htm")]
+    [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        /// <summary>
+        /// Unit type
+        /// </summary>
+        [Description("Units (nominal)")]
+        public string Units { get { return "NA"; } }
+
         /// <summary>
         /// Age in years.
         /// </summary>
@@ -43,18 +50,133 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
 
+        private double ageInMonths = 0;
+        
         /// <summary>
         /// Age in months.
         /// </summary>
         [XmlIgnore]
-        public double AgeInMonths { get; set; }
+        public double AgeInMonths
+        {
+            get
+            {
+                return ageInMonths;
+            }
+            set
+            {
+                if (ageInMonths != value)
+                {
+                    ageInMonths = value;
+                    // update AE
+                    adultEquivalent = (Parent as Labour).CalculateAE(value);
+                }
+            }
+        }
+
+        private double? adultEquivalent = null;
+
+        /// <summary>
+        /// Adult equivalent.
+        /// </summary>
+        [XmlIgnore]
+        public double AdultEquivalent
+        {
+            get
+            {
+                // if null then report warning that no AE relationship has been provided.
+                if(adultEquivalent == null)
+                {
+                    CLEMModel parent = (Parent as CLEMModel);
+                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.";
+                    if (!parent.Warnings.Exists(warning))
+                    {
+                        parent.Warnings.Add(warning);
+                        parent.Summary.WriteWarning(this, warning);
+                    }
+                }
+                return adultEquivalent??1;
+            }
+        }
+
+        /// <summary>
+        /// Monthly dietary components
+        /// </summary>
+        public List<LabourDietComponent> DietaryComponentList { get; set; }
+
+        /// <summary>
+        /// A method to calculate the details of the current intake
+        /// </summary>
+        /// <param name="metric">the name of the metric to report</param>
+        /// <returns></returns>
+        public double GetDietDetails(string metric)
+        {
+            double value = 0;
+            if (DietaryComponentList != null)
+            {
+                foreach (LabourDietComponent dietComponent in DietaryComponentList)
+                {
+                    double doubleResult = 0;
+                    var result = (dietComponent.FoodStore as CLEMResourceTypeBase).ConvertTo(metric, dietComponent.AmountConsumed);
+                    if (result != null)
+                    {
+                        Double.TryParse(result.ToString(), out doubleResult);
+                    }
+                    value += doubleResult;
+                }
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// A method to calculate the details of the current intake
+        /// </summary>
+        /// <returns></returns>
+        public double GetAmountConsumed()
+        {
+            if (DietaryComponentList is null)
+            {
+                return 0;
+            }
+            else
+            {
+                return DietaryComponentList.Sum(a => a.AmountConsumed);
+            }
+        }
+
+        /// <summary>
+        /// A method to calculate the details of the current intake
+        /// </summary>
+        /// <returns></returns>
+        public double GetAmountConsumed(string foodTypeName)
+        {
+            if (DietaryComponentList is null)
+            {
+                return 0;
+            }
+            else
+            {
+                return DietaryComponentList.Where(a => a.FoodStore.Name == foodTypeName).Sum(a => a.AmountConsumed);
+            }
+        }
+
+        /// <summary>
+        /// The amount of feed eaten during the feed to target activity processing.
+        /// </summary>
+        [XmlIgnore]
+        public double FeedToTargetIntake { get; set; }
 
         /// <summary>
         /// Number of individuals
         /// </summary>
         [Description("Number of individuals")]
-        [Required, GreaterThanEqualValue(1)]
+        [Required, GreaterThanEqualValue(0)]
         public int Individuals { get; set; }
+
+        /// <summary>
+        /// Hired labour switch
+        /// </summary>
+        [Description("Hired labour")]
+        public bool Hired { get; set; }
 
         /// <summary>
         /// The unique id of the last activity request for this labour type
@@ -78,14 +200,19 @@ namespace Models.CLEM.Resources
         /// Available Labour (in days) in the current month. 
         /// </summary>
         [XmlIgnore]
-        public double AvailableDays { get { return availableDays; } }
-        private double availableDays;
+        public double AvailableDays { get; private set; }
 
         /// <summary>
         /// Link to the current labour availability for this person
         /// </summary>
         [XmlIgnore]
         public LabourSpecificationItem LabourAvailability { get; set; }
+
+        /// <summary>
+        /// A proportion (0-1) to limit available labour. This may be from financial shortfall for hired labour.
+        /// </summary>
+        [XmlIgnore]
+        public double AvailabilityLimiter { get; set; }
 
         /// <summary>
         /// Constructor
@@ -119,11 +246,20 @@ namespace Models.CLEM.Resources
         /// <param name="month"></param>
         public void SetAvailableDays(int month)
         {
-            availableDays = 0;
+            AvailableDays = 0;
             if(LabourAvailability != null)
             {
-                availableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1));
+                AvailableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1)*AvailabilityLimiter);
             }
+        }
+
+        /// <summary>
+        /// Get value of this individual
+        /// </summary>
+        /// <returns>value</returns>
+        public double PayRate()
+        {
+            return (Parent as Labour).PayRate(this);
         }
 
         #region Transactions
@@ -141,16 +277,38 @@ namespace Models.CLEM.Resources
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
             double addAmount = (double)resourceAmount;
-            this.availableDays = this.availableDays + addAmount;
-            ResourceTransaction details = new ResourceTransaction();
-            details.Gain = addAmount;
-            details.Activity = activity.Name;
-            details.ActivityType = activity.GetType().Name;
-            details.Reason = reason;
-            details.ResourceType = this.Name;
+            this.AvailableDays += addAmount;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                Gain = addAmount,
+                Activity = activity,
+                Reason = reason,
+                ResourceType = this
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
+        }
+
+        /// <summary>
+        /// Add intake to the DietaryComponents list
+        /// </summary>
+        /// <param name="dietComponent"></param>
+        public void AddIntake(LabourDietComponent dietComponent)
+        {
+            if (DietaryComponentList == null)
+            {
+                DietaryComponentList = new List<LabourDietComponent>();
+            }
+            LabourDietComponent alreadyEaten = DietaryComponentList.Where(a => a.FoodStore.Name == dietComponent.FoodStore.Name).FirstOrDefault();
+            if (alreadyEaten != null)
+            {
+                alreadyEaten.AmountConsumed += dietComponent.AmountConsumed;
+            }
+            else
+            {
+                DietaryComponentList.Add(dietComponent);
+            }
         }
 
         /// <summary>
@@ -166,16 +324,17 @@ namespace Models.CLEM.Resources
 
             double amountRemoved = request.Required;
             // avoid taking too much
-            amountRemoved = Math.Min(this.availableDays, amountRemoved);
-            this.availableDays -= amountRemoved;
+            amountRemoved = Math.Min(this.AvailableDays, amountRemoved);
+            this.AvailableDays -= amountRemoved;
             request.Provided = amountRemoved;
             LastActivityRequestID = request.ActivityID;
-            ResourceTransaction details = new ResourceTransaction();
-            details.ResourceType = this.Name;
-            details.Loss = amountRemoved;
-            details.Activity = request.ActivityModel.Name;
-            details.ActivityType = request.ActivityModel.GetType().Name;
-            details.Reason = request.Reason;
+            ResourceTransaction details = new ResourceTransaction
+            {
+                ResourceType = this,
+                Loss = amountRemoved,
+                Activity = request.ActivityModel,
+                Reason = request.Reason
+            };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -188,7 +347,7 @@ namespace Models.CLEM.Resources
         /// <param name="newValue">New value to set food store to</param>
         public new void Set(double newValue)
         {
-            this.availableDays = newValue;
+            this.AvailableDays = newValue;
         }
 
         /// <summary>
@@ -230,7 +389,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return this.availableDays;
+                return this.AvailableDays;
             }
         }
 
@@ -249,7 +408,7 @@ namespace Models.CLEM.Resources
                 html = "<div class=\"activityentry\">";
                 if (this.Individuals == 0)
                 {
-                    html += "No individuals are proivded for this labour type";
+                    html += "No individuals are provided for this labour type";
                 }
                 else
                 {
@@ -259,6 +418,10 @@ namespace Models.CLEM.Resources
                     }
                     html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge)+"</span> year old ";
                     html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower())+"</span>";
+                    if (Hired)
+                    {
+                        html += " as hired labour";
+                    }
                 }
                 html += "</div>";
             }

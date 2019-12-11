@@ -26,6 +26,11 @@ namespace Models.Core
         private MethodInfo method;
 
         /// <summary>
+        /// A lit of arguments to pass to the method
+        /// </summary>
+        private object[] arguments = null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="VariableMethod" /> class.
         /// </summary>
         /// <param name="model">The underlying model for the property</param>
@@ -33,11 +38,32 @@ namespace Models.Core
         public VariableMethod(object model, MethodInfo method)
         {
             if (model == null || method == null)
+            {
                 throw new ApsimXException(null, "Cannot create an instance of class VariableMethod with a null model or methodInfo");
-            
+            }
+
             this.Object = model;
             this.method = method;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VariableMethod" /> class.
+        /// </summary>
+        /// <param name="model">The underlying model for the property</param>
+        /// <param name="method">The PropertyInfo for this property</param>
+        /// <param name="arguments">An array of arguments to pass to the method</param>
+        public VariableMethod(object model, MethodInfo method, object[] arguments)
+        {
+            if (model == null || method == null)
+            {
+                throw new ApsimXException(null, "Cannot create an instance of class VariableMethod with a null model or methodInfo");
+            }
+
+            this.Object = model;
+            this.method = method;
+            this.arguments = arguments;
+        }
+
 
         /// <summary>
         /// Gets or sets the underlying model that this property belongs to.
@@ -92,7 +118,7 @@ namespace Models.Core
         /// <summary>
         /// Gets the data type of the method
         /// </summary>
-        public override Type DataType { get { return null; } }
+        public override Type DataType { get { return this.method.ReturnType; } }
 
         /// <summary>
         /// Gets the values of the method
@@ -101,7 +127,14 @@ namespace Models.Core
         {
             get
             {
-                return method.Invoke(Object, new object[] { -1 });
+                if (arguments != null)
+                {
+                    return method.Invoke(Object, arguments);
+                }
+                else
+                {
+                    return method.Invoke(Object, new object[] { -1 });
+                }
             }
 
             set

@@ -94,7 +94,7 @@ namespace Models.CLEM.Activities
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
                     current = current.Parent as IModel;
                 }
                 return (result == 0);
@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
             IModel current = this as IModel;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Sum(a => a.Check(date) ? 0 : 1);
+                result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.Check(date) ? 0 : 1);
                 current = current.Parent as IModel;
             }
             return (result == 0);
@@ -137,7 +137,7 @@ namespace Models.CLEM.Activities
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Cast<IActivityTimer>().Count();
+                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Count();
                     current = current.Parent as IModel;
                 }
                 return (result != 0);
@@ -228,21 +228,27 @@ namespace Models.CLEM.Activities
         /// </summary>
         protected void ResourcesForAllActivityInitialisation()
         {
-            // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-            GetResourcesRequiredForInitialisation();
+            if (this.Enabled)
+            {
+                // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
+                GetResourcesRequiredForInitialisation();
 
-            // get resources required for all dynamically created CLEMActivityBase activities
-            if (ActivityList != null)
-            {
-                foreach (CLEMActivityBase activity in ActivityList)
+                // get resources required for all dynamically created CLEMActivityBase activities
+                if (ActivityList != null)
                 {
-                    activity.GetResourcesForAllActivityInitialisation();
+                    foreach (CLEMActivityBase activity in ActivityList)
+                    {
+                        activity.GetResourcesForAllActivityInitialisation();
+                    }
                 }
-            }
-            // get resources required for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-            {
-                activity.GetResourcesForAllActivityInitialisation();
+                // get resources required for all children of type CLEMActivityBase
+                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+                {
+                    if (activity.Enabled)
+                    {
+                        activity.GetResourcesForAllActivityInitialisation();
+                    }
+                }
             }
         }
 
@@ -252,24 +258,27 @@ namespace Models.CLEM.Activities
         /// </summary>
         public virtual void GetResourcesForAllActivities(CLEMModel model)
         {
-            if (this.TimingOK)
+            if (this.Enabled)
             {
-                ResourcesForAllActivities(model);
-            }
-            else
-            {
-                this.Status = ActivityStatus.Ignored;
-                if (ActivityList != null)
+                if (this.TimingOK)
                 {
-                    foreach (CLEMActivityBase activity in ActivityList)
+                    ResourcesForAllActivities(model);
+                }
+                else
+                {
+                    this.Status = ActivityStatus.Ignored;
+                    if (ActivityList != null)
+                    {
+                        foreach (CLEMActivityBase activity in ActivityList)
+                        {
+                            activity.Status = ActivityStatus.Ignored;
+                        }
+                    }
+                    // get resources required for all children of type CLEMActivityBase
+                    foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
                     {
                         activity.Status = ActivityStatus.Ignored;
                     }
-                }
-                // get resources required for all children of type CLEMActivityBase
-                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-                {
-                    activity.Status = ActivityStatus.Ignored;
                 }
             }
         }
@@ -281,7 +290,7 @@ namespace Models.CLEM.Activities
         {
             // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
 
-            if ((model.GetType() == typeof(ActivitiesHolder)&this.AllocationStyle== ResourceAllocationStyle.Automatic)|| (model.GetType() != typeof(ActivitiesHolder)))
+            if ((model.GetType() == typeof(ActivitiesHolder)&&this.AllocationStyle== ResourceAllocationStyle.Automatic)|| (model.GetType() != typeof(ActivitiesHolder)))
             {
                 // this will be perfomred if
                 // (a) the call has come from the Activity Holder and is therefore using the GetResourcesRequired event and the allocation style is automatic, or
@@ -321,7 +330,7 @@ namespace Models.CLEM.Activities
             ResourceRequestList = GetResourcesNeededForinitialisation();
 
             CheckResources(ResourceRequestList, Guid.NewGuid());
-            bool tookRequestedResources = TakeResources(ResourceRequestList, false);
+            TakeResources(ResourceRequestList, false);
 
             ResourceRequestList = null;
         }
@@ -365,8 +374,7 @@ namespace Models.CLEM.Activities
 
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                // if reportErrorAndStop or SkipActivity do not perform Activity
-                if (tookRequestedResources | (ResourceRequestList.Count == 0))
+                if (tookRequestedResources || (ResourceRequestList.Count == 0))
                 {
                     DoActivity();
                 }
@@ -554,14 +562,14 @@ namespace Models.CLEM.Activities
             };
 
             // start with top most LabourFilterGroup
-            while (current != null & amountProvided < amountNeeded)
+            while (current != null && amountProvided < amountNeeded)
             {
                 List<LabourType> items = (resourceHolder.GetResourceGroupByType(request.ResourceType) as Labour).Items;
-                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) | (a.LastActivityRequestID == request.ActivityID & a.LastActivityRequestAmount < lr.MaximumPerPerson)).ToList();
+                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumPerPerson)).ToList();
                 items = items.Filter(current as Model);
 
                 // search for people who can do whole task first
-                while (amountProvided < amountNeeded & items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).Count() > 0)
+                while (amountProvided < amountNeeded && items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).Count() > 0)
                 {
                     // get labour least available but with the amount needed
                     LabourType lt = items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).OrderBy(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson)).FirstOrDefault();
@@ -579,12 +587,13 @@ namespace Models.CLEM.Activities
 
                     amountProvided += amount;
                     removeRequest.Required = amount;
-//                    removeRequest.ResourceType = lt;
                     if (removeFromResource)
                     {
                         lt.LastActivityRequestID = request.ActivityID;
                         lt.LastActivityRequestAmount = amount;
                         lt.Remove(removeRequest);
+                        request.Provided += removeRequest.Provided;
+                        request.Value += request.Provided * lt.PayRate();
                     }
                 }
 
@@ -620,6 +629,8 @@ namespace Models.CLEM.Activities
                                     item.LastActivityRequestID = request.ActivityID;
                                     item.LastActivityRequestAmount += amount;
                                     item.Remove(removeRequest);
+                                    request.Provided += removeRequest.Provided;
+                                    request.Value += request.Provided * item.PayRate();
                                 }
                             }
                             else
@@ -663,7 +674,7 @@ namespace Models.CLEM.Activities
                 request.Available = Math.Min(request.Resource.Amount, request.Required);
             }
 
-            if(removeFromResource & request.Resource != null)
+            if(removeFromResource && request.Resource != null)
             {
                 request.Resource.Remove(request);
             }
@@ -719,11 +730,11 @@ namespace Models.CLEM.Activities
             }
 
             // check if need to do transmutations
-            int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationPossible == true & a.AllowTransmutation).Count();
-            bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false & a.AllowTransmutation).Count() == 0);
+            int countTransmutationsSuccessful = shortfallRequests.Where(a => a.TransmutationPossible == true && a.AllowTransmutation).Count();
+            bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false && a.AllowTransmutation).Count() == 0);
 
             // OR at least one transmutation successful and PerformWithPartialResources
-            if (((countShortfallRequests > 0) & (countShortfallRequests == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 & OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
+            if (((countShortfallRequests > 0) && (countShortfallRequests == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
             {
                 // do transmutations.
                 Resources.TransmutateShortfall(shortfallRequests, false);
@@ -938,6 +949,10 @@ namespace Models.CLEM.Activities
         /// Indicates activity occurred but was not needed
         /// </summary>
         NotNeeded,
+        /// <summary>
+        /// Indicates activity caused a warning and was not performed
+        /// </summary>
+        Warning,
         /// <summary>
         /// Indicates activity was place holder or parent activity
         /// </summary>

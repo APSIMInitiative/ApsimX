@@ -1,18 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="FactorPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Reflection;
     using EventArguments;
-    using Models.Core;
     using Models.Factorial;
+    using System;
+    using System.Drawing;
     using Views;
 
     /// <summary>
@@ -28,7 +19,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view object
         /// </summary>
-        private IEditorView factorView;
+        private IFactorView factorView;
 
         /// <summary>
         /// The presenter
@@ -49,13 +40,13 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.factor = model as Factor;
-            this.factorView = view as IEditorView;
+            this.factorView = view as IFactorView;
             this.presenter = explorerPresenter;
             intellisense = new IntellisensePresenter(factorView as ViewBase);
-            this.factorView.Lines = this.factor.Specifications?.ToArray() ?? new string[0];
+            this.factorView.Specification.Value = factor.Specification;
 
-            this.factorView.TextHasChangedByUser += this.OnTextHasChangedByUser;
-            this.factorView.ContextItemsNeeded += this.OnContextItemsNeeded;
+            this.factorView.Specification.Leave += this.OnTextHasChangedByUser;
+            this.factorView.Specification.IntellisenseItemsNeeded += this.OnContextItemsNeeded;
             this.presenter.CommandHistory.ModelChanged += this.OnModelChanged;
             intellisense.ItemSelected += OnIntellisenseItemSelected;
         }
@@ -65,10 +56,11 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            OnTextHasChangedByUser(this, new EventArgs());
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
-            factorView.TextHasChangedByUser -= this.OnTextHasChangedByUser;
-            factorView.ContextItemsNeeded -= this.OnContextItemsNeeded;
+            factorView.Specification.Leave -= this.OnTextHasChangedByUser;
+            factorView.Specification.IntellisenseItemsNeeded -= this.OnContextItemsNeeded;
             presenter.CommandHistory.ModelChanged -= this.OnModelChanged;
         }
 
@@ -79,7 +71,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnContextItemsNeeded(object sender, NeedContextItemsArgs e)
         {
-            if (e.ObjectName == string.Empty)
+            if (string.IsNullOrEmpty(e.ObjectName))
             {
                 e.ObjectName = ".";
             }
@@ -133,18 +125,12 @@ namespace UserInterface.Presenters
         {
             try
             {
-                presenter.CommandHistory.ModelChanged -= OnModelChanged;
-                List<string> newPaths = new List<string>();
-                foreach (string line in factorView.Lines)
+                if (factor.Specification != factorView.Specification.Value)
                 {
-                    if (line != string.Empty)
-                    {
-                        newPaths.Add(line);
-                    }
+                    presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                    presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specification", factorView.Specification.Value));
+                    presenter.CommandHistory.ModelChanged += OnModelChanged;
                 }
-
-                presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specifications", newPaths));
-                presenter.CommandHistory.ModelChanged += OnModelChanged;
             }
             catch (Exception err)
             {
@@ -158,7 +144,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
         {
-            factorView.Lines = factor.Specifications.ToArray();
+            factorView.Specification.Value = factor.Specification;
         }
 
         /// <summary>
@@ -170,9 +156,9 @@ namespace UserInterface.Presenters
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             if (string.IsNullOrEmpty(args.ItemSelected))
-                factorView.InsertAtCaret(args.ItemSelected);
+                factorView.Specification.InsertAtCursor(args.ItemSelected);
             else
-                factorView.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                factorView.Specification.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
         }
     }
 }
