@@ -172,11 +172,6 @@ namespace Models.PMF
         {
             IncrementDaysTotal(false);
 
-            if ((Apsim.Find(this, typeof(Clock)) as Clock).Today.DayOfYear == 60)
-            {
-
-            }
-
             if (DMPlantMax > 9990)
             {
                 double ttNow = phenology.AccumulatedTT;
