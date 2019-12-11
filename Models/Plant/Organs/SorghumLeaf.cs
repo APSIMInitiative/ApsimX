@@ -674,8 +674,12 @@ namespace Models.PMF.Organs
             var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
             NitrogenPhotoStress = Math.Max(photoStress, 0.0);
 
-            var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
-            NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);
+            NitrogenPhenoStress = 1.0;
+            if (phenology.Between("Emergence", "Flowering"))
+            {
+                var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
+                NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);
+            }
         }
 
         /// <summary>Radiation level for onset of light senescence.</summary>
