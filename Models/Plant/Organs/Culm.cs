@@ -76,7 +76,8 @@ namespace Models.PMF.Organs
     public class Culm : Model, ICustomDocumentation
     {
         private const double smm2sm = 0.000001;
-        private CulmParameters culmParameters { get; set; }
+        private CulmParameters culmParameters;
+        private CulmStructure structure;
 
         private IFunction noRateChange1;
         private IFunction noRateChange2;
@@ -130,6 +131,9 @@ namespace Models.PMF.Organs
             // fixme - temp hack to get things running.
             // Should replace these (and LargestLeafSize) with links in long run.
             IModel reference = culmParameters.LargestLeafSize as IModel;
+            structure = Apsim.Find(culmParameters.LargestLeafSize as IModel, "Structure") as CulmStructure;
+            if (structure == null)
+                throw new Exception($"Culm is unable to find structure model - have you deleted the CulmStructure object?");
             noRateChange1 = GetFunction(reference, "[Structure].RemainingLeavesForFinalAppearanceRate");
             noRateChange2 = GetFunction(reference, "[Structure].RemainingLeavesForFinalAppearanceRate2");
             appearanceRate1 = GetFunction(reference, "[Structure].InitialAppearanceRate");
@@ -184,11 +188,14 @@ namespace Models.PMF.Organs
         {
             //var leafNoCorrection = 1.52;
             //once leaf no is calculated leaf area of largest expanding leaf is determined
+
             // if sorghum
             //double leafNoEffective = Math.Min(CurrentLeafNumber + culmParameters.LeafNoCorrection, FinalLeafNumber - culmParameters.LeafNoAtAppearance);
             // else if maize
             //double leafNoEffective = Math.Min(CurrentLeafNumber - dltLeafNo + culmParameters.LeafNoCorrection, FinalLeafNumber);
             // else throw
+
+            structure.LeafNoApp = culmParameters.LeafNoAtAppearance;
             double leafNoEffective = this.leafNoEffective.Value();
             var leafsize = CalcIndividualLeafSize(leafNoEffective);
 

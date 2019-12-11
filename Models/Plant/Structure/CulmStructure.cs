@@ -141,6 +141,10 @@ namespace Models.PMF.Struct
         /// <summary>Remaining Leaves</summary>
         public double remainingLeaves { get { return FinalLeafNo - CurrentLeafNo; } }
 
+        /// <summary>fixme: Leaf number at appearance as set by each individual culmn before calculating LeafNoEffective.</summary>
+        [JsonIgnore]
+        public double LeafNoApp { get; set; }
+
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
         public string LeafInitialisationStage { get; set; } = "Emergence";
@@ -181,7 +185,8 @@ namespace Models.PMF.Struct
                         B0 = leaf.B0.Value(),
                         B1 = leaf.B1.Value(),
                         AX0 = leaf.AX0.Value(),
-                        LeafNoCorrection = leafNoCorrection.Value()
+                        LeafNoCorrection = leafNoCorrection.Value(),
+                        LeafNoAtAppearance = 0
                     });
                 }
 
