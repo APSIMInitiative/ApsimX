@@ -4271,7 +4271,7 @@ namespace Models.GrazPlan
         /// <param name="stock">The stock data</param>
         public void Buy(StockBuy stock)
         {
-            this.outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex + " ");
+            this.outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ");
             this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4284,7 +4284,7 @@ namespace Models.GrazPlan
         /// <param name="age">The age of animals (months)</param>
         /// <param name="weight">The weight of animals (kg)</param>
         /// <param name="fleeceWeight">The fleece weight of animals (kg)</param>
-        public void Buy(string genotype, double number, string sex, double age, double weight, double fleeceWeight)
+        public void Buy(string genotype, double number, ReproductiveType sex, double age, double weight, double fleeceWeight)
         {
             StockBuy stock = new StockBuy();
             stock.Genotype = genotype;
@@ -4293,7 +4293,7 @@ namespace Models.GrazPlan
             stock.Age = age;
             stock.Weight = weight;
             stock.FleeceWt = fleeceWeight;
-            this.outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex + " ");
+            this.outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ");
             this.stockModel.DoStockManagement(this.stockModel, stock, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4416,7 +4416,7 @@ namespace Models.GrazPlan
         /// <param name="wean">The weaning data</param>
         public void Wean(StockWean wean)
         {
-            this.outputSummary.WriteMessage(this, "Weaning " + wean.Number.ToString() + " " + wean.Sex);
+            this.outputSummary.WriteMessage(this, "Weaning " + wean.Number.ToString() + " " + wean.Sex.ToString());
             this.stockModel.DoStockManagement(this.stockModel, wean, this.localWeather.TheDay, this.localWeather.Latitude);
         }
 
@@ -4668,7 +4668,7 @@ namespace Models.GrazPlan
         /// <returns>Array of genotype names</returns>
         public string[] GenotypeNames(GrazType.AnimalType animal)
         {
-            AnimalParamSet paramSet = StockList.MakeParamSet("");   // can use the param filename from component inits
+            AnimalParamSet paramSet = stockModel.BaseParams;   
 
             int count = paramSet.BreedCount(animal);
             string[] namesArray = new string[count];
@@ -4688,13 +4688,19 @@ namespace Models.GrazPlan
         /// <returns>Array of genotype names</returns>
         public string[] GenotypeNamesDefined(GrazType.AnimalType animal)
         {
+            AnimalParamSet paramSet = stockModel.BaseParams;   
             string[] genoParams = GenotypeNames(animal);
             foreach (SingleGenotypeInits geno in GenoTypes)
             {
                 if (!genoParams.Contains(geno.GenotypeName))
                 {
-                    Array.Resize(ref genoParams, genoParams.Length + 1);
-                    genoParams[genoParams.Length - 1] = geno.GenotypeName;
+                    // check that the user defined genotype is of animal type
+                    AnimalParamSet parameters = paramSet.Match(geno.GenotypeName);
+                    if (parameters.Animal == animal)
+                    {
+                        Array.Resize(ref genoParams, genoParams.Length + 1);
+                        genoParams[genoParams.Length - 1] = geno.GenotypeName;
+                    }
                 }
             }
 

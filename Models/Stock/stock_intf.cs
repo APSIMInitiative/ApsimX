@@ -576,6 +576,14 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Gets the base parameter set for this instance
+        /// specified by the ParamFile
+        /// </summary>
+        public AnimalParamSet BaseParams
+        {
+            get { return baseParams; }
+        }
+        /// <summary>
         /// Gets the list of paddocks
         /// </summary>
         public PaddockList Paddocks
@@ -3452,45 +3460,26 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Converts a keyword to a ReproType.  Allows plurals in the keyword. 
-        /// N.B. The routine is animal-insensitive, i.e. if 'COW' is passed in,      
-        ///      Empty will be returned regardless of whether sheep or cattle are    
-        ///      under consideration                                                 
+        /// Converts a ReproductiveType to a ReproType. 
         /// </summary>
-        /// <param name="keyword">The keyword to match</param>
+        /// <param name="reproType">The keyword to match</param>
         /// <param name="repro">The reproduction record</param>
         /// <returns>True if the keyword is found</returns>
-        private bool ParseRepro(string keyword, ref GrazType.ReproType repro)
+        private bool ParseRepro(ReproductiveType reproType, ref GrazType.ReproType repro)
         {
-            ReproRecord[] sexKeywords = new ReproRecord[8] 
+            switch (reproType)
             {
-                        new ReproRecord(name: "ram",    repro: GrazType.ReproType.Male),
-                        new ReproRecord(name: "crypto", repro: GrazType.ReproType.Male),
-                        new ReproRecord(name: "wether", repro: GrazType.ReproType.Castrated),
-                        new ReproRecord(name: "ewe",    repro: GrazType.ReproType.Empty),
-                        new ReproRecord(name: "bull",   repro: GrazType.ReproType.Male),
-                        new ReproRecord(name: "steer",  repro: GrazType.ReproType.Castrated),
-                        new ReproRecord(name: "heifer", repro: GrazType.ReproType.Empty),
-                        new ReproRecord(name: "cow",    repro: GrazType.ReproType.Empty)
-            };
-
-            int idx;
-
-            bool result = true;
-            keyword = keyword.ToLower().Trim();
-            if ((keyword != string.Empty) && (keyword[keyword.Length - 1] == 's'))                 // Plurals are allowed                   
-                keyword = keyword.Substring(0, keyword.Length - 1);
-            idx = 0;
-            while ((idx <= 7) && (keyword != sexKeywords[idx].Name))
-                idx++;
-            if (idx <= 7)
-                repro = sexKeywords[idx].Repro;
-            else
-                repro = GrazType.ReproType.Castrated;
-            if ((idx > 7) && (keyword.Length > 0))
-                result = false;
-
-            return result;
+                case ReproductiveType.Female:
+                    repro = GrazType.ReproType.Empty;
+                    return true;
+                case ReproductiveType.Male:
+                    repro = GrazType.ReproType.Male;
+                    return true;
+                case ReproductiveType.Castrate:
+                    repro = GrazType.ReproType.Castrated;
+                    return true;
+            }
+            return false;
         }
                 
         /// <summary>
