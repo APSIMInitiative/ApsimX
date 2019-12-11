@@ -665,6 +665,8 @@ namespace UserInterface.Presenters
 
                     object newValue = GetNewCellValue(property, cell.NewValue);
                     this.SetPropertyValue(childmodel, property, newValue);
+                    grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = newValue;
+
                 }
                 catch (Exception ex)
                 {
