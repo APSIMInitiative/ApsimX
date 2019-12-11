@@ -97,6 +97,7 @@
                 this.view.StatusPanelHeight = 20;
             else
                 this.view.StatusPanelHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            this.view.SplitScreenPosition = Configuration.Settings.SplitScreenPosition;
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
         }
@@ -991,9 +992,6 @@
             {
                 string fileName = this.AskUserForOpenFileName("*.apsim|*.apsim");
                 this.view.ShowWaitCursor(true);
-
-                DoChecks();
-
                 this.Import(fileName);
 
                 string newFileName = Path.ChangeExtension(fileName, ".apsimx");
@@ -1007,172 +1005,6 @@
             {
                 this.view.ShowWaitCursor(false);
             }
-        }
-
-
-
-        private void DoChecks()
-        {
-            string[] files = Directory.GetFiles(@"C:\APSIMClassic\Tests\Validation\Maize", "*.apsim", SearchOption.AllDirectories);
-            File.Delete(@"C:\ApsimX\maizeGenotypes.log");
-            List<ICultivarDifference> diffs = new List<ICultivarDifference>();
-            List<XmlElement> officialGenotypes = FindOfficialGenotypes();
-
-            foreach (string file in files)
-                diffs.AddRange(FindGenotpes(file, officialGenotypes));
-
-            diffs = diffs.Distinct(new CultComparer()).ToList();
-            WriteToLog(diffs);
-        }
-
-        private bool Equals(XmlElement e1, XmlElement e2)
-        {
-            return false;
-        }
-
-        private interface ICultivarDifference
-        {
-            string FileName { get; set; }
-            string CultivarName { get; set; }
-            string PropertyName { get; set; }
-
-            string ToString();
-        }
-
-        private class MissingProperty : ICultivarDifference
-        {
-            public string FileName { get; set; }
-            public string CultivarName { get; set; }
-            public string PropertyName { get; set; }
-
-            public override string ToString()
-            {
-                return $"{FileName}: {CultivarName} has a property called {PropertyName} but this property does not exist in the official cultivar.";
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (obj is MissingProperty cult)
-                    return CultivarName == cult.CultivarName && PropertyName == cult.PropertyName;
-                return false;
-            }
-
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
-
-            public MissingProperty(string file, string cultivar, string property)
-            {
-                FileName = file;
-                CultivarName = cultivar;
-                PropertyName = property;
-            }
-        }
-
-        private class CultComparer : IEqualityComparer<ICultivarDifference>
-        {
-            public bool Equals(ICultivarDifference x, ICultivarDifference y)
-            {
-                return x.Equals(y);
-            }
-
-            public int GetHashCode(ICultivarDifference obj)
-            {
-                return base.GetHashCode();
-            }
-        }
-
-        private class DifferentCultivar : ICultivarDifference
-        {
-            public string FileName { get; set; }
-            public string CultivarName { get; set; }
-            public string PropertyName { get; set; }
-            public string Value { get; set; }
-            public string OfficialValue { get; set; }
-
-            public override string ToString()
-            {
-                return $"{FileName}: {CultivarName}'s {PropertyName} value of {Value} does not match official cultivar's value of {OfficialValue}";
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (obj is DifferentCultivar cult)
-                    return CultivarName == cult.CultivarName && PropertyName == cult.PropertyName && Value == cult.Value;
-                return false;
-            }
-
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
-
-            public DifferentCultivar(string file, string cultivar, string property, string value, string official)
-            {
-                FileName = file;
-                CultivarName = cultivar;
-                PropertyName = property;
-                Value = value;
-                OfficialValue = official;
-            }
-        }
-
-        private List<ICultivarDifference> FindGenotpes(string file, List<XmlElement> officialGenotypes)
-        {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(file);
-
-            List<ICultivarDifference> differences = new List<ICultivarDifference>();
-            List<XmlNode> genotypes = new List<XmlNode>();
-            foreach (XmlElement genotype in XmlUtilities.FindAllRecursivelyByType(doc.DocumentElement, "MaizeGenotype"))
-            {
-                string name = genotype.GetAttribute("name");
-                XmlElement official = officialGenotypes.Find(g => g.Name == name);
-                if (official == null)
-                    throw new Exception($"Cultivar '{name}' is not in the 7.10 official cultivars.");
-
-                if (genotype.ChildNodes == null || genotype.ChildNodes.Count < 1)
-                    continue;
-
-                genotypes.Add(genotype);
-
-                foreach (XmlNode node in genotype)
-                {
-                    if (!(node is XmlElement elem))
-                        throw new NotImplementedException();
-
-                    XmlElement officialElem = XmlUtilities.Find(official, elem.Name) as XmlElement;
-                    string fileName = Path.GetFileName(file);
-                    if (officialElem == null)
-                        differences.Add(new MissingProperty(fileName, name, elem.Name));
-                    else if (officialElem.InnerText.Trim() != elem.InnerText.Trim())
-                        differences.Add(new DifferentCultivar(fileName, name, elem.Name, elem.InnerText, officialElem.InnerText));
-                }
-            }
-
-            genotypes.ForEach(g => g.ParentNode.RemoveChild(g));
-            
-            return differences;
-        }
-
-        private void WriteToLog(List<ICultivarDifference> differences)
-        {
-            File.WriteAllLines(@"C:\ApsimX\maizeGenotypes.log", differences.Select(d => d.ToString()));
-        }
-
-        private List<XmlElement> FindOfficialGenotypes()
-        {
-            string masterFile = @"C:\APSIMClassic\Model\Maize.xml";
-            XmlDocument master = new XmlDocument();
-            master.Load(masterFile);
-
-            List<XmlElement> genotypes = new List<XmlElement>();
-            foreach (XmlNode node in XmlUtilities.ChildNodesRecursively(master.DocumentElement, null))
-                if (node is XmlElement element && element.GetAttribute("cultivar") == "yes")
-                    genotypes.Add(element);
-
-            return genotypes;
         }
 
         /// <summary>
@@ -1382,13 +1214,10 @@
             {
                 ShowError("You are on a custom build. You cannot upgrade.");
             }
-            else
+            if (this.AllowClose())
             {
-                if (this.AllowClose())
-                {
-                    UpgradeView form = new UpgradeView(view as ViewBase);
-                    form.Show();
-                }
+                UpgradeView form = new UpgradeView(view as ViewBase);
+                form.Show();
             }
         }
 
@@ -1401,6 +1230,7 @@
             if (e.AllowClose)
             {
                 fileConverter?.Destroy();
+                Configuration.Settings.SplitScreenPosition = view.SplitScreenPosition;
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;
