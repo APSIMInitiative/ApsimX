@@ -665,6 +665,8 @@ namespace UserInterface.Presenters
 
                     object newValue = GetNewCellValue(property, cell.NewValue);
                     this.SetPropertyValue(childmodel, property, newValue);
+                    if (newValue.GetType().IsEnum)
+                        newValue = VariableProperty.GetEnumDescription(newValue as Enum);
                     grid.DataSource.Rows[cell.RowIndex][cell.ColIndex] = newValue;
 
                 }
