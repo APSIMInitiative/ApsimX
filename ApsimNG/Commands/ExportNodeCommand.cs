@@ -511,7 +511,7 @@ namespace UserInterface.Commands
             table.Borders.Right.Width = 0.5;
             table.Rows.LeftIndent = 0;
 
-            foreach (DataColumn column in tableObj.data.Columns)
+            foreach (DataColumn column in tableObj.data.Table.Columns)
             {
                 Column column1 = table.AddColumn();
                 column1.Format.Alignment = ParagraphAlignment.Right;
@@ -525,15 +525,15 @@ namespace UserInterface.Commands
             XFont gdiFont = new XFont("Arial", 10);
             XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
 
-            for (int columnIndex = 0; columnIndex < tableObj.data.Columns.Count; columnIndex++)
+            for (int columnIndex = 0; columnIndex < tableObj.data.Table.Columns.Count; columnIndex++)
             {
-                string heading = tableObj.data.Columns[columnIndex].ColumnName;
+                string heading = tableObj.data.Table.Columns[columnIndex].ColumnName;
 
                 // Get the width of the column
                 double maxSize = graphics.MeasureString(heading, gdiFont).Width;
-                for (int rowIndex = 0; rowIndex < tableObj.data.Rows.Count; rowIndex++)
+                for (int rowIndex = 0; rowIndex < tableObj.data.Count; rowIndex++)
                 {
-                    string cellText = tableObj.data.Rows[rowIndex][columnIndex].ToString();
+                    string cellText = tableObj.data[rowIndex][columnIndex].ToString();
                     XSize size = graphics.MeasureString(cellText, gdiFont);
                     maxSize = Math.Max(maxSize, size.Width);
                 }
@@ -541,12 +541,12 @@ namespace UserInterface.Commands
                 table.Columns[columnIndex].Width = Unit.FromPoint(maxSize + 10);
                 row.Cells[columnIndex].AddParagraph(heading);
             }
-            for (int rowIndex = 0; rowIndex < tableObj.data.Rows.Count; rowIndex++)
+            for (int rowIndex = 0; rowIndex < tableObj.data.Count; rowIndex++)
             {
                 row = table.AddRow();
-                for (int columnIndex = 0; columnIndex < tableObj.data.Columns.Count; columnIndex++)
+                for (int columnIndex = 0; columnIndex < tableObj.data.Table.Columns.Count; columnIndex++)
                 {
-                    string cellText = tableObj.data.Rows[rowIndex][columnIndex].ToString();
+                    string cellText = tableObj.data[rowIndex][columnIndex].ToString();
                     row.Cells[columnIndex].AddParagraph(cellText);
                 }
                 
@@ -576,7 +576,7 @@ namespace UserInterface.Commands
         /// <param name="section">The writer to write to.</param>
         /// <param name="tags">The autodoc tags.</param>
         /// <param name="workingDirectory">The working directory.</param>
-        private void TagsToMigraDoc(Section section, List<AutoDocumentation.ITag> tags, string workingDirectory)
+        public void TagsToMigraDoc(Section section, List<AutoDocumentation.ITag> tags, string workingDirectory)
         {
             int figureNumber = 0;
             foreach (AutoDocumentation.ITag tag in tags)

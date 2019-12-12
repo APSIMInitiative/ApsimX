@@ -147,6 +147,7 @@
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\CustomMenuToolButton.cs" />
+    <Compile Include="Classes\PDFWriter.cs" />
     <Compile Include="Classes\Grid\CellRendererActiveButton.cs" />
     <Compile Include="Classes\Grid\CellRendererDropDown.cs" />
     <Compile Include="Classes\Grid\ColRenderAttributes.cs" />
@@ -207,7 +208,7 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
-    <Compile Include="Commands\WriteDebugDoc.cs" />
+    <Compile Include="Commands\CreateModelDescription.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellChangedArgs.cs" />

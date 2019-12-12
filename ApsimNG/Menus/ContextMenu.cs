@@ -841,13 +841,12 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Write debug document",
-                     AppliesTo = new Type[] { typeof(Simulation) })]
-        public void WriteDebugDocument(object sender, EventArgs e)
+        [ContextMenu(MenuName = "Create model description")]
+        public void CreateModelDescription(object sender, EventArgs e)
         {
             try
             {
-                Simulation model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Simulation;
+                var model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
                 WriteDebugDoc writeDocument = new WriteDebugDoc(explorerPresenter, model);
                 writeDocument.Do(null);
             }
