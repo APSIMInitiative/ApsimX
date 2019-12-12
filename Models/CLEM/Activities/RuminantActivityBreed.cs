@@ -188,12 +188,12 @@ namespace Models.CLEM.Activities
             // get list of all individuals of breeding age and condition
             // grouped by location
             var breeders = from ind in herd
-                            where
-                            (ind.Gender == Sex.Male && ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
-                            (ind.Gender == Sex.Female &&
-                            ind.Age >= ind.BreedParams.MinimumAge1stMating &&
-                            ind.HighWeight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
-                            )
+                            where ind.IsBreeder
+                            //(ind.Gender == Sex.Male && ind.Age >= ind.BreedParams.MinimumAge1stMating) ||
+                            //(ind.Gender == Sex.Female &&
+                            //ind.Age >= ind.BreedParams.MinimumAge1stMating &&
+                            //ind.HighWeight >= (ind.BreedParams.MinimumSize1stMating * ind.StandardReferenceWeight)
+                            //)
                             group ind by ind.Location into grp
                             select grp;
 
@@ -429,7 +429,7 @@ namespace Models.CLEM.Activities
 
             // get only breeders for labour calculations
             List<Ruminant> herd = CurrentHerd(true).Where(a => a.Gender == Sex.Female &&
-                            a.Age >= a.BreedParams.MinimumAge1stMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).ToList();
+                            a.IsBreeder).ToList();
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 
