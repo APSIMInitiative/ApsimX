@@ -1542,10 +1542,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
             //! flag to determine if Ks has been chosen for use. 
-            if (Soil.KS == null)
-                using_ks = false;
-            else
-                using_ks = true;
+            using_ks = MathUtilities.ValuesInArray(Soil.KS);
 
 
 

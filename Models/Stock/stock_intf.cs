@@ -576,6 +576,14 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
+        /// Gets the base parameter set for this instance
+        /// specified by the ParamFile
+        /// </summary>
+        public AnimalParamSet BaseParams
+        {
+            get { return baseParams; }
+        }
+        /// <summary>
         /// Gets the list of paddocks
         /// </summary>
         public PaddockList Paddocks

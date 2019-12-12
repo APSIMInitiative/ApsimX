@@ -384,4 +384,23 @@ namespace Models.CLEM
         /// </summary>
         FileReader
     }
+
+    /// <summary>
+    /// Style of weaning rules
+    /// </summary>
+    public enum WeaningStyle
+    {
+        /// <summary>
+        /// Age or weight achieved
+        /// </summary>
+        AgeOrWeight,
+        /// <summary>
+        /// Age achieved
+        /// </summary>
+        AgeOnly,
+        /// <summary>
+        /// Weight achieved
+        /// </summary>
+        WeightOnly
+    }
 }

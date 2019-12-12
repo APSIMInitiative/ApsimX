@@ -63,8 +63,8 @@ namespace UserInterface.Presenters
                 {
                     this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
+                this.view.FileName.Value = dataStore.FileName;
             }
-            this.view.FileName.Value = dataStore.FileName;
 
             this.view.TableList.Changed += this.OnTableSelected;
             this.view.ColumnFilter.Leave += OnColumnFilterChanged;

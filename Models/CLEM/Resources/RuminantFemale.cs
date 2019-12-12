@@ -221,9 +221,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                // removed the previous SuccessfulPregnancy and BirthAge > ConceptionAge to allow new ability to conceive while lactating.
-                // ToDo:  Add & this.SuccessfulPregnancy to avoid lactation after failed pregnancy
-                return ((this.Age - this.AgeAtLastBirth)*30.4 <= this.BreedParams.MilkingDays & (this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed));
+                return ((this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed) && (this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays);
             }            
         }
 
