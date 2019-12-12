@@ -288,6 +288,48 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": "SimulationName",
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 1,
+                  "Line": 4,
+                  "LineThickness": 1,
+                  "Checkpoint": "Released",
+                  "TableName": "PredictedObserved",
+                  "XFieldName": "Predicted.Eucalyptus.Wood.Wt",
+                  "YFieldName": "Observed.Eucalyptus.Wood.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series1",
+                  "Children": [
+                    {
+                      "$type": "Models.Graph.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1790,7 +1832,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -1888,7 +1930,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -2046,7 +2088,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -11449,7 +11491,7 @@
                                     "80-100",
                                     "100-150",
                                     "150-200",
-                                    "200-3000"
+                                    "200-300"
                                   ],
                                   "Thickness": [
                                     200.0,
@@ -11459,7 +11501,7 @@
                                     200.0,
                                     500.0,
                                     500.0,
-                                    28000.0
+                                    1000.0
                                   ],
                                   "ParticleSizeClay": [
                                     18.0,
@@ -11533,14 +11575,14 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01
+                                        0.11,
+                                        0.13,
+                                        0.14,
+                                        0.13,
+                                        0.13,
+                                        0.14,
+                                        0.15,
+                                        0.15
                                       ],
                                       "KL": [
                                         0.07,
@@ -12385,7 +12427,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -13235,8 +13277,7 @@
                                     "90-145",
                                     "145-155",
                                     "155-200",
-                                    "200-400",
-                                    "400-3000"
+                                    "200-400"
                                   ],
                                   "Thickness": [
                                     100.0,
@@ -13245,8 +13286,7 @@
                                     550.0,
                                     100.0,
                                     450.0,
-                                    2000.0,
-                                    26000.0
+                                    2000.0
                                   ],
                                   "ParticleSizeClay": [
                                     65.4,
@@ -13255,13 +13295,11 @@
                                     0.0,
                                     0.0,
                                     0.0,
-                                    0.0,
                                     0.0
                                   ],
                                   "BD": [
                                     1.6,
                                     1.6,
-                                    1.5,
                                     1.5,
                                     1.5,
                                     1.5,
@@ -13275,7 +13313,6 @@
                                     0.02,
                                     0.05,
                                     0.05,
-                                    0.05,
                                     0.05
                                   ],
                                   "LL15": [
@@ -13285,8 +13322,7 @@
                                     0.235,
                                     0.231,
                                     0.231,
-                                    0.231,
-                                    0.05
+                                    0.231
                                   ],
                                   "DUL": [
                                     0.272,
@@ -13295,8 +13331,7 @@
                                     0.324,
                                     0.319,
                                     0.319,
-                                    0.319,
-                                    0.05
+                                    0.319
                                   ],
                                   "SAT": [
                                     0.39,
@@ -13305,8 +13340,7 @@
                                     0.39,
                                     0.39,
                                     0.39,
-                                    0.39,
-                                    0.05
+                                    0.39
                                   ],
                                   "KS": null,
                                   "BDMetadata": null,
@@ -13320,14 +13354,13 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01
+                                        0.191,
+                                        0.208,
+                                        0.248,
+                                        0.235,
+                                        0.231,
+                                        0.231,
+                                        0.231
                                       ],
                                       "KL": [
                                         0.07,
@@ -13336,7 +13369,6 @@
                                         0.02,
                                         0.02,
                                         0.02,
-                                        0.01,
                                         0.01
                                       ],
                                       "XF": [
@@ -13346,8 +13378,7 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        1.0,
-                                        0.0
+                                        1.0
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
@@ -14556,15 +14587,6 @@
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileName": null,
-                          "Name": "Input",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -14599,7 +14621,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -14697,7 +14719,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -14795,7 +14817,7 @@
                       "Minimum": 0.0,
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -14900,7 +14922,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Site",
                           "Children": [
                             {
@@ -15016,7 +15038,7 @@
                                 {
                                   "$type": "Models.Soils.InitialWater, Models",
                                   "PercentMethod": 0,
-                                  "FractionFull": 0.0,
+                                  "FractionFull": 1.0,
                                   "DepthWetSoil": "NaN",
                                   "RelativeTo": "LL15",
                                   "Name": "Initial water",
@@ -15035,7 +15057,10 @@
                                     "80-100",
                                     "100-150",
                                     "150-200",
-                                    "200-3000"
+                                    "200-400",
+                                    "400-600",
+                                    "600-800",
+                                    "800-1000"
                                   ],
                                   "Thickness": [
                                     200.0,
@@ -15045,7 +15070,10 @@
                                     200.0,
                                     500.0,
                                     500.0,
-                                    28000.0
+                                    2000.0,
+                                    2000.0,
+                                    2000.0,
+                                    2000.0
                                   ],
                                   "ParticleSizeClay": [
                                     78.82,
@@ -15055,14 +15083,20 @@
                                     80.71,
                                     80.71,
                                     80.71,
-                                    8.6475
+                                    80.71,
+                                    80.71,
+                                    80.71,
+                                    80.71
                                   ],
                                   "BD": [
-                                    1.6,
-                                    1.6,
                                     1.5,
                                     1.5,
                                     1.5,
+                                    1.5,
+                                    1.5,
+                                    1.45,
+                                    1.45,
+                                    1.3,
                                     1.5,
                                     1.5,
                                     1.5
@@ -15075,15 +15109,21 @@
                                     0.05,
                                     0.05,
                                     0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
                                     0.05
                                   ],
                                   "LL15": [
                                     0.15,
                                     0.15,
-                                    0.25,
-                                    0.25,
-                                    0.25,
-                                    0.25,
+                                    0.2,
+                                    0.15,
+                                    0.15,
+                                    0.15,
+                                    0.15,
+                                    0.15,
+                                    0.2,
                                     0.2,
                                     0.2
                                   ],
@@ -15093,6 +15133,9 @@
                                     0.38,
                                     0.37,
                                     0.37,
+                                    0.4,
+                                    0.42,
+                                    0.45,
                                     0.37,
                                     0.37,
                                     0.37
@@ -15103,11 +15146,26 @@
                                     0.4,
                                     0.39,
                                     0.39,
+                                    0.45,
+                                    0.45,
+                                    0.5,
                                     0.39,
                                     0.39,
                                     0.39
                                   ],
-                                  "KS": null,
+                                  "KS": [
+                                    1000.0,
+                                    1000.0,
+                                    1000.0,
+                                    1000.0,
+                                    1000.0,
+                                    1000.0,
+                                    1000.0,
+                                    1000.0,
+                                    1000.0,
+                                    1000.0,
+                                    1000.0
+                                  ],
                                   "BDMetadata": null,
                                   "AirDryMetadata": null,
                                   "LL15Metadata": null,
@@ -15119,16 +15177,22 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01
+                                        0.15,
+                                        0.15,
+                                        0.2,
+                                        0.15,
+                                        0.15,
+                                        0.15,
+                                        0.15,
+                                        0.15,
+                                        0.2,
+                                        0.2,
+                                        0.2
                                       ],
                                       "KL": [
+                                        0.07,
+                                        0.07,
+                                        0.07,
                                         0.07,
                                         0.07,
                                         0.07,
@@ -15146,7 +15210,10 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        0.1
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
@@ -15819,7 +15886,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -15835,9 +15902,9 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
+                      "FactorToVaryColours": "Site",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "CultC3334",
+                      "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -15865,8 +15932,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
-                      "FactorToVaryMarkers": "CultC3334",
+                      "FactorToVaryColours": "Site",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -15917,7 +15984,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -15933,9 +16000,9 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
+                      "FactorToVaryColours": "Site",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "CultC3334",
+                      "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 0,
@@ -15963,8 +16030,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
-                      "FactorToVaryMarkers": "CultC3334",
+                      "FactorToVaryColours": "Site",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -16015,7 +16082,7 @@
                       "Minimum": 0.0,
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -16031,13 +16098,13 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
+                      "FactorToVaryColours": "Site",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "CultC3334",
+                      "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 1,
                       "Line": 0,
-                      "LineThickness": 1,
+                      "LineThickness": 0,
                       "Checkpoint": "Current",
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
@@ -16061,8 +16128,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -1663232,
-                      "FactorToVaryColours": "CultC3336",
-                      "FactorToVaryMarkers": "CultC3334",
+                      "FactorToVaryColours": "Site",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -16113,7 +16180,7 @@
                       "Minimum": 0.0,
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
@@ -16129,9 +16196,9 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -16777216,
-                      "FactorToVaryColours": "CultC3336",
+                      "FactorToVaryColours": "Site",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "CultC3334",
+                      "FactorToVaryLines": null,
                       "Marker": 11,
                       "MarkerSize": 1,
                       "Line": 0,
@@ -16159,8 +16226,8 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -1663232,
-                      "FactorToVaryColours": "CultC3336",
-                      "FactorToVaryMarkers": "CultC3334",
+                      "FactorToVaryColours": "Site",
+                      "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 0,
                       "MarkerSize": 0,
@@ -16227,7 +16294,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Site",
                           "Children": [
                             {
@@ -16361,8 +16428,8 @@
                                     "80-100",
                                     "100-150",
                                     "150-200",
-                                    "200-403",
-                                    "403-3000"
+                                    "200-400",
+                                    "400-600"
                                   ],
                                   "Thickness": [
                                     200.0,
@@ -16371,8 +16438,8 @@
                                     200.0,
                                     500.0,
                                     500.0,
-                                    2030.0,
-                                    25970.0
+                                    2000.0,
+                                    2000.0
                                   ],
                                   "ParticleSizeClay": [
                                     4.56,
@@ -16382,7 +16449,7 @@
                                     3.38,
                                     3.38,
                                     3.38,
-                                    0.1262456680785522
+                                    3.38
                                   ],
                                   "BD": [
                                     1.6,
@@ -16412,7 +16479,7 @@
                                     0.22,
                                     0.22,
                                     0.22,
-                                    0.05
+                                    0.22
                                   ],
                                   "DUL": [
                                     0.35,
@@ -16422,7 +16489,7 @@
                                     0.34,
                                     0.34,
                                     0.34,
-                                    0.05
+                                    0.34
                                   ],
                                   "SAT": [
                                     0.39,
@@ -16432,7 +16499,7 @@
                                     0.39,
                                     0.39,
                                     0.39,
-                                    0.05
+                                    0.39
                                   ],
                                   "KS": null,
                                   "BDMetadata": null,
@@ -16446,14 +16513,14 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01
+                                        0.22,
+                                        0.22,
+                                        0.22,
+                                        0.22,
+                                        0.22,
+                                        0.22,
+                                        0.22,
+                                        0.22
                                       ],
                                       "KL": [
                                         0.07,
@@ -16473,7 +16540,7 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        0.1
+                                        1.0
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
@@ -17103,15 +17170,6 @@
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileName": null,
-                          "Name": "Input",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -17707,8 +17765,7 @@
                                 "40-100",
                                 "100-150",
                                 "150-200",
-                                "200-400",
-                                "400-3000"
+                                "200-300"
                               ],
                               "Thickness": [
                                 100.0,
@@ -17717,8 +17774,7 @@
                                 600.0,
                                 500.0,
                                 500.0,
-                                2000.0,
-                                26000.0
+                                1000.0
                               ],
                               "ParticleSizeClay": null,
                               "BD": [
@@ -17728,11 +17784,9 @@
                                 1.5,
                                 1.5,
                                 1.5,
-                                1.5,
                                 1.5
                               ],
                               "AirDry": [
-                                0.01,
                                 0.01,
                                 0.01,
                                 0.01,
@@ -17748,8 +17802,7 @@
                                 0.16,
                                 0.16,
                                 0.16,
-                                0.16,
-                                0.05
+                                0.16
                               ],
                               "DUL": [
                                 0.4,
@@ -17758,8 +17811,7 @@
                                 0.4,
                                 0.4,
                                 0.4,
-                                0.24,
-                                0.05
+                                0.24
                               ],
                               "SAT": [
                                 0.4,
@@ -17768,8 +17820,7 @@
                                 0.4,
                                 0.4,
                                 0.4,
-                                0.4,
-                                0.05
+                                0.4
                               ],
                               "KS": null,
                               "BDMetadata": null,
@@ -17789,7 +17840,6 @@
                                     0.01,
                                     0.01,
                                     0.01,
-                                    0.01,
                                     0.01
                                   ],
                                   "KL": [
@@ -17799,7 +17849,6 @@
                                     0.02,
                                     0.02,
                                     0.02,
-                                    0.01,
                                     0.01
                                   ],
                                   "XF": [
@@ -17809,7 +17858,6 @@
                                     1.0,
                                     1.0,
                                     1.0,
-                                    0.1,
                                     0.1
                                   ],
                                   "LLMetadata": null,
@@ -18532,8 +18580,7 @@
                                 "40-100",
                                 "100-150",
                                 "150-200",
-                                "200-400",
-                                "400-3000"
+                                "200-400"
                               ],
                               "Thickness": [
                                 100.0,
@@ -18542,8 +18589,7 @@
                                 600.0,
                                 500.0,
                                 500.0,
-                                2000.0,
-                                26000.0
+                                2000.0
                               ],
                               "ParticleSizeClay": null,
                               "BD": [
@@ -18553,11 +18599,9 @@
                                 1.5,
                                 1.5,
                                 1.5,
-                                1.5,
                                 1.5
                               ],
                               "AirDry": [
-                                0.01,
                                 0.01,
                                 0.01,
                                 0.01,
@@ -18573,8 +18617,7 @@
                                 0.06,
                                 0.06,
                                 0.06,
-                                0.06,
-                                0.05
+                                0.06
                               ],
                               "DUL": [
                                 0.25,
@@ -18583,8 +18626,7 @@
                                 0.25,
                                 0.25,
                                 0.25,
-                                0.25,
-                                0.05
+                                0.25
                               ],
                               "SAT": [
                                 0.39,
@@ -18593,8 +18635,7 @@
                                 0.39,
                                 0.39,
                                 0.39,
-                                0.4,
-                                0.05
+                                0.4
                               ],
                               "KS": null,
                               "BDMetadata": null,
@@ -18608,14 +18649,13 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01
+                                    0.06,
+                                    0.06,
+                                    0.06,
+                                    0.06,
+                                    0.06,
+                                    0.06,
+                                    0.06
                                   ],
                                   "KL": [
                                     0.07,
@@ -18624,7 +18664,6 @@
                                     0.02,
                                     0.02,
                                     0.02,
-                                    0.01,
                                     0.01
                                   ],
                                   "XF": [
@@ -18634,7 +18673,6 @@
                                     1.0,
                                     1.0,
                                     1.0,
-                                    0.0,
                                     0.0
                                   ],
                                   "LLMetadata": null,
@@ -19660,8 +19698,7 @@
                                     "73-117",
                                     "117-153",
                                     "153-197",
-                                    "197-400",
-                                    "400-3000"
+                                    "197-400"
                                   ],
                                   "Thickness": [
                                     220.0,
@@ -19670,14 +19707,12 @@
                                     440.0,
                                     360.0,
                                     440.0,
-                                    2030.0,
-                                    26000.0
+                                    2030.0
                                   ],
                                   "ParticleSizeClay": null,
                                   "BD": [
                                     1.6,
                                     1.6,
-                                    1.5,
                                     1.5,
                                     1.5,
                                     1.5,
@@ -19691,11 +19726,9 @@
                                     0.02,
                                     0.05,
                                     0.05,
-                                    0.05,
                                     0.05
                                   ],
                                   "LL15": [
-                                    0.05,
                                     0.05,
                                     0.05,
                                     0.05,
@@ -19711,8 +19744,7 @@
                                     0.27,
                                     0.27,
                                     0.27,
-                                    0.27,
-                                    0.05
+                                    0.27
                                   ],
                                   "SAT": [
                                     0.39,
@@ -19721,8 +19753,7 @@
                                     0.39,
                                     0.39,
                                     0.39,
-                                    0.39,
-                                    0.05
+                                    0.39
                                   ],
                                   "KS": null,
                                   "BDMetadata": null,
@@ -19736,14 +19767,13 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01
+                                        0.05,
+                                        0.05,
+                                        0.05,
+                                        0.05,
+                                        0.05,
+                                        0.05,
+                                        0.05
                                       ],
                                       "KL": [
                                         0.07,
@@ -19752,7 +19782,6 @@
                                         0.02,
                                         0.02,
                                         0.02,
-                                        0.01,
                                         0.01
                                       ],
                                       "XF": [
@@ -19762,7 +19791,6 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        0.1,
                                         0.1
                                       ],
                                       "LLMetadata": null,
@@ -20793,8 +20821,7 @@
                                     "73-117",
                                     "117-153",
                                     "153-197",
-                                    "197-400",
-                                    "400-3000"
+                                    "197-400"
                                   ],
                                   "Thickness": [
                                     220.0,
@@ -20803,14 +20830,12 @@
                                     440.0,
                                     360.0,
                                     440.0,
-                                    2030.0,
-                                    26000.0
+                                    2030.0
                                   ],
                                   "ParticleSizeClay": null,
                                   "BD": [
                                     1.6,
                                     1.6,
-                                    1.5,
                                     1.5,
                                     1.5,
                                     1.5,
@@ -20824,8 +20849,7 @@
                                     0.01,
                                     0.01,
                                     0.01,
-                                    0.01,
-                                    0.05
+                                    0.01
                                   ],
                                   "LL15": [
                                     0.03,
@@ -20834,8 +20858,7 @@
                                     0.03,
                                     0.03,
                                     0.03,
-                                    0.03,
-                                    0.05
+                                    0.03
                                   ],
                                   "DUL": [
                                     0.26,
@@ -20844,8 +20867,7 @@
                                     0.26,
                                     0.26,
                                     0.26,
-                                    0.26,
-                                    0.05
+                                    0.26
                                   ],
                                   "SAT": [
                                     0.31,
@@ -20854,8 +20876,7 @@
                                     0.31,
                                     0.31,
                                     0.31,
-                                    0.31,
-                                    0.05
+                                    0.31
                                   ],
                                   "KS": null,
                                   "BDMetadata": null,
@@ -20869,14 +20890,13 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01
+                                        0.03,
+                                        0.03,
+                                        0.03,
+                                        0.03,
+                                        0.03,
+                                        0.03,
+                                        0.03
                                       ],
                                       "KL": [
                                         0.07,
@@ -20885,7 +20905,6 @@
                                         0.02,
                                         0.02,
                                         0.02,
-                                        0.01,
                                         0.01
                                       ],
                                       "XF": [
@@ -20895,7 +20914,6 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        0.0,
                                         0.0
                                       ],
                                       "LLMetadata": null,
@@ -22276,8 +22294,7 @@
                                     "73-117",
                                     "117-153",
                                     "153-197",
-                                    "197-400",
-                                    "400-3000"
+                                    "197-400"
                                   ],
                                   "Thickness": [
                                     220.0,
@@ -22286,14 +22303,12 @@
                                     440.0,
                                     360.0,
                                     440.0,
-                                    2030.0,
-                                    26000.0
+                                    2030.0
                                   ],
                                   "ParticleSizeClay": null,
                                   "BD": [
                                     1.6,
                                     1.6,
-                                    1.5,
                                     1.5,
                                     1.5,
                                     1.5,
@@ -22307,11 +22322,9 @@
                                     0.02,
                                     0.05,
                                     0.05,
-                                    0.05,
                                     0.05
                                   ],
                                   "LL15": [
-                                    0.06,
                                     0.06,
                                     0.06,
                                     0.06,
@@ -22327,8 +22340,7 @@
                                     0.32,
                                     0.32,
                                     0.32,
-                                    0.32,
-                                    0.05
+                                    0.32
                                   ],
                                   "SAT": [
                                     0.39,
@@ -22337,8 +22349,7 @@
                                     0.39,
                                     0.39,
                                     0.39,
-                                    0.39,
-                                    0.05
+                                    0.39
                                   ],
                                   "KS": null,
                                   "BDMetadata": null,
@@ -22352,14 +22363,13 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01
+                                        0.06,
+                                        0.06,
+                                        0.06,
+                                        0.06,
+                                        0.06,
+                                        0.06,
+                                        0.06
                                       ],
                                       "KL": [
                                         0.07,
@@ -22368,7 +22378,6 @@
                                         0.02,
                                         0.02,
                                         0.02,
-                                        0.01,
                                         0.01
                                       ],
                                       "XF": [
@@ -22378,7 +22387,6 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        0.1,
                                         0.1
                                       ],
                                       "LLMetadata": null,
@@ -22960,7 +22968,7 @@
                                 },
                                 {
                                   "Key": "SowingDate",
-                                  "Value": "2009-11-01"
+                                  "Value": "11/01/2009 00:00:00"
                                 }
                               ],
                               "Name": "TreeTransplantRule",
@@ -23002,15 +23010,6 @@
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PostSimulationTools.Input, Models",
-                          "FileName": null,
-                          "Name": "Input",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -23043,7 +23042,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -23141,7 +23140,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -23418,8 +23417,7 @@
                                     "73-117",
                                     "117-153",
                                     "153-197",
-                                    "197-400",
-                                    "400-3000"
+                                    "197-400"
                                   ],
                                   "Thickness": [
                                     220.0,
@@ -23428,14 +23426,12 @@
                                     440.0,
                                     360.0,
                                     440.0,
-                                    2030.0,
-                                    26000.0
+                                    2030.0
                                   ],
                                   "ParticleSizeClay": null,
                                   "BD": [
                                     1.6,
                                     1.6,
-                                    1.5,
                                     1.5,
                                     1.5,
                                     1.5,
@@ -23449,7 +23445,6 @@
                                     0.02,
                                     0.02,
                                     0.02,
-                                    0.02,
                                     0.02
                                   ],
                                   "LL15": [
@@ -23459,8 +23454,7 @@
                                     0.04,
                                     0.04,
                                     0.04,
-                                    0.04,
-                                    0.03
+                                    0.04
                                   ],
                                   "DUL": [
                                     0.27,
@@ -23469,8 +23463,7 @@
                                     0.27,
                                     0.27,
                                     0.27,
-                                    0.27,
-                                    0.03
+                                    0.27
                                   ],
                                   "SAT": [
                                     0.39,
@@ -23479,8 +23472,7 @@
                                     0.39,
                                     0.39,
                                     0.39,
-                                    0.39,
-                                    0.05
+                                    0.39
                                   ],
                                   "KS": null,
                                   "BDMetadata": null,
@@ -23494,14 +23486,13 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01
+                                        0.04,
+                                        0.04,
+                                        0.04,
+                                        0.04,
+                                        0.04,
+                                        0.04,
+                                        0.04
                                       ],
                                       "KL": [
                                         0.07,
@@ -23510,7 +23501,6 @@
                                         0.02,
                                         0.02,
                                         0.02,
-                                        0.01,
                                         0.01
                                       ],
                                       "XF": [
@@ -23520,8 +23510,7 @@
                                         1.0,
                                         1.0,
                                         1.0,
-                                        0.2,
-                                        0.1
+                                        0.2
                                       ],
                                       "LLMetadata": null,
                                       "KLMetadata": null,
@@ -24320,7 +24309,7 @@
                                 },
                                 {
                                   "Key": "SowingDate",
-                                  "Value": "2009-11-15"
+                                  "Value": "11/15/2009 00:00:00"
                                 }
                               ],
                               "Name": "TreeTransplantRule",
@@ -24412,7 +24401,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
@@ -24510,7 +24499,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": false,
+                      "DateTimeAxis": true,
                       "CrossesAtZero": false
                     },
                     {
