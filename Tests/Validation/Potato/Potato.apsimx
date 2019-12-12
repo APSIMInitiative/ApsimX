@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 386,
+  "ExplorerWidth": 340,
   "Version": 70,
   "Name": "Simulations",
   "Children": [
@@ -23,7 +23,7 @@
             "[Clock].Today",
             "[Potato].AboveGround.N",
             "[Potato].BelowGround.N",
-            "[Potato].Leaf.NodeNumber.Value()",
+            "[Potato].Leaf.NodeNumber",
             "[Potato].Leaf.CoverDead",
             "[Potato].Leaf.CoverGreen",
             "[Potato].Leaf.CoverTotal",
@@ -54,7 +54,7 @@
             "[Potato].Stem.Live.StructuralWt",
             "[Potato].Stem.Live.Wt",
             "[Potato].Leaf.Height",
-            "[Potato].Leaf.NodeNumber.Value()",
+            "[Potato].Leaf.NodeNumber",
             "[Potato].Total.N",
             "[Potato].TotalDead.N",
             "[Potato].TotalLive.N",
@@ -62,7 +62,7 @@
             "[Potato].Tuber.Dead.N",
             "[Potato].Tuber.Dead.NConc",
             "[Potato].Tuber.Dead.Wt",
-            "[Potato].Tuber.LiveFWt.DryMatterContent.Value()",
+            "[Potato].Tuber.LiveFWt.DryMatterContent",
             "[Potato].Tuber.Live.N",
             "[Potato].Tuber.Live.NConc",
             "[Potato].Tuber.Live.Wt",
@@ -143,7 +143,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -185,7 +185,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -224,7 +224,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -257,7 +257,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Potato].Leaf.FinalLeafNumber.Value()",
+                          "VariableName": "[Potato].Leaf.FinalLeafNumber",
                           "Name": "FinalLeafNumber",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -271,7 +271,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Potato].Leaf.NodeNumber.Value()",
+                              "VariableName": "[Potato].Leaf.NodeNumber",
                               "Name": "ValueToHold",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -290,7 +290,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Potato].Leaf.NodeNumber.DeltaNodeNumber.Value()",
+                      "VariableName": "[Potato].Leaf.NodeNumber.DeltaNodeNumber",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -323,7 +323,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Potato].Phenology.Vegetative.Target.Value()",
+                          "VariableName": "[Potato].Phenology.Vegetative.Target",
                           "Name": "VegetativeDuration",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -346,7 +346,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Potato].Leaf.NodeNumber.DeltaNodeNumber.Value()",
+                      "VariableName": "[Potato].Leaf.NodeNumber.DeltaNodeNumber",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -376,7 +376,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -405,7 +405,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -728,7 +728,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Tuber].MinimumNConc.Value()",
+                  "VariableName": "[Tuber].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -935,7 +935,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Tuber].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Tuber].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -967,7 +967,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Tuber].minimumNconc.Value()",
+                          "VariableName": "[Tuber].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -998,7 +998,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Tuber].criticalNConc.Value()",
+                              "VariableName": "[Tuber].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1007,7 +1007,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Tuber].minimumNconc.Value()",
+                              "VariableName": "[Tuber].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1039,7 +1039,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Tuber].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Tuber].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1048,7 +1048,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Tuber].maximumNconc.Value()",
+                          "VariableName": "[Tuber].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1529,7 +1529,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1561,7 +1561,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc.Value()",
+                          "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1592,7 +1592,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].criticalNConc.Value()",
+                              "VariableName": "[Root].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1601,7 +1601,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].minimumNconc.Value()",
+                              "VariableName": "[Root].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1633,7 +1633,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Root].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1642,7 +1642,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].maximumNconc.Value()",
+                          "VariableName": "[Root].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1859,7 +1859,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FCO2.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.FCO2",
                       "Name": "FCO2",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1868,7 +1868,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
                       "Name": "RelativeCO2Gradient",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1913,7 +1913,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FT.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.FT",
                       "Name": "RUE_FT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1926,7 +1926,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.FN.Value()",
+                          "VariableName": "[Leaf].Photosynthesis.FN",
                           "Name": "RUE_FN",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1935,7 +1935,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.FVPD.Value()",
+                          "VariableName": "[Leaf].Photosynthesis.FVPD",
                           "Name": "RUE_FVPD",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2049,7 +2049,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime.Value()",
+                          "VariableName": "[Phenology].ThermalTime",
                           "Name": "ThermalTime",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2058,7 +2058,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Phyllochron.Value()",
+                          "VariableName": "[Leaf].Phyllochron",
                           "Name": "Phyllochron",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2154,7 +2154,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].LateTuber.Target.Value()",
+                                  "VariableName": "[Phenology].LateTuber.Target",
                                   "Name": "SenescencePhaseLength",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2423,7 +2423,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].DeltaLAI.Value()",
+                          "VariableName": "[Leaf].DeltaLAI",
                           "Name": "DeltaLAI",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2488,7 +2488,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].minimumNconc.Value()",
+                          "VariableName": "[Leaf].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2519,7 +2519,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].criticalNConc.Value()",
+                              "VariableName": "[Leaf].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2528,7 +2528,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].minimumNconc.Value()",
+                              "VariableName": "[Leaf].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2570,7 +2570,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].maximumNconc.Value()",
+                          "VariableName": "[Leaf].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2762,8 +2762,8 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Potato].SowingData.Population",
-                              "Name": "PlantNumber",
+                              "VariableName": "[Potato].Stem.MainStemPopn",
+                              "Name": "MainStemNumber",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -2886,7 +2886,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Leaf].RelativeNodeApperance.Value()",
+                          "XProperty": "[Potato].Leaf.RelativeNodeAppearance",
                           "Name": "Phyllochron",
                           "Children": [
                             {
@@ -2952,7 +2952,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].NodeNumber.Value()",
+                      "VariableName": "[Leaf].NodeNumber",
                       "Name": "NodeNumber",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2961,7 +2961,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].FinalLeafNumber.Value()",
+                      "VariableName": "[Leaf].FinalLeafNumber",
                       "Name": "FinalLeafNumber",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3022,7 +3022,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FCO2.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.FCO2",
                       "Name": "FCO2",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3031,7 +3031,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+                      "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
                       "Name": "RelativeCO2Gradient",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3045,7 +3045,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -3747,7 +3747,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FT.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.FT",
                       "Name": "RUE_FT",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3760,7 +3760,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.FN.Value()",
+                          "VariableName": "[Leaf].Photosynthesis.FN",
                           "Name": "RUE_FN",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3769,7 +3769,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.FVPD.Value()",
+                          "VariableName": "[Leaf].Photosynthesis.FVPD",
                           "Name": "RUE_FVPD",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3992,7 +3992,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4430,7 +4430,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stem].MinimumNConc.Value()",
+                  "VariableName": "[Stem].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4547,7 +4547,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].DMDemands.Structural.StructuralFraction.Value()",
+                              "VariableName": "[Stem].DMDemands.Structural.StructuralFraction",
                               "Name": "StructuralFraction",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4579,7 +4579,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].minimumNconc.Value()",
+                          "VariableName": "[Stem].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4610,7 +4610,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].criticalNConc.Value()",
+                              "VariableName": "[Stem].criticalNConc",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4619,7 +4619,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].minimumNconc.Value()",
+                              "VariableName": "[Stem].minimumNconc",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4651,7 +4651,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].nitrogenDemandSwitch.Value()",
+                          "VariableName": "[Stem].nitrogenDemandSwitch",
                           "Name": "NitrogenDemandSwitch",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4660,7 +4660,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].maximumNconc.Value()",
+                          "VariableName": "[Stem].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6463,7 +6463,7 @@
                       ],
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LAI",
                       "Children": [
@@ -6561,7 +6561,7 @@
                       ],
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Cover",
                       "Children": [
@@ -6659,7 +6659,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Leafnumber",
                       "Children": [
@@ -6679,7 +6679,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Leaf.AppearedCohortNo",
+                          "YFieldName": "Potato.Leaf.NodeNumber",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -6709,7 +6709,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Leaf.AppearedCohortNo",
+                          "YFieldName": "Potato.Leaf.NodeNumber",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -7277,7 +7277,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent.Value()",
+                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -9602,7 +9602,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent.Value()",
+                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -11403,7 +11403,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent.Value()",
+                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -13327,7 +13327,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent.Value()",
+                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -14869,7 +14869,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent.Value()",
+                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -18020,7 +18020,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent.Value()",
+                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -20821,7 +20821,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent.Value()",
+                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -23738,7 +23738,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent.Value()",
+                          "YFieldName": "Potato.Tuber.LiveFWt.DryMatterContent",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
