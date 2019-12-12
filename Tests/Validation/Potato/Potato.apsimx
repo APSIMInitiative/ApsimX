@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 283,
+  "ExplorerWidth": 386,
   "Version": 70,
   "Name": "Simulations",
   "Children": [
@@ -23,15 +23,12 @@
             "[Clock].Today",
             "[Potato].AboveGround.N",
             "[Potato].BelowGround.N",
-            "[Potato].Leaf.AppearedCohortNo",
+            "[Potato].Leaf.NodeNumber.Value()",
             "[Potato].Leaf.CoverDead",
             "[Potato].Leaf.CoverGreen",
             "[Potato].Leaf.CoverTotal",
             "[Potato].Leaf.Dead.N",
             "[Potato].Leaf.Dead.NConc",
-            "[Potato].Leaf.DeadCohortNo",
-            "[Potato].Leaf.ExpandedCohortNo",
-            "[Potato].Leaf.ExpandingCohortNo",
             "[Potato].Leaf.Fn",
             "[Potato].Leaf.Fw",
             "[Potato].Leaf.LAI",
@@ -39,8 +36,6 @@
             "[Potato].Leaf.Live.N",
             "[Potato].Leaf.Live.Wt",
             "[Potato].Leaf.Live.NConc",
-            "[Potato].Leaf.PlantAppearedGreenLeafNo",
-            "[Potato].Leaf.SenescingCohortNo",
             "[Potato].Leaf.SpecificArea",
             "[Potato].Phenology.CurrentPhaseName",
             "[Potato].Phenology.Stage",
@@ -58,11 +53,8 @@
             "[Potato].Stem.Live.StorageWt",
             "[Potato].Stem.Live.StructuralWt",
             "[Potato].Stem.Live.Wt",
-            "[Potato].Structure.Height",
-            "[Potato].Structure.LeafTipsAppeared",
-            "[Potato].Structure.PlantTotalNodeNo",
-            "[Potato].Structure.PrimaryBudTotalNodeNo",
-            "[Potato].Structure.TotalStemPopn",
+            "[Potato].Leaf.Height",
+            "[Potato].Leaf.NodeNumber.Value()",
             "[Potato].Total.N",
             "[Potato].TotalDead.N",
             "[Potato].TotalLive.N",
@@ -274,7 +266,7 @@
                         },
                         {
                           "$type": "Models.Functions.HoldFunction, Models",
-                          "WhenToHold": null,
+                          "WhenToHold": "TuberInitiation",
                           "Name": "LeafNumberAtTuberInitiation",
                           "Children": [
                             {
@@ -801,7 +793,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Structure].MainStemPopn",
+                                          "VariableName": "[Stem].MainStemPopn",
                                           "Name": "VariableReference",
                                           "Children": [],
                                           "IncludeInDocumentation": false,
@@ -1182,7 +1174,7 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].FractionDied",
+                  "XProperty": "[Leaf].SenescenceRate",
                   "Name": "SenescenceRate",
                   "Children": [
                     {
@@ -2894,7 +2886,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Structure].RelativeNodeApperance",
+                          "XProperty": "[Leaf].RelativeNodeApperance.Value()",
                           "Name": "Phyllochron",
                           "Children": [
                             {
@@ -2915,58 +2907,6 @@
                               ],
                               "Name": "XYPairs",
                               "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "Phyllochron1",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
-                          "End": "FinalLeaf",
-                          "Name": "Phyllochron",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "XProperty": "[Leaf].RelativeNodeApperance",
-                              "Name": "Phyllochron",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    0.15,
-                                    0.74,
-                                    0.75,
-                                    1.0
-                                  ],
-                                  "Y": [
-                                    20.0,
-                                    30.0,
-                                    30.0,
-                                    60.0,
-                                    60.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -3231,7 +3171,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
+                      "XProperty": "[Leaf].RelativeNodeApperance",
                       "Name": "MaxArea",
                       "Children": [
                         {
@@ -3265,7 +3205,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
+                      "XProperty": "[Leaf].RelativeNodeApperance",
                       "Name": "GrowthDuration",
                       "Children": [
                         {
@@ -3295,7 +3235,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
+                      "XProperty": "[Leaf].RelativeNodeApperance",
                       "Name": "LagDuration",
                       "Children": [
                         {
@@ -3329,7 +3269,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
+                      "XProperty": "[Leaf].RelativeNodeApperance",
                       "Name": "SenescenceDuration",
                       "Children": [
                         {
@@ -3383,7 +3323,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].RelativeNodeApperance",
+                      "XProperty": "[Leaf].RelativeNodeApperance",
                       "Name": "SpecificLeafAreaMax",
                       "Children": [
                         {
@@ -4071,7 +4011,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Structure].RelativeNodeApperance",
+                          "XProperty": "[Leaf].RelativeNodeApperance",
                           "Name": "Phyllochron",
                           "Children": [
                             {
@@ -4167,7 +4107,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].LeafTipsAppeared",
+                      "XProperty": "[Leaf].NodeNumber",
                       "Name": "PotentialBranchingRate",
                       "Children": [
                         {
@@ -4744,6 +4684,33 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "MainStemPopn",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Potato].SowingData.Population",
+                      "Name": "SeedTuberPopn",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Potato].SowingData.BudNumber",
+                      "Name": "StemsPerTuber",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -4848,7 +4815,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].FinalLeafNumber.FixedValue = 28",
+                    "[Leaf].FinalLeafNumber.FixedValue = 28",
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.12,0.16"
                   ],
                   "Name": "Horizon",
@@ -4860,7 +4827,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].FinalLeafNumber.FixedValue = 26",
+                    "[Leaf].FinalLeafNumber.FixedValue = 26",
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.18",
                     "[Phenology].Vegetative.Target.FixedValue = 200"
                   ],
@@ -4873,7 +4840,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].FinalLeafNumber.FixedValue = 19",
+                    "[Leaf].FinalLeafNumber.FixedValue = 19",
                     "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,10,11",
                     "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0",
                     "[Tuber].DMDemands.Structural.DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3",
@@ -4888,7 +4855,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].FinalLeafNumber.FixedValue = 29",
+                    "[Leaf].FinalLeafNumber.FixedValue = 29",
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
                   ],
                   "Name": "Karaka",
@@ -4900,7 +4867,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].FinalLeafNumber.FixedValue = 29",
+                    "[Leaf].FinalLeafNumber.FixedValue = 29",
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.11,0.15"
                   ],
                   "Name": "Nadine",
@@ -4912,7 +4879,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].FinalLeafNumber.FixedValue = 36",
+                    "[Leaf].FinalLeafNumber.FixedValue = 36",
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21"
                   ],
                   "Name": "Nooksac",
@@ -4935,10 +4902,10 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].FinalLeafNumber.FixedValue = 29",
+                    "[Leaf].FinalLeafNumber.FixedValue = 29",
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21",
-                    "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1",
-                    "[Structure].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60",
+                    "[Leaf].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1",
+                    "[Leaf].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60",
                     "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,20,21",
                     "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0"
                   ],
@@ -4951,7 +4918,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Structure].FinalLeafNumber.FixedValue = 34"
+                    "[Leaf].FinalLeafNumber.FixedValue = 34"
                   ],
                   "Name": "RussetBurbank",
                   "Children": [
@@ -6393,7 +6360,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.RemoveBiomass(\"Harvest\");\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            //if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            //{\r\n            //    FinalTag = \"yield\";\r\n            //    ReadyForHarvest = true;\r\n            //}\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.RemoveBiomass(\"Harvest\");\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Leaf.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            //if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            //{\r\n            //    FinalTag = \"yield\";\r\n            //    ReadyForHarvest = true;\r\n            //}\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "PlantingDate",
@@ -8928,7 +8895,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public int SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public int SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Leaf.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "PlantingDate",
@@ -10813,7 +10780,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Leaf.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "PlantingDate",
@@ -13003,7 +12970,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Leaf.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "PlantingDate",
@@ -14583,7 +14550,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Leaf.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "PlantingDate",
@@ -16532,7 +16499,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Leaf.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "PlantingDate",
@@ -20321,7 +20288,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Leaf.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "PlantingDate",
@@ -23238,7 +23205,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        \r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed tuber\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        \r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            FinalTag = \"\";\r\n            Harvested = false;\r\n            ReadyForHarvest = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            \r\n            if (ReadyForHarvest == true)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n                ReadyForHarvest = false;\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"is working\");\r\n            }\r\n            FinalTag = \"\";   \r\n            \r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Leaf.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 80)\r\n                Summary.WriteWarning(this, \"Model is producing > 80 leaves which is guite alot.  Is this expected?  If not check you haven't set a invalid number in the Final Leaf Number box in\" + this.Name);\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today == HarvestDate) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n            if ((Potato.Phenology.Stage >= 7) && (Harvested == false))\r\n            {\r\n                FinalTag = \"yield\";\r\n                ReadyForHarvest = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "PlantingDate",
