@@ -53,10 +53,10 @@ namespace Models.CLEM.Activities
         public double MaximumBreederAge { get; set; }
 
         /// <summary>
-        /// Proportion of max breeders in single purchase
+        /// Proportion of min breeders in single purchase
         /// </summary>
         [Category("General", "Breeders")]
-        [Description("Proportion of max female breeders in single purchase")]
+        [Description("Proportion of min female breeders in single purchase")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion, GreaterThanEqualValue(0)]
         public double MaximumProportionBreedersPerPurchase { get; set; }
