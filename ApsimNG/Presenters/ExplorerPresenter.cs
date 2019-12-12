@@ -692,7 +692,11 @@
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.GenericPresenter");
                     }
 
-                    ShowDescriptionInRightHandPanel(descriptionName?.ToString());
+                    // if a clem model ignore the newly added description box that is handled by CLEM wrapper
+                    if (!model.GetType().Namespace.Contains("CLEM"))
+                    {
+                        ShowDescriptionInRightHandPanel(descriptionName?.ToString());
+                    }
 
                     if (viewName != null && presenterName != null)
                         ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
