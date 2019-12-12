@@ -79,7 +79,7 @@ namespace Models.CLEM.Resources
                 List<Ruminant> herd = Herd.Where(a => a.HerdName == herdName).ToList();
 
                 // get list of females of breeding age and condition
-                List<RuminantFemale> breedFemales = herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength && a.Age <= a.BreedParams.MaximumAgeMating && a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
+                List<RuminantFemale> breedFemales = herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
 
                 // get list of all sucking individuals
                 List<Ruminant> sucklingList = herd.Where(a => a.Weaned == false).ToList();
@@ -170,7 +170,7 @@ namespace Models.CLEM.Resources
                     // assigning values for the remaining females who haven't just bred.
                     // i.e meet breeding rules and not pregnant or lactating (just assigned calf), but calculate for underweight individuals not previously provided calves.
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
-                    foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female && a.Age > a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength && a.Weight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant))
+                    foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female && a.Age > a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant))
                     {
                         female.DryBreeder = true;
                         // generalised curve

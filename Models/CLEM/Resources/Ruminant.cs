@@ -173,6 +173,20 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Is this individual a valid breeder
+        /// </summary>
+        public bool IsBreeder 
+        { 
+            get
+            {
+                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) ||
+                    (Gender == Sex.Female &&
+                    Age >= BreedParams.MinimumAge1stMating &&
+                    HighWeight >= (BreedParams.MinimumSize1stMating * StandardReferenceWeight)
+                    );
+            }
+        }
 
         /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
