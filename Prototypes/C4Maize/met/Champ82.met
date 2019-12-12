@@ -1,0 +1,12 @@
+[weather.met.weather]
+!experiment number = 7
+!experiment = Champ82
+!station name = champ82                                  
+latitude = 40.7  (DECIMAL DEGREES)
+longitude = 0  (DECIMAL DEGREES)
+tav =   0.00 (oC)     ! annual average ambient temperature
+amp =   0.00 (oC)     ! annual amplitude in mean monthly temperature
+
+Year   Day    maxt    mint    radn    rain
+ ()     ()      ()      ()      ()      ()
+1982   124      30    15.6   20.33       0
