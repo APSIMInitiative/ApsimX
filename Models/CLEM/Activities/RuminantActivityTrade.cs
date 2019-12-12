@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
+using System.Globalization;
 
 namespace Models.CLEM.Activities
 {
@@ -155,7 +156,7 @@ namespace Models.CLEM.Activities
                     double number = purchasetype.Number;
                     if(numberToStock != null && foodStore != null)
                     {
-                        number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare, false));
+                        number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare, false), CultureInfo.InvariantCulture);
                     }
 
                     for (int i = 0; i < number; i++)
