@@ -12,9 +12,6 @@
             "LAI": 0.0,
             "SpeciesFamily": 0,
             "PhotosyntheticPathway": 0,
-            "InitialShootDM": 2000.0,
-            "InitialRootDM": 500.0,
-            "InitialRootDepth": 750.0,
             "initialDMFractionsGrasses": [
                 0.15,
                 0.25,
