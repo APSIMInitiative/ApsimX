@@ -71,11 +71,11 @@ namespace CMPServices
          FIsScalar = false;   //init because this may not be a new parser object
          FIsRecord = false;
 
-         FName = getAttrValue(topElement, "name");
-         FUnit = getAttrValue(topElement, "unit");
-         FKind = getAttrValue(topElement, "kind");
+         FName = GetAttrValue(topElement, "name");
+         FUnit = GetAttrValue(topElement, "unit");
+         FKind = GetAttrValue(topElement, "kind");
 
-         sBuf = getAttrValue(topElement, "array");
+         sBuf = GetAttrValue(topElement, "array");
          if (sBuf.Length > 0 && (sBuf.ToLower()[0] == 't')) 
          {
             FIsArray = true;
@@ -96,7 +96,7 @@ namespace CMPServices
                     FIsScalar = true;
                 }
             }
-            if (firstElementChild(topElement, "field") != null) //if a child element is a field
+            if (FirstElementChild(topElement, "field") != null) //if a child element is a field
                 FIsRecord = true;
          }
       }
@@ -180,7 +180,7 @@ namespace CMPServices
 
          anode = firstMember(topElement);
          if (anode != null)
-            sSDML = docToString(anode);
+            sSDML = DocToString(anode);
 
          return sSDML;
       }
@@ -198,16 +198,16 @@ namespace CMPServices
          Boolean found;
 
          //step through the child elements of this component
-         firstChild(rootNode);   //set the currNode
+         FirstChild(rootNode);   //set the currNode
          found = false;
          while ( (currNode != null) && (!found) ) 
          {
-            if (isElement(currNode, arrayElement) || isElement(currNode, fieldElement) ) 
+            if (IsElement(currNode, arrayElement) || IsElement(currNode, fieldElement) ) 
             {
                found = true;
             }
             if (!found)           //if this node is found to be ok then leave currNode pointing to it
-               nextSibling(currNode);
+               NextSibling(currNode);
          }
          return currNode;
       }
@@ -225,7 +225,7 @@ namespace CMPServices
 
          anode = nextMember(currNode);
          if (anode != null)
-            sSDML = docToString(anode);
+            sSDML = DocToString(anode);
 
          return sSDML;
       }
@@ -243,16 +243,16 @@ namespace CMPServices
          Boolean found;
 
          //step through the child elements of this component
-         nextSibling(startNode);   //set the currNode
+         NextSibling(startNode);   //set the currNode
          found = false;
          while ( (currNode != null) && (!found) ) 
          {
-            if (isElement(currNode, arrayElement) || isElement(currNode, fieldElement) ) 
+            if (IsElement(currNode, arrayElement) || IsElement(currNode, fieldElement) ) 
             {
                found = true;
             }
             if (!found)           //if this node is found to be ok then leave currNode pointing to it
-               nextSibling(currNode);
+               NextSibling(currNode);
          }
          return currNode;
       }

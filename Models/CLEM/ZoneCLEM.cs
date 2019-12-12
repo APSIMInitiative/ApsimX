@@ -22,7 +22,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    [Description("This manages all CLEM resources and activities in the simulation.")]
+    [Description("This represents a CLEM farm resources")]
     [HelpUri(@"Content/Features/CLEMComponent.htm")]
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes.")]
     [Version(1,0,1,"")]
@@ -102,6 +102,17 @@ namespace Models.CLEM
         public new double Slope { get; set; }
 
         /// <summary>
+        /// not used in CLEM
+        /// </summary>
+        [XmlIgnore]
+        public new double AspectAngle { get; set; }
+
+        /// <summary>Local altitude (meters above sea level).</summary>
+        [XmlIgnore]
+        public new double Altitude { get; set; } = 50;
+
+
+        /// <summary>
         /// Validate object
         /// </summary>
         /// <param name="validationContext"></param>
@@ -109,6 +120,16 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+            if (Clock.StartDate.ToShortDateString() == "1/01/0001") 
+            {
+                string[] memberNames = new string[] { "Clock.StartDate" };
+                results.Add(new ValidationResult(String.Format("Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
+            }
+            if (Clock.EndDate.ToShortDateString() == "1/01/0001")
+            {
+                string[] memberNames = new string[] { "Clock.EndDate" };
+                results.Add(new ValidationResult(String.Format("Invalid end date {0}", Clock.EndDate.ToShortDateString()), memberNames));
+            }
             if (Clock.StartDate.Day != 1)
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
@@ -157,31 +178,37 @@ namespace Models.CLEM
                 // find IStorageReader of simulation
                 IModel parentSimulation = Apsim.Parent(this, typeof(Simulation));
                 IStorageReader ds = DataStore.Reader;
-                DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
-                // all all current errors and validation problems to error string.
-                foreach (DataRow dr in dataRows)
+                if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
                 {
-                    error += "\n" + dr[6].ToString();
+                    DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
+                    // all all current errors and validation problems to error string.
+                    foreach (DataRow dr in dataRows)
+                    {
+                        error += "\n" + dr[6].ToString();
+                    }
                 }
                 throw new ApsimXException(this, error);
             }
 
-            if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
+            if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
             {
-                // go back from start month in intervals until
-                DateTime trackDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-                while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
+                if (EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
                 {
-                    trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                    // go back from start month in intervals until
+                    DateTime trackDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
+                    {
+                        trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                    }
+                    EcologicalIndicatorsNextDueDate = trackDate;
                 }
-                EcologicalIndicatorsNextDueDate = trackDate;
-            }
-            else
-            {
-                EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-                while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+                else
                 {
-                    EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+                    {
+                        EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                    }
                 }
             }
         }
@@ -194,7 +221,7 @@ namespace Models.CLEM
         {
             if (RandomSeed==0)
             {
-                randomGenerator = new Random();
+                randomGenerator = new Random(Guid.NewGuid().GetHashCode());
             }
             else
             {

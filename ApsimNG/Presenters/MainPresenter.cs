@@ -97,6 +97,7 @@
                 this.view.StatusPanelHeight = 20;
             else
                 this.view.StatusPanelHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            this.view.SplitScreenPosition = Configuration.Settings.SplitScreenPosition;
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
         }
@@ -127,12 +128,14 @@
 
             foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
             {
-                ok = presenter.SaveIfChanged() && ok;
+                ok &= presenter.SaveIfChanged();
+                presenter.Detach();
             }
 
             foreach (ExplorerPresenter presenter in this.presenters2.OfType<ExplorerPresenter>())
             {
-                ok = presenter.SaveIfChanged() && ok;
+                ok &= presenter.SaveIfChanged();
+                presenter.Detach();
             }
 
             return ok;
@@ -440,7 +443,7 @@
                     }
 
                     // Add to MRU list and update display
-                    Utility.Configuration.Settings.AddMruFile(fileName);
+                    Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
                     this.UpdateMRUDisplay();
                 }
                 catch (Exception err)
@@ -459,9 +462,8 @@
         /// </summary>
         public void UpdateMRUDisplay()
         {
-            this.view.StartPage1.List.Values = Utility.Configuration.Settings.MruList.ToArray();
-            this.view.StartPage2.List.Values = Utility.Configuration.Settings.MruList.ToArray();
-            Utility.Configuration.Settings.Save();
+            this.view.StartPage1.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
+            this.view.StartPage2.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
         }
 
         /// <summary>
@@ -579,7 +581,7 @@
                             new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
                             this.OnHelp);
             // Populate the view's listview.
-            startPage.List.Values = Utility.Configuration.Settings.MruList.ToArray();
+            startPage.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
 
             this.PopulatePopup(startPage);
         }
@@ -670,7 +672,7 @@
         {
             if (this.AskQuestion("Are you sure you want to completely clear the list of recently used files?") == QuestionResponseEnum.Yes)
             {
-                string[] mruFiles = Utility.Configuration.Settings.MruList.ToArray();
+                string[] mruFiles = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
                 foreach (string fileName in mruFiles)
                 {
                     Utility.Configuration.Settings.DelMruFile(fileName);
@@ -725,7 +727,7 @@
                     try
                     {
                         File.Copy(fileName, copyName);
-                        Utility.Configuration.Settings.AddMruFile(copyName);
+                        Configuration.Settings.AddMruFile(new ApsimFileMetadata(copyName));
                         this.UpdateMRUDisplay();
                     }
                     catch (Exception e)
@@ -1206,19 +1208,24 @@
         /// <param name="e">Event arguments.</param>
         private void OnUpgrade(object sender, EventArgs e)
         {
-            // Get the version of the current assembly.
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Revision == 0)
+            try
             {
-                ShowError("You are on a custom build. You cannot upgrade.");
-            }
-            else
-            {
-                if (this.AllowClose())
+                // Get the version of the current assembly.
+                Version version = Assembly.GetExecutingAssembly().GetName().Version;
+                if (version.Revision == 0)
+                {
+                    ShowError("You are on a custom build. You cannot upgrade.");
+                }
+
+                if (AllowClose())
                 {
                     UpgradeView form = new UpgradeView(view as ViewBase);
                     form.Show();
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -1231,6 +1238,7 @@
             if (e.AllowClose)
             {
                 fileConverter?.Destroy();
+                Configuration.Settings.SplitScreenPosition = view.SplitScreenPosition;
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;

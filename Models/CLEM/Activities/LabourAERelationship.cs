@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This model component specifies the Adult equivalent relationship to be used for labour by supplying a series of x and y values.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/Relationships/LabourAERelationship.htm")]
+    [HelpUri(@"content/features/Resources/Labour/LabourAdultEquivalentRelationship.htm")]
     public class LabourAERelationship: Relationship, IValidatableObject
     {
         /// <summary>

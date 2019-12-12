@@ -164,10 +164,10 @@
                     {
                       "$type": "Models.Soils.SoilCrop, Models",
                       "LL": [
-                        0.13,
-                        0.13,
-                        0.1,
+                        0.16,
+                        0.16,
                         0.15,
+                        0.2,
                         0.3,
                         0.3
                       ],
@@ -437,7 +437,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Inert",
                         "Location": "656, 254",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -445,7 +445,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "SurfaceResidue",
                         "Location": "566, 69",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -453,7 +453,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMLignin",
                         "Location": "261, 69",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -461,7 +461,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCellulose",
                         "Location": "397, 70",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -469,7 +469,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "FOMCarbohydrate",
                         "Location": "123, 70",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -477,7 +477,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Microbial",
                         "Location": "218, 299",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -485,7 +485,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Humic",
                         "Location": "458, 293",
-                        "Colour": "0, 114, 178",
+                        "Colour": "0, 158, 115",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -493,7 +493,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "Urea",
                         "Location": "529, 419",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -501,7 +501,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NO3",
                         "Location": "185, 435",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -509,7 +509,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "NH4",
                         "Location": "357, 422",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -525,7 +525,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNO3",
                         "Location": "688, 415",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       },
@@ -533,7 +533,7 @@
                         "$type": "Models.Graph.Node, Models",
                         "Name": "PlantAvailableNH4",
                         "Location": "691, 421",
-                        "Colour": "0, 158, 115",
+                        "Colour": "86, 180, 233",
                         "OutlineColour": "Black",
                         "Transparent": false
                       }
@@ -800,7 +800,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants within rows\")]\r\n        public double RowSpace { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowWidth { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed piece\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowWidth / 1000) * (RowSpace / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: 150, budNumber: StemNumberPerSeedTuber);\r\n            if (Clock.Today.Date == HarvestDate)\r\n                Potato.Harvest();\r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 46)\r\n                throw new Exception(\"The model will fail with leaf numbers > 46.  Reduce Final leaf number.\");\r\n        }\r\n    }\r\n}\r\n                \r\n",
+              "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Potato;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n        [Description(\"Planting Date\")]\r\n        public DateTime PlantingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Spacing (mm) between plants on rows\")]\r\n        public double PlantSpacing { get; set; }\r\n        [Description(\"Spacing (mm) between rows\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Depth (mm) tubers are planted\")]\r\n        public double PlantingDepth { get; set; }\r\n        [Description(\"Number of stems per seed piece\")]\r\n        public double StemNumberPerSeedTuber { get; set; }\r\n        [Description(\"Final leaf number.  Leave at 0 if not known\")]\r\n        public double SetFinalLeafNumber { get; set; }\r\n        [Description(\"HarvestDate Date\")]\r\n        public DateTime HarvestDate { get; set; }\r\n        [XmlIgnore] public string FinalTag { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool ReadyForHarvest { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double PlantPopulation = 1 / ((RowSpacing / 1000) * (PlantSpacing / 1000));\r\n\r\n            if (Clock.Today.Date == PlantingDate)\r\n                Potato.Sow(population: PlantPopulation, cultivar: CultivarName, depth: PlantingDepth, rowSpacing: RowSpacing, budNumber: StemNumberPerSeedTuber);\r\n            if (Clock.Today.Date == HarvestDate && Potato.IsAlive)\r\n            {\r\n                Potato.Harvest();\r\n                Potato.EndCrop();\r\n            }\r\n            if (SetFinalLeafNumber > 0)\r\n                zone.Set(\"Potato.Structure.FinalLeafNumber.FixedValue\", SetFinalLeafNumber);\r\n            if (SetFinalLeafNumber > 46)\r\n                throw new Exception(\"The model will fail with leaf numbers > 46.  Reduce Final leaf number.\");\r\n        }\r\n    }\r\n}\r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "PlantingDate",
@@ -809,14 +809,6 @@
                 {
                   "Key": "CultivarName",
                   "Value": "RussetBurbank"
-                },
-                {
-                  "Key": "RowSpace",
-                  "Value": "280"
-                },
-                {
-                  "Key": "RowWidth",
-                  "Value": "770"
                 },
                 {
                   "Key": "PlantingDepth",
@@ -833,6 +825,14 @@
                 {
                   "Key": "HarvestDate",
                   "Value": "05/01/2004 00:00:00"
+                },
+                {
+                  "Key": "PlantSpacing",
+                  "Value": "280"
+                },
+                {
+                  "Key": "RowSpacing",
+                  "Value": "770"
                 }
               ],
               "Name": "PotatoPlantAndHarvest",

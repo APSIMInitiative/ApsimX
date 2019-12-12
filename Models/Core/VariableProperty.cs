@@ -54,6 +54,9 @@ namespace Models.Core
 
             this.Object = model;
             this.property = property;
+            this.lowerArraySpecifier = 0;
+            this.upperArraySpecifier = 0;
+
             if (arraySpecifier != null)
             {
                 // Can be either a number or a range e.g. 1:3
@@ -65,14 +68,18 @@ namespace Models.Core
                 }
                 else
                 {
-                    this.lowerArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(0, posColon), CultureInfo.InvariantCulture);
-                    this.upperArraySpecifier = Convert.ToInt32(arraySpecifier.Substring(posColon + 1), CultureInfo.InvariantCulture);
+                    string start = arraySpecifier.Substring(0, posColon);
+                    if (!string.IsNullOrEmpty(start))
+                        lowerArraySpecifier = Convert.ToInt32(start, CultureInfo.InvariantCulture);
+                    else
+                        lowerArraySpecifier = -1;
+
+                    string end = arraySpecifier.Substring(posColon + 1);
+                    if (!string.IsNullOrEmpty(end))
+                        upperArraySpecifier = Convert.ToInt32(end, CultureInfo.InvariantCulture);
+                    else
+                        upperArraySpecifier = -1;
                 }
-            }
-            else
-            {
-                this.lowerArraySpecifier = 0;
-                this.upperArraySpecifier = 0;
             }
         }
 
@@ -125,6 +132,21 @@ namespace Models.Core
                 }
 
                 return descriptionAttribute.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets a tooltip for the property.
+        /// </summary>
+        public string Tooltip
+        {
+            get
+            {
+                TooltipAttribute attribute = property.GetCustomAttribute<TooltipAttribute>();
+                if (attribute == null)
+                    return null;
+
+                return attribute.Tooltip;
             }
         }
 
@@ -355,7 +377,9 @@ namespace Models.Core
 
                 object obj = null;
                 obj = this.property.GetValue(this.Object, null);
-                if (this.lowerArraySpecifier != 0 && obj != null && obj is IList)
+                if ((lowerArraySpecifier != 0 || upperArraySpecifier != 0)
+                    && obj != null 
+                    && obj is IList)
                 {
                     IList array = obj as IList;
                     if (array.Count == 0)
@@ -374,15 +398,21 @@ namespace Models.Core
                             throw new Exception("Unknown type of array");
                     }
 
-                    int numElements = this.upperArraySpecifier - this.lowerArraySpecifier + 1;
+                    int startIndex = lowerArraySpecifier;
+                    if (startIndex == -1)
+                        startIndex = 1;
+
+                    int endIndex = upperArraySpecifier;
+                    if (endIndex == -1)
+                        endIndex = array.Count;
+
+                    int numElements = endIndex - startIndex + 1;
                     Array values = Array.CreateInstance(elementType, numElements);
-                    for (int i = this.lowerArraySpecifier; i <= this.upperArraySpecifier; i++)
+                    for (int i = startIndex; i <= endIndex; i++)
                     {
-                        int index = i - this.lowerArraySpecifier;
+                        int index = i - startIndex;
                         if (i < 1 || i > array.Count)
-                        {
                             throw new Exception("Array index out of bounds while getting variable: " + this.Name);
-                        }
 
                         values.SetValue(array[i - 1], index);
                     }

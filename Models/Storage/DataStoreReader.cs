@@ -136,6 +136,12 @@
         /// <summary>Returns a list of table names</summary>
         public List<string> TableNames { get { return Connection.GetTableNames().FindAll(t => !t.StartsWith("_")); } }
 
+        /// <summary>Returns a list of table names</summary>
+        public List<string> ViewNames { get { return Connection.GetViewNames().FindAll(t => !t.StartsWith("_")); } }
+
+        /// <summary>Returns a list of table and view names</summary>
+        public List<string> TableAndViewNames { get { return Connection.GetTableAndViewNames().FindAll(t => !t.StartsWith("_")); } }
+
         /// <summary>Refresh this instance to reflect the database connection.</summary>
         public void Refresh()
         {
@@ -187,7 +193,7 @@
                                  string orderBy = null,
                                  bool distinct = false)
         {
-            if (!Connection.TableExists(tableName))
+            if (!Connection.TableExists(tableName) && !Connection.ViewExists(tableName))
                 return null;
 
             var fieldNamesInTable = Connection.GetColumnNames(tableName);

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 60,
+  "Version": 70,
   "Name": "Simulations",
   "Children": [
     {
@@ -2304,6 +2304,7 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
+              "RootLengthDensityModifierDueToDamage": 1.0,
               "RootAngle": 45.0,
               "SWAvailabilityRatio": 0.0,
               "Name": "Root",
@@ -3084,11 +3085,11 @@
               "Albedo": 0.25,
               "Gsmax350": 0.011,
               "R50": 150.0,
+              "LAI": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
               "LightProfile": null,
-              "MicroClimatePresent": true,
               "KDead": 0.3,
               "MaximumMainStemLeafNumber": 30,
               "TipsAtEmergence": 0,
@@ -4202,6 +4203,26 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "FN",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "FVPD",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -4233,7 +4254,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FT.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.LeafMaxGrossPhotosynthesis.TemperatureResponse.Value()",
                       "Name": "RUE_FT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4455,6 +4476,7 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "IsAboveGround": true,
               "Name": "Spike",
               "Children": [
                 {
@@ -5057,6 +5079,7 @@
               "DMDemand": null,
               "NDemand": null,
               "potentialDMAllocation": null,
+              "IsAboveGround": true,
               "Name": "Stem",
               "Children": [
                 {
@@ -8255,8 +8278,8 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System;\r\nusing System.Collections.Generic;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Soils.Arbitrator;\r\nusing APSIM.Shared.Utilities;\r\n\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Wheat;\r\n        \r\n        public event EventHandler LeafReport;\r\n        \r\n        [XmlIgnore] public int LeafPosition { get; set; }\r\n        [XmlIgnore] public double MaxLeafSize { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if ((Wheat.Leaf.ExpandedCohortNo > LeafPosition) & (Wheat.Structure.NextLeafProportion == 1))\r\n            {\r\n                LeafPosition = (int)\r\n                Wheat.Leaf.ExpandedCohortNo;\r\n                MaxLeafSize = Wheat.Leaf.CohortSize[LeafPosition - 1];\r\n                LeafReport.Invoke(this, new EventArgs());\r\n            }\r\n        }\r\n    }\r\n}\r\n",
-          "Parameters": null,
+          "Code": "using System;\r\nusing System.Collections.Generic;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.Interfaces;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing Models.Soils.Arbitrator;\r\nusing APSIM.Shared.Utilities;\r\n\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Wheat;\r\n        \r\n        public event EventHandler LeafReport;\r\n        \r\n        [XmlIgnore] public int LeafPosition { get; set; }\r\n        [XmlIgnore] public double MaxLeafSize { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        \tvar leaf = Wheat.Leaf as Leaf;\r\n            if ((leaf.ExpandedCohortNo > LeafPosition) & (Wheat.Structure.NextLeafProportion == 1))\r\n            {\r\n                LeafPosition = (int)\r\n                leaf.ExpandedCohortNo;\r\n                MaxLeafSize = leaf.CohortSize[LeafPosition - 1];\r\n                LeafReport.Invoke(this, new EventArgs());\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Parameters": [],
           "Name": "MaxLeafSize",
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -8462,7 +8485,7 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[IrrigationEvents]",
-                            "[Water]"
+                            "[Physical]"
                           ],
                           "Paths": null,
                           "Values": null,
@@ -8611,7 +8634,17 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -8622,6 +8655,7 @@
                                 200.0,
                                 200.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -8679,7 +8713,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -8736,7 +8770,7 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[IrrigationEvents]",
-                            "[Water]",
+                            "[Physical]",
                             "[Soil].Initialwater.SW = 0.279,0.2677,0.2491,0.27045,0.311,0.25355,0.27635,0.1422"
                           ],
                           "Paths": null,
@@ -8850,7 +8884,17 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -8861,6 +8905,7 @@
                                 200.0,
                                 200.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 0.08,
                                 0.12,
@@ -8918,7 +8963,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -8975,7 +9020,7 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[IrrigationEvents]",
-                            "[Water]",
+                            "[Physical]",
                             "[Soil].Initialwater.SW = 0.2655,0.27,0.209,0.31145,0.3079,0.3007,0.28705,0.3117"
                           ],
                           "Paths": null,
@@ -9035,7 +9080,17 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -9046,6 +9101,7 @@
                                 200.0,
                                 200.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -9103,7 +9159,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -9160,7 +9216,7 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[IrrigationEvents]",
-                            "[Water]",
+                            "[Physical]",
                             "[Soil].Initialwater.SW = 0.2805,0.27965,0.27,0.296,0.23105,0.2453,0.2042,0.15605"
                           ],
                           "Paths": null,
@@ -9220,7 +9276,17 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -9231,6 +9297,7 @@
                                 200.0,
                                 200.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -9288,7 +9355,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -9345,7 +9412,7 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[IrrigationEvents]",
-                            "[Water]",
+                            "[Physical]",
                             "[Soil].Initialwater.SW = 0.278,0.26825,0.25355,0.2364,0.2635,0.27705,0.3392,0.2"
                           ],
                           "Paths": null,
@@ -9423,7 +9490,17 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -9434,6 +9511,7 @@
                                 200.0,
                                 200.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -9491,7 +9569,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -9548,7 +9626,7 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[IrrigationEvents]",
-                            "[Water]",
+                            "[Physical]",
                             "[Soil].Initialwater.SW = 0.281,0.2785,0.2754,0.2698,0.252,0.26715,0.2623,0.1995"
                           ],
                           "Paths": null,
@@ -9644,7 +9722,17 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -9655,6 +9743,7 @@
                                 200.0,
                                 200.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -9712,7 +9801,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -9769,7 +9858,7 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[IrrigationEvents]",
-                            "[Water]",
+                            "[Physical]",
                             "[Soil].Initialwater.SW = 0.2375,0.2666,0.2634,0.2309,0.23805,0.2339,0.22815,0.1847"
                           ],
                           "Paths": null,
@@ -9805,7 +9894,17 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -9816,6 +9915,7 @@
                                 200.0,
                                 200.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -9828,8 +9928,8 @@
                               ],
                               "AirDry": [
                                 0.07,
-                                0.13,
-                                0.15,
+                                0.11,
+                                0.1,
                                 0.09,
                                 0.1,
                                 0.12,
@@ -9873,7 +9973,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -9942,8 +10042,8 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "StartDate": "1991-06-08T00:00:00",
-                      "EndDate": "1992-02-28T00:00:00",
+                      "Start": "1991-06-08T00:00:00",
+                      "End": "1992-02-28T00:00:00",
                       "Name": "Clock",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -9975,6 +10075,8 @@
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
                       "Name": "paddock",
                       "Children": [
                         {
@@ -10185,7 +10287,17 @@
                           "Name": "Soil",
                           "Children": [
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10196,6 +10308,7 @@
                                 200.0,
                                 200.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -10253,7 +10366,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -10329,6 +10442,16 @@
                                 200.0,
                                 200.0
                               ],
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
                               "SWCON": [
                                 0.6,
                                 0.6,
@@ -10349,7 +10472,7 @@
                                 0.0,
                                 0.0
                               ],
-                              "ResidueInterception": 0.0,
+                              "PrecipitationInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -10438,10 +10561,18 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilOrganicMatter, Models",
-                              "RootCN": 0.0,
-                              "EnrACoeff": 0.0,
-                              "EnrBCoeff": 0.0,
+                              "$type": "Models.Soils.Organic, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
+                              "FOMCNRatio": 0.0,
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10452,7 +10583,7 @@
                                 200.0,
                                 200.0
                               ],
-                              "OC": [
+                              "Carbon": [
                                 0.35,
                                 0.27,
                                 0.24,
@@ -10462,8 +10593,7 @@
                                 0.1,
                                 0.1
                               ],
-                              "OCMetadata": null,
-                              "SoilCN": [
+                              "SoilCNRatio": [
                                 0.0,
                                 0.0,
                                 0.0,
@@ -10493,7 +10623,7 @@
                                 0.2,
                                 0.2
                               ],
-                              "RootWt": [
+                              "FOM": [
                                 0.0,
                                 0.0,
                                 0.0,
@@ -10503,15 +10633,24 @@
                                 0.0,
                                 0.0
                               ],
-                              "OCUnits": 0,
-                              "Name": "SoilOrganicMatter",
+                              "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Analysis, Models",
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10542,14 +10681,6 @@
                                 0.5,
                                 0.5
                               ],
-                              "Rocks": null,
-                              "RocksMetadata": null,
-                              "Texture": null,
-                              "TextureMetadata": null,
-                              "MunsellColour": null,
-                              "MunsellMetadata": null,
-                              "EC": null,
-                              "ECMetadata": null,
                               "PH": [
                                 8.5,
                                 8.5,
@@ -10560,36 +10691,10 @@
                                 8.6,
                                 8.6
                               ],
-                              "PHMetadata": null,
                               "CL": null,
-                              "CLMetadata": null,
-                              "Boron": null,
-                              "BoronMetadata": null,
-                              "CEC": null,
-                              "CECMetadata": null,
-                              "Ca": null,
-                              "CaMetadata": null,
-                              "Mg": null,
-                              "MgMetadata": null,
-                              "Na": null,
-                              "NaMetadata": null,
-                              "K": null,
-                              "KMetadata": null,
+                              "EC": null,
                               "ESP": null,
-                              "ESPMetadata": null,
-                              "Mn": null,
-                              "MnMetadata": null,
-                              "Al": null,
-                              "AlMetadata": null,
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSilt": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClay": null,
-                              "ParticleSizeClayMetadata": null,
-                              "PHUnits": 0,
-                              "BoronUnits": 0,
-                              "Name": "Analysis",
+                              "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -10597,6 +10702,16 @@
                             },
                             {
                               "$type": "Models.Soils.Sample, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10626,6 +10741,16 @@
                             },
                             {
                               "$type": "Models.Soils.Sample, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -10677,6 +10802,7 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 1000.0,
@@ -10731,7 +10857,7 @@
                           "Parameters": [
                             {
                               "Key": "reset_date",
-                              "Value": "1991-09-02"
+                              "Value": "09/02/1991 00:00:00"
                             }
                           ],
                           "Name": "ResetSW",
@@ -10745,11 +10871,11 @@
                           "Parameters": [
                             {
                               "Key": "StartDate",
-                              "Value": "1991-06-08"
+                              "Value": "06/08/1991 00:00:00"
                             },
                             {
                               "Key": "EndDate",
-                              "Value": "1992-12-31"
+                              "Value": "12/31/1992 00:00:00"
                             }
                           ],
                           "Name": "ClimateControl",
@@ -10788,7 +10914,7 @@
                         {
                           "$type": "Models.Manager, Models",
                           "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.Phenology.CurrentPhaseName == \"Ripening\")\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
-                          "Parameters": null,
+                          "Parameters": [],
                           "Name": "Harvesting",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10840,7 +10966,9 @@
                     }
                   ],
                   "LegendPosition": 2,
+                  "LegendOrientation": 0,
                   "DisabledSeries": null,
+                  "LegendOutsideGraph": false,
                   "Name": "SoilWaterProfile",
                   "Children": [
                     {
@@ -10941,7 +11069,9 @@
                         }
                       ],
                       "LegendPosition": 2,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "SWC20cm",
                       "Children": [
                         {
@@ -11037,7 +11167,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "SWC40cm",
                       "Children": [
                         {
@@ -11133,7 +11265,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "SWC60cm",
                       "Children": [
                         {
@@ -11229,7 +11363,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "SWC80cm",
                       "Children": [
                         {
@@ -11325,7 +11461,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "SWC100cm",
                       "Children": [
                         {
@@ -11421,7 +11559,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "SWC120cm",
                       "Children": [
                         {
@@ -11517,7 +11657,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "SWC140cm",
                       "Children": [
                         {
@@ -11613,7 +11755,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "SWC1600cm",
                       "Children": [
                         {
@@ -11714,7 +11858,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": null,
+                  "LegendOutsideGraph": false,
                   "Name": "AboveGroundWt",
                   "Children": [
                     {
@@ -11810,7 +11956,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": null,
+                  "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
                     {
@@ -11906,7 +12054,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": null,
+                  "LegendOutsideGraph": false,
                   "Name": "Stems",
                   "Children": [
                     {
@@ -12002,7 +12152,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": null,
+                  "LegendOutsideGraph": false,
                   "Name": "GrainNumbers",
                   "Children": [
                     {
@@ -12103,7 +12255,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "AboveGroundN",
                       "Children": [
                         {
@@ -12210,7 +12364,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "EarN",
                       "Children": [
                         {
@@ -12306,7 +12462,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "StemN",
                       "Children": [
                         {
@@ -12402,7 +12560,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "LeafN",
                       "Children": [
                         {
@@ -12498,7 +12658,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "EarNconc",
                       "Children": [
                         {
@@ -12594,7 +12756,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "LeafNconc",
                       "Children": [
                         {
@@ -12690,7 +12854,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "StemNconc",
                       "Children": [
                         {
@@ -12796,7 +12962,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "GrainBiomass",
                       "Children": [
                         {
@@ -12892,7 +13060,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "StemBiomass",
                       "Children": [
                         {
@@ -12988,7 +13158,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "LeafBiomass",
                       "Children": [
                         {
@@ -13084,7 +13256,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "SpikeBiomass",
                       "Children": [
                         {
@@ -13185,7 +13359,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": null,
+                  "LegendOutsideGraph": false,
                   "Name": "Population",
                   "Children": [
                     {
@@ -13277,183 +13453,192 @@
                   "Name": "Factors",
                   "Children": [
                     {
-                      "$type": "Models.Factorial.Factor, Models",
-                      "Specification": null,
-                      "Name": "Sow",
+                      "$type": "Models.Factorial.Permutation, Models",
+                      "Name": "Permutation",
                       "Children": [
                         {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[Operations]",
-                            "[Fertilise].Script.SDSwitch = 1.0"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "5May",
+                          "$type": "Models.Factorial.Factor, Models",
+                          "Specification": "",
+                          "Name": "Sow",
                           "Children": [
                             {
-                              "$type": "Models.Operations, Models",
-                              "Operation": [
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[Operations]",
+                                "[Fertilise].Script.SDSwitch = 1.0"
+                              ],
+                              "Paths": null,
+                              "Values": null,
+                              "Name": "5May",
+                              "Children": [
                                 {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1992-05-15",
-                                  "Action": "[Wheat].Sow(population:100, cultivar:\"BattenWinter\", depth:40, rowSpacing:150);",
-                                  "Enabled": true
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1992-05-15",
+                                      "Action": "[Wheat].Sow(population:100, cultivar:\"BattenWinter\", depth:40, rowSpacing:150);",
+                                      "Enabled": true
+                                    }
+                                  ],
+                                  "Name": "Operations",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
-                              "Name": "Operations",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[Operations]",
-                            "[Fertilise].Script.SDSwitch = 0.0"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "5Aug",
-                          "Children": [
-                            {
-                              "$type": "Models.Operations, Models",
-                              "Operation": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Date": "1992-08-05",
-                                  "Action": "[Wheat].Sow(population:300, cultivar:\"BattenWinter\", depth:20, rowSpacing:150);",
-                                  "Enabled": true
-                                }
-                              ],
-                              "Name": "Operations",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[IrrigationEvents]",
-                      "Name": "Irr",
-                      "Children": [
-                        {
-                          "$type": "Models.Operations, Models",
-                          "Operation": null,
-                          "Name": "Nil",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Operations, Models",
-                          "Operation": [
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Date": "1992-11-25",
-                              "Action": "[Irrigation].Apply(60);",
-                              "Enabled": true
                             },
                             {
-                              "$type": "Models.Operation, Models",
-                              "Date": "1992-12-31",
-                              "Action": "[Irrigation].Apply(60);",
-                              "Enabled": true
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[Operations]",
+                                "[Fertilise].Script.SDSwitch = 0.0"
+                              ],
+                              "Paths": null,
+                              "Values": null,
+                              "Name": "5Aug",
+                              "Children": [
+                                {
+                                  "$type": "Models.Operations, Models",
+                                  "Operation": [
+                                    {
+                                      "$type": "Models.Operation, Models",
+                                      "Date": "1992-08-05",
+                                      "Action": "[Wheat].Sow(population:300, cultivar:\"BattenWinter\", depth:20, rowSpacing:150);",
+                                      "Enabled": true
+                                    }
+                                  ],
+                                  "Name": "Operations",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
-                          "Name": "Some",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Factorial.Factor, Models",
-                      "Specification": null,
-                      "Name": "Nit",
-                      "Children": [
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[Fertilise].Script.Amount1 = 0.0",
-                            "[Fertilise].Script.Amount2 = 0.0",
-                            "[Fertilise].Script.Amount3 = 0.0",
-                            "[Fertilise].Script.Amount4 = 0.0"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "0",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[Fertilise].Script.Amount1 = 50",
-                            "[Fertilise].Script.Amount2 = 50",
-                            "[Fertilise].Script.Amount3 = 0.0",
-                            "[Fertilise].Script.Amount4 = 0.0"
+                          "$type": "Models.Factorial.Factor, Models",
+                          "Specification": "[IrrigationEvents]",
+                          "Name": "Irr",
+                          "Children": [
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": null,
+                              "Name": "Nil",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1992-11-25",
+                                  "Action": "[Irrigation].Apply(60);",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1992-12-31",
+                                  "Action": "[Irrigation].Apply(60);",
+                                  "Enabled": true
+                                }
+                              ],
+                              "Name": "Some",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
                           ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "1",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[Fertilise].Script.Amount1 = 50.0",
-                            "[Fertilise].Script.Amount2 = 100.0",
-                            "[Fertilise].Script.Amount3 = 0.0",
-                            "[Fertilise].Script.Amount4 = 0.0"
+                          "$type": "Models.Factorial.Factor, Models",
+                          "Specification": "",
+                          "Name": "Nit",
+                          "Children": [
+                            {
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[Fertilise].Script.Amount1 = 0.0",
+                                "[Fertilise].Script.Amount2 = 0.0",
+                                "[Fertilise].Script.Amount3 = 0.0",
+                                "[Fertilise].Script.Amount4 = 0.0"
+                              ],
+                              "Paths": null,
+                              "Values": null,
+                              "Name": "0",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[Fertilise].Script.Amount1 = 50",
+                                "[Fertilise].Script.Amount2 = 50",
+                                "[Fertilise].Script.Amount3 = 0.0",
+                                "[Fertilise].Script.Amount4 = 0.0"
+                              ],
+                              "Paths": null,
+                              "Values": null,
+                              "Name": "1",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[Fertilise].Script.Amount1 = 50.0",
+                                "[Fertilise].Script.Amount2 = 100.0",
+                                "[Fertilise].Script.Amount3 = 0.0",
+                                "[Fertilise].Script.Amount4 = 0.0"
+                              ],
+                              "Paths": null,
+                              "Values": null,
+                              "Name": "2",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[Fertilise].Script.Amount1 = 50.0",
+                                "[Fertilise].Script.Amount2 = 100.0",
+                                "[Fertilise].Script.Amount3 = 50.0",
+                                "[Fertilise].Script.Amount4 = 50.0"
+                              ],
+                              "Paths": null,
+                              "Values": null,
+                              "Name": "3",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
                           ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "2",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[Fertilise].Script.Amount1 = 50.0",
-                            "[Fertilise].Script.Amount2 = 100.0",
-                            "[Fertilise].Script.Amount3 = 50.0",
-                            "[Fertilise].Script.Amount4 = 50.0"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "3",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -13474,8 +13659,8 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "StartDate": "1992-05-01T00:00:00",
-                      "EndDate": "1993-05-01T00:00:00",
+                      "Start": "1992-05-01T00:00:00",
+                      "End": "1993-05-01T00:00:00",
                       "Name": "Clock",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -13507,6 +13692,8 @@
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
                       "Name": "paddock",
                       "Children": [
                         {
@@ -13613,7 +13800,17 @@
                           "Name": "Soil",
                           "Children": [
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-120",
+                                "120-140"
+                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -13624,6 +13821,7 @@
                                 100.0,
                                 200.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 1.3,
                                 1.3,
@@ -13681,7 +13879,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -13757,6 +13955,16 @@
                                 200.0,
                                 200.0
                               ],
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
                               "SWCON": [
                                 0.6,
                                 0.6,
@@ -13777,7 +13985,7 @@
                                 0.0,
                                 0.0
                               ],
-                              "ResidueInterception": 0.0,
+                              "PrecipitationInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -13866,10 +14074,18 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilOrganicMatter, Models",
-                              "RootCN": 30.0,
-                              "EnrACoeff": 0.0,
-                              "EnrBCoeff": 0.0,
+                              "$type": "Models.Soils.Organic, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
+                              "FOMCNRatio": 30.0,
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -13880,7 +14096,7 @@
                                 200.0,
                                 200.0
                               ],
-                              "OC": [
+                              "Carbon": [
                                 2.4,
                                 2.1,
                                 1.6,
@@ -13890,8 +14106,7 @@
                                 0.47,
                                 0.47
                               ],
-                              "OCMetadata": null,
-                              "SoilCN": [
+                              "SoilCNRatio": [
                                 11.5,
                                 11.5,
                                 11.5,
@@ -13921,7 +14136,7 @@
                                 0.96,
                                 0.96
                               ],
-                              "RootWt": [
+                              "FOM": [
                                 171.8447476380118,
                                 115.19097914769489,
                                 77.214822445173212,
@@ -13931,15 +14146,24 @@
                                 15.589403789256034,
                                 10.449889865682275
                               ],
-                              "OCUnits": 0,
-                              "Name": "SoilOrganicMatter",
+                              "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Analysis, Models",
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -13970,14 +14194,6 @@
                                 0.5,
                                 0.5
                               ],
-                              "Rocks": null,
-                              "RocksMetadata": null,
-                              "Texture": null,
-                              "TextureMetadata": null,
-                              "MunsellColour": null,
-                              "MunsellMetadata": null,
-                              "EC": null,
-                              "ECMetadata": null,
                               "PH": [
                                 6.6,
                                 6.2,
@@ -13988,36 +14204,10 @@
                                 5.5,
                                 5.5
                               ],
-                              "PHMetadata": null,
                               "CL": null,
-                              "CLMetadata": null,
-                              "Boron": null,
-                              "BoronMetadata": null,
-                              "CEC": null,
-                              "CECMetadata": null,
-                              "Ca": null,
-                              "CaMetadata": null,
-                              "Mg": null,
-                              "MgMetadata": null,
-                              "Na": null,
-                              "NaMetadata": null,
-                              "K": null,
-                              "KMetadata": null,
+                              "EC": null,
                               "ESP": null,
-                              "ESPMetadata": null,
-                              "Mn": null,
-                              "MnMetadata": null,
-                              "Al": null,
-                              "AlMetadata": null,
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSilt": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClay": null,
-                              "ParticleSizeClayMetadata": null,
-                              "PHUnits": 0,
-                              "BoronUnits": 0,
-                              "Name": "Analysis",
+                              "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -14025,6 +14215,16 @@
                             },
                             {
                               "$type": "Models.Soils.Sample, Models",
+                              "Depth": [
+                                "0-10",
+                                "10-30",
+                                "30-50",
+                                "50-70",
+                                "70-90",
+                                "90-110",
+                                "110-130",
+                                "130-150"
+                              ],
                               "Thickness": [
                                 100.0,
                                 200.0,
@@ -14079,6 +14279,7 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                          "Canopies": [],
                           "InitialResidueName": "wheat_stubble",
                           "InitialResidueType": "wheat",
                           "InitialResidueMass": 0.0,
@@ -14251,7 +14452,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "AboveGroundNMay",
                       "Children": [
                         {
@@ -14347,7 +14550,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "AboveGroundNAug",
                       "Children": [
                         {
@@ -14443,7 +14648,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "AboveGroundWtMay",
                       "Children": [
                         {
@@ -14539,7 +14746,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "AboveGroundWtAug",
                       "Children": [
                         {
@@ -14635,7 +14844,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "ZadokScore",
                       "Children": [
                         {
@@ -14731,7 +14942,9 @@
                         }
                       ],
                       "LegendPosition": 0,
+                      "LegendOrientation": 0,
                       "DisabledSeries": null,
+                      "LegendOutsideGraph": false,
                       "Name": "WaterProfile",
                       "Children": [
                         {
@@ -14832,7 +15045,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "EarWtMay",
                           "Children": [
                             {
@@ -14928,7 +15143,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "EarWtAug",
                           "Children": [
                             {
@@ -15024,7 +15241,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "LeafWtMay",
                           "Children": [
                             {
@@ -15120,7 +15339,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "LeafWtAug",
                           "Children": [
                             {
@@ -15216,7 +15437,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "StemWtMay",
                           "Children": [
                             {
@@ -15323,7 +15546,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "StemWtAug",
                           "Children": [
                             {
@@ -15429,7 +15654,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "EarNMay",
                           "Children": [
                             {
@@ -15525,7 +15752,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "EarNAug",
                           "Children": [
                             {
@@ -15621,7 +15850,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "LeafNMay",
                           "Children": [
                             {
@@ -15717,7 +15948,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "LeafNAug",
                           "Children": [
                             {
@@ -15813,7 +16046,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "StemNMay",
                           "Children": [
                             {
@@ -15909,7 +16144,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "StemNAug",
                           "Children": [
                             {
@@ -16015,7 +16252,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "EarNconcMay",
                           "Children": [
                             {
@@ -16111,7 +16350,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "EarNconcAug",
                           "Children": [
                             {
@@ -16207,7 +16448,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "LeafNconcMay",
                           "Children": [
                             {
@@ -16303,7 +16546,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "LeafNconcAug",
                           "Children": [
                             {
@@ -16399,7 +16644,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "StemNconcMay",
                           "Children": [
                             {
@@ -16495,7 +16742,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "StemNconcAug",
                           "Children": [
                             {
@@ -16601,7 +16850,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "LAIMay",
                           "Children": [
                             {
@@ -16708,7 +16959,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "LAIAug",
                           "Children": [
                             {
@@ -16815,7 +17068,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "TillersMay",
                           "Children": [
                             {
@@ -16922,7 +17177,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "TillersAug",
                           "Children": [
                             {
@@ -17018,7 +17275,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "RadIntMay",
                           "Children": [
                             {
@@ -17125,7 +17384,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "RadIntAug",
                           "Children": [
                             {
@@ -17221,7 +17482,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "LeafTips",
                           "Children": [
                             {
@@ -17317,7 +17580,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "AppearedLeaves",
                           "Children": [
                             {
@@ -17434,7 +17699,9 @@
                             }
                           ],
                           "LegendPosition": 2,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "SWC20cm",
                           "Children": [
                             {
@@ -17530,7 +17797,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "SWC40cm",
                           "Children": [
                             {
@@ -17626,7 +17895,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "SWC60cm",
                           "Children": [
                             {
@@ -17722,7 +17993,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "SWC80cm",
                           "Children": [
                             {
@@ -17818,7 +18091,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "SWC100cm",
                           "Children": [
                             {
@@ -17914,7 +18189,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "SWC120cm",
                           "Children": [
                             {
@@ -18010,7 +18287,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "SWC140cm",
                           "Children": [
                             {
@@ -18076,7 +18355,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "SWC1600cm",
                           "Children": [
                             {
@@ -18142,7 +18423,9 @@
                             }
                           ],
                           "LegendPosition": 0,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "PercentWSC",
                           "Children": [
                             {
@@ -18234,7 +18517,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Harvest Yield",
               "Children": [
                 {
@@ -18312,7 +18597,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Harvest Biomass",
               "Children": [
                 {
@@ -18390,7 +18677,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "GrainNumber",
               "Children": [
                 {

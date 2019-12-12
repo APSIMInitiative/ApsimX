@@ -178,6 +178,8 @@ namespace APSIM.Shared.Utilities
         /// <returns>true if the day and month components of <paramref name="today"/> match ddMMM, else false</returns>
         public static bool DatesEqual(string ddMMM, DateTime today)
         {
+            if (ddMMM == null)
+                return false;
             return 
                 today.Month == Array.IndexOf(LowerCaseMonths, rxMMM.Match(ddMMM).Value.ToLower()) + 1
                 &&
@@ -376,5 +378,15 @@ namespace APSIM.Shared.Utilities
             return returnDate;
         }
 
+        /// <summary>
+        /// Does a date comparison where a datestring can be dd-mmm or yyyy-mm-dd
+        /// </summary>
+        /// <param name="dateStr">The date as a string, (ie, 01-jan or 2010-01-21)</param>
+        /// <param name="d">The date to compare the string with.</param>
+        /// <returns>True if the string matches the date.</returns>
+        public static bool DatesAreEqual(string dateStr, DateTime d)
+        {
+            return d == validateDateString(dateStr, d.Year);
+        }
     }
 }

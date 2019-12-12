@@ -64,18 +64,20 @@
         [Link]
         private Soil Soil = null;
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool FOMCellulose = null;
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool FOMCarbohydrate = null;
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool FOMLignin = null;
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         INutrientPool SurfaceResidue = null;
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NO3 = null;
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NH4 = null;
+        [Link(ByName = true)]
+        private ISolute Urea = null;
 
         // Carbon content of FOM
         private double CinFOM = 0.4;
@@ -190,6 +192,11 @@
                 double[] no3 = NO3.kgha;
                 values = MathUtilities.Add(values, nh4);
                 values = MathUtilities.Add(values, no3);
+                if (Urea != null)
+                {
+                    double[] urea = Urea.kgha;
+                    values = MathUtilities.Add(values, urea);
+                }
                 return values;
             }
         }

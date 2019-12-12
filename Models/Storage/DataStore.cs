@@ -235,5 +235,26 @@
                 connection = null;
             }
         }
+
+        /// <summary>
+        /// Add a select based view to the data table for SQLite datastores
+        /// </summary>
+        /// <param name="name">name of the view</param>
+        /// <param name="selectSQL">select SQL statement</param>
+        public void AddView(string name, string selectSQL)
+        {
+            if (connection is SQLite)
+            {
+                if (connection.ViewExists(name))
+                {
+                    connection.ExecuteNonQuery($"DROP VIEW {name}");
+                }
+                connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

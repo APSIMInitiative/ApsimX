@@ -43,9 +43,28 @@ namespace UserInterface.Views
         private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(Color), typeof(bool));
 
         /// <summary>Constructor</summary>
+        public TreeView()
+        {
+        }
+
+        /// <summary>Constructor</summary>
+        public TreeView(ViewBase owner) : base(owner)
+        {
+            Initialise(owner, new Gtk.TreeView());
+        }
+
+        /// <summary>Constructor</summary>
         public TreeView(ViewBase owner, Gtk.TreeView treeView) : base(owner)
         {
-            treeview1 = treeView;
+            Initialise(owner, treeView);
+        }
+
+        /// <summary>Gets or sets whether tree nodes can be changed.</summary>
+        public bool ReadOnly { get; set; }
+
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            treeview1 = (Gtk.TreeView) gtkControl;
             mainWidget = treeview1;
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -106,6 +125,9 @@ namespace UserInterface.Views
         /// <summary>Invoked then a node is renamed.</summary>
         public event EventHandler<NodeRenameArgs> Renamed;
 
+        /// <summary>Invoked then a node is double clicked.</summary>
+        public event EventHandler<EventArgs> DoubleClicked;
+
         /// <summary>Gets or sets the currently selected node.</summary>
         public string SelectedNode
         {
@@ -159,7 +181,7 @@ namespace UserInterface.Views
             if (path.Prev() && treemodel.GetIter(out prevnode, path))
                 treemodel.MoveBefore(node, prevnode);
 
-            treeview1.ScrollToCell(path, treeview1.Columns[0], false, 0, 0);
+            treeview1.ScrollToCell(path, null, false, 0, 0);
         }
 
         /// <summary>Moves the specified node down 1 position.</summary>
@@ -173,7 +195,7 @@ namespace UserInterface.Views
             if (treemodel.GetIter(out nextnode, path))
                 treemodel.MoveAfter(node, nextnode);
 
-            treeview1.ScrollToCell(path, treeview1.Columns[0], false, 0, 0);
+            treeview1.ScrollToCell(path, null, false, 0, 0);
         }
 
         /// <summary>Renames the specified node path.</summary>
@@ -189,12 +211,37 @@ namespace UserInterface.Views
         /// <summary>Puts the current node into edit mode so user can rename it.</summary>
         public void BeginRenamingCurrentNode()
         {
-            textRender.Editable = true;
-            TreePath selPath;
-            TreeViewColumn selCol;
-            treeview1.GetCursor(out selPath, out selCol);
-            treeview1.GrabFocus();
-            treeview1.SetCursor(selPath, treeview1.GetColumn(0), true);
+            if (!ReadOnly)
+            {
+                textRender.Editable = true;
+                TreePath selPath;
+                TreeViewColumn selCol;
+                treeview1.GetCursor(out selPath, out selCol);
+                treeview1.GrabFocus();
+                treeview1.SetCursor(selPath, treeview1.GetColumn(0), true);
+            }
+        }
+
+        private TreePath CreatePath(Utility.TreeNode node)
+        {
+            return new TreePath(node.Indices);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expandedNodes"></param>
+        public void ExpandNodes(Utility.TreeNode[] expandedNodes)
+        {
+            foreach (var node in expandedNodes)
+                treeview1.ExpandRow(CreatePath(node), false);
+        }
+
+        public Utility.TreeNode[] GetExpandedNodes()
+        {
+            List<Utility.TreeNode> expandedRows = new List<Utility.TreeNode>();
+            treeview1.MapExpandedRows((view, path) => expandedRows.Add(new Utility.TreeNode(path.Indices)));
+            return expandedRows.ToArray();
         }
 
         /// <summary>Deletes the specified node.</summary>
@@ -450,6 +497,14 @@ namespace UserInterface.Views
                     previouslySelectedNodePath = selectionChangedData.NewNodePath;
                     treeview1.CursorChanged += OnAfterSelect;
                 }
+                else
+                {
+                    // Presenter is ignoring the SelectedNodeChanged event.
+                    // We should scroll to the newly selected node so the user
+                    // can actually see what they've selected.
+                    treeview1.GetCursor(out TreePath path, out _);
+                    treeview1.ScrollToCell(path, null, false, 0, 1);
+                }
             }
             catch (Exception err)
             {
@@ -535,6 +590,8 @@ namespace UserInterface.Views
                 else
                     treeview1.ExpandRow(e.Path, false);
                 e.RetVal = true;
+
+                DoubleClicked?.Invoke(this, new EventArgs());
             }
             catch (Exception err)
             {
@@ -827,6 +884,26 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Expands all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        public void ExpandChildren(string path)
+        {
+            TreePath nodePath = treemodel.GetPath(FindNode(path));
+            treeview1.ExpandRow(nodePath, true);
+        }
+
+        /// <summary>
+        /// Collapses all child nodes recursively.
+        /// </summary>
+        /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        public void CollapseChildren(string path)
+        {
+            TreePath nodePath = treemodel.GetPath(FindNode(path));
+            treeview1.CollapseRow(nodePath);
         }
     }
 }

@@ -41,9 +41,6 @@ namespace UserInterface.Presenters
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>The current presenter</summary>
-        private IPresenter currentPresenter = null;
-
         /// <summary>The series definitions to show on graph.</summary>
         public List<SeriesDefinition> SeriesDefinitions { get; set; } = new List<SeriesDefinition>();
 
@@ -87,9 +84,9 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             explorerPresenter.CommandHistory.ModelChanged -= OnGraphModelChanged;
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             graphView.OnAxisClick -= OnAxisClick;
@@ -107,7 +104,7 @@ namespace UserInterface.Presenters
             // Get a list of series definitions.
             try
             {
-                SeriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader, SimulationFilter);
+                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter);
             }
             catch (SQLiteException e)
             {
@@ -148,7 +145,7 @@ namespace UserInterface.Presenters
                 }
 
                 // Format the legend.
-                graphView.FormatLegend(graph.LegendPosition);
+                graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation);
 
                 // Format the title
                 graphView.FormatTitle(graph.Name);
@@ -171,6 +168,7 @@ namespace UserInterface.Presenters
                 List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
                 this.graph.DisabledSeries.Clear();
                 this.graph.DisabledSeries.AddRange(seriesTitlesToKeep);
+                graphView.LegendInsideGraph = !graph.LegendOutsideGraph;
 
                 graphView.Refresh();
             }
@@ -203,6 +201,9 @@ namespace UserInterface.Presenters
         }
 
         public List<string> SimulationFilter { get; set; }
+
+        /// <summary>The current presenter</summary>
+        public IPresenter CurrentPresenter { get; set; }
 
         /// <summary>
         /// Iff set to true, the legend will appear inside the graph boundaries.
@@ -298,6 +299,19 @@ namespace UserInterface.Presenters
                             colour,
                             definition.ShowInLegend);
                     }
+                    else if (definition.Type == SeriesType.Box)
+                    {
+                        graphView.DrawBoxPLot(definition.Title,
+                            definition.X.Cast<object>().ToArray(),
+                            definition.Y.Cast<double>().ToArray(),
+                            definition.XAxis,
+                            definition.YAxis,
+                            definition.Colour,
+                            definition.ShowInLegend,
+                            definition.Line,
+                            definition.Marker,
+                            definition.LineThickness);
+                    }
                 }
                 catch (Exception err)
                 {
@@ -360,7 +374,9 @@ namespace UserInterface.Presenters
                                         lineAnnotation.y2,
                                         lineAnnotation.type, 
                                         lineAnnotation.thickness,
-                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour);
+                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour,
+                                        lineAnnotation.InFrontOfSeries,
+                                        lineAnnotation.ToolTip);
                 }
             }
         }
@@ -426,13 +442,13 @@ namespace UserInterface.Presenters
         /// <param name="axisType">Type of the axis.</param>
         private void OnAxisClick(Axis.AxisType axisType)
         {
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             AxisPresenter axisPresenter = new AxisPresenter();
-            currentPresenter = axisPresenter;
+            CurrentPresenter = axisPresenter;
             AxisView a = new AxisView(graphView as GraphView);
             string dimension = (axisType == Axis.AxisType.Left || axisType == Axis.AxisType.Right) ? "Y" : "X";
             graphView.ShowEditorPanel(a.MainWidget, dimension + "-Axis options");
@@ -444,13 +460,13 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnCaptionClick(object sender, EventArgs e)
         {
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             TitlePresenter titlePresenter = new TitlePresenter();
-            currentPresenter = titlePresenter;
+            CurrentPresenter = titlePresenter;
             titlePresenter.ShowCaption = true;
 
             TitleView t = new TitleView(graphView as GraphView);
@@ -487,13 +503,13 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnLegendClick(object sender, LegendClickArgs e)
         {
-            if (currentPresenter != null)
+            if (CurrentPresenter != null)
             {
-                currentPresenter.Detach();
+                CurrentPresenter.Detach();
             }
 
             LegendPresenter presenter = new LegendPresenter(this);
-            currentPresenter = presenter;
+            CurrentPresenter = presenter;
 
             LegendView view = new LegendView(graphView as GraphView);
             graphView.ShowEditorPanel(view.MainWidget, "Legend options");

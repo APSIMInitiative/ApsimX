@@ -23,6 +23,7 @@ namespace UserInterface.Views
     using APSIM.Shared.Utilities;
     using System.Linq;
     using System.Globalization;
+    using MathNet.Numerics.Statistics;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -349,7 +350,7 @@ namespace UserInterface.Views
                 else
                     series.ToolTip = title;
 
-                if (colour == Color.Empty)
+                if (colour.ToArgb() == Color.Empty.ToArgb())
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
@@ -647,6 +648,98 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Draw a box-and-whisker plot.
+        /// colour.
+        /// </summary>
+        /// <param name="title">The series title</param>
+        /// <param name="x">The x values for the series</param>
+        /// <param name="y">The y values for the series</param>
+        /// <param name="xAxisType">The axis type the x values are related to</param>
+        /// <param name="yAxisType">The axis type the y values are related to</param>
+        /// <param name="colour">The series color</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+        public void DrawBoxPLot(
+            string title,
+            object[] x,
+            double[] y,
+            Models.Graph.Axis.AxisType xAxisType,
+            Models.Graph.Axis.AxisType yAxisType,
+            Color colour,
+            bool showOnLegend,
+            Models.Graph.LineType lineType,
+            Models.Graph.MarkerType markerType,
+            Models.Graph.LineThicknessType lineThickness)
+        {
+            BoxPlotSeries series = new BoxPlotSeries();
+            series.Items = GetBoxPlotItems(y);
+            series.Title = title;
+
+            // Line style
+            if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
+            {
+                series.LineStyle = oxyLineType;
+                if (series.LineStyle == LineStyle.None)
+                    series.Fill = OxyColors.Transparent;
+                    series.Stroke = OxyColors.Transparent;
+            }
+
+            // Min/max lines = marker type
+            string marker = markerType.ToString();
+            if (marker.StartsWith("Filled"))
+                marker = marker.Remove(0, 6);
+
+            if (Enum.TryParse(marker, out OxyPlot.MarkerType oxyMarkerType))
+                series.OutlierType = oxyMarkerType;
+
+            // Line thickness
+            if (lineThickness == LineThicknessType.Thin)
+            {
+                double thickness = 0.5;
+                series.StrokeThickness = thickness;
+                series.MeanThickness = thickness;
+                series.MedianThickness = thickness;
+            }
+
+            // Colour
+            if (colour.ToArgb() == Color.Empty.ToArgb())
+                colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+
+            OxyColor oxyColour = Utility.Colour.ToOxy(colour);
+            series.Fill = oxyColour;
+            series.Stroke = oxyColour;
+
+            EnsureAxisExists(xAxisType, typeof(double));
+            EnsureAxisExists(yAxisType, typeof(double));
+
+            series.XAxisKey = xAxisType.ToString();
+            series.YAxisKey = yAxisType.ToString();
+
+            double width = 0.5;
+            series.BoxWidth = width;
+            series.WhiskerWidth = width;
+
+            plot1.Model.Series.Add(series);
+
+            OxyPlot.Axes.Axis xAxis = GetAxis(xAxisType);
+            xAxis.Minimum = 0 - width;
+            xAxis.Maximum = plot1.Model.Series.OfType<BoxPlotSeries>().Count() - 1 + width;
+        }
+
+        private List<BoxPlotItem> GetBoxPlotItems(double[] data)
+        {
+            data = data.Where(d => !double.IsNaN(d)).ToArray();
+            double[] fiveNumberSummary = data.FiveNumberSummary();
+            double min = fiveNumberSummary[0];
+            double lowerQuartile = fiveNumberSummary[1];
+            double median = fiveNumberSummary[2];
+            double upperQuartile = fiveNumberSummary[3];
+            double max = fiveNumberSummary[4];
+
+            int index = plot1.Model.Series.OfType<BoxPlotSeries>().Count();
+            return new List<BoxPlotItem>() { new BoxPlotItem(index, min, lowerQuartile, median, upperQuartile, max) };
+        }
+
+        /// <summary>
         /// Draw text on the graph at the specified coordinates.
         /// </summary>
         /// <param name="text">The text to put on the graph</param>
@@ -714,6 +807,8 @@ namespace UserInterface.Views
         /// <param name="textRotation">Text rotation</param>
         /// <param name="thickness">Line thickness</param>
         /// <param name="colour">The color of the text</param>
+        /// <param name="inFrontOfSeries">Show annotation in front of series?</param>
+        /// <param name="toolTip">Annotation tool tip.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawLine(
             object x1,
@@ -722,10 +817,10 @@ namespace UserInterface.Views
             object y2,
             Models.Graph.LineType type,
             Models.Graph.LineThicknessType thickness,
-            Color colour)
+            Color colour,
+            bool inFrontOfSeries,
+            string toolTip)
         {
-            OxyPlot.Annotations.LineAnnotation annotation = new OxyPlot.Annotations.LineAnnotation();
-
             double x1Position = 0.0;
             if (x1 is DateTime)
                 x1Position = DateTimeAxis.ToDouble(x1);
@@ -751,23 +846,38 @@ namespace UserInterface.Views
             else
                 y2Position = (double)y2;
 
-            annotation.X = x1Position;
-            annotation.Y = y1Position;
-            annotation.MinimumX = x1Position;
-            annotation.MinimumY = y1Position;
-            annotation.MaximumX = x2Position;
-            annotation.MaximumY = y2Position;
-            annotation.Type = LineAnnotationType.Vertical;
-            annotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+            OxyPlot.Annotations.Annotation annotation;
 
-            // Line type.
-            // LineStyle oxyLineType;
-            // if (Enum.TryParse<LineStyle>(type.ToString(), out oxyLineType))
-            //    annotation.LineStyle = oxyLineType;
-
-            // Line thickness
-            if (thickness == LineThicknessType.Thin)
-                annotation.StrokeThickness = 0.5;
+            if (x1Position == x2Position)
+            {
+                var lineAnnotation = new OxyPlot.Annotations.LineAnnotation();
+                lineAnnotation.X = x1Position;
+                lineAnnotation.Y = y1Position;
+                lineAnnotation.MinimumX = x1Position;
+                lineAnnotation.MinimumY = y1Position;
+                lineAnnotation.MaximumX = x2Position;
+                lineAnnotation.MaximumY = y2Position;
+                lineAnnotation.Type = LineAnnotationType.Vertical;
+                lineAnnotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+                if (thickness == LineThicknessType.Thin)
+                    lineAnnotation.StrokeThickness = 0.5;
+                annotation = lineAnnotation;
+            }
+            else
+            {
+                var rectangleAnnotation = new RectangleAnnotation();
+                rectangleAnnotation.MinimumX = x1Position;
+                rectangleAnnotation.MinimumY = y1Position;
+                rectangleAnnotation.MaximumX = x2Position;
+                rectangleAnnotation.MaximumY = y2Position;
+                rectangleAnnotation.Fill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+                annotation = rectangleAnnotation;
+            }
+            if (inFrontOfSeries)
+                annotation.Layer = AnnotationLayer.AboveSeries;
+            else
+                annotation.Layer = AnnotationLayer.BelowSeries;
+            annotation.ToolTip = toolTip;
             this.plot1.Model.Annotations.Add(annotation);
         }
 
@@ -840,13 +950,17 @@ namespace UserInterface.Views
         /// Format the legend.
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
-        public void FormatLegend(Models.Graph.Graph.LegendPositionType legendPositionType)
+        /// <param name="orientation">Orientation of items in the legend.</param>
+        public void FormatLegend(Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation)
         {
             LegendPosition oxyLegendPosition;
-            if (Enum.TryParse<LegendPosition>(legendPositionType.ToString(), out oxyLegendPosition))
+            if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
             {
                 this.plot1.Model.LegendFont = Font;
                 this.plot1.Model.LegendFontSize = FontSize;
+                this.plot1.Model.LegendPosition = oxyLegendPosition;
+                if (Enum.TryParse(orientation.ToString(), out LegendOrientation legendOrientation))
+                    plot1.Model.LegendOrientation = legendOrientation;
             }
 
             this.plot1.Model.LegendSymbolLength = 30;
@@ -1556,6 +1670,7 @@ namespace UserInterface.Views
         private void OnChartClick(object sender, OxyMouseDownEventArgs e)
         {
             e.Handled = false;
+
             inRightClick = e.ChangedButton == OxyMouseButton.Right;
             if (e.ChangedButton == OxyMouseButton.Left) /// Left clicks only
             {
@@ -1564,6 +1679,10 @@ namespace UserInterface.Views
                 else if (e.ClickCount == 2)
                     OnMouseDoubleClick(sender, e);
             }
+
+            // Annotation tool tips.
+            if (e.HitTestResult != null && e.HitTestResult.Element is OxyPlot.Annotations.Annotation)
+                plot1.TooltipText = (e.HitTestResult.Element as OxyPlot.Annotations.Annotation).ToolTip;
         }
 
         /// <summary>Mouse up event on chart. If in a right click, display the popup menu.</summary>
@@ -1575,6 +1694,7 @@ namespace UserInterface.Views
             if (inRightClick)
                 popup.Popup();
             inRightClick = false;
+            plot1.TooltipText = null;
         }
 
         /// <summary>Mouse has moved on the chart.

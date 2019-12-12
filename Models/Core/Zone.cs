@@ -1,14 +1,10 @@
-﻿using System.Xml.Serialization;
-using System.Xml;
-using System;
-using System.Collections.Generic;
-using System.Xml.Schema;
-using System.Reflection;
-using System.Linq;
-using Models;
-
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml.Serialization;
+
     /// <summary>
     /// # [Name]
     /// A generic system that can have children
@@ -23,14 +19,20 @@ namespace Models.Core
     public class Zone : Model
     {
         /// <summary>Area of the zone.</summary>
-        /// <value>The area.</value>
         [Description("Area of zone (ha)")]
         virtual public double Area { get; set; }
 
         /// <summary>Gets or sets the slope.</summary>
-        /// <value>The slope.</value>
-        [Description("Slope (deg)")]
+        [Description("Slope angle(deg)")]
         virtual public double Slope { get; set; }
+
+        /// <summary>Angle of the aspect, from north (degrees).</summary>
+        [Description("Angle of the aspect, from north (degrees)")]
+        public double AspectAngle { get; set; }
+
+        /// <summary>Local altitude (meters above sea level).</summary>
+        [Description("Local altitude (meters above sea level)")]
+        public double Altitude { get; set; } = 50;
 
         /// <summary>Return a list of plant models.</summary>
         [XmlIgnore]
