@@ -90,6 +90,14 @@ namespace UserInterface.Views
             oldVersions = (CheckButton)builder.GetObject("checkbutton2");
             listview1.Model = listmodel;
 
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            if (version.Revision == 0)
+            {
+                button1.Sensitive = false;
+                table2.Hide();
+                checkbutton1.Hide();
+            }
+
             CellRendererText textRender = new Gtk.CellRendererText();
             textRender.Editable = false;
 
@@ -121,6 +129,7 @@ namespace UserInterface.Views
             htmlView = new HTMLView(new ViewBase(null));
             htmlAlign.Add(htmlView.MainWidget);
             tabbedExplorerView = owner as IMainView;
+
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
             window1.Modal = true;
             oldVersions.Toggled += OnShowOldVersionsToggled;
@@ -183,6 +192,7 @@ namespace UserInterface.Views
             else
                 label1.Text = "You are currently using version " + version.ToString() + ". You are using the latest version.";
 
+
             firstNameBox.Text = Utility.Configuration.Settings.FirstName;
             lastNameBox.Text = Utility.Configuration.Settings.LastName;
             emailBox.Text = Utility.Configuration.Settings.Email;
@@ -195,16 +205,26 @@ namespace UserInterface.Views
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
-            try
+            if (version.Revision == 0)
             {
-                // web.DownloadFile(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
-                // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
-                htmlView.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                button1.Sensitive = false;
+                table2.Hide();
+                checkbutton1.Hide();
+                htmlView.SetContents("<center><span style=\"color:red\"><b>WARNING!</b></span><br/>You are currently using a custom build<br/><b>Upgrade is not available!</b></center>", false, false);
             }
-            catch (Exception)
+            else
             {
-                ViewBase.MasterView.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
-                loadFailure = true;
+                try
+                {
+                    // web.DownloadFile(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
+                    // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
+                    htmlView.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
+                }
+                catch (Exception)
+                {
+                    ViewBase.MasterView.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
+                    loadFailure = true;
+                }
             }
 
         }
