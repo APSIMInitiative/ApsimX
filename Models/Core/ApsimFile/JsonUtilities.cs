@@ -348,6 +348,31 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Add a variable reference function to the specified JSON model token.
+        /// </summary>
+        /// <param name="modelToken">The APSIM model token.</param>
+        /// <param name="name">The name of the variable reference function</param>
+        /// <param name="Path">The variable reference path</param>
+        public static void AddVariableReference(JObject modelToken, string name, string Path)
+        {
+            if (ChildWithName(modelToken, name) == null)
+            {
+                JArray children = modelToken["Children"] as JArray;
+                if (children == null)
+                {
+                    children = new JArray();
+                    modelToken["Children"] = children;
+                }
+
+                JObject VariableRefModel = new JObject();
+                VariableRefModel["$type"] = "Models.Functions.VariableReference, Models";
+                VariableRefModel["Name"] = name;
+                VariableRefModel["VariableName"] = Path;
+                children.Add(VariableRefModel);
+            }
+        }
+
+        /// <summary>
         /// Adds the given model as a child of node.
         /// </summary>
         /// <param name="node">Node to which the model will be added.</param>

@@ -16,7 +16,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 70; } }
+        public static int LatestVersion { get { return 71; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1382,6 +1382,21 @@
                     genotypes[i]["Conceptions"] = genotypes[i]["Conception"];
                     genotypes[i]["GenotypeName"] = genotypes[i]["Name"];
                 }
+            }
+        }
+
+        /// <summary>
+        /// Alters all existing linint functions to have a child variable reference IFunction called XValue instead of a
+        /// string property called XProperty that IFunction then had to locate
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion71(JObject root, string fileName)
+        {
+            foreach (JObject linint in JsonUtilities.ChildrenRecursively(root, "LinearInterpolationFunction"))
+            {
+                JsonUtilities.AddVariableReference(linint,"XValue", linint["XProperty"].ToString());
+                linint.Remove("XProperty");
             }
         }
 
