@@ -74,6 +74,10 @@
 
             foreach (string tableName in tableNamesToDelete)
                 database.DropTable(tableName);
+            if (database is SQLite)
+            {
+                (database as SQLite).Vacuum();
+            }
         }
     }
 }
