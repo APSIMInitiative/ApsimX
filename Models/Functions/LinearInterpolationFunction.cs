@@ -28,7 +28,7 @@ namespace Models.Functions
         private Dictionary<double, double> cache = new Dictionary<double, double>();
 
         /// <summary>The x value to use for interpolation</summary>
-        [Link(Type = LinkType.Scoped)]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction XValue = null;
 
         /// <summary>Constructor</summary>
