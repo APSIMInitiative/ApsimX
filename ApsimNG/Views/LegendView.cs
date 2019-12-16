@@ -74,19 +74,27 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            combobox1.Changed -= OnPositionComboChanged;
-            combobox1.Focused -= OnTitleTextBoxEnter;
-            listToggle.Toggled -= OnItemChecked;
-            comboModel.Dispose();
-            comboRender.Destroy();
-            listModel.Dispose();
-            listRender.Destroy();
-            listToggle.Destroy();
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                combobox1.Changed -= OnPositionComboChanged;
+                combobox1.Focused -= OnTitleTextBoxEnter;
+                listToggle.Toggled -= OnItemChecked;
+                comboModel.Dispose();
+                comboRender.Destroy();
+                listModel.Dispose();
+                listRender.Destroy();
+                listToggle.Destroy();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private bool settingCombo = false;
+
         /// <summary>
         /// Populate the view with the specified title.
         /// </summary>
@@ -116,11 +124,18 @@ namespace UserInterface.Views
         /// </summary>
         private void OnTitleTextBoxEnter(object sender, FocusedArgs e)
         {
-            TreeIter iter;
-            if (combobox1.GetActiveIter(out iter))
-                originalText = (string)combobox1.Model.GetValue(iter, 0);
-            else
-                originalText = null;
+            try
+            {
+                TreeIter iter;
+                if (combobox1.GetActiveIter(out iter))
+                    originalText = (string)combobox1.Model.GetValue(iter, 0);
+                else
+                    originalText = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -129,17 +144,24 @@ namespace UserInterface.Views
         /// </summary>
         private void OnPositionComboChanged(object sender, EventArgs e)
         {
-            if (settingCombo) return;
-            TreeIter iter;
-            string curText = null;
-            if (combobox1.GetActiveIter(out iter))
-                curText = (string)combobox1.Model.GetValue(iter, 0);
-            if (originalText == null)
-                originalText = curText;
-            if (curText != originalText && OnPositionChanged != null)
+            try
             {
-                originalText = curText;
-                OnPositionChanged.Invoke(curText);
+                if (settingCombo) return;
+                TreeIter iter;
+                string curText = null;
+                if (combobox1.GetActiveIter(out iter))
+                    curText = (string)combobox1.Model.GetValue(iter, 0);
+                if (originalText == null)
+                    originalText = curText;
+                if (curText != originalText && OnPositionChanged != null)
+                {
+                    originalText = curText;
+                    OnPositionChanged.Invoke(curText);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -202,16 +224,22 @@ namespace UserInterface.Views
         /// <param name="e">The <see cref="ItemCheckedEventArgs"/> instance containing the event data.</param>
         private void OnItemChecked(object sender, ToggledArgs e)
         {
-            TreeIter iter;
-
-            if (listModel.GetIter(out iter, new TreePath(e.Path)))
+            try
             {
-                bool old = (bool)listModel.GetValue(iter, 0);
-                listModel.SetValue(iter, 0, !old);
+                TreeIter iter;
+
+                if (listModel.GetIter(out iter, new TreePath(e.Path)))
+                {
+                    bool old = (bool)listModel.GetValue(iter, 0);
+                    listModel.SetValue(iter, 0, !old);
+                }
+                if (DisabledSeriesChanged != null)
+                    DisabledSeriesChanged.Invoke(this, new EventArgs());
             }
-            if (DisabledSeriesChanged != null)
-                DisabledSeriesChanged.Invoke(this, new EventArgs());
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
-        
     }
 }
