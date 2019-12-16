@@ -40,6 +40,9 @@ namespace UserInterface.Commands
         /// <summary>Temporary working directory.</summary>
         private string workingDirectory;
 
+        /// <summary>The name of the model to document.</summary>
+        private string modelNameToDocument;
+
         /// <summary>Gets the name of the file .</summary>
         public string FileNameWritten { get; private set; }
 
@@ -47,10 +50,13 @@ namespace UserInterface.Commands
         /// Initializes a new instance of the <see cref="ExportNodeCommand"/> class.
         /// </summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
-        /// <param name="nodePath">The node path.</param>
-        public ExportNodeCommand(ExplorerPresenter explorerPresenter, string nodePath)
+        public ExportNodeCommand(ExplorerPresenter explorerPresenter)
         {
             this.explorerPresenter = explorerPresenter;
+            // Get the model we are to export.
+            modelNameToDocument = Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
+            modelNameToDocument = modelNameToDocument.Replace("validation", string.Empty);
+            FileNameWritten = Path.Combine(Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName), modelNameToDocument + ".pdf");
         }
 
         /// <summary>
@@ -62,10 +68,7 @@ namespace UserInterface.Commands
             bibTeX = new BibTeX(bibFile);
             citations = new List<BibTeX.Citation>();
 
-            // Get the model we are to export.
-            string modelName = Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
-            modelName = modelName.Replace("validation", string.Empty);
-            DoExportPDF(modelName);
+            DoExportPDF(modelNameToDocument);
             citations.Clear();
         }
 
@@ -191,11 +194,12 @@ namespace UserInterface.Commands
             TagsToMigraDoc(section, tags, workingDirectory);
 
             // Write the PDF file.
-            FileNameWritten = Path.Combine(Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName), modelNameToExport + ".pdf");
             PdfDocumentRenderer pdfRenderer = new PdfDocumentRenderer(false);
             pdfRenderer.Document = document;
             pdfRenderer.RenderDocument();
             pdfRenderer.PdfDocument.Save(FileNameWritten);
+
+            explorerPresenter.MainPresenter.ShowMessage("Writen " + FileNameWritten, Simulation.MessageType.Information);
 
             // Remove temporary working directory.
             Directory.Delete(workingDirectory, true);

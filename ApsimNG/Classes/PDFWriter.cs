@@ -484,72 +484,95 @@
             table.Borders.Right.Width = 0.5;
             table.Rows.LeftIndent = 0;
 
+            var gdiFont = new XFont("Arial", 10);
+            XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
+
+            // Add the required columns to the table.
             foreach (DataColumn column in tableObj.data.Table.Columns)
             {
                 var column1 = table.AddColumn();
                 column1.Format.Alignment = ParagraphAlignment.Right;
             }
 
-            var row = table.AddRow();
-            row.HeadingFormat = true;
-            row.Format.Font.Bold = true;
-            row.Shading.Color = Colors.LightBlue;
-
-            var gdiFont = new XFont("Arial", 10);
-            XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
-
-            var hrefRegEx = new System.Text.RegularExpressions.Regex("(.*)<a href=\"(.+)\">(.+)</a>(.*)");
-            var italicsRegEx = new System.Text.RegularExpressions.Regex(@"(.+)<i>(.*)</i>.*", System.Text.RegularExpressions.RegexOptions.Singleline);
+            // Add a heading row.
+            var headingRow = table.AddRow();
+            headingRow.HeadingFormat = true;
+            headingRow.Format.Font.Bold = true;
+            headingRow.Shading.Color = Colors.LightBlue;
 
             for (int columnIndex = 0; columnIndex < tableObj.data.Table.Columns.Count; columnIndex++)
             {
+                // Get column heading
                 string heading = tableObj.data.Table.Columns[columnIndex].ColumnName;
+                headingRow.Cells[columnIndex].AddParagraph(heading);
 
                 // Get the width of the column
                 double maxSize = graphics.MeasureString(heading, gdiFont).Width;
                 for (int rowIndex = 0; rowIndex < tableObj.data.Count; rowIndex++)
                 {
-                    string cellText = tableObj.data[rowIndex][columnIndex].ToString();
+                    // Add a row to our table if processing first column.
+                    MigraDoc.DocumentObjectModel.Tables.Row row;
+                    if (columnIndex == 0)
+                        table.AddRow();
 
-                    var match = hrefRegEx.Match(cellText);
-                    if (match.Success)
-                        cellText = match.Groups[2].ToString();
-                    XSize size = graphics.MeasureString(cellText, gdiFont);
-                    maxSize = Math.Max(maxSize, size.Width);
+                    // Get the row to process.
+                    row = table.Rows[rowIndex+1];
+
+                    // Convert potential HTML to the cell in our row.
+                    HtmlToMigraDoc.Convert(tableObj.data[rowIndex][columnIndex].ToString(),
+                                           row.Cells[columnIndex], 
+                                           WorkingDirectory);
+
+                    // Update the maximum size of the column with the value from the current row.
+                    foreach (var element in row.Cells[columnIndex].Elements)
+                    {
+                        if (element is Paragraph)
+                        {
+                            var paragraph = element as Paragraph;
+                            var contents = string.Empty;
+                            foreach (var paragraphElement in paragraph.Elements)
+                                if (paragraphElement is MigraDoc.DocumentObjectModel.Text)
+                                    contents += (paragraphElement as MigraDoc.DocumentObjectModel.Text).Content;
+                                else if (paragraphElement is MigraDoc.DocumentObjectModel.Hyperlink)
+                                    contents += (paragraphElement as MigraDoc.DocumentObjectModel.Hyperlink).Name;
+
+                            var size = graphics.MeasureString(contents, gdiFont);
+                            maxSize = Math.Max(maxSize, size.Width);
+                        }
+                    }
                 }
 
                 table.Columns[columnIndex].Width = Unit.FromPoint(maxSize + 10);
-                row.Cells[columnIndex].AddParagraph(heading);
             }
-            for (int rowIndex = 0; rowIndex < tableObj.data.Count; rowIndex++)
-            {
-                row = table.AddRow();
-                for (int columnIndex = 0; columnIndex < tableObj.data.Table.Columns.Count; columnIndex++)
-                {
-                    string cellText = tableObj.data[rowIndex][columnIndex].ToString();
-
-                    var match = hrefRegEx.Match(cellText);
-                    if (match.Success)
-                    {
-                        var paragraph = row.Cells[columnIndex].AddParagraph();
-                        var hyperlink = paragraph.AddHyperlink(match.Groups[1].ToString().TrimStart('#'), HyperlinkType.Bookmark);
-                        hyperlink.AddFormattedText(match.Groups[2].ToString(), TextFormat.Underline);
-                    }
-                    else 
-                    {
-                        match = italicsRegEx.Match(cellText);
-                        if (match.Success)
-                        {
-                            var para = row.Cells[columnIndex].AddParagraph(match.Groups[1].ToString());
-                            para.AddLineBreak();
-                            para.AddFormattedText(match.Groups[2].ToString(), TextFormat.Italic);
-                        }
-                        else
-                            row.Cells[columnIndex].AddParagraph(cellText);
-                    }
-                }
-
-            }
+            //for (int rowIndex = 0; rowIndex < tableObj.data.Count; rowIndex++)
+            //{
+            //    row = table.AddRow();
+            //    for (int columnIndex = 0; columnIndex < tableObj.data.Table.Columns.Count; columnIndex++)
+            //    {
+            //        string cellText = tableObj.data[rowIndex][columnIndex].ToString();
+            //
+            //        var match = hrefRegEx.Match(cellText);
+            //        if (match.Success)
+            //        {
+            //            var paragraph = row.Cells[columnIndex].AddParagraph();
+            //            var hyperlink = paragraph.AddHyperlink(match.Groups[1].ToString().TrimStart('#'), HyperlinkType.Bookmark);
+            //            hyperlink.AddFormattedText(match.Groups[2].ToString(), TextFormat.Underline);
+            //        }
+            //        else
+            //        {
+            //            match = italicsRegEx.Match(cellText);
+            //            if (match.Success)
+            //            {
+            //                var para = row.Cells[columnIndex].AddParagraph(match.Groups[1].ToString());
+            //                para.AddLineBreak();
+            //                para.AddFormattedText(match.Groups[2].ToString(), TextFormat.Italic);
+            //            }
+            //            else
+            //                row.Cells[columnIndex].AddParagraph(cellText);
+            //        }
+            //    }
+            //
+            //}
             section.AddParagraph();
         }
 

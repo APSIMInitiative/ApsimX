@@ -198,6 +198,7 @@
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
+    <Compile Include="Commands\CreateModelDescriptionDoc.cs" />
     <Compile Include="Commands\DeleteModelCommand.cs" />
     <Compile Include="Commands\ExportNodeCommand.cs" />
     <Compile Include="Commands\IExplorerPresenter.cs" />
@@ -208,7 +209,6 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
-    <Compile Include="Commands\CreateModelDescription.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellChangedArgs.cs" />

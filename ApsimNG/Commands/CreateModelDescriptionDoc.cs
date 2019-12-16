@@ -21,7 +21,7 @@ namespace UserInterface.Commands
     /// <summary>
     /// This command exports the specified node and all child nodes as HTML.
     /// </summary>
-    public class WriteDebugDoc : ICommand
+    public class CreateModelDescriptionDoc : ICommand
     {
         /// <summary>The maximum length of a description.</summary>
         private const int maxDescriptionLength = 60;
@@ -32,6 +32,9 @@ namespace UserInterface.Commands
         /// <summary>The main form.</summary>
         private ExplorerPresenter explorerPresenter;
 
+        /// <summary>The model to document.</summary>
+        private IModel modelToDocument;
+
         /// <summary>A list of types to document.</summary>
         private List<Type> typesToDocument = new List<Type>();
 
@@ -41,14 +44,21 @@ namespace UserInterface.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportNodeCommand"/> class.
         /// </summary>
-        /// <param name="explorerPresenter">The explorer presenter</param>
-        /// <param name="model">The model to document</param>
-        public WriteDebugDoc(ExplorerPresenter explorerPresenter, IModel model)
+        /// <param name="explorerPresenter">The explorer presenter.</param>
+        /// <param name="model">The model to document.</param>
+        public CreateModelDescriptionDoc(ExplorerPresenter explorerPresenter, IModel model)
         {
             this.explorerPresenter = explorerPresenter;
-            typesToDocument.Add(model.GetType());
-            namespaceToDocument = model.GetType().Namespace;
+            this.modelToDocument = model;
+
+            typesToDocument.Add(modelToDocument.GetType());
+            namespaceToDocument = modelToDocument.GetType().Namespace;
+
+            FileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".description.pdf");
         }
+
+        /// <summary>The name of the file written.</summary>
+        public string FileNameWritten { get; }
 
         /// <summary>
         /// Perform the command
@@ -59,13 +69,10 @@ namespace UserInterface.Commands
             var tags = new List<AutoDocumentation.ITag>();
             for (int i = 0; i < typesToDocument.Count; i++)
                 tags.AddRange(DocumentType(typesToDocument[i]));
-            
-            // Work out what file name to write.
-            var fileName = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".description.pdf");
 
             // Convert the list of models into a list of tags.
             var pdfWriter = new PDFWriter(explorerPresenter, portraitOrientation:false);
-            pdfWriter.CreatePDF(tags, fileName);
+            pdfWriter.CreatePDF(tags, FileNameWritten);
         }
 
         /// <summary>Document the specified model.</summary>
@@ -75,6 +82,8 @@ namespace UserInterface.Commands
             var tags = new List<AutoDocumentation.ITag>();
 
             tags.Add(new AutoDocumentation.Heading(type.Name, 1));
+
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(type), modelToDocument, tags, 1, 0,false);
 
             var outputs = GetOutputs(type);
             if (outputs != null)
@@ -183,6 +192,11 @@ namespace UserInterface.Commands
             if (type.IsValueType && type.Namespace.StartsWith("System"))
                 typeName = typeName.ToLower();
 
+            if (isList)
+                typeName += "List<" + typeName + ">";
+            else if (isArray)
+                typeName += "[]";
+
             if (type.IsClass && type.Namespace.StartsWith(namespaceToDocument))
             {
                 if (!typesToDocument.Contains(type))
@@ -190,12 +204,7 @@ namespace UserInterface.Commands
                 typeName = string.Format("<a href=\"#{0}\">{1}</a>", type.Name, typeName);
             }
 
-            if (isList)
-                return "List<" + typeName + ">";
-            else if (isArray)
-                return typeName + "[]";
-            else
-                return typeName;
+            return typeName;
         }
 
         /// <summary>Return a datatable of links for the specified type.</summary>
@@ -256,24 +265,6 @@ namespace UserInterface.Commands
                 return null;
         }
 
-        /// <summary>
-        /// Locate and return the event backing field for the specified event. Returns
-        /// null if not found.
-        /// </summary>
-        /// <param name="eventName">The event namer to find an event declaration for</param>
-        /// <param name="publisherModel">The model containing the event.</param>
-        /// <returns>The event field declaration</returns>
-        private static FieldInfo FindEventField(string eventName, Type t)
-        {
-            FieldInfo eventAsField = t.GetField(eventName, BindingFlags.Instance | BindingFlags.NonPublic);
-            while (eventAsField == null && t.BaseType != typeof(object))
-            {
-                t = t.BaseType;
-                eventAsField = t.GetField(eventName, BindingFlags.Instance | BindingFlags.NonPublic);
-            }
-            return eventAsField;
-        }
-
         /// <summary>Return a datatable of methods for the specified type.</summary>
         /// <param name="type">The type to document.</param>
         private DataTable GetMethods(Type type)
@@ -299,7 +290,7 @@ namespace UserInterface.Commands
                     string description = AutoDocumentation.GetSummary(method);
                     if (description != null)
                         description = "<i>" + description + "</i>"; // italics
-                    var st = string.Format("{0} {1}({2})\r\n{3}",
+                    var st = string.Format("<p>{0} {1}({2})</p>{3}",
                                            GetTypeName(method.ReturnType), 
                                            method.Name, 
                                            parameters, 
@@ -319,9 +310,6 @@ namespace UserInterface.Commands
                 return null;
         }
 
-
-
-
         /// <summary>
         /// Undo the command
         /// </summary>
@@ -329,44 +317,6 @@ namespace UserInterface.Commands
         {
 
         }
-        
-
-        public class ModelDoc
-        {
-            public string Name;
-            public List<Output> Outputs = new List<Output>();
-            public List<Link> Links = new List<Link>();
-            public List<Event> Events = new List<Event>();
-            public class Output
-            {
-                public string Name;
-                public string TypeName;
-                public string Units;
-                public string Description;
-                public bool IsWritable;
-                public bool IsField;
-            }
-
-            public class Link
-            {
-                public string Name;
-                public string TypeName;
-                public string Units;
-                public string Description;
-                public string LinkedModelName;
-                public bool IsOptional;
-            }
-
-            public class Event
-            {
-                public string Name;
-                public string TypeName;
-                [XmlElement("SubscriberName")]
-                public List<string> SubscriberNames = new List<string>();
-            }
-
-        }
-
     }
 }
 

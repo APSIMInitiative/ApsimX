@@ -797,9 +797,8 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Create simulation documentation",
-                     FollowsSeparator = true,
-                     AppliesTo = new[] { typeof(Simulations) })]
+        [ContextMenu(MenuName = "Create documentation",
+                     FollowsSeparator = true)]
         public void CreateDocumentation(object sender, EventArgs e)
         {
             try
@@ -812,46 +811,32 @@ namespace UserInterface.Presenters
                         explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                         explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                        try
+                        ICommand command;
+                        string fileNameWritten;
+                        var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+
+                        if (modelToDocument is Simulations)
                         {
-                            ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
-                            this.explorerPresenter.CommandHistory.Add(command, true);
-                            explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", Simulation.MessageType.Information);
-                            Process.Start(command.FileNameWritten);
+                            command = new ExportNodeCommand(explorerPresenter);
+                            fileNameWritten = (command as ExportNodeCommand).FileNameWritten;
                         }
-                        catch (Exception err)
+                        else
                         {
-                            explorerPresenter.MainPresenter.ShowError(err);
+                            command = new CreateModelDescriptionDoc(explorerPresenter, modelToDocument);
+                            fileNameWritten = (command as CreateModelDescriptionDoc).FileNameWritten;
                         }
-                        finally
-                        {
-                            explorerPresenter.MainPresenter.ShowWaitCursor(false);
-                        }
+
+                        explorerPresenter.CommandHistory.Add(command, true);
+                        explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
+
+                        // Open the document.
+                        Process.Start(fileNameWritten);
                     }
                 }
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Event handler for a write debug document
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Create model description")]
-        public void CreateModelDescription(object sender, EventArgs e)
-        {
-            try
-            {
-                var model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
-                WriteDebugDoc writeDocument = new WriteDebugDoc(explorerPresenter, model);
-                writeDocument.Do(null);
-            }
-            catch (Exception err)
-            {
+                explorerPresenter.MainPresenter.ShowWaitCursor(false);
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }

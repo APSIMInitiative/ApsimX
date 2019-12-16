@@ -127,6 +127,15 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Get the summary of a member (field, property)
+        /// </summary>
+        /// <param name="t">The type to get the summary for.</param>
+        public static string GetSummary(Type t)
+        {
+            return GetSummary(t.FullName, 'T');
+        }
+
+        /// <summary>
         /// Get the summary of a member (class, field, property)
         /// </summary>
         /// <param name="path">The path to the member.</param>
