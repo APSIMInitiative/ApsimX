@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 70,
+  "Version": 71,
   "Name": "Simulations",
   "Children": [
     {
@@ -1401,7 +1401,6 @@
           "Children": [
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[SoilWaterScale]",
               "Name": "TrueValue",
               "Children": [
                 {
@@ -1431,6 +1430,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[SoilWaterScale]"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1439,7 +1443,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[SoilWaterScale]",
               "Name": "FalseValue",
               "Children": [
                 {
@@ -1469,6 +1472,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[SoilWaterScale]"
                 }
               ],
               "IncludeInDocumentation": true,

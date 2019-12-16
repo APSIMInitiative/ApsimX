@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 70,
+  "Version": 71,
   "Name": "Simulations",
   "Children": [
     {
@@ -202,7 +202,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[FodderBeet].Leaf.Fw",
                           "Name": "StressFactor",
                           "Children": [
                             {
@@ -220,6 +219,11 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[FodderBeet].Leaf.Fw"
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -343,7 +347,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
                       "Name": "PhotoPeriodResponse",
                       "Children": [
                         {
@@ -361,6 +364,11 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "XValue",
+                          "VariableName": "[Phenology].Photoperiod.Value()"
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -423,7 +431,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Photoperiod.Value()",
                   "Name": "Progression",
                   "Children": [
                     {
@@ -441,6 +448,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].Photoperiod.Value()"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -587,7 +599,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Structure].LeafTipsAppeared",
               "Name": "HeightModel",
               "Children": [
                 {
@@ -614,6 +625,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Structure].LeafTipsAppeared"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -676,7 +692,6 @@
               "Children": [
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[FodderBeet].Structure.LeafTipsAppeared",
                   "Name": "Phyllochron",
                   "Children": [
                     {
@@ -696,6 +711,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[FodderBeet].Structure.LeafTipsAppeared"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1030,7 +1050,6 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "XProperty": "[Structure].LeafTipsAppeared",
                                   "Name": "PartitionFraction",
                                   "Children": [
                                     {
@@ -1063,6 +1082,11 @@
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "Name": "XValue",
+                                      "VariableName": "[Structure].LeafTipsAppeared"
                                     }
                                   ],
                                   "IncludeInDocumentation": true,
@@ -1461,7 +1485,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "FW",
                   "Children": [
                     {
@@ -1481,6 +1504,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1537,7 +1565,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fn",
                   "Name": "FN",
                   "Children": [
                     {
@@ -1624,6 +1651,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fn"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1661,7 +1693,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[FodderBeet].Leaf.Fw",
                   "Name": "WaterStress",
                   "Children": [
                     {
@@ -1679,6 +1710,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[FodderBeet].Leaf.Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1707,7 +1743,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Structure].LeafTipsAppeared",
                   "Name": "MaxAreaPlateau",
                   "Children": [
                     {
@@ -1746,6 +1781,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Structure].LeafTipsAppeared"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1768,7 +1808,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].LeafTipsAppeared",
                       "Name": "AgeFactor",
                       "Children": [
                         {
@@ -1798,6 +1837,11 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "XValue",
+                          "VariableName": "[Structure].LeafTipsAppeared"
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -1820,7 +1864,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Structure].LeafTipsAppeared",
                   "Name": "GrowthDuration",
                   "Children": [
                     {
@@ -1926,6 +1969,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Structure].LeafTipsAppeared"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1938,7 +1986,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
                       "Name": "PhotoperiodMultiplier",
                       "Children": [
                         {
@@ -1960,6 +2007,11 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "XValue",
+                          "VariableName": "[Phenology].Photoperiod.Value()"
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -1977,7 +2029,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].LeafTipsAppeared",
                       "Name": "LagDurationBase",
                       "Children": [
                         {
@@ -1997,6 +2048,11 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "XValue",
+                          "VariableName": "[Structure].LeafTipsAppeared"
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -2014,7 +2070,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
                       "Name": "PhotoperiodMultiplier",
                       "Children": [
                         {
@@ -2036,6 +2091,11 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "XValue",
+                          "VariableName": "[Phenology].Photoperiod.Value()"
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -2119,7 +2179,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[FodderBeet].Leaf.Fw",
                   "Name": "ExpansionStress",
                   "Children": [
                     {
@@ -2137,6 +2196,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[FodderBeet].Leaf.Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -2235,7 +2299,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].CohortCurrentRankCoverAbove",
                   "Name": "ShadeInducedSenescenceRate",
                   "Children": [
                     {
@@ -2257,6 +2320,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].CohortCurrentRankCoverAbove"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -2333,7 +2401,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[FodderBeet].Leaf.Fw",
                           "Name": "StressFactor",
                           "Children": [
                             {
@@ -2351,6 +2418,11 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[FodderBeet].Leaf.Fw"
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -2397,7 +2469,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[FodderBeet].Leaf.Fw",
                           "Name": "StressFactor",
                           "Children": [
                             {
@@ -2415,6 +2486,11 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[FodderBeet].Leaf.Fw"
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -3198,7 +3274,6 @@
           "Children": [
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LengthDensity",
               "Name": "KLModifier",
               "Children": [
                 {
@@ -3216,6 +3291,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].LengthDensity"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3304,7 +3384,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Leaf].FractionDied",
               "Name": "SenescenceRate",
               "Children": [
                 {
@@ -3322,6 +3401,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Leaf].FractionDied"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3407,7 +3491,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].RWC",
               "Name": "NUptakeSWFactor",
               "Children": [
                 {
@@ -3425,6 +3508,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].RWC"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3453,7 +3541,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].Depth",
               "Name": "MaxDailyNUptake",
               "Children": [
                 {
@@ -3482,6 +3569,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].Depth"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3542,7 +3634,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Root].Depth",
                           "Name": "PartitionFraction",
                           "Children": [
                             {
@@ -3571,6 +3662,11 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[Root].Depth"
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -3843,7 +3939,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[Leaf].CoverGreen",
           "Name": "MortalityRate",
           "Children": [
             {
@@ -3861,6 +3956,11 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "Name": "XValue",
+              "VariableName": "[Leaf].CoverGreen"
             }
           ],
           "IncludeInDocumentation": true,

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 70,
+  "Version": 71,
   "Name": "Simulations",
   "Children": [
     {
@@ -1163,7 +1163,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Stover].Fw",
                   "Name": "WaterStressFactor",
                   "Children": [
                     {
@@ -1185,6 +1184,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Stover].Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1445,7 +1449,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Phenology].Stage",
               "Name": "Tallness",
               "Children": [
                 {
@@ -1465,6 +1468,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Phenology].Stage"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2396,7 +2404,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LayerMidPointDepth",
               "Name": "KLModifier",
               "Children": [
                 {
@@ -2479,6 +2486,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].LayerMidPointDepth"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2754,7 +2766,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LengthDensity",
               "Name": "KNO3",
               "Children": [
                 {
@@ -2772,6 +2783,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].LengthDensity"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2780,7 +2796,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LengthDensity",
               "Name": "KNH4",
               "Children": [
                 {
@@ -2798,6 +2813,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].LengthDensity"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2806,7 +2826,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].RWC",
               "Name": "NUptakeSWFactor",
               "Children": [
                 {
@@ -2824,6 +2843,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].RWC"
                 }
               ],
               "IncludeInDocumentation": true,

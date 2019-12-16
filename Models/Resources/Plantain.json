@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 70,
+  "Version": 71,
   "Name": "Simulations",
   "Children": [
     {
@@ -159,7 +159,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Photoperiod.Value()",
                   "Name": "Progression",
                   "Children": [
                     {
@@ -181,6 +180,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].Photoperiod.Value()"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -219,7 +223,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Photoperiod.Value()",
                   "Name": "Progression",
                   "Children": [
                     {
@@ -241,6 +244,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].Photoperiod.Value()"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -452,7 +460,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fn",
                   "Name": "FN",
                   "Children": [
                     {
@@ -474,6 +481,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fn"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -516,7 +528,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "FW",
                   "Children": [
                     {
@@ -538,6 +549,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -546,7 +562,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Photosynthesis.VPD",
                   "Name": "FVPD",
                   "Children": [
                     {
@@ -566,6 +581,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Photosynthesis.VPD"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -746,7 +766,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Plantain].AboveGround.Wt",
               "Name": "Tallness",
               "Children": [
                 {
@@ -775,6 +794,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Plantain].AboveGround.Wt"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -806,7 +830,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Stage",
                   "Name": "StageFactor",
                   "Children": [
                     {
@@ -826,6 +849,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].Stage"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -834,7 +862,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].CoverTotal",
                   "Name": "CoverFactor",
                   "Children": [
                     {
@@ -860,6 +887,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].CoverTotal"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -902,7 +934,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "SoilMoistureFactor",
                   "Children": [
                     {
@@ -922,6 +953,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -958,7 +994,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "SoilMoistureFactor",
                   "Children": [
                     {
@@ -978,6 +1013,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1681,7 +1721,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Stage",
                   "Name": "StageFactor",
                   "Children": [
                     {
@@ -1707,6 +1746,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].Stage"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1749,7 +1793,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "SoilMoistureFactor",
                   "Children": [
                     {
@@ -1769,6 +1812,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1805,7 +1853,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "SoilMoistureFactor",
                   "Children": [
                     {
@@ -1827,6 +1874,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -2509,7 +2561,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Stage",
                   "Name": "StageFactor",
                   "Children": [
                     {
@@ -2533,6 +2584,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].Stage"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -2571,7 +2627,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "SoilMoistureFactor",
                   "Children": [
                     {
@@ -2591,6 +2646,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -2627,7 +2687,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "SoilMoistureFactor",
                   "Children": [
                     {
@@ -2647,6 +2706,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fw"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -3369,7 +3433,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].FW",
                   "Name": "SoilMoistureFactor",
                   "Children": [
                     {
@@ -3389,6 +3452,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].FW"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -4211,7 +4279,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].FW",
                   "Name": "SoilMoistureFactor",
                   "Children": [
                     {
@@ -4231,6 +4298,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].FW"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -4284,7 +4356,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LengthDensity",
               "Name": "KLModifier",
               "Children": [
                 {
@@ -4321,6 +4392,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].LengthDensity"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -4329,7 +4405,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LengthDensity",
               "Name": "KNH4",
               "Children": [
                 {
@@ -4347,6 +4422,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].LengthDensity"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -4355,7 +4435,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LengthDensity",
               "Name": "KNO3",
               "Children": [
                 {
@@ -4373,6 +4452,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].LengthDensity"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -4391,7 +4475,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].RWC",
               "Name": "NUptakeSWFactor",
               "Children": [
                 {
@@ -4411,6 +4494,11 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].RWC"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -5125,7 +5213,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Phenology].Photoperiod.Value()",
                           "Name": "PhotoperiodEffect",
                           "Children": [
                             {
@@ -5151,6 +5238,11 @@
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[Phenology].Photoperiod.Value()"
                             }
                           ],
                           "IncludeInDocumentation": true,
@@ -5277,7 +5369,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
                       "Name": "PhotoperiodEffect",
                       "Children": [
                         {
@@ -5303,6 +5394,11 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "XValue",
+                          "VariableName": "[Phenology].Photoperiod.Value()"
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -5406,7 +5502,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
                       "Name": "PhotoperiodEffect",
                       "Children": [
                         {
@@ -5432,6 +5527,11 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "XValue",
+                          "VariableName": "[Phenology].Photoperiod.Value()"
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -5535,7 +5635,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[PerPlantBelowGroundWt].Value()",
                       "Name": "BiomassFactor",
                       "Children": [
                         {
@@ -5563,6 +5662,11 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "XValue",
+                          "VariableName": "[PerPlantBelowGroundWt].Value()"
                         }
                       ],
                       "IncludeInDocumentation": true,

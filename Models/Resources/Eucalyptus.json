@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 70,
+  "Version": 71,
   "Name": "Simulations",
   "Children": [
     {
@@ -1006,7 +1006,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Photosynthesis.VPD",
                   "Name": "FVPD",
                   "Children": [
                     {
@@ -1093,6 +1092,11 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Photosynthesis.VPD"
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1101,7 +1105,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fn",
                   "Name": "FN",
                   "Children": [
                     {
@@ -1188,6 +1191,11 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fn"
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1196,7 +1204,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "FW",
                   "Children": [
                     {
@@ -1283,6 +1290,11 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Leaf].Fw"
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1348,7 +1360,6 @@
               "Children": [
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Eucalyptus].Age.Value()",
                   "Name": "SpecificLeafAreaPot",
                   "Children": [
                     {
@@ -1381,6 +1392,11 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Eucalyptus].Age.Value()"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1389,7 +1405,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[IWeather].CO2",
                   "Name": "CO2Modifier",
                   "Children": [
                     {
@@ -1416,6 +1431,11 @@
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[IWeather].CO2"
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1429,7 +1449,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Eucalyptus].Age.Value()",
               "Name": "LeafResidenceTime",
               "Children": [
                 {
@@ -1462,6 +1481,11 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Eucalyptus].Age.Value()"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -1589,7 +1613,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Eucalyptus].IndividualTreeLiveWt.Value()",
                           "Name": "PartitionFraction",
                           "Children": [
                             {
@@ -1609,6 +1632,11 @@
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()"
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -1996,7 +2024,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Eucalyptus].IndividualTreeLiveWt.Value()",
                           "Name": "PartitionFraction",
                           "Children": [
                             {
@@ -2016,6 +2043,11 @@
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()"
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -2595,7 +2627,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Eucalyptus].IndividualTreeLiveWt.Value()",
                           "Name": "PartitionFraction",
                           "Children": [
                             {
@@ -2615,6 +2646,11 @@
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()"
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -3071,7 +3107,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Eucalyptus].IndividualTreeLiveWt.Value()",
                           "Name": "PartitionFraction",
                           "Children": [
                             {
@@ -3091,6 +3126,11 @@
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()"
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -3453,7 +3493,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].RWC",
               "Name": "NUptakeSWFactor",
               "Children": [
                 {
@@ -3471,6 +3510,11 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "XValue",
+                  "VariableName": "[Root].RWC"
                 }
               ],
               "IncludeInDocumentation": false,
