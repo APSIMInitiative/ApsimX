@@ -232,9 +232,24 @@ namespace Models.Core.ApsimFile
             return null;
         }
 
-        /// <summary>
-        /// Rename a child property if it exists.
-        /// </summary>
+        /// <summary>Return all sibling models.</summary>
+        /// <param name="model">The model whose siblings will be returned.</param>
+        public static JObject[] Siblings(JObject model)
+        {
+            JObject parent = Parent(model) as JObject;
+            return Children(parent).Where(c => c != model).ToArray();
+        }
+
+        /// <summary>Find a sibling with the specified name.</summary>
+        /// <param name="model"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static JObject Sibling(JObject model, string name)
+        {
+            return Siblings(model).FirstOrDefault(s => s["Name"]?.ToString() == name);
+        }
+
+        /// <summary>Rename a child property if it exists.</summary>
         /// <param name="modelToken">The APSIM model token.</param>
         /// <param name="propertyName">The name of the property to rename.</param>
         /// <param name="newPropertyName">The new name of the property.</param>
@@ -250,6 +265,22 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Renames a model. If a sibling model already exists with the same name,
+        /// will try appending numbers to the name.
+        /// </summary>
+        /// <param name="model">The model to be renamed.</param>
+        /// <param name="name">The new name for the model.</param>
+        public static void RenameModel(JObject model, string name)
+        {
+            model["Name"] = name;
+            for (int i = 0; i < 1000 && Sibling(model, name) != null; i++)
+            {
+                name = $"{name}{i}";
+                model["Name"] = name;
+            }
+        }
+
+        /// <summary>
         /// Renames a child node if it exists.
         /// </summary>
         /// <param name="node">Parent node.</param>
@@ -258,8 +289,7 @@ namespace Models.Core.ApsimFile
         public static void RenameChildModel(JObject node, string childName, string newName)
         {
             JObject child = ChildWithName(node, childName);
-            if (child != null)
-                child["Name"] = newName;
+            RenameModel(child, newName);
         }
 
         /// <summary>

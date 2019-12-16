@@ -130,6 +130,8 @@
                 {
                     IModel child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
                     child.Name = modelName;
+                    if (child is ModelCollectionFromResource)
+                        (child as ModelCollectionFromResource).ResourceName = selectedModelType.ModelName;
                     explorerPresenter.Add(child, Apsim.FullPath(this.model));
                 }
                 finally

@@ -364,6 +364,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>The _open</summary>
         [NonSerialized]
         private bool _open; //whether or not the database is open
+        /// <summary>path to the database</summary>
+        [NonSerialized]
+        private string dbPath; 
 
         // Windows LoadLibrary entry point
         [DllImport("kernel32.dll")]
@@ -424,6 +427,7 @@ namespace APSIM.Shared.Utilities
             }
 
             _open = true;
+            dbPath = path;
             IsReadOnly = readOnly;
             IsInMemory = path.ToLower().Contains(":memory:");
             sqlite3_busy_timeout(_db, 40000);
@@ -1103,7 +1107,22 @@ namespace APSIM.Shared.Utilities
         public void DropTable(string tableName)
         {
             ExecuteNonQuery(string.Format("DROP TABLE [{0}]", tableName));
-            ExecuteNonQuery("VACUUM");
+        }
+
+        /// <summary>
+        /// "Vacuum" the database, to defragment or clean up unused space
+        /// </summary>
+        public void Vacuum()
+        {
+            if (_open)
+            {
+                ExecuteNonQuery("VACUUM");
+                // Close to force the vacuuming to take immediate effect
+                // Then re-open to get back to where we were
+                CloseDatabase();
+                OpenDatabase(dbPath, IsReadOnly);
+            }
+
         }
 
         /// <summary>

@@ -113,7 +113,7 @@
                         // Add in an initial water and initial conditions models.
                         initWater = new JObject();
                         initWater["$type"] = "Models.Soils.InitialWater, Models";
-                        initWater["Name"] = "Initial water";
+                        JsonUtilities.RenameModel(initWater as JObject, "Initial water");
                         initWater["PercentMethod"] = "FilledFromTop";
                         initWater["FractionFull"] = 1;
                         initWater["DepthWetSoil"] = "NaN";
@@ -121,7 +121,7 @@
 
                         sample = new JObject();
                         sample["$type"] = "Models.Soils.Sample, Models";
-                        sample["Name"] = "Initial conditions";
+                        JsonUtilities.RenameModel(sample as JObject, "Initial conditions");
                         sample["Thickness"] = new JArray(new double[] { 1800 });
                         sample["NO3N"] = new JArray(new double[] { 3 });
                         sample["NH4"] = new JArray(new double[] { 1 });
@@ -504,7 +504,7 @@
                                 // Create a site factor 
                                 siteFactor = new JObject();
                                 siteFactor["$type"] = "Models.Factorial.Factor, Models";
-                                siteFactor["Name"] = "Site";
+                                JsonUtilities.RenameModel(siteFactor, "Site");
                                 JArray siteFactorChildren = new JArray();
                                 siteFactor["Children"] = siteFactorChildren;
 
@@ -808,7 +808,7 @@
 
             JObject microClimateModel = new JObject();
             microClimateModel["$type"] = "Models.MicroClimate, Models";
-            microClimateModel["Name"] = "MicroClimate";
+            JsonUtilities.RenameModel(microClimateModel, "MicroClimate");
             microClimateModel["a_interception"] = "0.0";
             microClimateModel["b_interception"] = "1.0";
             microClimateModel["c_interception"] = "0.0";
@@ -971,7 +971,7 @@
             foreach (var water in JsonUtilities.ChildrenRecursively(root, "Water"))
             {
                 water["$type"] = "Models.Soils.Physical, Models";
-                water["Name"] = "Physical";
+                JsonUtilities.RenameModel(water, "Physical");
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
@@ -1018,7 +1018,7 @@
             foreach (var organic in JsonUtilities.ChildrenRecursively(root, "SoilOrganicMatter"))
             {
                 organic["$type"] = "Models.Soils.Organic, Models";
-                organic["Name"] = "Organic";
+                JsonUtilities.RenameModel(organic, "Organic");
                 organic["FOMCNRatio"] = organic["RootCN"];
                 organic["FOM"] = organic["RootWt"];
                 organic["SoilCNRatio"] = organic["SoilCN"];
@@ -1124,8 +1124,7 @@
                 var physical = JsonUtilities.ChildWithName(soil as JObject, "Physical");
 
                 chemical["$type"] = "Models.Soils.Chemical, Models";
-                chemical["Name"] = "Chemical";
-
+                JsonUtilities.RenameModel(chemical, "Chemical");
                 if (physical != null)
                 {
                     // Move particle size numbers from chemical to physical and make sure layers are mapped.
@@ -1230,7 +1229,7 @@
                 {
                     var permutationsNode = new JObject();
                     permutationsNode["$type"] = "Models.Factorial.Permutation, Models";
-                    permutationsNode["Name"] = "Permutation";
+                    JsonUtilities.RenameModel(permutationsNode, "Permutation");
                     permutationsNode["Children"] = factors["Children"];
                     var children = new JArray(permutationsNode);
                     factors["Children"] = children;
@@ -1265,10 +1264,9 @@
                 foreach (JObject pastureSpecies in JsonUtilities.Children(sward))
                 {
                     if (pastureSpecies["Name"].ToString().Equals("Ryegrass", StringComparison.InvariantCultureIgnoreCase))
-                        pastureSpecies["Name"] = "AGPRyegrass";
+                        JsonUtilities.RenameModel(pastureSpecies, "AGPRyegrass");
                     if (pastureSpecies["Name"].ToString().Equals("WhiteClover", StringComparison.InvariantCultureIgnoreCase))
-                        pastureSpecies["Name"] = "AGPWhiteClover";
-
+                        JsonUtilities.RenameModel(pastureSpecies, "AGPWhiteClover");
                     pastureSpecies["ResourceName"] = pastureSpecies["Name"];
 
                     var swardParentChildren = JsonUtilities.Parent(sward)["Children"] as JArray;
@@ -1281,10 +1279,10 @@
             foreach (JObject pastureSpecies in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
             {
                 if (pastureSpecies["Name"].ToString().Equals("Ryegrass", StringComparison.InvariantCultureIgnoreCase))
-                    pastureSpecies["Name"] = "AGPRyegrass";
+                    JsonUtilities.RenameModel(pastureSpecies, "AGPRyegrass");
                 if (pastureSpecies["Name"].ToString().Equals("WhiteClover", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    pastureSpecies["Name"] = "AGPWhiteClover";
+                    JsonUtilities.RenameModel(pastureSpecies, "AGPWhiteClover");
                     foundAgPastureWhiteClover = true;
                 }
 
@@ -1296,9 +1294,9 @@
                 if (soilCrop["Name"].ToString().Equals("SwardSoil", StringComparison.InvariantCultureIgnoreCase))
                     soilCrop.Remove();
                 if (soilCrop["Name"].ToString().Equals("RyegrassSoil", StringComparison.InvariantCultureIgnoreCase))
-                    soilCrop["Name"] = "AGPRyegrassSoil";
+                    JsonUtilities.RenameModel(soilCrop, "AGPRyegrassSoil");
                 if (foundAgPastureWhiteClover && soilCrop["Name"].ToString().Equals("WhiteCloverSoil", StringComparison.InvariantCultureIgnoreCase))
-                    soilCrop["Name"] = "AGPWhiteCloverSoil";
+                    JsonUtilities.RenameModel(soilCrop, "AGPWhiteCloverSoil");
             }
         }
 

@@ -6,7 +6,7 @@
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# The APSIM Eucalyptus Model\r\n\r\nPhilip J. Smethurst, Neil I. Huth and Rafael V. Valadares\n\r\n\r\n",
+      "Text": "# The APSIM Eucalyptus Model\r\n\r\n\r\n\r\n",
       "Name": "TitlePage",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -180,7 +180,7 @@
           "$type": "Models.Map, Models",
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
-            "Latitude": 30.372875188118041,
+            "Latitude": 30.448673679287559,
             "Longitude": 52.646484375
           },
           "Zoom": 3.0,
@@ -25683,14 +25683,14 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05
                               ],
                               "KL": [
                                 0.07,
@@ -26501,14 +26501,14 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05
                               ],
                               "KL": [
                                 0.07,
@@ -27319,14 +27319,14 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01,
-                                0.01
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05
                               ],
                               "KL": [
                                 0.07,
@@ -28338,14 +28338,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05
                                   ],
                                   "KL": [
                                     0.07,
@@ -29140,7 +29140,7 @@
                             0.025376325771097264,
                             0.015391519611026323
                           ],
-                          "Name": "Organic",
+                          "Name": "High",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -29219,7 +29219,7 @@
                             0.025376325771097264,
                             0.015391519611026323
                           ],
-                          "Name": "Organic",
+                          "Name": "Medium",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -29298,7 +29298,7 @@
                             0.025376325771097264,
                             0.015391519611026323
                           ],
-                          "Name": "Organic",
+                          "Name": "Low",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -29591,14 +29591,14 @@
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01,
-                                    0.01
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05
                                   ],
                                   "KL": [
                                     0.07,
@@ -31480,7 +31480,7 @@
                       "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN",
-                      "DateTimeAxis": true,
+                      "DateTimeAxis": false,
                       "CrossesAtZero": false
                     }
                   ],
