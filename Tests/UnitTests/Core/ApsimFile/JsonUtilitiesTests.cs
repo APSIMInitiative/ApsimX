@@ -246,26 +246,7 @@ namespace UnitTests.Core.ApsimFile
             Assert.AreEqual(constant["$type"].Value<string>(), "Models.Functions.Constant, Models");
             Assert.AreEqual(constant["FixedValue"].Value<string>(), "1");
         }
-
-        /// <summary>
-        /// Ensures theAddVariableReference() method works correctly
-        /// </summary>
-        [Test]
-        public void AddVariableReferenceTests()
-        {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.JsonUtilitiesTestsDescendantsByType.json");
-            JObject rootNode = JObject.Parse(json);
-
-            List<JObject> axes = JsonUtilities.ChildrenRecursively(rootNode, "Models.Graph.Axis");
-
-            JsonUtilities.AddVariableReference(axes[0], "XValue", "[Test].testies");
-
-            var VarRef = JsonUtilities.ChildWithName(axes[0], "XValue");
-            Assert.NotNull(VarRef);
-            Assert.AreEqual(VarRef["$type"].Value<string>(), "Models.Functions.VariableReference, Models");
-            Assert.AreEqual(VarRef["VariableName"].Value<string>(), "[Test].testies");
-        }
-
+        
         /// <summary>
         /// Ensures the Values() method works correctly
         /// </summary>

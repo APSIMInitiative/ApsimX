@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
+    using Models.Functions;
     using Models.PMF;
     using Newtonsoft.Json.Linq;
     using System;
@@ -1393,7 +1394,10 @@
         {
             foreach (JObject linint in JsonUtilities.ChildrenRecursively(root, "LinearInterpolationFunction"))
             {
-                JsonUtilities.AddVariableReference(linint,"XValue", linint["XProperty"].ToString());
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "XValue";
+                varRef.VariableName = linint["XProperty"].ToString();
+                JsonUtilities.AddModel(linint, varRef);
                 linint.Remove("XProperty");
             }
         }
