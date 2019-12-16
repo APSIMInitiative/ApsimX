@@ -1095,8 +1095,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.VPD",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Photosynthesis.VPD"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1194,8 +1198,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fn",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fn"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1293,8 +1301,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1395,8 +1407,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Eucalyptus].Age.Value()",
                       "Name": "XValue",
-                      "VariableName": "[Eucalyptus].Age.Value()"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1434,8 +1450,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[IWeather].CO2",
                       "Name": "XValue",
-                      "VariableName": "[IWeather].CO2"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1484,8 +1504,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Eucalyptus].Age.Value()",
                   "Name": "XValue",
-                  "VariableName": "[Eucalyptus].Age.Value()"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -1635,8 +1659,12 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()",
                               "Name": "XValue",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()"
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -2046,8 +2074,12 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()",
                               "Name": "XValue",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()"
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -2649,8 +2681,12 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()",
                               "Name": "XValue",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()"
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -3129,8 +3165,12 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()",
                               "Name": "XValue",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()"
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -3513,8 +3553,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].RWC",
                   "Name": "XValue",
-                  "VariableName": "[Root].RWC"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,

@@ -264,8 +264,12 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Photoperiod",
                           "Name": "XValue",
-                          "VariableName": "[Phenology].Photoperiod"
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -608,8 +612,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].FNmetabolic",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].FNmetabolic"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -680,8 +688,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -714,8 +726,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.VPD",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Photosynthesis.VPD"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1453,8 +1469,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Live.Wt",
                   "Name": "XValue",
-                  "VariableName": "[Leaf].Live.Wt"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -1510,8 +1530,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
                       "Name": "XValue",
-                      "VariableName": "[Phenology].Stage"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1546,8 +1570,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].LAI",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].LAI"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1614,8 +1642,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1674,8 +1706,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -1889,8 +1925,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -2593,8 +2633,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
                       "Name": "XValue",
-                      "VariableName": "[Phenology].Stage"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -2629,8 +2673,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].LAI",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].LAI"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -2697,8 +2745,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -2759,8 +2811,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -3468,8 +3524,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
                       "Name": "XValue",
-                      "VariableName": "[Phenology].Stage"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -3536,8 +3596,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -3598,8 +3662,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -3667,8 +3735,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -3736,8 +3808,12 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].PhotoperiodVariation",
                           "Name": "XValue",
-                          "VariableName": "[Phenology].PhotoperiodVariation"
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -3820,8 +3896,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -4008,8 +4088,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].Reproductive.FractionComplete",
                   "Name": "XValue",
-                  "VariableName": "[Phenology].Reproductive.FractionComplete"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -4044,8 +4128,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].Reproductive.FractionComplete",
                   "Name": "XValue",
-                  "VariableName": "[Phenology].Reproductive.FractionComplete"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -4080,8 +4168,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].Reproductive.FractionComplete",
                   "Name": "XValue",
-                  "VariableName": "[Phenology].Reproductive.FractionComplete"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -4186,8 +4278,12 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].Photoperiod",
                               "Name": "XValue",
-                              "VariableName": "[Phenology].Photoperiod"
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -4590,8 +4686,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
                       "Name": "XValue",
-                      "VariableName": "[Phenology].Stage"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -4658,8 +4758,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -4718,8 +4822,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -5039,8 +5147,12 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].FN",
                               "Name": "XValue",
-                              "VariableName": "[Leaf].FN"
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -5480,8 +5592,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].FN",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].FN"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -5522,8 +5638,12 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Root].SoilWaterScale",
                           "Name": "XValue",
-                          "VariableName": "[Root].SoilWaterScale"
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": false,
@@ -5677,8 +5797,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -5709,8 +5833,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].SoilWaterScale",
                       "Name": "XValue",
-                      "VariableName": "[Root].SoilWaterScale"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -6555,8 +6683,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -6589,8 +6721,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].SoilWaterScale",
                       "Name": "XValue",
-                      "VariableName": "[Root].SoilWaterScale"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -6668,8 +6804,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -6756,8 +6896,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -7778,8 +7922,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
                       "Name": "XValue",
-                      "VariableName": "[Leaf].Fw"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -7812,8 +7960,12 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Root].SoilWaterScale",
                       "Name": "XValue",
-                      "VariableName": "[Root].SoilWaterScale"
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": false,
@@ -7916,8 +8068,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].LengthDensity",
                   "Name": "XValue",
-                  "VariableName": "[Root].LengthDensity"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -7946,8 +8102,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].LengthDensity",
                   "Name": "XValue",
-                  "VariableName": "[Root].LengthDensity"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -7976,8 +8136,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].LengthDensity",
                   "Name": "XValue",
-                  "VariableName": "[Root].LengthDensity"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -8008,8 +8172,12 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].SoilWaterScale",
                   "Name": "XValue",
-                  "VariableName": "[Root].SoilWaterScale"
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -9035,8 +9203,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Weather].Latitude",
               "Name": "XValue",
-              "VariableName": "[Weather].Latitude"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,

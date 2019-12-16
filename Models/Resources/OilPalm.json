@@ -223,8 +223,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "VariableName": "[OilPalm].Age"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -349,8 +353,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "VariableName": "[OilPalm].Age"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -390,8 +398,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "VariableName": "[OilPalm].Age"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -449,8 +461,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].CarbonStress",
               "Name": "XValue",
-              "VariableName": "[OilPalm].CarbonStress"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -492,8 +508,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "VariableName": "[OilPalm].Age"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -531,8 +551,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "VariableName": "[OilPalm].Age"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -622,8 +646,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "VariableName": "[OilPalm].Age"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -663,8 +691,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
               "Name": "XValue",
-              "VariableName": "[OilPalm].Age"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -702,8 +734,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].CarbonStress",
               "Name": "XValue",
-              "VariableName": "[OilPalm].CarbonStress"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -741,8 +777,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].CarbonStress",
               "Name": "XValue",
-              "VariableName": "[OilPalm].CarbonStress"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -780,8 +820,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Population",
               "Name": "XValue",
-              "VariableName": "[OilPalm].Population"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -819,8 +863,12 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Population",
               "Name": "XValue",
-              "VariableName": "[OilPalm].Population"
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
