@@ -592,6 +592,108 @@
             paragraph.AddSpace(numSpaces);
             paragraph.AddText(text);
         }
-
     }
+
+    public class MyFontResolver : IFontResolver
+    {
+        public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
+        {
+            // Ignore case of font names.
+            var name = familyName.ToLower();
+
+            // Deal with the fonts we know.
+            if (name.StartsWith("courier"))
+                return new FontResolverInfo("Courier#");
+            else
+            {
+                if (isBold)
+                {
+                    if (isItalic)
+                        return new FontResolverInfo("Arial#bi");
+                    return new FontResolverInfo("Arial#b");
+                }
+                if (isItalic)
+                    return new FontResolverInfo("Arial#i");
+                return new FontResolverInfo("Arial#");
+            }
+        }
+
+        /// <summary>
+        /// Return the font data for the fonts.
+        /// </summary>
+        public byte[] GetFont(string faceName)
+        {
+            switch (faceName)
+            {
+                case "Courier#":
+                    return MyFontHelper.Courier;
+
+                case "Arial#":
+                    return MyFontHelper.Arial;
+
+                case "Arial#b":
+                    return MyFontHelper.ArialBold;
+
+                case "Arial#i":
+                    return MyFontHelper.ArialItalic;
+
+                case "Arial#bi":
+                    return MyFontHelper.ArialBoldItalic;
+            }
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Helper class that reads font data from embedded resources.
+    /// </summary>
+    public static class MyFontHelper
+    {
+        public static byte[] Courier
+        {
+            get { return LoadFontData("ApsimNG.Resources.Fonts.cour.ttf"); }
+        }
+
+        // Make sure the fonts have compile type "Embedded Resource". Names are case-sensitive.
+        public static byte[] Arial
+        {
+            get { return LoadFontData("ApsimNG.Resources.Fonts.arial.ttf"); }
+        }
+
+        public static byte[] ArialBold
+        {
+            get { return LoadFontData("ApsimNG.Resources.Fonts.arialbd.ttf"); }
+        }
+
+        public static byte[] ArialItalic
+        {
+            get { return LoadFontData("ApsimNG.Resources.Fonts.ariali.ttf"); }
+        }
+
+        public static byte[] ArialBoldItalic
+        {
+            get { return LoadFontData("ApsimNG.Resources.Fonts.arialbi.ttf"); }
+        }
+
+        /// <summary>
+        /// Returns the specified font from an embedded resource.
+        /// </summary>
+        static byte[] LoadFontData(string name)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            using (Stream stream = assembly.GetManifestResourceStream(name))
+            {
+                if (stream == null)
+                    throw new ArgumentException("No resource with name " + name);
+
+                int count = (int)stream.Length;
+                byte[] data = new byte[count];
+                stream.Read(data, 0, count);
+                return data;
+            }
+        }
+    }
+
+
 }

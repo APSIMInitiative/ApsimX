@@ -39,7 +39,7 @@ public class Script
 				string folderName = Path.Combine(binFolder, @"..\Documentation\PDF");
 				Directory.CreateDirectory(folderName);
 			   
-				ExportNodeCommand command = new ExportNodeCommand(presenter, presenter.CurrentNodePath);
+				var command = new CreateDocCommand(presenter);
 				command.Do(null);
 
 				// Copy the file into the PDF directory.

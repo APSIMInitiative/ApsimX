@@ -21,7 +21,7 @@ namespace UserInterface.Commands
     /// <summary>
     /// This command exports the specified node and all child nodes as HTML.
     /// </summary>
-    public class CreateModelDescriptionDoc : ICommand
+    public class CreateModelDescriptionDocCommand : ICommand
     {
         /// <summary>The maximum length of a description.</summary>
         private const int maxDescriptionLength = 60;
@@ -42,11 +42,11 @@ namespace UserInterface.Commands
         private string namespaceToDocument;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExportNodeCommand"/> class.
+        /// Initializes a new instance of the <see cref="CreateDocCommand"/> class.
         /// </summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
         /// <param name="model">The model to document.</param>
-        public CreateModelDescriptionDoc(ExplorerPresenter explorerPresenter, IModel model)
+        public CreateModelDescriptionDocCommand(ExplorerPresenter explorerPresenter, IModel model)
         {
             this.explorerPresenter = explorerPresenter;
             this.modelToDocument = model;

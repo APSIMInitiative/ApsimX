@@ -817,13 +817,13 @@ namespace UserInterface.Presenters
 
                         if (modelToDocument is Simulations)
                         {
-                            command = new ExportNodeCommand(explorerPresenter);
-                            fileNameWritten = (command as ExportNodeCommand).FileNameWritten;
+                            command = new CreateDocCommand(explorerPresenter);
+                            fileNameWritten = (command as CreateDocCommand).FileNameWritten;
                         }
                         else
                         {
-                            command = new CreateModelDescriptionDoc(explorerPresenter, modelToDocument);
-                            fileNameWritten = (command as CreateModelDescriptionDoc).FileNameWritten;
+                            command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument);
+                            fileNameWritten = (command as CreateModelDescriptionDocCommand).FileNameWritten;
                         }
 
                         explorerPresenter.CommandHistory.Add(command, true);
@@ -836,8 +836,11 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowWaitCursor(false);
                 explorerPresenter.MainPresenter.ShowError(err);
+            }
+            finally 
+            {
+                explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
         }
 
