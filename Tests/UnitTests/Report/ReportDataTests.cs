@@ -40,26 +40,96 @@
             "2017-01-02,2.000,   2, def\r\n");
         }
 
-        /// <summary>Convert an array to a table.</summary>
+        /// <summary>Convert whole arrays to a table with correct headings.</summary>
         [Test]
-        public void ArraysToTable()
+        public void WholeArraysToTable()
         {
             var data = new ReportData()
             {
                 CheckpointName = "Current",
                 SimulationName = "Sim1",
                 TableName = "Report",
-                ColumnNames = new string[] { "Col1", "Col2" },
-                ColumnUnits = new string[] {   "mm",    "g" }
+                ColumnNames = new string[] { "Col", "Zones(1).WaterUptake" },
+                ColumnUnits = new string[] {  "mm",    "g" }
             };
 
-            data.Rows.Add(new List<object>() { new int[] { 1, 2    }, 10 });
-            data.Rows.Add(new List<object>() { new int[] { 3, 4, 5 }, 20 });
+            data.Rows.Add(new List<object>() { new int[] { 1, 2    }, new double[] { 3.0, 4.0 } });
+            data.Rows.Add(new List<object>() { new int[] { 5, 6, 7 }, new double[] { 8.0, 9.0 } });
 
             Assert.AreEqual(Utilities.TableToString(data.ToTable()),
-            "Col1(1),Col1(2),Col2,Col1(3)\r\n" +
-            "      1,      2,  10,       \r\n" +
-            "      3,      4,  20,      5\r\n");
+            "Col(1),Col(2),Zones(1).WaterUptake(1),Zones(1).WaterUptake(2),Col(3)\r\n" +
+            "     1,     2,                  3.000,                  4.000,      \r\n" +
+            "     5,     6,                  8.000,                  9.000,     7\r\n");
+        }
+
+        /// <summary>Convert partial arrays to a table with correct headings.</summary>
+        [Test]
+        public void PartialArraysToTable()
+        {
+            // Setup first report data.
+            var data = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                FolderName = "Folder1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col(1)" },
+                ColumnUnits = new string[] { null }
+            };
+            data.Rows.Add(new List<object>() { new double[] { 1.0, 2.0 } });
+            data.Rows.Add(new List<object>() { new double[] { 5.0, 6.0 } });
+
+            Assert.AreEqual(Utilities.TableToString(data.ToTable()),
+                           "Col(1)\r\n" +
+                           " 1.000\r\n" +
+                           " 5.000\r\n");
+        }
+
+        /// <summary>Convert arrays that are initially null but later have values.</summary>
+        [Test]
+        public void ArraysInitiallyNullToTable()
+        {
+            var data = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Col" },
+                ColumnUnits = new string[] { "mm" }
+            };
+
+            data.Rows.Add(new List<object>() { null });
+            data.Rows.Add(new List<object>() { new int[] { 1, 2, 3 } });
+
+            Assert.AreEqual(Utilities.TableToString(data.ToTable()),
+            "Col(1),Col(2),Col(3)\r\n" +
+            "      ,      ,      \r\n" +
+            "     1,     2,     3\r\n");
+        }
+
+        /// <summary>
+        /// Convert arrays or arrays. This can happen if the user reports Wheat.Root.Zones.WaterUptake
+        /// where Zones is an array of structure and WaterUpdake is a property of those structures.
+        /// </summary>
+        [Test]
+        public void ArraysOfArraysToTable()
+        {
+            var data = new ReportData()
+            {
+                CheckpointName = "Current",
+                SimulationName = "Sim1",
+                TableName = "Report",
+                ColumnNames = new string[] { "Wheat.Root.Zones.WaterUptake" },
+                ColumnUnits = new string[] { null }
+            };
+
+            data.Rows.Add(new List<object>() { new double[][] { new double[] { 1, 2 }, new double[] { 3, 4 } } });
+            data.Rows.Add(new List<object>() { new double[][] { new double[] { 5, 6 }, new double[] { 7, 8 } } });
+
+            Assert.AreEqual(Utilities.TableToString(data.ToTable()),
+            "Wheat.Root.Zones.WaterUptake(1),Col(2),Col(3)\r\n" +
+            "      ,      ,      \r\n" +
+            "     1,     2,     3\r\n");
         }
 
         /// <summary>Convert an array of structures to a table.</summary>

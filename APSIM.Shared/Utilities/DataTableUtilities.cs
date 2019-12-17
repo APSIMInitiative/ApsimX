@@ -773,6 +773,19 @@ namespace APSIM.Shared.Utilities
                 to.Rows.InsertAt(newRow, index + i);
             }
         }
-            
+
+        /// <summary>
+        /// Return true if the specified data column has a DbNull in every row.
+        /// </summary>
+        /// <param name="dataColumn">The column to check.</param>
+        public static bool ColumnIsNull(DataColumn dataColumn)
+        {
+            foreach (DataRow row in dataColumn.Table.Rows)
+                if (!Convert.IsDBNull(row[dataColumn]))
+                    return false;
+            return true;
+        }
+
+
     }
 }
