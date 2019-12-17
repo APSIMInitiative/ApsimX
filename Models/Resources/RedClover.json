@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 71,
+  "Version": 72,
   "Name": "Simulations",
   "Children": [
     {
@@ -1873,8 +1873,8 @@
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.RedClover.Leaf.Photosynthesis.FT.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.RedClover.Leaf.Photosynthesis.FT.XYPairs.Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,

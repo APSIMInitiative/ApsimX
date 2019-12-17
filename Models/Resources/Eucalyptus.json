@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 71,
+  "Version": 72,
   "Name": "Simulations",
   "Children": [
     {
@@ -123,7 +123,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -511,7 +511,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.FCO2.Value()",
+                  "VariableName": "[Leaf].Photosynthesis.FCO2",
                   "Name": "FCO2",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1070,8 +1070,8 @@
                               "TableName": null,
                               "XFieldName": "[XYPairs].X",
                               "YFieldName": "[XYPairs].Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -1173,8 +1173,8 @@
                               "TableName": null,
                               "XFieldName": "[XYPairs].X",
                               "YFieldName": "[XYPairs].Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -1276,8 +1276,8 @@
                               "TableName": null,
                               "XFieldName": "[XYPairs].X",
                               "YFieldName": "[XYPairs].Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -1407,7 +1407,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Eucalyptus].Age.Value()",
+                      "VariableName": "[Eucalyptus].Age",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1504,7 +1504,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Eucalyptus].Age.Value()",
+                  "VariableName": "[Eucalyptus].Age",
                   "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1659,7 +1659,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1735,7 +1735,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].minimumNconc.Value()",
+                      "VariableName": "[Leaf].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -1772,7 +1772,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].MaximumNconc.Value()",
+                      "VariableName": "[Leaf].MaximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2002,7 +2002,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Branch].MinimumNConc.Value()",
+              "VariableName": "[Branch].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -2074,7 +2074,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2136,7 +2136,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Branch].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Branch].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -2177,7 +2177,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Branch].minimumNconc.Value()",
+                      "VariableName": "[Branch].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2208,7 +2208,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Branch].criticalNConc.Value()",
+                          "VariableName": "[Branch].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -2217,7 +2217,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Branch].minimumNconc.Value()",
+                          "VariableName": "[Branch].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -2249,7 +2249,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Branch].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Branch].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2258,7 +2258,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Branch].maximumNconc.Value()",
+                      "VariableName": "[Branch].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2496,7 +2496,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Stem].MinimumNConc.Value()",
+              "VariableName": "[Stem].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -2566,7 +2566,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stem].Ht.Value()",
+                  "VariableName": "[Stem].Ht",
                   "Name": "Height",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -2681,7 +2681,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2743,7 +2743,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Stem].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -2784,7 +2784,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].minimumNconc.Value()",
+                      "VariableName": "[Stem].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2815,7 +2815,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].criticalNConc.Value()",
+                          "VariableName": "[Stem].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -2824,7 +2824,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].minimumNconc.Value()",
+                          "VariableName": "[Stem].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -2856,7 +2856,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Stem].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2865,7 +2865,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].maximumNconc.Value()",
+                      "VariableName": "[Stem].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3093,7 +3093,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Stem].MinimumNConc.Value()",
+              "VariableName": "[Stem].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": false,
@@ -3165,7 +3165,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt.Value()",
+                              "VariableName": "[Eucalyptus].IndividualTreeLiveWt",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3227,7 +3227,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[CoarseRoot].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[CoarseRoot].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3268,7 +3268,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[CoarseRoot].minimumNconc.Value()",
+                      "VariableName": "[CoarseRoot].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3299,7 +3299,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[CoarseRoot].criticalNConc.Value()",
+                          "VariableName": "[CoarseRoot].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3308,7 +3308,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[CoarseRoot].minimumNconc.Value()",
+                          "VariableName": "[CoarseRoot].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3340,7 +3340,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[CoarseRoot].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[CoarseRoot].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3349,7 +3349,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[CoarseRoot].maximumNconc.Value()",
+                      "VariableName": "[CoarseRoot].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3751,7 +3751,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[FineRoot].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[FineRoot].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3792,7 +3792,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[FineRoot].minimumNconc.Value()",
+                      "VariableName": "[FineRoot].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3823,7 +3823,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[FineRoot].criticalNConc.Value()",
+                          "VariableName": "[FineRoot].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3832,7 +3832,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[FineRoot].minimumNconc.Value()",
+                          "VariableName": "[FineRoot].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -3864,7 +3864,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[FineRoot].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[FineRoot].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -3873,7 +3873,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[FineRoot].maximumNconc.Value()",
+                      "VariableName": "[FineRoot].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": false,

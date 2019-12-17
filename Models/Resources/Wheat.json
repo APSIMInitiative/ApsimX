@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 71,
+  "Version": 72,
   "Name": "Simulations",
   "Children": [
     {
@@ -232,7 +232,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Photoperiod.Value()",
+                      "VariableName": "[Phenology].Photoperiod",
                       "Name": "Photoperiod",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -289,7 +289,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Vrn4.Value()",
+                          "VariableName": "[Phenology].Vrn4",
                           "Name": "If_Vrn4",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -298,7 +298,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].VernLag.Value()",
+                          "VariableName": "[Phenology].VernLag",
                           "Name": "IsLessThanLag",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -317,7 +317,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].DailyVernalisation.Value()",
+                          "VariableName": "[Phenology].DailyVernalisation",
                           "Name": "elseReturn_Vernalisation",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -345,7 +345,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].VernLag.Value()",
+                  "VariableName": "[Phenology].VernLag",
                   "Name": "MaxExpression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -365,7 +365,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DailyVernalisation.Value()",
+                      "VariableName": "[Phenology].DailyVernalisation",
                       "Name": "VernalisationConditioning",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -523,7 +523,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -543,7 +543,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -552,7 +552,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Structure].HaunStageTerminalSpikelet.Value()",
+                  "VariableName": "[Structure].HaunStageTerminalSpikelet",
                   "Name": "CompletionNodeNumber",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -581,7 +581,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -601,7 +601,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -614,7 +614,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron.BasePhyllochron.Value()",
+                      "VariableName": "[Structure].Phyllochron.BasePhyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -627,7 +627,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].EarlyReproductiveLongDayBase.Value()",
+                          "VariableName": "[Phenology].EarlyReproductiveLongDayBase",
                           "Name": "LongDayBase",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -660,7 +660,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Photoperiod.Value()",
+                                  "VariableName": "[Phenology].Photoperiod",
                                   "Name": "XValue",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -674,7 +674,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EarlyReproductivePpSensitivity.Value()",
+                              "VariableName": "[Phenology].EarlyReproductivePpSensitivity",
                               "Name": "PpSensitivity",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -719,7 +719,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -749,7 +749,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -779,7 +779,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -809,7 +809,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -829,7 +829,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1019,7 +1019,7 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Phenology].ThermalTime.Value()",
+              "VariableName": "[Phenology].ThermalTime",
               "Name": "ThermalTime",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1117,7 +1117,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Photoperiod.Value()",
+                      "VariableName": "[Phenology].Photoperiod",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1408,7 +1408,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].MeanTillerGrowthRate.Value()",
+                              "VariableName": "[Structure].MeanTillerGrowthRate",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1422,7 +1422,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime.Value()",
+                          "VariableName": "[Phenology].ThermalTime",
                           "Name": "ThermalTime",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1557,7 +1557,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1591,7 +1591,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Structure].Phyllochron.Value()",
+                  "VariableName": "[Structure].Phyllochron",
                   "Name": "Phyllochron",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1614,7 +1614,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].MinimumLeafNumber.Value()",
+                      "VariableName": "[Phenology].MinimumLeafNumber",
                       "Name": "MinLeafNumber",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1627,7 +1627,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].VrnSensitivity.Value()",
+                          "VariableName": "[Phenology].VrnSensitivity",
                           "Name": "UnVernalisedLeaves",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1650,7 +1650,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Vrn1.Value()",
+                              "VariableName": "[Phenology].Vrn1",
                               "Name": "RelativeVrn1Expression",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1673,7 +1673,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].PpSensitivity.Value()",
+                          "VariableName": "[Phenology].PpSensitivity",
                           "Name": "ShortPpLeaves",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1702,7 +1702,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Photoperiod.Value()",
+                              "VariableName": "[Phenology].Photoperiod",
                               "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1914,7 +1914,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grain].NumberFunction.Value()",
+                          "VariableName": "[Grain].NumberFunction",
                           "Name": "NumberFunction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1923,7 +1923,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].GrainDevelopment.Target.Value()",
+                          "VariableName": "[Phenology].GrainDevelopment.Target",
                           "Name": "FillingDuration",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1932,7 +1932,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime.Value()",
+                          "VariableName": "[Phenology].ThermalTime",
                           "Name": "ThermalTime",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1945,7 +1945,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].InitialGrainProportion.Value()",
+                              "VariableName": "[Grain].InitialGrainProportion",
                               "Name": "InitialProportion",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1954,7 +1954,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].MaximumPotentialGrainSize.Value()",
+                              "VariableName": "[Grain].MaximumPotentialGrainSize",
                               "Name": "MaximumSize",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1988,7 +1988,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grain].NumberFunction.Value()",
+                          "VariableName": "[Grain].NumberFunction",
                           "Name": "NumberFunction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1997,7 +1997,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].GrainFilling.Target.Value()",
+                          "VariableName": "[Phenology].GrainFilling.Target",
                           "Name": "FillingDuration",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2006,7 +2006,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime.Value()",
+                          "VariableName": "[Phenology].ThermalTime",
                           "Name": "ThermalTime",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2033,7 +2033,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grain].InitialGrainProportion.Value()",
+                                  "VariableName": "[Grain].InitialGrainProportion",
                                   "Name": "InitialProportion",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2047,7 +2047,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].MaximumPotentialGrainSize.Value()",
+                              "VariableName": "[Grain].MaximumPotentialGrainSize",
                               "Name": "MaximumSize",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2120,7 +2120,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grain].NumberFunction.Value()",
+                          "VariableName": "[Grain].NumberFunction",
                           "Name": "NumberFunction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2133,7 +2133,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainDevelopment.Target.Value()",
+                              "VariableName": "[Phenology].GrainDevelopment.Target",
                               "Name": "FloweringToGrainFilling",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2142,7 +2142,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.Target.Value()",
+                              "VariableName": "[Phenology].GrainFilling.Target",
                               "Name": "GrainFilling",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2156,7 +2156,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime.Value()",
+                          "VariableName": "[Phenology].ThermalTime",
                           "Name": "ThermalTime",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2169,7 +2169,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].MaximumPotentialGrainSize.Value()",
+                              "VariableName": "[Grain].MaximumPotentialGrainSize",
                               "Name": "MaximumSize",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2178,7 +2178,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grain].MaximumNConc.Value()",
+                              "VariableName": "[Grain].MaximumNConc",
                               "Name": "MaximumNConc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2228,7 +2228,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "DailyThermalTimeValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2918,7 +2918,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2950,7 +2950,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].minimumNconc.Value()",
+                      "VariableName": "[Root].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2981,7 +2981,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].criticalNConc.Value()",
+                          "VariableName": "[Root].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2990,7 +2990,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc.Value()",
+                          "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3022,7 +3022,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Root].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3031,7 +3031,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].maximumNconc.Value()",
+                      "VariableName": "[Root].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3097,7 +3097,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.FCO2.Value()",
+                  "VariableName": "[Leaf].Photosynthesis.FCO2",
                   "Name": "FCO2",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3518,7 +3518,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron.Value()",
+                      "VariableName": "[Structure].Phyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3578,7 +3578,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EarlyReproductive.Target.Value()",
+                              "VariableName": "[Phenology].EarlyReproductive.Target",
                               "Name": "EarlyReproductive",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3587,7 +3587,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainDevelopment.Target.Value()",
+                              "VariableName": "[Phenology].GrainDevelopment.Target",
                               "Name": "GrainDevelopment",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3596,7 +3596,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].GrainFilling.Target.Value()",
+                              "VariableName": "[Phenology].GrainFilling.Target",
                               "Name": "GrainFilling",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3605,7 +3605,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Maturing.Target.Value()",
+                              "VariableName": "[Phenology].Maturing.Target",
                               "Name": "Maturing",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3614,7 +3614,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Ripening.Target.Value()",
+                              "VariableName": "[Phenology].Ripening.Target",
                               "Name": "Ripening",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3628,7 +3628,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].CohortParameters.SenescenceDuration.Value()",
+                          "VariableName": "[Leaf].CohortParameters.SenescenceDuration",
                           "Name": "SenescenceDuration",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3661,7 +3661,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron.Value()",
+                      "VariableName": "[Structure].Phyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4369,7 +4369,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Phenology].ThermalTime.Value()",
+              "VariableName": "[Phenology].ThermalTime",
               "Name": "ThermalTime",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -4988,7 +4988,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Spike].MinimumNConc.Value()",
+                  "VariableName": "[Spike].MinimumNConc",
                   "Name": "MinimumNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -5005,7 +5005,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Spike].MaximumNConc.Value()",
+                          "VariableName": "[Spike].MaximumNConc",
                           "Name": "MaximumNConc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5014,7 +5014,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Spike].MinimumNConc.Value()",
+                          "VariableName": "[Spike].MinimumNConc",
                           "Name": "MinimumNConc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5239,7 +5239,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Spike].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Spike].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5271,7 +5271,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Spike].minimumNconc.Value()",
+                      "VariableName": "[Spike].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5302,7 +5302,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Spike].criticalNConc.Value()",
+                          "VariableName": "[Spike].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5311,7 +5311,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Spike].minimumNconc.Value()",
+                          "VariableName": "[Spike].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5343,7 +5343,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Spike].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Spike].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5352,7 +5352,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Spike].maximumNconc.Value()",
+                      "VariableName": "[Spike].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5762,7 +5762,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stem].MinimumNConc.Value()",
+                  "VariableName": "[Stem].MinimumNConc",
                   "Name": "MinimumNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -5779,7 +5779,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].MaximumNConc.Value()",
+                          "VariableName": "[Stem].MaximumNConc",
                           "Name": "MaximumNConc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5788,7 +5788,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].MinimumNConc.Value()",
+                          "VariableName": "[Stem].MinimumNConc",
                           "Name": "MinimumNConc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6014,7 +6014,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Stem].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6046,7 +6046,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].minimumNconc.Value()",
+                      "VariableName": "[Stem].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6077,7 +6077,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].criticalNConc.Value()",
+                          "VariableName": "[Stem].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6086,7 +6086,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].minimumNconc.Value()",
+                          "VariableName": "[Stem].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6118,7 +6118,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Stem].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6127,7 +6127,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].maximumNconc.Value()",
+                      "VariableName": "[Stem].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,

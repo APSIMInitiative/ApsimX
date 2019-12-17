@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 71,
+  "Version": 72,
   "Name": "Simulations",
   "Children": [
     {
@@ -209,7 +209,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -311,7 +311,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Photoperiod.Value()",
+                      "VariableName": "[Phenology].Photoperiod",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -355,7 +355,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -394,7 +394,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -812,7 +812,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.Value()",
+                  "VariableName": "[Leaf].Photosynthesis",
                   "Name": "Photosynthesis",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -825,7 +825,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.RUE.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.RUE",
                       "Name": "PotentialRUE",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -962,7 +962,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Area.SpecificLeafArea.Value()",
+                  "VariableName": "[Leaf].Area.SpecificLeafArea",
                   "Name": "SpecificLeafArea",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1488,7 +1488,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -1497,7 +1497,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -1519,7 +1519,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[TargetShootRootRatio].Value()",
+                                              "VariableName": "[TargetShootRootRatio]",
                                               "Name": "TargetSR1",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -1528,7 +1528,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[TargetShootRootRatio].Value()",
+                                              "VariableName": "[TargetShootRootRatio]",
                                               "Name": "TargetSR2",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -1542,7 +1542,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[ShootRootRatio].Value()",
+                                          "VariableName": "[ShootRootRatio]",
                                           "Name": "CurrentSR",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -1580,7 +1580,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -1589,7 +1589,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -1598,7 +1598,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[StemsLeafRatio].Value()",
+                                          "VariableName": "[StemsLeafRatio]",
                                           "Name": "CurrentSL",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -1624,7 +1624,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -1633,7 +1633,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -1647,7 +1647,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[ShootRootRatio].Value()",
+                                              "VariableName": "[ShootRootRatio]",
                                               "Name": "CurrentSR",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -1669,7 +1669,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio].Value()",
+                                                  "VariableName": "[TargetStemsLeafRatio]",
                                                   "Name": "TargetSL1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -1678,7 +1678,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio].Value()",
+                                                  "VariableName": "[TargetStemsLeafRatio]",
                                                   "Name": "TargetSL2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -1692,7 +1692,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[StemsLeafRatio].Value()",
+                                              "VariableName": "[StemsLeafRatio]",
                                               "Name": "CurrentSL",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -1784,7 +1784,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Leaf].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1816,7 +1816,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].minimumNconc.Value()",
+                      "VariableName": "[Leaf].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1847,7 +1847,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].criticalNConc.Value()",
+                          "VariableName": "[Leaf].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1856,7 +1856,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].minimumNconc.Value()",
+                          "VariableName": "[Leaf].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1888,7 +1888,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Leaf].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1897,7 +1897,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].maximumNconc.Value()",
+                      "VariableName": "[Leaf].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2480,7 +2480,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Stem].MinimumNConc.Value()",
+              "VariableName": "[Stem].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -2538,7 +2538,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2547,7 +2547,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2556,7 +2556,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio].Value()",
+                                          "VariableName": "[TargetStemsLeafRatio]",
                                           "Name": "TargetSL1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2565,7 +2565,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio].Value()",
+                                          "VariableName": "[TargetStemsLeafRatio]",
                                           "Name": "TargetSL2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2591,7 +2591,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2600,7 +2600,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2614,7 +2614,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[ShootRootRatio].Value()",
+                                              "VariableName": "[ShootRootRatio]",
                                               "Name": "CurrentSR",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -2636,7 +2636,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio].Value()",
+                                                  "VariableName": "[TargetStemsLeafRatio]",
                                                   "Name": "TargetSL1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2645,7 +2645,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio].Value()",
+                                                  "VariableName": "[TargetStemsLeafRatio]",
                                                   "Name": "TargetSL2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2659,7 +2659,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[StemsLeafRatio].Value()",
+                                              "VariableName": "[StemsLeafRatio]",
                                               "Name": "CurrentSL",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -2702,7 +2702,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2711,7 +2711,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2720,7 +2720,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio].Value()",
+                                          "VariableName": "[TargetStemsLeafRatio]",
                                           "Name": "TargetSL1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2729,7 +2729,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio].Value()",
+                                          "VariableName": "[TargetStemsLeafRatio]",
                                           "Name": "TargetSL2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2738,7 +2738,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[FlowerStemRatio].Value()",
+                                          "VariableName": "[FlowerStemRatio]",
                                           "Name": "CurrentFS",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2764,7 +2764,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2773,7 +2773,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2787,7 +2787,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[ShootRootRatio].Value()",
+                                              "VariableName": "[ShootRootRatio]",
                                               "Name": "CurrentSR",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -2809,7 +2809,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio].Value()",
+                                                  "VariableName": "[TargetStemsLeafRatio]",
                                                   "Name": "TargetSL1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2818,7 +2818,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio].Value()",
+                                                  "VariableName": "[TargetStemsLeafRatio]",
                                                   "Name": "TargetSL2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2832,7 +2832,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[StemsLeafRatio].Value()",
+                                              "VariableName": "[StemsLeafRatio]",
                                               "Name": "CurrentSL",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -2854,7 +2854,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetFlowerStemRatio].Value()",
+                                                  "VariableName": "[TargetFlowerStemRatio]",
                                                   "Name": "TargetFS1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2863,7 +2863,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetFlowerStemRatio].Value()",
+                                                  "VariableName": "[TargetFlowerStemRatio]",
                                                   "Name": "TargetFS2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2877,7 +2877,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[FlowerStemRatio].Value()",
+                                              "VariableName": "[FlowerStemRatio]",
                                               "Name": "CurrentFS",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -2969,7 +2969,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Stem].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3001,7 +3001,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].minimumNconc.Value()",
+                      "VariableName": "[Stem].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3032,7 +3032,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].criticalNConc.Value()",
+                          "VariableName": "[Stem].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3041,7 +3041,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].minimumNconc.Value()",
+                          "VariableName": "[Stem].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3073,7 +3073,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Stem].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3082,7 +3082,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stem].maximumNconc.Value()",
+                      "VariableName": "[Stem].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3667,7 +3667,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Inflorescence].MinimumNConc.Value()",
+              "VariableName": "[Inflorescence].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -3725,7 +3725,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -3734,7 +3734,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetShootRootRatio].Value()",
+                                          "VariableName": "[TargetShootRootRatio]",
                                           "Name": "TargetSR2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -3743,7 +3743,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio].Value()",
+                                          "VariableName": "[TargetStemsLeafRatio]",
                                           "Name": "TargetSL1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -3752,7 +3752,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetStemsLeafRatio].Value()",
+                                          "VariableName": "[TargetStemsLeafRatio]",
                                           "Name": "TargetSL2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -3761,7 +3761,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetFlowerStemRatio].Value()",
+                                          "VariableName": "[TargetFlowerStemRatio]",
                                           "Name": "TargetFS1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -3770,7 +3770,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetFlowerStemRatio].Value()",
+                                          "VariableName": "[TargetFlowerStemRatio]",
                                           "Name": "TargetFS2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -3796,7 +3796,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -3805,7 +3805,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -3819,7 +3819,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[ShootRootRatio].Value()",
+                                              "VariableName": "[ShootRootRatio]",
                                               "Name": "CurrentSR",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -3841,7 +3841,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio].Value()",
+                                                  "VariableName": "[TargetStemsLeafRatio]",
                                                   "Name": "TargetSL1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -3850,7 +3850,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetStemsLeafRatio].Value()",
+                                                  "VariableName": "[TargetStemsLeafRatio]",
                                                   "Name": "TargetSL2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -3864,7 +3864,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[StemsLeafRatio].Value()",
+                                              "VariableName": "[StemsLeafRatio]",
                                               "Name": "CurrentSL",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -3886,7 +3886,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetFlowerStemRatio].Value()",
+                                                  "VariableName": "[TargetFlowerStemRatio]",
                                                   "Name": "TargetFS1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -3895,7 +3895,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetFlowerStemRatio].Value()",
+                                                  "VariableName": "[TargetFlowerStemRatio]",
                                                   "Name": "TargetFS2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -3909,7 +3909,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[FlowerStemRatio].Value()",
+                                              "VariableName": "[FlowerStemRatio]",
                                               "Name": "CurrentFS",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -4001,7 +4001,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Inflorescence].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Inflorescence].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4033,7 +4033,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Inflorescence].minimumNconc.Value()",
+                      "VariableName": "[Inflorescence].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4064,7 +4064,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Inflorescence].criticalNConc.Value()",
+                          "VariableName": "[Inflorescence].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4073,7 +4073,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Inflorescence].minimumNconc.Value()",
+                          "VariableName": "[Inflorescence].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4105,7 +4105,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Inflorescence].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Inflorescence].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4114,7 +4114,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Inflorescence].maximumNconc.Value()",
+                      "VariableName": "[Inflorescence].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4699,7 +4699,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Taproot].MinimumNConc.Value()",
+              "VariableName": "[Taproot].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -4757,7 +4757,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[ShootRootRatio].Value()",
+                                          "VariableName": "[ShootRootRatio]",
                                           "Name": "CurrentSR",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -4766,7 +4766,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetTaprootRootRatio].Value()",
+                                          "VariableName": "[TargetTaprootRootRatio]",
                                           "Name": "TargetTR1",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -4775,7 +4775,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TargetTaprootRootRatio].Value()",
+                                          "VariableName": "[TargetTaprootRootRatio]",
                                           "Name": "TargetTR2",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -4801,7 +4801,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -4810,7 +4810,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -4824,7 +4824,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[ShootRootRatio].Value()",
+                                              "VariableName": "[ShootRootRatio]",
                                               "Name": "CurrentSR",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -4846,7 +4846,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetTaprootRootRatio].Value()",
+                                                  "VariableName": "[TargetTaprootRootRatio]",
                                                   "Name": "TargetTR1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -4855,7 +4855,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetTaprootRootRatio].Value()",
+                                                  "VariableName": "[TargetTaprootRootRatio]",
                                                   "Name": "TargetTR2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -4869,7 +4869,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[TaprootRootRatio].Value()",
+                                              "VariableName": "[TaprootRootRatio]",
                                               "Name": "CurrentTR",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -4961,7 +4961,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Taproot].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Taproot].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4993,7 +4993,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Taproot].minimumNconc.Value()",
+                      "VariableName": "[Taproot].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5024,7 +5024,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Taproot].criticalNConc.Value()",
+                          "VariableName": "[Taproot].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5033,7 +5033,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Taproot].minimumNconc.Value()",
+                          "VariableName": "[Taproot].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5065,7 +5065,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Taproot].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Taproot].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5074,7 +5074,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Taproot].maximumNconc.Value()",
+                      "VariableName": "[Taproot].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5828,7 +5828,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[ShootRootRatio].Value()",
+                                          "VariableName": "[ShootRootRatio]",
                                           "Name": "CurrentSR",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -5837,7 +5837,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[TaprootRootRatio].Value()",
+                                          "VariableName": "[TaprootRootRatio]",
                                           "Name": "CurrentTR",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -5863,7 +5863,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -5872,7 +5872,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetShootRootRatio].Value()",
+                                                  "VariableName": "[TargetShootRootRatio]",
                                                   "Name": "TargetSR2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -5886,7 +5886,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[ShootRootRatio].Value()",
+                                              "VariableName": "[ShootRootRatio]",
                                               "Name": "CurrentSR",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -5908,7 +5908,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetTaprootRootRatio].Value()",
+                                                  "VariableName": "[TargetTaprootRootRatio]",
                                                   "Name": "TargetTR1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -5917,7 +5917,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[TargetTaprootRootRatio].Value()",
+                                                  "VariableName": "[TargetTaprootRootRatio]",
                                                   "Name": "TargetTR2",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -5931,7 +5931,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[TaprootRootRatio].Value()",
+                                              "VariableName": "[TaprootRootRatio]",
                                               "Name": "CurrentTR",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -6023,7 +6023,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6055,7 +6055,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].minimumNconc.Value()",
+                      "VariableName": "[Root].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6086,7 +6086,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].criticalNConc.Value()",
+                          "VariableName": "[Root].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6095,7 +6095,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc.Value()",
+                          "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6127,7 +6127,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Root].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6136,7 +6136,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].maximumNconc.Value()",
+                      "VariableName": "[Root].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6417,7 +6417,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[TargetShootRootRatio].Vegetative.TargetSR.Value()",
+                      "VariableName": "[TargetShootRootRatio].Vegetative.TargetSR",
                       "Name": "MinTargetSR",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6444,7 +6444,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TargetShootRootRatio].Vegetative.TargetSR.Value()",
+                              "VariableName": "[TargetShootRootRatio].Vegetative.TargetSR",
                               "Name": "MinTargetSR",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6579,7 +6579,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[TargetShootRootRatio].Vegetative.TargetSR.Value()",
+                      "VariableName": "[TargetShootRootRatio].Vegetative.TargetSR",
                       "Name": "MinTargetSR",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6596,7 +6596,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TargetShootRootRatio].InductiveElongation.TargetSR.Value()",
+                              "VariableName": "[TargetShootRootRatio].InductiveElongation.TargetSR",
                               "Name": "MaxTargetSR",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6605,7 +6605,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[TargetShootRootRatio].Vegetative.TargetSR.Value()",
+                              "VariableName": "[TargetShootRootRatio].Vegetative.TargetSR",
                               "Name": "MinTargetSR",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6781,7 +6781,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[TargetShootRootRatio].InductiveElongation.TargetSR.DeltaTarget.VernalisationEffect.Value()",
+                      "VariableName": "[TargetShootRootRatio].InductiveElongation.TargetSR.DeltaTarget.VernalisationEffect",
                       "Name": "VernalisationEffect",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7098,7 +7098,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[PerPlantBelowGroundWt].Value()",
+                          "VariableName": "[PerPlantBelowGroundWt]",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,

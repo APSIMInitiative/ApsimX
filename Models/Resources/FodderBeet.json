@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 71,
+  "Version": 72,
   "Name": "Simulations",
   "Children": [
     {
@@ -270,7 +270,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -309,7 +309,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -338,7 +338,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -371,7 +371,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Photoperiod.Value()",
+                          "VariableName": "[Phenology].Photoperiod",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -459,7 +459,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Photoperiod.Value()",
+                      "VariableName": "[Phenology].Photoperiod",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -484,7 +484,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -533,7 +533,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -567,7 +567,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "VariableReference",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -602,7 +602,7 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Phenology].ThermalTime.Value()",
+              "VariableName": "[Phenology].ThermalTime",
               "Name": "ThermalTime",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -664,7 +664,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron.Phyllochron.Value()",
+                      "VariableName": "[Structure].Phyllochron.Phyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -995,7 +995,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[StorageRoot].MinimumNConc.Value()",
+                  "VariableName": "[StorageRoot].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1019,7 +1019,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[StorageRoot].MinimumNConc.Value()",
+              "VariableName": "[StorageRoot].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1188,7 +1188,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[StorageRoot].DMDemands.Metabolic.MetabolicFraction.Value()",
+                          "VariableName": "[StorageRoot].DMDemands.Metabolic.MetabolicFraction",
                           "Name": "metabolicFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1197,7 +1197,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[StorageRoot].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[StorageRoot].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1211,7 +1211,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].DMDemands.Structural.DMDemandFunction.Value()",
+                      "VariableName": "[StorageRoot].DMDemands.Structural.DMDemandFunction",
                       "Name": "DMDemandFraction",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1249,7 +1249,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].DMDemands.Structural.DMDemandFunction.Value()",
+                      "VariableName": "[StorageRoot].DMDemands.Structural.DMDemandFunction",
                       "Name": "DMDemandFraction",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1276,7 +1276,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].minimumNconc.Value()",
+                      "VariableName": "[StorageRoot].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1307,7 +1307,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[StorageRoot].maximumNconc.Value()",
+                          "VariableName": "[StorageRoot].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1349,7 +1349,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[StorageRoot].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1358,7 +1358,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].maximumNconc.Value()",
+                      "VariableName": "[StorageRoot].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1466,7 +1466,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Phenology].ThermalTime.Value()",
+              "VariableName": "[Phenology].ThermalTime",
               "Name": "ThermalTime",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1657,8 +1657,8 @@
                               "TableName": null,
                               "XFieldName": "[XYPairs].X",
                               "YFieldName": "[XYPairs].Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -1982,8 +1982,8 @@
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.FodderBeet.Leaf.CohortParameters.GrowthDuration.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.FodderBeet.Leaf.CohortParameters.GrowthDuration.XYPairs.Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -2058,7 +2058,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Photoperiod.Value()",
+                          "VariableName": "[Phenology].Photoperiod",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2150,7 +2150,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Photoperiod.Value()",
+                          "VariableName": "[Phenology].Photoperiod",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2644,7 +2644,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.FT.Value()",
+                  "VariableName": "[Leaf].Photosynthesis.FT",
                   "Name": "RUE_FT",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2657,7 +2657,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FN.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.FN",
                       "Name": "RUE_FN",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2666,7 +2666,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FVPD.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.FVPD",
                       "Name": "RUE_FVPD",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2805,7 +2805,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.FCO2.Value()",
+                  "VariableName": "[Leaf].Photosynthesis.FCO2",
                   "Name": "FCO2",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3038,7 +3038,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Petiole].MinimumNConc.Value()",
+              "VariableName": "[Petiole].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -3169,7 +3169,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Petiole].DMDemands.Structural.DMDemandFunction.Value()",
+                      "VariableName": "[Petiole].DMDemands.Structural.DMDemandFunction",
                       "Name": "DMDemandFunction1",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3192,7 +3192,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Petiole].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3224,7 +3224,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Petiole].minimumNconc.Value()",
+                      "VariableName": "[Petiole].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3255,7 +3255,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].criticalNConc.Value()",
+                          "VariableName": "[Petiole].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3264,7 +3264,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].minimumNconc.Value()",
+                          "VariableName": "[Petiole].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3296,7 +3296,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Petiole].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Petiole].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3305,7 +3305,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Petiole].maximumNconc.Value()",
+                      "VariableName": "[Petiole].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3819,7 +3819,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3851,7 +3851,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].minimumNconc.Value()",
+                      "VariableName": "[Root].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3882,7 +3882,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].criticalNConc.Value()",
+                          "VariableName": "[Root].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3891,7 +3891,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc.Value()",
+                          "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3923,7 +3923,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Root].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3932,7 +3932,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].maximumNconc.Value()",
+                      "VariableName": "[Root].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
