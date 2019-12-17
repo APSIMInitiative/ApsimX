@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 71; } }
+        public static int LatestVersion { get { return 72; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1399,6 +1399,28 @@
                 varRef.VariableName = linint["XProperty"].ToString();
                 JsonUtilities.AddModel(linint, varRef);
                 linint.Remove("XProperty");
+            }
+        }
+
+        /// <summary>
+        /// Remove .Value() from all variable references because it is redundant
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion72(JObject root, string fileName)
+        {
+            foreach (var varRef in JsonUtilities.ChildrenRecursively(root, "VariableReference"))
+                varRef["VariableName"] = varRef["VariableName"].ToString().Replace(".Value()", "");
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Value()", "");
+
+            foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                graph["XFieldName"] = graph["XFieldName"].ToString().Replace(".Value()", "");
+                graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(".Value()", "");
+                graph["YFieldName"] = graph["YFieldName"].ToString().Replace(".Value()", "");
+                graph["Y2FieldName"] = graph["Y2FieldName"].ToString().Replace(".Value()", "");
             }
         }
 
