@@ -199,8 +199,15 @@
         [GLib.ConnectBefore]
         private void OnUseLatestVersion(object sender, EventArgs args)
         {
-            versionInput.Sensitive = specificVersion.Active;
-            versionInput.IsEditable = specificVersion.Active;
+            try
+            {
+                versionInput.Sensitive = specificVersion.Active;
+                versionInput.IsEditable = specificVersion.Active;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -239,7 +246,14 @@
         [GLib.ConnectBefore]
         private void OnConvert(object sender, EventArgs args)
         {
-            Convert?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                Convert?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -253,8 +267,15 @@
         [GLib.ConnectBefore]
         private void OnDelete(object sender, DeleteEventArgs args)
         {
-            Visible = false;
-            args.RetVal = true;
+            try
+            {
+                Visible = false;
+                args.RetVal = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -265,15 +286,22 @@
         [GLib.ConnectBefore]
         private void OnClose(object sender, EventArgs args)
         {
-            mainWindow.DeleteEvent -= OnDelete;
-            mainWindow.Destroyed -= OnClose;
-            mainWindow.KeyPressEvent -= OnKeyPress;
-            chooseFileButton.Clicked -= OnChooseFile;
-            convertButton.Clicked -= OnConvert;
-            latestVersion.Toggled -= OnUseLatestVersion;
-            specificVersion.Toggled -= OnUseLatestVersion;
-            pathInput.Changed -= OnFilesChanged;
-            mainWindow.Dispose();
+            try
+            {
+                mainWindow.DeleteEvent -= OnDelete;
+                mainWindow.Destroyed -= OnClose;
+                mainWindow.KeyPressEvent -= OnKeyPress;
+                chooseFileButton.Clicked -= OnChooseFile;
+                convertButton.Clicked -= OnConvert;
+                latestVersion.Toggled -= OnUseLatestVersion;
+                specificVersion.Toggled -= OnUseLatestVersion;
+                pathInput.Changed -= OnFilesChanged;
+                mainWindow.Dispose();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -285,8 +313,15 @@
         [GLib.ConnectBefore]
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
-            if (args.Event.Key == Gdk.Key.Escape)
-                Visible = false;
+            try
+            {
+                if (args.Event.Key == Gdk.Key.Escape)
+                    Visible = false;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
