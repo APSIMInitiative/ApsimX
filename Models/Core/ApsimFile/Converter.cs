@@ -1418,9 +1418,11 @@
             foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
             {
                 graph["XFieldName"] = graph["XFieldName"].ToString().Replace(".Value()", "");
-                graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(".Value()", "");
+                if (graph["X2FieldName"] != null)
+                    graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(".Value()", "");
                 graph["YFieldName"] = graph["YFieldName"].ToString().Replace(".Value()", "");
-                graph["Y2FieldName"] = graph["Y2FieldName"].ToString().Replace(".Value()", "");
+                if (graph["Y2FieldName"] != null)
+                    graph["Y2FieldName"] = graph["Y2FieldName"].ToString().Replace(".Value()", "");
             }
         }
 
