@@ -7,6 +7,7 @@ namespace UserInterface.Views
 {
     using Interfaces;
     using Gtk;
+    using System;
 
     /// <summary>This view allows a single series to be edited.</summary>
     public class SeriesView : ViewBase, ISeriesView
@@ -116,29 +117,36 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            helpBox.ButtonReleaseEvent -= Help_ButtonPressEvent;
-            checkpointDropDown.MainWidget.Destroy();
-            dataSourceDropDown.MainWidget.Destroy();
-            xDropDown.MainWidget.Destroy();
-            yDropDown.MainWidget.Destroy();
-            x2DropDown.MainWidget.Destroy();
-            y2DropDown.MainWidget.Destroy();
-            seriesDropDown.MainWidget.Destroy();
-            lineTypeDropDown.MainWidget.Destroy();
-            markerTypeDropDown.MainWidget.Destroy();
-            colourDropDown.MainWidget.Destroy();
-            lineThicknessDropDown.MainWidget.Destroy();
-            markerSizeDropDown.MainWidget.Destroy();
-            checkBoxView1.MainWidget.Destroy();
-            checkBoxView2.MainWidget.Destroy();
-            checkBoxView3.MainWidget.Destroy();
-            checkBoxView4.MainWidget.Destroy();
-            checkBoxView5.MainWidget.Destroy();
-            checkBoxView6.MainWidget.Destroy();
-            graphView1.MainWidget.Destroy();
-            editView1.MainWidget.Destroy();
-            owner = null;
+            try
+            {
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                helpBox.ButtonReleaseEvent -= Help_ButtonPressEvent;
+                checkpointDropDown.MainWidget.Destroy();
+                dataSourceDropDown.MainWidget.Destroy();
+                xDropDown.MainWidget.Destroy();
+                yDropDown.MainWidget.Destroy();
+                x2DropDown.MainWidget.Destroy();
+                y2DropDown.MainWidget.Destroy();
+                seriesDropDown.MainWidget.Destroy();
+                lineTypeDropDown.MainWidget.Destroy();
+                markerTypeDropDown.MainWidget.Destroy();
+                colourDropDown.MainWidget.Destroy();
+                lineThicknessDropDown.MainWidget.Destroy();
+                markerSizeDropDown.MainWidget.Destroy();
+                checkBoxView1.MainWidget.Destroy();
+                checkBoxView2.MainWidget.Destroy();
+                checkBoxView3.MainWidget.Destroy();
+                checkBoxView4.MainWidget.Destroy();
+                checkBoxView5.MainWidget.Destroy();
+                checkBoxView6.MainWidget.Destroy();
+                graphView1.MainWidget.Destroy();
+                editView1.MainWidget.Destroy();
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Checkpoint control</summary>
@@ -216,8 +224,15 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Help_ButtonPressEvent(object o, ButtonReleaseEventArgs args)
         {
-            if (args.Event.Button == 1)
-              System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphfilters/");
+            try
+            {
+                if (args.Event.Button == 1)
+                  System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphfilters/");
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         public void EndEdit()

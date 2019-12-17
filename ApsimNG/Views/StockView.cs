@@ -257,23 +257,29 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            // detach events
-            btnNewGeno.Clicked -= BtnNewGeno_Clicked;
-            btnDelGeno.Clicked -= BtnDelGeno_Clicked;
-            edtGenotypeName.Changed -= ChangeGenotypeName;
-            rbtnSheep.Clicked -= ClickAnimal;
-            rbtnCattle.Clicked -= ClickAnimal;
-            cbxDamBreed.Changed -= ChangeBreed;
-            cbxGeneration.Changed -= ChangeGeneration;
-            notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
+            try
+            {
+                // detach events
+                btnNewGeno.Clicked -= BtnNewGeno_Clicked;
+                btnDelGeno.Clicked -= BtnDelGeno_Clicked;
+                edtGenotypeName.Changed -= ChangeGenotypeName;
+                rbtnSheep.Clicked -= ClickAnimal;
+                rbtnCattle.Clicked -= ClickAnimal;
+                cbxDamBreed.Changed -= ChangeBreed;
+                cbxGeneration.Changed -= ChangeGeneration;
+                notebook1.SwitchPage -= TabControl1_SelectedIndexChanged;
 
-            btnNewAnimals.Clicked -= BtnNewAnimals_Clicked;
-            cbxGroupGenotype.Changed -= ChangeGroupGenotype;
-            deNumber.OnChange -= ChangeNumber;
-            deWeight.OnChange -= this.ChangeEditCtrl;
-            dePrevWt.OnChange -= this.ChangeEditCtrl;
-            deAge.OnChange -= this.ChangeEditCtrl;
-
+                btnNewAnimals.Clicked -= BtnNewAnimals_Clicked;
+                cbxGroupGenotype.Changed -= ChangeGroupGenotype;
+                deNumber.OnChange -= ChangeNumber;
+                deWeight.OnChange -= this.ChangeEditCtrl;
+                dePrevWt.OnChange -= this.ChangeEditCtrl;
+                deAge.OnChange -= this.ChangeEditCtrl;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -451,17 +457,24 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeGeneration(object sender, EventArgs e)
         {
-            if (cbxGeneration.SelectedIndex <= 0)
+            try
             {
-                lblDamBreed.Text = "Breed";
-                lblSireBreed.Hide();
-                cbxSireBreed.IsVisible = false;
+                if (cbxGeneration.SelectedIndex <= 0)
+                {
+                    lblDamBreed.Text = "Breed";
+                    lblSireBreed.Hide();
+                    cbxSireBreed.IsVisible = false;
+                }
+                else
+                {
+                    lblDamBreed.Text = "Dam breed";
+                    lblSireBreed.Show();
+                    cbxSireBreed.IsVisible = true;
+                }
             }
-            else
+            catch (Exception err)
             {
-                lblDamBreed.Text = "Dam breed";
-                lblSireBreed.Show();
-                cbxSireBreed.IsVisible = true;
+                ShowError(err);
             }
         }
 
@@ -558,72 +571,79 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void BtnNewGeno_Clicked(object sender, EventArgs e)
         {
-            GrazType.AnimalType newAnimal;
-            int newBreedIndex;
-            string newBreed = "";
-            bool found;
-            int index;
-
-            if (genotypeInits.Length < MAXGENOTYPES)
+            try
             {
-                ParseCurrGenotype();
+                GrazType.AnimalType newAnimal;
+                int newBreedIndex;
+                string newBreed = "";
+                bool found;
+                int index;
 
-                // Find the first genotype that is not in the inits yet
-                if (currentGenotype >= 0)
-                    newAnimal = genotypeAnimals[currentGenotype];
-                else
-                    newAnimal = GrazType.AnimalType.Sheep;
-                newBreedIndex = 0;
-                found = false;
-                while ((newBreedIndex < paramSet.BreedCount(newAnimal)) && !found)
+                if (genotypeInits.Length < MAXGENOTYPES)
                 {
-                    newBreed = paramSet.BreedName(newAnimal, newBreedIndex);
+                    ParseCurrGenotype();
 
-                    found = true;
-                    for (index = 0; index < genotypeInits.Length; index++)
+                    // Find the first genotype that is not in the inits yet
+                    if (currentGenotype >= 0)
+                        newAnimal = genotypeAnimals[currentGenotype];
+                    else
+                        newAnimal = GrazType.AnimalType.Sheep;
+                    newBreedIndex = 0;
+                    found = false;
+                    while ((newBreedIndex < paramSet.BreedCount(newAnimal)) && !found)
                     {
-                        found = (found && (newBreed.ToLower() != genotypeInits[index].GenotypeName.ToLower()));
-                    }
-                    if (!found && (newBreedIndex == paramSet.BreedCount(newAnimal) - 1))
-                    {
-                        if (newAnimal == GrazType.AnimalType.Sheep)
-                            newAnimal = GrazType.AnimalType.Cattle;
+                        newBreed = paramSet.BreedName(newAnimal, newBreedIndex);
+
+                        found = true;
+                        for (index = 0; index < genotypeInits.Length; index++)
+                        {
+                            found = (found && (newBreed.ToLower() != genotypeInits[index].GenotypeName.ToLower()));
+                        }
+                        if (!found && (newBreedIndex == paramSet.BreedCount(newAnimal) - 1))
+                        {
+                            if (newAnimal == GrazType.AnimalType.Sheep)
+                                newAnimal = GrazType.AnimalType.Cattle;
+                            else
+                                newAnimal = GrazType.AnimalType.Sheep;
+                            newBreedIndex = 0;
+                        }
                         else
-                            newAnimal = GrazType.AnimalType.Sheep;
-                        newBreedIndex = 0;
+                            newBreedIndex++;
+                    }
+
+                    if (!found)
+                    {
+                        MessageDialog msgError = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, "Error adding more genotypes");
+                        msgError.Title = "Error";
+                        msgError.Run();
+                        msgError.Destroy();
                     }
                     else
-                        newBreedIndex++;
-                }
-
-                if (!found)
-                {
-                    MessageDialog msgError = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Error, ButtonsType.Close, "Error adding more genotypes");
-                    msgError.Title = "Error";
-                    msgError.Run();
-                    msgError.Destroy();
-                }
-                else
-                {
-                    Array.Resize(ref genotypeInits, genotypeInits.Length + 1);
-                    genotypeInits[genotypeInits.Length - 1] = new SingleGenotypeInits();
-                    genotypeInits[genotypeInits.Length - 1].Conceptions = new double[4];
-
-                    SetGenotypeDefaults(genotypeInits.Length - 1, newBreed);
-                    genoList.AppendValues(newBreed);
-                    SelectedGenoIndex = genotypeInits.Length - 1;
-                    ClickGenotypeList(null, null);
-
-                    // add to the animals genotypes combo list on the animals tab
-                    string[] genoNames = new string[genotypeInits.Length];
-                    for (int i = 0; i < genotypeInits.Length; i++)
                     {
-                        genoNames[i] = genotypeInits[i].GenotypeName;
-                    }
-                    cbxGroupGenotype.Values = genoNames;
+                        Array.Resize(ref genotypeInits, genotypeInits.Length + 1);
+                        genotypeInits[genotypeInits.Length - 1] = new SingleGenotypeInits();
+                        genotypeInits[genotypeInits.Length - 1].Conceptions = new double[4];
 
-                    EnableButtons();
+                        SetGenotypeDefaults(genotypeInits.Length - 1, newBreed);
+                        genoList.AppendValues(newBreed);
+                        SelectedGenoIndex = genotypeInits.Length - 1;
+                        ClickGenotypeList(null, null);
+
+                        // add to the animals genotypes combo list on the animals tab
+                        string[] genoNames = new string[genotypeInits.Length];
+                        for (int i = 0; i < genotypeInits.Length; i++)
+                        {
+                            genoNames[i] = genotypeInits[i].GenotypeName;
+                        }
+                        cbxGroupGenotype.Values = genoNames;
+
+                        EnableButtons();
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -634,10 +654,17 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ClickGenotypeList(object sender, EventArgs e)
         {
-            if (currentGenotype >= 0 && !filling)
-                ParseCurrGenotype();
-            currentGenotype = SelectedGenoIndex;
-            FillCurrGenotype();
+            try
+            {
+                if (currentGenotype >= 0 && !filling)
+                    ParseCurrGenotype();
+                currentGenotype = SelectedGenoIndex;
+                FillCurrGenotype();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -658,16 +685,23 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeBreed(object sender, EventArgs e)
         {
-            if (!filling)
+            try
             {
-                string newGenoName = MakeUniqueGenoName(cbxDamBreed.SelectedValue);
-                SetGenotypeDefaults(currentGenotype, cbxDamBreed.SelectedValue);
-                FillCurrGenotype();
-                edtGenotypeName.Text = newGenoName;
-                //ChangeGenotypeName(sender, e);          // ensure trigger updates on the Animals tab also
-                filling = true;
-                SetItem(genoList, currentGenotype, newGenoName);
-                filling = false;
+                if (!filling)
+                {
+                    string newGenoName = MakeUniqueGenoName(cbxDamBreed.SelectedValue);
+                    SetGenotypeDefaults(currentGenotype, cbxDamBreed.SelectedValue);
+                    FillCurrGenotype();
+                    edtGenotypeName.Text = newGenoName;
+                    //ChangeGenotypeName(sender, e);          // ensure trigger updates on the Animals tab also
+                    filling = true;
+                    SetItem(genoList, currentGenotype, newGenoName);
+                    filling = false;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -678,9 +712,14 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeGenotypeName(object sender, EventArgs e)
         {
-            if (!filling)
+            try
             {
-                SetItem(genoList, currentGenotype, edtGenotypeName.Text);
+                if (!filling)
+                    SetItem(genoList, currentGenotype, edtGenotypeName.Text);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
         /// <summary>
@@ -892,36 +931,43 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ClickAnimal(object sender, EventArgs e)
         {
-            if (((Gtk.RadioButton)sender).Active)
+            try
             {
-                GrazType.AnimalType currAnimal;
-
-                if (rbtnSheep.Active)
-                    currAnimal = GrazType.AnimalType.Sheep;
-                else
-                    currAnimal = GrazType.AnimalType.Cattle;
-
-                genotypeAnimals[currentGenotype] = currAnimal;
-
-                List<string> names = new List<string>();
-
-                int count = this.paramSet.BreedCount(currAnimal);
-                string[] namesArray = new string[count];
-                for (int i = 0; i < count; i++)
+                if (((Gtk.RadioButton)sender).Active)
                 {
-                    namesArray[i] = paramSet.BreedName(currAnimal, i);
+                    GrazType.AnimalType currAnimal;
+
+                    if (rbtnSheep.Active)
+                        currAnimal = GrazType.AnimalType.Sheep;
+                    else
+                        currAnimal = GrazType.AnimalType.Cattle;
+
+                    genotypeAnimals[currentGenotype] = currAnimal;
+
+                    List<string> names = new List<string>();
+
+                    int count = this.paramSet.BreedCount(currAnimal);
+                    string[] namesArray = new string[count];
+                    for (int i = 0; i < count; i++)
+                    {
+                        namesArray[i] = paramSet.BreedName(currAnimal, i);
+                    }
+
+                    cbxDamBreed.Changed -= ChangeBreed;
+
+                    cbxDamBreed.Values = namesArray;
+                    cbxDamBreed.SelectedIndex = 0;
+                    cbxSireBreed.Values = namesArray;
+                    cbxSireBreed.SelectedIndex = 0;
+
+                    cbxDamBreed.Changed += ChangeBreed;
+
+                    ChangeBreed(null, null);            //Force default SRW values etc
                 }
-
-                cbxDamBreed.Changed -= ChangeBreed;
-
-                cbxDamBreed.Values = namesArray;
-                cbxDamBreed.SelectedIndex = 0;
-                cbxSireBreed.Values = namesArray;
-                cbxSireBreed.SelectedIndex = 0;
-
-                cbxDamBreed.Changed += ChangeBreed;
-
-                ChangeBreed(null, null);            //Force default SRW values etc
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -932,19 +978,26 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void BtnDelGeno_Clicked(object sender, EventArgs e)
         {
-            if (currentGenotype >= 0)
+            try
             {
-                //TODO when animals tab is working: deleteGroupsWithGenotype(FCurrGenotype);
+                if (currentGenotype >= 0)
+                {
+                    //TODO when animals tab is working: deleteGroupsWithGenotype(FCurrGenotype);
 
-                for (int idx = currentGenotype + 1; idx <= genotypeInits.Length - 1; idx++)
-                    genotypeInits[idx - 1] = genotypeInits[idx];
-                Array.Resize(ref genotypeInits, genotypeInits.Length - 1);
+                    for (int idx = currentGenotype + 1; idx <= genotypeInits.Length - 1; idx++)
+                        genotypeInits[idx - 1] = genotypeInits[idx];
+                    Array.Resize(ref genotypeInits, genotypeInits.Length - 1);
 
-                int current = SelectedGenoIndex;
-                // repopulate the view
-                SetValues();
-                SelectedGenoIndex = Math.Min(current, genotypeInits.Length - 1);
-                EnableButtons();
+                    int current = SelectedGenoIndex;
+                    // repopulate the view
+                    SetValues();
+                    SelectedGenoIndex = Math.Min(current, genotypeInits.Length - 1);
+                    EnableButtons();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -955,11 +1008,17 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void TabControl1_SelectedIndexChanged(object sender, SwitchPageArgs e)
         {
-            switch (e.PageNum)
+            try
             {
-                case 0:
-
-                    break;
+                switch (e.PageNum)
+                {
+                    case 0:
+                        break;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -970,7 +1029,14 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void LbxGenotypeList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ClickGenotypeList(sender, e);
+            try
+            {
+                ClickGenotypeList(sender, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -980,7 +1046,14 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void LbxAnimalList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ClickAnimalList(sender);
+            try
+            {
+                ClickAnimalList(sender);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1249,27 +1322,40 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void BtnNewAnimals_Clicked(object sender, EventArgs e)
         {
-            if (CheckCurrGroup(null, true) && this.animalInits.Length < MAXANIMALGROUPS)
+            try
             {
-                Array.Resize(ref this.animalInits, this.animalInits.Length + 1);
-                this.animalInits[this.animalInits.Length - 1] = new AnimalInits();
+                if (CheckCurrGroup(null, true) && this.animalInits.Length < MAXANIMALGROUPS)
+                {
+                    Array.Resize(ref this.animalInits, this.animalInits.Length + 1);
+                    this.animalInits[this.animalInits.Length - 1] = new AnimalInits();
 
-                this.animalInits[this.animalInits.Length - 1].Genotype = this.genotypeInits[0].GenotypeName;
-                this.animalInits[this.animalInits.Length - 1].FibreDiam = 20;
+                    this.animalInits[this.animalInits.Length - 1].Genotype = this.genotypeInits[0].GenotypeName;
+                    this.animalInits[this.animalInits.Length - 1].FibreDiam = 20;
 
-                string groupText = GroupText(animalInits.Length - 1);
-                groupsList.AppendValues(groupText);
-                SelectedGroupIndex = animalInits.Length - 1;
-                ClickAnimalList(null);
+                    string groupText = GroupText(animalInits.Length - 1);
+                    groupsList.AppendValues(groupText);
+                    SelectedGroupIndex = animalInits.Length - 1;
+                    ClickAnimalList(null);
 
-                EnableButtons();
+                    EnableButtons();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
         private void BtnDeleteAnimals_Clicked(object sender, EventArgs e)
         {
-
-            EnableButtons();
+            try
+            {
+                EnableButtons();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         public static string[,] MALENAMES = { { "wether", "ram" }, { "steer", "bull" } };
@@ -1307,9 +1393,16 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeGroupGenotype(object sender, EventArgs e)
         {
-            if (!this.filling)
-                animalInits[currentGroup].Genotype = cbxGroupGenotype.SelectedValue;
-            FillCurrentGroup();
+            try
+            {
+                if (!this.filling)
+                    animalInits[currentGroup].Genotype = cbxGroupGenotype.SelectedValue;
+                FillCurrentGroup();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1319,9 +1412,16 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeNumber(object sender, EventArgs e)
         {
-            if (!this.filling)
-                animalInits[currentGroup].Number = Convert.ToInt32(deNumber.Value);
-            FillCurrentGroup();
+            try
+            {
+                if (!this.filling)
+                    animalInits[currentGroup].Number = Convert.ToInt32(deNumber.Value);
+                FillCurrentGroup();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1331,20 +1431,34 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ChangeSex(object sender, EventArgs e)
         {
-            if (!filling)
+            try
             {
-                GrazType.AnimalType animalType = GetAnimalTypeForGroup(currentGroup);
-                animalInits[currentGroup].Sex = SEXMAP[(int)animalType, cbxSex.SelectedIndex].Repro;
-                this.FillCurrentGroup();
-                this.CheckCurrGroup(cbxSex, false);
+                if (!filling)
+                {
+                    GrazType.AnimalType animalType = GetAnimalTypeForGroup(currentGroup);
+                    animalInits[currentGroup].Sex = SEXMAP[(int)animalType, cbxSex.SelectedIndex].Repro;
+                    this.FillCurrentGroup();
+                    this.CheckCurrGroup(cbxSex, false);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
         private void ChangeEditCtrl(object sender, EventArgs e)
         {
-            if (!filling)
-                CheckCurrGroup(sender, false);
-            FillCurrentGroup();
+            try
+            {
+                if (!filling)
+                    CheckCurrGroup(sender, false);
+                FillCurrentGroup();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

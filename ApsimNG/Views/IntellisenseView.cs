@@ -390,8 +390,15 @@
         [GLib.ConnectBefore]
         private void OnLeaveCompletion(object sender, FocusOutEventArgs e)
         {
-            completionForm.Hide();
-            OnLoseFocus?.Invoke(this, new EventArgs());
+            try
+            {
+                completionForm.Hide();
+                OnLoseFocus?.Invoke(this, new EventArgs());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -403,8 +410,15 @@
         [GLib.ConnectBefore]
         private void OnButtonPress(object sender, ButtonPressEventArgs e)
         {
-            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
-                HandleItemSelected();
+            try
+            {
+                if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
+                    HandleItemSelected();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -446,10 +460,17 @@
         [GLib.ConnectBefore]
         private void OnKeyRelease(object sender, KeyReleaseEventArgs e)
         {            
-            if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+            try
             {
-                HandleItemSelected();
-                e.RetVal = true;
+                if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+                {
+                    HandleItemSelected();
+                    e.RetVal = true;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
