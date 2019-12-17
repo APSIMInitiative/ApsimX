@@ -4286,7 +4286,7 @@
                     {
                       "$type": "Models.Functions.DailyMeanVPD, Models",
                       "MaximumVPDWeight": 0.66,
-                      "Name": "VPD",
+                      "Name": "DailyVPD",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4312,7 +4312,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "VPD.Value()",
+                      "VariableName": "[DailyVPD]",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4453,7 +4453,7 @@
                     {
                       "$type": "Models.Functions.DailyMeanVPD, Models",
                       "MaximumVPDWeight": 0.66,
-                      "Name": "VPD",
+                      "Name": "DailyVPD",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4479,7 +4479,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "VPD.Value()",
+                      "VariableName": "[DailyVPD]",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
