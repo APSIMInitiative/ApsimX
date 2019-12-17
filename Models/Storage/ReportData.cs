@@ -5,6 +5,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Data;
+    using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Xml.Serialization;
@@ -55,10 +56,14 @@
             }
 
             // Remove empty columns.
-            for (int columnIndex = 0; columnIndex < ColumnNames.Count; columnIndex++)
+            for (int columnIndex = 0; columnIndex < table.Columns.Count; columnIndex++)
             {
                 if (DataTableUtilities.ColumnIsNull(table.Columns[columnIndex]))
+                {
                     table.Columns.RemoveAt(columnIndex);
+                    // Need to decrement the column index because we have removed a column.
+                    columnIndex--;
+                }
             }
 
             return table;
@@ -94,22 +99,22 @@
                 // Determine if there is an array specification e.g. (2) at the end of the heading 
                 var regex = new Regex("(.+)\\(([0-9]+)\\)$");
                 var match = regex.Match(name);
-                if (match.Success)
+                for (int i = 0; i < array.Count; i++)
                 {
-                    // Found an array specification e.g. col(1)
-                    var heading = match.Groups[1].ToString();
-                    var i = Convert.ToInt32(match.Groups[2].ToString()) - 1;
-                    heading = string.Format("{0}({1})", heading, i+1);
-                    object arrayElement = array[i];
-                    FlattenValueIntoRow(heading, units, arrayElement, row);
-                }
-                else
-                {
-                    // Found no array specification - output whole array.
-                    for (int i = 0; i < array.Count; i++)
+                    if (match.Success)
                     {
-                        var heading = string.Format("{0}({1})", name, i+1);
+                        // Found an array specification e.g. col(1)
+                        var heading = match.Groups[1].ToString();
+                        var startIndex = Convert.ToInt32(match.Groups[2].ToString()) - 1;
+                        heading = string.Format("{0}({1})", heading, startIndex+i+1);
                         object arrayElement = array[i];
+                        FlattenValueIntoRow(heading, units, arrayElement, row);
+                    }
+                    else
+                    {
+                        // Found no array specification - output whole array.
+                            var heading = string.Format("{0}({1})", name, i+1);
+                            object arrayElement = array[i];
                         FlattenValueIntoRow(heading, units, arrayElement, row);  // recursion
                     }
                 }
