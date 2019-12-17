@@ -109,37 +109,44 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            plot1.Model.MouseDown -= OnChartClick;
-            plot1.Model.MouseUp -= OnChartMouseUp;
-            plot1.Model.MouseMove -= OnChartMouseMove;
-            captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
-            // It's good practice to disconnect the event handlers, as it makes memory leaks
-            // less likely. However, we may not "own" the event handlers, so how do we 
-            // know what to disconnect?
-            // We can do this via reflection. Here's how it currently can be done in Gtk#.
-            // Windows.Forms would do it differently.
-            // This may break if Gtk# changes the way they implement event handlers.
-            foreach (Widget w in popup)
+            try
             {
-                if (w is MenuItem)
+                plot1.Model.MouseDown -= OnChartClick;
+                plot1.Model.MouseUp -= OnChartMouseUp;
+                plot1.Model.MouseMove -= OnChartMouseMove;
+                captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
+                // It's good practice to disconnect the event handlers, as it makes memory leaks
+                // less likely. However, we may not "own" the event handlers, so how do we 
+                // know what to disconnect?
+                // We can do this via reflection. Here's how it currently can be done in Gtk#.
+                // Windows.Forms would do it differently.
+                // This may break if Gtk# changes the way they implement event handlers.
+                foreach (Widget w in popup)
                 {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
+                    if (w is MenuItem)
                     {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
+                        PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (pi != null)
                         {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
+                            System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
+                            if (handlers != null && handlers.ContainsKey("activate"))
+                            {
+                                EventHandler handler = (EventHandler)handlers["activate"];
+                                (w as MenuItem).Activated -= handler;
+                            }
                         }
                     }
                 }
+                Clear();
+                popup.Dispose();
+                plot1.Destroy();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
             }
-            Clear();
-            popup.Dispose();
-            plot1.Destroy();
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1184,8 +1191,15 @@ namespace UserInterface.Views
         private void OnCloseEditorPanel(object sender, EventArgs e)
         {
             /* TBI
-            this.bottomPanel.Visible = false;
-            this.splitter.Visible = false;
+            try
+            {
+                this.bottomPanel.Visible = false;
+                this.splitter.Visible = false;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
             */
         }
 
@@ -1482,76 +1496,83 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnMouseDoubleClick(object sender, OxyMouseDownEventArgs e)
         {
-            Point location = new Point((int)e.Position.X, (int)e.Position.Y);
-            Cairo.Rectangle plotRect = this.plot1.Model.PlotArea.ToRect(false);
-            Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
-            if (plotArea.Contains(location))
+            try
             {
-                Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
-                Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
-                if (legendArea.Contains(location))
+                Point location = new Point((int)e.Position.X, (int)e.Position.Y);
+                Cairo.Rectangle plotRect = this.plot1.Model.PlotArea.ToRect(false);
+                Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
+                if (plotArea.Contains(location))
                 {
-                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
-                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
-                    int seriesIndex = y / itemHeight;
-                    if (this.OnLegendClick != null)
+                    Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
+                    Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
+                    if (legendArea.Contains(location))
                     {
-                        LegendClickArgs args = new LegendClickArgs();
-                        args.SeriesIndex = seriesIndex;
-                        args.ControlKeyPressed = e.IsControlDown;
-                        this.OnLegendClick.Invoke(sender, args);
+                        int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
+                        int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
+                        int seriesIndex = y / itemHeight;
+                        if (this.OnLegendClick != null)
+                        {
+                            LegendClickArgs args = new LegendClickArgs();
+                            args.SeriesIndex = seriesIndex;
+                            args.ControlKeyPressed = e.IsControlDown;
+                            this.OnLegendClick.Invoke(sender, args);
+                        }
+                    }
+                    else
+                    {
+                        if (this.OnPlotClick != null)
+                        {
+                            this.OnPlotClick.Invoke(sender, e);
+                        }
                     }
                 }
                 else
                 {
-                    if (this.OnPlotClick != null)
+                    Rectangle leftAxisArea = new Rectangle(0, plotArea.Y, plotArea.X, plotArea.Height);
+                    Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
+                    Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
+
+                    if (this.GetAxis(Models.Graph.Axis.AxisType.Top) != null)
                     {
-                        this.OnPlotClick.Invoke(sender, e);
+                        titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
+                        topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
+                    }
+
+                    Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
+                    Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
+                    if (titleArea.Contains(location))
+                    {
+                        if (this.OnTitleClick != null)
+                        {
+                            this.OnTitleClick(sender, e);
+                        }
+                    }
+
+                    if (this.OnAxisClick != null)
+                    {
+                        if (leftAxisArea.Contains(location))
+                        {
+                            this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Left);
+                        }
+                        else if (topAxisArea.Contains(location))
+                        {
+                            this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Top);
+                        }
+                        else if (rightAxisArea.Contains(location))
+                        {
+                            this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Right);
+                        }
+                        else if (bottomAxisArea.Contains(location))
+                        {
+                            this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Bottom);
+                        }
                     }
                 }
             }
-            else
+            catch (Exception err)
             {
-                Rectangle leftAxisArea = new Rectangle(0, plotArea.Y, plotArea.X, plotArea.Height);
-                Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
-                Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
-
-                if (this.GetAxis(Models.Graph.Axis.AxisType.Top) != null)
-                {
-                    titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
-                    topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
-                }
-
-                Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
-                Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
-                if (titleArea.Contains(location))
-                {
-                    if (this.OnTitleClick != null)
-                    {
-                        this.OnTitleClick(sender, e);
-                    }
-                }
-
-                if (this.OnAxisClick != null)
-                {
-                    if (leftAxisArea.Contains(location))
-                    {
-                        this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Left);
-                    }
-                    else if (topAxisArea.Contains(location))
-                    {
-                        this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Top);
-                    }
-                    else if (rightAxisArea.Contains(location))
-                    {
-                        this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Right);
-                    }
-                    else if (bottomAxisArea.Contains(location))
-                    {
-                        this.OnAxisClick.Invoke(Models.Graph.Axis.AxisType.Bottom);
-                    }
-                }
-            } 
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1561,8 +1582,15 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments</param>
         private void OnCaptionLabelDoubleClick(object sender, ButtonPressEventArgs e)
         {
-            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && OnCaptionClick != null)
-                OnCaptionClick.Invoke(this, e);
+            try
+            {
+                if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1 && OnCaptionClick != null)
+                    OnCaptionClick.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         public Models.Graph.Axis[] Axes
@@ -1669,20 +1697,27 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnChartClick(object sender, OxyMouseDownEventArgs e)
         {
-            e.Handled = false;
-
-            inRightClick = e.ChangedButton == OxyMouseButton.Right;
-            if (e.ChangedButton == OxyMouseButton.Left) /// Left clicks only
+            try
             {
-                if (e.ClickCount == 1 && SingleClick != null)
-                    SingleClick.Invoke(this, e);
-                else if (e.ClickCount == 2)
-                    OnMouseDoubleClick(sender, e);
-            }
+                e.Handled = false;
 
-            // Annotation tool tips.
-            if (e.HitTestResult != null && e.HitTestResult.Element is OxyPlot.Annotations.Annotation)
-                plot1.TooltipText = (e.HitTestResult.Element as OxyPlot.Annotations.Annotation).ToolTip;
+                inRightClick = e.ChangedButton == OxyMouseButton.Right;
+                if (e.ChangedButton == OxyMouseButton.Left) /// Left clicks only
+                {
+                    if (e.ClickCount == 1 && SingleClick != null)
+                        SingleClick.Invoke(this, e);
+                    else if (e.ClickCount == 2)
+                        OnMouseDoubleClick(sender, e);
+                }
+
+                // Annotation tool tips.
+                if (e.HitTestResult != null && e.HitTestResult.Element is OxyPlot.Annotations.Annotation)
+                    plot1.TooltipText = (e.HitTestResult.Element as OxyPlot.Annotations.Annotation).ToolTip;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Mouse up event on chart. If in a right click, display the popup menu.</summary>
@@ -1690,11 +1725,18 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnChartMouseUp(object sender, OxyMouseEventArgs e)
         {
-            e.Handled = false;
-            if (inRightClick)
-                popup.Popup();
-            inRightClick = false;
-            plot1.TooltipText = null;
+            try
+            {
+                e.Handled = false;
+                if (inRightClick)
+                    popup.Popup();
+                inRightClick = false;
+                plot1.TooltipText = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Mouse has moved on the chart.
@@ -1704,15 +1746,28 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnChartMouseMove(object sender, OxyMouseEventArgs e)
         {
-            e.Handled = false;
-            inRightClick = false;
+            try
+            {
+                e.Handled = false;
+                inRightClick = false;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         public void ShowControls(bool visible)
         {
-            captionEventBox.Visible = visible;
-            expander1.Visible = visible && expander1.Expanded;
+            try
+            {
+                captionEventBox.Visible = visible;
+                expander1.Visible = visible && expander1.Expanded;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
-     
     }
 }
