@@ -258,7 +258,7 @@ namespace Models.Core
                     {
                         // Special case: we are trying to get a property of an array(IList). In this case
                         // we want to return the property value for all items in the array.
-                        VariableProperty property = new VariableProperty(relativeToObject, namePathBits[j]);
+                        VariableProperty property = new VariableProperty(relativeToObject, namePathBits[j], arraySpecifier);
                         properties.Add(property);
                         relativeToObject = property.Value;
                     }
