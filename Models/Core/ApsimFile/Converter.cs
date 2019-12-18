@@ -1417,10 +1417,12 @@
 
             foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
             {
-                graph["XFieldName"] = graph["XFieldName"].ToString().Replace(".Value()", "");
+                if(graph["XFieldName"] != null)
+                    graph["XFieldName"] = graph["XFieldName"].ToString().Replace(".Value()", "");
                 if (graph["X2FieldName"] != null)
                     graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(".Value()", "");
-                graph["YFieldName"] = graph["YFieldName"].ToString().Replace(".Value()", "");
+                if (graph["YFieldName"] != null)
+                    graph["YFieldName"] = graph["YFieldName"].ToString().Replace(".Value()", "");
                 if (graph["Y2FieldName"] != null)
                     graph["Y2FieldName"] = graph["Y2FieldName"].ToString().Replace(".Value()", "");
             }
