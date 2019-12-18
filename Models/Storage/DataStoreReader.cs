@@ -97,12 +97,12 @@
             return Connection.GetColumnNames(tableName);
         }
 
-        /// <summary>Return a list of column names with string data type for a table. Never returns null.</summary>
+        /// <summary>Return a list of column names/column type tuples for a table. Never returns null.</summary>
         /// <param name="tableName">The table name to return column names for.</param>
         /// <returns>Can return an empty list but never null.</returns>
-        public List<string> StringColumnNames(string tableName)
+        public List<Tuple<string, Type>> GetColumns(string tableName)
         {
-            return Connection.GetStringColumnNames(tableName);
+            return Connection.GetColumns(tableName);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@
             else
                 fieldList = fieldNames.ToList();
 
-            bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null;
+            bool hasSimulationName = fieldList.Contains("SimulationID") || fieldList.Contains("SimulationName") || simulationName != null || (filter != null && filter.Contains("SimulationName"));
             bool hasCheckpointName = fieldNamesInTable.Contains("CheckpointID") || fieldNamesInTable.Contains("CheckpointName") || checkpointName != null;
 
             sql.Append("SELECT ");
