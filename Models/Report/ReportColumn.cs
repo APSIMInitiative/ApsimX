@@ -348,8 +348,17 @@
         /// </summary>
         private object GetVariableValue()
         {
-            object value = locator.Get(variableName);
-
+            object value = null;
+            try
+            {
+                value = locator.Get(variableName);
+            }
+            catch (Exception)
+            {
+                // Swallow exception because reporting sum(Wheat.Root.PlantZone.WaterUptake) will
+                // throw an exception before the crop is sown. We don't want this to stop the
+                // simulation. Instead, simply report null.
+            }
             if (value is IFunction function)
                 value = function.Value();
             else if (value != null && (value.GetType().IsArray || value.GetType().IsClass))
