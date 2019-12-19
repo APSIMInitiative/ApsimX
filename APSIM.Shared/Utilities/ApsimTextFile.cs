@@ -621,7 +621,7 @@ namespace APSIM.Shared.Utilities
             if (IsCSVFile)
             {
                 words.Clear();
-                Line = Line.TrimEnd(',');
+                //Line = Line.TrimEnd(',');
                 words.AddRange(Line.Split(",".ToCharArray()));
             }
             else

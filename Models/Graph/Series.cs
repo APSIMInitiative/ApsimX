@@ -119,12 +119,19 @@ namespace Models.Graph
         public string Filter { get; set; }
         
         /// <summary>A list of all descriptor names that can be listed as 'vary by' in markers/line types etc.</summary>
-        public IEnumerable<string> GetDescriptorNames()
+        public IEnumerable<string> GetDescriptorNames(IStorageReader reader)
         {
             var names = new List<string>();
             foreach (var simulationDescription in FindSimulationDescriptions())
                 names.AddRange(simulationDescription.Descriptors.Select(d => d.Name));
             names.Add("Graph series");
+
+            // Add all string and integer fields to descriptor names.
+            foreach (var column in reader.GetColumns(TableName))
+                if (column.Item2 == typeof(string) || column.Item2 == typeof(int))
+                    if (column.Item1 != "CheckpointID" && column.Item1 != "SimulationID")
+                        names.Add(column.Item1);
+
             return names.Distinct();
         }
 

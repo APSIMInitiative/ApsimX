@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 67,
+  "Version": 70,
   "Name": "Simulations",
   "Children": [
     {
@@ -2888,6 +2888,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "Field",
               "Children": [
                 {
@@ -3097,6 +3099,7 @@
                         0.3
                       ],
                       "KLAT": null,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3345,7 +3348,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Inert",
                             "Location": "656, 254",
-                            "Colour": "0, 114, 178",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3353,7 +3356,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "SurfaceResidue",
                             "Location": "566, 69",
-                            "Colour": "0, 114, 178",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3361,7 +3364,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMLignin",
                             "Location": "261, 69",
-                            "Colour": "0, 114, 178",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3369,7 +3372,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCellulose",
                             "Location": "397, 70",
-                            "Colour": "0, 114, 178",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3377,7 +3380,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCarbohydrate",
                             "Location": "123, 70",
-                            "Colour": "0, 114, 178",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3385,7 +3388,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Microbial",
                             "Location": "218, 299",
-                            "Colour": "0, 114, 178",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3393,7 +3396,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Humic",
                             "Location": "458, 293",
-                            "Colour": "0, 114, 178",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3401,7 +3404,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Urea",
                             "Location": "529, 419",
-                            "Colour": "0, 158, 115",
+                            "Colour": "86, 180, 233",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3409,7 +3412,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NO3",
                             "Location": "185, 435",
-                            "Colour": "0, 158, 115",
+                            "Colour": "86, 180, 233",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3417,7 +3420,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NH4",
                             "Location": "357, 422",
-                            "Colour": "0, 158, 115",
+                            "Colour": "86, 180, 233",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3433,7 +3436,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "PlantAvailableNO3",
                             "Location": "688, 415",
-                            "Colour": "0, 158, 115",
+                            "Colour": "86, 180, 233",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -3441,7 +3444,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "PlantAvailableNH4",
                             "Location": "691, 421",
-                            "Colour": "0, 158, 115",
+                            "Colour": "86, 180, 233",
                             "OutlineColour": "Black",
                             "Transparent": false
                           }
@@ -3574,6 +3577,7 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
@@ -3685,7 +3689,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "TotalSW",
               "Children": [
                 {
@@ -3751,7 +3757,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "TotalSW Ranking vs Year",
               "Children": [
                 {
@@ -3769,7 +3777,7 @@
                   "LineThickness": 0,
                   "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
-                  "XFieldName": "Clock.Today.Year",
+                  "XFieldName": "Year",
                   "YFieldName": "TotalSW.MuStar",
                   "X2FieldName": null,
                   "Y2FieldName": null,
@@ -3817,7 +3825,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Runoff",
               "Children": [
                 {
@@ -3883,7 +3893,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Runoff Ranking vs Year",
               "Children": [
                 {
@@ -3901,7 +3913,7 @@
                   "LineThickness": 0,
                   "Checkpoint": "Current",
                   "TableName": "FallowSensitivityStatistics",
-                  "XFieldName": "Clock.Today.Year",
+                  "XFieldName": "Year",
                   "YFieldName": "FallowRunoff.MuStar",
                   "X2FieldName": null,
                   "Y2FieldName": null,
@@ -3968,7 +3980,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Year 1981",
               "Children": [
                 {
@@ -3994,7 +4008,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[Clock.Today.Year] = 1981",
+                  "Filter": "[Year] = 1981",
                   "Name": "series1",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4034,7 +4048,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Year 1982",
               "Children": [
                 {
@@ -4060,7 +4076,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[Clock.Today.Year] = 1982",
+                  "Filter": "[Year] = 1982",
                   "Name": "series1",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4100,7 +4116,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Year 1983",
               "Children": [
                 {
@@ -4126,7 +4144,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[Clock.Today.Year] = 1983",
+                  "Filter": "[Year] = 1983",
                   "Name": "series1",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4166,7 +4184,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Year 1984",
               "Children": [
                 {
@@ -4192,7 +4212,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[Clock.Today.Year] = 1984",
+                  "Filter": "[Year] = 1984",
                   "Name": "series1",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4232,7 +4252,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Year 1985",
               "Children": [
                 {
@@ -4258,7 +4280,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[Clock.Today.Year] = 1985",
+                  "Filter": "[Year] = 1985",
                   "Name": "series1",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4298,7 +4320,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Year 1986",
               "Children": [
                 {
@@ -4324,7 +4348,7 @@
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[Clock.Today.Year] = 1986",
+                  "Filter": "[Year] = 1986",
                   "Name": "series1",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4383,7 +4407,9 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "TotalSW MuStar vs Rainfall",
               "Children": [
                 {
@@ -4461,7 +4487,9 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "TotalSW Sigma vs Ranfall",
               "Children": [
                 {
@@ -4539,7 +4567,9 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Runoff MuStar vs Rainfall",
               "Children": [
                 {
@@ -4617,7 +4647,9 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Runoff Sigma vs Ranfall",
               "Children": [
                 {
@@ -4695,7 +4727,9 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Evaporation MuStar vs Rainfall",
               "Children": [
                 {
@@ -4773,7 +4807,9 @@
                 }
               ],
               "LegendPosition": 0,
-              "DisabledSeries": null,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Evaporation Sigma vs Rainfall",
               "Children": [
                 {

@@ -364,6 +364,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>The _open</summary>
         [NonSerialized]
         private bool _open; //whether or not the database is open
+        /// <summary>path to the database</summary>
+        [NonSerialized]
+        private string dbPath; 
 
         // Windows LoadLibrary entry point
         [DllImport("kernel32.dll")]
@@ -424,6 +427,7 @@ namespace APSIM.Shared.Utilities
             }
 
             _open = true;
+            dbPath = path;
             IsReadOnly = readOnly;
             IsInMemory = path.ToLower().Contains(":memory:");
             sqlite3_busy_timeout(_db, 40000);
@@ -744,19 +748,16 @@ namespace APSIM.Shared.Utilities
             return columnNames;
         }
 
-        /// <summary>Return a list of column names with a data type of string.</summary>
-        /// <param name="tableName">Name of the table.</param>
-        /// <returns></returns>
-        public List<string> GetStringColumnNames(string tableName)
+        /// <summary>Return a list of column names/column type tuples for a table. Never returns null.</summary>
+        /// <param name="tableName">The table name to return column names for.</param>
+        /// <returns>Can return an empty list but never null.</returns>
+        public List<Tuple<string, Type>> GetColumns(string tableName)
         {
-            List<string> columns = new List<string>();
+            var columns = new List<Tuple<string, Type>>();
             DataTable columnData = ExecuteQuery("pragma table_info('" + tableName + "')");
 
             foreach (DataRow row in columnData.Rows)
-            {
-                if (row["type"].ToString() == "char(50)")
-                    columns.Add(row["name"].ToString());
-            }
+                columns.Add(new Tuple<string,Type>(row["name"].ToString(), GetTypeFromSQLiteType(row["type"].ToString())));
 
             return columns;
         }
@@ -1038,6 +1039,21 @@ namespace APSIM.Shared.Utilities
                 return "text";
         }
 
+        /// <summary>Convert SQLite type into .NET type.</summary>
+        public Type GetTypeFromSQLiteType(string sqliteType)
+        {
+            if (sqliteType == null)
+                return typeof(int);
+            else if (sqliteType == "date")
+                return typeof(DateTime);
+            else if (sqliteType == "integer")
+                return typeof(int);
+            else if (sqliteType == "real")
+                return typeof(double);
+            else
+                return typeof(string);
+        }
+
         /// <summary>Convert .NET type into an SQLite type</summary>
         public string GetDBDataTypeName(Type type, bool allowLongStrings)
         {
@@ -1103,7 +1119,22 @@ namespace APSIM.Shared.Utilities
         public void DropTable(string tableName)
         {
             ExecuteNonQuery(string.Format("DROP TABLE [{0}]", tableName));
-            ExecuteNonQuery("VACUUM");
+        }
+
+        /// <summary>
+        /// "Vacuum" the database, to defragment or clean up unused space
+        /// </summary>
+        public void Vacuum()
+        {
+            if (_open)
+            {
+                ExecuteNonQuery("VACUUM");
+                // Close to force the vacuuming to take immediate effect
+                // Then re-open to get back to where we were
+                CloseDatabase();
+                OpenDatabase(dbPath, IsReadOnly);
+            }
+
         }
 
         /// <summary>

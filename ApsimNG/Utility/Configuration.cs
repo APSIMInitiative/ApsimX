@@ -31,6 +31,10 @@ namespace Utility
         /// <summary>The maximum number of files allowed in the mru list</summary>
         public int FilesInHistory { get; set; }
 
+        /// <summary>Position of split screen divider.</summary>
+        /// <remarks>Not sure what units this uses...might be pixels.</remarks>
+        public int SplitScreenPosition { get; set; }
+
         /// <summary>The previous folder where a file was opened or saved</summary>
         public string PreviousFolder { get; set; }
 

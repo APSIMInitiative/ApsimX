@@ -104,7 +104,7 @@ namespace UserInterface.Presenters
             // Get a list of series definitions.
             try
             {
-                SeriesDefinitions = graph.GetDefinitionsToGraph(storage.Reader, SimulationFilter);
+                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter);
             }
             catch (SQLiteException e)
             {

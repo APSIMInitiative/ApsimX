@@ -101,12 +101,19 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            textentry1.FocusOutEvent -= OnLeave;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            textentry1.Changed -= OnChanged;
-            textentry1.FocusOutEvent -= OnLeave;
-            textentry1.KeyPressEvent -= OnKeyPress;
-            owner = null;
+            try
+            {
+                textentry1.FocusOutEvent -= OnLeave;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                textentry1.Changed -= OnChanged;
+                textentry1.FocusOutEvent -= OnLeave;
+                textentry1.KeyPressEvent -= OnKeyPress;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private string lastText = String.Empty;
@@ -141,10 +148,17 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnLeave(object sender, EventArgs e)
         {
-            if (Leave != null && textentry1.Text != lastText)
+            try
             {
-                lastText = textentry1.Text;
-                Leave.Invoke(this, e);
+                if (Leave != null && textentry1.Text != lastText)
+                {
+                    lastText = textentry1.Text;
+                    Leave.Invoke(this, e);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -158,32 +172,39 @@ namespace UserInterface.Views
         [GLib.ConnectBefore]
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
-            bool controlSpace = (args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask && args.Event.Key == Gdk.Key.space;
-            bool controlShiftSpace = controlSpace && (args.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
-            bool isPeriod = args.Event.Key == Gdk.Key.period;
-            if (isPeriod || controlSpace || controlShiftSpace)
+            try
             {
-                if (IntellisenseItemsNeeded != null)
+                bool controlSpace = (args.Event.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask && args.Event.Key == Gdk.Key.space;
+                bool controlShiftSpace = controlSpace && (args.Event.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
+                bool isPeriod = args.Event.Key == Gdk.Key.period;
+                if (isPeriod || controlSpace || controlShiftSpace)
                 {
-                    int x, y;
-                    textentry1.GdkWindow.GetOrigin(out x, out y);
-                    System.Drawing.Point coordinates = new System.Drawing.Point(x, y + textentry1.SizeRequest().Height);
-                    NeedContextItemsArgs e = new NeedContextItemsArgs()
+                    if (IntellisenseItemsNeeded != null)
                     {
-                        Coordinates = coordinates,
-                        Code = textentry1.Text,
-                        ControlSpace = controlSpace,
-                        ControlShiftSpace = controlShiftSpace,
-                        Offset = Offset,
-                        ColNo = this.textentry1.CursorPosition
-                    };
-                    lastText = textentry1.Text;
-                    IntellisenseItemsNeeded.Invoke(this, e);
+                        int x, y;
+                        textentry1.GdkWindow.GetOrigin(out x, out y);
+                        System.Drawing.Point coordinates = new System.Drawing.Point(x, y + textentry1.SizeRequest().Height);
+                        NeedContextItemsArgs e = new NeedContextItemsArgs()
+                        {
+                            Coordinates = coordinates,
+                            Code = textentry1.Text,
+                            ControlSpace = controlSpace,
+                            ControlShiftSpace = controlShiftSpace,
+                            Offset = Offset,
+                            ColNo = this.textentry1.CursorPosition
+                        };
+                        lastText = textentry1.Text;
+                        IntellisenseItemsNeeded.Invoke(this, e);
+                    }
+                }
+                else if ((args.Event.Key & Gdk.Key.Return) == Gdk.Key.Return)
+                {
+                    OnLeave(this, EventArgs.Empty);
                 }
             }
-            else if ((args.Event.Key & Gdk.Key.Return) == Gdk.Key.Return)
+            catch (Exception err)
             {
-                OnLeave(this, EventArgs.Empty);
+                ShowError(err);
             }
         }
 
@@ -194,12 +215,26 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         private void OnLeave(object o, FocusOutEventArgs args)
         {
-            OnLeave(o, new EventArgs());
+            try
+            {
+                OnLeave(o, new EventArgs());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void OnChanged(object sender, EventArgs e)
         {
-            Changed?.Invoke(this, e);
+            try
+            {
+                Changed?.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

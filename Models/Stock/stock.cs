@@ -4668,7 +4668,7 @@ namespace Models.GrazPlan
         /// <returns>Array of genotype names</returns>
         public string[] GenotypeNames(GrazType.AnimalType animal)
         {
-            AnimalParamSet paramSet = StockList.MakeParamSet("");   // can use the param filename from component inits
+            AnimalParamSet paramSet = stockModel.BaseParams;   
 
             int count = paramSet.BreedCount(animal);
             string[] namesArray = new string[count];
@@ -4688,13 +4688,19 @@ namespace Models.GrazPlan
         /// <returns>Array of genotype names</returns>
         public string[] GenotypeNamesDefined(GrazType.AnimalType animal)
         {
+            AnimalParamSet paramSet = stockModel.BaseParams;   
             string[] genoParams = GenotypeNames(animal);
             foreach (SingleGenotypeInits geno in GenoTypes)
             {
                 if (!genoParams.Contains(geno.GenotypeName))
                 {
-                    Array.Resize(ref genoParams, genoParams.Length + 1);
-                    genoParams[genoParams.Length - 1] = geno.GenotypeName;
+                    // check that the user defined genotype is of animal type
+                    AnimalParamSet parameters = paramSet.Match(geno.GenotypeName);
+                    if (parameters.Animal == animal)
+                    {
+                        Array.Resize(ref genoParams, genoParams.Length + 1);
+                        genoParams[genoParams.Length - 1] = geno.GenotypeName;
+                    }
                 }
             }
 

@@ -237,7 +237,6 @@ namespace UnitTests.ApsimNG.Views
             Assert.AreNotEqual(white, boxPlot.Stroke);
 
             // The controls should no longer be sensitive.
-            Assert.IsFalse(seriesView.X.IsSensitive);
             Assert.IsFalse(seriesView.XCumulative.IsSensitive);
             Assert.IsFalse(seriesView.XOnTop.IsSensitive);
             Assert.IsFalse(seriesView.MarkerSize.IsSensitive);
