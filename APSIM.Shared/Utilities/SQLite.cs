@@ -748,19 +748,16 @@ namespace APSIM.Shared.Utilities
             return columnNames;
         }
 
-        /// <summary>Return a list of column names with a data type of string.</summary>
-        /// <param name="tableName">Name of the table.</param>
-        /// <returns></returns>
-        public List<string> GetStringColumnNames(string tableName)
+        /// <summary>Return a list of column names/column type tuples for a table. Never returns null.</summary>
+        /// <param name="tableName">The table name to return column names for.</param>
+        /// <returns>Can return an empty list but never null.</returns>
+        public List<Tuple<string, Type>> GetColumns(string tableName)
         {
-            List<string> columns = new List<string>();
+            var columns = new List<Tuple<string, Type>>();
             DataTable columnData = ExecuteQuery("pragma table_info('" + tableName + "')");
 
             foreach (DataRow row in columnData.Rows)
-            {
-                if (row["type"].ToString() == "char(50)")
-                    columns.Add(row["name"].ToString());
-            }
+                columns.Add(new Tuple<string,Type>(row["name"].ToString(), GetTypeFromSQLiteType(row["type"].ToString())));
 
             return columns;
         }
@@ -1040,6 +1037,21 @@ namespace APSIM.Shared.Utilities
                 return "real";
             else
                 return "text";
+        }
+
+        /// <summary>Convert SQLite type into .NET type.</summary>
+        public Type GetTypeFromSQLiteType(string sqliteType)
+        {
+            if (sqliteType == null)
+                return typeof(int);
+            else if (sqliteType == "date")
+                return typeof(DateTime);
+            else if (sqliteType == "integer")
+                return typeof(int);
+            else if (sqliteType == "real")
+                return typeof(double);
+            else
+                return typeof(string);
         }
 
         /// <summary>Convert .NET type into an SQLite type</summary>

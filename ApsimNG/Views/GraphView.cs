@@ -677,62 +677,66 @@ namespace UserInterface.Views
             Models.Graph.MarkerType markerType,
             Models.Graph.LineThicknessType lineThickness)
         {
-            BoxPlotSeries series = new BoxPlotSeries();
-            series.Items = GetBoxPlotItems(y);
-            series.Title = title;
-
-            // Line style
-            if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
+            if (x?.Length > 0 && y?.Length > 0)
             {
-                series.LineStyle = oxyLineType;
-                if (series.LineStyle == LineStyle.None)
-                    series.Fill = OxyColors.Transparent;
+                BoxPlotSeries series = new BoxPlotSeries();
+                series.Items = GetBoxPlotItems(x, y, xAxisType, yAxisType);
+                if (showOnLegend)
+                    series.Title = title;
+
+                // Line style
+                if (Enum.TryParse(lineType.ToString(), out LineStyle oxyLineType))
+                {
+                    series.LineStyle = oxyLineType;
+                    if (series.LineStyle == LineStyle.None)
+                        series.Fill = OxyColors.Transparent;
                     series.Stroke = OxyColors.Transparent;
+                }
+
+                // Min/max lines = marker type
+                string marker = markerType.ToString();
+                if (marker.StartsWith("Filled"))
+                    marker = marker.Remove(0, 6);
+
+                if (Enum.TryParse(marker, out OxyPlot.MarkerType oxyMarkerType))
+                    series.OutlierType = oxyMarkerType;
+
+                // Line thickness
+                if (lineThickness == LineThicknessType.Thin)
+                {
+                    double thickness = 0.5;
+                    series.StrokeThickness = thickness;
+                    series.MeanThickness = thickness;
+                    series.MedianThickness = thickness;
+                }
+
+                // Colour
+                if (colour.ToArgb() == Color.Empty.ToArgb())
+                    colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+
+                OxyColor oxyColour = Utility.Colour.ToOxy(colour);
+                series.Fill = oxyColour;
+                series.Stroke = oxyColour;
+
+                series.XAxisKey = xAxisType.ToString();
+                series.YAxisKey = yAxisType.ToString();
+
+                double width = 0.5;
+                series.BoxWidth = width;
+                series.WhiskerWidth = width;
+
+                plot1.Model.Series.Add(series);
+
+                OxyPlot.Axes.Axis xAxis = GetAxis(xAxisType);
+
+                //xAxis.Minimum = 0 - width;
+                //xAxis.Maximum = plot1.Model.Series.OfType<BoxPlotSeries>().Count() - 1 + width;
             }
-
-            // Min/max lines = marker type
-            string marker = markerType.ToString();
-            if (marker.StartsWith("Filled"))
-                marker = marker.Remove(0, 6);
-
-            if (Enum.TryParse(marker, out OxyPlot.MarkerType oxyMarkerType))
-                series.OutlierType = oxyMarkerType;
-
-            // Line thickness
-            if (lineThickness == LineThicknessType.Thin)
-            {
-                double thickness = 0.5;
-                series.StrokeThickness = thickness;
-                series.MeanThickness = thickness;
-                series.MedianThickness = thickness;
-            }
-
-            // Colour
-            if (colour.ToArgb() == Color.Empty.ToArgb())
-                colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
-
-            OxyColor oxyColour = Utility.Colour.ToOxy(colour);
-            series.Fill = oxyColour;
-            series.Stroke = oxyColour;
-
-            EnsureAxisExists(xAxisType, typeof(double));
-            EnsureAxisExists(yAxisType, typeof(double));
-
-            series.XAxisKey = xAxisType.ToString();
-            series.YAxisKey = yAxisType.ToString();
-
-            double width = 0.5;
-            series.BoxWidth = width;
-            series.WhiskerWidth = width;
-
-            plot1.Model.Series.Add(series);
-
-            OxyPlot.Axes.Axis xAxis = GetAxis(xAxisType);
-            xAxis.Minimum = 0 - width;
-            xAxis.Maximum = plot1.Model.Series.OfType<BoxPlotSeries>().Count() - 1 + width;
         }
 
-        private List<BoxPlotItem> GetBoxPlotItems(double[] data)
+        private List<BoxPlotItem> GetBoxPlotItems(object[] x, double[] data, 
+                                                  Models.Graph.Axis.AxisType xAxisType,
+                                                  Models.Graph.Axis.AxisType yAxisType)
         {
             data = data.Where(d => !double.IsNaN(d)).ToArray();
             double[] fiveNumberSummary = data.FiveNumberSummary();
@@ -742,8 +746,32 @@ namespace UserInterface.Views
             double upperQuartile = fiveNumberSummary[3];
             double max = fiveNumberSummary[4];
 
-            int index = plot1.Model.Series.OfType<BoxPlotSeries>().Count();
-            return new List<BoxPlotItem>() { new BoxPlotItem(index, min, lowerQuartile, median, upperQuartile, max) };
+            double xValue = plot1.Model.Series.OfType<BoxPlotSeries>().Count();
+            if (x[0] is double)
+            {
+                xValue = (double)x[0];
+                EnsureAxisExists(xAxisType, typeof(double));
+            }
+            else
+            {
+                EnsureAxisExists(xAxisType, typeof(string));
+                CategoryAxis axis = GetAxis(xAxisType) as CategoryAxis;
+                if (axis != null)
+                {
+                    var xLabel = x[0].ToString();
+                    int index = axis.Labels.IndexOf(xLabel);
+                    if (index == -1)
+                    {
+                        axis.Labels.Add(xLabel);
+                        index = axis.Labels.IndexOf(xLabel);
+                    }
+                    xValue = index;
+                }
+            }
+            
+            EnsureAxisExists(yAxisType, typeof(double));
+
+            return new List<BoxPlotItem>() { new BoxPlotItem(xValue, min, lowerQuartile, median, upperQuartile, max) };
         }
 
         /// <summary>
@@ -1252,6 +1280,16 @@ namespace UserInterface.Views
                 {
                     int numDecimalPlaces = st.Length - pos - 1;
                     axis.StringFormat = "F" + numDecimalPlaces.ToString();
+                }
+
+                if (axis.PlotModel.Series[0] is BoxPlotSeries && 
+                    axis.Position == AxisPosition.Bottom && 
+                    axis.PlotModel.Series?.Count > 0)
+                {
+                    // Need to put a bit of extra space on the x axis.
+                    axis.MinimumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
+                    axis.MaximumPadding = (axis.ActualMaximum - axis.ActualMinimum) * 0.005;
+
                 }
             }
         }

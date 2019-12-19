@@ -484,12 +484,12 @@ namespace APSIM.Shared.Utilities
             */
         }
 
-        /// <summary>Return a list of column names with a data type of string.</summary>
-        /// <param name="tableName">Name of the table.</param>
-        /// <returns></returns>
-        public List<string> GetStringColumnNames(string tableName)
+        /// <summary>Return a list of column names/column type tuples for a table. Never returns null.</summary>
+        /// <param name="tableName">The table name to return column names for.</param>
+        /// <returns>Can return an empty list but never null.</returns>
+        public List<Tuple<string, Type>> GetColumns(string tableName)
         {
-            List<string> columnNames = new List<string>();
+            var columnNames = new List<Tuple<string, Type>>();
 
             if (IsOpen)
             {
@@ -503,7 +503,7 @@ namespace APSIM.Shared.Utilities
                 {
                     string colName = GetLongColumnName(tableName, (string)dr[0]).Trim();
                     if (!String.IsNullOrEmpty(colName))
-                        columnNames.Add(colName);
+                        columnNames.Add(new Tuple<string, Type>(colName, null));
                 }
             }
             return columnNames;
@@ -927,6 +927,23 @@ namespace APSIM.Shared.Utilities
                 return "BLOB SUB_TYPE TEXT";
             else
                 return "VARCHAR(50)";
+        }
+
+        /// <summary>Convert Firebird type into .NET type.</summary>
+        public Type GetTypeFromFirebirdType(string firebirdType)
+        {
+            if (firebirdType == null)
+                return typeof(int);
+            else if (firebirdType == "TIMESTAMP")
+                return typeof(DateTime);
+            else if (firebirdType == "INTEGER")
+                return typeof(int);
+            else if (firebirdType == "FLOAT")
+                return typeof(float);
+            else if (firebirdType == "DOUBLE PRECISION")
+                return typeof(double);
+            else
+                return typeof(string);
         }
 
         /// <summary>Create the new table</summary>
