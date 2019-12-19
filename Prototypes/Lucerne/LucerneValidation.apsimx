@@ -572,6 +572,25 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AccumulateResetAtStage, Models",
+                  "ResetStageName": "FloralInitiation",
+                  "Name": "ThermalTimeAfterBudsVisible",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime.Value()",
+                      "Name": "ThermalTime",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2168,6 +2187,15 @@
                   "Name": "NodeNumber",
                   "Children": [
                     {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[BasialBuds].NodeNumber",
+                      "Name": "BasialBudNode",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.DivideFunction, Models",
                       "Name": "DeltaNode",
                       "Children": [
@@ -2388,6 +2416,113 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.PMF.Organs.BasialBuds, Models",
+                  "ResetStageName": "FloralInitiation",
+                  "NodeNumber": 0.0,
+                  "LAI": 0.0,
+                  "Name": "BasialBuds",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "DeltaLAI",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "FloralInitiation",
+                          "End": "Maturity",
+                          "Name": "PhaseLookupValue",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "MultiplyFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Area.LeafArea.DeltaLAI",
+                                  "Name": "DeltaLAI",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Area.LeafArea.DeltaLAI.Earlylag",
+                                  "Name": "Earlylag",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "DeltaNodeNumber",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "FloralInitiation",
+                          "End": "Maturity",
+                          "Name": "PhaseLookupValue",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "MultiplyFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].NodeNumber.DeltaNode",
+                                  "Name": "VariableReference",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "BasialBudFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.MaximumFunction, Models",
                   "Name": "Area",
                   "Children": [
@@ -2402,6 +2537,53 @@
                       "FractionRemovedOnPrune": 1.0,
                       "Name": "LeafArea",
                       "Children": [
+                        {
+                          "$type": "Models.Functions.LessThanFunction, Models",
+                          "Name": "BasialBudLAI",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].DaysAfterCutting",
+                              "Name": "DaysAfterCutting",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 2.0,
+                              "Units": null,
+                              "Name": "Two",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[BasialBuds].LAI",
+                              "Name": "BasialBudLAIAtCutting",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
                           "Name": "DeltaLAI",
@@ -2614,7 +2796,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "XProperty": "[Phenology].ThermalTimeAfterCutting.Value()",
+                                  "XProperty": "[Phenology].ThermalTimeAfterBudsVisible",
                                   "Name": "Decreasing",
                                   "Children": [
                                     {
@@ -2625,8 +2807,8 @@
                                         200.0
                                       ],
                                       "Y": [
-                                        1.0,
-                                        1.0,
+                                        0.0,
+                                        0.5,
                                         1.0
                                       ],
                                       "Name": "XYPairs",
@@ -2642,7 +2824,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "XProperty": "[Phenology].ThermalTimeAfterCutting.Value()",
+                                  "XProperty": "[Phenology].ThermalTimeAfterBudsVisible",
                                   "Name": "Increasing",
                                   "Children": [
                                     {
@@ -7064,18 +7246,24 @@
             "[Lucerne].Leaf.CoverDead",
             "[Lucerne].Leaf.CoverTotal",
             "[Lucerne].Leaf.DeltaPotentialLAI.Value()",
+            "[Lucerne].Leaf.Area.LeafArea.DeltaLAI",
+            "[Lucerne].Leaf.Area.LeafArea.BasialBudLAI",
             "[Lucerne].Leaf.Fn",
             "[Lucerne].Leaf.Fw",
             "[Lucerne].Leaf.Height as Height",
             "[Lucerne].Leaf.HeightFunction.DeltaHeight.Value()",
             "[Lucerne].Leaf.LAI as LAI",
-            "[Lucerne].Leaf.LAIFunction.Value()",
+            "[Lucerne].Leaf.Area",
+            "[Lucerne].Leaf.Area.LeafArea.FrostDeath",
             "[Lucerne].Leaf.Live.N ",
             "[Lucerne].Leaf.Live.NConc*100 as LeafN",
             "[Lucerne].Leaf.Live.Wt *10 as LeafWt",
             "[Lucerne].Leaf.NodeNumber.Value() as NodeNumber",
+            "[Lucerne].Leaf.BasialBuds.NodeNumber",
             "[Lucerne].Leaf.SenLAI.Value()",
+            "[Lucerne].Leaf.Area.LeafArea.Senescence",
             "[Lucerne].Leaf.WaterDemand",
+            "[Lucerne].Leaf.BasialBuds.LAI",
             "[Lucerne].Phenology.CurrentPhaseName",
             "[Lucerne].Phenology.CurrentStageName",
             "[Lucerne].Phenology.DaysAfterCutting",
@@ -7126,7 +7314,8 @@
             "[Soil].SoilWater.WaterTable",
             "[Weather].DaysSinceWinterSolstice",
             "[Phenology].Photoperiod.Value() as Photoperiod",
-            "[Phenology].DeltaPhotoperiod.Value()"
+            "[Phenology].DeltaPhotoperiod.Value()",
+            "[Phenology].DaysAfterCutting"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -15228,7 +15417,7 @@
                         {
                           "$type": "Models.Graph.Axis, Models",
                           "Type": 0,
-                          "Title": "Height (mm)",
+                          "Title": "",
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
@@ -17313,7 +17502,7 @@
                         {
                           "$type": "Models.Graph.Axis, Models",
                           "Type": 0,
-                          "Title": "RootWt (Kg/ha)",
+                          "Title": "",
                           "Inverted": false,
                           "Minimum": "NaN",
                           "Maximum": "NaN",
@@ -17344,7 +17533,7 @@
                           "Checkpoint": "Current",
                           "TableName": "Report",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "Phenology.DeltaPhotoperiod.Value()",
+                          "YFieldName": "Lucerne.Leaf.Area.LeafArea.BasialBudLAI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -17589,6 +17778,269 @@
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [
+                        "SL",
+                        "SS",
+                        "LS"
+                      ],
+                      "LegendOutsideGraph": false,
+                      "Name": "BasialBudsArea",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Defoliation",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Leaf.BasialBuds.LAI",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.EventNamesOnGraph, Models",
+                              "ColumnName": "Lucerne.Phenology.CurrentStageName",
+                              "SimulationName": null,
+                              "Name": "EventNamesOnGraph",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "LAI",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted1",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [
+                        "SL",
+                        "LS"
+                      ],
+                      "LegendOutsideGraph": false,
+                      "Name": "BasialBudsNodeNumber",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": "Defoliation",
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Leaf.BasialBuds.NodeNumber",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.EventNamesOnGraph, Models",
+                              "ColumnName": "Lucerne.Phenology.CurrentStageName",
+                              "SimulationName": null,
+                              "Name": "EventNamesOnGraph",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 1,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LeafSenescence",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Defoliation",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Lucerne.Leaf.Area.LeafArea.Senescence",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -78076,7 +78528,7 @@
     },
     {
       "$type": "Models.Manager, Models",
-      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    public class Script : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            DataStore store = Apsim.Find(this, typeof(DataStore)) as DataStore;\r\n\r\n            var data = store.Reader.GetData(\"PredictedObserved\");\r\n            var predictedShootWt = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.ShootWt\");\r\n            var observedShootWt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.ShootWt\");\r\n\r\n            var stats = MathUtilities.CalcRegressionStats(\"ShootWt\", predictedShootWt, observedShootWt);\r\n\r\n            if (stats.R2 < 0.59)\r\n                throw new Exception(\"Test failed. R2 is below threshold. R2=\" + stats.R2);\r\n        }\r\n    }\r\n}\r\n",
+      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    public class Script : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            DataStore store = Apsim.Find(this, typeof(DataStore)) as DataStore;\r\n\r\n            var data = store.Reader.GetData(\"PredictedObserved\");\r\n            var predictedShootWt = DataTableUtilities.GetColumnAsDoubles(data, \"Predicted.ShootWt\");\r\n            var observedShootWt = DataTableUtilities.GetColumnAsDoubles(data, \"Observed.ShootWt\");\r\n\r\n            var stats = MathUtilities.CalcRegressionStats(\"ShootWt\", predictedShootWt, observedShootWt);\r\n\r\n            if (stats.R2 < 0.1)\r\n                throw new Exception(\"Test failed. R2 is below threshold. R2=\" + stats.R2);\r\n        }\r\n    }\r\n}\r\n",
       "Parameters": [],
       "Name": "Test",
       "IncludeInDocumentation": true,
