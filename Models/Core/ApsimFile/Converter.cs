@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
+    using Models.Functions;
     using Models.PMF;
     using Newtonsoft.Json.Linq;
     using System;
@@ -16,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 70; } }
+        public static int LatestVersion { get { return 72; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1380,6 +1381,50 @@
                     genotypes[i]["Conceptions"] = genotypes[i]["Conception"];
                     genotypes[i]["GenotypeName"] = genotypes[i]["Name"];
                 }
+            }
+        }
+
+        /// <summary>
+        /// Alters all existing linint functions to have a child variable reference IFunction called XValue instead of a
+        /// string property called XProperty that IFunction then had to locate
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion71(JObject root, string fileName)
+        {
+            foreach (JObject linint in JsonUtilities.ChildrenRecursively(root, "LinearInterpolationFunction"))
+            {
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "XValue";
+                varRef.VariableName = linint["XProperty"].ToString();
+                JsonUtilities.AddModel(linint, varRef);
+                linint.Remove("XProperty");
+            }
+        }
+
+        /// <summary>
+        /// Remove .Value() from all variable references because it is redundant
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion72(JObject root, string fileName)
+        {
+            foreach (var varRef in JsonUtilities.ChildrenRecursively(root, "VariableReference"))
+                varRef["VariableName"] = varRef["VariableName"].ToString().Replace(".Value()", "");
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Value()", "");
+
+            foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                if(graph["XFieldName"] != null)
+                    graph["XFieldName"] = graph["XFieldName"].ToString().Replace(".Value()", "");
+                if (graph["X2FieldName"] != null)
+                    graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(".Value()", "");
+                if (graph["YFieldName"] != null)
+                    graph["YFieldName"] = graph["YFieldName"].ToString().Replace(".Value()", "");
+                if (graph["Y2FieldName"] != null)
+                    graph["Y2FieldName"] = graph["Y2FieldName"].ToString().Replace(".Value()", "");
             }
         }
 
