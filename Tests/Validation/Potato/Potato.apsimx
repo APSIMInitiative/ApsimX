@@ -2822,7 +2822,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].RelativeNodeApperance",
+                                  "VariableName": "[Potato].Leaf.RelativeNodeAppearance",
                                   "Name": "XValue",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -5098,8 +5098,8 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Leaf].FinalLeafNumber.FixedValue = 19",
-                    "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,10,11",
-                    "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0",
+                    "[Leaf].DeltaLAI.Vegetative.Delta.Branches.PotentialBranchingRate.XYPairs.X = 0,6,10,11",
+                    "[Leaf].DeltaLAI.Vegetative.Delta.Branches.PotentialBranchingRate.XYPairs.Y = 1,1,2,2",
                     "[Tuber].DMDemands.Structural.DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3",
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
                   ],
@@ -5163,8 +5163,8 @@
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21",
                     "[Leaf].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1",
                     "[Leaf].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60",
-                    "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.X = 0,6,7,20,21",
-                    "[Structure].BranchingRate.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0"
+                    "[Leaf].DeltaLAI.Vegetative.Delta.Branches.PotentialBranchingRate.XYPairs.X = 0,6,20,21",
+                    "[Leaf].DeltaLAI.Vegetative.Delta.Branches.PotentialBranchingRate.XYPairs.Y = 1,1,7,0"
                   ],
                   "Name": "Rua",
                   "Children": [],
