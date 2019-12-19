@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 366,
+  "ExplorerWidth": 282,
   "Version": 72,
   "Name": "Simulations",
   "Children": [
@@ -67,8 +67,7 @@
             "[Potato].Tuber.Live.NConc",
             "[Potato].Tuber.Live.Wt",
             "[Potato].Tuber.LiveFWt",
-            "[PlantandHarvest].Script.FinalTag",
-            "[Potato].Stem.MainStemPopn"
+            "[PlantandHarvest].Script.FinalTag"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -4954,8 +4953,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Potato].SowingData.RowSpacing",
-                      "Name": "StemsPerTuber",
+                      "VariableName": "[Potato].Population",
+                      "Name": "SeedTuberPopn",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -4963,8 +4962,8 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Potato].SowingData.Population",
-                      "Name": "SeedTuberPopn",
+                      "VariableName": "[Potato].SowingData.BudNumber",
+                      "Name": "StemsPerTuber",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -6627,7 +6626,7 @@
                               "Parameters": [
                                 {
                                   "Key": "PlantingDate",
-                                  "Value": "2003-10-20"
+                                  "Value": "10/20/2003 00:00:00"
                                 },
                                 {
                                   "Key": "CultivarName",
@@ -6655,7 +6654,7 @@
                                 },
                                 {
                                   "Key": "HarvestDate",
-                                  "Value": "2004-06-01"
+                                  "Value": "06/01/2004 00:00:00"
                                 }
                               ],
                               "Name": "PlantandHarvest",
