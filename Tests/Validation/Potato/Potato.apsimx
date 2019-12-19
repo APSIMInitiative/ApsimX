@@ -2461,7 +2461,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.5,
                   "Units": null,
                   "Name": "NRetranslocationFactor",
                   "Children": [],
@@ -2793,90 +2793,44 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.PhaseLookup, Models",
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
                               "Name": "RelativeArea",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "Emergence",
-                                  "End": "TuberInitiation",
-                                  "Name": "BeforeEndPod",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "Name": "RelativeArea",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Memo, Models",
-                                          "Text": "",
-                                          "Name": "Memo",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            2.0,
-                                            7.0,
-                                            10.0,
-                                            18.0
-                                          ],
-                                          "Y": [
-                                            0.6666,
-                                            1.0,
-                                            1.0,
-                                            0.83
-                                          ],
-                                          "Name": "XYPairs",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Leaf].NodeNumber",
-                                          "Name": "XValue",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    0.0,
+                                    0.15,
+                                    0.3,
+                                    0.44,
+                                    0.59,
+                                    0.73
                                   ],
-                                  "IncludeInDocumentation": true,
+                                  "Y": [
+                                    0.074074074,
+                                    0.666666667,
+                                    1.0,
+                                    0.555555556,
+                                    0.222222222,
+                                    0.055555556
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                                  "Start": "TuberInitiation",
-                                  "End": "FinalLeaf",
-                                  "Name": "AfterEndPod",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.4,
-                                      "Units": null,
-                                      "Name": "RelativeArea",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].RelativeNodeApperance",
+                                  "Name": "XValue",
+                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2890,37 +2844,84 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "$type": "Models.Functions.MultiplyFunction, Models",
                               "Name": "Branches",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    6.0,
-                                    7.0,
-                                    8.0,
-                                    9.0
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "PotentialBranchingRate",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        8.0,
+                                        14.0,
+                                        20.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        1.0,
+                                        3.0,
+                                        3.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].NodeNumber",
+                                      "Name": "XValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
                                   ],
-                                  "Y": [
-                                    1.0,
-                                    1.0,
-                                    2.0,
-                                    2.0,
-                                    2.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NodeNumber",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "CrowdingFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.4,
+                                        0.55,
+                                        0.8,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        1.0,
+                                        0.45,
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].CoverGreen",
+                                      "Name": "XValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -2994,7 +2995,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.006,
+                  "FixedValue": 0.027,
                   "Units": null,
                   "Name": "AreaLargestLeaf",
                   "Children": [],
