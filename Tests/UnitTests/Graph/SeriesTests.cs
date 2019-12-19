@@ -105,7 +105,7 @@
             var reader = new TextStorageReader(data);
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Exp");
 
             var definitions = new List<SeriesDefinition>();
@@ -186,7 +186,7 @@
             var reader = new TextStorageReader(data);
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Irr");
             Assert.AreEqual(descriptors[1], "Fert");
 
@@ -293,7 +293,7 @@
             Apsim.ParentAllChildren(folder);
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Irr");
             Assert.AreEqual(descriptors[1], "Fert");
             Assert.AreEqual(descriptors[2], "Cultivar");
@@ -431,7 +431,7 @@
             Apsim.ParentAllChildren(folder);
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "ABC");
 
             var definitions = new List<SeriesDefinition>();
@@ -884,7 +884,7 @@
 
             var series1 = folder.Children[1].Children[0] as Series;
 
-            var descriptorNames = series1.GetDescriptorNames().ToArray();
+            var descriptorNames = series1.GetDescriptorNames(reader).ToArray();
             //Assert.AreEqual(descriptorNames, new string[] { "SimulationName", "Graph series", "ABC" });
 
             var definitions = new List<SeriesDefinition>();
@@ -954,7 +954,7 @@
             var reader = new TextStorageReader(data);
 
             var series = folder.Children[1] as Series;
-            var descriptors = series.GetDescriptorNames().ToList();
+            var descriptors = series.GetDescriptorNames(reader).ToList();
             Assert.AreEqual(descriptors[0], "Exp");
 
             var definitions = new List<SeriesDefinition>();
