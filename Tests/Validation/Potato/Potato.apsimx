@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 340,
+  "ExplorerWidth": 366,
   "Version": 70,
   "Name": "Simulations",
   "Children": [
@@ -67,7 +67,8 @@
             "[Potato].Tuber.Live.NConc",
             "[Potato].Tuber.Live.Wt",
             "[Potato].Tuber.LiveFWt",
-            "[PlantandHarvest].Script.FinalTag"
+            "[PlantandHarvest].Script.FinalTag",
+            "[Potato].Stem.MainStemPopn"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -290,7 +291,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Potato].Leaf.NodeNumber.DeltaNodeNumber",
+                      "VariableName": "[Potato].Leaf.NodeNumber.DeltaNode",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -346,7 +347,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Potato].Leaf.NodeNumber.DeltaNodeNumber",
+                      "VariableName": "[Potato].Leaf.NodeNumber.DeltaNode",
                       "Name": "Progression",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -2807,7 +2808,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].VegetativeThermalTime",
+                                  "VariableName": "[Phenology].ThermalTime",
                                   "Name": "TT",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -4471,7 +4472,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": " [Structure].DeltaTipNumber",
+                              "VariableName": " [Leaf].NodeNumber.DeltaNode",
                               "Name": "DeltaNodesPerStem",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -4490,7 +4491,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].TotalStemPopn",
+                              "VariableName": "[Stem].MainStemPopn",
                               "Name": "StemNumber",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -4691,8 +4692,8 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Potato].SowingData.Population",
-                      "Name": "SeedTuberPopn",
+                      "VariableName": "[Potato].SowingData.RowSpacing",
+                      "Name": "StemsPerTuber",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -4700,8 +4701,8 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Potato].SowingData.BudNumber",
-                      "Name": "StemsPerTuber",
+                      "VariableName": "[Potato].SowingData.Population",
+                      "Name": "SeedTuberPopn",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -6727,6 +6728,104 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 3,
+                          "Title": "Date",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Graph.Axis, Models",
+                          "Type": 0,
+                          "Title": "Appeared leaves",
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 3,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "StemPopn",
+                      "Children": [
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Cultivar",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Report",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Potato.Stem.MainStemPopn",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Cultivar",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "Checkpoint": "Current",
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Potato.Leaf.NodeNumber",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -7061,7 +7160,7 @@
                       ],
                       "LegendPosition": 1,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafWt",
                       "Children": [
