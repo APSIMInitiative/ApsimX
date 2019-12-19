@@ -38,6 +38,7 @@
             "[Potato].Leaf.Live.NConc",
             "[Potato].Leaf.SpecificArea",
             "[Potato].Phenology.CurrentPhaseName",
+            "[Potato].Phenology.CurrentStageName",
             "[Potato].Phenology.Stage",
             "[Potato].Root.Dead.N",
             "[Potato].Root.Dead.NConc",
@@ -1763,10 +1764,10 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            10.0,
-                            20.0,
-                            30.0,
-                            40.0
+                            2.0,
+                            12.0,
+                            24.0,
+                            34.0
                           ],
                           "Y": [
                             0.0,
@@ -1775,42 +1776,6 @@
                             0.0
                           ],
                           "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "FVPD",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            10.0,
-                            50.0
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis.VPD",
-                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1865,10 +1830,12 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            1.0
+                            0.4,
+                            1.5
                           ],
                           "Y": [
                             0.0,
+                            1.0,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -1906,6 +1873,26 @@
                       "Name": "RadnInt",
                       "Children": [],
                       "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": "0-1",
+                      "Name": "FVPD",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This model assumes no impact of VPD on stomatal conductance or photosynthesis.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -2023,45 +2010,55 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "ExtinctionCoefficient",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "",
-                      "Name": "Memo",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.8,
+                      "Units": null,
+                      "Name": "Constant",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        200.0,
-                        1000.0
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "LinearInterpolationFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            1.0
+                          ],
+                          "Y": [
+                            0.5,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Potato].Leaf.Fw",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
                       ],
-                      "Y": [
-                        0.6,
-                        0.4
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Potato].SowingData.RowSpacing",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2070,43 +2067,28 @@
                   "Name": "Tallness",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        1.0,
-                        2.0,
-                        3.0,
-                        4.0,
-                        5.0,
-                        6.0,
-                        9.0
+                        0.0,
+                        200.0,
+                        1200.0,
+                        4000.0
                       ],
                       "Y": [
-                        0.0,
-                        0.0,
-                        50.0,
-                        400.0,
+                        20.0,
+                        300.0,
                         700.0,
-                        900.0,
-                        1000.0
+                        900.0
                       ],
                       "Name": "XYPairs",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Stage",
+                      "VariableName": "[Stem].Live.Wt",
                       "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2114,7 +2096,7 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2315,12 +2297,12 @@
                       "X": [
                         3.0,
                         4.0,
-                        9.0
+                        6.0
                       ],
                       "Y": [
-                        0.06,
-                        0.05,
-                        0.03
+                        0.07,
+                        0.07,
+                        0.05
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -2351,12 +2333,12 @@
                       "X": [
                         3.0,
                         4.0,
-                        9.0
+                        6.0
                       ],
                       "Y": [
                         0.06,
-                        0.05,
-                        0.03
+                        0.06,
+                        0.04
                       ],
                       "Name": "XYPairs",
                       "Children": [],
@@ -2380,7 +2362,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.02,
+                  "FixedValue": 0.03,
                   "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [],
@@ -2416,23 +2398,11 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.3,
+                      "FractionLiveToResidue": 0.2,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Harvest",
                       "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.95,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2440,34 +2410,58 @@
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.6,
+                      "FractionLiveToResidue": 0.3,
                       "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
+                      "Name": "Cut",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.6,
+                      "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
                       "FractionLiveToResidue": 0.1,
                       "FractionDeadToResidue": 0.0,
+                      "Name": "Prune",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.15,
+                      "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.05,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Thin",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.5,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "NRetranslocationFactor",
                   "Children": [],
@@ -2705,11 +2699,11 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        -4.0,
+                        -1.0,
                         4.0
                       ],
                       "Y": [
-                        1.0,
+                        0.0,
                         0.0
                       ],
                       "Name": "XYPairs",
@@ -6754,7 +6748,18 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Predicted",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.EventNamesOnGraph, Models",
+                              "ColumnName": "Potato.Phenology.CurrentStageName",
+                              "SimulationName": null,
+                              "Name": "EventNamesOnGraph",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -7127,7 +7132,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "TotalWt",
                       "Children": [
@@ -7323,7 +7328,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
-                      "DisabledSeries": null,
+                      "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "TuberFreshWeight",
                       "Children": [
@@ -7352,7 +7357,18 @@
                           "CumulativeX": false,
                           "Filter": null,
                           "Name": "Prediceted",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Graph.EventNamesOnGraph, Models",
+                              "ColumnName": "Potato.Phenology.CurrentStageName",
+                              "SimulationName": null,
+                              "Name": "EventNamesOnGraph",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
