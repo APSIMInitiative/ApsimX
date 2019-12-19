@@ -56,6 +56,7 @@
         /// <param name="from">Model to copy from</param>
         private void CopyPropertiesFrom(Model from)
         {
+
             foreach (PropertyInfo property in from.GetType().GetProperties())
             {
                 if (property.CanWrite &&
@@ -65,15 +66,19 @@
                     property.Name != "IncludeInDocumentation" &&
                     property.Name != "ResourceName")
                 {
-                    object fromValue = property.GetValue(from);
-                    bool doSetPropertyValue;
-                    if (fromValue is double)
-                        doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
-                    else
-                        doSetPropertyValue = fromValue != null;
+                    var description = property.GetCustomAttribute(typeof(DescriptionAttribute));
+                    if (description == null)
+                    {
+                        object fromValue = property.GetValue(from);
+                        bool doSetPropertyValue;
+                        if (fromValue is double)
+                            doSetPropertyValue = Convert.ToDouble(fromValue, CultureInfo.InvariantCulture) != 0;
+                        else
+                            doSetPropertyValue = fromValue != null;
 
-                    if (doSetPropertyValue)
-                        property.SetValue(this, fromValue);
+                        if (doSetPropertyValue)
+                            property.SetValue(this, fromValue);
+                    }
                 }
             }
         }
