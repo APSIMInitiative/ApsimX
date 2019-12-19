@@ -295,16 +295,18 @@ namespace Models.Utilities
             }
 
             string rKey;
+            if (subKeyNames == null)
+                throw new Exception("Unable to find R entry in Registry - is R installed?.");
             if (subKeyNames.Contains("R64"))
                 rKey = registryKey + @"\R64";
             else if (subKeyNames.Contains("R"))
                 rKey = registryKey + @"\R";
             else
-                throw new Exception("Unable to find R entry in Registry.");
+                throw new Exception("Unable to find R entry in Registry - is R installed?.");
 
             List<string> versions = GetSubKeys(rKey);
             if (versions == null)
-                throw new Exception("Unable to find R entry in Registry.");
+                throw new Exception("Unable to find R entry in Registry - is R installed?.");
             else
             {
                 // Ignore Microsoft R client. 
@@ -365,8 +367,14 @@ namespace Models.Utilities
                 WebClient web = new WebClient();
                 web.DownloadFileCompleted += (sender, e) =>
                 {
-                    OnDownloadCompleted?.Invoke();
-                    InstallR(fileName);
+                    try
+                    {
+                        OnDownloadCompleted?.Invoke();
+                        InstallR(fileName);
+                    }
+                    catch
+                    {
+                    }
                 };
                 web.DownloadFileAsync(new Uri(windowsDownloadUrl), fileName);
             }
