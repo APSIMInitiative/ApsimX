@@ -153,6 +153,7 @@ namespace Models.PMF
         private void OnStartOfDay(object sender, EventArgs e)
         {
             doIncrement = true;
+            WAllocated = 0;
         }
 
         [EventSubscribe("DoPhenology")]
