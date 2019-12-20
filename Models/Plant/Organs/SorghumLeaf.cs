@@ -870,9 +870,13 @@ namespace Models.PMF.Organs
             double effectiveRue = MathUtilities.Divide(Photosynthesis.Value(), RadIntTot, 0);
 
             double radnCanopy = MathUtilities.Divide(RadIntTot, CoverGreen, MetData.Radn);
+            if (MathUtilities.FloatsAreEqual(CoverGreen, 0))
+                radnCanopy = 0;
 
             double sen_radn_crit = MathUtilities.Divide(dlt_dm_transp, effectiveRue, radnCanopy);
             double intc_crit = MathUtilities.Divide(sen_radn_crit, radnCanopy, 1.0);
+            if (MathUtilities.FloatsAreEqual(sen_radn_crit, 0))
+                intc_crit = 0;
 
             //            ! needs rework for row spacing
             double laiEquilibWaterToday;
