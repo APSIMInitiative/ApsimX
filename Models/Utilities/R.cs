@@ -409,8 +409,8 @@ namespace Models.Utilities
             // Copy installer to working directory.
             try
             {
-                string newInstallerPath = Path.Combine(workingDirectory, Path.GetFileNameWithoutExtension(installerPath));
-                File.Copy(installerPath, newInstallerPath);
+                string newInstallerPath = Path.Combine(workingDirectory, Path.GetFileName(installerPath));
+                File.Copy(installerPath, newInstallerPath, true);
                 installerPath = newInstallerPath;
             }
             catch
