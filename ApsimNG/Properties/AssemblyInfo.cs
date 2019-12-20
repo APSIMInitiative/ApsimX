@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CSIRO")]
 [assembly: AssemblyProduct("ApsimNG")]
-[assembly: AssemblyCopyright("Copyright © APSIM Initiative 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

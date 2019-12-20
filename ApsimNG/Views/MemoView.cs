@@ -82,24 +82,38 @@ namespace UserInterface.Views
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
         private void TextView_ButtonPressEvent(object o, ButtonPressEventArgs args)
         {
-            if (menuItemList.Count > 0 && args.Event.Button == 3)
+            try
             {
-                int x, y;
-                TextView.WindowToBufferCoords(TextWindowType.Text, (int)(args.Event.X), (int)(args.Event.Y), out x, out y);
-                TextIter where = TextView.GetIterAtLocation(x, y);
-                TextView.Buffer.PlaceCursor(where);
+                if (menuItemList.Count > 0 && args.Event.Button == 3)
+                {
+                    int x, y;
+                    TextView.WindowToBufferCoords(TextWindowType.Text, (int)(args.Event.X), (int)(args.Event.Y), out x, out y);
+                    TextIter where = TextView.GetIterAtLocation(x, y);
+                    TextView.Buffer.PlaceCursor(where);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            TextView.FocusOutEvent -= RichTextBox1_Leave;
-            TextView.Buffer.Changed -= RichTextBox1_TextChanged;
-            TextView.PopulatePopup -= TextView_PopulatePopup;
-            menuItemList.Clear();
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            editLabel.Clicked -= Memo_StartEdit;
-            owner = null;
+            try
+            {
+                TextView.FocusOutEvent -= RichTextBox1_Leave;
+                TextView.Buffer.Changed -= RichTextBox1_TextChanged;
+                TextView.PopulatePopup -= TextView_PopulatePopup;
+                menuItemList.Clear();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                editLabel.Clicked -= Memo_StartEdit;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -161,11 +175,18 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void RichTextBox1_Leave(object sender, FocusOutEventArgs e)
         {
-            if (MemoLeave != null)
+            try
             {
-                EditorArgs args = new EditorArgs();
-                args.TextString = TextView.Buffer.Text;
-                MemoLeave(this, args);
+                if (MemoLeave != null)
+                {
+                    EditorArgs args = new EditorArgs();
+                    args.TextString = TextView.Buffer.Text;
+                    MemoLeave(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -220,21 +241,28 @@ namespace UserInterface.Views
 
         private void TextView_PopulatePopup(object o, PopulatePopupArgs args)
         {
-            if (menuItemList.Count > 0)
+            try
             {
-                foreach (Widget w in args.Menu)
+                if (menuItemList.Count > 0)
                 {
-                    args.Menu.Remove(w);
-                    w.Destroy();
+                    foreach (Widget w in args.Menu)
+                    {
+                        args.Menu.Remove(w);
+                        w.Destroy();
+                    }
+                    foreach (MenuInfo item in menuItemList)
+                    {
+                        MenuItem menuItem = new MenuItem(item.MenuText);
+                        menuItem.Activated += item.Action;
+                        menuItem.Visible = true;
+                        args.Menu.Append(menuItem);
+                    }
+                    args.RetVal = true;
                 }
-                foreach (MenuInfo item in menuItemList)
-                {
-                    MenuItem menuItem = new MenuItem(item.MenuText);
-                    menuItem.Activated += item.Action;
-                    menuItem.Visible = true;
-                    args.Menu.Append(menuItem);
-                }
-                args.RetVal = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -293,11 +321,18 @@ namespace UserInterface.Views
         }
         private void HelpBtn_Clicked(object sender, EventArgs e)
         {
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            process.StartInfo.FileName = "https://apsimnextgeneration.netlify.com/usage/memo/";
-            process.Start();
-            // Forms.HelpForm form = Forms.HelpForm.GetHelpForm();
-            // form.Show("https://apsimnextgeneration.netlify.com/usage/memo/");
+            try
+            {
+                System.Diagnostics.Process process = new System.Diagnostics.Process();
+                process.StartInfo.FileName = "https://apsimnextgeneration.netlify.com/usage/memo/";
+                process.Start();
+                // Forms.HelpForm form = Forms.HelpForm.GetHelpForm();
+                // form.Show("https://apsimnextgeneration.netlify.com/usage/memo/");
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
     }

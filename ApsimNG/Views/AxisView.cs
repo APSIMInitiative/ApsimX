@@ -279,14 +279,21 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            entryTitle.Changed -= TitleTextBox_TextChanged;
-            entryMin.FocusOutEvent -= OnMinimumChanged;
-            entryMax.FocusOutEvent -= OnMaximumChanged;
-            entryInterval.FocusOutEvent -= OnIntervalChanged;
-            checkbutton1.Toggled -= OnCheckedChanged;
-            checkbutton2.Toggled -= OnCheckedChanged;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                entryTitle.Changed -= TitleTextBox_TextChanged;
+                entryMin.FocusOutEvent -= OnMinimumChanged;
+                entryMax.FocusOutEvent -= OnMaximumChanged;
+                entryInterval.FocusOutEvent -= OnIntervalChanged;
+                checkbutton1.Toggled -= OnCheckedChanged;
+                checkbutton2.Toggled -= OnCheckedChanged;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -296,8 +303,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void TitleTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (TitleChanged != null)
-                TitleChanged.Invoke(this, e);
+            try
+            {
+                if (TitleChanged != null)
+                    TitleChanged.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -307,8 +321,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCheckedChanged(object sender, EventArgs e)
         {
-            if (InvertedChanged != null)
-                InvertedChanged(this, e);
+            try
+            {
+                if (InvertedChanged != null)
+                    InvertedChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -318,8 +339,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnCrossesAtZeroChanged(object sender, EventArgs e)
         {
-            if (CrossesAtZeroChanged != null)
-                CrossesAtZeroChanged(this, e);
+            try
+            {
+                if (CrossesAtZeroChanged != null)
+                    CrossesAtZeroChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -329,8 +357,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnMinimumChanged(object sender, EventArgs e)
         {
-            if (MinimumChanged != null)
-                MinimumChanged(this, e);
+            try
+            {
+                if (MinimumChanged != null)
+                    MinimumChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -340,8 +375,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnMaximumChanged(object sender, EventArgs e)
         {
-            if (MaximumChanged != null)
-                MaximumChanged(this, e);
+            try
+            {
+                if (MaximumChanged != null)
+                    MaximumChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -351,8 +393,15 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments</param>
         private void OnIntervalChanged(object sender, EventArgs e)
         {
-            if (IntervalChanged != null)
-                IntervalChanged(this, e);
+            try
+            {
+                if (IntervalChanged != null)
+                    IntervalChanged(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }
