@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 72; } }
+        public static int LatestVersion { get { return 73; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1443,6 +1443,31 @@
                     graph["YFieldName"] = graph["YFieldName"].ToString().Replace(".Value()", "");
                 if (graph["Y2FieldName"] != null)
                     graph["Y2FieldName"] = graph["Y2FieldName"].ToString().Replace(".Value()", "");
+            }
+        }
+
+        /// <summary>
+        /// Alters all existing AllometricDemand functions to have a child variable reference IFunction called XValue and YValue instead of 
+        /// string property called XProperty and YProperty that it then had to locate.  Aiming to get all things using get for properties
+        /// to be doing it via Variable reference so we can stream line scoping rules
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion73(JObject root, string fileName)
+        {
+            foreach (JObject Alomet in JsonUtilities.ChildrenRecursively(root, "AllometricDemandFunction"))
+            {
+                VariableReference XvarRef = new VariableReference();
+                XvarRef.Name = "XValue";
+                XvarRef.VariableName = Alomet["XProperty"].ToString();
+                JsonUtilities.AddModel(Alomet, XvarRef);
+                Alomet.Remove("XProperty");
+                VariableReference YvarRef = new VariableReference();
+                YvarRef.Name = "YValue";
+                YvarRef.VariableName = Alomet["YProperty"].ToString();
+                JsonUtilities.AddModel(Alomet, YvarRef);
+                Alomet.Remove("YProperty");
+
             }
         }
 

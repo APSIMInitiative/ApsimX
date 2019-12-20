@@ -22,14 +22,14 @@ namespace Models.Functions.DemandFunctions
         /// <summary>The power</summary>
         [Description("Power")]
         public double Power { get; set; }
-        /// <summary>The x property</summary>
-        [Description("XProperty")]
-        public string XProperty { get; set; }
-        /// <summary>The y property</summary>
-        [Description("YProperty")]
-        public string YProperty { get; set; }
 
-        /// <summary>Gets the value.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction XValue = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction YValue = null;
+
+                /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">
         /// Cannot find variable:  + XProperty +  in function:  + this.Name
@@ -39,20 +39,10 @@ namespace Models.Functions.DemandFunctions
         public double Value(int arrayIndex = -1)
         {
             double returnValue = 0.0;
-            object XValue = Apsim.Get(this, XProperty);
-            if (XValue == null)
-                throw new Exception("Cannot find variable: " + XProperty + " in function: " + this.Name);
-            object YValue = Apsim.Get(this, YProperty);
-            if (YValue == null)
-                throw new Exception("Cannot find variable: " + YProperty + " in function: " + this.Name);
-
-            if (XValue is Array)
-                XValue = (XValue as Array).GetValue(arrayIndex);
-            if (YValue is Array)
-                YValue = (YValue as Array).GetValue(arrayIndex);
-            double Target = Const * Math.Pow((double)XValue, Power);
-            returnValue = Math.Max(0.0, Target - (double)YValue);
-
+            if (XValue.Value(arrayIndex) < 0)
+                throw new Exception(this.Name + "'s XValue returned a negative which will cause the power function to return a Nan");
+            double Target = Const * Math.Pow(XValue.Value(arrayIndex), Power);
+            returnValue = Math.Max(0.0, Target - YValue.Value(arrayIndex));
             return returnValue;
         }
 
