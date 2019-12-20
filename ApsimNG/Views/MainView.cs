@@ -203,13 +203,20 @@
         [GLib.ConnectBefore]
         private void OnChangeTab(object sender, SwitchPageArgs args)
         {
-            Notebook control = sender as Notebook;
-
-            for (int i = 0; i < control.Children.Length; i++)
+            try
             {
-                // The top-level widget in the tab label is always an event box.
-                Widget tabLabel = control.GetTabLabel(control.Children[i]);
-                tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                Notebook control = sender as Notebook;
+
+                for (int i = 0; i < control.Children.Length; i++)
+                {
+                    // The top-level widget in the tab label is always an event box.
+                    Widget tabLabel = control.GetTabLabel(control.Children[i]);
+                    tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
         
@@ -528,7 +535,14 @@
         /// <param name="e"></param>
         public void OnCloseBtnClick(object o, EventArgs e)
         {
-            CloseTabContaining(o);
+            try
+            {
+                CloseTabContaining(o);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Close a tab.</summary>
@@ -807,7 +821,14 @@
         [GLib.ConnectBefore]
         private void ShowDetailedErrorMessage(object sender, EventArgs args)
         {
-            ShowDetailedError?.Invoke(sender, args);
+            try
+            {
+                ShowDetailedError?.Invoke(sender, args);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -818,11 +839,18 @@
         /// <param name="args">Event arguments.</param>
         public void ToggleTheme(object sender, EventArgs args)
         {
-            if (sender is ToolButton)
+            try
             {
-                ToolButton button = sender as ToolButton;
-                button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
-                button.IconWidget.ShowAll();
+                if (sender is ToolButton)
+                {
+                    ToolButton button = sender as ToolButton;
+                    button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
+                    button.IconWidget.ShowAll();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -860,9 +888,16 @@
         /// <param name="args">Event arguments.</param>
         private void OnChangeFont(object sender, EventArgs args)
         {
-            Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
-            Utility.Configuration.Settings.Font = newFont;
-            ChangeFont(newFont);
+            try
+            {
+                Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
+                Utility.Configuration.Settings.Font = newFont;
+                ChangeFont(newFont);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -873,14 +908,21 @@
         /// <param name="args">Event arguments.</param>
         private void OnDestroyFontDialog(object sender, EventArgs args)
         {
-            if (fontDialog == null)
-                return;
-            
-            fontDialog.OkButton.Clicked -= OnChangeFont;
-            fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
-            fontDialog.ApplyButton.Clicked -= OnChangeFont;
-            fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
-            fontDialog.Destroy();
+            try
+            {
+                if (fontDialog == null)
+                    return;
+                
+                fontDialog.OkButton.Clicked -= OnChangeFont;
+                fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
+                fontDialog.ApplyButton.Clicked -= OnChangeFont;
+                fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
+                fontDialog.Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -931,10 +973,17 @@
         /// <param name="e">Event arguments.</param>
         protected void OnStopClicked(object o, EventArgs e)
         {
-            if (StopSimulation != null)
+            try
             {
-                EventArgs args = new EventArgs();
-                StopSimulation.Invoke(this, args);
+                if (StopSimulation != null)
+                {
+                    EventArgs args = new EventArgs();
+                    StopSimulation.Invoke(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 

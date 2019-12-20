@@ -127,15 +127,22 @@ namespace UserInterface.Views
         /// <param name="args">Event arguments.</param>
         private void OnLoaded(object sender, EventArgs args)
         {
-            // Context menu keyboard shortcuts are registered when the tree
-            // view gains focus. Unfortunately, some views seem to prevent this
-            // event from firing, and as a result, the keyboard shortcuts don't
-            // work. To fix this, we select the first node in the tree when it
-            // is "realized" (rendered).
-            TreeIter iter;
-            treeviewWidget.Model.GetIterFirst(out iter);
-            string firstNodeName = treeviewWidget.Model.GetValue(iter, 0)?.ToString();
-            Tree.SelectedNode = "." + firstNodeName;
+            try
+            {
+                // Context menu keyboard shortcuts are registered when the tree
+                // view gains focus. Unfortunately, some views seem to prevent this
+                // event from firing, and as a result, the keyboard shortcuts don't
+                // work. To fix this, we select the first node in the tree when it
+                // is "realized" (rendered).
+                TreeIter iter;
+                treeviewWidget.Model.GetIterFirst(out iter);
+                string firstNodeName = treeviewWidget.Model.GetValue(iter, 0)?.ToString();
+                Tree.SelectedNode = "." + firstNodeName;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
         
         /// <summary>
@@ -145,18 +152,25 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnDestroyed(object sender, EventArgs e)
         {
-            treeviewWidget.Realized -= OnLoaded;
-            if (rightHandView != null)
+            try
             {
-                foreach (Widget child in rightHandView.Children)
+                treeviewWidget.Realized -= OnLoaded;
+                if (rightHandView != null)
                 {
-                    rightHandView.Remove(child);
-                    child.Destroy();
+                    foreach (Widget child in rightHandView.Children)
+                    {
+                        rightHandView.Remove(child);
+                        child.Destroy();
+                    }
                 }
+                ToolStrip.Destroy();
+                mainWidget.Destroyed -= OnDestroyed;
+                owner = null;
             }
-            ToolStrip.Destroy();
-            mainWidget.Destroyed -= OnDestroyed;
-            owner = null;
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

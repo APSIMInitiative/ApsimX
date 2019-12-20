@@ -67,14 +67,21 @@
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            profileGrid.MainWidget.Destroy();
-            profileGrid = null;
-            propertyGrid.MainWidget.Destroy();
-            propertyGrid = null;
-            graph.MainWidget.Destroy();
-            graph = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                profileGrid.MainWidget.Destroy();
+                profileGrid = null;
+                propertyGrid.MainWidget.Destroy();
+                propertyGrid = null;
+                graph.MainWidget.Destroy();
+                graph = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -85,8 +92,15 @@
         /// <param name="e"></param>
         private void GraphWidget_Realized(object sender, EventArgs e)
         {
-            vpaned2.PositionSet = true;
-            vpaned2.Position = vpaned1.Parent.Allocation.Height / 2;
+            try
+            {
+                vpaned2.PositionSet = true;
+                vpaned2.Position = vpaned1.Parent.Allocation.Height / 2;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -136,6 +150,5 @@
         {
             MainWidget.Visible = show;
         }
-
     }
 }
