@@ -311,12 +311,21 @@ namespace Models.Utilities
             {
                 // Ignore Microsoft R client. 
                 string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).First();
+                string installDirectory = null; 
                 using (RegistryKey latestVersionKey = Registry.LocalMachine.OpenSubKey(latestVersionKeyName))
                 {
-                    return Registry.GetValue(latestVersionKey.ToString(), "InstallPath", null) as string;
+                    if (latestVersionKey != null)
+                        installDirectory = Registry.GetValue(latestVersionKey.ToString(), "InstallPath", null) as string;
                 }
+                if (installDirectory == null)
+                    using (RegistryKey latestVersionKey = Registry.CurrentUser.OpenSubKey(latestVersionKeyName))
+                    {
+                        if (latestVersionKey != null)
+                            installDirectory = Registry.GetValue(latestVersionKey.ToString(), "InstallPath", null) as string;
+                    }
+                return installDirectory;
             }
-            
+
         }
 
         /// <summary>
@@ -328,10 +337,20 @@ namespace Models.Utilities
         {
             try
             {
+                List<string> keys;
                 using (RegistryKey key = Registry.LocalMachine.OpenSubKey(keyName))
                 {
-                    return key?.GetSubKeyNames().ToList();
+                    keys = key?.GetSubKeyNames().ToList();
                 }
+
+                if (keys == null)
+                    using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyName))
+                    {
+                        keys = key?.GetSubKeyNames().ToList();
+                    }
+
+
+                return keys;
             }
             catch
             {
