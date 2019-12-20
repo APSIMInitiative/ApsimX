@@ -2228,7 +2228,7 @@
                             },
                             {
                               "$type": "Models.Functions.LessThanFunction, Models",
-                              "Name": "LessThanFunction",
+                              "Name": "AgeBasedSenescence",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
@@ -2241,7 +2241,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 900.0,
+                                  "FixedValue": 1000.0,
                                   "Units": null,
                                   "Name": "Constant",
                                   "Children": [],
@@ -2602,7 +2602,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "Children": [],
@@ -2967,164 +2967,9 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Potato].Stem.MainStemPopn",
-                              "Name": "MainStemNumber",
+                              "VariableName": "[Stem].BranchPopn",
+                              "Name": "Stems",
                               "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.AddFunction, Models",
-                              "Name": "Branches",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Mainstem",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.AccumulateFunction, Models",
-                                  "StartStageName": "Emergence",
-                                  "EndStageName": "FinalLeaf",
-                                  "ResetStageName": null,
-                                  "FractionRemovedOnCut": 0.0,
-                                  "FractionRemovedOnHarvest": 0.0,
-                                  "FractionRemovedOnGraze": 0.0,
-                                  "FractionRemovedOnPrune": 0.0,
-                                  "Name": "Laterals",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "NewLaterals",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                          "Name": "PotentialBranchingRate",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.XYPairs, Models",
-                                              "X": [
-                                                0.0,
-                                                4.0,
-                                                5.0,
-                                                13.0,
-                                                14.0,
-                                                34.0
-                                              ],
-                                              "Y": [
-                                                0.0,
-                                                0.0,
-                                                0.5,
-                                                0.5,
-                                                0.0,
-                                                0.0
-                                              ],
-                                              "Name": "XYPairs",
-                                              "Children": [],
-                                              "IncludeInDocumentation": false,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].NodeNumber",
-                                              "Name": "XValue",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                          "Name": "CrowdingFunction",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.XYPairs, Models",
-                                              "X": [
-                                                0.0,
-                                                0.4,
-                                                0.7,
-                                                0.95,
-                                                0.98,
-                                                1.0
-                                              ],
-                                              "Y": [
-                                                1.0,
-                                                1.0,
-                                                0.0,
-                                                0.0,
-                                                -1.0,
-                                                -1.0
-                                              ],
-                                              "Name": "XYPairs",
-                                              "Children": [],
-                                              "IncludeInDocumentation": false,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].CoverGreen",
-                                              "Name": "XValue",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": false,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.DivideFunction, Models",
-                                          "Name": "NewNodes",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].ThermalTime",
-                                              "Name": "TT",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].Phyllochron",
-                                              "Name": "Phyllochron",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -4671,7 +4516,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "NReallocationFactor",
                   "Children": [],
@@ -4710,12 +4555,76 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
+                  "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "SenescenceRate",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "FinalLeaf",
+                      "End": "FullSenescence",
+                      "Name": "Reproductive",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Leaf senescence rate is calculated to ensure that all leaves are senesced by crop maturity.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "Rate",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].ThermalTime",
+                              "Name": "TT",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "TTRemaining",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].LateTuber.Target",
+                                  "Name": "SenescencePhaseLength",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Potato].Phenology.LateTuber.ProgressThroughPhase",
+                                  "Name": "SenescencePhaseComplete",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4876,7 +4785,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "Children": [],
@@ -4946,8 +4855,8 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Stem].MainStemPopn",
-                              "Name": "StemNumber",
+                              "VariableName": "[Stem].BranchPopn",
+                              "Name": "Branchs",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -5167,6 +5076,179 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "BranchPopn",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.AddFunction, Models",
+                      "Name": "BranchsPerMainStem",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "Mainstem",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AccumulateFunction, Models",
+                          "StartStageName": "Emergence",
+                          "EndStageName": "FinalLeaf",
+                          "ResetStageName": null,
+                          "FractionRemovedOnCut": 0.0,
+                          "FractionRemovedOnHarvest": 0.0,
+                          "FractionRemovedOnGraze": 0.0,
+                          "FractionRemovedOnPrune": 0.0,
+                          "Name": "Laterals",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "NewLaterals",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "PotentialBranchingRate",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        4.0,
+                                        5.0,
+                                        13.0,
+                                        14.0,
+                                        34.0
+                                      ],
+                                      "Y": [
+                                        0.0,
+                                        0.0,
+                                        0.5,
+                                        0.5,
+                                        0.0,
+                                        0.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].NodeNumber",
+                                      "Name": "XValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                  "Name": "CrowdingFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        0.4,
+                                        0.7,
+                                        0.95,
+                                        0.98,
+                                        1.0
+                                      ],
+                                      "Y": [
+                                        1.0,
+                                        1.0,
+                                        0.0,
+                                        0.0,
+                                        -1.0,
+                                        -1.0
+                                      ],
+                                      "Name": "XYPairs",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].CoverGreen",
+                                      "Name": "XValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.DivideFunction, Models",
+                                  "Name": "NewNodes",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].ThermalTime",
+                                      "Name": "TT",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].Phyllochron",
+                                      "Name": "Phyllochron",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stem].MainStemPopn",
+                      "Name": "MainStemPopn",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
@@ -5297,8 +5379,8 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Leaf].FinalLeafNumber.FixedValue = 19",
-                    "[Leaf].DeltaLAI.Vegetative.Delta.Branches.Laterals.NewLaterals.PotentialBranchingRate.XYPairs.X = 0,3,4,10,11",
-                    "[Leaf].DeltaLAI.Vegetative.Delta.Branches.Laterals.NewLaterals.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0",
+                    "[Stem].BranchPopn.BranchsPerMainStem.Laterals.NewLaterals.PotentialBranchingRate.XYPairs.X = 0,3,4,10,11",
+                    "[Stem].BranchPopn.BranchsPerMainStem.Laterals.NewLaterals.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0",
                     "[Tuber].DMDemands.Structural.DMDemandFunction.TuberFilling.DailyDemand.OrganNumber.TuberNumberPerStem.FixedValue = 3",
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.2"
                   ],
@@ -5362,8 +5444,8 @@
                     "[Tuber].LiveFWt.DryMatterContent.XYPairs.Y = 0.13,0.21",
                     "[Leaf].Phyllochron.Phyllochron.Phyllochron.XYPairs.X = 0,0.15,0.74,0.75,1",
                     "[Leaf].Phyllochron.Phyllochron.Phyllochron.XYPairs.Y = 5,40,40,60,60",
-                    "[Leaf].DeltaLAI.Vegetative.Delta.Branches.Laterals.NewLaterals.PotentialBranchingRate.XYPairs.X = 0,3,4,20,21",
-                    "[Leaf].DeltaLAI.Vegetative.Delta.Branches.Laterals.NewLaterals.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0"
+                    "[Stem].BranchPopn.BranchsPerMainStem.Laterals.NewLaterals.PotentialBranchingRate.XYPairs.X = 0,3,4,20,21",
+                    "[Stem].BranchPopn.BranchsPerMainStem.Laterals.NewLaterals.PotentialBranchingRate.XYPairs.Y = 0,0,0.5,0.5,0"
                   ],
                   "Name": "Rua",
                   "Children": [],
@@ -15789,7 +15871,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Tuber Biomass Comparison",
               "Children": [
@@ -15869,7 +15951,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Leaf Area Index",
               "Children": [
@@ -15949,7 +16031,7 @@
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
-              "DisabledSeries": null,
+              "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Tuber Nitrogen",
               "Children": [
