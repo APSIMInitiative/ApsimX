@@ -183,10 +183,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AzureSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Cloud\Azure\AzureInterface.cs" />
     <Compile Include="Cloud\BatchConstants.cs" />
     <Compile Include="Cloud\BatchCredentials.cs" />
     <Compile Include="Cloud\DownloadWindow.cs" />
     <Compile Include="Cloud\FileUploader.cs" />
+    <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\ICloudJobPresenter.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />

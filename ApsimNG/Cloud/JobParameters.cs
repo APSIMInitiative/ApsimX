@@ -1,9 +1,15 @@
-﻿using System;
+﻿using Models.Core;
+using System;
 
 namespace ApsimNG.Cloud
 {
     public class JobParameters
     {
+        /// <summary>
+        /// The model to be run on the cloud platform.
+        /// </summary>
+        public IModel Model { get; set; }
+
         /// <summary>
         /// Display name of the job.
         /// </summary>

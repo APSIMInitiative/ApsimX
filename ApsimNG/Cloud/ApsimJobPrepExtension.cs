@@ -26,8 +26,8 @@ namespace ApsimNG.Cloud
                 ResourceFiles = GetResourceFiles(job, blobClient).ToList(),
                 EnvironmentSettings = new[]
                 {
-                    new EnvironmentSetting("APSIM_STORAGE_ACCOUNT", job.StorageAuth.Account),
-                    new EnvironmentSetting("APSIM_STORAGE_KEY", job.StorageAuth.Key),
+                    new EnvironmentSetting("APSIM_STORAGE_ACCOUNT", AzureSettings.Default.StorageAccount/*job.StorageAuth.Account*/),
+                    new EnvironmentSetting("APSIM_STORAGE_KEY", AzureSettings.Default.StorageKey/*job.StorageAuth.Key*/),
                     new EnvironmentSetting("JOBNAME", job.DisplayName),
                     new EnvironmentSetting("RECIPIENT", job.Recipient)
                 }

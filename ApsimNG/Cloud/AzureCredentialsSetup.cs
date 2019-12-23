@@ -153,6 +153,12 @@ namespace ApsimNG.Cloud
             return true;
         }
 
+        public static void GetCredentialsIfNotExist()
+        {
+            if (!CredentialsExist())
+                new AzureCredentialsSetup();
+        }
+
         /// <summary>
         /// Opens a file chooser dialog for the user to select a licence (.lic) file. 
         /// Populates the input fields with the appropriate values from this file.

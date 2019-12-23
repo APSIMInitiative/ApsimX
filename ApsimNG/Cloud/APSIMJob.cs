@@ -28,16 +28,6 @@
         public string Recipient { get; set; }
 
         /// <summary>
-        /// Azure batch credentials. Each user will have their own credentials.
-        /// </summary>
-        public BatchCredentials BatchAuth { get; set; }
-
-        /// <summary>
-        /// Azure storage credentials. Each user will have their own credentials.
-        /// </summary>
-        public StorageCredentials StorageAuth { get; set; }
-
-        /// <summary>
         /// Azure pool settings for the job.
         /// </summary>
         public PoolSettings PoolInfo { get; set; }
@@ -53,15 +43,13 @@
         /// <param name="batch"></param>
         /// <param name="storage"></param>
         /// <param name="pool"></param>
-        public APSIMJob (string dispName, string zipFileSas, string packagePath, string packageVersion, string recipient, BatchCredentials batch, StorageCredentials storage, PoolSettings pool)
+        public APSIMJob (string dispName, string zipFileSas, string packagePath, string packageVersion, string recipient, PoolSettings pool)
         {
             DisplayName = dispName;
             ModelZipFileSas = zipFileSas;            
             ApplicationPackagePath = packagePath;
             ApsimApplicationPackageVersion = packageVersion;            
             Recipient = recipient;
-            BatchAuth = batch;
-            StorageAuth = storage;
             PoolInfo = pool;
         }
     }
