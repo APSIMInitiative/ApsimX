@@ -47,22 +47,52 @@ namespace Models.PMF.Organs
         [EventSubscribe("PostPhenology")]
         private void PostPhenology(object sender, EventArgs e)
         {
-           
+            DaysAfterCutting += 1;
             LAI += Deltalai.Value();
-            NodeNumber += Deltanodenumber.Value();      
-        }
-
-        /// <summary>Called when [phase changed].</summary>
-        /// <param name="phaseChange">The phase change.</param>
-        /// <param name="sender">Sender plant.</param>
-        [EventSubscribe("PhaseChanged")]
-        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
-        {
-            if (phaseChange.StageName == ResetStageName)
+            NodeNumber += Deltanodenumber.Value(); 
+            if (DaysAfterCutting==3)
+            {
                 LAI = 0;
-            NodeNumber = 0;
+                NodeNumber = 0;
+            }
         }
 
+        private int DaysAfterCutting = 0;
+
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Cutting")]
+        private void OnCut(object sender, EventArgs e)
+        {
+            DaysAfterCutting = 0;
+        }
+
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Harvesting")]
+        private void OnHarvest(object sender, EventArgs e)
+        {
+            DaysAfterCutting = 0;
+        }
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Grazing")]
+        private void OnGraze(object sender, EventArgs e)
+        {
+            DaysAfterCutting = 0;
+        }
+
+        /// <summary>Called when [cut].</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Pruning")]
+        private void OnPrune(object sender, EventArgs e)
+        {
+            DaysAfterCutting = 0;
+        }
 
         /// <summary>Called when [EndCrop].</summary>
         /// <param name="sender">The sender.</param>
