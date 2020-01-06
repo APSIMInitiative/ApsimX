@@ -639,7 +639,7 @@ namespace UserInterface.Presenters
 
             List<JobDetails> jobs = new List<JobDetails>();
             var pools = batchCli.PoolOperations.ListPools();
-            var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,stats", ExpandClause = "stats" };
+            var jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
 
             IPagedEnumerable<CloudJob> cloudJobs = null;
 

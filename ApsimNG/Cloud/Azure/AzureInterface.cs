@@ -58,27 +58,22 @@ namespace ApsimNG.Cloud.Azure
             // This VM has 16 vCPUs and 56 GiB of memory.
             // Therefore, default max tasks per VM is 16 (1 per core).
             job.PoolMaxTasksPerVM = 16;
-            string tmpZip = "";
 
             SetAzureMetaData("job-" + job.ID, "Owner", Environment.UserName.ToLower());
 
             // if jp.ApplicationPackagePath is a directory it will need to be zipped up
             if (Directory.Exists(job.ApsimXPath))
             {
-                UpdateStatus("Zipping APSIM");
+                UpdateStatus("Compressing APSIM binaries...");
 
-                tmpZip = Path.Combine(Path.GetTempPath(), "Apsim-tmp-X-" + Environment.UserName.ToLower() + ".zip");
-                if (File.Exists(tmpZip))
-                    File.Delete(tmpZip);
+                string zipFile = Path.Combine(Path.GetTempPath(), $"Apsim-tmp-X-{Environment.UserName.ToLower()}.zip");
+                if (File.Exists(zipFile))
+                    File.Delete(zipFile);
 
-                if (CreateApsimXZip(job.ApsimXPath, tmpZip) > 0)
-                {
-                    UpdateStatus("Cancelled");
-                    return;
-                }
+                CreateApsimXZip(job.ApsimXPath, zipFile);
 
-                job.ApsimXPath = tmpZip;
-                job.ApsimXVersion = Path.GetFileName(tmpZip).Substring(Path.GetFileName(tmpZip).IndexOf('-') + 1);
+                job.ApsimXPath = zipFile;
+                job.ApsimXVersion = Path.GetFileName(zipFile).Substring(Path.GetFileName(zipFile).IndexOf('-') + 1);
             }
 
             // TODO : do we actually need/use the APSIMJob class?
@@ -87,8 +82,8 @@ namespace ApsimNG.Cloud.Azure
             apsimJob.PoolInfo.VMCount = job.PoolVMCount;
 
             // Upload tools such as 7zip, AzCopy, CMail, etc.
-            UpdateStatus("Checking tools");
-            string executableDirectory = GetExecutableDirectory();
+            UpdateStatus("Uploading tools...");
+            string executableDirectory = Path.GetDirectoryName(GetType().Assembly.Location);
             string toolsDir = Path.Combine(executableDirectory, "tools");
             if (!Directory.Exists(toolsDir))
                 throw new Exception("Tools Directory not found: " + toolsDir);
@@ -96,7 +91,7 @@ namespace ApsimNG.Cloud.Azure
             foreach (string filePath in Directory.EnumerateFiles(toolsDir))
                 await UploadFileIfNeeded("tools", filePath);
 
-            if (job.EmailRecipient.Length > 0)
+            if (job.SendEmail)
             {
                 try
                 {
@@ -124,7 +119,6 @@ namespace ApsimNG.Cloud.Azure
 
             // Upload apsim.
             UpdateStatus("Uploading APSIM Next Generation");
-
             await UploadFileIfNeeded("apsim", job.ApsimXPath);
 
             // Generate model files.
@@ -146,17 +140,15 @@ namespace ApsimNG.Cloud.Azure
             }
 
             Runner run = new Runner(job.Model);
-            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { });
-
-            tmpZip = "";
+            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ });
 
             // zip up models directory
-            if (Directory.Exists(job.ModelPath)) // this test may be unnecessary
-            {
-                tmpZip = GetTempFileName("Model-", ".zip", true);
-                ZipFile.CreateFromDirectory(job.ModelPath, tmpZip, CompressionLevel.Fastest, false);
-                job.ModelPath = tmpZip;
-            }
+            if (!Directory.Exists(job.ModelPath)) // this test may be unnecessary
+                throw new Exception($"Directory does not exist: {job.ModelPath}");
+
+            string tmpZip = GetTempFileName("Model-", ".zip", true);
+            ZipFile.CreateFromDirectory(job.ModelPath, tmpZip, CompressionLevel.Fastest, false);
+            job.ModelPath = tmpZip;
 
             // Upload models.
             UpdateStatus("Uploading models");
@@ -169,14 +161,13 @@ namespace ApsimNG.Cloud.Azure
             if (!job.SaveModelFiles)
             {
                 if (Directory.Exists(job.ModelPath))
-                    Directory.Delete(job.ModelPath); // doesn't work
+                    Directory.Delete(job.ModelPath, true);
                 else if (File.Exists(job.ModelPath))
                     File.Delete(job.ModelPath);
             }
 
-            UpdateStatus("Submitting Job");
-
             // Submit job.
+            UpdateStatus("Submitting Job");
             CloudJob cloudJob = batchClient.JobOperations.CreateJob(job.ID.ToString(), GetPoolInfo(apsimJob.PoolInfo));
             cloudJob.DisplayName = apsimJob.DisplayName;
             cloudJob.JobPreparationTask = apsimJob.ToJobPreparationTask(job.ID, blobClient);
@@ -226,38 +217,23 @@ namespace ApsimNG.Cloud.Azure
         /// <param name="srcPath">Path of the ApsimX directory</param>
         /// <param name="zipPath">Path to which the zip file will be saved</param>
         /// <returns>0 if successful, 1 otherwise</returns>
-        private int CreateApsimXZip(string srcPath, string zipPath)
+        private void CreateApsimXZip(string srcPath, string zipPath)
         {
             try
             {
+                string bin = Path.Combine(srcPath, "Bin");
+                string[] extensions = new string[] { "*.dll", "*.exe" };
+
                 using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
-                {
                     using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
-                    {
-                        string bin = Path.Combine(srcPath, "Bin");
-                        string[] extensions = new string[] { "*.dll", "*.exe" };
                         foreach (string extension in extensions)
                             foreach (string fileName in Directory.EnumerateFiles(bin, extension))
                                 archive.CreateEntryFromFile(fileName, Path.GetFileName(fileName));
-                    }
-                }
-                return 0;
             }
             catch (Exception err)
             {
-                throw new Exception("Error zipping up APSIM", err);
+                throw new Exception("Error compressing APSIM", err);
             }
-        }
-
-        /// <summary>
-        /// Returns the path to the directory of the running executable.
-        /// </summary>        
-        private string GetExecutableDirectory()
-        {
-            string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
-            string path = Uri.UnescapeDataString(uri.Path);
-            return Path.GetDirectoryName(path);
         }
 
         /// <summary>

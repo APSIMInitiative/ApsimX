@@ -331,9 +331,10 @@ namespace UserInterface.Views
 
             JobParams = new JobParameters
             {
-                PoolVMCount = Int32.Parse(comboCoreCount.ActiveText) / 16,
+                PoolVMCount = int.Parse(comboCoreCount.ActiveText) / 16,
                 DisplayName = entryName.Text,
-                EmailRecipient = chkEmail.Active ? entryEmail.Text : "",
+                SendEmail = chkEmail.Active,
+                EmailRecipient = entryEmail.Text,
                 ModelPath = chkSaveModels.Active ? entryModelPath.Text : Path.GetTempPath() + Guid.NewGuid(),
                 SaveModelFiles = chkSaveModels.Active,
                 ApsimXVersion = Path.GetFileName(apsimPath).Substring(Path.GetFileName(apsimPath).IndexOf('-') + 1),

@@ -36,7 +36,12 @@ namespace ApsimNG.Cloud
         public string ApsimXVersion { get; set; }
 
         /// <summary>
-        /// An email will be sent to this address when the job finishes.
+        /// Iff true, an email will be sent to <see cref="EmailRecipient"/> when the job finishes.
+        /// </summary>
+        public bool SendEmail { get; set; }
+
+        /// <summary>
+        /// iff <see cref="SendEmail"/> is true, an email will be sent to this address when the job finishes.
         /// </summary>
         public string EmailRecipient { get; set; }
 
