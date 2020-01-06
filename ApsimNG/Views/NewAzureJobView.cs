@@ -332,16 +332,12 @@ namespace UserInterface.Views
             JobParams = new JobParameters
             {
                 PoolVMCount = Int32.Parse(comboCoreCount.ActiveText) / 16,
-                JobDisplayName = entryName.Text,
-                Recipient = chkEmail.Active ? entryEmail.Text : "",
+                DisplayName = entryName.Text,
+                EmailRecipient = chkEmail.Active ? entryEmail.Text : "",
                 ModelPath = chkSaveModels.Active ? entryModelPath.Text : Path.GetTempPath() + Guid.NewGuid(),
                 SaveModelFiles = chkSaveModels.Active,
-                ApsimFromDir = radioApsimDir.Active,
-                OutputDir = entryOutputDir.Text,
-                AutoDownload = chkDownload.Active,
-                Summarise = chkSummarise.Active,
-                ApplicationPackageVersion = Path.GetFileName(apsimPath).Substring(Path.GetFileName(apsimPath).IndexOf('-') + 1),
-                ApplicationPackagePath = apsimPath
+                ApsimXVersion = Path.GetFileName(apsimPath).Substring(Path.GetFileName(apsimPath).IndexOf('-') + 1),
+                ApsimXPath = apsimPath
             };
 
             Presenter.SubmitJob(JobParams);

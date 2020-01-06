@@ -49,20 +49,21 @@ namespace ApsimNG.Cloud.Azure
         {
             SetupClient();
 
-            job.JobId = Guid.NewGuid();
+            job.ID = Guid.NewGuid();
             job.CoresPerProcess = 1;
             job.JobManagerShouldSubmitTasks = true;
             job.AutoScale = true;
+
             // Our default VM size is the standard_d5_v2.
             // This VM has 16 vCPUs and 56 GiB of memory.
             // Therefore, default max tasks per VM is 16 (1 per core).
             job.PoolMaxTasksPerVM = 16;
             string tmpZip = "";
 
-            SetAzureMetaData("job-" + job.JobId, "Owner", Environment.UserName.ToLower());
+            SetAzureMetaData("job-" + job.ID, "Owner", Environment.UserName.ToLower());
 
             // if jp.ApplicationPackagePath is a directory it will need to be zipped up
-            if (Directory.Exists(job.ApplicationPackagePath))
+            if (Directory.Exists(job.ApsimXPath))
             {
                 UpdateStatus("Zipping APSIM");
 
@@ -70,53 +71,45 @@ namespace ApsimNG.Cloud.Azure
                 if (File.Exists(tmpZip))
                     File.Delete(tmpZip);
 
-                if (CreateApsimXZip(job.ApplicationPackagePath, tmpZip) > 0)
+                if (CreateApsimXZip(job.ApsimXPath, tmpZip) > 0)
                 {
                     UpdateStatus("Cancelled");
                     return;
                 }
 
-                job.ApplicationPackagePath = tmpZip;
-                job.ApplicationPackageVersion = Path.GetFileName(tmpZip).Substring(Path.GetFileName(tmpZip).IndexOf('-') + 1);
+                job.ApsimXPath = tmpZip;
+                job.ApsimXVersion = Path.GetFileName(tmpZip).Substring(Path.GetFileName(tmpZip).IndexOf('-') + 1);
             }
 
-            // add current job to the list of jobs                        
-
             // TODO : do we actually need/use the APSIMJob class?
-            APSIMJob apsimJob = new APSIMJob(job.JobDisplayName, "", job.ApplicationPackagePath, job.ApplicationPackageVersion, job.Recipient, PoolSettings.FromConfiguration());
+            APSIMJob apsimJob = new APSIMJob(job.DisplayName, "", job.ApsimXPath, job.ApsimXVersion, job.EmailRecipient, PoolSettings.FromConfiguration());
             apsimJob.PoolInfo.MaxTasksPerVM = job.PoolMaxTasksPerVM;
             apsimJob.PoolInfo.VMCount = job.PoolVMCount;
 
-
-            // upload tools such as 7zip, AzCopy, CMail, etc.
-
+            // Upload tools such as 7zip, AzCopy, CMail, etc.
             UpdateStatus("Checking tools");
-
             string executableDirectory = GetExecutableDirectory();
             string toolsDir = Path.Combine(executableDirectory, "tools");
             if (!Directory.Exists(toolsDir))
                 throw new Exception("Tools Directory not found: " + toolsDir);
 
             foreach (string filePath in Directory.EnumerateFiles(toolsDir))
-            {
                 await UploadFileIfNeeded("tools", filePath);
-            }
 
-            if (job.Recipient.Length > 0)
+            if (job.EmailRecipient.Length > 0)
             {
                 try
                 {
-                    // Store a config file into the job directory that has the e-mail config
-
+                    // Save a config file in the job directory that has the email settings.
                     string tmpConfig = Path.Combine(Path.GetTempPath(), "settings.txt");
                     using (StreamWriter file = new StreamWriter(tmpConfig))
                     {
-                        file.WriteLine("EmailRecipient=" + job.Recipient);
+                        file.WriteLine("EmailRecipient=" + job.EmailRecipient);
                         file.WriteLine("EmailSender=" + AzureSettings.Default["EmailSender"]);
                         file.WriteLine("EmailPW=" + AzureSettings.Default["EmailPW"]);
                     }
 
-                    await UploadFileIfNeeded("job-" + job.JobId, tmpConfig);
+                    await UploadFileIfNeeded("job-" + job.ID, tmpConfig);
                     File.Delete(tmpConfig);
                 }
                 catch (Exception err)
@@ -125,25 +118,21 @@ namespace ApsimNG.Cloud.Azure
                 }
             }
 
-            // upload job manager            
+            // Upload job manager.
             UpdateStatus("Uploading job manager");
             await UploadFileIfNeeded("jobmanager", Path.Combine(executableDirectory, "azure-apsim.exe"));
 
-
-
-            // upload apsim
+            // Upload apsim.
             UpdateStatus("Uploading APSIM Next Generation");
 
-            await UploadFileIfNeeded("apsim", job.ApplicationPackagePath);
+            await UploadFileIfNeeded("apsim", job.ApsimXPath);
 
-
-            // generate model files
-
+            // Generate model files.
             UpdateStatus("Generating model files");
             if (!Directory.Exists(job.ModelPath))
                 Directory.CreateDirectory(job.ModelPath);
 
-            // copy weather files to models directory to be zipped up
+            // Copy weather files to models directory to be compressed.
             Simulations sims = Apsim.Parent(job.Model, typeof(Simulations)) as Simulations;
             foreach (Weather child in Apsim.ChildrenRecursively(job.Model, typeof(Weather)))
             {
@@ -169,13 +158,14 @@ namespace ApsimNG.Cloud.Azure
                 job.ModelPath = tmpZip;
             }
 
-            // upload models
-
+            // Upload models.
             UpdateStatus("Uploading models");
-            apsimJob.ModelZipFileSas = UploadFile(job.ModelPath, job.JobId.ToString(), Path.GetFileName(job.ModelPath));
+            apsimJob.ModelZipFileSas = UploadFile(job.ModelPath, job.ID.ToString(), Path.GetFileName(job.ModelPath));
 
-            // clean up temporary model files
-            if (File.Exists(tmpZip)) File.Delete(tmpZip);
+            // Clean up temporary model files.
+            if (File.Exists(tmpZip))
+                File.Delete(tmpZip);
+
             if (!job.SaveModelFiles)
             {
                 if (Directory.Exists(job.ModelPath))
@@ -186,26 +176,15 @@ namespace ApsimNG.Cloud.Azure
 
             UpdateStatus("Submitting Job");
 
-
-
-
-
-
-            // submit job
-            CloudJob cloudJob = batchClient.JobOperations.CreateJob(job.JobId.ToString(), GetPoolInfo(apsimJob.PoolInfo));
+            // Submit job.
+            CloudJob cloudJob = batchClient.JobOperations.CreateJob(job.ID.ToString(), GetPoolInfo(apsimJob.PoolInfo));
             cloudJob.DisplayName = apsimJob.DisplayName;
-            cloudJob.JobPreparationTask = apsimJob.ToJobPreparationTask(job.JobId, blobClient);
-            cloudJob.JobReleaseTask = apsimJob.ToJobReleaseTask(job.JobId, blobClient);
-            cloudJob.JobManagerTask = apsimJob.ToJobManagerTask(job.JobId, blobClient, job.JobManagerShouldSubmitTasks, job.AutoScale);
+            cloudJob.JobPreparationTask = apsimJob.ToJobPreparationTask(job.ID, blobClient);
+            cloudJob.JobReleaseTask = apsimJob.ToJobReleaseTask(job.ID, blobClient);
+            cloudJob.JobManagerTask = apsimJob.ToJobManagerTask(job.ID, blobClient, job.JobManagerShouldSubmitTasks, job.AutoScale);
 
             cloudJob.Commit();
             UpdateStatus("Job Successfully submitted");
-
-            //if (job.AutoDownload)
-            //{
-            //    AzureResultsDownloader dl = new AzureResultsDownloader(job.JobId, job.JobDisplayName, job.OutputDir, null, true, job.Summarise, true, true, true);
-            //    dl.DownloadResults(true);
-            //}
         }
 
         private void SetupClient()

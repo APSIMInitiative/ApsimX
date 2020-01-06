@@ -13,27 +13,12 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Display name of the job.
         /// </summary>
-        public string JobDisplayName { get; set; }
+        public string DisplayName { get; set; }
 
         /// <summary>
         /// Unique ID of the job.
         /// </summary>
-        public Guid JobId { get; set; }
-
-        /// <summary>
-        /// Directory to save results to.
-        /// </summary>
-        public string OutputDir { get; set; }
-
-        /// <summary>
-        /// If true, results will be combined into a single .csv file.
-        /// </summary>
-        public bool Summarise { get; set; }
-
-        /// <summary>
-        /// State of the job (active, running, complete...).
-        /// </summary>
-        public string Status { get; set; }
+        public Guid ID { get; set; }
 
         /// <summary>
         /// Directory that model files should be saved to.
@@ -41,24 +26,19 @@ namespace ApsimNG.Cloud
         public string ModelPath { get; set; }
 
         /// <summary>
-        /// If true, ApplicationPackagePath points to a directory. If false, it points to a .zip file.
-        /// </summary>
-        public bool ApsimFromDir { get; set; }
-
-        /// <summary>
         /// Directory or zip file containing ApsimX to be uploaded.
         /// </summary>
-        public string ApplicationPackagePath { get; set; }
+        public string ApsimXPath { get; set; }
 
         /// <summary>
         /// Version of APSIM to be uploaded.
         /// </summary>
-        public string ApplicationPackageVersion { get; set; }
+        public string ApsimXVersion { get; set; }
 
         /// <summary>
         /// An email will be sent to this address when the job finishes.
         /// </summary>
-        public string Recipient { get; set; }
+        public string EmailRecipient { get; set; }
 
         /// <summary>
         /// Number of cores per process.
@@ -76,10 +56,6 @@ namespace ApsimNG.Cloud
         public int PoolMaxTasksPerVM { get; set; }
 
         /// <summary>
-        /// If true, results will automatically be downloaded once the job is finished.
-        /// </summary>
-        public bool AutoDownload { get; set; }
-        /// <summary>
         /// If true, model files will be saved after they are generated.
         /// </summary>
         public bool SaveModelFiles { get; set; }
@@ -89,7 +65,10 @@ namespace ApsimNG.Cloud
         /// </summary>
         public bool JobManagerShouldSubmitTasks { get; set; }
 
-
+        /// <summary>
+        /// This is used in some way by the job manager (azure-apsim.exe).
+        /// It's always set to true but I'm not brave enough to remove it.
+        /// </summary>
         public bool AutoScale { get; set; }
     }
 }

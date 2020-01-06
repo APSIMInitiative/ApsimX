@@ -102,73 +102,30 @@ namespace UserInterface.Presenters
         /// <param name="jp">Job Parameters.</param>
         public async void SubmitJob(JobParameters jp)
         {
-            if (jp.JobDisplayName.Length < 1)
-            {
-                ShowErrorMessage("A description is required");
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(jp.DisplayName))
+                throw new Exception("A description is required");
 
-            if (jp.ApplicationPackagePath.Length < 1)
-            {
-                string msg = jp.ApsimFromDir ? "Invalid Apsim Directory" : "Invalid Apsim zip file";
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(jp.ApsimXPath))
+                throw new Exception("Invalid path to apsim");
 
-            if (! (Directory.Exists(jp.ApplicationPackagePath) || File.Exists(jp.ApplicationPackagePath)) )
-            {
-                ShowErrorMessage("File or Directory not found: " + jp.ApplicationPackagePath);
-                return;
-            }
+            if (!Directory.Exists(jp.ApsimXPath) && !File.Exists(jp.ApsimXPath))
+                throw new Exception($"File or Directory not found: '{jp.ApsimXPath}'");
 
-            if (jp.CoresPerProcess.ToString().Length < 1)
-            {
-                ShowErrorMessage("Number of cores per CPU is a required field");
-                return;
-            }
+            if (jp.CoresPerProcess <= 0)
+                jp.CoresPerProcess = 1;
 
-            if (jp.SaveModelFiles && jp.ModelPath.Length < 0)
-            {
-                ShowErrorMessage("Invalid model output directory: " + jp.ModelPath);
-                return;
-            }
+            if (jp.SaveModelFiles && string.IsNullOrWhiteSpace(jp.ModelPath))
+                throw new Exception($"Invalid model output directory: '{jp.ModelPath}'");
+
             if (!Directory.Exists(jp.ModelPath))
-            {
-                try
-                {
-                    Directory.CreateDirectory(jp.ModelPath);
-                }
-                catch (Exception err)
-                {
-                    ShowError(err);
-                    return;
-                }                
-            }
-
-            if (jp.OutputDir.Length < 1)
-            {
-                ShowErrorMessage("Invalid output directory.");
-                return;
-            }
-
-            if (!Directory.Exists(jp.OutputDir))
-            {
-                try
-                {
-                    Directory.CreateDirectory(jp.OutputDir);
-                }
-                catch (Exception err)
-                {
-                    ShowError(err);
-                    return;
-                }
-            }
+                Directory.CreateDirectory(jp.ModelPath);
 
             jp.Model = Apsim.Get(presenter.ApsimXFile, presenter.CurrentNodePath) as IModel;
 
-            // save user's choices to ApsimNG.Properties.Settings            
-            
-            AzureSettings.Default["OutputDir"] = jp.OutputDir;
-            AzureSettings.Default.Save();
+            // todo: Save settings to ApsimNG.Properties.Settings.
+            //AzureSettings.Default["OutputDir"] = jp.OutputDir;
+            //AzureSettings.Default.Save();
+
             //if (batchCli == null)
             //    GetCredentials(null, null);
             //else
