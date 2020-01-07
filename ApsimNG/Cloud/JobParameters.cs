@@ -21,18 +21,17 @@ namespace ApsimNG.Cloud
         public Guid ID { get; set; }
 
         /// <summary>
-        /// Directory that model files should be saved to.
-        /// </summary>
-        public string ModelPath { get; set; }
-
-        /// <summary>
-        /// Directory or zip file containing ApsimX to be uploaded.
+        /// Directory or .zip file containing ApsimX to be uploaded.
         /// </summary>
         public string ApsimXPath { get; set; }
 
         /// <summary>
-        /// Version of APSIM to be uploaded.
+        /// Version of ApsimX to be uploaded.
         /// </summary>
+        /// <remarks>
+        /// This is currently something stupid, like tmp-hol430-X.
+        /// Changing this may break everything though so it stays for now.
+        /// </remarks>
         public string ApsimXVersion { get; set; }
 
         /// <summary>
@@ -48,6 +47,10 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Number of cores per process.
         /// </summary>
+        /// <remarks>
+        /// Under the current implementation (Azure) there is no reason
+        /// *not* to set this to 1.
+        /// </remarks>
         public int CoresPerProcess { get; set; }
 
         /// <summary>
@@ -56,18 +59,33 @@ namespace ApsimNG.Cloud
         public int PoolVMCount { get; set; }
 
         /// <summary>
-        /// Maximum number of tasks allowed on a single VM.
+        /// Maximum number of tasks allowed to run concurrently on a single VM.
         /// </summary>
-        public int PoolMaxTasksPerVM { get; set; }
+        /// <remarks>
+        /// This will always be 16 for now because the azure component
+        /// uses the standard_d5_v2 VM type, which has 16 vCPUs.
+        /// </remarks>
+        public int MaxTasksPerVM { get; set; }
 
         /// <summary>
-        /// If true, model files will be saved after they are generated.
+        /// If true, model (.apsimx) files will be saved after they are generated.
         /// </summary>
+        /// <remarks>
+        /// Do we really need this option?
+        /// </remarks>
         public bool SaveModelFiles { get; set; }
 
         /// <summary>
-        /// If true, the job manager will submit the tasks.
+        /// Directory to which model (.apsimx) files should be saved.
         /// </summary>
+        public string ModelPath { get; set; }
+
+        /// <summary>
+        /// Iff true, the job manager will submit the tasks.
+        /// </summary>
+        /// <remarks>
+        /// Always true. todo: remove this property.
+        /// </remarks>
         public bool JobManagerShouldSubmitTasks { get; set; }
 
         /// <summary>

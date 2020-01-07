@@ -29,6 +29,9 @@ namespace ApsimNG.Cloud.Azure
         public AzureInterface()
         {
             AzureCredentialsSetup.GetCredentialsIfNotExist();
+
+            // Setup Azure batch/storage clients using the given credentials.
+            SetupClient();
         }
 
         /// <summary>
@@ -45,28 +48,22 @@ namespace ApsimNG.Cloud.Azure
         /// </summary>
         /// <param name="job">Job parameters.</param>
         /// <param name="UpdateStatus">Action which will display job submission status to the user.</param>
-        public async Task SubmitJobs(JobParameters job, Action<string> UpdateStatus)
+        public async Task SubmitJob(JobParameters job, Action<string> UpdateStatus)
         {
-            SetupClient();
+            // Initialise a working directory.
+            string workingDirectory = Path.Combine(Path.GetTempPath(), job.ID.ToString());
+            Directory.CreateDirectory(workingDirectory);
 
-            job.ID = Guid.NewGuid();
-            job.CoresPerProcess = 1;
-            job.JobManagerShouldSubmitTasks = true;
-            job.AutoScale = true;
+            // Set job owner.
+            string owner = Environment.UserName.ToLower();
+            await SetAzureMetaDataAsync("job-" + job.ID, "Owner", owner);
 
-            // Our default VM size is the standard_d5_v2.
-            // This VM has 16 vCPUs and 56 GiB of memory.
-            // Therefore, default max tasks per VM is 16 (1 per core).
-            job.PoolMaxTasksPerVM = 16;
-
-            SetAzureMetaData("job-" + job.ID, "Owner", Environment.UserName.ToLower());
-
-            // if jp.ApplicationPackagePath is a directory it will need to be zipped up
+            // If the ApsimX path is a directory it will need to be compressed.
             if (Directory.Exists(job.ApsimXPath))
             {
-                UpdateStatus("Compressing APSIM binaries...");
+                UpdateStatus("Compressing APSIM Next Generation...");
 
-                string zipFile = Path.Combine(Path.GetTempPath(), $"Apsim-tmp-X-{Environment.UserName.ToLower()}.zip");
+                string zipFile = Path.Combine(workingDirectory, $"Apsim-tmp-X-{owner}.zip");
                 if (File.Exists(zipFile))
                     File.Delete(zipFile);
 
@@ -76,11 +73,6 @@ namespace ApsimNG.Cloud.Azure
                 job.ApsimXVersion = Path.GetFileName(zipFile).Substring(Path.GetFileName(zipFile).IndexOf('-') + 1);
             }
 
-            // TODO : do we actually need/use the APSIMJob class?
-            APSIMJob apsimJob = new APSIMJob(job.DisplayName, "", job.ApsimXPath, job.ApsimXVersion, job.EmailRecipient, PoolSettings.FromConfiguration());
-            apsimJob.PoolInfo.MaxTasksPerVM = job.PoolMaxTasksPerVM;
-            apsimJob.PoolInfo.VMCount = job.PoolVMCount;
-
             // Upload tools such as 7zip, AzCopy, CMail, etc.
             UpdateStatus("Uploading tools...");
             string executableDirectory = Path.GetDirectoryName(GetType().Assembly.Location);
@@ -89,40 +81,34 @@ namespace ApsimNG.Cloud.Azure
                 throw new Exception("Tools Directory not found: " + toolsDir);
 
             foreach (string filePath in Directory.EnumerateFiles(toolsDir))
-                await UploadFileIfNeeded("tools", filePath);
+                await UploadFileIfNeededAsync("tools", filePath);
 
+            // Upload email config file.
             if (job.SendEmail)
             {
-                try
-                {
-                    // Save a config file in the job directory that has the email settings.
-                    string tmpConfig = Path.Combine(Path.GetTempPath(), "settings.txt");
-                    using (StreamWriter file = new StreamWriter(tmpConfig))
-                    {
-                        file.WriteLine("EmailRecipient=" + job.EmailRecipient);
-                        file.WriteLine("EmailSender=" + AzureSettings.Default["EmailSender"]);
-                        file.WriteLine("EmailPW=" + AzureSettings.Default["EmailPW"]);
-                    }
+                StringBuilder config = new StringBuilder();
+                config.AppendLine($"EmailRecipient={job.EmailRecipient}");
+                config.AppendLine($"EmailSender={AzureSettings.Default.EmailSender}");
+                config.AppendLine($"EmailPW={AzureSettings.Default.EmailPW}");
 
-                    await UploadFileIfNeeded("job-" + job.ID, tmpConfig);
-                    File.Delete(tmpConfig);
-                }
-                catch (Exception err)
-                {
-                    throw new Exception("Error writing to settings file", err);
-                }
+                // Save a config file in the job directory that has the email settings.
+                string configFile = Path.Combine(workingDirectory, "settings.txt");
+                File.WriteAllText(configFile, config.ToString());
+
+                await UploadFileIfNeededAsync("job-" + job.ID, configFile);
+                File.Delete(configFile);
             }
 
             // Upload job manager.
-            UpdateStatus("Uploading job manager");
-            await UploadFileIfNeeded("jobmanager", Path.Combine(executableDirectory, "azure-apsim.exe"));
+            UpdateStatus("Uploading job manager...");
+            await UploadFileIfNeededAsync("jobmanager", Path.Combine(executableDirectory, "azure-apsim.exe"));
 
             // Upload apsim.
-            UpdateStatus("Uploading APSIM Next Generation");
-            await UploadFileIfNeeded("apsim", job.ApsimXPath);
+            UpdateStatus("Uploading APSIM Next Generation...");
+            await UploadFileIfNeededAsync("apsim", job.ApsimXPath);
 
             // Generate model files.
-            UpdateStatus("Generating model files");
+            UpdateStatus("Generating model files...");
             if (!Directory.Exists(job.ModelPath))
                 Directory.CreateDirectory(job.ModelPath);
 
@@ -139,32 +125,28 @@ namespace ApsimNG.Cloud.Azure
                     File.Copy(sourceFile, destFile);
             }
 
+            // Generate .apsimx file for each simulation to be run.
             Runner run = new Runner(job.Model);
             GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ });
 
-            // zip up models directory
-            if (!Directory.Exists(job.ModelPath)) // this test may be unnecessary
-                throw new Exception($"Directory does not exist: {job.ModelPath}");
-
-            string tmpZip = GetTempFileName("Model-", ".zip", true);
+            // Compress model (.apsimx file) directory.
+            UpdateStatus("Compressing model files...");
+            string tmpZip = Path.Combine(workingDirectory, $"Model-{Guid.NewGuid()}.zip");
             ZipFile.CreateFromDirectory(job.ModelPath, tmpZip, CompressionLevel.Fastest, false);
             job.ModelPath = tmpZip;
 
+            // TODO : do we really need the APSIMJob class?
+            APSIMJob apsimJob = new APSIMJob(job.DisplayName, "", job.ApsimXPath, job.ApsimXVersion, job.EmailRecipient, PoolSettings.FromConfiguration());
+            apsimJob.PoolInfo.MaxTasksPerVM = job.MaxTasksPerVM;
+            apsimJob.PoolInfo.VMCount = job.PoolVMCount;
+
             // Upload models.
-            UpdateStatus("Uploading models");
-            apsimJob.ModelZipFileSas = UploadFile(job.ModelPath, job.ID.ToString(), Path.GetFileName(job.ModelPath));
+            UpdateStatus("Uploading model files...");
+            apsimJob.ModelZipFileSas = await UploadFileIfNeededAsync(job.ID.ToString(), job.ModelPath);
 
-            // Clean up temporary model files.
-            if (File.Exists(tmpZip))
-                File.Delete(tmpZip);
-
-            if (!job.SaveModelFiles)
-            {
-                if (Directory.Exists(job.ModelPath))
-                    Directory.Delete(job.ModelPath, true);
-                else if (File.Exists(job.ModelPath))
-                    File.Delete(job.ModelPath);
-            }
+            // Clean up temp files.
+            UpdateStatus("Deleting temp files...");
+            Directory.Delete(workingDirectory, true);
 
             // Submit job.
             UpdateStatus("Submitting Job");
@@ -174,7 +156,7 @@ namespace ApsimNG.Cloud.Azure
             cloudJob.JobReleaseTask = apsimJob.ToJobReleaseTask(job.ID, blobClient);
             cloudJob.JobManagerTask = apsimJob.ToJobManagerTask(job.ID, blobClient, job.JobManagerShouldSubmitTasks, job.AutoScale);
 
-            cloudJob.Commit();
+            await cloudJob.CommitAsync();
             UpdateStatus("Job Successfully submitted");
         }
 
@@ -182,7 +164,7 @@ namespace ApsimNG.Cloud.Azure
         {
             var credentials = new Microsoft.Azure.Storage.Auth.StorageCredentials(AzureSettings.Default.StorageAccount, AzureSettings.Default.StorageKey);
             var storageAccount = new CloudStorageAccount(credentials, true);
-            blobClient = BlobAccountExtensions.CreateCloudBlobClient(storageAccount);
+            blobClient = storageAccount.CreateCloudBlobClient();
 
             string url = AzureSettings.Default.BatchUrl;
             string account = AzureSettings.Default.BatchAccount;
@@ -197,26 +179,50 @@ namespace ApsimNG.Cloud.Azure
         /// <param name="containerName">Name of the container</param>
         /// <param name="key">Metadata key/name</param>
         /// <param name="val">Data to write</param>
-        private void SetAzureMetaData(string containerName, string key, string val)
+        private async Task SetAzureMetaDataAsync(string containerName, string key, string val)
         {
-            var credentials = new Microsoft.Azure.Storage.Auth.StorageCredentials(
-                (string)AzureSettings.Default["StorageAccount"],
-                (string)AzureSettings.Default["StorageKey"]);
-
-            var storageAccount = new CloudStorageAccount(credentials, true);
-            var blobClient = Microsoft.Azure.Storage.Blob.BlobAccountExtensions.CreateCloudBlobClient(storageAccount);
             var containerRef = blobClient.GetContainerReference(containerName);
-            containerRef.CreateIfNotExists();
+            await containerRef.CreateIfNotExistsAsync();
             containerRef.Metadata.Add(key, val);
-            containerRef.SetMetadata();
+            await containerRef.SetMetadataAsync();
         }
 
         /// <summary>
-        /// Zips up a directory containing ApsimX
+        /// Upload a file to Azure's cloud storage if it does not already exist.
+        /// Return the URI and shared access signature of the uploaded blob.
         /// </summary>
-        /// <param name="srcPath">Path of the ApsimX directory</param>
-        /// <param name="zipPath">Path to which the zip file will be saved</param>
-        /// <returns>0 if successful, 1 otherwise</returns>
+        /// <param name="containerName">Name of the container to upload the file to</param>
+        /// <param name="filePath">Path to the file on disk</param>
+        private async Task<string> UploadFileIfNeededAsync(string containerName, string filePath)
+        {
+            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
+            await container.CreateIfNotExistsAsync();
+            CloudBlockBlob blob = container.GetBlockBlobReference(Path.GetFileName(filePath));
+
+            string md5 = GetFileMd5(filePath);
+            
+            // If blob already exists and md5 matches, there is no need to upload the file.
+            if (await blob.ExistsAsync() && string.Equals(md5, blob.Properties.ContentMD5, StringComparison.InvariantCultureIgnoreCase))
+                return null;
+
+            blob.Properties.ContentMD5 = md5;
+            await blob.UploadFromFileAsync(filePath);
+
+            var policy = new SharedAccessBlobPolicy
+            {
+                Permissions = SharedAccessBlobPermissions.Read,
+                SharedAccessStartTime = DateTime.UtcNow.AddMinutes(-15),
+                SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(12) // Hopefully this job won't take more than a year!
+            };
+            return blob.Uri.AbsoluteUri + blob.GetSharedAccessSignature(policy);
+        }
+
+        /// <summary>
+        /// Compress all .exe and .dll files in the ApsimX/Bin directory
+        /// into a single .zip archive at a given path.
+        /// </summary>
+        /// <param name="srcPath">Path of the ApsimX directory.</param>
+        /// <param name="zipPath">Path to which the zip file will be saved.</param>
         private void CreateApsimXZip(string srcPath, string zipPath)
         {
             try
@@ -225,36 +231,15 @@ namespace ApsimNG.Cloud.Azure
                 string[] extensions = new string[] { "*.dll", "*.exe" };
 
                 using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
-                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
-                        foreach (string extension in extensions)
-                            foreach (string fileName in Directory.EnumerateFiles(bin, extension))
-                                archive.CreateEntryFromFile(fileName, Path.GetFileName(fileName));
+                using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Update))
+                    foreach (string extension in extensions)
+                        foreach (string fileName in Directory.EnumerateFiles(bin, extension))
+                            archive.CreateEntryFromFile(fileName, Path.GetFileName(fileName));
             }
             catch (Exception err)
             {
                 throw new Exception("Error compressing APSIM", err);
             }
-        }
-
-        /// <summary>
-        /// Upload a file to Azure's cloud storage if it does not already exist.
-        /// </summary>
-        /// <param name="containerName">Name of the container to upload the file to</param>
-        /// <param name="filePath">Path to the file on disk</param>
-        private async Task UploadFileIfNeeded(string containerName, string filePath)
-        {
-            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
-            await container.CreateIfNotExistsAsync();
-            CloudBlockBlob blobRef = container.GetBlockBlobReference(Path.GetFileName(filePath));
-
-            string md5 = GetFileMd5(filePath);
-            
-            // if blob exists and md5 matches, there is no need to upload the file
-            if (blobRef.Exists() && string.Equals(md5, blobRef.Properties.ContentMD5, StringComparison.InvariantCultureIgnoreCase))
-                return;
-
-            blobRef.Properties.ContentMD5 = md5;
-            await blobRef.UploadFromFileAsync(filePath);
         }
 
         /// <summary>
@@ -271,87 +256,6 @@ namespace ApsimNG.Cloud.Azure
                     return Convert.ToBase64String(hashBytes);
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets a temp file with a given extension, checks it can be created, possibly removes it and returns the path
-        /// </summary>
-        /// <param name="prefix"></param>
-        /// <param name="extension"></param>
-        /// <param name="removeFile">Whether the file should be removed</param>
-        /// <returns></returns>
-        private string GetTempFileName(string prefix, string extension, bool removeFile)
-        {
-            int attempt = 0;
-            while (true)
-            {
-                string fileName = Path.GetRandomFileName();
-                fileName = Path.ChangeExtension(fileName, extension);
-                fileName = Path.Combine(Path.GetTempPath(), prefix + fileName);
-
-                try
-                {
-                    using (new FileStream(fileName, FileMode.CreateNew)) { }
-                    if (removeFile) File.Delete(fileName);
-                    return fileName;
-                }
-                catch (IOException err)
-                {
-                    if (++attempt == 10)
-                        throw new Exception("No unique temporary file name is available", err);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Uploads a file to an Azure container.
-        /// </summary>
-        /// <param name="filePath">Path of the local file to be uploaded.</param>
-        /// <param name="container">Container to upload the file to.</param>
-        /// <param name="remoteFileName">Name of the remote file (once it has been uploaded). Name of the local file will not be changed.</param>
-        /// <returns></returns>
-        public string UploadFile(string filePath, string container, string remoteFileName)
-        {
-            // retry connection every 3 seconds
-            //blobClient.DefaultRequestOptions.RetryPolicy = new LinearRetry(TimeSpan.FromSeconds(3), 10);
-
-            CloudBlobContainer containerRef = blobClient.GetContainerReference(container);
-            containerRef.CreateIfNotExists();
-
-            CloudBlockBlob blob = containerRef.GetBlockBlobReference(remoteFileName);
-            if (BlobNeedsUploading(blob, filePath))
-                blob.UploadFromFileAsync(filePath, new AccessCondition(), new BlobRequestOptions { ParallelOperationThreadCount = 8, StoreBlobContentMD5 = true }, null).Wait();
-
-            var policy = new SharedAccessBlobPolicy
-            {
-                Permissions = SharedAccessBlobPermissions.Read,
-                SharedAccessStartTime = DateTime.UtcNow.AddMinutes(-15),
-                SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(12)
-            };
-            return blob.Uri.AbsoluteUri + blob.GetSharedAccessSignature(policy);
-        }
-
-        /// <summary>
-        /// Checks if a blob actually needs to be uploaded to a path.
-        /// Returns false if a blob with the same MD5 already exists at the given path.
-        /// Returns true otherwise.
-        /// </summary>
-        /// <param name="blob">Blob to be uploaded.</param>
-        /// <param name="filePath">Path for the blob to be uploaded to.</param>
-        /// <returns></returns>
-        private bool BlobNeedsUploading(CloudBlockBlob blob, string filePath)
-        {
-            if (blob.Exists())
-            {
-                blob.FetchAttributes();
-
-                if (blob.Properties.ContentMD5 != null)
-                {
-                    string localMD5 = GetFileMd5(filePath);
-                    if (blob.Properties.ContentMD5 == localMD5) return false;
-                }
-            }
-            return true;
         }
 
         private PoolInformation GetPoolInfo(PoolSettings settings)

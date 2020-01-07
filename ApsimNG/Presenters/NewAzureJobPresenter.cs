@@ -132,7 +132,7 @@ namespace UserInterface.Presenters
             //    submissionWorker.RunWorkerAsync(jp);
             try
             {
-                await cloudInterface.SubmitJobs(jp, s => view.Status = s);
+                await cloudInterface.SubmitJob(jp, s => view.Status = s);
             }
             catch (Exception err)
             {

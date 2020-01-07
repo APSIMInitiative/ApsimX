@@ -13,16 +13,16 @@ namespace ApsimNG.Cloud
     public interface ICloudInterface
     {
         /// <summary>
-        /// List all Azure jobs.
+        /// List all apsim jobs on a cloud platform.
         /// </summary>
         /// <param name="ct">Cancellation token.</param>
         Task<JobDetails> ListJobs(CancellationToken ct);
 
         /// <summary>
-        /// Submit a job to be run on Azure.
+        /// Submit a job to be run on a cloud platform.
         /// </summary>
         /// <param name="job">Job parameters.</param>
         /// <param name="UpdateStatus">Action which will display job submission status to the user.</param>
-        Task SubmitJobs(JobParameters job, Action<string> UpdateStatus);
+        Task SubmitJob(JobParameters job, Action<string> UpdateStatus);
     }
 }

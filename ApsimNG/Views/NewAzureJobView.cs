@@ -338,7 +338,16 @@ namespace UserInterface.Views
                 ModelPath = chkSaveModels.Active ? entryModelPath.Text : Path.GetTempPath() + Guid.NewGuid(),
                 SaveModelFiles = chkSaveModels.Active,
                 ApsimXVersion = Path.GetFileName(apsimPath).Substring(Path.GetFileName(apsimPath).IndexOf('-') + 1),
-                ApsimXPath = apsimPath
+                ApsimXPath = apsimPath,
+                ID = Guid.NewGuid(),
+                CoresPerProcess = 1,
+                JobManagerShouldSubmitTasks = true,
+                AutoScale = true,
+
+                // Our default VM size is the standard_d5_v2.
+                // This VM has 16 vCPUs and 56 GiB of memory.
+                // Therefore, default max tasks per VM is 16 (1 per core).
+                MaxTasksPerVM = 16,
             };
 
             Presenter.SubmitJob(JobParams);
