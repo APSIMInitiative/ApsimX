@@ -5,7 +5,7 @@ using Gtk;
 using Utility;
 using UserInterface.Interfaces;
 
-namespace ApsimNG.Cloud
+namespace ApsimNG.Cloud.Azure
 {
     class AzureCredentialsSetup : Window
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApsimNG.Cloud
+namespace ApsimNG.Cloud.Azure
 {
     public class StorageConstants
     {

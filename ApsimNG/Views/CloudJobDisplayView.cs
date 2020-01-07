@@ -218,28 +218,28 @@ namespace UserInterface.Views
             lblDownloadStatus.Xalign = 0;
 
             btnChangeDownloadDir = new Button("Change Download Directory");
-            btnChangeDownloadDir.Clicked += BtnChangeDownloadDir_Click;
+            btnChangeDownloadDir.Clicked += OnChangeDownloadPath;
 
             tblButtonContainer = new Table(1, 1, false);
             tblButtonContainer.Attach(btnChangeDownloadDir, 0, 1, 0, 1, AttachOptions.Shrink, AttachOptions.Shrink, 0, 0);
 
             btnDownload = new Button("Download");
-            btnDownload.Clicked += BtnDownload_Click;
+            btnDownload.Clicked += OnDownloadJobs;
             HBox downloadButtonContainer = new HBox();
             downloadButtonContainer.PackStart(btnDownload, false, true, 0);
 
             btnDelete = new Button("Delete Job(s)");
-            btnDelete.Clicked += BtnDelete_Click;
+            btnDelete.Clicked += OnDeleteJobs;
             HBox deleteButtonContainer = new HBox();
             deleteButtonContainer.PackStart(btnDelete, false, true, 0);
 
             btnStop = new Button("Stop Job(s)");
-            btnStop.Clicked += BtnStop_Click;
+            btnStop.Clicked += OnStopJobs;
             HBox stopButtonContainer = new HBox();
             stopButtonContainer.PackStart(btnStop, false, true, 0);
 
             btnSetup = new Button("Credentials");
-            btnSetup.Clicked += BtnSetup_Click;
+            btnSetup.Clicked += OnSetupClicked;
             HBox setupButtonContainer = new HBox();
             setupButtonContainer.PackStart(btnSetup, false, true, 0);
 
@@ -275,7 +275,16 @@ namespace UserInterface.Views
             HideLoadingProgressBar();
         }
 
-        public Interfaces.ICloudJobPresenter Presenter { get; set; }
+        /// <summary>
+        /// Invoked when the user clicks the setup button to provide an API key/credentials.
+        /// </summary>
+        public event EventHandler SetupClicked;
+
+        public event AsyncEventHandler StopJobs;
+
+        public event AsyncEventHandler DeleteJobs;
+
+        public event AsyncEventHandler DownloadJobs;
 
         /// <summary>
         /// Gets or sets the value of the job download status.
@@ -329,16 +338,6 @@ namespace UserInterface.Views
         {
             RemoveEventHandlers();
             MainWidget.Destroy();
-        }
-
-        /// <summary>
-        /// Displays a warning to the user, and asks if they want to continue.
-        /// </summary>
-        /// <param name="msg"></param>
-        /// <returns>True if the user wants to continue, false otherwise.</returns>
-        public bool AskQuestion(string msg)
-        {
-            return (Owner as MainView).AskQuestion(msg) == QuestionResponseEnum.Yes;
         }
 
         /// <summary>
@@ -409,11 +408,11 @@ namespace UserInterface.Views
         private void RemoveEventHandlers()
         {
             chkFilterOwner.Toggled -= ApplyFilter;
-            btnChangeDownloadDir.Clicked -= BtnChangeDownloadDir_Click;
-            btnDownload.Clicked -= BtnDownload_Click;
-            btnDelete.Clicked -= BtnDelete_Click;
-            btnSetup.Clicked -= BtnSetup_Click;
-            btnStop.Clicked -= BtnStop_Click;
+            btnChangeDownloadDir.Clicked -= OnChangeDownloadPath;
+            btnDownload.Clicked -= OnDownloadJobs;
+            btnDelete.Clicked -= OnDeleteJobs;
+            btnSetup.Clicked -= OnSetupClicked;
+            btnStop.Clicked -= OnStopJobs;
         }
 
         /// <summary>
@@ -516,7 +515,70 @@ namespace UserInterface.Views
             if (!(n == (int)Columns.StartTime || n == (int)Columns.EndTime)) return -1;
             string str1 = (string)model.GetValue(a, n);
             string str2 = (string)model.GetValue(b, n);
-            return Presenter.CompareDateTimeStrings(str1, str2);
+            // fixme
+            return CompareDateTimeStrings(str1, str2);
+        }
+
+        /// <summary>
+        /// Parses and compares two DateTime objects stored as strings.
+        /// </summary>
+        /// <param name="str1">First DateTime.</param>
+        /// <param name="str2">Second DateTime.</param>
+        /// <returns></returns>
+        public int CompareDateTimeStrings(string str1, string str2)
+        {
+            // if either of these strings is empty, the job is still running
+            if (str1 == "" || str1 == null)
+            {
+                if (str2 == "" || str2 == null) // neither job has finished
+                {
+                    return 0;
+                }
+                else // first job is still running, second is finished
+                {
+                    return 1;
+                }
+            }
+            else if (str2 == "" || str2 == null) // first job is finished, second job still running
+            {
+                return -1;
+            }
+            // otherwise, both jobs are still running
+            DateTime t1 = GetDateTimeFromString(str1);
+            DateTime t2 = GetDateTimeFromString(str2);
+
+            return DateTime.Compare(t1, t2);
+        }
+
+        /// <summary>
+        /// Generates a DateTime object from a string.
+        /// </summary>
+        /// <param name="st">Date time string. MUST be in the format dd/mm/yyyy hh:mm:ss (A|P)M</param>
+        /// <returns>A DateTime object representing this string.</returns>
+        public DateTime GetDateTimeFromString(string st)
+        {
+            try
+            {
+                string[] separated = st.Split(' ');
+                string[] date = separated[0].Split('/');
+                string[] time = separated[1].Split(':');
+                int year, month, day, hour, minute, second;
+                day = Int32.Parse(date[0]);
+                month = Int32.Parse(date[1]);
+                year = Int32.Parse(date[2]);
+
+                hour = Int32.Parse(time[0]);
+                if (separated[separated.Length - 1].ToLower() == "pm" && hour < 12) hour += 12;
+                minute = Int32.Parse(time[1]);
+                second = Int32.Parse(time[2]);
+
+                return new DateTime(year, month, day, hour, minute, second);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+            return new DateTime();
         }
 
         /// <summary>
@@ -553,8 +615,8 @@ namespace UserInterface.Views
             store.GetIterFirst(out iter);
             for (int i = 0; i < store.IterNChildren(); i++)
             {
-                string id = (string)store.GetValue(iter, 1);
-                string name = Presenter.GetFormattedJobName(id, !myJobsOnly);
+                // fixme: show owner when viewing all jobs.
+                string name = (string)store.GetValue(iter, 0);
                 store.SetValue(iter, 0, name);
                 store.IterNext(ref iter);
             }
@@ -571,26 +633,28 @@ namespace UserInterface.Views
             object rawId = model.GetValue(iter, 1);
             if (rawId is string)
             {
-                return !myJobsOnly || Presenter.UserOwnsJob((string)rawId);
+                return !myJobsOnly || UserOwnsJob((string)rawId);
             }
             return true;
         }
 
         /// <summary>
-        /// Tests if a string starts with a vowel.
+        /// Checks if the current user owns a job. 
         /// </summary>
-        /// <param name="st"></param>
-        /// <returns>True if st starts with a vowel, false otherwise.</returns>
-        private bool StartsWithVowel(string st)
+        /// <param name="id">ID of the job.</param>
+        /// <returns></returns>
+        public bool UserOwnsJob(string id)
         {
-            return "aeiou".Contains(st[0]);
+            // tbi
+            return true;
+            //return GetJob(id).Owner.ToLower() == Environment.UserName.ToLower();
         }
 
         /// <summary>
         /// Gets the IDs of all currently selected jobs.
         /// </summary>
         /// <returns></returns>
-        private List<string> GetSelectedJobIds()
+        public string[] GetSelectedJobIds()
         {
             TreePath[] selectedRows = tree.Selection.GetSelectedRows();
             List<string> jobIds = new List<string>();
@@ -600,7 +664,19 @@ namespace UserInterface.Views
                 tree.Model.GetIter(out iter, selectedRows[i]);
                 jobIds.Add((string)tree.Model.GetValue(iter, 1));
             }
-            return jobIds;
+            return jobIds.ToArray();
+        }
+
+        /// <summary>
+        /// Gets the ID of a specific job.
+        /// </summary>
+        /// <param name="row">Path in the TreeView to the row containing the job.</param>
+        /// <returns></returns>
+        private string GetID(TreePath row)
+        {
+            TreeIter iter;
+            tree.Model.GetIter(out iter, row);
+            return (string)tree.Model.GetValue(iter, (int)Columns.ID);
         }
 
         /// <summary>
@@ -610,9 +686,17 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnStop_Click(object sender, EventArgs e)
+        private async void OnStopJobs(object sender, EventArgs e)
         {
-            Presenter.StopJobs(GetSelectedJobIds());
+            try
+            {
+                //GetSelectedJobIds();
+                await StopJobs?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -621,9 +705,17 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnDelete_Click(object sender, EventArgs e)
+        private async void OnDeleteJobs(object sender, EventArgs e)
         {
-            Presenter.DeleteJobs(GetSelectedJobIds());
+            try
+            {
+                //Presenter.DeleteJobs(GetSelectedJobIds());
+                await DeleteJobs?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -631,10 +723,18 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnSetup_Click(object sender, EventArgs e)
+        private void OnSetupClicked(object sender, EventArgs e)
         {            
-            var setup = new AzureCredentialsSetup();
-            setup.Finished += delegate { Presenter.GetCredentials(); }; // this ensures that the changes actually have an effect
+            try
+            {
+                //var setup = new AzureCredentialsSetup();
+                //setup.Finished += delegate { Presenter.GetCredentials(); }; // this ensures that the changes actually have an effect
+                SetupClicked?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -644,30 +744,25 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnDownload_Click(object sender, EventArgs e)
+        private async void OnDownloadJobs(object sender, EventArgs e)
         {
-
-            List<string> jobIds = GetSelectedJobIds();
-            // Normally (when stopping or deleting) the presenter would check to make sure there is at least 1 job selected. 
-            // In this case though, we check here to prevent the download pop-up from appearing if nothing is selected.
-            if (jobIds.Count < 1)
+            try
             {
-                Presenter.ShowMessage("Unable to download jobs: no jobs are selected", Models.Core.Simulation.MessageType.Information);
-                return;
+                //List<string> jobIds = GetSelectedJobIds();
+                //// Normally (when stopping or deleting) the presenter would check to make sure there is at least 1 job selected. 
+                //// In this case though, we check here to prevent the download pop-up from appearing if nothing is selected.
+                //if (jobIds.Count < 1)
+                //{
+                //    Presenter.ShowMessage("Unable to download jobs: no jobs are selected", Models.Core.Simulation.MessageType.Information);
+                //    return;
+                //}
+                //DownloadWindow dl = new DownloadWindow(Presenter, jobIds);
+                await DownloadJobs?.Invoke(this, EventArgs.Empty);
             }
-            DownloadWindow dl = new DownloadWindow(Presenter, jobIds);
-        }
-
-        /// <summary>
-        /// Gets the ID of a specific job.
-        /// </summary>
-        /// <param name="row">Path in the TreeView to the row containing the job.</param>
-        /// <returns></returns>
-        private string GetId(TreePath row)
-        {
-            TreeIter iter;
-            tree.Model.GetIter(out iter, row);
-            return (string)tree.Model.GetValue(iter, (int)Columns.ID);
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -676,45 +771,17 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnChangeDownloadDir_Click(object sender, EventArgs e)
+        private void OnChangeDownloadPath(object sender, EventArgs e)
         {
-            Presenter.SetDownloadDirectory(GetDirectory());
-        }
-
-        /// <summary>Opens a file chooser dialog for the user to choose a directory.</summary>	
-        /// <return>
-        /// The path of the chosen directory, or an empty string if the user pressed cancel or 
-        /// selected a nonexistent directory.
-        /// </return>
-        private string GetDirectory()
-        {
-            string path = "";
-            Application.Invoke(delegate
+            try
             {
-                FileChooserDialog fc = new FileChooserDialog(
-                                                        "Choose the file to open",
-                                                        null,
-                                                        FileChooserAction.SelectFolder,
-                                                        "Cancel", ResponseType.Cancel,
-                                                        "Select Folder", ResponseType.Accept);
-                try
-                {
-                    if (fc.Run() == (int)ResponseType.Accept)
-                    {
-                        path = fc.Filename;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    (Owner as MainView).ShowMessage(ex.ToString(), Models.Core.Simulation.ErrorLevel.Error);
-                }
-                finally
-                {
-                    fc.Destroy();
-                }
-            });
-
-            return path;
+                //tbi
+                //Presenter.SetDownloadDirectory(GetDirectory());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

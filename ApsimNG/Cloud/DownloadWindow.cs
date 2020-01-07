@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UserInterface.Interfaces;
 using Utility;
 using Gtk;
+using ApsimNG.Cloud.Azure;
 
 namespace ApsimNG.Cloud
 {
@@ -79,32 +80,11 @@ namespace ApsimNG.Cloud
         private VBox vboxPrimary;
 
         /// <summary>
-        /// List of jobs to be downloaded.
-        /// </summary>
-        private List<string> jobs;
-
-        /// <summary>
-        /// Reference to the presenter, which will have a method to download results.
-        /// </summary>
-        private UserInterface.Interfaces.ICloudJobPresenter presenter;
-
-        /// <summary>
-        /// Default constructor. Unused.
+        /// Default constructor.
         /// </summary>
         public DownloadWindow() : base("Download cloud jobs")
         {
             InitialiseWindow();
-        }
-
-        /// <summary>
-        /// The only constructor used (at present).
-        /// </summary>
-        /// <param name="jobIds">Ids of the jobs to be downloaded.</param>
-        public DownloadWindow(UserInterface.Interfaces.ICloudJobPresenter parent, List<string> jobIds) : base("Download cloud jobs")
-        {
-            presenter = parent;
-            jobs = jobIds;
-            InitialiseWindow();            
         }
 
         /// <summary>
@@ -200,7 +180,7 @@ namespace ApsimNG.Cloud
             btnDownload.Clicked -= Download;
             btnChangeOutputDir.Clicked -= ChangeOutputDir;
             Destroy();
-            presenter.DownloadResults(jobs, chkDownloadResults.Active, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active, unzipResults.Active, runAsync.Active);
+            //presenter.DownloadResults(jobs, chkDownloadResults.Active, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active, unzipResults.Active, runAsync.Active);
         }
 
         /// <summary>
@@ -219,6 +199,7 @@ namespace ApsimNG.Cloud
             if (!string.IsNullOrEmpty(downloadDirectory))
             {
                 entryOutputDir.Text = downloadDirectory;
+                //fixme - fire off an event here??
                 AzureSettings.Default["OutputDir"] = downloadDirectory;                
                 AzureSettings.Default.Save();                
             }

@@ -17,14 +17,21 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ApsimNG.Cloud.Azure;
+using APSIM.Shared.Utilities;
 
-namespace ApsimNG.Cloud.Azure
+namespace ApsimNG.Cloud
 {
     public class AzureInterface : ICloudInterface
     {
         private BatchClient batchClient;
+        private CloudBlobClient storageClient;
 
-        private CloudBlobClient blobClient;
+        /// <summary>The results are compressed into a file with this name.</summary>
+        private const string resultsFileName = "Results.zip";
+
+        /// <summary>Array of all valid debug file formats.</summary>
+        private static readonly string[] debugFileFormats = { ".stdout", ".sum" };
 
         public AzureInterface()
         {
@@ -35,20 +42,11 @@ namespace ApsimNG.Cloud.Azure
         }
 
         /// <summary>
-        /// List all Azure jobs.
-        /// </summary>
-        /// <param name="ct">Cancellation token.</param>
-        public async Task<JobDetails> ListJobs(CancellationToken ct)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Submit a job to be run on Azure.
         /// </summary>
         /// <param name="job">Job parameters.</param>
         /// <param name="UpdateStatus">Action which will display job submission status to the user.</param>
-        public async Task SubmitJob(JobParameters job, Action<string> UpdateStatus)
+        public async Task SubmitJobAsync(JobParameters job, Action<string> UpdateStatus)
         {
             // Initialise a working directory.
             UpdateStatus("Initialising job environment...");
@@ -92,7 +90,7 @@ namespace ApsimNG.Cloud.Azure
                 config.AppendLine($"EmailSender={AzureSettings.Default.EmailSender}");
                 config.AppendLine($"EmailPW={AzureSettings.Default.EmailPW}");
 
-                // Save a config file in the job directory that has the email settings.
+                // Write these settings to a temporary config file.
                 string configFile = Path.Combine(workingDirectory, "settings.txt");
                 File.WriteAllText(configFile, config.ToString());
 
@@ -156,11 +154,133 @@ namespace ApsimNG.Cloud.Azure
             UpdateStatus("Job Successfully submitted");
         }
 
+        /// <summary>
+        /// List all Azure jobs.
+        /// </summary>
+        /// <param name="ct">Cancellation token.</param>
+        /// <param name="ShowProgress">Function to report progress as percentage in range [0, 100].</param>
+        public async Task<List<JobDetails>> ListJobsAsync(CancellationToken ct, Action<double> ShowProgress)
+        {
+            ShowProgress(0);
+
+            IEnumerable<CloudPool> pools = batchClient.PoolOperations.ListPools();
+            ODATADetailLevel jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
+
+            // Download raw job list via the Azure API.
+            List<CloudJob> cloudJobs = batchClient.JobOperations.ListJobs(jobDetailLevel).ToList();
+
+            // Parse jobs into a list of JobDetails objects.
+            List<JobDetails> jobs = new List<JobDetails>();
+            for (int i = 0; i < cloudJobs.Count; i++)
+            {
+                if (ct.IsCancellationRequested)
+                    return jobs;
+
+                ShowProgress(100.0 * i / cloudJobs.Count);
+                jobs.Add(await GetJobDetails(cloudJobs[i]));
+            }
+
+            ShowProgress(100);
+            return jobs;
+        }
+
+        /// <summary>
+        /// Halt the execution of a job.
+        /// </summary>
+        /// <param name="jobID">ID of the job.</param>
+        public async Task StopJobAsync(string jobID)
+        {
+            await batchClient.JobOperations.TerminateJobAsync(jobID);
+        }
+
+        /// <summary>
+        /// Delete a job and all cloud storage associated with the job.
+        /// </summary>
+        /// <param name="jobID">ID of the job.</param>
+        public async Task DeleteJobAsync(string jobID)
+        {
+            Guid parsedID = Guid.Parse(jobID);
+
+            // Delete cloud storage associated with the job.
+            await storageClient.GetContainerReference(StorageConstants.GetJobOutputContainer(parsedID)).DeleteIfExistsAsync();
+            await storageClient.GetContainerReference(StorageConstants.GetJobContainer(parsedID)).DeleteIfExistsAsync();
+            await storageClient.GetContainerReference(jobID).DeleteIfExistsAsync();
+
+            // Delete the job.
+            await batchClient.JobOperations.DeleteJobAsync(jobID);
+        }
+
+        /// <summary>Download the results of a job.</summary>
+        /// <param name="options">Download options.</param>
+        /// <param name="ct">Cancellation token.</param>
+        public async Task DownloadResultsAsync(DownloadOptions options, CancellationToken ct)
+        {
+            if (!Directory.Exists(options.Path))
+                Directory.CreateDirectory(options.Path);
+
+            List<CloudBlockBlob> outputs = await GetJobOutputs(options.JobID);
+            List<CloudBlockBlob> toDownload = new List<CloudBlockBlob>();
+
+            // Build up a list of files to download.
+            CloudBlockBlob results = outputs.Find(b => string.Equals(b.Name, resultsFileName, StringComparison.InvariantCultureIgnoreCase));
+            if (results != null)
+                toDownload.Add(results);
+            else
+                // Always download debug files if no results archive can be found.
+                options.DownloadDebugFiles = true;
+
+            if (options.DownloadDebugFiles)
+                toDownload.AddRange(outputs.Where(blob => debugFileFormats.Contains(Path.GetExtension(blob.Name.ToLower()))));
+
+            // Now download the necessary files.
+            foreach (CloudBlockBlob blob in toDownload)
+            {
+                if (ct.IsCancellationRequested)
+                    return;
+                else
+                    // todo: Download in parallel?
+                    await blob.DownloadToFileAsync(Path.Combine(options.Path, blob.Name), FileMode.Create, ct);
+            }
+
+            if (options.ExtractResults)
+            {
+                string archive = Path.Combine(options.Path, resultsFileName);
+                string resultsDir = Path.Combine(options.Path, "results");
+                if (File.Exists(archive))
+                {
+                    // Extract the result files.
+                    using (ZipArchive zip = ZipFile.Open(archive, ZipArchiveMode.Read, Encoding.UTF8))
+                        zip.ExtractToDirectory(resultsDir);
+
+                    // Merge results into a single .db file.
+                    DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), "combined.db");
+
+                    // TBI: merge into csv file.
+                    if (options.ExportToCsv)
+                        throw new NotImplementedException();
+                }
+            }
+        }
+
+        /// <summary>Lists all output files of a given job.</summary>
+        /// <param name="jobID">Job ID.</param>
+        private async Task<List<CloudBlockBlob>> GetJobOutputs(Guid jobID)
+        {
+            CloudBlobContainer containerRef = storageClient.GetContainerReference(StorageConstants.GetJobOutputContainer(jobID));
+            if (!await containerRef.ExistsAsync())
+                return null;
+
+            return await containerRef.ListBlobsAsync();
+        }
+
+        /// <summary>
+        /// Initialise the batch/storage clients used to call the Azure API.
+        /// </summary>
         private void SetupClient()
         {
             var credentials = new Microsoft.Azure.Storage.Auth.StorageCredentials(AzureSettings.Default.StorageAccount, AzureSettings.Default.StorageKey);
             var storageAccount = new CloudStorageAccount(credentials, true);
-            blobClient = storageAccount.CreateCloudBlobClient();
+            storageClient = storageAccount.CreateCloudBlobClient();
 
             string url = AzureSettings.Default.BatchUrl;
             string account = AzureSettings.Default.BatchAccount;
@@ -177,10 +297,26 @@ namespace ApsimNG.Cloud.Azure
         /// <param name="val">Data to write</param>
         private async Task SetAzureMetaDataAsync(string containerName, string key, string val)
         {
-            var containerRef = blobClient.GetContainerReference(containerName);
+            var containerRef = storageClient.GetContainerReference(containerName);
             await containerRef.CreateIfNotExistsAsync();
             containerRef.Metadata.Add(key, val);
             await containerRef.SetMetadataAsync();
+        }
+
+        /// <summary>Gets metadata value for a container in Azure cloud storage.</summary>
+        /// <param name="containerName">Name of the container.</param>
+        /// <param name="key">Metadata key.</param>
+        private async Task<string> GetContainerMetaDataAsync(string containerName, string key)
+        {
+            CloudBlobContainer containerRef = storageClient.GetContainerReference(containerName);
+            if (!await containerRef.ExistsAsync())
+                throw new Exception($"Failed to fetch metadata '{key}' for container '{containerName}' - container does not exist");
+
+            await containerRef.FetchAttributesAsync();
+            if (containerRef.Metadata.ContainsKey(key))
+                return containerRef.Metadata[key];
+
+            throw new Exception($"Failed to fetch metadata '{key}' for container '{containerName}' - key does not exist");
         }
 
         /// <summary>
@@ -191,7 +327,7 @@ namespace ApsimNG.Cloud.Azure
         /// <param name="filePath">Path to the file on disk</param>
         private async Task<string> UploadFileIfNeededAsync(string containerName, string filePath)
         {
-            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
+            CloudBlobContainer container = storageClient.GetContainerReference(containerName);
             await container.CreateIfNotExistsAsync();
             CloudBlockBlob blob = container.GetBlockBlobReference(Path.GetFileName(filePath));
 
@@ -211,6 +347,49 @@ namespace ApsimNG.Cloud.Azure
                 SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(12) // Hopefully this job won't take more than a year!
             };
             return blob.Uri.AbsoluteUri + blob.GetSharedAccessSignature(policy);
+        }
+
+        /// <summary>
+        /// Translates an Azure-specific CloudDetails object into a
+        /// generic JobDetails object which can be passed back to the
+        /// presenter.
+        /// </summary>
+        /// <param name="cloudJob"></param>
+        private async Task<JobDetails> GetJobDetails(CloudJob cloudJob)
+        {
+            if (!await storageClient.GetContainerReference($"job-{cloudJob.Id}").ExistsAsync())
+            {
+                await DeleteJobAsync(cloudJob.Id);
+                return null;
+            }
+            string owner = await GetContainerMetaDataAsync($"job-{cloudJob.Id}", "Owner");
+
+            TaskCounts tasks = await batchClient.JobOperations.GetJobTaskCountsAsync(cloudJob.Id);
+            int numTasks = tasks.Active + tasks.Running + tasks.Completed;
+
+            // If there are no tasks, set progress to 100%.
+            double jobProgress = numTasks == 0 ? 100 : 100.0 * tasks.Completed / numTasks;
+
+            // If cpu time is unavailable, set this field to 0.
+            TimeSpan cpu = cloudJob.Statistics == null ? TimeSpan.Zero : cloudJob.Statistics.KernelCpuTime + cloudJob.Statistics.UserCpuTime;
+            JobDetails job = new JobDetails
+            {
+                Id = cloudJob.Id,
+                DisplayName = cloudJob.DisplayName,
+                State = cloudJob.State.ToString(),
+                Owner = owner,
+                NumSims = numTasks - 1, // subtract one because one of these is the job manager
+                Progress = jobProgress,
+                CpuTime = cpu
+            };
+
+            if (cloudJob.ExecutionInformation != null)
+            {
+                job.StartTime = cloudJob.ExecutionInformation.StartTime;
+                job.EndTime = cloudJob.ExecutionInformation.EndTime;
+            }
+
+            return job;
         }
 
         private JobPreparationTask ToJobPreparationTask(JobParameters job, string sas)
@@ -267,7 +446,7 @@ namespace ApsimNG.Cloud.Azure
 
         private IEnumerable<ResourceFile> GetJobManagerResourceFiles()
         {
-            var toolsRef = blobClient.GetContainerReference("jobmanager");
+            var toolsRef = storageClient.GetContainerReference("jobmanager");
             foreach (CloudBlockBlob listBlobItem in toolsRef.ListBlobs())
             {
                 var sas = listBlobItem.GetSharedAccessSignature(new SharedAccessBlobPolicy
@@ -290,7 +469,7 @@ namespace ApsimNG.Cloud.Azure
         {
             yield return ResourceFile.FromUrl(modelZipFileSas, BatchConstants.ModelZipFileName);
 
-            var toolsRef = blobClient.GetContainerReference("tools");
+            var toolsRef = storageClient.GetContainerReference("tools");
             foreach (CloudBlockBlob listBlobItem in toolsRef.ListBlobs())
             {
                 var sas = listBlobItem.GetSharedAccessSignature(new SharedAccessBlobPolicy
@@ -302,7 +481,7 @@ namespace ApsimNG.Cloud.Azure
                 yield return ResourceFile.FromUrl(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
             }
 
-            var apsimRef = blobClient.GetContainerReference("apsim");
+            var apsimRef = storageClient.GetContainerReference("apsim");
             foreach (CloudBlockBlob listBlobItem in apsimRef.ListBlobs())
             {
                 if (listBlobItem.Name.ToLower().Contains(version.ToLower()))

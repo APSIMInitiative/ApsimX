@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 
-namespace ApsimNG.Cloud
+namespace ApsimNG.Cloud.Azure
 {
     public class StorageCredentials
     {

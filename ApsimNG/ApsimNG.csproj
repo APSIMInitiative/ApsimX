@@ -75,7 +75,7 @@
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Cloud\AzureSettings.settings">
+    <None Include="Cloud\Azure\AzureSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AzureSettings.Designer.cs</LastGenOutput>
     </None>
@@ -173,24 +173,23 @@
     <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
     <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
     <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />
-    <Compile Include="Cloud\AzureCredentialsSetup.cs" />
-    <Compile Include="Cloud\AzureResultsDownloader.cs" />
-    <Compile Include="Cloud\AzureSettings.Designer.cs">
+    <Compile Include="Cloud\Azure\AzureCredentialsSetup.cs" />
+    <Compile Include="Cloud\Azure\AzureExtensions.cs" />
+    <Compile Include="Cloud\Azure\AzureSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AzureSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="Cloud\Azure\AzureInterface.cs" />
-    <Compile Include="Cloud\BatchConstants.cs" />
-    <Compile Include="Cloud\BatchCredentials.cs" />
+    <Compile Include="Cloud\Azure\BatchConstants.cs" />
+    <Compile Include="Cloud\Azure\BatchCredentials.cs" />
+    <Compile Include="Cloud\DownloadOptions.cs" />
     <Compile Include="Cloud\DownloadWindow.cs" />
-    <Compile Include="Cloud\FileUploader.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />
-    <Compile Include="Cloud\ICloudJobPresenter.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
-    <Compile Include="Cloud\StorageConstants.cs" />
-    <Compile Include="Cloud\StorageCredentials.cs" />
+    <Compile Include="Cloud\Azure\StorageConstants.cs" />
+    <Compile Include="Cloud\Azure\StorageCredentials.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace ApsimNG.Cloud
+namespace ApsimNG.Cloud.Azure
 {
     class BatchConstants
     {

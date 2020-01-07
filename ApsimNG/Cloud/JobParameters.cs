@@ -3,6 +3,9 @@ using System;
 
 namespace ApsimNG.Cloud
 {
+    /// <summary>
+    /// This class holds details about a job to be run on the cloud.
+    /// </summary>
     public class JobParameters
     {
         /// <summary>

@@ -61,5 +61,16 @@ namespace ApsimNG.Cloud
         /// Total CPU time of the job.
         /// </summary>
         public TimeSpan CpuTime { get; set; }
+
+        /// <summary>
+        /// Tests if two jobs are equal.
+        /// </summary>
+        /// <param name="a">The first job.</param>
+        /// <param name="b">The second job.</param>
+        /// <returns>True if the jobs have the same ID and they are in the same state.</returns>
+        public bool IsEqualTo(JobDetails b)
+        {
+            return (Id == b.Id && State == b.State && Progress == b.Progress);
+        }
     }
 }

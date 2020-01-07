@@ -1,4 +1,4 @@
-﻿namespace ApsimNG.Cloud
+﻿namespace ApsimNG.Cloud.Azure
 {    
     public class BatchCredentials
     {
