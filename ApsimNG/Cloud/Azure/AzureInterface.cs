@@ -135,14 +135,9 @@ namespace ApsimNG.Cloud.Azure
             ZipFile.CreateFromDirectory(job.ModelPath, tmpZip, CompressionLevel.Fastest, false);
             job.ModelPath = tmpZip;
 
-            // TODO : do we really need the APSIMJob class?
-            APSIMJob apsimJob = new APSIMJob(job.DisplayName, "", job.ApsimXPath, job.ApsimXVersion, job.EmailRecipient, PoolSettings.FromConfiguration());
-            apsimJob.PoolInfo.MaxTasksPerVM = job.MaxTasksPerVM;
-            apsimJob.PoolInfo.VMCount = job.PoolVMCount;
-
             // Upload models.
             UpdateStatus("Uploading model files...");
-            apsimJob.ModelZipFileSas = await UploadFileIfNeededAsync(job.ID.ToString(), job.ModelPath);
+            string modelZipFileSas = await UploadFileIfNeededAsync(job.ID.ToString(), job.ModelPath);
 
             // Clean up temp files.
             UpdateStatus("Deleting temp files...");
@@ -150,11 +145,11 @@ namespace ApsimNG.Cloud.Azure
 
             // Submit job.
             UpdateStatus("Submitting Job");
-            CloudJob cloudJob = batchClient.JobOperations.CreateJob(job.ID.ToString(), GetPoolInfo(apsimJob.PoolInfo));
-            cloudJob.DisplayName = apsimJob.DisplayName;
-            cloudJob.JobPreparationTask = apsimJob.ToJobPreparationTask(job.ID, blobClient);
-            cloudJob.JobReleaseTask = apsimJob.ToJobReleaseTask(job.ID, blobClient);
-            cloudJob.JobManagerTask = apsimJob.ToJobManagerTask(job.ID, blobClient, job.JobManagerShouldSubmitTasks, job.AutoScale);
+            CloudJob cloudJob = batchClient.JobOperations.CreateJob(job.ID.ToString(), GetPoolInfo(PoolSettings.FromConfiguration()));
+            cloudJob.DisplayName = job.DisplayName;
+            cloudJob.JobPreparationTask = ToJobPreparationTask(job, modelZipFileSas);
+            cloudJob.JobReleaseTask = ToJobReleaseTask(job, modelZipFileSas);
+            cloudJob.JobManagerTask = ToJobManagerTask(job);
 
             await cloudJob.CommitAsync();
             UpdateStatus("Job Successfully submitted");
@@ -215,6 +210,111 @@ namespace ApsimNG.Cloud.Azure
                 SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(12) // Hopefully this job won't take more than a year!
             };
             return blob.Uri.AbsoluteUri + blob.GetSharedAccessSignature(policy);
+        }
+
+        private JobPreparationTask ToJobPreparationTask(JobParameters job, string sas)
+        {
+            return new JobPreparationTask
+            {
+                CommandLine = "cmd.exe /c jobprep.cmd",
+                ResourceFiles = GetJobPrepResourceFiles(sas, job.ApsimXVersion).ToList(),
+                WaitForSuccess = true
+            };
+        }
+
+        private JobReleaseTask ToJobReleaseTask(JobParameters job, string sas)
+        {
+            return new JobReleaseTask
+            {
+                CommandLine = "cmd.exe /c jobrelease.cmd",
+                ResourceFiles = GetJobPrepResourceFiles(sas, job.ApsimXVersion).ToList(),
+                EnvironmentSettings = new[]
+                {
+                    new EnvironmentSetting("APSIM_STORAGE_ACCOUNT", AzureSettings.Default.StorageAccount/*job.StorageAuth.Account*/),
+                    new EnvironmentSetting("APSIM_STORAGE_KEY", AzureSettings.Default.StorageKey/*job.StorageAuth.Key*/),
+                    new EnvironmentSetting("JOBNAME", job.DisplayName),
+                    new EnvironmentSetting("RECIPIENT", job.EmailRecipient)
+                }
+            };
+        }
+
+        private JobManagerTask ToJobManagerTask(JobParameters job)
+        {
+            var cmd = string.Format("cmd.exe /c {0} job-manager {1} {2} {3} {4} {5} {6} {7} {8} {9}",
+                BatchConstants.GetJobManagerPath(job.ID),
+                AzureSettings.Default.BatchUrl,//job.BatchAuth.Url,
+                AzureSettings.Default.BatchAccount,//job.BatchAuth.Account,
+                AzureSettings.Default.BatchKey,//job.BatchAuth.Key,
+                AzureSettings.Default.StorageAccount,//job.StorageAuth.Account,
+                AzureSettings.Default.StorageKey,//job.StorageAuth.Key,
+                job.ID,
+                BatchConstants.GetModelPath(job.ID),
+                job.JobManagerShouldSubmitTasks,
+                job.AutoScale
+            );
+
+            return new JobManagerTask
+            {
+                CommandLine = cmd,
+                DisplayName = "Job manager task",
+                KillJobOnCompletion = true,
+                Id = BatchConstants.JobManagerName,
+                RunExclusive = false,
+                ResourceFiles = GetJobManagerResourceFiles().ToList()
+            };
+        }
+
+        private IEnumerable<ResourceFile> GetJobManagerResourceFiles()
+        {
+            var toolsRef = blobClient.GetContainerReference("jobmanager");
+            foreach (CloudBlockBlob listBlobItem in toolsRef.ListBlobs())
+            {
+                var sas = listBlobItem.GetSharedAccessSignature(new SharedAccessBlobPolicy
+                {
+                    SharedAccessStartTime = DateTime.UtcNow.AddHours(-1),
+                    SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(2),
+                    Permissions = SharedAccessBlobPermissions.Read,
+                });
+                yield return ResourceFile.FromUrl(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
+            }
+        }
+
+        /// <summary>
+        /// Returns the zipped Apsim file and helpers like AzCopy and 7zip
+        /// </summary>
+        /// <param name="job"></param>
+        /// <param name="blobClient"></param>
+        /// <returns></returns>
+        private IEnumerable<ResourceFile> GetJobPrepResourceFiles(string modelZipFileSas, string version)
+        {
+            yield return ResourceFile.FromUrl(modelZipFileSas, BatchConstants.ModelZipFileName);
+
+            var toolsRef = blobClient.GetContainerReference("tools");
+            foreach (CloudBlockBlob listBlobItem in toolsRef.ListBlobs())
+            {
+                var sas = listBlobItem.GetSharedAccessSignature(new SharedAccessBlobPolicy
+                {
+                    SharedAccessStartTime = DateTime.UtcNow.AddHours(-1),
+                    SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(2),
+                    Permissions = SharedAccessBlobPermissions.Read,
+                });
+                yield return ResourceFile.FromUrl(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
+            }
+
+            var apsimRef = blobClient.GetContainerReference("apsim");
+            foreach (CloudBlockBlob listBlobItem in apsimRef.ListBlobs())
+            {
+                if (listBlobItem.Name.ToLower().Contains(version.ToLower()))
+                {
+                    var sas = listBlobItem.GetSharedAccessSignature(new SharedAccessBlobPolicy
+                    {
+                        SharedAccessStartTime = DateTime.UtcNow.AddHours(-1),
+                        SharedAccessExpiryTime = DateTime.UtcNow.AddMonths(2),
+                        Permissions = SharedAccessBlobPermissions.Read
+                    });
+                    yield return ResourceFile.FromUrl(listBlobItem.Uri.AbsoluteUri + sas, listBlobItem.Name);
+                }
+            }
         }
 
         /// <summary>

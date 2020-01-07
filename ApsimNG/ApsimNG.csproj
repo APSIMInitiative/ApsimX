@@ -173,9 +173,6 @@
     <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
     <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
     <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />
-    <Compile Include="Cloud\APSIMJob.cs" />
-    <Compile Include="Cloud\ApsimJobManagerExtension.cs" />
-    <Compile Include="Cloud\ApsimJobPrepExtension.cs" />
     <Compile Include="Cloud\AzureCredentialsSetup.cs" />
     <Compile Include="Cloud\AzureResultsDownloader.cs" />
     <Compile Include="Cloud\AzureSettings.Designer.cs">
