@@ -189,7 +189,6 @@
     <Compile Include="Cloud\ICloudJobPresenter.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
-    <Compile Include="Cloud\PoolSettings.cs" />
     <Compile Include="Cloud\StorageConstants.cs" />
     <Compile Include="Cloud\StorageCredentials.cs" />
     <Compile Include="CommandHistory.cs" />

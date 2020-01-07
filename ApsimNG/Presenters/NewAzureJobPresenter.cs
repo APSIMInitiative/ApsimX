@@ -226,37 +226,6 @@ namespace UserInterface.Presenters
             return 0;
         }
 
-        private PoolInformation GetPoolInfo(PoolSettings settings)
-        {
-            if (string.IsNullOrEmpty(settings.PoolName))
-            {
-                return new PoolInformation
-                {
-                    AutoPoolSpecification = new AutoPoolSpecification
-                    {
-                        PoolLifetimeOption = PoolLifetimeOption.Job,
-                        PoolSpecification = new PoolSpecification
-                        {
-                            MaxTasksPerComputeNode = settings.MaxTasksPerVM,
-
-                            // This specifies the OS that our VM will be running.
-                            // OS Family 5 means .NET 4.6 will be installed.
-                            // For more info see https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-guestos-update-matrix#releases
-                            CloudServiceConfiguration = new CloudServiceConfiguration("5"),
-                            ResizeTimeout = TimeSpan.FromMinutes(15),
-                            TargetDedicatedComputeNodes = settings.VMCount,
-                            VirtualMachineSize = settings.VMSize,
-                            TaskSchedulingPolicy = new TaskSchedulingPolicy(ComputeNodeFillType.Spread)
-                        }
-                    }
-                };
-            }
-            return new PoolInformation
-            {
-                PoolId = settings.PoolName
-            };
-        }
-
         /// <summary>
         /// Gets a temp file with a given extension, checks it can be created, possibly removes it and returns the path
         /// </summary>

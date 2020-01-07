@@ -331,7 +331,7 @@ namespace UserInterface.Views
 
             JobParams = new JobParameters
             {
-                PoolVMCount = int.Parse(comboCoreCount.ActiveText) / 16,
+                CpuCount = int.Parse(comboCoreCount.ActiveText),
                 DisplayName = entryName.Text,
                 SendEmail = chkEmail.Active,
                 EmailRecipient = entryEmail.Text,

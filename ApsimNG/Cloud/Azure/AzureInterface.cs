@@ -51,6 +51,7 @@ namespace ApsimNG.Cloud.Azure
         public async Task SubmitJob(JobParameters job, Action<string> UpdateStatus)
         {
             // Initialise a working directory.
+            UpdateStatus("Initialising job environment...");
             string workingDirectory = Path.Combine(Path.GetTempPath(), job.ID.ToString());
             Directory.CreateDirectory(workingDirectory);
 
@@ -145,7 +146,7 @@ namespace ApsimNG.Cloud.Azure
 
             // Submit job.
             UpdateStatus("Submitting Job");
-            CloudJob cloudJob = batchClient.JobOperations.CreateJob(job.ID.ToString(), GetPoolInfo(PoolSettings.FromConfiguration()));
+            CloudJob cloudJob = batchClient.JobOperations.CreateJob(job.ID.ToString(), GetPoolInfo(job));
             cloudJob.DisplayName = job.DisplayName;
             cloudJob.JobPreparationTask = ToJobPreparationTask(job, modelZipFileSas);
             cloudJob.JobReleaseTask = ToJobReleaseTask(job, modelZipFileSas);
@@ -358,9 +359,9 @@ namespace ApsimNG.Cloud.Azure
             }
         }
 
-        private PoolInformation GetPoolInfo(PoolSettings settings)
+        private PoolInformation GetPoolInfo(JobParameters job)
         {
-            if (string.IsNullOrEmpty(settings.PoolName))
+            if (string.IsNullOrEmpty(AzureSettings.Default.PoolName))
             {
                 return new PoolInformation
                 {
@@ -369,23 +370,39 @@ namespace ApsimNG.Cloud.Azure
                         PoolLifetimeOption = PoolLifetimeOption.Job,
                         PoolSpecification = new PoolSpecification
                         {
-                            MaxTasksPerComputeNode = settings.MaxTasksPerVM,
+                            ResizeTimeout = TimeSpan.FromMinutes(15),
+
+                            // todo: look into using ComputeNodeFillType.Pack
+                            TaskSchedulingPolicy = new TaskSchedulingPolicy(ComputeNodeFillType.Spread),
 
                             // This specifies the OS that our VM will be running.
                             // OS Family 5 means .NET 4.6 will be installed.
-                            // For more info see https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-guestos-update-matrix#releases
+                            // For more info see:
+                            // https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-guestos-update-matrix#releases
                             CloudServiceConfiguration = new CloudServiceConfiguration("5"),
-                            ResizeTimeout = TimeSpan.FromMinutes(15),
-                            TargetDedicatedComputeNodes = settings.VMCount,
-                            VirtualMachineSize = settings.VMSize,
-                            TaskSchedulingPolicy = new TaskSchedulingPolicy(ComputeNodeFillType.Spread)
+
+                            // For now, always use standard_d5_v2 VM type.
+                            // This VM has 16 vCPUs, 56 GiB of memory and 800 GiB temp (SSD) storage.
+                            // todo: should make this user-controllable
+                            // For other VM sizes, see:
+                            // https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes
+                            // https://docs.microsoft.com/azure/virtual-machines/windows/sizes-general
+                            VirtualMachineSize = "standard_d5_v2",
+
+                            // Each task needs only one vCPU. Therefore number of tasks per VM will be number of vCPUs per VM.
+                            MaxTasksPerComputeNode = 16,
+
+                            // We only use one pool, so number of nodes per pool will be total number of vCPUs (as specified by the user)
+                            // divided by number of vCPUs per VM. We've hardcoded VM size to standard_d5_v2, which has 16 vCPUs.
+                            TargetDedicatedComputeNodes = job.CpuCount / 16,
                         }
                     }
                 };
             }
             return new PoolInformation
             {
-                PoolId = settings.PoolName
+                // Should never be true - we never modify AzureSettings.Default.PoolName
+                PoolId = AzureSettings.Default.PoolName
             };
         }
     }

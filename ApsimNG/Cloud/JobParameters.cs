@@ -54,9 +54,9 @@ namespace ApsimNG.Cloud
         public int CoresPerProcess { get; set; }
 
         /// <summary>
-        /// Number of VMs per pool.
+        /// Number of vCPUs to use when running the job.
         /// </summary>
-        public int PoolVMCount { get; set; }
+        public int CpuCount { get; set; }
 
         /// <summary>
         /// Maximum number of tasks allowed to run concurrently on a single VM.
