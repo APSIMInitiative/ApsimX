@@ -6,7 +6,7 @@ using Gtk;
 
 namespace UserInterface.Views
 {
-    public class CloudJobDisplayView : ViewBase
+    public class CloudJobView : ViewBase
     {
         /// <summary>
         /// Whether or not only the jobs submitted by the user should be displayed.
@@ -124,12 +124,18 @@ namespace UserInterface.Views
         /// </summary>
         private const string TimespanFormat = @"dddd\d\ hh\h\ mm\m\ ss\s";
 
+        private DownloadWindow dl;
+
         /// <summary>
         /// Constructor. Initialises the jobs TreeView and the controls associated with it.
         /// </summary>
         /// <param name="owner"></param>
-        public CloudJobDisplayView(ViewBase owner) : base(owner)
+        public CloudJobView(ViewBase owner) : base(owner)
         {
+            dl = new DownloadWindow(this);
+            dl.Download += OnDoDownload;
+            dl.Visible = false;
+
             store = new ListStore(typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string), typeof(string));
 
             Type[] types = new Type[columnTitles.Length];
@@ -332,10 +338,57 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Output directory as specified by user.
+        /// </summary>
+        public string DownloadPath
+        {
+            get
+            {
+                return dl.Path;
+            }
+        }
+
+        /// <summary>
+        /// Should results be extracted?
+        /// </summary>
+        public bool ExtractResults
+        {
+            get
+            {
+                return dl.ExtractResults;
+            }
+        }
+
+        /// <summary>
+        /// Should results be exported to .csv format?
+        /// </summary>
+        public bool ExportCsv
+        {
+            get
+            {
+                return dl.ExportCsv;
+            }
+        }
+
+        /// <summary>
+        /// Should debug files be downloaded?
+        /// </summary>
+        public bool DownloadDebugFiles
+        {
+            get
+            {
+                return dl.DownloadDebugFiles;
+            }
+        }
+
+        /// <summary>
         /// Unbinds the event handlers.
         /// </summary>
         public void Detach()
         {
+            dl.Download -= OnDoDownload;
+            dl.Destroy();
+
             RemoveEventHandlers();
             MainWidget.Destroy();
         }
@@ -525,7 +578,7 @@ namespace UserInterface.Views
         /// <param name="str1">First DateTime.</param>
         /// <param name="str2">Second DateTime.</param>
         /// <returns></returns>
-        public int CompareDateTimeStrings(string str1, string str2)
+        private int CompareDateTimeStrings(string str1, string str2)
         {
             // if either of these strings is empty, the job is still running
             if (str1 == "" || str1 == null)
@@ -555,7 +608,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="st">Date time string. MUST be in the format dd/mm/yyyy hh:mm:ss (A|P)M</param>
         /// <returns>A DateTime object representing this string.</returns>
-        public DateTime GetDateTimeFromString(string st)
+        private DateTime GetDateTimeFromString(string st)
         {
             try
             {
@@ -739,24 +792,33 @@ namespace UserInterface.Views
 
         /// <summary>
         /// Event handler for the click event on the download job button. 
-        /// Asks the user for confirmation, then downloads the results for each
-        /// job the user has selected.
+        /// Creates a dialog box to prompt the user for download options.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private async void OnDownloadJobs(object sender, EventArgs e)
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnDownloadJobs(object sender, EventArgs e)
         {
             try
             {
-                //List<string> jobIds = GetSelectedJobIds();
-                //// Normally (when stopping or deleting) the presenter would check to make sure there is at least 1 job selected. 
-                //// In this case though, we check here to prevent the download pop-up from appearing if nothing is selected.
-                //if (jobIds.Count < 1)
-                //{
-                //    Presenter.ShowMessage("Unable to download jobs: no jobs are selected", Models.Core.Simulation.MessageType.Information);
-                //    return;
-                //}
-                //DownloadWindow dl = new DownloadWindow(Presenter, jobIds);
+                dl.Visible = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks download on the "download options"
+        /// dialog. Fires off an event for the presenter.
+        /// </summary>
+        /// <param name="sender">Event arguments.</param>
+        /// <param name="e">Sender object.</param>
+        private async void OnDoDownload(object sender, EventArgs e)
+        {
+            try
+            {
+                dl.Visible = false;
                 await DownloadJobs?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception err)
@@ -775,6 +837,7 @@ namespace UserInterface.Views
         {
             try
             {
+                throw new NotImplementedException();
                 //tbi
                 //Presenter.SetDownloadDirectory(GetDirectory());
             }

@@ -16,12 +16,12 @@ using System.Threading;
 
 namespace UserInterface.Presenters
 {
-    public class AzureJobDisplayPresenter : IPresenter
+    public class CloudJobPresenter : IPresenter
     {
         /// <summary>
         /// The view displaying the list of cloud jobs.
         /// </summary>
-        private CloudJobDisplayView view;
+        private CloudJobView view;
 
         /// <summary>
         /// This object will handle the cloud platform-specific tasks
@@ -42,17 +42,24 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The parent presenter.
         /// </summary>
-        private MainPresenter Presenter { get; set; }
+        private MainPresenter presenter;
+
+        /// <summary>
+        /// Used to distribute cancellation tokens to async processes.
+        /// These cancellation tokens are never cancelled (for now).
+        /// </summary>
+        private CancellationTokenSource cancelToken;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="primaryPresenter"></param>
-        public AzureJobDisplayPresenter(MainPresenter primaryPresenter)
+        public CloudJobPresenter(MainPresenter primaryPresenter)
         {
             cloudInterface = new AzureInterface();
+            cancelToken = new CancellationTokenSource();
 
-            Presenter = primaryPresenter;
+            presenter = primaryPresenter;
             jobList = new List<JobDetails>();
 
             fetchJobs = new BackgroundWorker()
@@ -70,7 +77,7 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter"></param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.view = (CloudJobDisplayView)view;
+            this.view = (CloudJobView)view;
             this.view.StopJobs += OnStopJobs;
             this.view.DeleteJobs += OnDeleteJobs;
             this.view.DownloadJobs += OnDownloadJobs;
@@ -82,6 +89,11 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            view.StopJobs -= OnStopJobs;
+            view.DeleteJobs -= OnDeleteJobs;
+            view.DownloadJobs -= OnDownloadJobs;
+
+            cancelToken.Cancel();
             fetchJobs.CancelAsync();
             view.Detach();
         }
@@ -99,11 +111,11 @@ namespace UserInterface.Presenters
 
             // Get the grammar right when asking for confirmation.
             string msg = "Are you sure you want to stop " + (jobIDs.Length > 1 ? "these " + jobIDs.Length + " jobs" : "this job") + "? There is no way to resume execution!";
-            if (Presenter.AskQuestion(msg) != QuestionResponseEnum.Yes)
+            if (presenter.AskQuestion(msg) != QuestionResponseEnum.Yes)
                 return;
 
             foreach (string id in jobIDs)
-                await cloudInterface.StopJobAsync(id);
+                await cloudInterface.StopJobAsync(id, cancelToken.Token);
         }
 
         /// <summary>
@@ -119,12 +131,12 @@ namespace UserInterface.Presenters
 
             // Get the grammar right when asking for confirmation.
             string msg = "Are you sure you want to delete " + (jobIDs.Length > 1 ? "these " + jobIDs.Length + " jobs?" : "this job?");
-            if (Presenter.AskQuestion(msg) != QuestionResponseEnum.Yes)
+            if (presenter.AskQuestion(msg) != QuestionResponseEnum.Yes)
                 return;
 
             foreach (string id in jobIDs)
             {
-                await cloudInterface.DeleteJobAsync(id);
+                await cloudInterface.DeleteJobAsync(id, cancelToken.Token);
 
                 // Remove the job from the locally stored list of jobs.
                 jobList.RemoveAll(j => j.Id == id);
@@ -143,10 +155,12 @@ namespace UserInterface.Presenters
         private async Task OnDownloadJobs(object sender, EventArgs args)
         {
             DownloadOptions options = new DownloadOptions();
-            // fixme - need user input here
-            options.DownloadDebugFiles = true;
-            options.ExportToCsv = false;
-            options.ExtractResults = false;
+            
+            options.DownloadDebugFiles = view.DownloadDebugFiles;
+            options.ExportToCsv = view.ExportCsv;
+            options.ExtractResults = view.ExtractResults;
+
+            string basePath = view.DownloadPath;
 
             view.DownloadProgress = 0;
             view.ShowDownloadProgressBar();
@@ -157,10 +171,13 @@ namespace UserInterface.Presenters
                 {
                     JobDetails job = jobList.Find(j => j.Id == id);
 
-                    options.Path = Path.Combine(AzureSettings.Default.OutputDir, job.DisplayName + "_Results");
+                    options.Path = Path.Combine(basePath, job.DisplayName + "_Results");
                     options.JobID = Guid.Parse(id);
 
-                    await cloudInterface.DownloadResultsAsync(options, new CancellationToken());
+                    await cloudInterface.DownloadResultsAsync(options, cancelToken.Token, p => view.DownloadProgress = p);
+
+                    if (cancelToken.IsCancellationRequested)
+                        return;
                 }
             }
             finally
@@ -185,7 +202,7 @@ namespace UserInterface.Presenters
                     // Update the list of jobs. This will take some time.
                     view.JobLoadProgress = 0;
                     view.ShowLoadingProgressBar();
-                    var newJobs = await cloudInterface.ListJobsAsync(new CancellationToken(), p => view.JobLoadProgress = p);
+                    var newJobs = await cloudInterface.ListJobsAsync(cancelToken.Token, p => view.JobLoadProgress = p);
 
                     if (fetchJobs.CancellationPending)
                         return;
@@ -203,7 +220,7 @@ namespace UserInterface.Presenters
             }
             catch (Exception err)
             {
-                Presenter.ShowError(err);
+                presenter.ShowError(err);
             }
             finally
             {

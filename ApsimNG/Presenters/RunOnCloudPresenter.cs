@@ -13,13 +13,14 @@ using Models.Core;
 using System.Linq;
 using ApsimNG.Cloud.Azure;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace UserInterface.Presenters
 {
-    public class NewAzureJobPresenter : IPresenter, INewCloudJobPresenter
+    public class RunOnCloudPresenter : IPresenter
     {
         /// <summary>The new azure job view</summary>
-        private NewAzureJobView view;
+        private RunOnCloudView view;
         
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter presenter;
@@ -30,12 +31,16 @@ namespace UserInterface.Presenters
         /// <summary>Cloud interface responsible for job submission.</summary>
         private ICloudInterface cloudInterface;
 
+        /// <summary>Allows job submission to be cancelled.</summary>
+        private CancellationTokenSource cancellation;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public NewAzureJobPresenter()
+        public RunOnCloudPresenter()
         {
             cloudInterface = new AzureInterface();
+            cancellation = new CancellationTokenSource();
         }
 
         /// <summary>
@@ -47,9 +52,10 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter parentPresenter)
         {
             this.presenter = parentPresenter;
-            this.view = view as NewAzureJobView;
+            this.view = view as RunOnCloudView;
 
-            this.view.SubmitJob += OnSubmitJob;
+            this.view.SubmitJob += SubmitJob;
+            this.view.CancelSubmission += CancelJobSubmission;
             
             this.model = model as IModel;
             this.view.JobName = this.model.Name;
@@ -57,10 +63,11 @@ namespace UserInterface.Presenters
 
         public void Detach()
         {
-            view.SubmitJob -= OnSubmitJob;
+            view.SubmitJob -= SubmitJob;
+            view.CancelSubmission -= CancelJobSubmission;
         }
 
-        private async Task OnSubmitJob(object sender, EventArgs args)
+        private async Task SubmitJob(object sender, EventArgs args)
         {
             JobParameters job = new JobParameters
             {
@@ -100,7 +107,7 @@ namespace UserInterface.Presenters
 
             try
             {
-                await cloudInterface.SubmitJobAsync(job, s => view.Status = s);
+                await cloudInterface.SubmitJobAsync(job, cancellation.Token, s => view.Status = s);
             }
             catch (Exception err)
             {
@@ -112,24 +119,11 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Cancels submission of a job.
         /// </summary>
-        public void CancelJobSubmission()
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        public void CancelJobSubmission(object sender, EventArgs args)
         {
-            throw new NotImplementedException();
-        }
-
-        public void SubmitJob(JobParameters jp)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ShowErrorMessage(string msg)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ShowError(Exception err)
-        {
-            throw new NotImplementedException();
+            cancellation.Cancel();
         }
     }
 }

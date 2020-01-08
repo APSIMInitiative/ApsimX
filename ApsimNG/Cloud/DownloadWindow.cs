@@ -4,6 +4,7 @@ using UserInterface.Interfaces;
 using Utility;
 using Gtk;
 using ApsimNG.Cloud.Azure;
+using UserInterface.Views;
 
 namespace ApsimNG.Cloud
 {
@@ -12,23 +13,8 @@ namespace ApsimNG.Cloud
     /// Once the user has chosen their options and pressed download, this class will pass the user's
     /// preferences into its presenter's DownloadResults method.
     /// </summary>
-    class DownloadWindow : Window
+    class DownloadWindow : ViewBase
     {
-        /// <summary>
-        /// Whether or not the result files should be unzipped.
-        /// </summary>
-        private bool unzipResultFiles;
-
-        /// <summary>
-        /// Whether the results should be downloaded.
-        /// </summary>
-        private bool downloadResults;
-
-        /// <summary>
-        /// Whether the results should be combined into a .csv file.
-        /// </summary>
-        private bool collateResults;
-
         /// <summary>
         /// Whether 'debug' (.stdout) files should be downloaded.
         /// </summary>
@@ -37,7 +23,7 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Wether results should be unzipped.
         /// </summary>
-        private CheckButton unzipResults;
+        private CheckButton extractResults;
 
         /// <summary>
         /// Whether results should be saved after being combined into a .csv file.
@@ -80,18 +66,17 @@ namespace ApsimNG.Cloud
         private VBox vboxPrimary;
 
         /// <summary>
-        /// Default constructor.
+        /// Window which holds <see cref="vboxPrimary"/>.
         /// </summary>
-        public DownloadWindow() : base("Download cloud jobs")
-        {
-            InitialiseWindow();
-        }
+        private Window window;
 
         /// <summary>
-        /// Adds the controls (buttons, checkbuttons, progress bars etc.) to the window.
+        /// Default constructor.
         /// </summary>
-        private void InitialiseWindow()
+        public DownloadWindow(ViewBase owner) : base(owner)
         {
+            window = new Window("Download cloud jobs");
+
             vboxPrimary = new VBox();
             HBox downloadDirectoryContainer = new HBox();
 
@@ -110,22 +95,19 @@ namespace ApsimNG.Cloud
                 TooltipText = "Results will be downloaded if and only if this option is enabled."
             };
             chkDownloadResults.Toggled += DownloadResultsToggle;
-            downloadResults = true;
 
-            unzipResults = new CheckButton("Unzip results")
+            extractResults = new CheckButton("Unzip results")
             {
                 Active = true,
                 TooltipText = "Check this option to automatically unzip the results."
             };
-            unzipResults.Toggled += UnzipToggle;
-            unzipResultFiles = true;
+            extractResults.Toggled += ToggleExtractResults;
 
             generateCsv = new CheckButton("Collate Results")
             {
                 Active = true,
                 TooltipText = "Check this option to automatically combine results into a CSV file."
             };
-            collateResults = true;
             generateCsv.Toggled += GenerateCsvToggle;
 
             keepRawOutputs = new CheckButton("Keep raw output files")
@@ -134,30 +116,31 @@ namespace ApsimNG.Cloud
                 TooltipText = "By default, the raw output files are deleted after being combined into a CSV. Check this option to keep the raw outputs."
             };
 
-            unzipResults.Active = false;
+            extractResults.Active = false;
 
             // Button initialisation
             btnDownload = new Button("Download");
-            btnDownload.Clicked += Download;
+            btnDownload.Clicked += OnDownload;
 
             btnChangeOutputDir = new Button("...");
             btnChangeOutputDir.Clicked += ChangeOutputDir;
 
-            entryOutputDir = new Entry((string)AzureSettings.Default["OutputDir"]) { Sensitive = false };
+            entryOutputDir = new Entry(AzureSettings.Default.OutputDir);
+            entryOutputDir.Sensitive = false;
             entryOutputDir.WidthChars = entryOutputDir.Text.Length;
 
             downloadDirectoryContainer.PackStart(new Label("Output Directory: "), false, false, 0);
             downloadDirectoryContainer.PackStart(entryOutputDir, true, true, 0);
             downloadDirectoryContainer.PackStart(btnChangeOutputDir, false, false, 0);
-            
+
             // Put all form controls into the primary vbox
             vboxPrimary.PackStart(includeDebugFiles);
             vboxPrimary.PackStart(runAsync);
             vboxPrimary.PackStart(chkDownloadResults);
-            vboxPrimary.PackStart(unzipResults);
+            vboxPrimary.PackStart(extractResults);
             vboxPrimary.PackStart(generateCsv);
             vboxPrimary.PackStart(keepRawOutputs);
-            vboxPrimary.PackStart(downloadDirectoryContainer);            
+            vboxPrimary.PackStart(downloadDirectoryContainer);
 
             // This empty label will put a gap between the controls above it and below it.
             vboxPrimary.PackStart(new Label(""));
@@ -166,8 +149,90 @@ namespace ApsimNG.Cloud
 
             Frame primaryContainer = new Frame("Download Settings");
             primaryContainer.Add(vboxPrimary);
-            Add(primaryContainer);
-            ShowAll();
+            window.Add(primaryContainer);
+            window.HideAll();
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks the download button.
+        /// </summary>
+        public event EventHandler Download;
+
+        /// <summary>
+        /// Output directory as specified by user.
+        /// </summary>
+        public string Path
+        {
+            get
+            {
+                return entryOutputDir.Text;
+            }
+        }
+
+        /// <summary>
+        /// Should results be extracted?
+        /// </summary>
+        public bool ExtractResults
+        {
+            get
+            {
+                return extractResults.Active;
+            }
+        }
+
+        /// <summary>
+        /// Should results be exported to .csv format?
+        /// </summary>
+        public bool ExportCsv
+        {
+            get
+            {
+                return generateCsv.Active;
+            }
+        }
+
+        /// <summary>
+        /// Should debug files be downloaded?
+        /// </summary>
+        public bool DownloadDebugFiles
+        {
+            get
+            {
+                return includeDebugFiles.Active;
+            }
+        }
+
+        /// <summary>
+        /// Controls visibility of the download window.
+        /// </summary>
+        public bool Visible
+        {
+            get
+            {
+                return window.Visible;
+            }
+            set
+            {
+                if (value)
+                    window.ShowAll();
+                else
+                    window.HideAll();
+            }
+        }
+
+        /// <summary>
+        /// Destroys the download window.
+        /// </summary>
+        public void Destroy()
+        {
+            btnDownload.Clicked -= OnDownload;
+            btnChangeOutputDir.Clicked -= ChangeOutputDir;
+
+            chkDownloadResults.Toggled -= DownloadResultsToggle;
+            extractResults.Toggled -= ToggleExtractResults;
+            generateCsv.Toggled -= GenerateCsvToggle;
+
+            window.Destroy();
         }
 
         /// <summary>
@@ -175,72 +240,99 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Download(object sender, EventArgs e)
+        private void OnDownload(object sender, EventArgs e)
         {
-            btnDownload.Clicked -= Download;
-            btnChangeOutputDir.Clicked -= ChangeOutputDir;
-            Destroy();
-            //presenter.DownloadResults(jobs, chkDownloadResults.Active, generateCsv.Active, includeDebugFiles.Active, keepRawOutputs.Active, unzipResults.Active, runAsync.Active);
+            try
+            {
+                Download?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
         /// Opens a GUI asking the user for a default download directory, and saves their choice.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         private void ChangeOutputDir(object sender, EventArgs e)
         {
-            IFileDialog fileChooser = new FileDialog()
+            try
             {
-                Action = FileDialog.FileActionType.SelectFolder,
-                Prompt = "Choose a download folder"
-            };
-            string downloadDirectory = fileChooser.GetFile();
-            if (!string.IsNullOrEmpty(downloadDirectory))
+                IFileDialog fileChooser = new FileDialog()
+                {
+                    Action = FileDialog.FileActionType.SelectFolder,
+                    Prompt = "Choose a download folder"
+                };
+                string downloadDirectory = fileChooser.GetFile();
+                if (!string.IsNullOrEmpty(downloadDirectory))
+                {
+                    entryOutputDir.Text = downloadDirectory;
+                    //fixme - fire off an event here??
+                    AzureSettings.Default["OutputDir"] = downloadDirectory;
+                    AzureSettings.Default.Save();
+                }
+            }
+            catch (Exception err)
             {
-                entryOutputDir.Text = downloadDirectory;
-                //fixme - fire off an event here??
-                AzureSettings.Default["OutputDir"] = downloadDirectory;                
-                AzureSettings.Default.Save();                
+                ShowError(err);
             }
         }
         
         /// <summary>
         /// Event handler for toggling the generate CSV checkbox. Disables the keep raw outputs checkbox.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         private void GenerateCsvToggle(object sender, EventArgs e)
         {
-            collateResults = !collateResults;
-
-            keepRawOutputs.Active = false;
-            keepRawOutputs.Sensitive = collateResults;
+            try
+            {
+                keepRawOutputs.Active = false;
+                keepRawOutputs.Sensitive = generateCsv.Active;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
         /// Event handler for toggling the unzip results checkbox. Disables the generate CSV checkbox.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void UnzipToggle(object sender, EventArgs e)
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void ToggleExtractResults(object sender, EventArgs e)
         {
-            unzipResultFiles = !unzipResultFiles;
-            generateCsv.Active = false;
-            generateCsv.Sensitive = unzipResultFiles;            
+            try
+            {
+                generateCsv.Active = false;
+                generateCsv.Sensitive = extractResults.Active;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
         /// Event handler for toggling the download results checkbox. Disables the unzip results checkbox.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         private void DownloadResultsToggle(object sender, EventArgs e)
         {
-            downloadResults = !downloadResults;
-
-            unzipResults.Active = false;
-            unzipResults.Sensitive = downloadResults;
+            try
+            {
+                extractResults.Active = false;
+                extractResults.Sensitive = chkDownloadResults.Active;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

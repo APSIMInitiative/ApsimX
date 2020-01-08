@@ -300,7 +300,7 @@
     <Compile Include="Presenters\CheckpointsPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
-    <Compile Include="Presenters\AzureJobDisplayPresenter.cs" />
+    <Compile Include="Presenters\CloudJobPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
@@ -310,7 +310,6 @@
     <Compile Include="Presenters\GenericPresenter.cs" />
     <Compile Include="Presenters\GraphPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
-    <Compile Include="Presenters\INewCloudJobPresenter.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\IntellisensePresenter.cs" />
@@ -323,7 +322,7 @@
     <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
     <Compile Include="Presenters\TablePresenter.cs" />
-    <Compile Include="Presenters\NewAzureJobPresenter.cs" />
+    <Compile Include="Presenters\RunOnCloudPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
     <Compile Include="Presenters\GridPresenter.cs" />
@@ -356,7 +355,7 @@
     <Compile Include="Views\AxisView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
-    <Compile Include="Views\CloudJobDisplayView.cs" />
+    <Compile Include="Views\CloudJobView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
     <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
@@ -386,7 +385,7 @@
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
-    <Compile Include="Views\NewAzureJobView.cs" />
+    <Compile Include="Views\RunOnCloudView.cs" />
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />

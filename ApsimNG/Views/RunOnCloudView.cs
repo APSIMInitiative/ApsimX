@@ -7,7 +7,7 @@ namespace UserInterface.Views
 {
     public delegate Task AsyncEventHandler(object sender, EventArgs args);
 
-    public class NewAzureJobView : ViewBase
+    public class RunOnCloudView : ViewBase
     {
         private Entry entryName;
         private RadioButton radioApsimDir;
@@ -28,7 +28,7 @@ namespace UserInterface.Views
         private Button btnModelPath;
         private Label lblStatus;
 
-        public NewAzureJobView(ViewBase owner) : base(owner)
+        public RunOnCloudView(ViewBase owner) : base(owner)
         {
             // This vbox holds both alignment objects (which in turn hold the frames).
             VBox vboxPrimary = new VBox(false, 10);
@@ -194,7 +194,7 @@ namespace UserInterface.Views
             BtnOK = new Button("OK");
             BtnOK.Clicked += OnOKClicked;
             Button btnCancel = new Button("Cancel");
-            btnCancel.Clicked += new EventHandler(BtnCancel_Click);
+            btnCancel.Clicked += OnCancel;
             HBox hbxButtons = new HBox(true, 0);
             hbxButtons.PackEnd(btnCancel, false, true, 0);
             hbxButtons.PackEnd(BtnOK, false, true, 0);
@@ -220,6 +220,11 @@ namespace UserInterface.Views
         /// Invoked when the user clicks on the OK button to submit the job.
         /// </summary>
         public event AsyncEventHandler SubmitJob;
+
+        /// <summary>
+        /// Invoked when the user clicks on the Cancel button to cancel job submission.
+        /// </summary>
+        public event EventHandler CancelSubmission;
 
         /// <summary>
         /// Job display name.
@@ -325,9 +330,16 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnCancel_Click(object sender, EventArgs e)
+        private void OnCancel(object sender, EventArgs e)
         {
-            // tbi
+            try
+            {
+                CancelSubmission?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
