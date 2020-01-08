@@ -83,16 +83,23 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, System.EventArgs e)
         {
-            variableEditor.StyleChanged -= OnStyleChanged;
-            frequencyEditor.StyleChanged -= OnStyleChanged;
-            variableEditor.MainWidget.Destroy();
-            variableEditor = null;
-            frequencyEditor.MainWidget.Destroy();
-            frequencyEditor = null;
-            dataStoreView1.MainWidget.Destroy();
-            dataStoreView1 = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                variableEditor.StyleChanged -= OnStyleChanged;
+                frequencyEditor.StyleChanged -= OnStyleChanged;
+                variableEditor.MainWidget.Destroy();
+                variableEditor = null;
+                frequencyEditor.MainWidget.Destroy();
+                frequencyEditor = null;
+                dataStoreView1.MainWidget.Destroy();
+                dataStoreView1 = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Provides access to the variable list.</summary>
@@ -112,6 +119,5 @@ namespace UserInterface.Views
             get { return notebook1.CurrentPage; }
             set { notebook1.CurrentPage = value; }
         }
-
     }
 }

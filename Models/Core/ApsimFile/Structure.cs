@@ -31,6 +31,8 @@
             // Call OnCreated
             modelToAdd.OnCreated();
             Apsim.ChildrenRecursively(modelToAdd).ForEach(m => m.OnCreated());
+
+            Apsim.ClearCaches(modelToAdd);
         }
 
         /// <summary>Adds a new model (as specified by the string argument) to the specified parent.</summary>
@@ -62,6 +64,7 @@
         {
             model.Name = newName;
             EnsureNameIsUnique(model);
+            Apsim.ClearCache(model);
         }
 
         /// <summary>Move a model from one parent to another.</summary>
@@ -72,9 +75,14 @@
             // Remove old model.
             if (model.Parent.Children.Remove(model as Model))
             {
+                // Clear the cache for all models in scope of the model to be moved.
+                // The models in scope will be different after the move so we will
+                // need to do this again after we move the model.
+                Apsim.ClearCache(model);
                 newParent.Children.Add(model as Model);
                 model.Parent = newParent;
                 EnsureNameIsUnique(model);
+                Apsim.ClearCache(model);
             }
             else
                 throw new Exception("Cannot move model " + model.Name);

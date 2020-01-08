@@ -147,6 +147,7 @@
     <Compile Include="Attributes\ContextMenuAttribute.cs" />
     <Compile Include="Attributes\MainMenuAttribute.cs" />
     <Compile Include="Classes\CustomMenuToolButton.cs" />
+    <Compile Include="Classes\PDFWriter.cs" />
     <Compile Include="Classes\Grid\CellRendererActiveButton.cs" />
     <Compile Include="Classes\Grid\CellRendererDropDown.cs" />
     <Compile Include="Classes\Grid\ColRenderAttributes.cs" />
@@ -197,8 +198,9 @@
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />
     <Compile Include="Commands\ChangeProperty.cs" />
+    <Compile Include="Commands\CreateModelDescriptionDocCommand.cs" />
     <Compile Include="Commands\DeleteModelCommand.cs" />
-    <Compile Include="Commands\ExportNodeCommand.cs" />
+    <Compile Include="Commands\CreateDocCommand.cs" />
     <Compile Include="Commands\IExplorerPresenter.cs" />
     <Compile Include="Commands\MoveModelCommand.cs" />
     <Compile Include="Commands\MoveModelUpDownCommand.cs" />
@@ -207,7 +209,6 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
-    <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellChangedArgs.cs" />
@@ -482,6 +483,7 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\ProtectedDivideFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StorageNDemandFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ShadedBarsOnGraph.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />

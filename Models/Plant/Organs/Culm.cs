@@ -1,5 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Functions;
 using Models.PMF.Phen;
 using Models.PMF.Struct;
 using System;
@@ -40,25 +41,51 @@ namespace Models.PMF.Organs
         /// <summary>/// The aX0 for this Culm </summary>
         public double AX0 { get; set; }
 
-        /// <summary> The aMaxSlope for this Culm </summary>
-        public double AMaxSlope { get; set; }
+        /// <summary>
+        /// leaf_no_correction in old apsim.
+        /// </summary>
+        public double LeafNoCorrection { get; set; }
 
-        /// <summary>The aMaxIntercept for this Culm</summary>
-        public double AMaxIntercept { get; set; }
+        /// <summary>Encapsulates aMax (largest leaf size) calcaulations.</summary>
+        public IFunction LargestLeafSize { get; set; }
 
+        // at this point it seems like it would be simpler to give each culm a reference to
+        // the outside world (simulations tree) so it can find these values for itself, but
+        // for now let's keep this simple. Note the current method will also cause problems
+        // if these parameters become non-constant.
+
+        /// <summary>bellCurveParams[0]</summary>
+        public double A0 { get; set; }
+
+        /// <summary>bellCurveParams[1]</summary>
+        public double A1 { get; set; }
+
+        /// <summary>bellCurveParams[2]</summary>
+        public double B0 { get; set; }
+
+        /// <summary>bellCurveParams[3]</summary>
+        public double B1 { get; set; }
     }
 
     ///<summary>
     /// A Culm represents a collection of leaves
     /// </summary>
-
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Culm : Model, ICustomDocumentation
     {
         private const double smm2sm = 0.000001;
-        private CulmParameters culmParameters { get; set; }
+        private CulmParameters culmParameters;
+        private CulmStructure structure;
+
+        private IFunction noRateChange1;
+        private IFunction noRateChange2;
+        private IFunction appearanceRate1;
+        private IFunction appearanceRate2;
+        private IFunction appearanceRate3;
+        private IFunction leafNoEffective;
+
         /// <summary> The proportion of a whole tiller</summary>
         public double Proportion { get; set; }
 
@@ -100,6 +127,27 @@ namespace Models.PMF.Organs
         {
             culmParameters = parameters;
             Proportion = culmParameters.InitialProportion;
+
+            // fixme - temp hack to get things running.
+            // Should replace these (and LargestLeafSize) with links in long run.
+            IModel reference = culmParameters.LargestLeafSize as IModel;
+            structure = Apsim.Find(culmParameters.LargestLeafSize as IModel, "Structure") as CulmStructure;
+            if (structure == null)
+                throw new Exception($"Culm is unable to find structure model - have you deleted the CulmStructure object?");
+            noRateChange1 = GetFunction(reference, "[Structure].RemainingLeavesForFinalAppearanceRate");
+            noRateChange2 = GetFunction(reference, "[Structure].RemainingLeavesForFinalAppearanceRate2");
+            appearanceRate1 = GetFunction(reference, "[Structure].InitialAppearanceRate");
+            appearanceRate2 = GetFunction(reference, "[Structure].MidAppearanceRate");
+            appearanceRate3 = GetFunction(reference, "[Structure].FinalAppearanceRate");
+            leafNoEffective = GetFunction(reference, "[Structure].LeafNoEffective");
+        }
+
+        private IFunction GetFunction(IModel reference, string path)
+        {
+            IFunction result = leafNoEffective = Apsim.Get(reference, path) as IFunction;
+            if (leafNoEffective == null)
+                throw new Exception($"Unable to find {path}");
+            return result;
         }
 
         /// <summary>
@@ -118,9 +166,13 @@ namespace Models.PMF.Organs
             // Peter's 2 stage version used here, modified to apply to last few leaves before flag
             // i.e. c_leaf_no_rate_change is leaf number from the top down (e.g. 4)
 
-            double leafAppRate = culmParameters.InitialAppearanceRate;
-            if (MathUtilities.IsLessThanOrEqual(remainingLeaves, culmParameters.RemainingLeavesForFinalAppearanceRate))
-                leafAppRate = culmParameters.FinalAppearanceRate;
+            double leafAppRate;
+            if (MathUtilities.IsLessThanOrEqual(remainingLeaves, noRateChange2.Value()))
+                leafAppRate = appearanceRate3.Value();
+            else if (MathUtilities.IsLessThanOrEqual(remainingLeaves, noRateChange1.Value()))
+                leafAppRate = appearanceRate2.Value();
+            else
+                leafAppRate = appearanceRate1.Value();
 
             // If leaves are still growing, the cumulative number of phyllochrons or fully expanded
             // leaves is calculated from thermal time for the day.
@@ -134,17 +186,26 @@ namespace Models.PMF.Organs
         /// <summary>Add number of new leaf appeared</summary>
         public double calcPotentialArea()
         {
-            var leafNoCorrection = 1.52;
+            //var leafNoCorrection = 1.52;
             //once leaf no is calculated leaf area of largest expanding leaf is determined
-            double leafNoEffective = Math.Min(CurrentLeafNumber + leafNoCorrection, FinalLeafNumber - culmParameters.LeafNoAtAppearance);
-            var leafsize = calcIndividualLeafSize(leafNoEffective);
+
+            // if sorghum
+            //double leafNoEffective = Math.Min(CurrentLeafNumber + culmParameters.LeafNoCorrection, FinalLeafNumber - culmParameters.LeafNoAtAppearance);
+            // else if maize
+            //double leafNoEffective = Math.Min(CurrentLeafNumber - dltLeafNo + culmParameters.LeafNoCorrection, FinalLeafNumber);
+            // else throw
+
+            structure.LeafNoApp = culmParameters.LeafNoAtAppearance;
+            double leafNoEffective = this.leafNoEffective.Value();
+            var leafsize = CalcIndividualLeafSize(leafNoEffective);
 
             double leafArea = leafsize * smm2sm * culmParameters.Density * dltLeafNo; // in dltLai
             TotalLAI += leafArea;
             return (leafArea * Proportion);
         }
 
-        private double calcIndividualLeafSize(double leafNo)
+        /// <summary>Calc size of individual leaf.</summary>
+        public double CalcIndividualLeafSize(double leafNo)
         {
             //double aX0 = 0.687;
             //double aMaxSlope = 22.25;
@@ -179,11 +240,11 @@ namespace Models.PMF.Organs
                     }
                 }
             }
-            double a0 = -0.009, a1 = -0.2;
-            double b0 = 0.0006, b1 = -0.43;
+            //double a0 = -0.009, a1 = -0.2;
+            //double b0 = 0.0006, b1 = -0.43;
 
-            double a = a0 - Math.Exp(a1 * correctedFinalLeafNo); //breadth
-            double b = b0 - Math.Exp(b1 * correctedFinalLeafNo); //skewness
+            double a = culmParameters.A0 - Math.Exp(culmParameters.A1 * correctedFinalLeafNo); //breadth
+            double b = culmParameters.B0 - Math.Exp(culmParameters.B1 * correctedFinalLeafNo); //skewness
 
             //Relationship for calculating maximum individual leaf area from Total Leaf No
             //Source: Modelling genotypic and environmental control of leaf area dynamics in grain sorghum. II. Individual leaf level 
@@ -198,7 +259,7 @@ namespace Models.PMF.Organs
             //Calculation then changed to use the relationship as described in the Carberry paper in Table 2
             //The actual intercept and slope will be determined by the cultivar, and read from the config file (sorghum.xml)
             //aMaxS = 19.5; //not 100% sure what this number should be - tried a range and this provided the best fit forthe test data
-            double largestLeafSize = culmParameters.AMaxSlope * FinalLeafNumber + culmParameters.AMaxIntercept; //aMaxI is the intercept
+            double largestLeafSize = culmParameters.LargestLeafSize.Value();
 
             //a vertical adjustment is applied to each tiller - this was discussed in a meeting on 22/08/12 and derived 
             //from a set of graphs that I cant find that compared the curves of each tiller

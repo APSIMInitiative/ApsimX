@@ -103,8 +103,15 @@
         /// <summary>The main widget has been destroyed.</summary>
         private void OnMainWidgetDestroyed(object sender, EventArgs e)
         {
-            mainWidget.Destroyed -= OnMainWidgetDestroyed;
-            owner = null;
+            try
+            {
+                mainWidget.Destroyed -= OnMainWidgetDestroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Populate the tree view.</summary>
@@ -153,41 +160,55 @@
         /// <param name="iter">The tree iterator.</param>
         public void OnFormatColumn(TreeViewColumn col, CellRenderer baseCell, TreeModel model, TreeIter iter)
         {
-            TreePath path = tree.Model.GetPath(iter);
-            int rowIndex = path.Indices[0];
-            int colIndex = DataSource.Columns.IndexOf(col.Title);
+            try
+            {
+                TreePath path = tree.Model.GetPath(iter);
+                int rowIndex = path.Indices[0];
+                int colIndex = DataSource.Columns.IndexOf(col.Title);
 
-            CellRendererDescription renderDetails = CellRenderDetails.Find(c => c.ColumnIndex == colIndex && c.RowIndex == rowIndex);
-            if (renderDetails != null)
-            {
-                var cell = baseCell as CellRendererText;
-                cell.Strikethrough = renderDetails.StrikeThrough;
-                if (renderDetails.Bold)
-                    cell.Weight = (int) Pango.Weight.Bold;
-                if (renderDetails.Italics)
-                    cell.Font = "Sans Italic";
-                cell.Foreground = renderDetails.Colour.Name; // ?
+                CellRendererDescription renderDetails = CellRenderDetails.Find(c => c.ColumnIndex == colIndex && c.RowIndex == rowIndex);
+                if (renderDetails != null)
+                {
+                    var cell = baseCell as CellRendererText;
+                    cell.Strikethrough = renderDetails.StrikeThrough;
+                    if (renderDetails.Bold)
+                        cell.Weight = (int) Pango.Weight.Bold;
+                    if (renderDetails.Italics)
+                        cell.Font = "Sans Italic";
+                    cell.Foreground = renderDetails.Colour.Name; // ?
+                }
+                else if (baseCell is CellRendererText)
+                {
+                    var cell = baseCell as CellRendererText;
+                    cell.Strikethrough = false;
+                    cell.Weight = (int)Pango.Weight.Normal;
+                    cell.Font = "Normal";
+                }
             }
-            else if (baseCell is CellRendererText)
+            catch (Exception err)
             {
-                var cell = baseCell as CellRendererText;
-                cell.Strikethrough = false;
-                cell.Weight = (int)Pango.Weight.Normal;
-                cell.Font = "Normal";
+                ShowError(err);
             }
         }
 
         /// <summary>The grid has readjusted the column widths.</summary>
         private void OnColumnWidthChange(object sender, EventArgs e)
         {
-            //TreeViewColumn col = sender as TreeViewColumn;
-            //int index = columns.IndexOf(col);
-            //Application.Invoke(delegate
+            //try
             //{
+            //    TreeViewColumn col = sender as TreeViewColumn;
+            //    int index = columns.IndexOf(col);
+            //    Application.Invoke(delegate
+            //    {
             //    // if something is going wrong with column width, this is probably causing it                
             //    cells[index].Width = col.Width - 4;
-            //    cells[index].Ellipsize = EllipsizeMode.End;
-            //});
+            //        cells[index].Ellipsize = EllipsizeMode.End;
+            //    });
+            //}
+            //catch (Exception err)
+            //{
+            //    ShowError(err);
+            //}
         }
 
         /// <summary>
@@ -199,26 +220,31 @@
         [GLib.ConnectBefore]
         private void OnTreeClicked(object sender, ButtonReleaseEventArgs e)
         {
-            if (e.Event.Button == 1) // left click
-                Changed?.Invoke(sender, new EventArgs());
-
-            else if (e.Event.Button == 3) // right click
+            try
             {
-                TreePath path;
-                tree.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path);
+                if (e.Event.Button == 1) // left click
+                    Changed?.Invoke(sender, new EventArgs());
 
-                // By default, Gtk will un-select the selected rows when a normal (non-shift/ctrl) click is registered.
-                // Setting e.Retval to true will stop the default Gtk ButtonPress event handler from being called after 
-                // we return from this handler, which in turn means that the rows will not be deselected.
-                e.RetVal = tree.Selection.GetSelectedRows().Contains(path);
-                if (contextMenu != null)
+                else if (e.Event.Button == 3) // right click
                 {
-                    contextMenu.ShowAll();
-                    contextMenu.Popup();
+                    TreePath path;
+                    tree.GetPathAtPos((int)e.Event.X, (int)e.Event.Y, out path);
+
+                    // By default, Gtk will un-select the selected rows when a normal (non-shift/ctrl) click is registered.
+                    // Setting e.Retval to true will stop the default Gtk ButtonPress event handler from being called after 
+                    // we return from this handler, which in turn means that the rows will not be deselected.
+                    e.RetVal = tree.Selection.GetSelectedRows().Contains(path);
+                    if (contextMenu != null)
+                    {
+                        contextMenu.ShowAll();
+                        contextMenu.Popup();
+                    }
                 }
             }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
-
-
     }
 }

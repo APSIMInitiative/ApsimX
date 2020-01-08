@@ -190,6 +190,9 @@
     <Compile Include="Weather\MockWeather.cs" />
     <Compile Include="Core\ApsimFile\ConverterTests.cs" />
     <Compile Include="Core\ApsimTests.cs" />
+	<Compile Include="..\..\Models\Properties\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>	
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
