@@ -41,9 +41,9 @@ Maize_Exp1 2ND Yr3_4
 Maize_Exp1 3N Yr1_1=Angelo98FertN0
 Maize_Exp1 3N Yr1_2=Angelo98FertN50
 Maize_Exp1 3N Yr1_3=Angelo98FertN250
-Maize_Exp1 3N Yr2_1
-Maize_Exp1 3N Yr2_2
-Maize_Exp1 3N Yr2_3
+Maize_Exp1 3N Yr2_1=Angelo99FertN10
+Maize_Exp1 3N Yr2_2=Angelo99FertN70
+Maize_Exp1 3N Yr2_3=Angelo99FertN300
 Maize_G5N2_G5N2
 Maize_G6N2_G6N2
 Maize_G7N2_G7N2
