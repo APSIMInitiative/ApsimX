@@ -34,9 +34,9 @@ Maize_DRK_DRKOWX
 Maize_DRK_DRKS09
 Maize_DRK_DRKSH40
 Maize_DRK_DRKSWX
-Maize_Exp1 2ND Yr3_1
-Maize_Exp1 2ND Yr3_2
-Maize_Exp1 2ND Yr3_3
+Maize_Exp1 2ND Yr3_1=Angelo00FertN0
+Maize_Exp1 2ND Yr3_2=Angelo00FertN150
+Maize_Exp1 2ND Yr3_3=Angelo00FertN250
 Maize_Exp1 2ND Yr3_4
 Maize_Exp1 3N Yr1_1=Angelo98FertN0
 Maize_Exp1 3N Yr1_2=Angelo98FertN50
