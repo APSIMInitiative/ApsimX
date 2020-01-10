@@ -253,6 +253,24 @@ namespace Models.CLEM.Activities
                 }
             }
 
+            // use market stores
+            // buy extra into market store and use market stores
+            // if no market buy from unknown source
+            
+            // if still intake available and targets not met
+
+            // 
+
+            // add more to stores from purchases, either from money or market and money
+
+            // these purchases need to be instant
+
+            // then go and add to the resource requests to take any extra just purchased if needed
+
+
+
+
+
             // now we need to add a heap of purchase requests for the shortfall in intake
             // finances will limit the 
             // one at a time going through the food types we will try and buy the shortfall up to intake and targets
