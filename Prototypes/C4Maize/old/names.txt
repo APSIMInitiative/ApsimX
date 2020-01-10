@@ -103,10 +103,10 @@ Maize_MSN_M2S5N3
 Maize_MSN_M3S1
 Maize_MSN_M3S2
 Maize_MSN_M3S3
-Maize_UQG_UQG6875
-Maize_UQG_UQGBARKR
-Maize_UQG_UQGKCB
-Maize_UQG_UQGXL82
+Maize_UQG_UQG6875=UQGattonCvPioneer_6875
+Maize_UQG_UQGBARKR=UQGattonCvBarker
+Maize_UQG_UQGKCB=UQGattonUQGCvkatumani
+Maize_UQG_UQGXL82=UQGattonUQGCvDekalb_XL82
 Quincy776
 Quincy779
 Quincy786
