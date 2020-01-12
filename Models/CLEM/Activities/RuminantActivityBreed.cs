@@ -76,7 +76,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // work our pregnancy status of initial herd
+            // work out pregnancy status of initial herd
             if (InferStartupPregnancy)
             {
                 // set up pre start conception status of breeders

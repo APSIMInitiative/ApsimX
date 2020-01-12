@@ -95,9 +95,6 @@ namespace Models.CLEM.Activities
                 {
                     BuyWithTrucking();
                 }
-                // report that this activity was performed as it does not use base GetResourcesRequired
-                // only triggered on buy not sell.
-                //this.TriggerOnActivityPerformed();
             }
         }
 
@@ -108,6 +105,14 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalSell(object sender, EventArgs e)
         {
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
+
+            // only perform this activity if the timing is ok
+            // OR
+            // there are animals marked for destocking from forced selling
+            if (TimingOK || ruminantHerd.Herd.Where(a => a.SaleFlag == HerdChangeReason.DestockSale).Count() > 0)
+            {
+
+            }
 
             int trucks = 0;
             double saleValue = 0;

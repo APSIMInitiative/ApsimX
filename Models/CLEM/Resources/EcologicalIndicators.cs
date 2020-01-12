@@ -27,17 +27,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double GrassBasalArea { get; set; }
 
-        //erosion
-        //tree basal area
-        //perennials
-        //%runoff
-        //methane
-        //soilC
-        //TreeC 
-        //Burnkg - will be in burn pasture activity
-        //methaneFire - created by burn pasture activity
-        //N2OOFire - created by burn pasture activity
-
         /// <summary>
         /// Average monthly stocking rate (Adult Equivalents/square km)
         /// </summary>
@@ -48,5 +37,59 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Utilisation { get; set; }
 
+        /// <summary>
+        /// Erosion
+        /// </summary>
+        public double Erosion { get; set; }
+
+        /// <summary>
+        /// Runoff
+        /// </summary>
+        public double Runoff { get; set; }
+
+        /// <summary>
+        /// Rainfall
+        /// </summary>
+        public double Rainfall { get; set; }
+
+        /// <summary>
+        /// Cover
+        /// </summary>
+        public double Cover { get; set; }
+
+        /// <summary>
+        /// tree basal area
+        /// </summary>
+        public double TreeBasalArea { get; set; }
+
+        /// <summary>
+        /// Tree carbon
+        /// </summary>
+        public double TreeCarbon { get; set; }
+
+        /// <summary>
+        /// Perennials
+        /// </summary>
+        public double Perennials { get; set; }
+
+        //methane - done elsewhere
+        //soilC - need to look at this
+        //Burnkg - will be in burn pasture activity
+        //methaneFire - created by burn pasture activity
+        //N2OOFire - created by burn pasture activity
+
+        /// <summary>
+        /// Reset all values
+        /// </summary>
+        public void Reset()
+        {
+            Erosion = 0;
+            Runoff = 0;
+            Rainfall = 0;
+            Cover = 0;
+            TreeBasalArea = 0;
+            TreeCarbon = 0;
+            Perennials = 0;
+        }
     }
 }
