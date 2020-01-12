@@ -78,11 +78,16 @@
             else
                 explorerPresenter.MainPresenter.ShowError(errors);
 
+            string resourceNameOfCompletionSound;
             SoundPlayer player = new SoundPlayer();
-            if (DateTime.Now.Month == 12)
-                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.notes.wav");
+            if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
+                resourceNameOfCompletionSound = "ApsimNG.Resources.Sounds.Jingle.wav";
+            else if (errors.Count > 0)
+                resourceNameOfCompletionSound = "ApsimNG.Resources.Sounds.Fail.wav";
             else
-                player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.success.wav");
+                resourceNameOfCompletionSound = "ApsimNG.Resources.Sounds.Success.wav";
+
+            player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceNameOfCompletionSound);
             player.Play();
         }
 
