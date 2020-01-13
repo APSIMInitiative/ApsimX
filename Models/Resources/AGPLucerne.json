@@ -104,7 +104,7 @@
       "RootElongationRate": 25.0,
       "RootDistributionDepthParam": 250.0,
       "RootDistributionExponent": 3.2,
-      "DigestibilitiesCellWall": [0.7, 0.7, 0.7, 0.2]
+      "DigestibilitiesCellWall": [0.7, 0.7, 0.7, 0.2],
       "MinimumGreenWt": 50.0,
       "FractionStolonStanding": 0.0,
       "PreferenceForGreenOverDead": 1.0,

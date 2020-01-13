@@ -51,7 +51,7 @@
         0.006,
         0.025
       ],
-      "DegreesDayForGermination": " 125",
+      "DegreesDayForGermination": 125,
       "TargetShootRootRatio": 4.0,
       "MaxRootAllocation": 0.25,
       "ShootRootGlfFactor": 0.5,
