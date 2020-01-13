@@ -179,6 +179,9 @@ namespace Models
                 if (fertiliserType == null)
                     throw new ApsimXException(this, "Cannot find fertiliser type '" + Type + "'");
 
+                // We find the current amount of N in each form, add to it as needed, 
+                // then set the new value. An alternative approach could call AddKgHaDelta
+                // rather than SetKgHa
                 if (fertiliserType.FractionNO3 != 0)
                 {
                     var values = NO3.kgha;

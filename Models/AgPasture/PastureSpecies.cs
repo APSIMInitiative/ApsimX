@@ -11,6 +11,7 @@
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
     using Models.Functions;
+    using Models.PMF.Interfaces;
 
     /// <summary>
     /// # [Name]
@@ -20,7 +21,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake
+    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IPlantDamage
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -68,6 +69,7 @@
 
         /// <summary>Gets or sets the canopy albedo for this plant (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double Albedo
         {
             get { return myAlbedo; }
@@ -79,6 +81,7 @@
 
         /// <summary>Gets or sets the  maximum stomatal conductance (m/s).</summary>
         [Units("m/s")]
+        [XmlIgnore]
         public double Gsmax
         {
             get { return myGsmax; }
@@ -90,6 +93,7 @@
 
         /// <summary>Gets or sets the R50 factor (W/m^2).</summary>
         [Units("W/m^2")]
+        [XmlIgnore]
         public double R50
         {
             get { return myR50; }
@@ -99,14 +103,23 @@
         /// <summary>Gets the LAI of live tissues (m^2/m^2).</summary>
         //[Description("Leaf area index of green tissues")]
         [Units("m^2/m^2")]
+        [XmlIgnore]
         public double LAI
         {
-            get { return LAIGreen; }
+            get 
+            { 
+                return LAIGreen; 
+            }
+            set
+            {
+                LAIGreen = value;
+            }
         }
 
         /// <summary>Gets the total LAI, live + dead (m^2/m^2).</summary>
         //[Description("Total leaf area index")]
         [Units("m^2/m^2")]
+        [XmlIgnore]
         public double LAITotal
         {
             get { return LAIGreen + LAIDead; }
@@ -115,6 +128,7 @@
         /// <summary>Gets the plant's green cover (0-1).</summary>
         //[Description("Fraction of soil covered by green tissues")]
         [Units("0-1")]
+        [XmlIgnore]
         public double CoverGreen
         {
             get { return CalcPlantCover(greenLAI); }
@@ -123,6 +137,7 @@
         /// <summary>Gets the total plant cover (0-1).</summary>
         //[Description("Fraction of soil covered by plant tissues")]
         [Units("0-1")]
+        [XmlIgnore]
         public double CoverTotal
         {
             get { return CalcPlantCover(greenLAI + deadLAI); }
@@ -131,6 +146,7 @@
         /// <summary>Gets the average canopy height (mm).</summary>
         //[Description("Average canopy height")]
         [Units("mm")]
+        [XmlIgnore]
         public double Height
         {
             get { return HeightfromDM(); }
@@ -139,14 +155,16 @@
         /// <summary>Gets the canopy depth (mm).</summary>
         //[Description("The depth of the canopy")]
         [Units("mm")]
+        [XmlIgnore]
         public double Depth
         {
             get { return Height; }
         }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
-        //[Description("The depth of the canopy")]
+        //[Description("The width of the canopy")]
         [Units("mm")]
+        [XmlIgnore]
         public double Width
         {
             get { return 0; }
@@ -156,6 +174,7 @@
         /// <summary>Plant growth limiting factor, supplied to MicroClimate for calculating potential transpiration.</summary>
         //[Description("General growth limiting factor (for MicroClimate)")]
         [Units("0-1")]
+        [XmlIgnore]
         public double FRGR
         {
             get { return 1.0; }
@@ -187,18 +206,26 @@
                     InterceptedRadn += canopyLayer.amount;
 
                 // (RCichota, May-2017) Made intercepted radiation equal to solar radiation and implemented the variable 'effective cover'.
-                // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate passes the value of  total intercepted
-                //  radiation (over all canopy). We here assume that solar radiation is the best value for AgPasture (agrees with Ecomod).
-                // The 'effective cover' is computed using an 'effective light extinction coefficient' which is based on the value for intercepted
-                //  radiation supplied by MicroClimate. This is the light extinction coefficient that result in the same total intercepted radiation,
-                //  but using solar radiation on top of canopy (this value is only used in the calcualtion of photosynthesis).
-                // TODO: this approach may have to be amended when multi-layer canopies are used (the thought behind the approach here is that
-                //  things like shading (which would reduce Radn on top of canopy) are irrelevant).
+                // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate only passes the value of total
+                //  intercepted radiation (over all canopy). Here it is assumed/defined that solar radiation is indeed the best value for
+                //  AgPasture to use in its photosynthesis (agrees with the implementation in Ecomod).
+                // The 'effective cover' is computed using an 'effective light extinction coefficient', which is obtained based on the 
+                //  value for intercepted radiation supplied by MicroClimate. This is the light extinction coefficient that result in the
+                //  same total intercepted radiation, but using solar radiation on top of canopy.
+                //  (note that this value is only used in the calculation of photosynthesis).
+                // TODO: this approach may have to be amended when multi-layer canopies are used (the thought behind the approach here
+                //  is that things like shading (which would reduce Radn on top of canopy) are irrelevant).
                 RadiationTopOfCanopy = myMetData.Radn;
-                double myEffectiveLightExtinctionCoefficient = -Math.Log(1.0 - InterceptedRadn / myMetData.Radn) / greenLAI;
                 effectiveGreenCover = 0.0;
-                if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
-                    effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
+                if (RadiationTopOfCanopy > 0.0)
+                {
+                    double AuxVar = 0.0;
+                    if (InterceptedRadn < RadiationTopOfCanopy)
+                        AuxVar = Math.Log(1.0 - InterceptedRadn / RadiationTopOfCanopy);
+                    double myEffectiveLightExtinctionCoefficient = MathUtilities.Divide(-AuxVar, greenLAI, 0.0);
+                    if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
+                        effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
+                }
             }
         }
 
@@ -207,6 +234,7 @@
         #region ICrop implementation  --------------------------------------------------------------------------------------
 
         /// <summary>Gets a value indicating how leguminous a plant is</summary>
+        [XmlIgnore]
         public double Legumosity
         {
             get
@@ -219,6 +247,7 @@
         }
 
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
+        [XmlIgnore]
         public bool IsC4 { get { return PhotosyntheticPathway == PastureSpecies.PhotosynthesisPathwayType.C4; } }
 
         /// <summary>Gets a list of cultivar names (not used by AgPasture).</summary>
@@ -275,7 +304,7 @@
 
             // Incorporate all root mass to soil fresh organic matter
             foreach (PastureBelowGroundOrgan root in roots)
-                root.DoDetachBiomass(root.DMTotal, root.NTotal);
+                root.Tissue[0].DetachBiomass(root.DMTotal, root.NTotal);
 
             // zero all variables
             RefreshVariables();
@@ -478,6 +507,7 @@
         /// <summary>Gets or sets the family type for this plant species (grass/legume/forb).</summary>
         //[Description("Family type for this plant species [grass/legume/forb]:")]
         [Units("-")]
+        [XmlIgnore]
         public PlantFamilyType SpeciesFamily
         {
             get { return mySpeciesFamily; }
@@ -489,6 +519,7 @@
         }
 
         /// <summary>Species metabolic pathway of C fixation during photosynthesys (C3/C4).</summary>
+        [XmlIgnore]
         public PhotosynthesisPathwayType PhotosyntheticPathway { get; set; } = PhotosynthesisPathwayType.C3;
 
 
@@ -498,36 +529,40 @@
         /// <summary>Initial above ground DM weight (kgDM/ha).</summary>
         [Description("Initial above ground DM weight")]
         [Units("kgDM/ha")]
-        public double InitialShootDM { get; set; } = 2000.0;
+        public double InitialShootDM { get; set; }
 
 
         /// <summary>Initial below ground DM weight (kgDM/ha).</summary>
         [Description("Initial below ground DM weight")]
         [Units("kgDM/ha")]
-        public double InitialRootDM { get; set; } = 500.0;
+        public double InitialRootDM { get; set; }
 
 
 
         /// <summary>Initial rooting depth (mm).</summary>
         [Description("Initial rooting depth")]
         [Units("mm")]
-        public double InitialRootDepth { get; set; } = 750.0;
+        public double InitialRootDepth { get; set; }
 
 
 
         /// <summary>Initial fractions of DM for each plant part in grasses (0-1).</summary>
+        [XmlIgnore]
         public double[] initialDMFractionsGrasses { get; set; } = { 0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00 };
 
         /// <summary>Initial fractions of DM for each plant part in legumes (0-1).</summary>
+        [XmlIgnore]
         public double[] initialDMFractionsLegumes { get; set; } = { 0.16, 0.23, 0.22, 0.05, 0.03, 0.05, 0.05, 0.01, 0.04, 0.08, 0.08 };
 
         /// <summary>Initial fractions of DM for each plant part in forbs (0-1).</summary>
+        [XmlIgnore]
         public double[] initialDMFractionsForbs { get; set; } = { 0.20, 0.20, 0.15, 0.05, 0.10, 0.15, 0.10, 0.05, 0.00, 0.00, 0.00 };
 
         ////- Potential growth (photosynthesis) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Reference leaf CO2 assimilation rate for photosynthesis (mg CO2/m^2Leaf/s).</summary>
         [Units("mg/m^2/s")]
+        [XmlIgnore]
         public double ReferencePhotosyntheticRate { get; set; } = 1.0;
 
 
@@ -549,6 +584,7 @@
 
         /// <summary>Light extinction coefficient (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double LightExtinctionCoefficient { get; set; } = 0.5;
 
 
@@ -580,23 +616,27 @@
 
         /// <summary>Minimum temperature for growth (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double GrowthTminimum { get; set; } = 1.0;
 
 
 
         /// <summary>Optimum temperature for growth (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double GrowthToptimum { get; set; } = 20.0;
 
 
 
         /// <summary>Curve parameter for growth response to temperature (>0.0).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double GrowthTEffectExponent { get; set; } = 1.7;
 
 
         /// <summary>Enable photosynthesis reduction due to heat damage (yes/no).</summary>
         [Units("yes/no")]
+        [XmlIgnore]
         public YesNoAnswer UseHeatStressFactor
         {
             get
@@ -611,30 +651,35 @@
 
         /// <summary>Onset temperature for heat effects on photosynthesis (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double HeatOnsetTemperature { get; set; } = 28.0;
 
 
 
         /// <summary>Temperature for full heat effect on photosynthesis, growth stops (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double HeatFullTemperature { get; set; } = 35.0;
 
 
 
         /// <summary>Cumulative degrees-day for recovery from heat stress (oCd).</summary>
         [Units("oCd")]
+        [XmlIgnore]
         public double HeatRecoverySumDD { get; set; } = 30.0;
 
 
 
         /// <summary>Reference temperature for recovery from heat stress (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double HeatRecoveryTReference { get; set; } = 25.0;
 
 
 
         /// <summary>Enable photosynthesis reduction due to cold damage is enabled (yes/no).</summary>
         [Units("yes/no")]
+        [XmlIgnore]
         public YesNoAnswer UseColdStressFactor
         {
             get
@@ -649,23 +694,27 @@
 
         /// <summary>Onset temperature for cold effects on photosynthesis (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double ColdOnsetTemperature { get; set; } = 1.0;
 
 
 
         /// <summary>Temperature for full cold effect on photosynthesis, growth stops (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double ColdFullTemperature { get; set; } = -5.0;
 
 
         /// <summary>Cumulative degrees for recovery from cold stress (oCd).</summary>
         [Units("oCd")]
+        [XmlIgnore]
         public double ColdRecoverySumDD { get; set; } = 25.0;
 
 
 
         /// <summary>Reference temperature for recovery from cold stress (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double ColdRecoveryTReference { get; set; } = 0.0;
 
 
@@ -674,18 +723,21 @@
 
         /// <summary>Maintenance respiration coefficient (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double MaintenanceRespirationCoefficient { get; set; } = 0.03;
 
 
 
         /// <summary>Growth respiration coefficient (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double GrowthRespirationCoefficient { get; set; } = 0.25;
 
 
 
         /// <summary>Reference temperature for maintenance respiration (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double RespirationTReference { get; set; } = 20.0;
 
 
@@ -701,6 +753,7 @@
         /// <summary>N concentration thresholds for leaves (kgN/kgDM).</summary>
         //[Description("optimum, minimum and maximum")]
         [Units("kg/kg")]
+        [XmlIgnore]
         public double[] NThresholdsForLeaves { get; set; } = { 0.04, 0.012, 0.05 };
 
 
@@ -708,6 +761,7 @@
         /// <summary>N concentration thresholds for stems (kgN/kgDM).</summary>
         //[Description("optimum, minimum and maximum")]
         [Units("kg/kg")]
+        [XmlIgnore]
         public double[] NThresholdsForStems { get; set; } = { 0.02, 0.006, 0.025 };
 
 
@@ -715,6 +769,7 @@
         /// <summary>N concentration thresholds for stolons (kgN/kgDM).</summary>
         //[Description("optimum, minimum and maximum")]
         [Units("kg/kg")]
+        [XmlIgnore]
         public double[] NThresholdsForStolons { get; set; } = { 0.0, 0.0, 0.0 };
 
 
@@ -722,6 +777,7 @@
         /// <summary>N concentration thresholds for roots, optimum, minimum and maximum (kgN/kgDM).</summary>
         //[Description("optimum, minimum and maximum")]
         [Units("kg/kg")]
+        [XmlIgnore]
         public double[] NThresholdsForRoots { get; set; } = { 0.02, 0.006, 0.025 };
 
 
@@ -730,6 +786,7 @@
 
         /// <summary>Cumulative degrees-day needed for seed germination (oCd).</summary>
         [Units("oCd")]
+        [XmlIgnore]
         public double DegreesDayForGermination { get; set; } = 125;
 
 
@@ -741,18 +798,21 @@
 
         /// <summary>Target, or ideal, shoot-root ratio (>0.0).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double TargetShootRootRatio { get; set; } = 4.0;
 
 
 
         /// <summary>Maximum fraction of DM growth allocated to roots (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double MaxRootAllocation { get; set; } = 0.25;
 
 
 
         /// <summary>Maximum effect that soil GLFs have on Shoot-Root ratio (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double ShootRootGlfFactor { get; set; } = 0.50;
 
 
@@ -762,6 +822,7 @@
         /// Adjust Shoot:Root ratio to mimic DM allocation during reproductive season (perennial species)?.
         /// </summary>
         [Units("yes/no")]
+        [XmlIgnore]
         public YesNoAnswer UseReproSeasonFactor
         {
             get
@@ -776,12 +837,14 @@
 
         /// <summary>Reference latitude determining timing for reproductive season (degrees).</summary>
         [Units("degrees")]
+        [XmlIgnore]
         public double ReproSeasonReferenceLatitude { get; set; } = 41.0;
 
 
 
         /// <summary>Coefficient controlling the time to start the reproductive season as function of latitude (-).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double ReproSeasonTimingCoeff { get; set; } = 0.14;
 
 
@@ -789,90 +852,103 @@
         /// <summary>Coefficient controlling the duration of the reproductive season as function of latitude (-).</summary>
         [XmlIgnore]
         [Units("-")]
-        public double ReproSeasonDurationCoeff = 2.0;
+        public double ReproSeasonDurationCoeff { get; set; } = 2.0;
 
         /// <summary>Ratio between the length of shoulders and the period with full reproductive growth effect (-).</summary>
         [XmlIgnore]
         [Units("-")]
-        public double ReproSeasonShouldersLengthFactor = 1.0;
+        public double ReproSeasonShouldersLengthFactor { get; set; } = 1.0;
 
         /// <summary>Proportion of the onset phase of shoulder period with reproductive growth effect (0-1).</summary>
         [XmlIgnore]
         [Units("0-1")]
-        public double ReproSeasonOnsetDurationFactor = 0.60;
+        public double ReproSeasonOnsetDurationFactor { get; set; } = 0.60;
 
         /// <summary>Maximum increase in Shoot-Root ratio during reproductive growth (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double ReproSeasonMaxAllocationIncrease { get; set; } = 0.50;
 
 
         /// <summary>Coefficient controlling the increase in shoot allocation during reproductive growth as function of latitude (-).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double ReproSeasonAllocationCoeff { get; set; } = 0.10;
 
 
 
         /// <summary>Maximum target allocation of new growth to leaves (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double FractionLeafMaximum { get; set; } = 0.7;
 
 
 
         /// <summary>Minimum target allocation of new growth to leaves (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double FractionLeafMinimum { get; set; } = 0.7;
 
 
         /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease (kgDM/ha).</summary>
         [Units("kg/ha")]
+        [XmlIgnore]
         public double FractionLeafDMThreshold { get; set; } = 500;
 
 
 
         /// <summary>Shoot DM when allocation to leaves is midway maximum and minimum (kgDM/ha).</summary>
         [Units("kg/ha")]
+        [XmlIgnore]
         public double FractionLeafDMFactor { get; set; } = 2000;
 
 
 
         /// <summary>Exponent of the function controlling the DM allocation to leaves (>0.0).</summary>
         [Units(">0.0")]
+        [XmlIgnore]
         public double FractionLeafExponent { get; set; } = 3.0;
 
 
 
         /// <summary>Fraction of new shoot growth to be allocated to stolons (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double FractionToStolon { get; set; } = 0.0;
 
 
 
         /// <summary>Specific leaf area (m^2/kgDM).</summary>
         [Units("m^2/kg")]
+        [XmlIgnore]
         public double SpecificLeafArea { get; set; } = 25.0;
 
 
 
         /// <summary>Specific root length (m/gDM).</summary>
         [Units("m/g")]
+        [XmlIgnore]
         public double SpecificRootLength { get; set; } = 100.0;
 
 
 
         /// <summary>Fraction of stolon tissue used when computing green LAI (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double StolonEffectOnLAI { get; set; } = 0.0;
 
 
 
         /// <summary>Maximum aboveground biomass for considering stems when computing LAI (kgDM/ha).</summary>
         [Units("kg/ha")]
+        [XmlIgnore]
         public double ShootMaxEffectOnLAI { get; set; } = 1000;
 
 
 
         /// <summary>Maximum fraction of stem tissue used when computing green LAI (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double MaxStemEffectOnLAI { get; set; } = 1.0;
 
 
@@ -881,6 +957,7 @@
 
         /// <summary>Number of live leaves per tiller (-).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double LiveLeavesPerTiller { get; set; } = 3.0;
 
 
@@ -888,12 +965,14 @@
         /// <summary>Reference daily DM turnover rate for shoot tissues (0-1).</summary>
         /// <remarks>This is closely related to the leaf appearance rate.</remarks>
         [Units("0-1")]
+        [XmlIgnore]
         public double TissueTurnoverRateShoot { get; set; } = 0.05;
 
 
 
         /// <summary>Reference daily DM turnover rate for root tissues (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double TissueTurnoverRateRoot { get; set; } = 0.02;
 
 
@@ -905,36 +984,42 @@
 
         /// <summary>Reference daily detachment rate for dead tissues (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double DetachmentRateShoot { get; set; } = 0.08;
 
 
 
         /// <summary>Minimum temperature for tissue turnover (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double TurnoverTemperatureMin { get; set; } = 2.0;
 
 
 
         /// <summary>Reference temperature for tissue turnover (oC).</summary>
         [Units("oC")]
+        [XmlIgnore]
         public double TurnoverTemperatureRef { get; set; } = 20.0;
 
 
 
         /// <summary>Exponent of function for temperature effect on tissue turnover (>0.0).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double TurnoverTemperatureExponent { get; set; } = 1.0;
 
 
 
         /// <summary>Maximum increase in tissue turnover due to water deficit (>0.0).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double TurnoverDroughtEffectMax { get; set; } = 1.0;
 
 
 
         /// <summary>Minimum GLFwater without effect on tissue turnover (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double TurnoverDroughtThreshold { get; set; } = 0.5;
 
 
@@ -957,6 +1042,7 @@
 
         /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double TurnoverDefoliationCoefficient { get; set; } = 0.5;
 
 
@@ -968,6 +1054,7 @@
 
         /// <summary>Effect of defoliation on root turnover rate relative to stolon (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double TurnoverDefoliationRootEffect { get; set; } = 0.1;
 
 
@@ -975,6 +1062,7 @@
         /// <summary>Fraction of luxury N remobilisable each day for each tissue age (0-1).</summary>
         //[Description("emerging, developing and mature")]
         [Units("0-1")]
+        [XmlIgnore]
         public double[] FractionNLuxuryRemobilisable { get; set; } = {0.1, 0.1, 0.1 };
 
         
@@ -983,24 +1071,28 @@
 
         /// <summary>Minimum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double MinimumNFixation { get; set; }  = 0.0;
 
         
 
         /// <summary>Maximum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double MaximumNFixation { get; set; } = 0.0;
 
         
 
         /// <summary>Respiration cost factor due to the presence of symbiont bacteria (kgC/kgC in roots).</summary>
         [Units("kg/kg")]
+        [XmlIgnore]
         public double SymbiontCostFactor { get; set; } = 0.0;
 
         
 
         /// <summary>Respiration cost factor due to the activity of symbiont bacteria (kgC/kgN fixed).</summary>
         [Units("kg/kg")]
+        [XmlIgnore]
         public double NFixingCostFactor { get; set; } = 0.0;
 
         
@@ -1009,6 +1101,7 @@
 
         /// <summary>Maximum reduction in plant growth due to water logging (saturated soil) (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double SoilSaturationEffectMax { get; set; } = 0.1;
 
         
@@ -1016,18 +1109,21 @@
         /// <summary>Minimum water-free pore space for growth with no limitations (0-1).</summary>
         /// <remarks>A negative value indicates that porosity at DUL will be used.</remarks>
         [Units("0-1")]
+        [XmlIgnore]
         public double MinimumWaterFreePorosity { get; set; } = -1.0;
 
         
 
         /// <summary>Maximum daily recovery rate from water logging (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double SoilSaturationRecoveryFactor { get; set; } = 0.25;
 
         
 
         /// <summary>Exponent to modify the effect of N deficiency on plant growth (>0.0).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double NDillutionCoefficient { get; set; } = 0.5;
 
 
@@ -1035,6 +1131,7 @@
         /// <summary>Generic growth limiting factor that represents an arbitrary limitation to potential growth (0-1).</summary>
         /// <remarks> This factor can be used to describe the effects of drivers such as disease, etc.</remarks>
         [Units("0-1")]
+        [XmlIgnore]
         public double GlfGeneric { get; set; } = 1.0;
 
 
@@ -1042,6 +1139,7 @@
         /// <summary>Generic growth limiting factor that represents an arbitrary soil limitation (0-1).</summary>
         /// <remarks> This factor can be used to describe the effect of limitation in nutrients other than N.</remarks>
         [Units("0-1")]
+        [XmlIgnore]
         public double GlfSoilFertility { get; set; } = 1.0;
 
         
@@ -1050,24 +1148,28 @@
 
         /// <summary>Minimum plant height (mm).</summary>
         [Units("mm")]
+        [XmlIgnore]
         public double PlantHeightMinimum { get; set; } = 25.0;
 
         
 
         /// <summary>Maximum plant height (mm).</summary>
         [Units("mm")]
+        [XmlIgnore]
         public double PlantHeightMaximum { get; set; } = 600.0;
 
         
 
         /// <summary>DM weight above ground for maximum plant height (kgDM/ha).</summary>
         [Units("kg/ha")]
+        [XmlIgnore]
         public double PlantHeightMassForMax { get; set; } = 10000;
 
         
 
         /// <summary>Exponent controlling shoot height as function of DM weight (>1.0).</summary>
         [Units(">1.0")]
+        [XmlIgnore]
         public double PlantHeightExponent { get; set; } = 2.8;
 
         
@@ -1076,35 +1178,41 @@
 
         /// <summary>Minimum rooting depth at emergence (mm).</summary>
         [Units("mm")]
+        [XmlIgnore]
         public double RootDepthMinimum { get; set; } = 50.0;
 
         
 
         /// <summary>Maximum rooting depth (mm).</summary>
         [Units("mm")]
+        [XmlIgnore]
         public double RootDepthMaximum { get; set; } = 750.0;
 
         
 
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
         [Units("mm/day")]
+        [XmlIgnore]
         public double RootElongationRate { get; set; } = 25.0;
 
         
 
         /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
         [Units("mm")]
+        [XmlIgnore]
         public double RootDistributionDepthParam { get; set; } = 90.0;
 
         
 
         /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double RootDistributionExponent { get; set; } = 3.2;
 
-        
+
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
+        [XmlIgnore]
         public double RootBottomDistributionFactor { get; set; } = 1.05;
 
         ////- Digestibility and feed quality >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1112,6 +1220,7 @@
         /// <summary>Digestibility of cell walls for each tissue age, emerging, developing, mature and dead (0-1).</summary>
         //[Description("emerging, developing, mature and dead")]
         [Units("0-1")]
+        [XmlIgnore]
         public double[] DigestibilitiesCellWall { get; set; } = { 0.6, 0.6, 0.6, 0.2 };
 
     
@@ -1130,6 +1239,7 @@
 
         /// <summary>Minimum above ground green DM, leaf and stems (kgDM/ha).</summary>
         [Units("kg/ha")]
+        [XmlIgnore]
         public double MinimumGreenWt { get; set; } = 100.0;
 
        
@@ -1146,18 +1256,21 @@
 
         /// <summary>Proportion of stolon DM standing, available for removal (0-1).</summary>
         [Units("0-1")]
+        [XmlIgnore]
         public double FractionStolonStanding { get; set; } = 0.0;
 
 
 
         /// <summary>Relative preference for live over dead material during graze (>0.0).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double PreferenceForGreenOverDead { get; set; } = 1.0;
 
 
 
         /// <summary>Relative preference for leaf over stem-stolon material during graze (>0.0).</summary>
         [Units("-")]
+        [XmlIgnore]
         public double PreferenceForLeafOverStems { get; set; } = 1.0;
 
         
@@ -1169,6 +1282,7 @@
 
         /// <summary>Choose the method to calculate soil available water.</summary>
         [Units("-")]
+        [XmlIgnore]
         public PlantAvailableWaterMethod WaterAvailableMethod { get; set; } = PlantAvailableWaterMethod.DefaultAPSIM;
 
         
@@ -1178,6 +1292,7 @@
 
         /// <summary>Choose the method to calculate available soil nitrogen.</summary>
         [Units("-")]
+        [XmlIgnore]
         public PlantAvailableNitrogenMethod NitrogenAvailableMethod { get; set; } = PlantAvailableNitrogenMethod.BasicAgPasture;
 
         
@@ -1210,6 +1325,7 @@
 
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
         [Units("kg/ha")]
+        [XmlIgnore]
         public double MaximumNUptake { get; set; } = 10.0;
 
         /// <summary>Ammonium uptake coefficient.</summary>
@@ -2624,9 +2740,11 @@
         /// <summary>Gets the leaf area index of green tissues (m^2/m^2).</summary>
         //[Description("Leaf area index of green tissues")]
         [Units("m^2/m^2")]
+        [XmlIgnore]
         public double LAIGreen
         {
             get { return greenLAI; }
+            set { greenLAI = value; }
         }
 
         /// <summary>Gets the leaf area index of dead tissues (m^2/m^2).</summary>
@@ -3128,6 +3246,23 @@
         {
             get { return stolons.Tissue[2].Nconc; }
         }
+
+        /// <summary>A list of organs that can be damaged.</summary>
+        public List<IOrganDamage> Organs
+        {
+            get
+            {
+                var organsThatCanBeDamaged = new List<IOrganDamage>() { leaves, stems, stolons };
+                return organsThatCanBeDamaged;
+            }
+        }
+
+
+        /// <summary>Plant population.</summary>
+        public double Population => throw new NotImplementedException();
+
+        /// <summary>Amount of assimilate available to be damaged.</summary>
+        public double AssimilateAvailable => throw new NotImplementedException();
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -3635,7 +3770,7 @@
 
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
                     DoAddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
-                    roots[0].DoDetachBiomass(detachedRootDM, detachedRootN);
+                    roots[0].Tissue[0].DetachBiomass(detachedRootDM, detachedRootN);
                     //foreach (PastureBelowGroundOrgan root in rootZones)
                     //    root.DoDetachBiomass(root.DMDetached, root.NDetached);
                     // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
@@ -3706,12 +3841,20 @@
 
             // get the limitation factor due to soil N deficiency
             double glfNit = 1.0;
-            if (dNewGrowthN > Epsilon)
+            if (dGrowthAfterWaterLimitations > Epsilon)
             {
-                glfNSupply = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
+                if (dNewGrowthN > Epsilon)
+                {
+                    glfNSupply = Math.Min(1.0, Math.Max(0.0, MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0)));
 
-                // adjust the glfN
-                glfNit = Math.Pow(glfNSupply, NDillutionCoefficient);
+                    // adjust the glfN
+                    glfNit = Math.Pow(glfNSupply, NDillutionCoefficient);
+                }
+                else
+                {
+                    glfNSupply = 0.0;
+                    glfNit = 0.0;
+                }
             }
             else
                 glfNSupply = 1.0;
@@ -3747,7 +3890,7 @@
             double myDayLength = 3600 * myMetData.CalculateDayLength(-6);
 
             // Photosynthetically active radiation, converted from MJ/m2.day to J/m2.s
-            double interceptedPAR = FractionPAR * RadiationTopOfCanopy * 1000000.0 / myDayLength;
+            double interceptedPAR = MathUtilities.Divide(FractionPAR * RadiationTopOfCanopy * 1000000.0, myDayLength, 0.0);
 
             // Photosynthetically active radiation, for the middle of the day (J/m2 leaf/s)
             interceptedPAR *= LightExtinctionCoefficient * (4.0 / 3.0);
@@ -4496,7 +4639,7 @@
                 double glfFactor = 1.0 - ShootRootGlfFactor * (1.0 - Math.Pow(glfMin, 1.0 / ShootRootGlfFactor));
 
                 // get the current shoot/root ratio (partition will try to make this value closer to targetSR)
-                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, BelowGroundLiveWt, 1000000.0);
+                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, BelowGroundLiveWt, double.MaxValue);
 
                 // get the factor for the reproductive season of perennials (increases shoot allocation during spring)
                 double reproFac = 1.0;
@@ -4507,7 +4650,7 @@
                 double targetSR = TargetShootRootRatio * reproFac;
 
                 // update today's shoot:root partition
-                double growthSR = targetSR * glfFactor * targetSR / currentSR;
+                double growthSR = MathUtilities.Divide(targetSR * glfFactor * targetSR, currentSR, double.MaxValue - 1.5);
 
                 // compute fraction to shoot
                 fractionToShoot = growthSR / (1.0 + growthSR);
@@ -4541,16 +4684,21 @@
                 targetFLeaf = FractionLeafMinimum + (FractionLeafMaximum - FractionLeafMinimum) / (1.0 + fLeafAux);
             }
 
-            // get current leaf:stem ratio
-            double currentLS = leaves.DMLive / (stems.DMLive + stolons.DMLive);
+            if (leaves.DMLive > 0.0)
+            {
+                // get current leaf:stem ratio
+                double currentLS = MathUtilities.Divide(leaves.DMLive, stems.DMLive + stolons.DMLive, double.MaxValue);
 
-            // get today's target leaf:stem ratio
-            double targetLS = targetFLeaf / (1 - targetFLeaf);
+                // get today's target leaf:stem ratio
+                double targetLS = targetFLeaf / (1.0 - targetFLeaf);
 
-            // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
-            double newLS = targetLS * targetLS / currentLS;
+                // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
+                double newLS = MathUtilities.Divide(targetLS * targetLS, currentLS, double.MaxValue - 1.5);
 
-            fractionToLeaf = newLS / (1 + newLS);
+                fractionToLeaf = newLS / (1.0 + newLS);
+            }
+            else
+                fractionToLeaf = FractionLeafMaximum;
         }
 
         /// <summary>Computes the variations in root depth.</summary>
@@ -5503,6 +5651,63 @@
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Remove biomass from an organ.
+        /// </summary>
+        /// <param name="organName">Name of organ.</param>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove.</param>
+        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            var organ = Organs.Find(o => o.Name == organName);
+            if (organ == null)
+                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
+            if (organ is PastureAboveGroundOrgan)
+                (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassToRemove);
+            else if (organ is PastureBelowGroundOrgan)
+                (organ as PastureBelowGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
+        }
+
+        /// <summary>
+        /// Set the plant leaf area index.
+        /// </summary>
+        /// <param name="deltaLAI">Delta LAI.</param>
+        public void ReduceCanopy(double deltaLAI)
+        {
+            if (LAI > 0)
+            {
+                var prop = deltaLAI / LAI;
+                leaves.RemoveBiomass(new OrganBiomassRemovalType() { FractionLiveToRemove = prop * leaves.DMLive });
+            }
+        }
+
+        /// <summary>
+        /// Set the plant root length density.
+        /// </summary>
+        /// <param name="deltaRLD">New root length density.</param>
+        public void ReduceRootLengthDensity(double deltaRLD)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Remove an amount of assimilate from the plant.
+        /// </summary>
+        /// <param name="deltaAssimilate">The amount of assimilate to remove (g/m2).</param>
+        public void RemoveAssimilate(double deltaAssimilate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Reduce the plant population.
+        /// </summary>
+        /// <param name="newPlantPopulation">The new plant population.</param>
+        public void ReducePopulation(double newPlantPopulation)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------

@@ -128,6 +128,8 @@
         public event EventHandler DoInitialSummary;
         /// <summary>Occurs when [do management].</summary>
         public event EventHandler DoManagement;
+        /// <summary>Occurs when [do PestDisease damage]</summary>
+        public event EventHandler DoPestDiseaseDamage;
         /// <summary>Occurs when [do energy arbitration].</summary>
         public event EventHandler DoEnergyArbitration;                                //MicroClimate
         /// <summary>Occurs when [do soil water movement].</summary>
@@ -306,6 +308,9 @@
                 if (DoManagement != null)
                     DoManagement.Invoke(this, args);
 
+                if (DoPestDiseaseDamage != null)
+                    DoPestDiseaseDamage.Invoke(this, args);
+
                 if (DoEnergyArbitration != null)
                     DoEnergyArbitration.Invoke(this, args);
 
@@ -348,26 +353,23 @@
                 if (DoActualPlantGrowth != null)
                     DoActualPlantGrowth.Invoke(this, args);
 
-                if (DoUpdate != null)
-                    DoUpdate.Invoke(this, args);
-
-                if (DoManagementCalculations != null)
-                    DoManagementCalculations.Invoke(this, args);
-
                 if (DoStock != null)
                     DoStock.Invoke(this, args);
 
                 if (DoLifecycle != null)
                     DoLifecycle.Invoke(this, args);
 
+                if (DoUpdate != null)
+                    DoUpdate.Invoke(this, args);
+
+                if (DoManagementCalculations != null)
+                    DoManagementCalculations.Invoke(this, args);
+
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);
 
                 if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
                     EndOfWeek.Invoke(this, args);
-
-                if (Today == EndDate && EndOfSimulation != null)
-                    EndOfSimulation.Invoke(this, args);
 
                 if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
                     EndOfYear.Invoke(this, args);
@@ -433,6 +435,10 @@
                 Today = Today.AddDays(1);
             }
             Today = EndDate;
+            
+            if (EndOfSimulation != null)
+                EndOfSimulation.Invoke(this, args);
+
             Summary.WriteMessage(this, "Simulation terminated normally");
         }
     }

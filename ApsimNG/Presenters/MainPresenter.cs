@@ -97,6 +97,7 @@
                 this.view.StatusPanelHeight = 20;
             else
                 this.view.StatusPanelHeight = Utility.Configuration.Settings.StatusPanelHeight;
+            this.view.SplitScreenPosition = Configuration.Settings.SplitScreenPosition;
             // Process command line.
             this.ProcessCommandLineArguments(commandLineArguments);
         }
@@ -1204,19 +1205,24 @@
         /// <param name="e">Event arguments.</param>
         private void OnUpgrade(object sender, EventArgs e)
         {
-            // Get the version of the current assembly.
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Revision == 0)
+            try
             {
-                ShowError("You are on a custom build. You cannot upgrade.");
-            }
-            else
-            {
-                if (this.AllowClose())
+                // Get the version of the current assembly.
+                Version version = Assembly.GetExecutingAssembly().GetName().Version;
+                if (version.Revision == 0)
+                {
+                    ShowError("You are on a custom build. You cannot upgrade.");
+                }
+
+                if (AllowClose())
                 {
                     UpgradeView form = new UpgradeView(view as ViewBase);
                     form.Show();
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -1229,6 +1235,7 @@
             if (e.AllowClose)
             {
                 fileConverter?.Destroy();
+                Configuration.Settings.SplitScreenPosition = view.SplitScreenPosition;
                 Utility.Configuration.Settings.MainFormLocation = this.view.WindowLocation;
                 Utility.Configuration.Settings.MainFormSize = this.view.WindowSize;
                 Utility.Configuration.Settings.MainFormMaximized = this.view.WindowMaximised;

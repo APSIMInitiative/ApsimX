@@ -10,6 +10,7 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using Models.Core;
 
     /// <summary>
     /// Livestock metabolizable energy partition
@@ -144,7 +145,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the animal sex type
         /// </summary>
-        public string Sex { get; set; }
+        public ReproductiveType Sex { get; set; } 
         
         /// <summary>
         /// Gets or sets the in days
@@ -255,18 +256,20 @@ namespace Models.GrazPlan
     public class PaddockInit
     {
         /// <summary>
-        /// Gets or sets the name of the paddock
+        /// Gets or sets the name of the paddock that is used for Move events
         /// </summary>
         public string Name { get; set; }
         
         /// <summary>
         /// Gets or sets the paddock area in ha
         /// </summary>
+        [Units("ha")]
         public double Area { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the paddock slope in deg
         /// </summary>
+        [Units("deg")]
         public double Slope { get; set; }
 
         /// <summary>
@@ -422,7 +425,7 @@ namespace Models.GrazPlan
         /// Convert to days
         /// </summary>
         public const double MONTH2DAY = 365.25 / 12;
-        
+
         /// <summary>
         /// Copies the parameters into an array of genotype structures
         /// </summary>
@@ -441,28 +444,28 @@ namespace Models.GrazPlan
             {
                 parameters = model.GetGenotype(idx);
 
-                if (parameters.iParentageCount() == 1)
+                if (parameters.ParentageCount() == 1)
                 {
-                    damBreed = parameters.sParentageBreed(0);
+                    damBreed = parameters.ParentageBreed(0);
                     sireBreed = damBreed;
                     generation = 0;
                 }
-                else if ((parameters.iParentageCount() == 2) && (parameters.fParentagePropn(0) > 0))
+                else if ((parameters.ParentageCount() == 2) && (parameters.ParentagePropn(0) > 0))
                 {
-                    damBreed = parameters.sParentageBreed(0);
-                    sireBreed = parameters.sParentageBreed(1);
-                    generation = Convert.ToInt32(Math.Max(0, Math.Round(Math.Log(parameters.fParentagePropn(0)) / Math.Log(0.5))), CultureInfo.InvariantCulture);    // TODO: may need checking
+                    damBreed = parameters.ParentageBreed(0);
+                    sireBreed = parameters.ParentageBreed(1);
+                    generation = Convert.ToInt32(Math.Max(0, Math.Round(Math.Log(parameters.ParentagePropn(0)) / Math.Log(0.5))), CultureInfo.InvariantCulture);    // TODO: may need checking
                 }
-                else if (parameters.iParentageCount() == 2)
+                else if (parameters.ParentageCount() == 2)
                 {
-                    sireBreed = parameters.sParentageBreed(1);
+                    sireBreed = parameters.ParentageBreed(1);
                     damBreed = sireBreed;
                     generation = 0;
                 }
                 else
                 {
-                    damBreed = parameters.sParentageBreed(0);
-                    sireBreed = parameters.sParentageBreed(1);
+                    damBreed = parameters.ParentageBreed(0);
+                    sireBreed = parameters.ParentageBreed(1);
                     generation = 0;
                 }
 
@@ -489,167 +492,75 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Fill a sheep init value
+        /// Fill an init array with animal details from the model
         /// </summary>
-        /// <param name="model">The animal model</param>
-        /// <param name="animal">The animal type</param>
-        /// <param name="initValue">The sheep data</param>
-        public static void MakeSheepValue(StockList model, GrazType.AnimalType animal, ref SheepInit[] initValue)
+        /// <param name="model"></param>
+        /// <param name="initValue"></param>
+        public static void MakeAnimalValue(StockList model, ref AnimalInits[] initValue)
         {
             AnimalGroup animalGroup;
-            int count;
             int idx, jdx;
 
-            count = 0;
-            for (idx = 1; idx <= model.Count(); idx++)
-                if (model.At(idx).Genotype.Animal == animal)
-                    count++;
-            Array.Resize(ref initValue, count);
+            Array.Resize(ref initValue, model.Count());
 
             jdx = 0;
             for (idx = 1; idx <= model.Count(); idx++)
             {
-                if (model.At(idx).Genotype.Animal == animal)
+                animalGroup = model.At(idx);
+
+                initValue[jdx] = new AnimalInits();
+
+                initValue[jdx].Genotype = animalGroup.Genotype.Name;
+                initValue[jdx].Number = animalGroup.NoAnimals;
+                initValue[jdx].Sex = animalGroup.ReproState;
+                initValue[jdx].AgeDays = animalGroup.AgeDays;
+                initValue[jdx].Weight = animalGroup.LiveWeight;
+                initValue[jdx].MaxPrevWt = animalGroup.MaxPrevWeight;
+                initValue[jdx].Pregnant = animalGroup.Pregnancy;
+                initValue[jdx].Lactating = animalGroup.Lactation;
+
+                GrazType.AnimalType animal = model.At(idx).Genotype.Animal;
+                if (animal == GrazType.AnimalType.Sheep)
                 {
-                    animalGroup = model.At(idx);
+                    initValue[jdx].FleeceWt = animalGroup.FleeceCutWeight;
+                    initValue[jdx].FibreDiam = animalGroup.FibreDiam;
+                    initValue[jdx].NumFoetuses = Math.Max(animalGroup.NoFoetuses, animalGroup.NoOffspring);
+                }
+                else if (animal == GrazType.AnimalType.Cattle)
+                {
+                    initValue[jdx].NumFoetuses = animalGroup.NoFoetuses;
+                    initValue[jdx].NumSuckling = animalGroup.NoOffspring;
+                }
 
-                    initValue[jdx] = new SheepInit();
+                if (animalGroup.Lactation > 0)
+                    initValue[jdx].BirthCS = animalGroup.BirthCondition;
 
-                    initValue[jdx].Genotype = animalGroup.Genotype.Name;
-                    initValue[jdx].Number = animalGroup.NoAnimals;
-                    initValue[jdx].Sex = model.SexString(idx, false);
-                    initValue[jdx].Age = animalGroup.AgeDays;
-                    initValue[jdx].Weight = animalGroup.LiveWeight;
-                    initValue[jdx].MaxPrevWt = animalGroup.MaxPrevWeight;
-                    initValue[jdx].Pregnant = animalGroup.Pregnancy;
-                    initValue[jdx].Lactating = animalGroup.Lactation;
+                if ((animalGroup.Pregnancy > 0) || (animalGroup.Young != null))
+                {
+                    if (animalGroup.MatedTo != null)
+                        initValue[jdx].MatedTo = animalGroup.MatedTo.Name;
+                    else
+                        initValue[jdx].MatedTo = string.Empty;
+                }
+                else
+                    initValue[jdx].MatedTo = string.Empty;
 
+                if (animalGroup.Young != null)
+                {
+                    initValue[jdx].YoungWt = animalGroup.Young.LiveWeight;
                     if (animal == GrazType.AnimalType.Sheep)
                     {
-                        initValue[jdx].FleeceWt = animalGroup.FleeceCutWeight;
-                        initValue[jdx].FibreDiam = animalGroup.FibreDiam;
-                        initValue[jdx].NumYoung = Math.Max(animalGroup.NoFoetuses, animalGroup.NoOffspring);
+                        initValue[jdx].YoungGFW = animalGroup.Young.FleeceCutWeight;
                     }
-                    /*else if (Animal == GrazType.AnimalType.Cattle)
-                    {
-                        aValue[Jdx].no_foetuses = aGroup.NoFoetuses;
-                        aValue[Jdx].no_suckling = aGroup.NoOffspring;
-                    }*/
 
-                    if (animalGroup.Lactation > 0)
-                        initValue[jdx].BirthCS = animalGroup.BirthCondition;
-
-                    if ((animalGroup.Pregnancy > 0) || (animalGroup.Young != null))
-                    {
-                        if (animalGroup.MatedTo != null)
-                            initValue[jdx].MatedTo = animalGroup.MatedTo.Name;
-                        else
-                            initValue[jdx].MatedTo = string.Empty;
-                    }
-                    else
-                        initValue[jdx].MatedTo = string.Empty;
-
-                    if (animalGroup.Young != null)
-                    {
-                        if (animal == GrazType.AnimalType.Sheep)
-                        {
-                            initValue[jdx].LambWt = animalGroup.Young.LiveWeight;
-                            initValue[jdx].LambFleeceWt = animalGroup.Young.FleeceCutWeight;
-                        }
-                        /*else if (Animal == GrazType.AnimalType.Cattle)
-                            aValue[Jdx].calf_wt = aGroup.Young.LiveWeight;*/
-
-                        initValue[jdx].Paddock = model.GetInPadd(idx);
-                        initValue[jdx].Tag = model.GetTag(idx);
-                        initValue[jdx].Priority = model.GetPriority(idx);
-                    }
+                    initValue[jdx].Paddock = model.GetInPadd(idx);
+                    initValue[jdx].Tag = model.GetTag(idx);
+                    initValue[jdx].Priority = model.GetPriority(idx);
                 }
                 jdx++;
             } // next animal
         }
-
-        /// <summary>
-        /// Fill a cattle init value
-        /// </summary>
-        /// <param name="model">The animal model</param>
-        /// <param name="animal">The animal type</param>
-        /// <param name="initValue">The cattle init value</param>
-        public static void MakeCattleValue(StockList model, GrazType.AnimalType animal, ref CattleInit[] initValue)
-        {
-            AnimalGroup animalGroup;
-            int count;
-            int idx, jdx;
-
-            count = 0;
-            for (idx = 1; idx <= model.Count(); idx++)
-                if (model.At(idx).Genotype.Animal == animal)
-                    count++;
-            Array.Resize(ref initValue, count);
-
-            jdx = 0;
-            for (idx = 1; idx <= model.Count(); idx++)
-            {
-                if (model.At(idx).Genotype.Animal == animal)
-                {
-                    animalGroup = model.At(idx);
-
-                    initValue[jdx] = new CattleInit();
-
-                    initValue[jdx].Genotype = animalGroup.Genotype.Name;
-                    initValue[jdx].Number = animalGroup.NoAnimals;
-                    initValue[jdx].Sex = model.SexString(idx, false);
-                    initValue[jdx].Age = animalGroup.AgeDays;
-                    initValue[jdx].Weight = animalGroup.LiveWeight;
-                    initValue[jdx].MaxPrevWt = animalGroup.MaxPrevWeight;
-                    initValue[jdx].Pregnant = animalGroup.Pregnancy;
-                    initValue[jdx].Lactating = animalGroup.Lactation;
-
-                    /*if (Animal == GrazType.AnimalType.Sheep)
-                    {
-                        aValue[Jdx].fleece_wt = aGroup.FleeceCutWeight;
-                        aValue[Jdx].fibre_diam = aGroup.FibreDiam;
-                        aValue[Jdx].no_young = Math.Max(aGroup.NoFoetuses, aGroup.NoOffspring);
-                    }
-                    else*/
-                    if (animal == GrazType.AnimalType.Cattle)
-                    {
-                        initValue[jdx].NumFoetuses = animalGroup.NoFoetuses;
-                        initValue[jdx].NumSuckling = animalGroup.NoOffspring;
-                    }
-
-                    if (animalGroup.Lactation > 0)
-                        initValue[jdx].BirthCS = animalGroup.BirthCondition;
-
-                    if ((animalGroup.Pregnancy > 0) || (animalGroup.Young != null))
-                    {
-                        if (animalGroup.MatedTo != null)
-                            initValue[jdx].MatedTo = animalGroup.MatedTo.Name;
-                        else
-                            initValue[jdx].MatedTo = string.Empty;
-                    }
-                    else
-                        initValue[jdx].MatedTo = string.Empty;
-
-                    if (animalGroup.Young != null)
-                    {
-                        /*if (Animal == GrazType.AnimalType.Sheep)
-                        {
-                            aValue[Jdx].lamb_wt = aGroup.Young.LiveWeight;
-                            aValue[Jdx].lamb_fleece_wt = aGroup.Young.FleeceCutWeight;
-                        }
-                        else*/
-                        if (animal == GrazType.AnimalType.Cattle)
-                            initValue[jdx].CalfWt = animalGroup.Young.LiveWeight;
-
-                        initValue[jdx].Paddock = model.GetInPadd(idx);
-                        initValue[jdx].Tag = model.GetTag(idx);
-                        initValue[jdx].Priority = model.GetPriority(idx);
-                    }
-                }
-                jdx++;
-            } // next animal
-        }
-
+    
         /// <summary>
         /// Fill the paddock init list
         /// </summary>

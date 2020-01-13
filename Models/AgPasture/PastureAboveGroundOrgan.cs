@@ -9,7 +9,7 @@
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan : Model, IRemovableBiomass
+    public class PastureAboveGroundOrgan : Model, IOrganDamage
     {
         /// <summary>The collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]
@@ -18,23 +18,15 @@
         /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="biomassToRemove">Biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
         {
-            // TODO: Work out what to do with biomassToRemove.FractionLiveToResidue
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
-            {
-                Tissue[t].DM *= (1.0 - biomassToRemove.FractionLiveToRemove);
-                Tissue[t].Namount *= (1.0 - biomassToRemove.FractionLiveToRemove);
-                Tissue[t].NRemobilisable *= (1.0 - biomassToRemove.FractionLiveToRemove);
-            }
+                Tissue[t].RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
 
             // Dead removal
-            Tissue[Tissue.Length - 1].DM *= (1.0 - biomassToRemove.FractionDeadToRemove);
-            Tissue[Tissue.Length - 1].Namount *= (1.0 - biomassToRemove.FractionDeadToRemove);
-            Tissue[Tissue.Length - 1].NRemobilisable *= (1.0 - biomassToRemove.FractionDeadToRemove);
+            Tissue[Tissue.Length - 1].RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
         }
 
         #region Organ specific characteristics  ----------------------------------------------------------------------------

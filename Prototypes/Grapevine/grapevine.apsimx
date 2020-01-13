@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 278,
-  "Version": 57,
+  "Version": 69,
   "Name": "Simulations",
   "Children": [
     {
@@ -144,7 +144,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -273,7 +275,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EndoDormancy.ThermalTime.Value()",
+                              "VariableName": "[Phenology].EndoDormancy.Progression.Value()",
                               "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -307,7 +309,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].EndoDormancy.ThermalTime.Value()",
+                              "VariableName": "[Phenology].EndoDormancy.Progression.Value()",
                               "Name": "ThermalTime",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -698,7 +700,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].EndoDormancy.ThermalTime.Value()",
+                      "VariableName": "[Phenology].EndoDormancy.Progression.Value()",
                       "Name": "ThermalTime",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -999,7 +1001,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -1065,7 +1069,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph1",
                               "Children": [
                                 {
@@ -1235,11 +1241,11 @@
               "Albedo": 0.25,
               "Gsmax350": 0.01,
               "R50": 200.0,
+              "LAI": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
               "LightProfile": null,
-              "MicroClimatePresent": true,
               "KDead": 0.03,
               "MaximumMainStemLeafNumber": 30,
               "TipsAtEmergence": 0,
@@ -1440,7 +1446,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -1506,7 +1514,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph1",
                               "Children": [
                                 {
@@ -1777,7 +1787,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -3904,7 +3916,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -4559,7 +4573,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -4656,7 +4672,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -4722,7 +4740,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph1",
                                   "Children": [
                                     {
@@ -4788,7 +4808,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph2",
                                   "Children": [
                                     {
@@ -4881,7 +4903,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph",
                                   "Children": [
                                     {
@@ -4947,7 +4971,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph1",
                                   "Children": [
                                     {
@@ -5013,7 +5039,9 @@
                                     }
                                   ],
                                   "LegendPosition": 3,
+                                  "LegendOrientation": 0,
                                   "DisabledSeries": null,
+                                  "LegendOutsideGraph": false,
                                   "Name": "Graph2",
                                   "Children": [
                                     {
@@ -5209,7 +5237,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5302,7 +5332,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5430,7 +5462,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5496,7 +5530,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph1",
                               "Children": [
                                 {
@@ -5589,7 +5625,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -5684,7 +5722,9 @@
                                 }
                               ],
                               "LegendPosition": 3,
+                              "LegendOrientation": 0,
                               "DisabledSeries": null,
+                              "LegendOutsideGraph": false,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -6285,6 +6325,7 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
+              "RootLengthDensityModifierDueToDamage": 1.0,
               "RootAngle": 45.0,
               "SWAvailabilityRatio": 0.0,
               "Name": "Root",
@@ -6374,7 +6415,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6467,7 +6510,9 @@
                             }
                           ],
                           "LegendPosition": 3,
+                          "LegendOrientation": 0,
                           "DisabledSeries": null,
+                          "LegendOutsideGraph": false,
                           "Name": "Graph",
                           "Children": [
                             {
@@ -6952,7 +6997,7 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n        \tzone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
+              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "CordonDiameter",
@@ -6982,7 +7027,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Prune Date\")]\r\n        public string PruneDateString { get; set; }\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n        \tzone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n        \t//calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n        \tzone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n       \t \t}\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+              "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Grapevine;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"Prune Date\")]\r\n        public string PruneDateString { get; set; }\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n\r\n        [XmlIgnore] private DateTime PruneDate { get; set; }\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            PruneDate = DateTime.Parse(PruneDateString);\r\n                        \r\n            if (PruneDate.Month == Clock.Today.Month && PruneDate.Day == Clock.Today.Day)\r\n            {\r\n                Remove.SetPhenologyStage = 1;\r\n                Grapevine.RemoveBiomass(\"Prune\", Remove);\r\n            }\r\n\r\n            {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);   \r\n            //calculate the biomass by length 1 meter time 2 cordons time density (0.0005 g/mm3)\r\n            zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", 3.14*(CordonDiameter/2)*(CordonDiameter/2)*2000*0.0005); \r\n\r\n                }\r\n\r\n\r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
               "Parameters": [
                 {
                   "Key": "PruneDateString",
@@ -7167,13 +7212,14 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "BaseSim",
           "Children": [
             {
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "Vineyard",
               "Children": [
                 {
@@ -7187,7 +7233,6 @@
                 },
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 0,
                   "ASCOrder": null,
                   "ASCSubOrder": null,
@@ -7208,7 +7253,15 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -7217,6 +7270,7 @@
                         300.0,
                         300.0
                       ],
+                      "ParticleSizeClay": null,
                       "BD": [
                         1.2,
                         1.2,
@@ -7264,14 +7318,14 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
                           "LL": [
                             0.13,
-                            0.13,
-                            0.1,
+                            0.16,
+                            0.15,
                             0.15,
                             0.15,
                             0.15
@@ -7332,6 +7386,14 @@
                         300.0,
                         300.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "SWCON": [
                         0.55,
                         0.55,
@@ -7348,7 +7410,7 @@
                         0.0,
                         0.0
                       ],
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -7437,18 +7499,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 30.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        100.0,
-                        200.0,
-                        300.0,
-                        300.0,
-                        300.0,
-                        300.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-10",
                         "10-30",
@@ -7457,7 +7508,16 @@
                         "90-120",
                         "120-150"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 30.0,
+                      "Thickness": [
+                        100.0,
+                        200.0,
+                        300.0,
+                        300.0,
+                        300.0,
+                        300.0
+                      ],
+                      "Carbon": [
                         3.5,
                         2.5,
                         1.2,
@@ -7465,8 +7525,7 @@
                         0.47,
                         0.47
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         11.5,
                         11.5,
                         11.5,
@@ -7490,7 +7549,7 @@
                         0.96,
                         0.96
                       ],
-                      "RootWt": [
+                      "FOM": [
                         1243.9310541346904,
                         833.83192147272689,
                         457.61666105087295,
@@ -7498,15 +7557,22 @@
                         137.83148958311097,
                         75.643525303383925
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -7515,14 +7581,22 @@
                         300.0,
                         300.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        33.333333333333336,
+                        12.500000000000002,
+                        3.8888888888888897,
+                        3.8888888888888897,
+                        0.38333333333333336,
+                        0.38333333333333336
+                      ],
+                      "NH4N": [
+                        0.083333333333333315,
+                        0.041666666666666657,
+                        0.027777777777777773,
+                        0.027777777777777773,
+                        0.027777777777777762,
+                        0.027777777777777762
+                      ],
                       "PH": [
                         6.6,
                         6.2,
@@ -7531,36 +7605,10 @@
                         5.5,
                         5.5
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7580,6 +7628,14 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-120",
+                        "120-150"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -7588,30 +7644,14 @@
                         300.0,
                         300.0
                       ],
-                      "NO3": [
-                        40.0,
-                        30.0,
-                        14.0,
-                        14.0,
-                        1.38,
-                        1.38
-                      ],
-                      "NH4": [
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 1,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -7636,6 +7676,7 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "Grapevine",
                   "InitialResidueType": "Grapevine",
                   "InitialResidueMass": 2000.0,
@@ -7714,7 +7755,7 @@
                   "Children": [
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n        \tzone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "CordonDiameter",
@@ -7778,8 +7819,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "2004-01-01T00:00:00",
-              "EndDate": "2008-10-31T00:00:00",
+              "Start": "2004-01-01T00:00:00",
+              "End": "2008-10-31T00:00:00",
               "Name": "Clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -7854,7 +7895,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "MeanTempFlowering",
               "Children": [
                 {
@@ -7961,7 +8004,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "ShootandBunchNum",
               "Children": [
                 {
@@ -8068,7 +8113,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "BerryNum",
               "Children": [
                 {
@@ -8175,7 +8222,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "BerryWT",
               "Children": [
                 {
@@ -8276,7 +8325,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "PhenologyStage",
           "Children": [
             {
@@ -8342,7 +8393,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "LeafNum",
           "Children": [
             {
@@ -8468,7 +8521,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "LeafSize",
           "Children": [
             {
@@ -9044,7 +9099,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "LeafArea",
           "Children": [
             {
@@ -9110,7 +9167,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "LeafBiomass",
           "Children": [
             {
@@ -9176,7 +9235,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "ShootBiomass",
           "Children": [
             {
@@ -9242,7 +9303,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "CordonBiomass",
           "Children": [
             {
@@ -9308,7 +9371,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "TrunkBiomass",
           "Children": [
             {
@@ -9374,7 +9439,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "RootBiomass",
           "Children": [
             {
@@ -9440,7 +9507,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "AccChill",
           "Children": [
             {
@@ -9506,7 +9575,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "CarbonSupplyDemand",
           "Children": [
             {
@@ -9594,7 +9665,9 @@
             }
           ],
           "LegendPosition": 1,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Budburst",
           "Children": [
             {
@@ -9690,7 +9763,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "NWaterStress",
           "Children": [
             {
@@ -9808,7 +9883,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "Photosynthesis",
           "Children": [
             {
@@ -9881,7 +9958,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "PhenologyBase",
               "Children": [
                 {
@@ -9896,8 +9972,8 @@
                 },
                 {
                   "$type": "Models.Clock, Models",
-                  "StartDate": "2004-01-01T00:00:00",
-                  "EndDate": "2017-07-01T00:00:00",
+                  "Start": "2004-01-01T00:00:00",
+                  "End": "2017-07-01T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -9927,6 +10003,8 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "Vineyard",
                   "Children": [
                     {
@@ -9940,7 +10018,6 @@
                     },
                     {
                       "$type": "Models.Soils.Soil, Models",
-                      "Weirdo": null,
                       "RecordNumber": 0,
                       "ASCOrder": null,
                       "ASCSubOrder": null,
@@ -9961,7 +10038,15 @@
                       "Name": "Soil",
                       "Children": [
                         {
-                          "$type": "Models.Soils.Water, Models",
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
@@ -9970,6 +10055,7 @@
                             300.0,
                             300.0
                           ],
+                          "ParticleSizeClay": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -10017,15 +10103,15 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
-                          "Name": "Water",
+                          "Name": "Physical",
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.13,
-                                0.13,
-                                0.1,
+                                0.16,
+                                0.16,
                                 0.15,
+                                0.13,
                                 0.15,
                                 0.15
                               ],
@@ -10085,6 +10171,14 @@
                             300.0,
                             300.0
                           ],
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150"
+                          ],
                           "SWCON": [
                             0.55,
                             0.55,
@@ -10101,7 +10195,7 @@
                             0.0,
                             0.0
                           ],
-                          "ResidueInterception": 0.0,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -10190,18 +10284,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilOrganicMatter, Models",
-                          "RootCN": 30.0,
-                          "EnrACoeff": 7.4,
-                          "EnrBCoeff": 0.2,
-                          "Thickness": [
-                            100.0,
-                            200.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
+                          "$type": "Models.Soils.Organic, Models",
                           "Depth": [
                             "0-10",
                             "10-30",
@@ -10210,7 +10293,16 @@
                             "90-120",
                             "120-150"
                           ],
-                          "OC": [
+                          "FOMCNRatio": 30.0,
+                          "Thickness": [
+                            100.0,
+                            200.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "Carbon": [
                             3.5,
                             2.5,
                             1.2,
@@ -10218,8 +10310,7 @@
                             0.47,
                             0.47
                           ],
-                          "OCMetadata": null,
-                          "SoilCN": [
+                          "SoilCNRatio": [
                             11.5,
                             11.5,
                             11.5,
@@ -10243,7 +10334,7 @@
                             0.96,
                             0.96
                           ],
-                          "RootWt": [
+                          "FOM": [
                             1243.9310541346904,
                             833.83192147272689,
                             457.61666105087295,
@@ -10251,15 +10342,22 @@
                             137.83148958311097,
                             75.643525303383925
                           ],
-                          "OCUnits": 0,
-                          "Name": "SoilOrganicMatter",
+                          "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Analysis, Models",
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
@@ -10268,14 +10366,22 @@
                             300.0,
                             300.0
                           ],
-                          "Rocks": null,
-                          "RocksMetadata": null,
-                          "Texture": null,
-                          "TextureMetadata": null,
-                          "MunsellColour": null,
-                          "MunsellMetadata": null,
-                          "EC": null,
-                          "ECMetadata": null,
+                          "NO3N": [
+                            33.333333333333336,
+                            12.500000000000002,
+                            3.8888888888888897,
+                            3.8888888888888897,
+                            0.38333333333333336,
+                            0.38333333333333336
+                          ],
+                          "NH4N": [
+                            0.083333333333333315,
+                            0.041666666666666657,
+                            0.027777777777777773,
+                            0.027777777777777773,
+                            0.027777777777777762,
+                            0.027777777777777762
+                          ],
                           "PH": [
                             6.6,
                             6.2,
@@ -10284,36 +10390,10 @@
                             5.5,
                             5.5
                           ],
-                          "PHMetadata": null,
                           "CL": null,
-                          "CLMetadata": null,
-                          "Boron": null,
-                          "BoronMetadata": null,
-                          "CEC": null,
-                          "CECMetadata": null,
-                          "Ca": null,
-                          "CaMetadata": null,
-                          "Mg": null,
-                          "MgMetadata": null,
-                          "Na": null,
-                          "NaMetadata": null,
-                          "K": null,
-                          "KMetadata": null,
+                          "EC": null,
                           "ESP": null,
-                          "ESPMetadata": null,
-                          "Mn": null,
-                          "MnMetadata": null,
-                          "Al": null,
-                          "AlMetadata": null,
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSilt": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClay": null,
-                          "ParticleSizeClayMetadata": null,
-                          "PHUnits": 0,
-                          "BoronUnits": 0,
-                          "Name": "Analysis",
+                          "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10333,6 +10413,14 @@
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
@@ -10341,30 +10429,14 @@
                             300.0,
                             300.0
                           ],
-                          "NO3": [
-                            40.0,
-                            30.0,
-                            14.0,
-                            14.0,
-                            1.38,
-                            1.38
-                          ],
-                          "NH4": [
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1
-                          ],
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
                           "CL": null,
                           "ESP": null,
                           "PH": null,
-                          "NO3Units": 1,
-                          "NH4Units": 1,
                           "SWUnits": 0,
                           "OCUnits": 0,
                           "PHUnits": 0,
@@ -10389,6 +10461,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "Grapevine",
                       "InitialResidueType": "Grapevine",
                       "InitialResidueMass": 2000.0,
@@ -10467,7 +10540,7 @@
                       "Children": [
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n        \tzone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
+                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "CordonDiameter",
@@ -10557,7 +10630,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "BudBurstPredic",
           "Children": [
             {
@@ -10635,7 +10710,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "FloweringPred",
           "Children": [
             {
@@ -10713,7 +10790,9 @@
             }
           ],
           "LegendPosition": 0,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "VeraisonPred",
           "Children": [
             {
@@ -10783,28 +10862,37 @@
               "Name": "Factors",
               "Children": [
                 {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[ParameterTest].Script.chill_a = 0.4",
-                  "Name": "ChillA",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Weather].FileName = Site1001_BRA.met,Site1002_OYB.met,Site1003_SEA.met,Site1004_RPC.met",
-                  "Name": "Climate",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[ParameterTest].Script.chill_c = -0.28, -0.3, -0.32, -0.35",
-                  "Name": "ChillC",
-                  "Children": [],
+                  "$type": "Models.Factorial.Permutation, Models",
+                  "Name": "Permutation",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "[ParameterTest].Script.chill_a = 0.4",
+                      "Name": "ChillA",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "[Weather].FileName = Site1001_BRA.met,Site1002_OYB.met,Site1003_SEA.met,Site1004_RPC.met",
+                      "Name": "Climate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "[ParameterTest].Script.chill_c = -0.28, -0.3, -0.32, -0.35",
+                      "Name": "ChillC",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -10816,7 +10904,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "OptimizationBase",
               "Children": [
                 {
@@ -10831,8 +10918,8 @@
                 },
                 {
                   "$type": "Models.Clock, Models",
-                  "StartDate": "2004-01-01T00:00:00",
-                  "EndDate": "2017-07-01T00:00:00",
+                  "Start": "2004-01-01T00:00:00",
+                  "End": "2017-07-01T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -10862,11 +10949,12 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "Vineyard",
                   "Children": [
                     {
                       "$type": "Models.Soils.Soil, Models",
-                      "Weirdo": null,
                       "RecordNumber": 0,
                       "ASCOrder": null,
                       "ASCSubOrder": null,
@@ -10887,7 +10975,15 @@
                       "Name": "Soil",
                       "Children": [
                         {
-                          "$type": "Models.Soils.Water, Models",
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
@@ -10896,6 +10992,7 @@
                             300.0,
                             300.0
                           ],
+                          "ParticleSizeClay": null,
                           "BD": [
                             1.2,
                             1.2,
@@ -10943,15 +11040,15 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
-                          "Name": "Water",
+                          "Name": "Physical",
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.13,
-                                0.13,
-                                0.1,
+                                0.16,
+                                0.16,
                                 0.15,
+                                0.13,
                                 0.15,
                                 0.15
                               ],
@@ -11011,6 +11108,14 @@
                             300.0,
                             300.0
                           ],
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150"
+                          ],
                           "SWCON": [
                             0.55,
                             0.55,
@@ -11027,7 +11132,7 @@
                             0.0,
                             0.0
                           ],
-                          "ResidueInterception": 0.0,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -11116,18 +11221,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilOrganicMatter, Models",
-                          "RootCN": 30.0,
-                          "EnrACoeff": 7.4,
-                          "EnrBCoeff": 0.2,
-                          "Thickness": [
-                            100.0,
-                            200.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
+                          "$type": "Models.Soils.Organic, Models",
                           "Depth": [
                             "0-10",
                             "10-30",
@@ -11136,7 +11230,16 @@
                             "90-120",
                             "120-150"
                           ],
-                          "OC": [
+                          "FOMCNRatio": 30.0,
+                          "Thickness": [
+                            100.0,
+                            200.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "Carbon": [
                             3.5,
                             2.5,
                             1.2,
@@ -11144,8 +11247,7 @@
                             0.47,
                             0.47
                           ],
-                          "OCMetadata": null,
-                          "SoilCN": [
+                          "SoilCNRatio": [
                             11.5,
                             11.5,
                             11.5,
@@ -11169,7 +11271,7 @@
                             0.96,
                             0.96
                           ],
-                          "RootWt": [
+                          "FOM": [
                             1243.9310541346904,
                             833.83192147272689,
                             457.61666105087295,
@@ -11177,15 +11279,22 @@
                             137.83148958311097,
                             75.643525303383925
                           ],
-                          "OCUnits": 0,
-                          "Name": "SoilOrganicMatter",
+                          "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Analysis, Models",
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
@@ -11194,14 +11303,22 @@
                             300.0,
                             300.0
                           ],
-                          "Rocks": null,
-                          "RocksMetadata": null,
-                          "Texture": null,
-                          "TextureMetadata": null,
-                          "MunsellColour": null,
-                          "MunsellMetadata": null,
-                          "EC": null,
-                          "ECMetadata": null,
+                          "NO3N": [
+                            33.333333333333336,
+                            12.500000000000002,
+                            3.8888888888888897,
+                            3.8888888888888897,
+                            0.38333333333333336,
+                            0.38333333333333336
+                          ],
+                          "NH4N": [
+                            0.083333333333333315,
+                            0.041666666666666657,
+                            0.027777777777777773,
+                            0.027777777777777773,
+                            0.027777777777777762,
+                            0.027777777777777762
+                          ],
                           "PH": [
                             6.6,
                             6.2,
@@ -11210,36 +11327,10 @@
                             5.5,
                             5.5
                           ],
-                          "PHMetadata": null,
                           "CL": null,
-                          "CLMetadata": null,
-                          "Boron": null,
-                          "BoronMetadata": null,
-                          "CEC": null,
-                          "CECMetadata": null,
-                          "Ca": null,
-                          "CaMetadata": null,
-                          "Mg": null,
-                          "MgMetadata": null,
-                          "Na": null,
-                          "NaMetadata": null,
-                          "K": null,
-                          "KMetadata": null,
+                          "EC": null,
                           "ESP": null,
-                          "ESPMetadata": null,
-                          "Mn": null,
-                          "MnMetadata": null,
-                          "Al": null,
-                          "AlMetadata": null,
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSilt": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClay": null,
-                          "ParticleSizeClayMetadata": null,
-                          "PHUnits": 0,
-                          "BoronUnits": 0,
-                          "Name": "Analysis",
+                          "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -11259,6 +11350,14 @@
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
@@ -11267,30 +11366,14 @@
                             300.0,
                             300.0
                           ],
-                          "NO3": [
-                            40.0,
-                            30.0,
-                            14.0,
-                            14.0,
-                            1.38,
-                            1.38
-                          ],
-                          "NH4": [
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1
-                          ],
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": null,
                           "OC": null,
                           "EC": null,
                           "CL": null,
                           "ESP": null,
                           "PH": null,
-                          "NO3Units": 1,
-                          "NH4Units": 1,
                           "SWUnits": 0,
                           "OCUnits": 0,
                           "PHUnits": 0,
@@ -11324,6 +11407,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "Grapevine",
                       "InitialResidueType": "Grapevine",
                       "InitialResidueMass": 2000.0,
@@ -11402,7 +11486,7 @@
                       "Children": [
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n        \tzone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
+                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Grapevine;\r\n        [Link] Zone zone;\r\n\r\n        [Description(\"CordonDiameter_mm\")]         \r\n        public double CordonDiameter { get; set; }  //mm\r\n        \r\n\r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            zone.Set(\"Grapevine.Cordon.CordonDiameter.FixedValue\", CordonDiameter);      \r\n        }\r\n\r\n     }\r\n}\r\n",
                           "Parameters": [
                             {
                               "Key": "CordonDiameter",
@@ -11456,7 +11540,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n    \t[Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n\t\t//[Description(\"BudBurstBase\")]\r\n        //public double BudBurstBase  {get; set;}\r\n\t\t[Description(\"chill_a\")]\r\n        public double chill_a  {get; set;}\r\n\r\n\t\t[Description(\"chill_c\")]\r\n        public double chill_c  {get; set;}\r\n\t\r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n        \t//zone.Set(\"Grapevine.Phenology.Budding.Target.Base.FixedValue\", BudBurstBase);\r\n        \tzone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n        \tzone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n\t\t\t//zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n\t\t\t//zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
+                  "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n        //[Description(\"BudBurstBase\")]\r\n        //public double BudBurstBase  {get; set;}\r\n        [Description(\"chill_a\")]\r\n        public double chill_a  {get; set;}\r\n\r\n        [Description(\"chill_c\")]\r\n        public double chill_c  {get; set;}\r\n    \r\n        //Description(\"EndoTarget\")]\r\n        //public double EndoTarget  {get; set;}\r\n        //[Description(\"FloweringTarget\")]\r\n        //public double FloweringTarget  {get; set;}\r\n\r\n                \r\n        [EventSubscribe(\"PlantSowing\")]\r\n        private void OnPlantSowing(object sender, EventArgs e)\r\n        {\r\n            //zone.Set(\"Grapevine.Phenology.Budding.Target.Base.FixedValue\", BudBurstBase);\r\n            zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.A\", chill_a);\r\n            zone.Set(\"Grapevine.Phenology.Budding.Target.ChillingTadjustment.C\", chill_c);\r\n            //zone.Set(\"Grapevine.Phenology.EndoDormancy.Target.FixedValue\", EndoTarget);\r\n            //zone.Set(\"Grapevine.Phenology.Flowering.Target.FixedValue\", FloweringTarget);                      \r\n        }\r\n    }\r\n}\r\n            \r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "chill_a",

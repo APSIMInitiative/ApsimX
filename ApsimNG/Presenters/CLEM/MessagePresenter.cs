@@ -116,21 +116,21 @@ namespace UserInterface.Presenters
                 return htmlString;
             }
             DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
-            int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
-            int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-            dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
-
-            foreach (DataRow dr in dataRows)
-            {
-                // convert invalid parameter warnings to errors
-                if(dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
-                {
-                    dr[errorCol] = "0";
-                }
-            }
-
             if (dataRows.Count() > 0)
             {
+                int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
+                int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
+                dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+
+                foreach (DataRow dr in dataRows)
+                {
+                    // convert invalid parameter warnings to errors
+                    if(dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
+                    {
+                        dr[errorCol] = "0";
+                    }
+                }
+
                 foreach (DataRow dr in dataRows.Take(maxErrors))
                 {
                     bool ignore = false;

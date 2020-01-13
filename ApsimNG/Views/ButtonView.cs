@@ -64,12 +64,19 @@ namespace UserInterface.Views
         /// <param name="e">The argument parameters</param>
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            if (button == null)
-                toolButton.Clicked -= OnButtonClick;
-            else
-                button.Clicked -= OnButtonClick;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                if (button == null)
+                    toolButton.Clicked -= OnButtonClick;
+                else
+                    button.Clicked -= OnButtonClick;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>User has clicked the button.</summary>
@@ -77,7 +84,14 @@ namespace UserInterface.Views
         /// <param name="e">The argument parameters</param>
         private void OnButtonClick(object sender, EventArgs e)
         {
-            PerformClick();
+            try
+            {
+                PerformClick();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Click the button.</summary>

@@ -36,7 +36,8 @@ namespace Models.Core
         /// <param name="rootNode"></param>
         /// <param name="recurse">Recurse through all child models?</param>
         /// <param name="allLinks">Unresolve all links or just the non child links?</param>
-        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true)
+        /// <param name="throwOnFail">Should all links be considered optional?</param>
+        public void Resolve(IModel rootNode, bool allLinks, bool recurse = true, bool throwOnFail = false)
         {
             var scope = new ScopingRules();
 
@@ -47,11 +48,11 @@ namespace Models.Core
                 foreach (IModel modelNode in allModels)
                 {
                     if (modelNode.Enabled)
-                        ResolveInternal(modelNode, scope);
+                        ResolveInternal(modelNode, scope, throwOnFail);
                 }
             }
             else
-                ResolveInternal(rootNode, scope);
+                ResolveInternal(rootNode, scope, throwOnFail);
         }
 
         /// <summary>
@@ -109,7 +110,8 @@ namespace Models.Core
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="scope">The scoping rules to use to resolve links.</param>
-        private void ResolveInternal(object obj, ScopingRules scope)
+        /// <param name="throwOnFail">Should all links be considered optional?</param>
+        private void ResolveInternal(object obj, ScopingRules scope, bool throwOnFail)
         {
             foreach (IVariable field in GetAllDeclarations(GetModel(obj),
                                                      GetModel(obj).GetType(),
@@ -172,7 +174,7 @@ namespace Models.Core
                             array.Add(GetModel(matches[i]));
                         field.Value = array;
                     }
-                    else if (matches.Count == 0)
+                    else if (matches.Count == 0 && !throwOnFail)
                     {
                         if (!link.IsOptional)
                             throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));

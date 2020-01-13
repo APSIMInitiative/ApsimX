@@ -1381,7 +1381,7 @@ namespace Models.Soils.SoilWaterBackend
 
             if ((lyr.air_dry + air_dry_errmargin) < min_sw)
                 {
-                err_messg = String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G})",
+                err_messg = String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                            " Air dry lower limit of ",
                                            lyr.air_dry,
                                            " in layer ",
@@ -1389,13 +1389,13 @@ namespace Models.Soils.SoilWaterBackend
                                            "\n",
                                            "         is below acceptable value of ",
                                            min_sw);
-                Constants.IssueWarning(err_messg);
+                throw new Exception(err_messg);
                 }
 
 
             if ((lyr.ll15 + ll15_errmargin) < (lyr.air_dry - air_dry_errmargin))
                 {
-                err_messg = String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G})",
+                err_messg = String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                            " 15 bar lower limit of ",
                                            lyr.ll15,
                                            " in layer ",
@@ -1403,14 +1403,14 @@ namespace Models.Soils.SoilWaterBackend
                                            "\n",
                                            "         is below air dry value of ",
                                            lyr.air_dry);
-                Constants.IssueWarning(err_messg);
+                throw new Exception(err_messg);
                 }
 
 
 
             if ((lyr.dul + dul_errmargin) <= (lyr.ll15 - ll15_errmargin))
                 {
-                err_messg = String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G})",
+                err_messg = String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                            " drained upper limit of ",
                                            lyr.dul,
                                            " in layer ",
@@ -1418,12 +1418,12 @@ namespace Models.Soils.SoilWaterBackend
                                            "\n",
                                            "         is at or below lower limit of ",
                                            lyr.ll15);
-                Constants.IssueWarning(err_messg);
+                throw new Exception(err_messg);
                 }
 
             if ((lyr.sat + sat_errmargin) <= (lyr.dul - dul_errmargin))
                 {
-                err_messg = String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G})",
+                err_messg = String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                            " saturation of ",
                                            lyr.sat,
                                            " in layer ",
@@ -1431,12 +1431,12 @@ namespace Models.Soils.SoilWaterBackend
                                            "\n",
                                            "         is at or below drained upper limit of ",
                                            lyr.dul);
-                Constants.IssueWarning(err_messg);
+                throw new Exception(err_messg);
                 }
 
             if ((lyr.sat - sat_errmargin) > (max_sw + max_sw_errmargin))
                 {
-                err_messg = String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G} {7} {8} {9:G} {10} {11} {12:G})",
+                err_messg = String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4} {7} {8} {9:G4} {10} {11} {12:G4})",
                                            " saturation of ",
                                            lyr.sat,
                                            " in layer ",
@@ -1450,13 +1450,13 @@ namespace Models.Soils.SoilWaterBackend
                                            "\n",
                                            "OR saturation (sat) to below ",
                                            max_sw);
-                Constants.IssueWarning(err_messg);
+                throw new Exception(err_messg);
                 }
 
 
             if (lyr.sw - sw_errmargin > lyr.sat + sat_errmargin)
                 {
-                err_messg = String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G}",
+                err_messg = String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4}",
                                            " soil water of ",
                                            lyr.sw,
                                            " in layer ",
@@ -1464,12 +1464,12 @@ namespace Models.Soils.SoilWaterBackend
                                            "\n",
                                            "         is above saturation of ",
                                            lyr.sat);
-                Constants.IssueWarning(err_messg);
+                throw new Exception(err_messg);
                 }
 
             if (lyr.sw + sw_errmargin < lyr.air_dry - air_dry_errmargin)
                 {
-                err_messg = String.Format("({0} {1:G}) {2} {3} {4} {5} {6:G}",
+                err_messg = String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4}",
                                            " soil water of ",
                                            lyr.sw,
                                            " in layer ",
@@ -1477,7 +1477,7 @@ namespace Models.Soils.SoilWaterBackend
                                            "\n",
                                            "         is below air-dry value of ",
                                            lyr.air_dry);
-                Constants.IssueWarning(err_messg);
+                throw new Exception(err_messg);
                 }
 
             }
@@ -1542,10 +1542,7 @@ namespace Models.Soils.SoilWaterBackend
 
 
             //! flag to determine if Ks has been chosen for use. 
-            if (Soil.KS == null)
-                using_ks = false;
-            else
-                using_ks = true;
+            using_ks = MathUtilities.ValuesInArray(Soil.KS);
 
 
 

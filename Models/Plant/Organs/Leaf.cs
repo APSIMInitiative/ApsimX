@@ -32,7 +32,7 @@ namespace Models.PMF.Organs
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IRemovableBiomass
+    public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrganDamage
     {
 
         /// <summary>The surface organic matter model</summary>
@@ -51,6 +51,7 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
+        private const int MM2ToM2 = 1000000; // Conversion of mm2 to m2
 
         /// <summary>Growth Respiration</summary>
         /// [Units("CO_2")]
@@ -126,11 +127,25 @@ namespace Models.PMF.Organs
         {
             get
             {
-                int MM2ToM2 = 1000000; // Conversion of mm2 to m2
                 foreach (LeafCohort L in Leaves)
                     if (Double.IsNaN(L.LiveArea))
                         throw new Exception("LiveArea of leaf cohort " + L.Name + " is Nan");
                 return Leaves.Sum(x => x.LiveArea) / MM2ToM2;
+            }
+            set
+            {
+                var totalLiveArea = Leaves.Sum(x => x.LiveArea);
+                if (totalLiveArea > 0)
+                {
+                    var delta = totalLiveArea - (value * MM2ToM2);    // mm2
+                    var prop = delta / totalLiveArea;
+                    foreach (var L in Leaves)
+                    {
+                        var amountToRemove = L.LiveArea * prop;
+                        L.LiveArea -= amountToRemove;
+                        L.DeadArea += amountToRemove;
+                    }
+                }
             }
         }
 
@@ -1322,7 +1337,7 @@ namespace Models.PMF.Organs
         /// <param name="amountToRemove">The frations of biomass to remove</param>
         public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
-            bool writeToSummary = true;
+            bool writeToSummary = false;
             foreach (LeafCohort leaf in Leaves)
             {
                 if (leaf.IsInitialised)
@@ -1335,6 +1350,18 @@ namespace Models.PMF.Organs
                 }
 
                 needToRecalculateLiveDead = true;
+            }
+
+            if (amountToRemove != null)
+            {
+                var toResidue = Detached.Wt / Total.Wt * 100;
+                var removedOff = Removed.Wt / Total.Wt * 100;
+                double totalFractionToRemove = amountToRemove.FractionLiveToRemove + amountToRemove.FractionLiveToResidue +
+                                               amountToRemove.FractionDeadToRemove + amountToRemove.FractionDeadToResidue;
+                Summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
+                             + "% of " + Name.ToLower() + " biomass from " + parentPlant.Name
+                             + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
+                             + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
             }
         }
 

@@ -821,6 +821,7 @@ namespace UserInterface.Views
             frame1.ExposeEvent += OnWidgetExpose;
             hbox1.Realized += Hbox1_Realized;
             hbox1.SizeAllocated += Hbox1_SizeAllocated;
+            vbox2.SizeAllocated += OnBrowserSizeAlloc;
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -857,6 +858,8 @@ namespace UserInterface.Views
         // I couldn't find any better technique. 
         public void OnWidgetExpose(object o, ExposeEventArgs args)
         {
+            try
+            {
             int height, width;
             frame1.GdkWindow.GetSize(out width, out height);
             frame1.SetSizeRequest(width, height);
@@ -874,6 +877,11 @@ namespace UserInterface.Views
                     brow.Browser.Height = height;
                     brow.Browser.Width = width;
                 }
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -905,30 +913,38 @@ namespace UserInterface.Views
 
         protected void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            memo.MemoChange -= this.TextUpdate;
-            if (keyPressObject != null)
-                (keyPressObject as HtmlElement).KeyPress -= OnKeyPress;
-            frame1.ExposeEvent -= OnWidgetExpose;
-            hbox1.Realized -= Hbox1_Realized;
-            hbox1.SizeAllocated -= Hbox1_SizeAllocated;
-            if ((browser as TWWebBrowserIE) != null)
+            try
             {
-                if (vbox2.Toplevel is Window)
-                    (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
-                frame1.Unrealized -= Frame1_Unrealized;
-                (browser as TWWebBrowserIE).WebSocket.UnmapEvent -= (browser as TWWebBrowserIE).Socket_UnmapEvent;
+                memo.MemoChange -= this.TextUpdate;
+                vbox2.SizeAllocated -= OnBrowserSizeAlloc;
+                if (keyPressObject != null)
+                    (keyPressObject as HtmlElement).KeyPress -= OnKeyPress;
+                frame1.ExposeEvent -= OnWidgetExpose;
+                hbox1.Realized -= Hbox1_Realized;
+                hbox1.SizeAllocated -= Hbox1_SizeAllocated;
+                if ((browser as TWWebBrowserIE) != null)
+                {
+                    if (vbox2.Toplevel is Window)
+                        (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
+                    frame1.Unrealized -= Frame1_Unrealized;
+                    (browser as TWWebBrowserIE).WebSocket.UnmapEvent -= (browser as TWWebBrowserIE).Socket_UnmapEvent;
+                }
+                if (browser != null)
+                    browser.Dispose();
+                if (popupWindow != null)
+                {
+                    popupWindow.Destroy();
+                }
+                memo.StartEdit -= this.ToggleEditing;
+                memo.MainWidget.Destroy();
+                memo = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
             }
-            if (browser != null)
-                browser.Dispose();
-            if (popupWindow != null)
+            catch (Exception err)
             {
-                popupWindow.Destroy();
+                ShowError(err);
             }
-            memo.StartEdit -= this.ToggleEditing;
-            memo.MainWidget.Destroy();
-            memo = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
         }
 
         protected virtual void NewTitle(string title)
@@ -937,8 +953,46 @@ namespace UserInterface.Views
 
         private void Hbox1_Realized(object sender, EventArgs e)
         {
-            vpaned1.Position = 30; 
-            memo.LabelText = "Edit text";
+            try
+            {
+                vpaned1.Position = 30; 
+                memo.LabelText = "Edit text";
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Ok so for reasons I don't understand, the main widget's
+        /// size request seems to be in some cases smaller than the
+        /// browser's size request. As a result, the HTMLView will
+        /// sometimes overlap with other widgets because the HTMLView's
+        /// size request is actually smaller than the space used by the
+        /// browser. In this scenario I would have expected the browser
+        /// widget to be cut off at the limits of the main widget's
+        /// gdk window, but this doesn't happen - perhaps due to a
+        /// limitation or oversight in the gtk socket component which
+        /// we use to wrap the browser widget.
+        /// 
+        /// Either way, this little hack seems to correct the problem.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnBrowserSizeAlloc(object sender, SizeAllocatedArgs args)
+        {
+            try
+            {
+                // Force the main widget to request enough space for
+                // the browser.
+                mainWidget.HeightRequest = args.Allocation.Height;
+                mainWidget.WidthRequest = args.Allocation.Width;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -948,21 +1002,41 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Hbox1_SizeAllocated(object sender, EventArgs e)
         {
-             
-            if (!this.editing)
-                vpaned1.Position = memo.HeaderHeight();
+            try
+            {
+                if (!this.editing)
+                    vpaned1.Position = memo.HeaderHeight();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void Frame1_Unrealized(object sender, EventArgs e)
         {
-            if ((browser as TWWebBrowserIE) != null)
-                (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
+            try
+            {
+                if ((browser as TWWebBrowserIE) != null)
+                    (vbox2.Toplevel as Window).SetFocus -= MainWindow_SetFocus;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void MainWindow_SetFocus(object o, SetFocusArgs args)
         {
-            if (MasterView.MainWindow != null)
-                MasterView.MainWindow.Focus(0);
+            try
+            {
+                if (MasterView.MainWindow != null)
+                    MasterView.MainWindow.Focus(0);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1027,27 +1101,34 @@ namespace UserInterface.Views
         /// <param name="e">Event arguments.</param>
         private void OnKeyPress(object sender, HtmlElementEventArgs e)
         {
-            if (browser is TWWebBrowserIE)
+            try
             {
-                TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
-
-                // By default, we assume that the key press is not significant, so we set the
-                // event args' return value to false, so event propagation continues.
-                e.ReturnValue = false;
-
-                int keyCode = e.KeyPressedCode;
-                if (e.CtrlKeyPressed)
+                if (browser is TWWebBrowserIE)
                 {
-                    keyCode += 96;
-                    if (keyCode == 'c')
-                        Copy?.Invoke(this, new CopyEventArgs() { Text = ieBrowser.GetSelectedText() });
-                    else if (keyCode == 'a')
-                        ieBrowser.SelectAll();
-                    else if (keyCode == 'f')
-                        // We just send the appropriate keypress event to the WebBrowser. This doesn't 
-                        // seem to work well for ctrl + a, and doesn't work at all for ctrl + c. 
-                        SendKeys.SendWait("^f");
+                    TWWebBrowserIE ieBrowser = browser as TWWebBrowserIE;
+
+                    // By default, we assume that the key press is not significant, so we set the
+                    // event args' return value to false, so event propagation continues.
+                    e.ReturnValue = false;
+
+                    int keyCode = e.KeyPressedCode;
+                    if (e.CtrlKeyPressed)
+                    {
+                        keyCode += 96;
+                        if (keyCode == 'c')
+                            Copy?.Invoke(this, new CopyEventArgs() { Text = ieBrowser.GetSelectedText() });
+                        else if (keyCode == 'a')
+                            ieBrowser.SelectAll();
+                        else if (keyCode == 'f')
+                            // We just send the appropriate keypress event to the WebBrowser. This doesn't 
+                            // seem to work well for ctrl + a, and doesn't work at all for ctrl + c. 
+                            SendKeys.SendWait("^f");
+                    }
                 }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -1091,7 +1172,14 @@ namespace UserInterface.Views
         /// <param name="e">Event argument.</param>
         private void OnEditClick(object sender, EventArgs e)
         {
-            TurnEditorOn(true);
+            try
+            {
+                TurnEditorOn(true);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1101,11 +1189,18 @@ namespace UserInterface.Views
         /// <param name="e">Event argument.</param>
         private void TextUpdate(object sender, EventArgs e)
         {
-            MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
-            markDown.ExtraMode = true;
-            string html = markDown.Transform(memo.MemoText);
-            html = ParseHtmlImages(html);
-            PopulateView(html);
+            try
+            {
+                MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
+                markDown.ExtraMode = true;
+                string html = markDown.Transform(memo.MemoText);
+                html = ParseHtmlImages(html);
+                PopulateView(html);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1115,11 +1210,18 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void ToggleEditing(object sender, EventArgs e)
         {
-            if (editing)
-                vpaned1.Position = memo.HeaderHeight();
-            else
-                vpaned1.Position = (int)Math.Floor(vpaned1.Parent.Allocation.Height / 1.3);
-            editing = !editing;
+            try
+            {
+                if (editing)
+                    vpaned1.Position = memo.HeaderHeight();
+                else
+                    vpaned1.Position = (int)Math.Floor(vpaned1.Parent.Allocation.Height / 1.3);
+                editing = !editing;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1160,7 +1262,14 @@ namespace UserInterface.Views
         /// <param name="e">Event argument.</param>
         private void OnHelpClick(object sender, EventArgs e)
         {
-            Process.Start("https://apsimdev.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
+            try
+            {
+                Process.Start("https://apsimdev.apsim.info/Documentation/APSIM(nextgeneration)/Memo.aspx");
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

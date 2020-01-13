@@ -22,6 +22,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantDestockGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
+    [Version(1, 0, 1, "Supports blank entry for Location to represent 'Not specified - general yards'")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFilter.htm")]
     public class RuminantFilter: CLEMModel, IValidatableObject
@@ -67,7 +68,6 @@ namespace Models.CLEM.Groupings
         /// Value to check for filter
         /// </summary>
         [Description("Value to filter by")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Value to filter by required")]
         public string Value
         {
             get
@@ -126,7 +126,14 @@ namespace Models.CLEM.Groupings
                         default:
                             break;
                     }
-                    str += Value;
+                    if (Value.ToString() == "" && Parameter.ToString() == "Location")
+                    {
+                        str += "Not specified - general yards";
+                    }
+                    else
+                    {
+                        str += Value;
+                    }
                 }
             }
             return str;
@@ -157,15 +164,15 @@ namespace Models.CLEM.Groupings
             string html = "";
             if(!this.ValidParent())
             {
-                html = "<div class=\"errorlink\">Invalid Parent. Type of Ruminant Group required.</div>";
+                html = "<div class=\"errorlink\">Invalid Parent. Ruminant Group type required.</div>";
             }
             if (this.Value == null)
             {
-                html += "<div class=\"errorlink\">[FILTER NOT DEFINED]</div>";
+                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">[FILTER NOT DEFINED]</div>";
             }
             else
             {
-                html += "<div class=\"filter\">" + this.ToString() + "</div>";
+                html += "<div class=\"filter\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">" + this.ToString() + "</div>";
             }
             return html;
         }
@@ -202,6 +209,11 @@ namespace Models.CLEM.Groupings
             {
                 string[] memberNames = new string[] { "RuminantFilter" };
                 results.Add(new ValidationResult("The RuminantFilter named "+this.Name+" does not have a valid RuminantGroup parent component", memberNames));
+            }
+            if((Value==null||Value=="")&&(Parameter.ToString()!="Location"))
+            {
+                string[] memberNames = new string[] { "Value" };
+                results.Add(new ValidationResult("Value must be specified", memberNames));
             }
             return results;
         }

@@ -132,6 +132,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgPasture\SimpleGrazing.cs" />
     <Compile Include="AgPasture\PastureSpecies.cs" />
     <Compile Include="AgPasture\PastureAboveGroundOrgan.cs" />
     <Compile Include="AgPasture\PastureBelowGroundOrgan.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="CLEM\Activities\FinanceActivityIncome.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedTarget.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeedToTargets.cs" />
+    <Compile Include="CLEM\Activities\LabourActivityFeedToTargetsV1.cs" />
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\LabourAERelationship.cs" />
@@ -203,6 +205,7 @@
     <Compile Include="CLEM\Resources\LabourSpecifications.cs" />
     <Compile Include="CLEM\Resources\ResourcePricing.cs" />
     <Compile Include="Core\Attributes\CategoryAttribute.cs" />
+    <Compile Include="Core\Attributes\TooltipAttribute.cs" />
     <Compile Include="Core\Attributes\VersionAttribute.cs" />
     <Compile Include="Core\Checkpoints.cs" />
     <Compile Include="CLEM\Activities\BlankActivity.cs" />
@@ -254,15 +257,23 @@
     <Compile Include="Functions\DecumulateFunction.cs" />
     <Compile Include="Functions\EndOfDayFunction.cs" />
     <Compile Include="Functions\LiveOnEventFunction.cs" />
+    <Compile Include="Functions\ProtectedDivideFunction.cs" />
     <Compile Include="Graph\DefaultPainter.cs" />
+    <Compile Include="Graph\ShadedBarsOnGraph.cs" />
     <Compile Include="Graph\GraphPanel.cs" />
     <Compile Include="Graph\IGraphPanelScript.cs" />
     <Compile Include="Graph\ISeriesDefinitionPainter.cs" />
     <Compile Include="Graph\MultiDescriptorPainter.cs" />
     <Compile Include="Graph\SequentialPainter.cs" />
     <Compile Include="Graph\SeriesDefinition.cs" />
+    <Compile Include="Lifecycle\PlantAssimilateConsumption.cs" />
+    <Compile Include="Lifecycle\PlantOrganFunctionalDimensionReduction.cs" />
+    <Compile Include="Lifecycle\PlantOrganConsumption.cs" />
+    <Compile Include="Lifecycle\PlantMortality.cs" />
+    <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Plant\Arbitrator\RetranslocateAvailableN.cs" />
     <Compile Include="Factorial\CompositeFactor.cs" />
+    <Compile Include="Plant\Interfaces\IPlantDamage.cs" />
     <Compile Include="Plant\Phenology\Phases\DAWSPhase.cs" />
     <Compile Include="Plant\Phenology\Scales\Age.cs" />
     <EmbeddedResource Include="Resources\Scripts\GraphPanelScriptTemplate.cs" />
@@ -326,7 +337,7 @@
     <Compile Include="Plant\Phenology\Phases\IPhaseWithTrarget.cs" />
     <Compile Include="Plant\Phenology\Phases\PhaseChangedType.cs" />
     <Compile Include="Plant\Phenology\Phases\IPhase.cs" />
-    <Compile Include="Plant\Interfaces\IRemovableBiomass.cs" />
+    <Compile Include="Plant\Interfaces\IOrganDamage.cs" />
     <Compile Include="Plant\Phenology\Responses\Vernalisation.cs" />
     <Compile Include="Plant\Phenology\Scales\BBCH.cs" />
     <Compile Include="Plant\Structure\BudNumberFunction.cs" />
@@ -354,7 +365,6 @@
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="IClock.cs" />
     <Compile Include="Irrigation\IIrrigation.cs" />
-    <Compile Include="Interfaces\ILeaf.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
     <Compile Include="Interfaces\ISoil.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
@@ -744,6 +754,15 @@
     <EmbeddedResource Include="Resources\Potato.json" />
     <EmbeddedResource Include="Resources\RedClover.json" />
     <EmbeddedResource Include="Resources\WhiteClover.json" />
+    <EmbeddedResource Include="Resources\AGPBrownTop.json" />
+    <EmbeddedResource Include="Resources\AGPCocksfoot.json" />
+    <EmbeddedResource Include="Resources\AGPKikuyu.json" />
+    <EmbeddedResource Include="Resources\AGPPaspalum.json" />
+    <EmbeddedResource Include="Resources\AGPPhalaris.json" />
+    <EmbeddedResource Include="Resources\AGPRedClover.json" />
+    <EmbeddedResource Include="Resources\AGPRhodes.json" />
+    <EmbeddedResource Include="Resources\AGPTallFescue.json" />
+    <EmbeddedResource Include="Resources\AGPLucerne.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

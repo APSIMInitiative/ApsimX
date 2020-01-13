@@ -111,6 +111,9 @@ namespace Models.PMF.Struct
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction remainingLeavesForFinalAppearanceRate = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction leafNoCorrection = null;
+
         private bool leavesInitialised;
         private double tillersAdded;
         private bool dayofEmergence;
@@ -137,6 +140,10 @@ namespace Models.PMF.Struct
 
         /// <summary>Remaining Leaves</summary>
         public double remainingLeaves { get { return FinalLeafNo - CurrentLeafNo; } }
+
+        /// <summary>fixme: Leaf number at appearance as set by each individual culmn before calculating LeafNoEffective.</summary>
+        [JsonIgnore]
+        public double LeafNoApp { get; set; }
 
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
@@ -172,9 +179,14 @@ namespace Models.PMF.Struct
                         InitialAppearanceRate = initialAppearanceRate.Value(),
                         FinalAppearanceRate = finalAppearanceRate.Value(),
                         RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
-                        AMaxIntercept = leaf.AMaxIntercept.Value(),
-                        AMaxSlope = leaf.AMaxSlope.Value(),
-                        AX0 = leaf.AX0.Value()
+                        LargestLeafSize = leaf.LargestLeafSize,
+                        A0 = leaf.A0.Value(),
+                        A1 = leaf.A1.Value(),
+                        B0 = leaf.B0.Value(),
+                        B1 = leaf.B1.Value(),
+                        AX0 = leaf.AX0.Value(),
+                        LeafNoCorrection = leafNoCorrection.Value(),
+                        LeafNoAtAppearance = 0
                     });
                 }
 
@@ -336,9 +348,13 @@ namespace Models.PMF.Struct
                     InitialAppearanceRate = initialAppearanceRate.Value(),
                     FinalAppearanceRate = finalAppearanceRate.Value(),
                     RemainingLeavesForFinalAppearanceRate = remainingLeavesForFinalAppearanceRate.Value(),
-                    AMaxIntercept = leaf.AMaxIntercept.Value(),
-                    AMaxSlope = leaf.AMaxSlope.Value(),
-                    AX0 = leaf.AX0.Value()
+                    LargestLeafSize = leaf.LargestLeafSize,
+                    A0 = leaf.A0.Value(),
+                    A1 = leaf.A1.Value(),
+                    B0 = leaf.B0.Value(),
+                    B1 = leaf.B1.Value(),
+                    AX0 = leaf.AX0.Value(),
+                    LeafNoCorrection = leafNoCorrection.Value()
                 });
                 newCulm.FinalLeafNumber = FinalLeafNo;
                 newCulm.calcLeafAppearance(dltTTDayBefore);
@@ -362,8 +378,16 @@ namespace Models.PMF.Struct
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
-            CurrentLeafNo = 0.0;
-
+            CurrentLeafNo = 0;
+            leavesInitialised = false;
+            tillersAdded = 0;
+            dayofEmergence = false;
+            dltTTDayBefore = 0;
+            TTTargetFI = 0;
+            FertileTillerNumber = 0;
+            CurrentLeafNo = 0;
+            LeafNoApp = 0;
+            NLeaves = 0;
             //TotalStemPopn = 0;
             //PotLeafTipsAppeared = 0;
             //PlantTotalNodeNo = 0;

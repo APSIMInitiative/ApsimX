@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
-  "Version": 56,
+  "ExplorerWidth": 300,
+  "Version": 69,
   "Name": "Simulations",
   "Children": [
     {
@@ -398,21 +398,14 @@
               "NDemand": null,
               "MaintenanceRespiration": 0.0,
               "GrowthRespiration": 0.0,
-              "ApicalCohortNo": 0,
-              "CohortsInitialised": false,
-              "TipsAtEmergence": 0,
-              "CohortsAtInitialisation": 0,
-              "AppearedCohortNo": 0,
-              "PlantAppearedLeafNo": 0.0,
-              "InitialisedCohortNo": 0,
               "Albedo": 0.18,
               "Gsmax350": 0.015,
               "R50": 150.0,
+              "LAI": 0.0,
               "Height": 0.0,
               "FRGR": 0.0,
               "PotentialEP": 0.0,
               "WaterDemand": 0.0,
-              "MicroClimatePresent": true,
               "LightProfile": null,
               "potentialDMAllocation": null,
               "Name": "Leaf",
@@ -1145,6 +1138,7 @@
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
+              "RootLengthDensityModifierDueToDamage": 1.0,
               "RootAngle": 45.0,
               "SWAvailabilityRatio": 0.0,
               "Name": "Root",
@@ -2101,6 +2095,14 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                  "Name": "RetranslocateNitrogen",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2694,7 +2696,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [ScopedLinkByName] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+          "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
           "Parameters": [
             {
               "Key": "LeafRemovalWt",
@@ -3073,13 +3075,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "HamakuapokoBase",
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "StartDate": "1988-05-22T00:00:00",
-                  "EndDate": "1990-05-22T00:00:00",
+                  "Start": "1988-05-22T00:00:00",
+                  "End": "1990-05-22T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -3119,11 +3120,12 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "Zone",
                   "Children": [
                     {
                       "$type": "Models.Soils.Soil, Models",
-                      "Weirdo": null,
                       "RecordNumber": 0,
                       "ASCOrder": null,
                       "ASCSubOrder": null,
@@ -3144,7 +3146,15 @@
                       "Name": "Hamakuapoko Soil",
                       "Children": [
                         {
-                          "$type": "Models.Soils.Water, Models",
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-23",
+                            "23-63",
+                            "63-98",
+                            "98-148",
+                            "148-175",
+                            "175-188"
+                          ],
                           "Thickness": [
                             230.0,
                             400.0,
@@ -3153,6 +3163,7 @@
                             270.0,
                             130.0
                           ],
+                          "ParticleSizeClay": null,
                           "BD": [
                             1.4,
                             1.3,
@@ -3200,7 +3211,7 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
-                          "Name": "Water",
+                          "Name": "Physical",
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
@@ -3303,6 +3314,14 @@
                             270.0,
                             130.0
                           ],
+                          "Depth": [
+                            "0-23",
+                            "23-63",
+                            "63-98",
+                            "98-148",
+                            "148-175",
+                            "175-188"
+                          ],
                           "SWCON": [
                             0.5,
                             0.5,
@@ -3319,7 +3338,7 @@
                             0.0,
                             0.0
                           ],
-                          "ResidueInterception": 0.0,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3408,18 +3427,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilOrganicMatter, Models",
-                          "RootCN": 40.0,
-                          "EnrACoeff": 7.4,
-                          "EnrBCoeff": 0.2,
-                          "Thickness": [
-                            230.0,
-                            400.0,
-                            350.0,
-                            500.0,
-                            270.0,
-                            130.0
-                          ],
+                          "$type": "Models.Soils.Organic, Models",
                           "Depth": [
                             "0-23",
                             "23-63",
@@ -3428,7 +3436,16 @@
                             "148-175",
                             "175-188"
                           ],
-                          "OC": [
+                          "FOMCNRatio": 40.0,
+                          "Thickness": [
+                            230.0,
+                            400.0,
+                            350.0,
+                            500.0,
+                            270.0,
+                            130.0
+                          ],
+                          "Carbon": [
                             2.4,
                             2.4,
                             2.4,
@@ -3436,8 +3453,7 @@
                             0.6,
                             0.3
                           ],
-                          "OCMetadata": null,
-                          "SoilCN": [
+                          "SoilCNRatio": [
                             11.0,
                             11.0,
                             11.0,
@@ -3461,7 +3477,7 @@
                             0.4,
                             0.4
                           ],
-                          "RootWt": [
+                          "FOM": [
                             188.08483233636247,
                             99.344660632090424,
                             56.831149735840256,
@@ -3469,15 +3485,22 @@
                             16.632542734899669,
                             13.516543416690684
                           ],
-                          "OCUnits": 0,
-                          "Name": "SoilOrganicMatter",
+                          "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Analysis, Models",
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-23",
+                            "23-63",
+                            "63-98",
+                            "98-148",
+                            "148-175",
+                            "175-188"
+                          ],
                           "Thickness": [
                             230.0,
                             400.0,
@@ -3486,14 +3509,22 @@
                             270.0,
                             130.0
                           ],
-                          "Rocks": null,
-                          "RocksMetadata": null,
-                          "Texture": null,
-                          "TextureMetadata": null,
-                          "MunsellColour": null,
-                          "MunsellMetadata": null,
-                          "EC": null,
-                          "ECMetadata": null,
+                          "NO3N": [
+                            20.0,
+                            1.0,
+                            0.5,
+                            0.2,
+                            0.1,
+                            0.1
+                          ],
+                          "NH4N": [
+                            1.0,
+                            0.5,
+                            0.2,
+                            0.1,
+                            0.1,
+                            0.1
+                          ],
                           "PH": [
                             5.2,
                             5.2,
@@ -3502,36 +3533,10 @@
                             5.2,
                             5.2
                           ],
-                          "PHMetadata": null,
                           "CL": null,
-                          "CLMetadata": null,
-                          "Boron": null,
-                          "BoronMetadata": null,
-                          "CEC": null,
-                          "CECMetadata": null,
-                          "Ca": null,
-                          "CaMetadata": null,
-                          "Mg": null,
-                          "MgMetadata": null,
-                          "Na": null,
-                          "NaMetadata": null,
-                          "K": null,
-                          "KMetadata": null,
+                          "EC": null,
                           "ESP": null,
-                          "ESPMetadata": null,
-                          "Mn": null,
-                          "MnMetadata": null,
-                          "Al": null,
-                          "AlMetadata": null,
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSilt": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClay": null,
-                          "ParticleSizeClayMetadata": null,
-                          "PHUnits": 0,
-                          "BoronUnits": 0,
-                          "Name": "Analysis",
+                          "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -3539,6 +3544,14 @@
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-23",
+                            "23-63",
+                            "63-98",
+                            "98-148",
+                            "148-175",
+                            "175-188"
+                          ],
                           "Thickness": [
                             230.0,
                             400.0,
@@ -3547,22 +3560,8 @@
                             270.0,
                             130.0
                           ],
-                          "NO3": [
-                            20.0,
-                            1.0,
-                            0.5,
-                            0.2,
-                            0.1,
-                            0.1
-                          ],
-                          "NH4": [
-                            1.0,
-                            0.5,
-                            0.2,
-                            0.1,
-                            0.1,
-                            0.1
-                          ],
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": [
                             0.23,
                             0.23,
@@ -3576,8 +3575,6 @@
                           "CL": null,
                           "ESP": null,
                           "PH": null,
-                          "NO3Units": 0,
-                          "NH4Units": 0,
                           "SWUnits": 0,
                           "OCUnits": 0,
                           "PHUnits": 0,
@@ -3728,6 +3725,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "maize_stubble",
                       "InitialResidueType": "maize",
                       "InitialResidueMass": 0.0,
@@ -3781,7 +3779,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = Soil.ToCumThickness(soil.Thickness);\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "FASW",
@@ -3811,7 +3809,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [ScopedLinkByName] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        TotalRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n\r\n            TotalRemovalWt = LeafRemovalWt + StemRemovalWt;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "LeafRemovalWt",
@@ -3883,7 +3881,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
                     {
@@ -3979,7 +3979,9 @@
                     }
                   ],
                   "LegendPosition": 1,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "LightInterception",
                   "Children": [
                     {
@@ -4075,7 +4077,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "AboveGroundWt",
                   "Children": [
                     {
@@ -4308,13 +4312,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "GuadeloupeBase",
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "StartDate": "1993-05-01T00:00:00",
-                  "EndDate": "1997-02-28T00:00:00",
+                  "Start": "1993-05-01T00:00:00",
+                  "End": "1997-02-28T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4354,11 +4357,12 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "Zone",
                   "Children": [
                     {
                       "$type": "Models.Soils.Soil, Models",
-                      "Weirdo": null,
                       "RecordNumber": 0,
                       "ASCOrder": null,
                       "ASCSubOrder": null,
@@ -4379,7 +4383,15 @@
                       "Name": "Guadeloupe Soil",
                       "Children": [
                         {
-                          "$type": "Models.Soils.Water, Models",
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-50",
+                            "50-100",
+                            "100-150",
+                            "150-200"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
@@ -4388,6 +4400,7 @@
                             500.0,
                             500.0
                           ],
+                          "ParticleSizeClay": null,
                           "BD": [
                             0.92,
                             1.01,
@@ -4435,7 +4448,7 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
-                          "Name": "Water",
+                          "Name": "Physical",
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
@@ -4534,12 +4547,16 @@
                             200.0,
                             1800.0
                           ],
+                          "Depth": [
+                            "0-20",
+                            "20-200"
+                          ],
                           "SWCON": [
                             0.5,
                             0.5
                           ],
                           "KLAT": null,
-                          "ResidueInterception": 0.0,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4628,30 +4645,27 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilOrganicMatter, Models",
-                          "RootCN": 40.0,
-                          "EnrACoeff": 7.4,
-                          "EnrBCoeff": 0.2,
-                          "Thickness": [
-                            100.0,
-                            200.0,
-                            200.0,
-                            1500.0
-                          ],
+                          "$type": "Models.Soils.Organic, Models",
                           "Depth": [
                             "0-10",
                             "10-30",
                             "30-50",
                             "50-200"
                           ],
-                          "OC": [
+                          "FOMCNRatio": 40.0,
+                          "Thickness": [
+                            100.0,
+                            200.0,
+                            200.0,
+                            1500.0
+                          ],
+                          "Carbon": [
                             3.92,
                             3.5,
                             2.61,
                             1.0
                           ],
-                          "OCMetadata": null,
-                          "SoilCN": [
+                          "SoilCNRatio": [
                             14.6,
                             14.6,
                             14.6,
@@ -4669,71 +4683,54 @@
                             0.5,
                             0.5
                           ],
-                          "RootWt": [
+                          "FOM": [
                             170.39591055281855,
                             126.23239526718019,
                             93.515258454223726,
                             9.85643572577751
                           ],
-                          "OCUnits": 0,
-                          "Name": "SoilOrganicMatter",
+                          "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Analysis, Models",
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-50",
+                            "50-200"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
                             200.0,
                             1500.0
                           ],
-                          "Rocks": null,
-                          "RocksMetadata": null,
-                          "Texture": null,
-                          "TextureMetadata": null,
-                          "MunsellColour": null,
-                          "MunsellMetadata": null,
-                          "EC": null,
-                          "ECMetadata": null,
+                          "NO3N": [
+                            15.0,
+                            10.0,
+                            5.0,
+                            1.0
+                          ],
+                          "NH4N": [
+                            10.0,
+                            6.0,
+                            3.0,
+                            0.5
+                          ],
                           "PH": [
                             6.0,
                             6.0,
                             6.1,
                             4.5
                           ],
-                          "PHMetadata": null,
                           "CL": null,
-                          "CLMetadata": null,
-                          "Boron": null,
-                          "BoronMetadata": null,
-                          "CEC": null,
-                          "CECMetadata": null,
-                          "Ca": null,
-                          "CaMetadata": null,
-                          "Mg": null,
-                          "MgMetadata": null,
-                          "Na": null,
-                          "NaMetadata": null,
-                          "K": null,
-                          "KMetadata": null,
+                          "EC": null,
                           "ESP": null,
-                          "ESPMetadata": null,
-                          "Mn": null,
-                          "MnMetadata": null,
-                          "Al": null,
-                          "AlMetadata": null,
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSilt": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClay": null,
-                          "ParticleSizeClayMetadata": null,
-                          "PHUnits": 0,
-                          "BoronUnits": 0,
-                          "Name": "Analysis",
+                          "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4741,24 +4738,20 @@
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-50",
+                            "50-200"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
                             200.0,
                             1500.0
                           ],
-                          "NO3": [
-                            15.0,
-                            10.0,
-                            5.0,
-                            1.0
-                          ],
-                          "NH4": [
-                            10.0,
-                            6.0,
-                            3.0,
-                            0.5
-                          ],
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": [
                             0.25,
                             0.25,
@@ -4770,8 +4763,6 @@
                           "CL": null,
                           "ESP": null,
                           "PH": null,
-                          "NO3Units": 0,
-                          "NH4Units": 0,
                           "SWUnits": 0,
                           "OCUnits": 0,
                           "PHUnits": 0,
@@ -4882,6 +4873,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "maize_stubble",
                       "InitialResidueType": "maize",
                       "InitialResidueMass": 0.0,
@@ -5008,7 +5000,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [ScopedLinkByName] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "LeafRemovalWt",
@@ -5071,7 +5063,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Leaf Wt",
                   "Children": [
                     {
@@ -5167,7 +5161,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
                     {
@@ -5233,7 +5229,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Stem Wt",
                   "Children": [
                     {
@@ -5329,7 +5327,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "AboveGroundWt",
                   "Children": [
                     {
@@ -5425,7 +5425,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "PreObs LeafWt",
                   "Children": [
                     {
@@ -5503,7 +5505,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "PreObs StemWt",
                   "Children": [
                     {
@@ -5581,7 +5585,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "PreObs AboveGroundWt",
                   "Children": [
                     {
@@ -5659,7 +5665,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Leaf Wt1996to1997",
                   "Children": [
                     {
@@ -5755,7 +5763,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Stem Wt1996to1997",
                   "Children": [
                     {
@@ -5985,13 +5995,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "GuadeloupeGodetBase",
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "StartDate": "1989-05-01T00:00:00",
-                  "EndDate": "1997-03-31T00:00:00",
+                  "Start": "1989-05-01T00:00:00",
+                  "End": "1997-03-31T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -6031,11 +6040,12 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "Zone",
                   "Children": [
                     {
                       "$type": "Models.Soils.Soil, Models",
-                      "Weirdo": null,
                       "RecordNumber": 0,
                       "ASCOrder": null,
                       "ASCSubOrder": null,
@@ -6056,13 +6066,20 @@
                       "Name": "GuadeloupeGodet Soil",
                       "Children": [
                         {
-                          "$type": "Models.Soils.Water, Models",
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-50",
+                            "50-100"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
                             200.0,
                             500.0
                           ],
+                          "ParticleSizeClay": null,
                           "BD": [
                             0.92,
                             1.01,
@@ -6100,7 +6117,7 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
-                          "Name": "Water",
+                          "Name": "Physical",
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
@@ -6189,6 +6206,12 @@
                             200.0,
                             500.0
                           ],
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-50",
+                            "50-100"
+                          ],
                           "SWCON": [
                             0.5,
                             0.5,
@@ -6196,7 +6219,7 @@
                             0.5
                           ],
                           "KLAT": null,
-                          "ResidueInterception": 0.0,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6285,30 +6308,27 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilOrganicMatter, Models",
-                          "RootCN": 40.0,
-                          "EnrACoeff": 7.4,
-                          "EnrBCoeff": 0.2,
-                          "Thickness": [
-                            100.0,
-                            200.0,
-                            200.0,
-                            500.0
-                          ],
+                          "$type": "Models.Soils.Organic, Models",
                           "Depth": [
                             "0-10",
                             "10-30",
                             "30-50",
                             "50-100"
                           ],
-                          "OC": [
+                          "FOMCNRatio": 40.0,
+                          "Thickness": [
+                            100.0,
+                            200.0,
+                            200.0,
+                            500.0
+                          ],
+                          "Carbon": [
                             3.0,
                             2.0,
                             1.0,
                             0.5
                           ],
-                          "OCMetadata": null,
-                          "SoilCN": [
+                          "SoilCNRatio": [
                             10.6,
                             10.6,
                             10.6,
@@ -6326,71 +6346,54 @@
                             0.5,
                             0.5
                           ],
-                          "RootWt": [
+                          "FOM": [
                             208.63636017906853,
                             114.50206217857719,
                             62.84006408036489,
                             14.02151356198941
                           ],
-                          "OCUnits": 0,
-                          "Name": "SoilOrganicMatter",
+                          "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Analysis, Models",
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-50",
+                            "50-100"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
                             200.0,
                             500.0
                           ],
-                          "Rocks": null,
-                          "RocksMetadata": null,
-                          "Texture": null,
-                          "TextureMetadata": null,
-                          "MunsellColour": null,
-                          "MunsellMetadata": null,
-                          "EC": null,
-                          "ECMetadata": null,
+                          "NO3N": [
+                            15.0,
+                            10.0,
+                            5.0,
+                            2.0
+                          ],
+                          "NH4N": [
+                            10.0,
+                            6.0,
+                            3.0,
+                            1.0
+                          ],
                           "PH": [
                             8.1,
                             8.1,
                             8.1,
                             8.1
                           ],
-                          "PHMetadata": null,
                           "CL": null,
-                          "CLMetadata": null,
-                          "Boron": null,
-                          "BoronMetadata": null,
-                          "CEC": null,
-                          "CECMetadata": null,
-                          "Ca": null,
-                          "CaMetadata": null,
-                          "Mg": null,
-                          "MgMetadata": null,
-                          "Na": null,
-                          "NaMetadata": null,
-                          "K": null,
-                          "KMetadata": null,
+                          "EC": null,
                           "ESP": null,
-                          "ESPMetadata": null,
-                          "Mn": null,
-                          "MnMetadata": null,
-                          "Al": null,
-                          "AlMetadata": null,
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSilt": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClay": null,
-                          "ParticleSizeClayMetadata": null,
-                          "PHUnits": 0,
-                          "BoronUnits": 0,
-                          "Name": "Analysis",
+                          "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -6398,24 +6401,20 @@
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-10",
+                            "10-30",
+                            "30-50",
+                            "50-100"
+                          ],
                           "Thickness": [
                             100.0,
                             200.0,
                             200.0,
                             500.0
                           ],
-                          "NO3": [
-                            15.0,
-                            10.0,
-                            5.0,
-                            2.0
-                          ],
-                          "NH4": [
-                            10.0,
-                            6.0,
-                            3.0,
-                            1.0
-                          ],
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": [
                             0.25,
                             0.25,
@@ -6427,8 +6426,6 @@
                           "CL": null,
                           "ESP": null,
                           "PH": null,
-                          "NO3Units": 0,
-                          "NH4Units": 0,
                           "SWUnits": 0,
                           "OCUnits": 0,
                           "PHUnits": 0,
@@ -6527,6 +6524,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "maize_stubble",
                       "InitialResidueType": "maize",
                       "InitialResidueMass": 0.0,
@@ -6791,7 +6789,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [ScopedLinkByName] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "LeafRemovalWt",
@@ -6854,7 +6852,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Leaf Wt",
                   "Children": [
                     {
@@ -6950,7 +6950,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Stem Wt",
                   "Children": [
                     {
@@ -7046,7 +7048,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "AboveGroundWt",
                   "Children": [
                     {
@@ -7142,7 +7146,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "PreObs LeafWt",
                   "Children": [
                     {
@@ -7220,7 +7226,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "PreObs StemWt",
                   "Children": [
                     {
@@ -7298,7 +7306,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "PreObs AboveGroundWt",
                   "Children": [
                     {
@@ -7376,7 +7386,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "LAI",
                   "Children": [
                     {
@@ -7442,7 +7454,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "LeafRemovalWt",
                   "Children": [
                     {
@@ -7538,7 +7552,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "StemRemovalWt",
                   "Children": [
                     {
@@ -7634,7 +7650,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "TotalRemovalWt",
                   "Children": [
                     {
@@ -7731,401 +7749,410 @@
               "Name": "Factors",
               "Children": [
                 {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[FertiliserRule]",
-                  "Name": "N",
+                  "$type": "Models.Factorial.Permutation, Models",
+                  "Name": "Permutation",
                   "Children": [
                     {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.UreaN);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                      "Parameters": [
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "[FertiliserRule]",
+                      "Name": "N",
+                      "Children": [
                         {
-                          "Key": "Amount",
-                          "Value": "0"
+                          "$type": "Models.Manager, Models",
+                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.UreaN);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "Amount",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "CropName",
+                              "Value": "maize"
+                            },
+                            {
+                              "Key": "FertDAS",
+                              "Value": "30"
+                            }
+                          ],
+                          "Name": "0",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "Key": "CropName",
-                          "Value": "maize"
+                          "$type": "Models.Manager, Models",
+                          "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "Amount",
+                              "Value": "24"
+                            },
+                            {
+                              "Key": "CropName",
+                              "Value": "maize"
+                            },
+                            {
+                              "Key": "FertDAS",
+                              "Value": "28"
+                            }
+                          ],
+                          "Name": "24",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "Key": "FertDAS",
-                          "Value": "30"
+                          "$type": "Models.Manager, Models",
+                          "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                          "Parameters": [
+                            {
+                              "Key": "Amount",
+                              "Value": "48"
+                            },
+                            {
+                              "Key": "CropName",
+                              "Value": "maize"
+                            },
+                            {
+                              "Key": "FertDAS",
+                              "Value": "28"
+                            }
+                          ],
+                          "Name": "48",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
-                      "Name": "0",
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Manager, Models",
-                      "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                      "Parameters": [
+                      "$type": "Models.Factorial.Factor, Models",
+                      "Specification": "[GliricidiaManagement]",
+                      "Name": "Maize",
+                      "Children": [
                         {
-                          "Key": "Amount",
-                          "Value": "24"
+                          "$type": "Models.Operations, Models",
+                          "Operation": null,
+                          "Name": "Sole",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         },
                         {
-                          "Key": "CropName",
-                          "Value": "maize"
-                        },
-                        {
-                          "Key": "FertDAS",
-                          "Value": "28"
+                          "$type": "Models.Operations, Models",
+                          "Operation": [
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1991-12-15",
+                              "Action": "[Gliricidia].Sow(population: 0.74, cultivar: GliricidiaYoung,depth: 100, rowSpacing: 1500);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1992-09-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1992-12-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1993-02-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1993-09-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1993-12-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1994-02-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1994-09-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1994-12-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1995-02-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1995-09-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1995-12-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1996-02-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1996-09-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1996-12-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1997-02-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1997-08-15",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1997-10-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1997-12-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1998-02-28",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1998-08-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1998-10-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1998-12-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1999-02-28",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1999-08-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1999-10-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "1999-12-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2000-02-28",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2000-08-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2000-10-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2000-12-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2001-02-28",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2001-08-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2001-10-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2001-12-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2002-02-28",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2002-08-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2002-10-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2002-12-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2003-02-28",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2003-08-18",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2003-11-07",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2003-12-16",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2004-02-02",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2004-08-18",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2004-12-21",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2005-01-31",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2005-10-04",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2005-12-05",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Date": "2006-01-24",
+                              "Action": "[CuttingManagement].Script.DoCut(10, 25);",
+                              "Enabled": true
+                            }
+                          ],
+                          "Name": "Gliricidia",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
-                      "Name": "24",
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser N to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set; }\r\n        \r\n        [Description(\"Days after sowing:\")]\r\n        public int FertDAS { get; set; }\r\n        \r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Maize.IsAlive && Maize.Phenology.DaysAfterSowing == FertDAS)\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NH4N);\r\n                \r\n                \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                      "Parameters": [
-                        {
-                          "Key": "Amount",
-                          "Value": "48"
-                        },
-                        {
-                          "Key": "CropName",
-                          "Value": "maize"
-                        },
-                        {
-                          "Key": "FertDAS",
-                          "Value": "28"
-                        }
-                      ],
-                      "Name": "48",
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[GliricidiaManagement]",
-                  "Name": "Maize",
-                  "Children": [
-                    {
-                      "$type": "Models.Operations, Models",
-                      "Operation": null,
-                      "Name": "Sole",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Operations, Models",
-                      "Operation": [
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1991-12-15",
-                          "Action": "[Gliricidia].Sow(population: 0.74, cultivar: GliricidiaYoung,depth: 100, rowSpacing: 1500);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1992-09-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1992-12-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1993-02-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1993-09-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1993-12-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1994-02-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1994-09-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1994-12-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1995-02-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1995-09-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1995-12-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1996-02-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1996-09-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1996-12-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1997-02-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1997-08-15",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1997-10-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1997-12-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1998-02-28",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1998-08-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1998-10-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1998-12-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1999-02-28",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1999-08-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1999-10-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "1999-12-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-02-28",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-08-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-10-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-12-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-02-28",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-08-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-10-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-12-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2002-02-28",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2002-08-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2002-10-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2002-12-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2003-02-28",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2003-08-18",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2003-11-07",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2003-12-16",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2004-02-02",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2004-08-18",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2004-12-21",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2005-01-31",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2005-10-04",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2005-12-05",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2006-01-24",
-                          "Action": "[CuttingManagement].Script.DoCut(10, 25);",
-                          "Enabled": true
-                        }
-                      ],
-                      "Name": "Gliricidia",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -8142,13 +8169,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "MakokaBase",
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "StartDate": "1991-12-01T00:00:00",
-                  "EndDate": "2006-12-31T00:00:00",
+                  "Start": "1991-12-01T00:00:00",
+                  "End": "2006-12-31T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8188,11 +8214,12 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "Zone",
                   "Children": [
                     {
                       "$type": "Models.Soils.Soil, Models",
-                      "Weirdo": null,
                       "RecordNumber": 0,
                       "ASCOrder": null,
                       "ASCSubOrder": null,
@@ -8213,7 +8240,21 @@
                       "Name": "Makoka Soil",
                       "Children": [
                         {
-                          "$type": "Models.Soils.Water, Models",
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200",
+                            "200-250",
+                            "250-300"
+                          ],
                           "Thickness": [
                             200.0,
                             200.0,
@@ -8228,6 +8269,7 @@
                             500.0,
                             500.0
                           ],
+                          "ParticleSizeClay": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -8305,15 +8347,15 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
-                          "Name": "Water",
+                          "Name": "Physical",
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.05,
-                                0.05,
-                                0.05,
-                                0.05,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
                                 0.1,
                                 0.1,
                                 0.1,
@@ -8363,18 +8405,18 @@
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
                               "LL": [
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02,
-                                0.02
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08
                               ],
                               "KL": [
                                 0.1,
@@ -8441,13 +8483,18 @@
                             1800.0,
                             1000.0
                           ],
+                          "Depth": [
+                            "0-20",
+                            "20-200",
+                            "200-300"
+                          ],
                           "SWCON": [
                             0.2,
                             0.1,
                             0.0
                           ],
                           "KLAT": null,
-                          "ResidueInterception": 0.0,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -8536,22 +8583,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilOrganicMatter, Models",
-                          "RootCN": 15.0,
-                          "EnrACoeff": 7.4,
-                          "EnrBCoeff": 0.2,
-                          "Thickness": [
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0
-                          ],
+                          "$type": "Models.Soils.Organic, Models",
                           "Depth": [
                             "0-20",
                             "20-40",
@@ -8564,7 +8596,20 @@
                             "160-180",
                             "180-200"
                           ],
-                          "OC": [
+                          "FOMCNRatio": 15.0,
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0
+                          ],
+                          "Carbon": [
                             0.8,
                             0.6,
                             0.4,
@@ -8576,8 +8621,7 @@
                             0.05,
                             0.05
                           ],
-                          "OCMetadata": null,
-                          "SoilCN": [
+                          "SoilCNRatio": [
                             14.3,
                             14.3,
                             14.3,
@@ -8613,7 +8657,7 @@
                             0.7,
                             0.7
                           ],
-                          "RootWt": [
+                          "FOM": [
                             27.276178916350652,
                             20.206690331807074,
                             14.969484377475792,
@@ -8625,15 +8669,26 @@
                             2.4744391248471564,
                             1.833109589654498
                           ],
-                          "OCUnits": 0,
-                          "Name": "SoilOrganicMatter",
+                          "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Analysis, Models",
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200"
+                          ],
                           "Thickness": [
                             200.0,
                             200.0,
@@ -8646,14 +8701,30 @@
                             200.0,
                             200.0
                           ],
-                          "Rocks": null,
-                          "RocksMetadata": null,
-                          "Texture": null,
-                          "TextureMetadata": null,
-                          "MunsellColour": null,
-                          "MunsellMetadata": null,
-                          "EC": null,
-                          "ECMetadata": null,
+                          "NO3N": [
+                            1.0,
+                            0.5,
+                            0.2,
+                            0.2,
+                            0.2,
+                            0.2,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1
+                          ],
+                          "NH4N": [
+                            0.5,
+                            0.2,
+                            0.2,
+                            0.2,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1
+                          ],
                           "PH": [
                             5.9,
                             5.6,
@@ -8666,36 +8737,10 @@
                             6.3,
                             5.9
                           ],
-                          "PHMetadata": null,
                           "CL": null,
-                          "CLMetadata": null,
-                          "Boron": null,
-                          "BoronMetadata": null,
-                          "CEC": null,
-                          "CECMetadata": null,
-                          "Ca": null,
-                          "CaMetadata": null,
-                          "Mg": null,
-                          "MgMetadata": null,
-                          "Na": null,
-                          "NaMetadata": null,
-                          "K": null,
-                          "KMetadata": null,
+                          "EC": null,
                           "ESP": null,
-                          "ESPMetadata": null,
-                          "Mn": null,
-                          "MnMetadata": null,
-                          "Al": null,
-                          "AlMetadata": null,
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSilt": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClay": null,
-                          "ParticleSizeClayMetadata": null,
-                          "PHUnits": 0,
-                          "BoronUnits": 0,
-                          "Name": "Analysis",
+                          "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -8703,6 +8748,19 @@
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200",
+                            "200-300"
+                          ],
                           "Thickness": [
                             200.0,
                             200.0,
@@ -8716,32 +8774,8 @@
                             200.0,
                             1000.0
                           ],
-                          "NO3": [
-                            1.0,
-                            0.5,
-                            0.2,
-                            0.2,
-                            0.2,
-                            0.2,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1
-                          ],
-                          "NH4": [
-                            0.5,
-                            0.2,
-                            0.2,
-                            0.2,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1
-                          ],
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": [
                             0.18,
                             0.18,
@@ -8760,8 +8794,6 @@
                           "CL": null,
                           "ESP": null,
                           "PH": null,
-                          "NO3Units": 0,
-                          "NH4Units": 0,
                           "SWUnits": 0,
                           "OCUnits": 0,
                           "PHUnits": 0,
@@ -9018,6 +9050,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "maize_stubble",
                       "InitialResidueType": "maize",
                       "InitialResidueMass": 0.0,
@@ -9176,7 +9209,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [ScopedLinkByName] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "LeafRemovalWt",
@@ -9239,7 +9272,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Grain Yield all years",
                   "Children": [
                     {
@@ -9335,7 +9370,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Grain Yield PvsO",
                   "Children": [
                     {
@@ -9413,7 +9450,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "AboveGroundWt vs Year",
                   "Children": [
                     {
@@ -9509,7 +9548,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Maize AboveGroundWt PvsO",
                   "Children": [
                     {
@@ -9587,7 +9628,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "SurfaceMineralN vs Year",
                   "Children": [
                     {
@@ -9683,7 +9726,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "SurfaceMineralN PvsO",
                   "Children": [
                     {
@@ -9761,7 +9806,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "SuburfaceMineralN vs Year",
                   "Children": [
                     {
@@ -9857,7 +9904,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "GrainSize PvsO",
                   "Children": [
                     {
@@ -9935,7 +9984,9 @@
                     }
                   ],
                   "LegendPosition": 3,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Grain No PvsO",
                   "Children": [
                     {
@@ -10013,7 +10064,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "LeafRemovalWt",
                   "Children": [
                     {
@@ -10109,7 +10162,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "StemRemovalWt",
                   "Children": [
                     {
@@ -10205,7 +10260,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "TotalRemovalWt",
                   "Children": [
                     {
@@ -10301,7 +10358,9 @@
                     }
                   ],
                   "LegendPosition": 0,
+                  "LegendOrientation": 0,
                   "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
                   "Name": "Gliricidia TotalRemovalWt vs Year",
                   "Children": [
                     {
@@ -10407,7 +10466,9 @@
             }
           ],
           "LegendPosition": 3,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "AboveGroundWt",
           "Children": [
             {
@@ -11608,13 +11669,12 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "MakokaDugumaBase",
               "Children": [
                 {
                   "$type": "Models.Clock, Models",
-                  "StartDate": "1999-12-01T00:00:00",
-                  "EndDate": "2006-12-31T00:00:00",
+                  "Start": "1999-12-01T00:00:00",
+                  "End": "2006-12-31T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -11654,11 +11714,12 @@
                   "$type": "Models.Core.Zone, Models",
                   "Area": 1.0,
                   "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
                   "Name": "Zone",
                   "Children": [
                     {
                       "$type": "Models.Soils.Soil, Models",
-                      "Weirdo": null,
                       "RecordNumber": 0,
                       "ASCOrder": null,
                       "ASCSubOrder": null,
@@ -11679,7 +11740,21 @@
                       "Name": "Makoka Soil",
                       "Children": [
                         {
-                          "$type": "Models.Soils.Water, Models",
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200",
+                            "200-250",
+                            "250-300"
+                          ],
                           "Thickness": [
                             200.0,
                             200.0,
@@ -11694,6 +11769,7 @@
                             500.0,
                             500.0
                           ],
+                          "ParticleSizeClay": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -11771,7 +11847,7 @@
                           "DULMetadata": null,
                           "SATMetadata": null,
                           "KSMetadata": null,
-                          "Name": "Water",
+                          "Name": "Physical",
                           "Children": [
                             {
                               "$type": "Models.Soils.SoilCrop, Models",
@@ -11907,13 +11983,18 @@
                             1800.0,
                             1000.0
                           ],
+                          "Depth": [
+                            "0-20",
+                            "20-200",
+                            "200-300"
+                          ],
                           "SWCON": [
                             0.2,
                             0.1,
                             0.0
                           ],
                           "KLAT": null,
-                          "ResidueInterception": 0.0,
+                          "PrecipitationInterception": 0.0,
                           "Name": "SoilWater",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -12002,22 +12083,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilOrganicMatter, Models",
-                          "RootCN": 15.0,
-                          "EnrACoeff": 7.4,
-                          "EnrBCoeff": 0.2,
-                          "Thickness": [
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0,
-                            200.0
-                          ],
+                          "$type": "Models.Soils.Organic, Models",
                           "Depth": [
                             "0-20",
                             "20-40",
@@ -12030,7 +12096,20 @@
                             "160-180",
                             "180-200"
                           ],
-                          "OC": [
+                          "FOMCNRatio": 15.0,
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0
+                          ],
+                          "Carbon": [
                             0.8,
                             0.6,
                             0.4,
@@ -12042,8 +12121,7 @@
                             0.05,
                             0.05
                           ],
-                          "OCMetadata": null,
-                          "SoilCN": [
+                          "SoilCNRatio": [
                             14.3,
                             14.3,
                             14.3,
@@ -12079,7 +12157,7 @@
                             0.7,
                             0.7
                           ],
-                          "RootWt": [
+                          "FOM": [
                             27.276178916350652,
                             20.206690331807074,
                             14.969484377475792,
@@ -12091,15 +12169,26 @@
                             2.4744391248471564,
                             1.833109589654498
                           ],
-                          "OCUnits": 0,
-                          "Name": "SoilOrganicMatter",
+                          "Name": "Organic",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": false,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Analysis, Models",
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200"
+                          ],
                           "Thickness": [
                             200.0,
                             200.0,
@@ -12112,14 +12201,30 @@
                             200.0,
                             200.0
                           ],
-                          "Rocks": null,
-                          "RocksMetadata": null,
-                          "Texture": null,
-                          "TextureMetadata": null,
-                          "MunsellColour": null,
-                          "MunsellMetadata": null,
-                          "EC": null,
-                          "ECMetadata": null,
+                          "NO3N": [
+                            1.0,
+                            0.5,
+                            0.2,
+                            0.2,
+                            0.2,
+                            0.2,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1
+                          ],
+                          "NH4N": [
+                            0.5,
+                            0.2,
+                            0.2,
+                            0.2,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1
+                          ],
                           "PH": [
                             5.9,
                             5.6,
@@ -12132,36 +12237,10 @@
                             6.3,
                             5.9
                           ],
-                          "PHMetadata": null,
                           "CL": null,
-                          "CLMetadata": null,
-                          "Boron": null,
-                          "BoronMetadata": null,
-                          "CEC": null,
-                          "CECMetadata": null,
-                          "Ca": null,
-                          "CaMetadata": null,
-                          "Mg": null,
-                          "MgMetadata": null,
-                          "Na": null,
-                          "NaMetadata": null,
-                          "K": null,
-                          "KMetadata": null,
+                          "EC": null,
                           "ESP": null,
-                          "ESPMetadata": null,
-                          "Mn": null,
-                          "MnMetadata": null,
-                          "Al": null,
-                          "AlMetadata": null,
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSilt": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClay": null,
-                          "ParticleSizeClayMetadata": null,
-                          "PHUnits": 0,
-                          "BoronUnits": 0,
-                          "Name": "Analysis",
+                          "Name": "Chemical",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": false,
@@ -12169,6 +12248,19 @@
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200",
+                            "200-300"
+                          ],
                           "Thickness": [
                             200.0,
                             200.0,
@@ -12182,32 +12274,8 @@
                             200.0,
                             1000.0
                           ],
-                          "NO3": [
-                            1.0,
-                            0.5,
-                            0.2,
-                            0.2,
-                            0.2,
-                            0.2,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1
-                          ],
-                          "NH4": [
-                            0.5,
-                            0.2,
-                            0.2,
-                            0.2,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1
-                          ],
+                          "NO3N": null,
+                          "NH4N": null,
                           "SW": [
                             0.18,
                             0.18,
@@ -12226,8 +12294,6 @@
                           "CL": null,
                           "ESP": null,
                           "PH": null,
-                          "NO3Units": 0,
-                          "NH4Units": 0,
                           "SWUnits": 0,
                           "OCUnits": 0,
                           "PHUnits": 0,
@@ -12370,6 +12436,7 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "Canopies": [],
                       "InitialResidueName": "maize_stubble",
                       "InitialResidueType": "maize",
                       "InitialResidueMass": 0.0,
@@ -12430,11 +12497,12 @@
                       "$type": "Models.Core.Zone, Models",
                       "Area": 1.0,
                       "Slope": 0.0,
+                      "AspectAngle": 0.0,
+                      "Altitude": 50.0,
                       "Name": "Zone",
                       "Children": [
                         {
                           "$type": "Models.Soils.Soil, Models",
-                          "Weirdo": null,
                           "RecordNumber": 0,
                           "ASCOrder": null,
                           "ASCSubOrder": null,
@@ -12455,7 +12523,21 @@
                           "Name": "Makoka Soil",
                           "Children": [
                             {
-                              "$type": "Models.Soils.Water, Models",
+                              "$type": "Models.Soils.Physical, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160",
+                                "160-180",
+                                "180-200",
+                                "200-250",
+                                "250-300"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -12470,6 +12552,7 @@
                                 500.0,
                                 500.0
                               ],
+                              "ParticleSizeClay": null,
                               "BD": [
                                 1.42,
                                 1.45,
@@ -12547,7 +12630,7 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "Name": "Water",
+                              "Name": "Physical",
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
@@ -12683,13 +12766,18 @@
                                 1800.0,
                                 1000.0
                               ],
+                              "Depth": [
+                                "0-20",
+                                "20-200",
+                                "200-300"
+                              ],
                               "SWCON": [
                                 0.2,
                                 0.1,
                                 0.0
                               ],
                               "KLAT": null,
-                              "ResidueInterception": 0.0,
+                              "PrecipitationInterception": 0.0,
                               "Name": "SoilWater",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -12778,22 +12866,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.SoilOrganicMatter, Models",
-                              "RootCN": 15.0,
-                              "EnrACoeff": 7.4,
-                              "EnrBCoeff": 0.2,
-                              "Thickness": [
-                                200.0,
-                                200.0,
-                                200.0,
-                                200.0,
-                                200.0,
-                                200.0,
-                                200.0,
-                                200.0,
-                                200.0,
-                                200.0
-                              ],
+                              "$type": "Models.Soils.Organic, Models",
                               "Depth": [
                                 "0-20",
                                 "20-40",
@@ -12806,7 +12879,20 @@
                                 "160-180",
                                 "180-200"
                               ],
-                              "OC": [
+                              "FOMCNRatio": 15.0,
+                              "Thickness": [
+                                200.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                200.0
+                              ],
+                              "Carbon": [
                                 0.8,
                                 0.6,
                                 0.4,
@@ -12818,8 +12904,7 @@
                                 0.05,
                                 0.05
                               ],
-                              "OCMetadata": null,
-                              "SoilCN": [
+                              "SoilCNRatio": [
                                 14.3,
                                 14.3,
                                 14.3,
@@ -12855,7 +12940,7 @@
                                 0.7,
                                 0.7
                               ],
-                              "RootWt": [
+                              "FOM": [
                                 27.276178916350652,
                                 20.206690331807074,
                                 14.969484377475792,
@@ -12867,15 +12952,26 @@
                                 2.4744391248471564,
                                 1.833109589654498
                               ],
-                              "OCUnits": 0,
-                              "Name": "SoilOrganicMatter",
+                              "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": false,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Analysis, Models",
+                              "$type": "Models.Soils.Chemical, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160",
+                                "160-180",
+                                "180-200"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -12888,14 +12984,30 @@
                                 200.0,
                                 200.0
                               ],
-                              "Rocks": null,
-                              "RocksMetadata": null,
-                              "Texture": null,
-                              "TextureMetadata": null,
-                              "MunsellColour": null,
-                              "MunsellMetadata": null,
-                              "EC": null,
-                              "ECMetadata": null,
+                              "NO3N": [
+                                1.0,
+                                0.5,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
+                              "NH4N": [
+                                0.5,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1
+                              ],
                               "PH": [
                                 5.9,
                                 5.6,
@@ -12908,36 +13020,10 @@
                                 6.3,
                                 5.9
                               ],
-                              "PHMetadata": null,
                               "CL": null,
-                              "CLMetadata": null,
-                              "Boron": null,
-                              "BoronMetadata": null,
-                              "CEC": null,
-                              "CECMetadata": null,
-                              "Ca": null,
-                              "CaMetadata": null,
-                              "Mg": null,
-                              "MgMetadata": null,
-                              "Na": null,
-                              "NaMetadata": null,
-                              "K": null,
-                              "KMetadata": null,
+                              "EC": null,
                               "ESP": null,
-                              "ESPMetadata": null,
-                              "Mn": null,
-                              "MnMetadata": null,
-                              "Al": null,
-                              "AlMetadata": null,
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSilt": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClay": null,
-                              "ParticleSizeClayMetadata": null,
-                              "PHUnits": 0,
-                              "BoronUnits": 0,
-                              "Name": "Analysis",
+                              "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": false,
@@ -12945,6 +13031,19 @@
                             },
                             {
                               "$type": "Models.Soils.Sample, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-80",
+                                "80-100",
+                                "100-120",
+                                "120-140",
+                                "140-160",
+                                "160-180",
+                                "180-200",
+                                "200-300"
+                              ],
                               "Thickness": [
                                 200.0,
                                 200.0,
@@ -12958,32 +13057,8 @@
                                 200.0,
                                 1000.0
                               ],
-                              "NO3": [
-                                1.0,
-                                0.5,
-                                0.2,
-                                0.2,
-                                0.2,
-                                0.2,
-                                0.1,
-                                0.1,
-                                0.1,
-                                0.1,
-                                0.1
-                              ],
-                              "NH4": [
-                                0.5,
-                                0.2,
-                                0.2,
-                                0.2,
-                                0.1,
-                                0.1,
-                                0.1,
-                                0.1,
-                                0.1,
-                                0.1,
-                                0.1
-                              ],
+                              "NO3N": null,
+                              "NH4N": null,
                               "SW": [
                                 0.18,
                                 0.18,
@@ -13002,8 +13077,6 @@
                               "CL": null,
                               "ESP": null,
                               "PH": null,
-                              "NO3Units": 0,
-                              "NH4Units": 0,
                               "SWUnits": 0,
                               "OCUnits": 0,
                               "PHUnits": 0,
@@ -13146,6 +13219,7 @@
                         },
                         {
                           "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                          "Canopies": [],
                           "InitialResidueName": "maize_stubble",
                           "InitialResidueType": "maize",
                           "InitialResidueMass": 0.0,
@@ -13209,7 +13283,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [ScopedLinkByName] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                      "Code": "\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Interfaces;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Gliricidia;\r\n        [Link] Clock Clock;\r\n\r\n    \r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n\r\n        [Description(\"Leaf Removal Wt\")]\r\n        public double LeafRemovalWt {get; set;}\r\n\r\n\r\n        [Description(\"Stem Removal Wt\")]\r\n        public double StemRemovalWt {get; set;}\r\n\r\n        [Description(\"Total Removal Wt\")]\r\n        public double TotalRemovalWt {get; set;}\r\n\r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n        LeafRemovalWt = 0;\r\n        StemRemovalWt = 0;\r\n        }\r\n\r\n        public void DoCut(double LeafResidue, double StemResidue)\r\n        {\r\n            double L = (double)Apsim.Get(Gliricidia, \"Leaf.Live.Wt\");\r\n            double LeafRemovalFraction = 0;\r\n\r\n            if (L > 0)\r\n                LeafRemovalFraction = (L - LeafResidue) / L;\r\n                LeafRemovalWt = (L - LeafResidue);\r\n            if (LeafRemovalFraction < 0)\r\n                LeafRemovalFraction = 0;\r\n               \r\n            double S = (double)Apsim.Get(Gliricidia, \"Stem.Live.Wt\");\r\n            double StemRemovalFraction = 0;\r\n\r\n            if (S > 0)\r\n                StemRemovalFraction = (S - StemResidue) / S; \r\n                StemRemovalWt = (S - StemResidue);              \r\n            if (StemRemovalFraction < 0)\r\n                StemRemovalFraction = 0;\r\n               \r\n            Remove.SetFractionToRemove(\"Leaf\", LeafRemovalFraction);\r\n            Remove.SetFractionToRemove(\"Stem\", StemRemovalFraction);\r\n            Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n            Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n            Gliricidia.RemoveBiomass(\"Cut\", Remove);\r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
                       "Parameters": [
                         {
                           "Key": "LeafRemovalWt",
@@ -13267,7 +13341,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "SurfaceMineralN vs Year",
               "Children": [
                 {
@@ -13363,7 +13439,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "SurfaceMineralN PvsO",
               "Children": [
                 {
@@ -13441,7 +13519,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Soil2MineralN vs Year",
               "Children": [
                 {
@@ -13507,7 +13587,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Soil3MineralN vs Year",
               "Children": [
                 {
@@ -13573,7 +13655,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Soil4MineralN vs Year",
               "Children": [
                 {
@@ -13639,7 +13723,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "SuburfaceMineralN vs Year",
               "Children": [
                 {
@@ -13735,7 +13821,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NLeaching",
               "Children": [
                 {
@@ -13801,7 +13889,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Gliricidia Stem vs Year",
               "Children": [
                 {
@@ -13897,7 +13987,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Gliricidia LeafWt vs Year",
               "Children": [
                 {
@@ -13993,7 +14085,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Gliricidia LeafDetached vs Year",
               "Children": [
                 {
@@ -14089,7 +14183,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Gliricidia ABGWt vs Year",
               "Children": [
                 {
@@ -14185,7 +14281,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Gliricidia LAI vs Year",
               "Children": [
                 {
@@ -14251,7 +14349,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Gliricidia Fw",
               "Children": [
                 {
@@ -14317,7 +14417,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Gliricidia Fn",
               "Children": [
                 {
@@ -14383,7 +14485,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "N Fixed",
               "Children": [
                 {
@@ -14449,7 +14553,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "NFixedAnnual",
               "Children": [
                 {
@@ -14515,7 +14621,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LAI",
               "Children": [
                 {
@@ -14611,7 +14719,9 @@
                 }
               ],
               "LegendPosition": 1,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "LightInterception",
               "Children": [
                 {
@@ -14707,7 +14817,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Partitioning",
               "Children": [
                 {
@@ -14838,7 +14950,9 @@
             }
           ],
           "LegendPosition": 3,
+          "LegendOrientation": 0,
           "DisabledSeries": [],
+          "LegendOutsideGraph": false,
           "Name": "TotalRemovalWt",
           "Children": [
             {

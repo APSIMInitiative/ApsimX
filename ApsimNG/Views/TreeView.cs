@@ -495,12 +495,24 @@ namespace UserInterface.Views
                     if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
                         SelectedNodeChanged.Invoke(this, selectionChangedData);
                     previouslySelectedNodePath = selectionChangedData.NewNodePath;
-                    treeview1.CursorChanged += OnAfterSelect;
+                }
+                else
+                {
+                    // Presenter is ignoring the SelectedNodeChanged event.
+                    // We should scroll to the newly selected node so the user
+                    // can actually see what they've selected.
+                    treeview1.GetCursor(out TreePath path, out _);
+                    treeview1.ScrollToCell(path, null, false, 0, 1);
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
+            }
+            finally
+            {
+                if (SelectedNodeChanged != null && treeview1 != null)
+                    treeview1.CursorChanged += OnAfterSelect;
             }
         }
 

@@ -797,7 +797,8 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Create documentation", FollowsSeparator = true)]
+        [ContextMenu(MenuName = "Create documentation",
+                     FollowsSeparator = true)]
         public void CreateDocumentation(object sender, EventArgs e)
         {
             try
@@ -810,21 +811,26 @@ namespace UserInterface.Presenters
                         explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                         explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                        try
+                        ICommand command;
+                        string fileNameWritten;
+                        var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+
+                        if (modelToDocument is Simulations)
                         {
-                            ExportNodeCommand command = new ExportNodeCommand(this.explorerPresenter, this.explorerPresenter.CurrentNodePath);
-                            this.explorerPresenter.CommandHistory.Add(command, true);
-                            explorerPresenter.MainPresenter.ShowMessage("Finished creating documentation", Simulation.MessageType.Information);
-                            Process.Start(command.FileNameWritten);
+                            command = new CreateDocCommand(explorerPresenter);
+                            fileNameWritten = (command as CreateDocCommand).FileNameWritten;
                         }
-                        catch (Exception err)
+                        else
                         {
-                            explorerPresenter.MainPresenter.ShowError(err);
+                            command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument);
+                            fileNameWritten = (command as CreateModelDescriptionDocCommand).FileNameWritten;
                         }
-                        finally
-                        {
-                            explorerPresenter.MainPresenter.ShowWaitCursor(false);
-                        }
+
+                        explorerPresenter.CommandHistory.Add(command, true);
+                        explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
+
+                        // Open the document.
+                        Process.Start(fileNameWritten);
                     }
                 }
             }
@@ -832,26 +838,9 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Event handler for a write debug document
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Write debug document",
-                     AppliesTo = new Type[] { typeof(Simulation) })]
-        public void WriteDebugDocument(object sender, EventArgs e)
-        {
-            try
+            finally 
             {
-                Simulation model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Simulation;
-                WriteDebugDoc writeDocument = new WriteDebugDoc(explorerPresenter, model);
-                writeDocument.Do(null);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
+                explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
         }
 
@@ -917,7 +906,8 @@ namespace UserInterface.Presenters
 
 
         [ContextMenu(MenuName = "Find All References",
-                     ShortcutKey = "Shift + F12")]
+                     ShortcutKey = "Shift + F12",
+                     AppliesTo = new[] { typeof(IFunction) })]
         public void OnFindReferences(object sender, EventArgs e)
         {
             try
@@ -931,101 +921,17 @@ namespace UserInterface.Presenters
                     message.AppendLine();
                     message.AppendLine();
                     Stopwatch timer = Stopwatch.StartNew();
-                    BindingFlags flags;
 
-                    foreach (IModel child in Apsim.FindAll(model))
+                    foreach (VariableReference reference in Apsim.FindAll(model, typeof(VariableReference)))
                     {
-                        if (Apsim.FullPath(child) == Apsim.FullPath(model))
-                            continue;
-
-                        // Resolve links (this doesn't seem to work properly).
-                        explorerPresenter.ApsimXFile.Links.Resolve(child);
-                        MemberInfo[] members = null;
-                        Type childType = child.GetType();
-
-                        // First, find all links to the model.
-                        // First, try the cache.
-                        if (!links.TryGetValue(childType, out members))
+                        try
                         {
-                            // We haven't looked for members of this type before.
-                            List<MemberInfo> localMembers = new List<MemberInfo>();
-
-                            // Links may be static or non-static (instance), and can have any accessibility.
-                            flags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-
-                            // Find all properties which are links.
-                            localMembers.AddRange(child.GetType().GetProperties(flags).Where(p => ReflectionUtilities.GetAttribute(p, typeof(LinkAttribute), true) != null));
-
-                            // Find all fields which are links.
-                            localMembers.AddRange(child.GetType().GetFields(flags).Where(f => ReflectionUtilities.GetAttribute(f, typeof(LinkAttribute), true) != null));
-
-                            members = localMembers.ToArray();
-
-                            // Add members to cache.
-                            links.Add(childType, members);
+                            if (Apsim.Get(reference, reference.VariableName.Replace(".Value()", "")) == model)
+                                references.Add(new Reference() { Member = typeof(VariableReference).GetProperty("VariableName"), Model = reference, Target = model });
                         }
-
-                        // Now iterate over all members of this type which are links.
-                        foreach (MemberInfo member in members)
+                        catch
                         {
-                            IModel linkValue = ReflectionUtilities.GetValueOfFieldOrProperty(member.Name, child) as IModel;
-                            if (linkValue == null)
-                                continue; // Silently ignore this member.
 
-                            bool isCorrectType = model.GetType().IsAssignableFrom(linkValue.GetType());
-                            bool hasCorrectPath = string.Equals(Apsim.FullPath(linkValue), modelPath, StringComparison.InvariantCulture);
-                            if (isCorrectType && hasCorrectPath)
-                            {
-                                message.AppendLine($"Found member {member.Name} of node {Apsim.FullPath(child)}.");
-                                references.Add(new Reference() { Member = member, Target = model, Model = child });
-                            }
-                        }
-
-                        //if (model is IFunction && child is IFunction)
-                        {
-                            // Next, search all public string properties for the path to this model.
-                            PropertyInfo[] properties;
-                            if (!stringProperties.TryGetValue(childType, out properties))
-                            {
-                                flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public;
-                                properties = childType.GetProperties(flags).Where(p => p.PropertyType == typeof(string) && p.CanRead).ToArray();
-                                stringProperties.Add(childType, properties);
-                            }
-                            foreach (PropertyInfo property in properties)
-                            {
-                                string value;
-                                try
-                                {
-                                    // An exception could be thrown here from inside the property's getter.
-                                    value = property.GetValue(child) as string;
-                                }
-                                catch
-                                {
-                                    continue;
-                                }
-                                if (value == null)
-                                    continue;
-
-                                value = value.Replace(".Value()", "").Replace(".Value", "");
-                                IModel result = null;
-                                try
-                                {
-                                    result = Apsim.Get(child, value) as IModel;
-                                }
-                                catch
-                                {
-                                    continue;
-                                }
-                                if (result == null)
-                                    continue;
-                                bool correctType = model.GetType().IsAssignableFrom(result.GetType());
-                                bool correctPath = string.Equals(Apsim.FullPath(result), modelPath, StringComparison.InvariantCulture);
-                                if (correctType && correctPath)
-                                {
-                                    message.AppendLine($"Found reference in string property {property.Name} of node {Apsim.FullPath(child)}.");
-                                    references.Add(new Reference() { Member = property, Target = model, Model = child });
-                                }
-                            }
                         }
                     }
                     timer.Stop();

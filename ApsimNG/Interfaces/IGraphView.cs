@@ -253,6 +253,8 @@ namespace UserInterface.Interfaces
         /// <param name="textRotation">Text rotation</param>
         /// <param name="thickness">Line thickness</param>
         /// <param name="colour">The color of the text</param>
+        /// <param name="inFrontOfSeries">Show annotation in front of series?</param>
+        /// <param name="toolTip">Annotation tool tip.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawLine(
             object x1,
@@ -261,7 +263,9 @@ namespace UserInterface.Interfaces
             object y2,
             Models.Graph.LineType type,
             Models.Graph.LineThicknessType thickness,
-            Color colour);
+            Color colour,
+            bool inFrontOfSeries,
+            string toolTip);
 
         /// <summary>
         /// Format the specified axis.

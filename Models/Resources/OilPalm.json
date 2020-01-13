@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 69,
+  "Version": 73,
   "Name": "Simulations",
   "Children": [
     {
@@ -188,7 +188,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].Age",
           "Name": "FrondAppearanceRate",
           "Children": [
             {
@@ -217,6 +216,15 @@
                 10.1
               ],
               "Name": "XYPairs",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
+              "Name": "XValue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -310,7 +318,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].Age",
           "Name": "BunchSizeMax",
           "Children": [
             {
@@ -343,6 +350,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
+              "Name": "XValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -351,7 +367,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].Age",
           "Name": "HarvestFrondNumber",
           "Children": [
             {
@@ -376,6 +391,15 @@
                 34.0
               ],
               "Name": "XYPairs",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
+              "Name": "XValue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -408,7 +432,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].CarbonStress",
           "Name": "FFFStressImpact",
           "Children": [
             {
@@ -435,6 +458,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].CarbonStress",
+              "Name": "XValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -443,7 +475,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].Age",
           "Name": "StemToFrondFraction",
           "Children": [
             {
@@ -474,6 +505,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
+              "Name": "XValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -482,7 +522,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].Age",
           "Name": "StemNConcentration",
           "Children": [
             {
@@ -505,6 +544,15 @@
                 0.351
               ],
               "Name": "XYPairs",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
+              "Name": "XValue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -567,7 +615,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].Age",
           "Name": "SpecificLeafArea",
           "Children": [
             {
@@ -596,6 +643,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
+              "Name": "XValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -604,7 +660,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].Age",
           "Name": "SpecificLeafAreaMax",
           "Children": [
             {
@@ -633,6 +688,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Age",
+              "Name": "XValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -641,7 +705,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].CarbonStress",
           "Name": "FlowerAbortionFraction",
           "Children": [
             {
@@ -668,6 +731,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].CarbonStress",
+              "Name": "XValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -676,7 +748,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].CarbonStress",
           "Name": "BunchFailureFraction",
           "Children": [
             {
@@ -703,6 +774,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].CarbonStress",
+              "Name": "XValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -711,7 +791,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].Population",
           "Name": "DirectExtinctionCoeff",
           "Children": [
             {
@@ -738,6 +817,15 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Population",
+              "Name": "XValue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -746,7 +834,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[OilPalm].Population",
           "Name": "DiffuseExtinctionCoeff",
           "Children": [
             {
@@ -769,6 +856,15 @@
                 0.45
               ],
               "Name": "XYPairs",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[OilPalm].Population",
+              "Name": "XValue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

@@ -15,8 +15,10 @@
     /// This organ is simulated using a GenericOrgan type.  It is parameterised to calculate the growth, senescence, and detachment of any organ that does not have specific functions.
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IRemovableBiomass
+    public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001; 
@@ -157,7 +159,8 @@
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
-        public bool IsAboveGround { get { return true; } }
+        [Description("Is organ above ground?")]
+        public bool IsAboveGround { get; set; } = true;
 
         /// <summary>The live biomass</summary>
         [XmlIgnore]

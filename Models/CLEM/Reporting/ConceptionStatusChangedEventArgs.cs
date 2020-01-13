@@ -2,6 +2,7 @@
 using Models.Core;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,11 +48,12 @@ namespace Models.CLEM.Reporting
                 case ConceptionStatus.Failed:
                 case ConceptionStatus.Birth:
                 case ConceptionStatus.Weaned:
-                    ConceptionDate = dateTime.AddMonths(-1 * Convert.ToInt32(female.Age - female.AgeAtLastConception));
+                    ConceptionDate = dateTime.AddMonths(-1 * Convert.ToInt32(female.Age - female.AgeAtLastConception, CultureInfo.InvariantCulture));
                     ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
                     break;
                 case ConceptionStatus.Unsuccessful:
                 case ConceptionStatus.NotMated:
+                case ConceptionStatus.NotReady:
                     ConceptionDate = dateTime;
                     break;
                 default:

@@ -1,6 +1,7 @@
 ﻿namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
+    using Models.Functions;
     using Models.PMF;
     using Newtonsoft.Json.Linq;
     using System;
@@ -16,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 69; } }
+        public static int LatestVersion { get { return 73; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -113,7 +114,7 @@
                         // Add in an initial water and initial conditions models.
                         initWater = new JObject();
                         initWater["$type"] = "Models.Soils.InitialWater, Models";
-                        initWater["Name"] = "Initial water";
+                        JsonUtilities.RenameModel(initWater as JObject, "Initial water");
                         initWater["PercentMethod"] = "FilledFromTop";
                         initWater["FractionFull"] = 1;
                         initWater["DepthWetSoil"] = "NaN";
@@ -121,7 +122,7 @@
 
                         sample = new JObject();
                         sample["$type"] = "Models.Soils.Sample, Models";
-                        sample["Name"] = "Initial conditions";
+                        JsonUtilities.RenameModel(sample as JObject, "Initial conditions");
                         sample["Thickness"] = new JArray(new double[] { 1800 });
                         sample["NO3N"] = new JArray(new double[] { 3 });
                         sample["NH4"] = new JArray(new double[] { 1 });
@@ -504,7 +505,7 @@
                                 // Create a site factor 
                                 siteFactor = new JObject();
                                 siteFactor["$type"] = "Models.Factorial.Factor, Models";
-                                siteFactor["Name"] = "Site";
+                                JsonUtilities.RenameModel(siteFactor, "Site");
                                 JArray siteFactorChildren = new JArray();
                                 siteFactor["Children"] = siteFactorChildren;
 
@@ -808,7 +809,7 @@
 
             JObject microClimateModel = new JObject();
             microClimateModel["$type"] = "Models.MicroClimate, Models";
-            microClimateModel["Name"] = "MicroClimate";
+            JsonUtilities.RenameModel(microClimateModel, "MicroClimate");
             microClimateModel["a_interception"] = "0.0";
             microClimateModel["b_interception"] = "1.0";
             microClimateModel["c_interception"] = "0.0";
@@ -971,7 +972,7 @@
             foreach (var water in JsonUtilities.ChildrenRecursively(root, "Water"))
             {
                 water["$type"] = "Models.Soils.Physical, Models";
-                water["Name"] = "Physical";
+                JsonUtilities.RenameModel(water, "Physical");
             }
 
             foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
@@ -1018,7 +1019,7 @@
             foreach (var organic in JsonUtilities.ChildrenRecursively(root, "SoilOrganicMatter"))
             {
                 organic["$type"] = "Models.Soils.Organic, Models";
-                organic["Name"] = "Organic";
+                JsonUtilities.RenameModel(organic, "Organic");
                 organic["FOMCNRatio"] = organic["RootCN"];
                 organic["FOM"] = organic["RootWt"];
                 organic["SoilCNRatio"] = organic["SoilCN"];
@@ -1124,8 +1125,7 @@
                 var physical = JsonUtilities.ChildWithName(soil as JObject, "Physical");
 
                 chemical["$type"] = "Models.Soils.Chemical, Models";
-                chemical["Name"] = "Chemical";
-
+                JsonUtilities.RenameModel(chemical, "Chemical");
                 if (physical != null)
                 {
                     // Move particle size numbers from chemical to physical and make sure layers are mapped.
@@ -1230,7 +1230,7 @@
                 {
                     var permutationsNode = new JObject();
                     permutationsNode["$type"] = "Models.Factorial.Permutation, Models";
-                    permutationsNode["Name"] = "Permutation";
+                    JsonUtilities.RenameModel(permutationsNode, "Permutation");
                     permutationsNode["Children"] = factors["Children"];
                     var children = new JArray(permutationsNode);
                     factors["Children"] = children;
@@ -1265,10 +1265,9 @@
                 foreach (JObject pastureSpecies in JsonUtilities.Children(sward))
                 {
                     if (pastureSpecies["Name"].ToString().Equals("Ryegrass", StringComparison.InvariantCultureIgnoreCase))
-                        pastureSpecies["Name"] = "AGPRyegrass";
+                        JsonUtilities.RenameModel(pastureSpecies, "AGPRyegrass");
                     if (pastureSpecies["Name"].ToString().Equals("WhiteClover", StringComparison.InvariantCultureIgnoreCase))
-                        pastureSpecies["Name"] = "AGPWhiteClover";
-
+                        JsonUtilities.RenameModel(pastureSpecies, "AGPWhiteClover");
                     pastureSpecies["ResourceName"] = pastureSpecies["Name"];
 
                     var swardParentChildren = JsonUtilities.Parent(sward)["Children"] as JArray;
@@ -1281,10 +1280,10 @@
             foreach (JObject pastureSpecies in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
             {
                 if (pastureSpecies["Name"].ToString().Equals("Ryegrass", StringComparison.InvariantCultureIgnoreCase))
-                    pastureSpecies["Name"] = "AGPRyegrass";
+                    JsonUtilities.RenameModel(pastureSpecies, "AGPRyegrass");
                 if (pastureSpecies["Name"].ToString().Equals("WhiteClover", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    pastureSpecies["Name"] = "AGPWhiteClover";
+                    JsonUtilities.RenameModel(pastureSpecies, "AGPWhiteClover");
                     foundAgPastureWhiteClover = true;
                 }
 
@@ -1296,9 +1295,9 @@
                 if (soilCrop["Name"].ToString().Equals("SwardSoil", StringComparison.InvariantCultureIgnoreCase))
                     soilCrop.Remove();
                 if (soilCrop["Name"].ToString().Equals("RyegrassSoil", StringComparison.InvariantCultureIgnoreCase))
-                    soilCrop["Name"] = "AGPRyegrassSoil";
+                    JsonUtilities.RenameModel(soilCrop, "AGPRyegrassSoil");
                 if (foundAgPastureWhiteClover && soilCrop["Name"].ToString().Equals("WhiteCloverSoil", StringComparison.InvariantCultureIgnoreCase))
-                    soilCrop["Name"] = "AGPWhiteCloverSoil";
+                    JsonUtilities.RenameModel(soilCrop, "AGPWhiteCloverSoil");
             }
         }
 
@@ -1357,6 +1356,100 @@
                 manager.Replace("[ChildLink]", "[Link(Type = LinkType.Child)]", caseSensitive: true);
 
                 manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Changes the type of the Stock component inital values genotypes array
+        /// from StockGeno to SingleGenotypeInits.
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion70(JObject root, string fileName)
+        {
+            foreach (var stockNode in JsonUtilities.ChildrenOfType(root, "Stock"))
+            {
+                // for each element of GenoTypes[]
+                var genotypes = stockNode["GenoTypes"];
+                for (int i = 0; i < genotypes.Count(); i++)
+                {
+                    genotypes[i]["$type"] = "Models.GrazPlan.SingleGenotypeInits, Models";
+                    double dr = Convert.ToDouble(genotypes[i]["DeathRate"]);
+                    double drw = Convert.ToDouble(genotypes[i]["WnrDeathRate"]);
+                    genotypes[i]["DeathRate"] = new JArray(new double[] {dr , drw });
+                    genotypes[i]["PotFleeceWt"] = genotypes[i]["RefFleeceWt"];
+                    genotypes[i]["Conceptions"] = genotypes[i]["Conception"];
+                    genotypes[i]["GenotypeName"] = genotypes[i]["Name"];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Alters all existing linint functions to have a child variable reference IFunction called XValue instead of a
+        /// string property called XProperty that IFunction then had to locate
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion71(JObject root, string fileName)
+        {
+            foreach (JObject linint in JsonUtilities.ChildrenRecursively(root, "LinearInterpolationFunction"))
+            {
+                VariableReference varRef = new VariableReference();
+                varRef.Name = "XValue";
+                varRef.VariableName = linint["XProperty"].ToString();
+                JsonUtilities.AddModel(linint, varRef);
+                linint.Remove("XProperty");
+            }
+        }
+
+        /// <summary>
+        /// Remove .Value() from all variable references because it is redundant
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion72(JObject root, string fileName)
+        {
+            foreach (var varRef in JsonUtilities.ChildrenRecursively(root, "VariableReference"))
+                varRef["VariableName"] = varRef["VariableName"].ToString().Replace(".Value()", "");
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+                JsonUtilities.SearchReplaceReportVariableNames(report, ".Value()", "");
+
+            foreach (var graph in JsonUtilities.ChildrenOfType(root, "Series"))
+            {
+                if(graph["XFieldName"] != null)
+                    graph["XFieldName"] = graph["XFieldName"].ToString().Replace(".Value()", "");
+                if (graph["X2FieldName"] != null)
+                    graph["X2FieldName"] = graph["X2FieldName"].ToString().Replace(".Value()", "");
+                if (graph["YFieldName"] != null)
+                    graph["YFieldName"] = graph["YFieldName"].ToString().Replace(".Value()", "");
+                if (graph["Y2FieldName"] != null)
+                    graph["Y2FieldName"] = graph["Y2FieldName"].ToString().Replace(".Value()", "");
+            }
+        }
+
+        /// <summary>
+        /// Alters all existing AllometricDemand functions to have a child variable reference IFunction called XValue and YValue instead of 
+        /// string property called XProperty and YProperty that it then had to locate.  Aiming to get all things using get for properties
+        /// to be doing it via Variable reference so we can stream line scoping rules
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion73(JObject root, string fileName)
+        {
+            foreach (JObject Alomet in JsonUtilities.ChildrenRecursively(root, "AllometricDemandFunction"))
+            {
+                VariableReference XvarRef = new VariableReference();
+                XvarRef.Name = "XValue";
+                XvarRef.VariableName = Alomet["XProperty"].ToString();
+                JsonUtilities.AddModel(Alomet, XvarRef);
+                Alomet.Remove("XProperty");
+                VariableReference YvarRef = new VariableReference();
+                YvarRef.Name = "YValue";
+                YvarRef.VariableName = Alomet["YProperty"].ToString();
+                JsonUtilities.AddModel(Alomet, YvarRef);
+                Alomet.Remove("YProperty");
+
             }
         }
 

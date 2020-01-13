@@ -144,11 +144,11 @@ namespace UserInterface.Views
                     {
                         // set to web address
                         // not currently available during development until web help is launched
-                        helpURL = "http://apsimdev.apsim.info/CLEM/" + ModelHelpURL.TrimStart('/');
+                        helpURL = "https://www.apsim.info/clem/" + ModelHelpURL.TrimStart('/');
                     }
                     if (helpURL == "")
                     {
-                        helpURL = "http://apsimdev.apsim.info";
+                        helpURL = "https://www.apsim.info";
                     }
                     System.Diagnostics.Process.Start(helpURL);
                 }

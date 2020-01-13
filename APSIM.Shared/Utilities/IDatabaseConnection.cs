@@ -29,9 +29,21 @@ namespace APSIM.Shared.Utilities
         /// <returns>A list of table names in sorted order (upper case)</returns>
         List<string> GetTableNames();
 
+        /// <summary>Return a list of view names</summary>
+        /// <returns>A list of view names in sorted order (upper case)</returns>
+        List<string> GetViewNames();
+
+        /// <summary>Return a list of view names</summary>
+        /// <returns>A list of view names in sorted order (upper case)</returns>
+        List<string> GetTableAndViewNames();
+
         /// <summary>Does the specified table exist?</summary>
         /// <param name="tableName">The table name to look for</param>
         bool TableExists(string tableName);
+
+        /// <summary>Does the specified view exist?</summary>
+        /// <param name="viewName">The table name to look for</param>
+        bool ViewExists(string viewName);
 
         /// <summary>
         /// Run a query and return a data table of results
@@ -59,10 +71,10 @@ namespace APSIM.Shared.Utilities
         /// <returns>A list of column names in column order (uppercase)</returns>
         List<string> GetColumnNames(string tableName);
 
-        /// <summary>Return a list of column names with a data type of string.</summary>
-        /// <param name="tableName">Name of the table.</param>
-        /// <returns></returns>
-        List<string> GetStringColumnNames(string tableName);
+        /// <summary>Return a list of column names/column type tuples for a table. Never returns null.</summary>
+        /// <param name="tableName">The table name to return column names for.</param>
+        /// <returns>Can return an empty list but never null.</returns>
+        List<Tuple<string, Type>> GetColumns(string tableName);
 
         /// <summary>Return a list of column names for the specified table</summary>
         /// <param name="tableName">The table name to get columns from.</param>
