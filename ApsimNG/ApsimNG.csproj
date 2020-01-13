@@ -205,6 +205,7 @@
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
     <Compile Include="Commands\WriteDebugDoc.cs" />
+    <Compile Include="EventArguments\AsyncEventHandler.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellChangedArgs.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Interfaces\ICloudJobView.cs" />
     <Compile Include="Interfaces\IGraphPanelView.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
     <Compile Include="Interfaces\IPropertyTreeView.cs" />

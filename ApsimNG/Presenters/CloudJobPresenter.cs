@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using ApsimNG.Cloud;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Batch;
 using UserInterface.Interfaces;
 using System.IO;
 using System.ComponentModel;
-using Models.Core;
-using Microsoft.Azure.Storage.Blob;
 using UserInterface.Views;
-using ApsimNG.Cloud.Azure;
 using System.Threading.Tasks;
 using System.Threading;
+using ApsimNG.Interfaces;
+using Models.Core;
 
 namespace UserInterface.Presenters
 {
@@ -21,7 +18,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view displaying the list of cloud jobs.
         /// </summary>
-        private CloudJobView view;
+        private ICloudJobView view;
 
         /// <summary>
         /// This object will handle the cloud platform-specific tasks
@@ -95,7 +92,6 @@ namespace UserInterface.Presenters
 
             cancelToken.Cancel();
             fetchJobs.CancelAsync();
-            view.Detach();
         }
 
         /// <summary>
@@ -105,7 +101,7 @@ namespace UserInterface.Presenters
         /// <param name="args">Event arguments.</param>
         private async Task OnStopJobs(object sender, EventArgs args)
         {
-            string[] jobIDs = view.GetSelectedJobIds();
+            string[] jobIDs = view.GetSelectedJobIDs();
             if (jobIDs.Length < 1)
                 throw new Exception("Unable to stop jobs: no jobs are selected");
 
@@ -125,7 +121,7 @@ namespace UserInterface.Presenters
         /// <param name="args">Event arguments.</param>
         private async Task OnDeleteJobs(object sender, EventArgs args)
         {
-            string[] jobIDs = view.GetSelectedJobIds();
+            string[] jobIDs = view.GetSelectedJobIDs();
             if (jobIDs.Length < 1)
                 throw new Exception("Unable to delete jobs: no jobs are selected");
 
@@ -167,11 +163,11 @@ namespace UserInterface.Presenters
 
             try
             {
-                foreach (string id in view.GetSelectedJobIds())
+                foreach (string id in view.GetSelectedJobIDs())
                 {
                     JobDetails job = jobList.Find(j => j.Id == id);
 
-                    options.Path = Path.Combine(basePath, job.DisplayName + "_Results");
+                    options.Path = Path.Combine(basePath, job.DisplayName + "_results");
                     options.JobID = Guid.Parse(id);
 
                     await cloudInterface.DownloadResultsAsync(options, cancelToken.Token, p => view.DownloadProgress = p);
@@ -179,6 +175,7 @@ namespace UserInterface.Presenters
                     if (cancelToken.IsCancellationRequested)
                         return;
                 }
+                presenter.ShowMessage($"Results were successfully downloaded to {options.Path}", Simulation.MessageType.Information);
             }
             finally
             {

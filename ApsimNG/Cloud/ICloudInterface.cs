@@ -44,7 +44,7 @@ namespace ApsimNG.Cloud
         /// <summary>Download the results of a job.</summary>
         /// <param name="options">Download options.</param>
         /// <param name="ct">Cancellation token.</param>
-        /// <param name="ShowProgress">Function which reports progress to the user.</param>
+        /// <param name="ShowProgress">Function which reports progress (in range [0, 1]) to the user.</param>
         Task DownloadResultsAsync(DownloadOptions options, CancellationToken ct, Action<double> ShowProgress);
     }
 }

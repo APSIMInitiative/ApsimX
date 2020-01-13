@@ -198,8 +198,8 @@ namespace UserInterface.Presenters
                     object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
                     explorerPresenter.HideRightHandPanel();
                     explorerPresenter.ShowInRightHandPanel(model,
-                                                           "UserInterface.Views.NewAzureJobView",
-                                                           "UserInterface.Presenters.NewAzureJobPresenter");
+                                                           "UserInterface.Views.RunOnCloudView",
+                                                           "UserInterface.Presenters.RunOnCloudPresenter");
                 }
                 else
                 {

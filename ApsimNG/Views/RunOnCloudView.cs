@@ -2,11 +2,10 @@
 using Gtk;
 using System.IO;
 using System.Threading.Tasks;
+using ApsimNG.EventArguments;
 
 namespace UserInterface.Views
 {
-    public delegate Task AsyncEventHandler(object sender, EventArgs args);
-
     public class RunOnCloudView : ViewBase
     {
         private Entry entryName;

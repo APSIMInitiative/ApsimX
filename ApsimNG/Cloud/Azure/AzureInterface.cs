@@ -214,7 +214,7 @@ namespace ApsimNG.Cloud
             Directory.Delete(workingDirectory, true);
 
             // Submit job.
-            UpdateStatus("Submitting Job");
+            UpdateStatus("Submitting Job...");
             CloudJob cloudJob = batchClient.JobOperations.CreateJob(job.ID.ToString(), GetPoolInfo(job));
             cloudJob.DisplayName = job.DisplayName;
             cloudJob.JobPreparationTask = CreateJobPreparationTask(job, modelZipFileSas);
@@ -234,7 +234,6 @@ namespace ApsimNG.Cloud
         {
             ShowProgress(0);
 
-            IEnumerable<CloudPool> pools = batchClient.PoolOperations.ListPools();
             ODATADetailLevel jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
 
             // Download raw job list via the Azure API.
@@ -299,7 +298,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="options">Download options.</param>
         /// <param name="ct">Cancellation token.</param>
-        /// <param name="ShowProgress">Function which reports progress to the user.</param>
+        /// <param name="ShowProgress">Function which reports progress (in range [0, 1]) to the user.</param>
         public async Task DownloadResultsAsync(DownloadOptions options, CancellationToken ct, Action<double> ShowProgress)
         {
             if (!Directory.Exists(options.Path))
@@ -322,7 +321,7 @@ namespace ApsimNG.Cloud
             // Now download the necessary files.
             for (int i = 0; i < toDownload.Count; i++)
             {
-                ShowProgress(100.0 * i / toDownload.Count);
+                ShowProgress(i / toDownload.Count);
                 CloudBlockBlob blob = toDownload[i];
 
                 // todo: Download in parallel?
@@ -343,8 +342,15 @@ namespace ApsimNG.Cloud
                     using (ZipArchive zip = ZipFile.Open(archive, ZipArchiveMode.Read, Encoding.UTF8))
                         zip.ExtractToDirectory(resultsDir);
 
-                    // Merge results into a single .db file.
-                    DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), "combined.db");
+                    try
+                    {
+                        // Merge results into a single .db file.
+                        DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), "combined.db");
+                    }
+                    catch (Exception err)
+                    {
+                        throw new Exception($"Results were successfully extracted to {resultsDir} but an error wasn encountered while attempting to merge the individual .db files", err);
+                    }
 
                     // TBI: merge into csv file.
                     if (options.ExportToCsv)
