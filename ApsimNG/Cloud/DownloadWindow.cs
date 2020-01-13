@@ -116,7 +116,7 @@ namespace ApsimNG.Cloud
             btnChangeOutputDir = new Button("...");
             btnChangeOutputDir.Clicked += OnChangeOutputDir;
 
-            entryOutputDir = new Entry(AzureSettings.Default.OutputDir);
+            entryOutputDir = new Entry();
             entryOutputDir.Sensitive = false;
             entryOutputDir.WidthChars = entryOutputDir.Text.Length;
 
@@ -159,6 +159,10 @@ namespace ApsimNG.Cloud
             get
             {
                 return entryOutputDir.Text;
+            }
+            set
+            {
+                entryOutputDir.Text = value;
             }
         }
 

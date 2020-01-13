@@ -75,9 +75,16 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.view = (CloudJobView)view;
+
+            // fixme
+            this.view.DownloadPath = ApsimNG.Cloud.Azure.AzureSettings.Default.OutputDir;
+
+            this.view.ChangeOutputPath += OnChangeOutputPath;
+            this.view.SetupClicked += OnSetup;
             this.view.StopJobs += OnStopJobs;
             this.view.DeleteJobs += OnDeleteJobs;
             this.view.DownloadJobs += OnDownloadJobs;
+
             fetchJobs.RunWorkerAsync();
         }
 
@@ -86,12 +93,16 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            view.ChangeOutputPath -= OnChangeOutputPath;
+            view.SetupClicked -= OnSetup;
             view.StopJobs -= OnStopJobs;
             view.DeleteJobs -= OnDeleteJobs;
             view.DownloadJobs -= OnDownloadJobs;
 
             cancelToken.Cancel();
             fetchJobs.CancelAsync();
+
+            view.Destroy();
         }
 
         /// <summary>
@@ -223,6 +234,26 @@ namespace UserInterface.Presenters
             {
                 view?.HideLoadingProgressBar();
             }
+        }
+
+        /// <summary>
+        /// Called when the user wants to input credentials/API key.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnSetup(object sender, EventArgs e)
+        {
+            // fixme - should probably move this functionality into ICloudInterface
+            new ApsimNG.Cloud.Azure.AzureCredentialsSetup();
+        }
+
+        private void OnChangeOutputPath(object sender, EventArgs e)
+        {
+            // fixme - should probably move this functionality into ICloudInterface
+            string path = ViewBase.AskUserForFileName("Choose a folder", Utility.FileDialog.FileActionType.SelectFolder, "");
+            ApsimNG.Cloud.Azure.AzureSettings.Default.OutputDir = path;
+            ApsimNG.Cloud.Azure.AzureSettings.Default.Save();
+            view.DownloadPath = path;
         }
 
         /// <summary>

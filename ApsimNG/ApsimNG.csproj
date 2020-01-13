@@ -183,6 +183,7 @@
     <Compile Include="Cloud\Azure\AzureInterface.cs" />
     <Compile Include="Cloud\Azure\BatchConstants.cs" />
     <Compile Include="Cloud\Azure\BatchCredentials.cs" />
+    <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
     <Compile Include="Cloud\DownloadWindow.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />

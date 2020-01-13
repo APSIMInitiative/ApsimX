@@ -4,9 +4,14 @@ using System.Linq;
 using Gtk;
 using Utility;
 using UserInterface.Interfaces;
+using System.IO;
 
 namespace ApsimNG.Cloud.Azure
 {
+    /// <summary>
+    /// A popup window which prompts the user to specify an azure licence file
+    /// containing API keys/credentials required to run simulations on Azure.
+    /// </summary>
     class AzureCredentialsSetup : Window
     {
         /// <summary>
@@ -66,13 +71,21 @@ namespace ApsimNG.Cloud.Azure
         {
             WidthRequest = 500;
             // initialise input fields with the last values used
-            batchAccountInput = new Entry((string)AzureSettings.Default["BatchAccount"]);
-            batchUrlInput = new Entry((string)AzureSettings.Default["BatchUrl"]);
-            batchKeyInput = new Entry((string)AzureSettings.Default["BatchKey"]);
-            storageAccountInput = new Entry((string)AzureSettings.Default["StorageAccount"]);
-            storageKeyInput = new Entry((string)AzureSettings.Default["StorageKey"]);
-            emailSenderInput = new Entry((string)AzureSettings.Default["EmailSender"]);
-            emailPWInput = new Entry((string)AzureSettings.Default["EmailPW"]);
+            batchAccountInput = new Entry();
+            batchUrlInput = new Entry();
+            batchKeyInput = new Entry();
+            storageAccountInput = new Entry();
+            storageKeyInput = new Entry();
+            emailSenderInput = new Entry();
+            emailPWInput = new Entry();
+
+            try
+            {
+                PopulateInputs();
+            }
+            catch
+            {
+            }
 
             btnLoad = new Button("Load from File");
             btnLoad.Clicked += LoadCredentialsFromFile;
@@ -116,15 +129,17 @@ namespace ApsimNG.Cloud.Azure
             primaryContainer.Attach(new Label(""), 0, 2, 8, 9, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
 
             primaryContainer.Attach(buttonContainer, 0, 2, 9, 10, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);
-                        
+
             Alignment adj = new Alignment(0f, 0f, 1f, 0f); // 3rd argument is 1 to make the controls to scale (horizontally) with viewport size
             adj.LeftPadding = adj.RightPadding = adj.TopPadding = adj.BottomPadding = 15;
             adj.Add(primaryContainer);
             Add(adj);
-            adj.ShowAll();
-            Show();
+
+            WindowPosition = WindowPosition.Center;
+
+            ShowAll();
         }
-        
+
         /// <summary>
         /// Event handler for when the user has finished entering credentials (when they press save).
         /// </summary>
@@ -137,26 +152,58 @@ namespace ApsimNG.Cloud.Azure
         /// <returns>True if credentials exist, false otherwise.</returns>
         public static bool CredentialsExist()
         {
-            string[] credentials = new string[] { "BatchAccount", "BatchUrl", "BatchKey", "StorageAccount", "StorageKey", "EmailSender", "EmailPW" };
-            // not very scalable, I know. the better solution would be to split the properties into 2 files: credentials, and misc settings. then just iterate over the following:
-            //List<string> properties = AzureSettings.Default.Properties.Cast<System.Configuration.SettingsProperty>().Select(p => p.Name).ToList();
+            if (!File.Exists(AzureSettings.Default.LicenceFilePath))
+                return false;
 
-            // Could turn this method into a two-liner (including the above line initialising credentials):
-            // return credentials.All(c => !string.IsNullOrEmpty((string)AzureSettings.Default[c]));
-            // But I don't have the means to test this right now - DH 8/18.
-            foreach (string key in credentials)
+            try
             {
-                string value = (string)AzureSettings.Default[key];
-                if (string.IsNullOrEmpty(value))
+                Licence licence = new Licence(AzureSettings.Default.LicenceFilePath);
+                if (string.IsNullOrEmpty(licence.BatchAccount))
                     return false;
+                if (string.IsNullOrEmpty(licence.BatchUrl))
+                    return false;
+                if (string.IsNullOrEmpty(licence.BatchKey))
+                    return false;
+                if (string.IsNullOrEmpty(licence.StorageAccount))
+                    return false;
+                if (string.IsNullOrEmpty(licence.StorageKey))
+                    return false;
+                return true;
             }
-            return true;
+            catch
+            {
+                return false;
+            }
         }
 
-        public static void GetCredentialsIfNotExist()
+        public static void GetCredentialsIfNotExist(System.Action runAfter)
         {
             if (!CredentialsExist())
-                new AzureCredentialsSetup();
+            {
+                var popup = new AzureCredentialsSetup();
+                popup.Finished += (_, __) => runAfter();
+            }
+            else
+                runAfter();
+        }
+
+        /// <summary>
+        /// Populate the text inputs with the values from the licence file.
+        /// </summary>
+        private void PopulateInputs()
+        {
+            if (File.Exists(AzureSettings.Default.LicenceFilePath))
+            {
+                Licence licence = new Licence(AzureSettings.Default.LicenceFilePath);
+
+                batchAccountInput.Text = licence.BatchAccount;
+                batchUrlInput.Text = licence.BatchUrl;
+                batchKeyInput.Text = licence.BatchKey;
+                storageAccountInput.Text = licence.StorageAccount;
+                storageKeyInput.Text = licence.StorageKey;
+                emailSenderInput.Text = licence.EmailSender;
+                emailPWInput.Text = licence.EmailPW;
+            }
         }
 
         /// <summary>
@@ -167,57 +214,23 @@ namespace ApsimNG.Cloud.Azure
         /// <param name="e"></param>
         private void LoadCredentialsFromFile(object sender, EventArgs e)
         {
-            IFileDialog fileChooser = new FileDialog()
+            try
             {
-                Prompt = "Select a licence file",
-                FileType = "Azure Licence file (*.lic) | *.lic",
-                Action = FileDialog.FileActionType.Open,
-                InitialDirectory = (string)AzureSettings.Default["AzureLicenceFilePath"]
-            };
-            string credentialsFile = fileChooser.GetFile();
-            if (!string.IsNullOrEmpty(credentialsFile))
-            {
-                AzureSettings.Default["AzureLicenceFilePath"] = credentialsFile;
-                AzureSettings.Default.Save();
-                string line = "";
-                System.IO.StreamReader file = new System.IO.StreamReader(credentialsFile);
-                while ((line= file.ReadLine()) != null)
+                IFileDialog fileChooser = new FileDialog()
                 {
-                    if (line.IndexOf('=') > -1)
-                    {
-                        // Not a very scalable solution - see comment in this.CredentialsExist()
-                        string key = line.Substring(0, line.IndexOf('='));
-                        string value = line.Substring(line.IndexOf('=') + 1);
-                        switch (key)
-                        {
-                            case "StorageAccount":
-                                storageAccountInput.Text = value;
-                                break;
-                            case "StorageKey":
-                                storageKeyInput.Text = value;
-                                break;
-                            case "BatchUrl":
-                                batchUrlInput.Text = value;
-                                break;
-                            case "BatchAccount":
-                                batchAccountInput.Text = value;
-                                break;
-                            case "BatchKey":
-                                batchKeyInput.Text = value;
-                                break;
-                            case "GmailAccount":
-                                emailSenderInput.Text = value;
-                                break;
-                            case "GmailPassword":
-                                emailPWInput.Text = value;
-                                break;
-                            default:
-                                 // TODO : show error message, because if flow reaches here, the file is not a valid Azure Licence file
-                                break;                                
-                        }
-                    }
-                }
-                file.Close();
+                    Prompt = "Select a licence file",
+                    FileType = "Azure Licence file (*.lic) | *.lic | All Files (*.*) | *.*",
+                    Action = FileDialog.FileActionType.Open,
+                };
+
+                AzureSettings.Default.LicenceFilePath = fileChooser.GetFile();
+                AzureSettings.Default.Save();
+
+                PopulateInputs();
+            }
+            catch// (Exception err) // fixme
+            {
+
             }
         }
 
@@ -229,16 +242,15 @@ namespace ApsimNG.Cloud.Azure
         /// <param name="e"></param>
         private void SaveCredentials(object sender, EventArgs e)
         {
-            AzureSettings.Default["StorageAccount"] = storageAccountInput.Text;
-            AzureSettings.Default["StorageKey"] = storageKeyInput.Text;
-            AzureSettings.Default["BatchUrl"] = batchUrlInput.Text;
-            AzureSettings.Default["BatchAccount"] = batchAccountInput.Text;
-            AzureSettings.Default["BatchKey"] = batchKeyInput.Text;
-            AzureSettings.Default["EmailSender"] = emailSenderInput.Text;
-            AzureSettings.Default["EmailPW"] = emailPWInput.Text;
-            AzureSettings.Default.Save();
-            Finished?.Invoke(this, e);
-            this.Destroy();
+            try
+            {
+                Finished?.Invoke(this, e);
+                Destroy();
+            }
+            catch// (Exception err) // fixme
+            {
+
+            }
         }
 
         /// <summary>
@@ -248,7 +260,14 @@ namespace ApsimNG.Cloud.Azure
         /// <param name="e"></param>
         private void ProvideHelp(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/");            
+            try
+            {
+                System.Diagnostics.Process.Start("http://apsimnextgeneration.netlify.com/usage/cloud/azure/gettingstarted/");
+            }
+            catch// (Exception err) // fixme
+            {
+
+            }
         }
     }
 }

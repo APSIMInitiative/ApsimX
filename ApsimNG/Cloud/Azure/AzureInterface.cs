@@ -35,17 +35,22 @@ namespace ApsimNG.Cloud
 
         public AzureInterface()
         {
-            AzureCredentialsSetup.GetCredentialsIfNotExist();
+            AzureCredentialsSetup.GetCredentialsIfNotExist(Initialise);
+        }
+
+        /// <summary>
+        /// Initialise the batch and storage clients for communication with Microsoft's APIs.
+        /// </summary>
+        private void Initialise()
+        {
+            Licence licence = new Licence(AzureSettings.Default.LicenceFilePath);
 
             // Setup Azure batch/storage clients using the given credentials.
-            var credentials = new Microsoft.Azure.Storage.Auth.StorageCredentials(AzureSettings.Default.StorageAccount, AzureSettings.Default.StorageKey);
+            var credentials = new Microsoft.Azure.Storage.Auth.StorageCredentials(licence.StorageAccount, licence.StorageKey);
             var storageAccount = new CloudStorageAccount(credentials, true);
             storageClient = storageAccount.CreateCloudBlobClient();
 
-            string url = AzureSettings.Default.BatchUrl;
-            string account = AzureSettings.Default.BatchAccount;
-            string key = AzureSettings.Default.BatchKey;
-            var sharedCredentials = new BatchSharedKeyCredentials(url, account, key);
+            var sharedCredentials = new BatchSharedKeyCredentials(licence.BatchUrl, licence.BatchAccount, licence.BatchKey);
             batchClient = BatchClient.Open(sharedCredentials);
         }
 
@@ -57,6 +62,9 @@ namespace ApsimNG.Cloud
         /// <param name="UpdateStatus">Action which will display job submission status to the user.</param>
         public async Task SubmitJobAsync(JobParameters job, CancellationToken ct, Action<string> UpdateStatus)
         {
+            if (batchClient == null || storageClient == null)
+                throw new Exception("Unable to submit job to Azure: no credentials provided");
+
             // Initialise a working directory.
             UpdateStatus("Initialising job environment...");
             string workingDirectory = Path.Combine(Path.GetTempPath(), job.ID.ToString());
@@ -114,10 +122,11 @@ namespace ApsimNG.Cloud
             // Upload email config file.
             if (job.SendEmail)
             {
+                Licence licence = new Licence(AzureSettings.Default.LicenceFilePath);
                 StringBuilder config = new StringBuilder();
                 config.AppendLine($"EmailRecipient={job.EmailRecipient}");
-                config.AppendLine($"EmailSender={AzureSettings.Default.EmailSender}");
-                config.AppendLine($"EmailPW={AzureSettings.Default.EmailPW}");
+                config.AppendLine($"EmailSender={licence.EmailSender}");
+                config.AppendLine($"EmailPW={licence.EmailPW}");
 
                 // Write these settings to a temporary config file.
                 string configFile = Path.Combine(workingDirectory, "settings.txt");
@@ -232,6 +241,9 @@ namespace ApsimNG.Cloud
         /// <param name="ShowProgress">Function to report progress as percentage in range [0, 100].</param>
         public async Task<List<JobDetails>> ListJobsAsync(CancellationToken ct, Action<double> ShowProgress)
         {
+            if (batchClient == null || storageClient == null)
+                return null;
+
             ShowProgress(0);
 
             ODATADetailLevel jobDetailLevel = new ODATADetailLevel { SelectClause = "id,displayName,state,executionInfo,stats", ExpandClause = "stats" };
@@ -512,14 +524,15 @@ namespace ApsimNG.Cloud
         /// <param name="sas">Shared access signature for the model files.</param>
         private JobReleaseTask CreateJobReleaseTask(JobParameters job, string sas)
         {
+            Licence licence = new Licence(AzureSettings.Default.LicenceFilePath);
             return new JobReleaseTask
             {
                 CommandLine = "cmd.exe /c jobrelease.cmd",
                 ResourceFiles = GetJobPrepResourceFiles(sas, job.ApsimXVersion).ToList(),
                 EnvironmentSettings = new[]
                 {
-                    new EnvironmentSetting("APSIM_STORAGE_ACCOUNT", AzureSettings.Default.StorageAccount/*job.StorageAuth.Account*/),
-                    new EnvironmentSetting("APSIM_STORAGE_KEY", AzureSettings.Default.StorageKey/*job.StorageAuth.Key*/),
+                    new EnvironmentSetting("APSIM_STORAGE_ACCOUNT", licence.StorageAccount),
+                    new EnvironmentSetting("APSIM_STORAGE_KEY", licence.StorageKey),
                     new EnvironmentSetting("JOBNAME", job.DisplayName),
                     new EnvironmentSetting("RECIPIENT", job.EmailRecipient)
                 }
@@ -533,13 +546,14 @@ namespace ApsimNG.Cloud
         /// <param name="job">Job parameters.</param>
         private JobManagerTask CreateJobManagerTask(JobParameters job)
         {
+            Licence licence = new Licence(AzureSettings.Default.LicenceFilePath);
             var cmd = string.Format("cmd.exe /c {0} job-manager {1} {2} {3} {4} {5} {6} {7} {8} {9}",
                 BatchConstants.GetJobManagerPath(job.ID),
-                AzureSettings.Default.BatchUrl,//job.BatchAuth.Url,
-                AzureSettings.Default.BatchAccount,//job.BatchAuth.Account,
-                AzureSettings.Default.BatchKey,//job.BatchAuth.Key,
-                AzureSettings.Default.StorageAccount,//job.StorageAuth.Account,
-                AzureSettings.Default.StorageKey,//job.StorageAuth.Key,
+                licence.BatchUrl,
+                licence.BatchAccount,
+                licence.BatchKey,
+                licence.StorageAccount,
+                licence.StorageKey,
                 job.ID,
                 BatchConstants.GetModelPath(job.ID),
                 job.JobManagerShouldSubmitTasks,
@@ -672,48 +686,40 @@ namespace ApsimNG.Cloud
         /// <param name="job">Job parameters.</param>
         private PoolInformation GetPoolInfo(JobParameters job)
         {
-            if (string.IsNullOrEmpty(AzureSettings.Default.PoolName))
-            {
-                return new PoolInformation
-                {
-                    AutoPoolSpecification = new AutoPoolSpecification
-                    {
-                        PoolLifetimeOption = PoolLifetimeOption.Job,
-                        PoolSpecification = new PoolSpecification
-                        {
-                            ResizeTimeout = TimeSpan.FromMinutes(15),
-
-                            // todo: look into using ComputeNodeFillType.Pack
-                            TaskSchedulingPolicy = new TaskSchedulingPolicy(ComputeNodeFillType.Spread),
-
-                            // This specifies the OS that our VM will be running.
-                            // OS Family 5 means .NET 4.6 will be installed.
-                            // For more info see:
-                            // https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-guestos-update-matrix#releases
-                            CloudServiceConfiguration = new CloudServiceConfiguration("5"),
-
-                            // For now, always use standard_d5_v2 VM type.
-                            // This VM has 16 vCPUs, 56 GiB of memory and 800 GiB temp (SSD) storage.
-                            // todo: should make this user-controllable
-                            // For other VM sizes, see:
-                            // https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes
-                            // https://docs.microsoft.com/azure/virtual-machines/windows/sizes-general
-                            VirtualMachineSize = "standard_d5_v2",
-
-                            // Each task needs only one vCPU. Therefore number of tasks per VM will be number of vCPUs per VM.
-                            MaxTasksPerComputeNode = 16,
-
-                            // We only use one pool, so number of nodes per pool will be total number of vCPUs (as specified by the user)
-                            // divided by number of vCPUs per VM. We've hardcoded VM size to standard_d5_v2, which has 16 vCPUs.
-                            TargetDedicatedComputeNodes = job.CpuCount / 16,
-                        }
-                    }
-                };
-            }
             return new PoolInformation
             {
-                // Should never be true - we never modify AzureSettings.Default.PoolName
-                PoolId = AzureSettings.Default.PoolName
+                AutoPoolSpecification = new AutoPoolSpecification
+                {
+                    PoolLifetimeOption = PoolLifetimeOption.Job,
+                    PoolSpecification = new PoolSpecification
+                    {
+                        ResizeTimeout = TimeSpan.FromMinutes(15),
+
+                        // todo: look into using ComputeNodeFillType.Pack
+                        TaskSchedulingPolicy = new TaskSchedulingPolicy(ComputeNodeFillType.Spread),
+
+                        // This specifies the OS that our VM will be running.
+                        // OS Family 5 means .NET 4.6 will be installed.
+                        // For more info see:
+                        // https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-guestos-update-matrix#releases
+                        CloudServiceConfiguration = new CloudServiceConfiguration("5"),
+
+                        // For now, always use standard_d5_v2 VM type.
+                        // This VM has 16 vCPUs, 56 GiB of memory and 800 GiB temp (SSD) storage.
+                        // todo: should make this user-controllable
+                        // For other VM sizes, see:
+                        // https://docs.microsoft.com/azure/batch/batch-pool-vm-sizes
+                        // https://docs.microsoft.com/azure/virtual-machines/windows/sizes-general
+                        VirtualMachineSize = "standard_d5_v2",
+
+                        // Each task needs only one vCPU. Therefore number of tasks per VM will be number of vCPUs per VM.
+                        MaxTasksPerComputeNode = 16,
+
+                        // We only use one pool, so number of nodes per pool will be total number of vCPUs (as specified by the user)
+                        // divided by number of vCPUs per VM. We've hardcoded VM size to standard_d5_v2, which has 16 vCPUs.
+                        TargetDedicatedComputeNodes = job.CpuCount / 16,
+                    }
+                }
             };
         }
     }

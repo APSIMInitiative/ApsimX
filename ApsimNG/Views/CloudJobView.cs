@@ -231,58 +231,22 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Invoked when the user toggles the "my jobs only" checkbox.
-        /// Refreshes the TreeView.
+        /// Close the view.
         /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnToggleFilter(object sender, EventArgs args)
+        public void Destroy()
         {
-            try
-            {
-                filterOwner.Refilter();
-                tree.QueueDraw();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Sets the contents of a cell being display on a grid.
-        /// Appends owner to display name if showing other people's jobs.
-        /// </summary>
-        /// <param name="col">The column.</param>
-        /// <param name="cell">The cell.</param>
-        /// <param name="model">The tree model.</param>
-        /// <param name="iter">The tree iterator.</param>
-        private void OnSetCellData(TreeViewColumn column, CellRenderer cell, TreeModel model, TreeIter iter)
-        {
-            try
-            {
-                if (Array.IndexOf(tree.Columns, column) == 0 && cell is CellRendererText textCell)
-                {
-                    string jobName = (string)model.GetValue(iter, 0);
-                    string owner = (string)model.GetValue(iter, columnTitles.Length);
-
-                    // First column.
-                    if (chkMyJobsOnly.Active)
-                        textCell.Text = jobName;
-                    else
-                        textCell.Text = $"{jobName} ({owner})";
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
+            mainWidget.Destroy();
         }
 
         /// <summary>
         /// Invoked when the user clicks the setup button to provide an API key/credentials.
         /// </summary>
         public event EventHandler SetupClicked;
+
+        /// <summary>
+        /// Invoked when the user wants to change the results output path.
+        /// </summary>
+        public event EventHandler ChangeOutputPath;
 
         /// <summary>
         /// Invoked when the user wants to stop a job.
@@ -342,6 +306,10 @@ namespace UserInterface.Views
             {
                 return dl.Path;
             }
+            set
+            {
+                dl.Path = value;
+            }
         }
 
         /// <summary>
@@ -375,25 +343,6 @@ namespace UserInterface.Views
             {
                 return dl.DownloadDebugFiles;
             }
-        }
-
-        /// <summary>
-        /// Unbinds the event handlers.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnDestroyed(object sender, EventArgs args)
-        {
-            mainWidget.Destroyed -= OnDestroyed;
-            chkMyJobsOnly.Toggled -= OnToggleFilter;
-            btnChangeDownloadDir.Clicked -= OnChangeDownloadPath;
-            btnDownload.Clicked -= OnDownloadJobs;
-            btnDelete.Clicked -= OnDeleteJobs;
-            btnSetup.Clicked -= OnSetupClicked;
-            btnStop.Clicked -= OnStopJobs;
-
-            dl.Download -= OnDoDownload;
-            dl.Destroy();
         }
 
         /// <summary>
@@ -434,6 +383,9 @@ namespace UserInterface.Views
         /// </summary>
         public void UpdateJobTable(List<JobDetails> jobs)
         {
+            if (jobs == null)
+                return;
+
             // This entire function is run on the Gtk main loop thread.
             // This may cause problems if another thread wants to modify a view at the same time,
             // but is probably better than the alternative, which is concurrent modification of live Gtk elements.
@@ -469,6 +421,55 @@ namespace UserInterface.Views
                 jobIds.Add((string)tree.Model.GetValue(iter, 1));
             }
             return jobIds.ToArray();
+        }
+
+        /// <summary>
+        /// Invoked when the user toggles the "my jobs only" checkbox.
+        /// Refreshes the TreeView.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnToggleFilter(object sender, EventArgs args)
+        {
+            try
+            {
+                filterOwner.Refilter();
+                tree.QueueDraw();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Sets the contents of a cell being display on a grid.
+        /// Appends owner to display name if showing other people's jobs.
+        /// </summary>
+        /// <param name="col">The column.</param>
+        /// <param name="cell">The cell.</param>
+        /// <param name="model">The tree model.</param>
+        /// <param name="iter">The tree iterator.</param>
+        private void OnSetCellData(TreeViewColumn column, CellRenderer cell, TreeModel model, TreeIter iter)
+        {
+            try
+            {
+                if (Array.IndexOf(tree.Columns, column) == 0 && cell is CellRendererText textCell)
+                {
+                    string jobName = (string)model.GetValue(iter, 0);
+                    string owner = (string)model.GetValue(iter, columnTitles.Length);
+
+                    // First column.
+                    if (chkMyJobsOnly.Active)
+                        textCell.Text = jobName;
+                    else
+                        textCell.Text = $"{jobName} ({owner})";
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -624,6 +625,32 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Unbinds the event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnDestroyed(object sender, EventArgs args)
+        {
+            try
+            {
+                mainWidget.Destroyed -= OnDestroyed;
+                chkMyJobsOnly.Toggled -= OnToggleFilter;
+                btnChangeDownloadDir.Clicked -= OnChangeDownloadPath;
+                btnDownload.Clicked -= OnDownloadJobs;
+                btnDelete.Clicked -= OnDeleteJobs;
+                btnSetup.Clicked -= OnSetupClicked;
+                btnStop.Clicked -= OnStopJobs;
+
+                dl.Download -= OnDoDownload;
+                dl.Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
         /// Event handler for the stop job button.
         /// Asks the user for confirmation and halts the execution of any 
         /// selected jobs which have not already finished.
@@ -724,8 +751,7 @@ namespace UserInterface.Views
         {
             try
             {
-                //tbi
-                throw new NotImplementedException();
+                ChangeOutputPath?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception err)
             {

@@ -8,6 +8,11 @@ namespace ApsimNG.Interfaces
     interface ICloudJobView
     {
         /// <summary>
+        /// Invoked when the user wants to change the results output path.
+        /// </summary>
+        event EventHandler ChangeOutputPath;
+
+        /// <summary>
         /// Invoked when the user clicks the setup button to provide an API key/credentials.
         /// </summary>
         event EventHandler SetupClicked;
@@ -58,6 +63,11 @@ namespace ApsimNG.Interfaces
         void ShowLoadingProgressBar();
 
         /// <summary>
+        /// Close the view.
+        /// </summary>
+        void Destroy();
+
+        /// <summary>
         /// Gets or sets the value of the job load progress bar.
         /// </summary>
         double JobLoadProgress { get; set; }
@@ -70,7 +80,7 @@ namespace ApsimNG.Interfaces
         /// <summary>
         /// Output directory as specified by user.
         /// </summary>
-        string DownloadPath { get; }
+        string DownloadPath { get; set; }
 
         /// <summary>
         /// Should results be extracted?
