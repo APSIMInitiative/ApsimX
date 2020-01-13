@@ -22,6 +22,9 @@ using APSIM.Shared.Utilities;
 
 namespace ApsimNG.Cloud
 {
+    /// <summary>
+    /// This class handles communications with Microsoft's Azure API.
+    /// </summary>
     public class AzureInterface : ICloudInterface
     {
         private BatchClient batchClient;

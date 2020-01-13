@@ -12,6 +12,9 @@ namespace ApsimNG.Cloud.Azure
     /// A popup window which prompts the user to specify an azure licence file
     /// containing API keys/credentials required to run simulations on Azure.
     /// </summary>
+    /// <remarks>
+    /// Should this be in the Views directory?
+    /// </remarks>
     class AzureCredentialsSetup : Window
     {
         /// <summary>

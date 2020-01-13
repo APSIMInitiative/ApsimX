@@ -8,6 +8,10 @@ using Gtk;
 
 namespace UserInterface.Views
 {
+    /// <summary>
+    /// This is a view for displaying cloud jobs - that is, simulations
+    /// which have been run on a cloud platform (e.g. Microsoft Azure).
+    /// </summary>
     public class CloudJobView : ViewBase, ICloudJobView
     {
         /// <summary>
@@ -93,7 +97,7 @@ namespace UserInterface.Views
         /// </summary>
         private const string TimespanFormat = @"dddd\d\ hh\h\ mm\m\ ss\s";
 
-        private DownloadWindow dl;
+        private CloudDownloadView dl;
 
         /// <summary>
         /// Constructor. Initialises the jobs TreeView and the controls associated with it.
@@ -101,7 +105,7 @@ namespace UserInterface.Views
         /// <param name="owner"></param>
         public CloudJobView(ViewBase owner) : base(owner)
         {
-            dl = new DownloadWindow(this);
+            dl = new CloudDownloadView(this);
             dl.Download += OnDoDownload;
             dl.Visible = false;
 

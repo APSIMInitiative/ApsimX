@@ -4,9 +4,8 @@ using UserInterface.Interfaces;
 using Utility;
 using Gtk;
 using ApsimNG.Cloud.Azure;
-using UserInterface.Views;
 
-namespace ApsimNG.Cloud
+namespace UserInterface.Views
 {
     /// <summary>
     /// This view creates a popup window which allows the user to
@@ -14,7 +13,7 @@ namespace ApsimNG.Cloud
     /// Once the user has chosen their options and pressed download,
     /// an event will be fired off to initiate the download.
     /// </summary>
-    class DownloadWindow : ViewBase
+    class CloudDownloadView : ViewBase
     {
         /// <summary>
         /// Whether 'debug' (.stdout) files should be downloaded.
@@ -69,7 +68,7 @@ namespace ApsimNG.Cloud
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public DownloadWindow(ViewBase owner) : base(owner)
+        public CloudDownloadView(ViewBase owner) : base(owner)
         {
             window = new Window("Download cloud jobs");
             window.TransientFor = (MasterView as ViewBase).MainWidget.Toplevel as Window;

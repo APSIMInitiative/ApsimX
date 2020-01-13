@@ -182,15 +182,13 @@
     </Compile>
     <Compile Include="Cloud\Azure\AzureInterface.cs" />
     <Compile Include="Cloud\Azure\BatchConstants.cs" />
-    <Compile Include="Cloud\Azure\BatchCredentials.cs" />
     <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
-    <Compile Include="Cloud\DownloadWindow.cs" />
+    <Compile Include="Views\CloudDownloadView.cs" />
     <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
     <Compile Include="Cloud\Azure\StorageConstants.cs" />
-    <Compile Include="Cloud\Azure\StorageCredentials.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />
