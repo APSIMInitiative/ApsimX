@@ -280,6 +280,7 @@
     <Compile Include="Soils\Nutrients\INutrientPool.cs" />
     <Compile Include="Soils\SoilTemp\SoilTemperature.cs" />
     <Compile Include="Soils\Standardiser\Layers.cs" />
+    <Compile Include="Soils\Standardiser\SoilCheckerWithoutStandardiser.cs" />
     <Compile Include="Soils\Standardiser\SoilChecker.cs" />
     <Compile Include="Soils\Standardiser\SoilDefaults.cs" />
     <Compile Include="Soils\Standardiser\SoilUnits.cs" />
