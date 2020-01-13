@@ -205,7 +205,6 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
-    <Compile Include="Commands\WriteDebugDoc.cs" />
     <Compile Include="EventArguments\AsyncEventHandler.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />

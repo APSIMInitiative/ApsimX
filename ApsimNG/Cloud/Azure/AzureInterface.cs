@@ -360,7 +360,7 @@ namespace ApsimNG.Cloud
                     try
                     {
                         // Merge results into a single .db file.
-                        DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), "combined.db");
+                        DBMerger.MergeFiles(Path.Combine(resultsDir, "*.db"), false, "combined.db");
                     }
                     catch (Exception err)
                     {
