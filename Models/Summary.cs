@@ -85,7 +85,7 @@
             var soils = Apsim.ChildrenRecursively(simulation, typeof(Soils.Soil));
             foreach (Soils.Soil soil in soils)
             {
-                string errorMessages = SoilCheckerWithoutStandardiser.Check(soil);
+                string errorMessages = SoilChecker.Check(soil);
                 if (!string.IsNullOrEmpty(errorMessages))
                     WriteWarning(soil, errorMessages);
             }
