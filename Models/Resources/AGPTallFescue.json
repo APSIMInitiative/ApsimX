@@ -28,7 +28,7 @@
       "ColdRecoverySumDD": 30.0,
       "ColdRecoveryTReference": 0.0,
       "MaintenanceRespirationCoefficient": 0.03,
-      "GrowthRespirationCoefficient": 0.75,
+      "GrowthRespirationCoefficient": 0.25,
       "RespirationTReference": 20.0,
       "RespirationExponent": 1.5,
       "NThresholdsForLeaves": [
