@@ -284,6 +284,7 @@
         public static ReportColumn Create(string descriptor, IClock clock, IStorageWriter storage, ILocator locator, IEvent events)
         {
             string columnName = StringUtilities.RemoveWordAfter(ref descriptor, "as");
+            string originalDescriptor = descriptor;
             object to = StringUtilities.RemoveWordAfter(ref descriptor, "to");
             object from = StringUtilities.RemoveWordAfter(ref descriptor, "from");
             if (clock is IModel)
@@ -301,6 +302,10 @@
                         to = toValue;
                 }
             }
+
+            if (to == null || from == null)
+                descriptor = originalDescriptor;
+
             string aggregationFunction = StringUtilities.RemoveWordBefore(ref descriptor, "of");
 
             string variableName = descriptor;  // variable name is what is left over.
