@@ -495,7 +495,6 @@ namespace UserInterface.Views
                     if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
                         SelectedNodeChanged.Invoke(this, selectionChangedData);
                     previouslySelectedNodePath = selectionChangedData.NewNodePath;
-                    treeview1.CursorChanged += OnAfterSelect;
                 }
                 else
                 {
@@ -509,6 +508,11 @@ namespace UserInterface.Views
             catch (Exception err)
             {
                 ShowError(err);
+            }
+            finally
+            {
+                if (SelectedNodeChanged != null && treeview1 != null)
+                    treeview1.CursorChanged += OnAfterSelect;
             }
         }
 

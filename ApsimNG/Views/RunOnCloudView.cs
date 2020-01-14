@@ -1,25 +1,21 @@
 ﻿using System;
 using Gtk;
 using System.IO;
-using System.ComponentModel;
-using ApsimNG.Cloud;
+using System.Threading.Tasks;
+using ApsimNG.EventArguments;
 
 namespace UserInterface.Views
-{   
-    public class NewAzureJobView : ViewBase
+{
+    public class RunOnCloudView : ViewBase
     {
-        // There are a lot of commented-out controls in this view which may be used at some point in the future.
         private Entry entryName;
         private RadioButton radioApsimDir;
-        //private RadioButton radioBob;
         private RadioButton radioApsimZip;
-        //private Entry entryVersion;
-        //private Entry entryRevision;
         private Entry entryApsimDir;
         private Entry entryApsimZip;
         private Button btnApsimDir;
         private Button btnApsimZip;
-        //private Button btnBob;
+        private Button BtnOK;
         private Entry entryOutputDir;
         private ComboBox comboCoreCount;
         private CheckButton chkEmail;
@@ -31,25 +27,25 @@ namespace UserInterface.Views
         private Button btnModelPath;
         private Label lblStatus;
 
-        public NewAzureJobView(ViewBase owner) : base(owner)
+        public RunOnCloudView(ViewBase owner) : base(owner)
         {
-            SubmitJob = new BackgroundWorker();
-            // this vbox holds both alignment objects (which in turn hold the frames)
+            // This vbox holds both alignment objects (which in turn hold the frames).
             VBox vboxPrimary = new VBox(false, 10);
 
-            // this is the alignment object which holds the azure job frame
+            // This is the alignment object which holds the azure job frame.
             Alignment primaryContainer = new Alignment(0f, 0f, 0f, 0f);
             primaryContainer.LeftPadding = primaryContainer.RightPadding = primaryContainer.TopPadding = primaryContainer.BottomPadding = 5;
 
-            // Azure Job Frame
+            // Azure Job Frame.
             Frame frmAzure = new Frame("Azure Job");
 
             Alignment alignTblAzure = new Alignment(0.5f, 0.5f, 1f, 1f);
             alignTblAzure.LeftPadding = alignTblAzure.RightPadding = alignTblAzure.TopPadding = alignTblAzure.BottomPadding = 5;
 
-            // Azure table - contains all fields in the azure job frame
+            // Azure table - contains all fields in the azure job frame.
             Table tblAzure = new Table(4, 2, false);
             tblAzure.RowSpacing = 5;
+
             // Job Name
             Label lblName = new Label("Job Description/Name:");
             lblName.Xalign = 0;
@@ -65,26 +61,19 @@ namespace UserInterface.Views
             lblCores.Xalign = 0;
             lblCores.Yalign = 0.5f;
 
-            // use the same core count options as in MARS (16, 32, 48, 64, ... , 128, 256)
+            // Use the same core count options as in MARS (16, 32, 48, 64, ... , 128, 256)
             comboCoreCount = ComboBox.NewText();
-            for (int i = 16; i <= 128; i += 16) comboCoreCount.AppendText(i.ToString());
+            for (int i = 16; i <= 128; i += 16)
+                comboCoreCount.AppendText(i.ToString());
             comboCoreCount.AppendText("256");
-
             comboCoreCount.Active = 0;
 
-            // combo boxes cannot be aligned, so it is placed in an alignment object, which can be aligned
+            // Combo boxes cannot be aligned, so it is placed in an alignment object, which can be aligned.
             Alignment comboAlign = new Alignment(0f, 0.5f, 0.25f, 1f);
             comboAlign.Add(comboCoreCount);
 
             tblAzure.Attach(lblCores, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblAzure.Attach(comboAlign, 1, 2, 1, 2, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 20, 0);
-
-
-
-            // User doesn't get to choose a model via the form anymore. It comes from the context of the right click
-            
-            // Model selection frame
-            Frame frmModelSelect = new Frame("Model Selection");
 
             // Alignment to ensure a 5px border around the inside of the frame
             Alignment alignModel = new Alignment(0f, 0f, 1f, 1f);
@@ -94,15 +83,14 @@ namespace UserInterface.Views
             tblModel.RowSpacing = 10;
 
             chkSaveModels = new CheckButton("Save model files");
-            chkSaveModels.Toggled += ChkSaveModels_Toggled;
+            chkSaveModels.Toggled += OnToggleSaveModelFiles;
             entryModelPath = new Entry();
             btnModelPath = new Button("...");
-            btnModelPath.Clicked += BtnModelPath_Click;
+            btnModelPath.Clicked += OnChooseModelPath;
             
             chkSaveModels.Active = true;
             chkSaveModels.Active = false;
             
-
             HBox hboxModelpath = new HBox();
             hboxModelpath.PackStart(entryModelPath, true, true, 0);
             hboxModelpath.PackStart(btnModelPath, false, false, 5);
@@ -110,85 +98,57 @@ namespace UserInterface.Views
             tblAzure.Attach(chkSaveModels, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblAzure.Attach(hboxModelpath, 1, 2, 2, 3, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
 
-            //Apsim Version Selection frame/table		
+            // Apsim Version Selection frame/table.
             Frame frmVersion = new Frame("APSIM Next Generation Version Selection");
-            Table tblVersion = new Table(2, 3, false);            
+            Table tblVersion = new Table(2, 3, false);
             tblVersion.ColumnSpacing = 5;
             tblVersion.RowSpacing = 10;
 
-            // Alignment to ensure a 5px border on the inside of the frame
+            // Alignment to ensure a 5px border on the inside of the frame.
             Alignment alignVersion = new Alignment(0f, 0f, 1f, 1f);
             alignVersion.LeftPadding = alignVersion.RightPadding = alignVersion.TopPadding = alignVersion.BottomPadding = 5;
 
-            /*
-            // use from online source
-            // TODO: find/implement a Bob equivalent
-            HBox hbxBob = new HBox();
-            radioBob = new RadioButton("Use APSIM Next Generation from an online source (Bob?)");
-            radioBob.Toggled += new EventHandler(radioBob_Changed);
-            Label lblVersion = new Label("Version:");
-            entryVersion = new Entry();
-            Label lblRevision = new Label("Revision:");
-            entryRevision = new Entry();
-
-            hbxBob.Add(radioBob);
-            hbxBob.Add(lblVersion);
-            hbxBob.Add(entryVersion);
-            hbxBob.Add(lblRevision);
-            hbxBob.Add(entryRevision);
-
-            btnBob = new Button("...");
-            btnBob.Clicked += new EventHandler(btnBob_Click);
-
-            tblVersion.Attach(hbxBob, 0, 2, 0, 1, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
-            tblVersion.Attach(btnBob, 2, 3, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-            */
-            // use Apsim from a directory
-
+            // Options for running apsim from a directory.
             radioApsimDir = new RadioButton("Use APSIM Next Generation from a directory");
             radioApsimDir.Toggled += new EventHandler(RadioApsimDir_Changed);
-            // populate this input field with the directory containing this executable		
+
+            // Populate this input field with the directory containing this executable.
             entryApsimDir = new Entry(Directory.GetParent(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)).ToString());
             btnApsimDir = new Button("...");
-            btnApsimDir.Clicked += new EventHandler(BtnApsimDir_Click);
+            btnApsimDir.Clicked += new EventHandler(OnChooseApsimDir);
             tblVersion.Attach(radioApsimDir, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblVersion.Attach(entryApsimDir, 1, 2, 0, 1, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
             tblVersion.Attach(btnApsimDir, 2, 3, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
-            // use a zipped version of Apsim
-
+            // Options for running apsim from a .zip archive.
             radioApsimZip = new RadioButton(radioApsimDir, "Use a zipped version of APSIM Next Generation");
-            radioApsimZip.Toggled += new EventHandler(RadioApsimZip_Changed);
+            radioApsimZip.Toggled += new EventHandler(OnChangeApsimSource);
             entryApsimZip = new Entry();
             btnApsimZip = new Button("...");
-            btnApsimZip.Clicked += new EventHandler(BtnApsimZip_Click);
+            btnApsimZip.Clicked += new EventHandler(OnChooseApsimZipFile);
 
             tblVersion.Attach(radioApsimZip, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblVersion.Attach(entryApsimZip, 1, 2, 1, 2, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
             tblVersion.Attach(btnApsimZip, 2, 3, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-
-            
-
-
-
 
             alignVersion.Add(tblVersion);
             frmVersion.Add(alignVersion);
 
             tblAzure.Attach(frmVersion, 0, 2, 3, 4, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
-            // toggle the default radio button to ensure appropriate entries/buttons are greyed out by default
+            // Toggle the default radio button to ensure appropriate entries/buttons are greyed out by default.
             radioApsimDir.Active = true;
             radioApsimZip.Active = true;
             radioApsimDir.Active = true;
 
-            // add azure job table to azure alignment, and add that to the azure job frame
+            // Add azure job table to azure alignment, and add that to the azure job frame.
             alignTblAzure.Add(tblAzure);
             frmAzure.Add(alignTblAzure);
 
             // Results frame
             Frame frameResults = new Frame("Results");
-            // Alignment object to ensure a 10px border around the inside of the results frame		
+
+            // Alignment object to ensure a 10px border around the inside of the results frame.
             Alignment alignFrameResults = new Alignment(0f, 0f, 1f, 1f);
             alignFrameResults.LeftPadding = alignFrameResults.RightPadding = alignFrameResults.TopPadding = alignFrameResults.BottomPadding = 10;
             Table tblResults = new Table(4, 3, false);
@@ -199,12 +159,8 @@ namespace UserInterface.Views
             chkEmail = new CheckButton("Send email  upon completion to:");
             entryEmail = new Entry();
 
-
-
-
             tblResults.Attach(chkEmail, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblResults.Attach(entryEmail, 1, 2, 0, 1, (AttachOptions.Expand | AttachOptions.Fill), AttachOptions.Fill, 0, 0);
-
 
             // Auto download results
             chkDownload = new CheckButton("Automatically download results once complete");
@@ -213,19 +169,16 @@ namespace UserInterface.Views
             tblResults.Attach(chkDownload, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblResults.Attach(chkSummarise, 1, 3, 1, 2, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Fill, 0, 0);
 
-            // Output dir
-
+            // Output directory options
             Label lblOutputDir = new Label("Output Directory:");
             lblOutputDir.Xalign = 0;
-            entryOutputDir = new Entry((string)AzureSettings.Default["OutputDir"]);
 
             Button btnOutputDir = new Button("...");
-            btnOutputDir.Clicked += new EventHandler(BtnOutputDir_Click);
-
+            btnOutputDir.Clicked += new EventHandler(OnChooseOutputDirectoryPath);
+            entryOutputDir = new Entry();
             tblResults.Attach(lblOutputDir, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblResults.Attach(entryOutputDir, 1, 2, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             tblResults.Attach(btnOutputDir, 2, 3, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
-
 
             Alignment alignNameTip = new Alignment(0f, 0f, 1f, 1f);
             Label lblNameTip = new Label("(note: if you close Apsim before the job completes, the results will not be automatically downloaded)");
@@ -233,43 +186,48 @@ namespace UserInterface.Views
 
             tblResults.Attach(alignNameTip, 0, 3, 3, 4, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
-
-
             alignFrameResults.Add(tblResults);
             frameResults.Add(alignFrameResults);
 
-
-
             // OK/Cancel buttons
-            
             BtnOK = new Button("OK");
-            BtnOK.Clicked += new EventHandler(BtnOK_Click);
+            BtnOK.Clicked += OnOKClicked;
             Button btnCancel = new Button("Cancel");
-            btnCancel.Clicked += new EventHandler(BtnCancel_Click);
+            btnCancel.Clicked += OnCancel;
             HBox hbxButtons = new HBox(true, 0);
             hbxButtons.PackEnd(btnCancel, false, true, 0);
             hbxButtons.PackEnd(BtnOK, false, true, 0);
-            Alignment alignButtons = new Alignment(1f, 0f, 0.2f, 0f);            
+            Alignment alignButtons = new Alignment(1f, 0f, 0.2f, 0f);
             alignButtons.Add(hbxButtons);
             lblStatus = new Label("");
             lblStatus.Xalign = 0f;
 
             // Add Azure frame to primary vbox
             vboxPrimary.PackStart(frmAzure, false, true, 0);
-            // add results frame to primary vbox
+
+            // Add results frame to primary vbox.
             vboxPrimary.PackStart(frameResults, false, true, 0);
             vboxPrimary.PackStart(alignButtons, false, true, 0);
             vboxPrimary.PackStart(lblStatus, false, true, 0);
-            // Add primary vbox to alignment
+
+            // Add primary vbox to alignment.
             primaryContainer.Add(vboxPrimary);
-            mainWidget = primaryContainer;            
+            mainWidget = primaryContainer;
         }
 
-        public Presenters.INewCloudJobPresenter Presenter { get; set; }
-        public BackgroundWorker SubmitJob { get; set; }
-        public JobParameters JobParams { get; set; }
-        public Button BtnOK;
+        /// <summary>
+        /// Invoked when the user clicks on the OK button to submit the job.
+        /// </summary>
+        public event AsyncEventHandler SubmitJob;
 
+        /// <summary>
+        /// Invoked when the user clicks on the Cancel button to cancel job submission.
+        /// </summary>
+        public event EventHandler CancelSubmission;
+
+        /// <summary>
+        /// Job display name.
+        /// </summary>
         public string JobName
         {
             get
@@ -282,6 +240,75 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>
+        /// Path to ApsimX.
+        /// </summary>
+        public string ApsimXPath
+        {
+            get
+            {
+                return radioApsimDir.Active ? entryApsimDir.Text : entryApsimZip.Text;
+            }
+        }
+
+        /// <summary>
+        /// Should an email be sent on job completion?
+        /// </summary>
+        public bool SendEmail
+        {
+            get
+            {
+                return chkEmail.Active;
+            }
+        }
+
+        /// <summary>
+        /// Email will be sent to this address on job completion.
+        /// </summary>
+        public string EmailRecipient
+        {
+            get
+            {
+                return entryEmail.Text;
+            }
+        }
+
+        /// <summary>
+        /// Number of vCPUs to use when running the job.
+        /// </summary>
+        public int CpuCount
+        {
+            get
+            {
+                return int.Parse(comboCoreCount.ActiveText);
+            }
+        }
+
+        /// <summary>
+        /// Path to which model files will be saved.
+        /// </summary>
+        public string ModelPath
+        {
+            get
+            {
+                return chkSaveModels.Active ? entryModelPath.Text : Path.GetTempPath() + Guid.NewGuid();
+            }
+        }
+
+        /// <summary>
+        /// Model files will be deleted after being uploaded iff this is false.
+        /// </summary>
+        public bool SaveModelFiles
+        {
+            get
+            {
+                return chkSaveModels.Active;
+            }
+        }
+
+        /// <summary>
+        /// Job submission status.
+        /// </summary>
         public string Status
         {
             get
@@ -298,26 +325,20 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Updates the status label.
-        /// </summary>
-        /// <param name="status">Status to be displayed.</param>
-        public void DisplayStatus(string status)
-        {
-            // run IO on Gtk main loop thread
-            Application.Invoke(delegate
-            {
-                lblStatus.Text = status;
-            });
-        }
-
-        /// <summary>
         /// Closes the job submission panel.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnCancel_Click(object sender, EventArgs e)
+        private void OnCancel(object sender, EventArgs e)
         {
-            Presenter.CancelJobSubmission();
+            try
+            {
+                CancelSubmission?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -325,65 +346,17 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BtnOK_Click(object sender, EventArgs e)
+        private async void OnOKClicked(object sender, EventArgs e)
         {
-            string apsimPath = radioApsimDir.Active ? entryApsimDir.Text : entryApsimZip.Text;
-
-            JobParams = new JobParameters
+            try
             {
-                PoolVMCount = Int32.Parse(comboCoreCount.ActiveText) / 16,
-                JobDisplayName = entryName.Text,
-                Recipient = chkEmail.Active ? entryEmail.Text : "",
-                ModelPath = chkSaveModels.Active ? entryModelPath.Text : Path.GetTempPath() + Guid.NewGuid(),
-                SaveModelFiles = chkSaveModels.Active,
-                ApsimFromDir = radioApsimDir.Active,
-                OutputDir = entryOutputDir.Text,
-                AutoDownload = chkDownload.Active,
-                Summarise = chkSummarise.Active,
-                ApplicationPackageVersion = Path.GetFileName(apsimPath).Substring(Path.GetFileName(apsimPath).IndexOf('-') + 1),
-                ApplicationPackagePath = apsimPath
-            };
-
-            Presenter.SubmitJob(JobParams);
-        }
-
-        /// <summary>
-        /// Tests if a string starts with a vowel.
-        /// </summary>
-        /// <param name="st"></param>
-        /// <returns>True if st starts with a vowel, false otherwise.</returns>
-        private bool StartsWithVowel(string st)
-        {
-             return "aeiou".IndexOf(st[0]) >= 0;
-        }
-
-        /*
-        /// <summary>
-        /// Toggle Event handler for online version of ApsimX radio button.
-        /// Greys out the input fields/buttons associated with the other radio buttons in this group.
-        /// </summary>
-        private void radioBob_Changed(object sender, EventArgs e)
-        {
-            if (radioBob.Active)
+                await SubmitJob?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
             {
-                entryApsimDir.IsEditable = false;
-                entryApsimDir.Sensitive = false;
-                btnApsimDir.Sensitive = false;
-
-                entryApsimZip.IsEditable = false;
-                entryApsimZip.Sensitive = false;
-                btnApsimZip.Sensitive = false;
-
-                entryVersion.IsEditable = true;
-                entryVersion.Sensitive = true;
-
-                entryRevision.IsEditable = true;
-                entryRevision.Sensitive = true;
-
-                btnBob.Sensitive = true;
+                ShowError(err);
             }
         }
-        */
 
         /// <summary>
         /// Toggle Event handler for run ApsimX from a directory radio button.
@@ -391,24 +364,22 @@ namespace UserInterface.Views
         /// </summary>
         private void RadioApsimDir_Changed(object sender, EventArgs e)
         {
-            if (radioApsimDir.Active)
+            try
             {
-                /*
-                entryVersion.IsEditable = false;
-                entryVersion.Sensitive = false;
+                if (radioApsimDir.Active)
+                {
+                    entryApsimZip.IsEditable = false;
+                    entryApsimZip.Sensitive = false;
+                    btnApsimZip.Sensitive = false;
 
-                entryRevision.IsEditable = false;
-                entryRevision.Sensitive = false;
-
-                btnBob.Sensitive = false;
-                */
-                entryApsimZip.IsEditable = false;
-                entryApsimZip.Sensitive = false;
-                btnApsimZip.Sensitive = false;
-
-                entryApsimDir.IsEditable = true;
-                entryApsimDir.Sensitive = true;
-                btnApsimDir.Sensitive = true;
+                    entryApsimDir.IsEditable = true;
+                    entryApsimDir.Sensitive = true;
+                    btnApsimDir.Sensitive = true;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -416,60 +387,87 @@ namespace UserInterface.Views
         /// Toggle Event handler for run ApsimX from a zip file radio button.
         /// Greys out the input fields/buttons associated with the other radio buttons in this group.
         /// </summary>
-        private void RadioApsimZip_Changed(object sender, EventArgs e)
+        private void OnChangeApsimSource(object sender, EventArgs e)
         {
-            if (radioApsimZip.Active)
+            try
             {
-                /*
-                entryVersion.IsEditable = false;
-                entryVersion.Sensitive = false;
+                if (radioApsimZip.Active)
+                {
+                    entryApsimDir.IsEditable = false;
+                    entryApsimDir.Sensitive = false;
+                    btnApsimDir.Sensitive = false;
 
-                entryRevision.IsEditable = false;
-                entryRevision.Sensitive = false;
-                entryRevision.Text = "";
-
-                btnBob.Sensitive = false;
-                */
-                entryApsimDir.IsEditable = false;
-                entryApsimDir.Sensitive = false;
-                btnApsimDir.Sensitive = false;
-
-                entryApsimZip.IsEditable = true;
-                entryApsimZip.Sensitive = true;
-                btnApsimZip.Sensitive = true;
+                    entryApsimZip.IsEditable = true;
+                    entryApsimZip.Sensitive = true;
+                    btnApsimZip.Sensitive = true;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
-        private void BtnBob_Click(object sender, EventArgs e)
+        private void OnChooseApsimDir(object sender, EventArgs e)
         {
-            // just leaving this here in case we ever end up implementing the online source functionality
+            try
+            {
+                entryApsimDir.Text = AskUserForFileName("Select the ApsimX folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
-        private void BtnApsimDir_Click(object sender, EventArgs e)
+        private void OnChooseApsimZipFile(object sender, EventArgs e)
         {
-            entryApsimDir.Text = AskUserForFileName("Select the ApsimX folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
+            try
+            {
+                entryApsimZip.Text = AskUserForFileName("Please select a zipped file", Utility.FileDialog.FileActionType.Open, "Zip file (*.zip) | *.zip");
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
-        private void BtnApsimZip_Click(object sender, EventArgs e)
+        private void OnChooseOutputDirectoryPath(object sender, EventArgs e)
         {
-            entryApsimZip.Text = AskUserForFileName("Please select a zipped file", Utility.FileDialog.FileActionType.Open, "Zip file (*.zip) | *.zip");
-        }
-
-        private void BtnOutputDir_Click(object sender, EventArgs e)
-        {
-            entryOutputDir.Text = AskUserForFileName("Select an output folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
+            try
+            {
+                entryOutputDir.Text = AskUserForFileName("Select an output folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }        
 
-        private void ChkSaveModels_Toggled(object sender, EventArgs e)
+        private void OnToggleSaveModelFiles(object sender, EventArgs e)
         {
-            entryModelPath.IsEditable = chkSaveModels.Active;
-            entryModelPath.Sensitive = chkSaveModels.Active;
-            btnModelPath.Sensitive = chkSaveModels.Active;
+            try
+            {
+                entryModelPath.IsEditable = chkSaveModels.Active;
+                entryModelPath.Sensitive = chkSaveModels.Active;
+                btnModelPath.Sensitive = chkSaveModels.Active;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
-        private void BtnModelPath_Click(object sender, EventArgs e)
+        private void OnChooseModelPath(object sender, EventArgs e)
         {
-            entryModelPath.Text = AskUserForFileName("Select an output folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
+            try
+            {
+                entryModelPath.Text = AskUserForFileName("Select an output folder", Utility.FileDialog.FileActionType.SelectFolder, string.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

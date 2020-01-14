@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
                     }
                 }
                 // no price match found.
-                string warning = "No " + purchaseStyle.ToString() + " price entry was found for an indiviudal with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight.ToString("##0") + "])";
+                string warning = "No " + purchaseStyle.ToString() + " price entry was found for an indiviudal with details [f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight.ToString("##0") + "]";
                 if (!Warnings.Exists(warning))
                 {
                     Warnings.Add(warning);

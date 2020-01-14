@@ -11,6 +11,7 @@
     using MigraDoc.DocumentObjectModel.Tables;
     using MigraDoc.RtfRendering;
     using Models.Core;
+    using Models.Soils.Standardiser;
     using Report;
     using Storage;
 
@@ -77,6 +78,18 @@
         {
             if (CaptureSummaryText)
                 CreateInitialConditionsTable();
+
+
+            //Do checks on the soil to make sure there are no problems with the initial parameterisation.
+
+            var soils = Apsim.ChildrenRecursively(simulation, typeof(Soils.Soil));
+            foreach (Soils.Soil soil in soils)
+            {
+                string errorMessages = SoilChecker.Check(soil);
+                if (!string.IsNullOrEmpty(errorMessages))
+                    WriteWarning(soil, errorMessages);
+            }
+
         }
 
         /// <summary>Invoked when a simulation is completed.</summary>

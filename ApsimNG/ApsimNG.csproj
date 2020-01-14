@@ -75,7 +75,7 @@
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Cloud\AzureSettings.settings">
+    <None Include="Cloud\Azure\AzureSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AzureSettings.Designer.cs</LastGenOutput>
     </None>
@@ -174,26 +174,22 @@
     <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
     <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
     <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />
-    <Compile Include="Cloud\APSIMJob.cs" />
-    <Compile Include="Cloud\ApsimJobManagerExtension.cs" />
-    <Compile Include="Cloud\ApsimJobPrepExtension.cs" />
-    <Compile Include="Cloud\AzureCredentialsSetup.cs" />
-    <Compile Include="Cloud\AzureResultsDownloader.cs" />
-    <Compile Include="Cloud\AzureSettings.Designer.cs">
+    <Compile Include="Cloud\Azure\AzureCredentialsSetup.cs" />
+    <Compile Include="Cloud\Azure\AzureExtensions.cs" />
+    <Compile Include="Cloud\Azure\AzureSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AzureSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Cloud\BatchConstants.cs" />
-    <Compile Include="Cloud\BatchCredentials.cs" />
-    <Compile Include="Cloud\DownloadWindow.cs" />
-    <Compile Include="Cloud\FileUploader.cs" />
-    <Compile Include="Cloud\ICloudJobPresenter.cs" />
+    <Compile Include="Cloud\Azure\AzureInterface.cs" />
+    <Compile Include="Cloud\Azure\BatchConstants.cs" />
+    <Compile Include="Cloud\Azure\Licence.cs" />
+    <Compile Include="Cloud\DownloadOptions.cs" />
+    <Compile Include="Views\CloudDownloadView.cs" />
+    <Compile Include="Cloud\ICloudInterface.cs" />
     <Compile Include="Cloud\JobDetails.cs" />
     <Compile Include="Cloud\JobParameters.cs" />
-    <Compile Include="Cloud\PoolSettings.cs" />
-    <Compile Include="Cloud\StorageConstants.cs" />
-    <Compile Include="Cloud\StorageCredentials.cs" />
+    <Compile Include="Cloud\Azure\StorageConstants.cs" />
     <Compile Include="CommandHistory.cs" />
     <Compile Include="Commands\AddModelCommand.cs" />
     <Compile Include="Commands\BibTeX.cs" />
@@ -209,6 +205,7 @@
     <Compile Include="Commands\RunCommand.cs" />
     <Compile Include="Commands\SelectNodeCommand.cs" />
     <Compile Include="Commands\SupplementCommands.cs" />
+    <Compile Include="EventArguments\AsyncEventHandler.cs" />
     <Compile Include="EventArguments\ErrorArgs.cs" />
     <Compile Include="EventArguments\FileActionArgs.cs" />
     <Compile Include="EventArguments\GridCellChangedArgs.cs" />
@@ -222,6 +219,7 @@
     <Compile Include="EventArguments\KeysArgs.cs" />
     <Compile Include="EventArguments\LegendClickArgs.cs" />
     <Compile Include="EventArguments\NeedContextItemsArgs.cs" />
+    <Compile Include="Interfaces\ICloudJobView.cs" />
     <Compile Include="Interfaces\IGraphPanelView.cs" />
     <Compile Include="Interfaces\IMethodCompletionView.cs" />
     <Compile Include="Interfaces\IPropertyTreeView.cs" />
@@ -309,7 +307,7 @@
     <Compile Include="Presenters\CheckpointsPresenter.cs" />
     <Compile Include="Presenters\AddModelPresenter.cs" />
     <Compile Include="Presenters\AxisPresenter.cs" />
-    <Compile Include="Presenters\AzureJobDisplayPresenter.cs" />
+    <Compile Include="Presenters\CloudJobPresenter.cs" />
     <Compile Include="Presenters\CultivarPresenter.cs" />
     <Compile Include="Presenters\DataStorePresenter.cs" />
     <Compile Include="Presenters\ExplorerPresenter.cs" />
@@ -319,7 +317,6 @@
     <Compile Include="Presenters\GenericPresenter.cs" />
     <Compile Include="Presenters\GraphPresenter.cs" />
     <Compile Include="Presenters\IExportable.cs" />
-    <Compile Include="Presenters\INewCloudJobPresenter.cs" />
     <Compile Include="Presenters\InitialWaterPresenter.cs" />
     <Compile Include="Presenters\InputPresenter.cs" />
     <Compile Include="Presenters\IntellisensePresenter.cs" />
@@ -332,7 +329,7 @@
     <Compile Include="Presenters\MemoPresenter.cs" />
     <Compile Include="Presenters\MetDataPresenter.cs" />
     <Compile Include="Presenters\TablePresenter.cs" />
-    <Compile Include="Presenters\NewAzureJobPresenter.cs" />
+    <Compile Include="Presenters\RunOnCloudPresenter.cs" />
     <Compile Include="Presenters\OperationsPresenter.cs" />
     <Compile Include="Presenters\ProfilePresenter.cs" />
     <Compile Include="Presenters\GridPresenter.cs" />
@@ -360,7 +357,7 @@
     <Compile Include="Views\AxisView.cs" />
     <Compile Include="Views\ButtonView.cs" />
     <Compile Include="Views\CheckBoxView.cs" />
-    <Compile Include="Views\CloudJobDisplayView.cs" />
+    <Compile Include="Views\CloudJobView.cs" />
     <Compile Include="Views\ColourDropDownView.cs" />
     <Compile Include="Views\DataStoreView.cs" />
     <Compile Include="Views\DoubleEditView.cs" />
@@ -390,7 +387,7 @@
     <Compile Include="Views\ManagerView.cs" />
     <Compile Include="Views\MapView.cs" />
     <Compile Include="Views\MemoView.cs" />
-    <Compile Include="Views\NewAzureJobView.cs" />
+    <Compile Include="Views\RunOnCloudView.cs" />
     <Compile Include="Views\ProfileView.cs" />
     <Compile Include="Views\ReportView.cs" />
     <Compile Include="Views\SeriesView.cs" />
