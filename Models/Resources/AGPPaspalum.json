@@ -27,7 +27,7 @@
       "ColdFullTemperature": 0.0,
       "ColdRecoverySumDD": 50.0,
       "ColdRecoveryTReference": 5.0,
-      "MaintenanceRespirationCoefficient": 3.0,
+      "MaintenanceRespirationCoefficient": 0.03,
       "GrowthRespirationCoefficient": 0.75,
       "RespirationTReference": 20.0,
       "RespirationExponent": 1.5,
