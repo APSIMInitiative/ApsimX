@@ -6,8 +6,10 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Media;
     using System.Timers;
+    using Utility;
 
     class RunCommand : ICommand
     {
@@ -78,16 +80,23 @@
             else
                 explorerPresenter.MainPresenter.ShowError(errors);
 
-            string resourceNameOfCompletionSound;
+            // Play a completion sound.
             SoundPlayer player = new SoundPlayer();
-            if (DateTime.Now.Month == 12 && DateTime.Now.Day == 25)
-                resourceNameOfCompletionSound = "ApsimNG.Resources.Sounds.Jingle.wav";
-            else if (errors.Count > 0)
-                resourceNameOfCompletionSound = "ApsimNG.Resources.Sounds.Fail.wav";
+            if (errors.Count > 0)
+            {
+                if (File.Exists(Configuration.Settings.SimulationCompleteWithErrorWavFileName))
+                    player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                else
+                    player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Fail.wav");
+            }
             else
-                resourceNameOfCompletionSound = "ApsimNG.Resources.Sounds.Success.wav";
-
-            player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceNameOfCompletionSound);
+            {
+                if (File.Exists(Configuration.Settings.SimulationCompleteWavFileName))
+                    player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                else
+                    player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Success.wav");
+            }
+            
             player.Play();
         }
 

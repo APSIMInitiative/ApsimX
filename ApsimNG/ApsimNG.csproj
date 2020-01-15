@@ -779,7 +779,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\AGPRhodes.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPTallFescue.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPLucerne.png" />
-    <EmbeddedResource Include="Resources\Sounds\Jingle.wav" />
     <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
