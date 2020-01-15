@@ -24,7 +24,7 @@ namespace UserInterface.Commands
     public class CreateModelDescriptionDocCommand : ICommand
     {
         /// <summary>The maximum length of a description.</summary>
-        private const int maxDescriptionLength = 60;
+        private const int maxDescriptionLength = 50;
 
         /// <summary>The maximum length of a type name.</summary>
         private const int maxTypeLength = 30;
@@ -41,6 +41,12 @@ namespace UserInterface.Commands
         /// <summary>Only document types in this namespace.</summary>
         private string namespaceToDocument;
 
+        /// <summary>List of parameter names for the model being documented.</summary>
+        private List<string> parameterNames;
+
+        /// <summary>An enum used to call GetProperties indicating what type of properties to return..</summary>
+        private enum PropertyType { Parameters, NonParameters };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateDocCommand"/> class.
         /// </summary>
@@ -51,7 +57,6 @@ namespace UserInterface.Commands
             this.explorerPresenter = explorerPresenter;
             this.modelToDocument = model;
 
-            typesToDocument.Add(modelToDocument.GetType());
             namespaceToDocument = modelToDocument.GetType().Namespace;
 
             FileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".description.pdf");
@@ -65,8 +70,15 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory commandHistory)
         {
+            parameterNames = (modelToDocument as ModelCollectionFromResource).GetModelParameterNames();
+
             // Get a list of tags for each type.
             var tags = new List<AutoDocumentation.ITag>();
+
+            // Document the model.
+            tags.AddRange(DocumentObject(modelToDocument));
+
+            // Document any other referenced types.
             for (int i = 0; i < typesToDocument.Count; i++)
                 tags.AddRange(DocumentType(typesToDocument[i]));
 
@@ -76,91 +88,165 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Document the specified model.</summary>
-        /// <param name="type">The type to document.</param>
-        private List<AutoDocumentation.ITag> DocumentType(Type type)
+        /// <param name="objectToDocument">The type to document.</param>
+        private List<AutoDocumentation.ITag> DocumentObject(IModel objectToDocument)
         {
             var tags = new List<AutoDocumentation.ITag>();
 
-            tags.Add(new AutoDocumentation.Heading(type.Name, 1));
+            tags.Add(new AutoDocumentation.Heading((objectToDocument as IModel).Name, 1));
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(objectToDocument.GetType()), modelToDocument, tags, 1, 0,false);
 
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(type), modelToDocument, tags, 1, 0,false);
+            // If there are parameters then write them to the tags.
+            if (parameterNames != null)
+            {
+                var parameters = GetProperties(objectToDocument.GetType(), PropertyType.Parameters);
+                var parameterTable = PropertiesToTable(parameters, objectToDocument);
+                tags.Add(new AutoDocumentation.Paragraph("**Parameters (Inputs)**", 0));
+                tags.Add(new AutoDocumentation.Table(new DataView(parameterTable) { Sort = "Name asc" }, 2));
+            }
 
-            var outputs = GetOutputs(type);
+            var outputs = GetProperties(objectToDocument.GetType(), PropertyType.NonParameters);
+
             if (outputs != null)
             {
+                var outputTable = PropertiesToTable(outputs);
                 tags.Add(new AutoDocumentation.Paragraph("**Properties (Outputs)**", 0));
-                tags.Add(new AutoDocumentation.Table(new DataView(outputs) { Sort = "Name asc" }, 2));
+                tags.Add(new AutoDocumentation.Table(new DataView(outputTable) { Sort = "Name asc" }, 2));
             }
-            
-            var links = GetLinks(type);
+
+            DocumentLinksEventsMethods(objectToDocument.GetType(), tags);
+
+            // Clear the parameter names as we've used them.
+            parameterNames.Clear();
+
+            return tags;
+        }
+
+        /// <summary>Document the specified model.</summary>
+        /// <param name="typeToDocument">The type to document.</param>
+        private List<AutoDocumentation.ITag> DocumentType(Type typeToDocument)
+        {
+            var tags = new List<AutoDocumentation.ITag>();
+
+            tags.Add(new AutoDocumentation.Heading(typeToDocument.Name, 1));
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(typeToDocument), modelToDocument, tags, 1, 0, false);
+
+            var outputs = GetProperties(typeToDocument, PropertyType.NonParameters);
+            if (outputs != null && outputs.Count > 0)
+            {
+                var outputTable = PropertiesToTable(outputs);
+                tags.Add(new AutoDocumentation.Paragraph("**Properties (Outputs)**", 0));
+                tags.Add(new AutoDocumentation.Table(new DataView(outputTable) { Sort = "Name asc" }, 2));
+            }
+
+            DocumentLinksEventsMethods(typeToDocument, tags);
+
+            return tags;
+        }
+
+        private void DocumentLinksEventsMethods(Type typeToDocument, List<AutoDocumentation.ITag> tags)
+        {
+            var links = GetLinks(typeToDocument);
             if (links != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("**Links (Dependencies)**", 0));
                 tags.Add(new AutoDocumentation.Table(new DataView(links) { Sort = "Name asc" }, 1));
             }
 
-            var events = GetEvents(type);
+            var events = GetEvents(typeToDocument);
             if (events != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("**Events published**", 0));
                 tags.Add(new AutoDocumentation.Table(new DataView(events) { Sort = "Name asc" }, 1));
             }
 
-            var methods = GetMethods(type);
+            var methods = GetMethods(typeToDocument);
             if (methods != null)
             {
                 tags.Add(new AutoDocumentation.Paragraph("**Methods (callable from manager)**", 0));
                 tags.Add(new AutoDocumentation.Table(new DataView(methods) { Sort = "Name asc" }, 1));
             }
-
-            return tags;
         }
 
         /// <summary>
         /// Create and return a new Output object for member
         /// </summary>
-        /// <param name="type">The type</param>
-        private DataTable GetOutputs(Type type)
+        /// <param name="properties">The list of properties to put into table.</param>
+        /// <param name="objectToDocument">The object to use for getting property values. If null, then no value column will be added.</param>
+        private DataTable PropertiesToTable(List<PropertyInfo> properties, object objectToDocument = null)
         {
-            var outputs = new DataTable("Outputs");
+            var outputs = new DataTable("Properties");
             outputs.Columns.Add("Name", typeof(string));
             outputs.Columns.Add("Description", typeof(string));
             outputs.Columns.Add("Units", typeof(string));
             outputs.Columns.Add("Type", typeof(string));
             outputs.Columns.Add("Settable?", typeof(bool));
-            foreach (var property in type.GetProperties(System.Reflection.BindingFlags.Public |
-                                                        System.Reflection.BindingFlags.Instance |
-                                                        System.Reflection.BindingFlags.FlattenHierarchy))
+            if (objectToDocument != null)
+                outputs.Columns.Add("Value", typeof(string));
+            foreach (var property in properties)
             {
-                if (property.DeclaringType != typeof(Model))
+                var row = outputs.NewRow();
+
+                string typeName = GetTypeName(property.PropertyType);
+                string units = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
+                var description = AutoDocumentation.GetSummary(property);
+                if (description == null)
                 {
-                    var row = outputs.NewRow();
-
-                    string typeName = GetTypeName(property.PropertyType);
-                    string units = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
-                    var description = AutoDocumentation.GetSummary(property);
-                    if (description == null)
-                    {
-                        var descriptionAttribute = property.GetCustomAttribute<DescriptionAttribute>();
-                        description = descriptionAttribute?.ToString();
-                    }
-                    // Truncate descriptions so they fit onto the page.
-                    if (description?.Length > maxDescriptionLength)
-                        description = description.Remove(maxDescriptionLength) + "...";
-
-                    row["Name"] = property.Name;
-                    row["Type"] = typeName;
-                    row["Units"] = units;
-                    row["Description"] = description;
-                    row["Settable?"] = property.CanWrite;
-
-                    outputs.Rows.Add(row);
+                    var descriptionAttribute = property.GetCustomAttribute<DescriptionAttribute>();
+                    description = descriptionAttribute?.ToString();
                 }
+                // Truncate descriptions so they fit onto the page.
+                if (description?.Length > maxDescriptionLength)
+                    description = description.Remove(maxDescriptionLength) + "...";
+
+                row["Name"] = property.Name;
+                row["Type"] = typeName;
+                row["Units"] = units;
+                row["Description"] = description;
+                row["Settable?"] = property.CanWrite;
+                if (objectToDocument != null)
+                {
+                    try
+                    {
+                        row["Value"] = ReflectionUtilities.ObjectToString(property.GetValue(objectToDocument, null));
+                    }
+                    catch (Exception)
+                    { }
+                }
+                outputs.Rows.Add(row);  
             }
             if (outputs.Rows.Count > 0)
                 return outputs;
             else
                 return null;
+        }
+
+        /// <summary>
+        /// Create and return a new Output object for member
+        /// </summary>
+        /// <param name="typeToDocument">The type of object to inspect.</param>
+        /// <param name="typeofProperties">The type of properties to include in the return table.</param>
+        private List<PropertyInfo> GetProperties(Type typeToDocument, PropertyType typeofProperties)
+        {
+            var properties = new List<PropertyInfo>();
+            foreach (var property in typeToDocument.GetProperties(BindingFlags.Public |
+                                                                  BindingFlags.Instance |
+                                                                  BindingFlags.FlattenHierarchy |
+                                                                  BindingFlags.DeclaredOnly))
+            {
+                if (property.DeclaringType != typeof(Model))
+                {
+                    // See if property is a parameter. If so then don't put it into
+                    // the outputs table.
+                    bool isParameter = parameterNames.Contains(property.Name);
+
+                    bool includeInTable = typeofProperties == PropertyType.Parameters && isParameter ||
+                                          typeofProperties == PropertyType.NonParameters && !isParameter;
+                    if (includeInTable)
+                        properties.Add(property);
+                }
+            }
+            return properties;
         }
 
         /// <summary>Get a type name for the specified class member.</summary>
@@ -199,7 +285,7 @@ namespace UserInterface.Commands
 
             if (type.IsClass && type.Namespace.StartsWith(namespaceToDocument))
             {
-                if (!typesToDocument.Contains(type))
+                if (type != modelToDocument.GetType() && !typesToDocument.Contains(type))
                     typesToDocument.Add(type);
                 typeName = string.Format("<a href=\"#{0}\">{1}</a>", type.Name, typeName);
             }
@@ -254,7 +340,22 @@ namespace UserInterface.Commands
                 var row = events.NewRow();
 
                 row["Name"] = eventMember.Name;
-                row["Type"] = GetTypeName(eventMember.EventHandlerType);
+
+                MethodInfo invokeMethod = eventMember.EventHandlerType.GetMethod("Invoke");
+                string parameterString = null;
+                foreach (ParameterInfo param in invokeMethod.GetParameters())
+                {
+                    if (parameterString != null)
+                        parameterString += ", ";
+
+                    parameterString += GetTypeName(param.ParameterType) + " " + param.Name;
+                }
+                string typeString = invokeMethod.ReturnType.Name + " " + 
+                                    eventMember.Name + " ("  +
+                                    parameterString +
+                                    ")";
+
+                row["Type"] = typeString;
 
                 events.Rows.Add(row);
             }
