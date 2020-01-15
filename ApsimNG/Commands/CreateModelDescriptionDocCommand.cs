@@ -70,7 +70,8 @@ namespace UserInterface.Commands
         /// </summary>
         public void Do(CommandHistory commandHistory)
         {
-            parameterNames = (modelToDocument as ModelCollectionFromResource).GetModelParameterNames();
+            if (modelToDocument is ModelCollectionFromResource)
+                parameterNames = (modelToDocument as ModelCollectionFromResource).GetModelParameterNames();
 
             // Get a list of tags for each type.
             var tags = new List<AutoDocumentation.ITag>();
@@ -117,7 +118,7 @@ namespace UserInterface.Commands
             DocumentLinksEventsMethods(objectToDocument.GetType(), tags);
 
             // Clear the parameter names as we've used them.
-            parameterNames.Clear();
+            parameterNames?.Clear();
 
             return tags;
         }
@@ -238,7 +239,7 @@ namespace UserInterface.Commands
                 {
                     // See if property is a parameter. If so then don't put it into
                     // the outputs table.
-                    bool isParameter = parameterNames.Contains(property.Name);
+                    bool isParameter = parameterNames != null && parameterNames.Contains(property.Name);
 
                     bool includeInTable = typeofProperties == PropertyType.Parameters && isParameter ||
                                           typeofProperties == PropertyType.NonParameters && !isParameter;
