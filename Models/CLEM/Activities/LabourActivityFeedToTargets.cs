@@ -183,6 +183,17 @@ namespace Models.CLEM.Activities
 
                 // calculate current level from previous intake this month (LabourActivityFeed)
                 target.CurrentAchieved += people.GetDietaryValue(target.Metric, IncludeHiredLabour, true) * aE * daysInMonth;
+
+                // add sources outside of this activity to peoples' diets
+                if (target.OtherSourcesValue > 0)
+                {
+                    foreach (var person in peopleList)
+                    {
+                        LabourDietComponent outsideEat = new LabourDietComponent();
+                        outsideEat.AddOtherSource(target.Metric, target.OtherSourcesValue * person.AdultEquivalent * daysInMonth);
+                        person.AddIntake(outsideEat);
+                    }
+                }
             }
 
             // get max months before spoiling of all food stored (will be zero for non perishable food)
@@ -239,7 +250,11 @@ namespace Models.CLEM.Activities
             }
             foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price));
 
-            double fundsAvailable = bankAccount.FundsAvailable;
+            double fundsAvailable = double.PositiveInfinity;
+            if (bankAccount != null)
+            {
+                fundsAvailable = bankAccount.FundsAvailable;
+            }
 
             int parcelIndex = 0;
             double intake = otherIntake;
@@ -247,15 +262,18 @@ namespace Models.CLEM.Activities
             while(parcelIndex < foodParcels.Count)
             {
                 foodParcels[parcelIndex].Proportion = 0;
-                if (intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0 | foodParcels[parcelIndex].Expires == 0))
+                if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0 | foodParcels[parcelIndex].Expires == 0))
                 {
                     // still able to eat and target not met or food about to expire this timestep
-                    //reduce by amout theat can be eaten
-                    double reduceAmount = Math.Min(1, (intakeLimit - intake) / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
+                    // reduce by amout that can be eaten
+                    double propCanBeEaten = Math.Min(1, (intakeLimit - intake) / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
                     // reduce to target limits
-                    double reduceTarget = 1;
+                    double propToTarget = 1;
                     if (foodParcels[parcelIndex].Expires != 0)
                     {
+                        // if the food is not going to spoil
+                        // then adjust what can be eaten up to target otherwise allow over target consumption to avoid waste
+
                         LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();
                         if (targetUnfilled != null)
                         {
@@ -263,17 +281,26 @@ namespace Models.CLEM.Activities
                             double metricneeded = Math.Max(0, targetUnfilled.Target - targetUnfilled.CurrentAchieved);
                             double amountneeded = metricneeded / foodParcels[parcelIndex].FoodStore.ConversionFactor(targetUnfilled.Metric);
 
-                            // check we can afford to purchase this food parcel
-                            double cost = amountneeded / foodParcels[parcelIndex].FoodStore.Price.PacketSize * foodParcels[parcelIndex].FoodStore.Price.PricePerPacket;
-                            double priceReduction = Math.Min(1, cost / fundsAvailable);
-                            amountneeded *= priceReduction;
-                            fundsAvailable = Math.Min(0, fundsAvailable-priceReduction);
-
-                            double reduceAmountMetric = Math.Min(1, (amountneeded) / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
-                            reduceTarget = (reduceAmountMetric < 1) ? reduceAmountMetric : 1;
+                            propToTarget = Math.Min(1, amountneeded / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
                         }
                     }
-                    foodParcels[parcelIndex].Proportion = Math.Min(reduceAmount, reduceTarget);
+
+                    foodParcels[parcelIndex].Proportion = Math.Min(propCanBeEaten, propToTarget);
+
+                    // work out if there will be a cost limitation
+                    double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / foodParcels[parcelIndex].FoodStore.Price.PacketSize * foodParcels[parcelIndex].FoodStore.Price.PricePerPacket;
+                    double propToPrice = 1;
+                    if (cost > 0)
+                    {
+                        propToPrice = Math.Max(1, fundsAvailable / cost);
+                        // remove cost from running check tally
+                        fundsAvailable = Math.Max(0, fundsAvailable - (cost * propToPrice));
+
+                        // real fanance transactions will happen in the do activity as stuff is allocated
+                        // there should not be shortfall as all the checks and reductions have happened here
+                    }
+
+                    foodParcels[parcelIndex].Proportion *= propToPrice;
 
                     // update intake
                     double newIntake = (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion);
@@ -308,7 +335,7 @@ namespace Models.CLEM.Activities
                 {
                     double financeLimit = 1;
                     // if obtained from the market make financial transaction before taking
-                    if(bankAccount != null && item.Key.Parent.Parent == Market && item.Key.Price.PricePerPacket > 0)
+                    if(bankAccount != null && item.Key.Parent.Parent.Parent == Market && item.Key.Price.PricePerPacket > 0)
                     {
                         // if shortfall reduce purchase
                         ResourceRequest marketRequest = new ResourceRequest
@@ -481,16 +508,10 @@ namespace Models.CLEM.Activities
                 var requests = ResourceRequestList.Where(a => a.ResourceType == typeof(HumanFoodStore));
                 if (requests.Count() > 0)
                 {
-                    this.Status = ActivityStatus.Success;
                     foreach (ResourceRequest request in requests)
                     {
                         if (request.Provided > 0)
                         {
-                            if (request.Provided < request.Available)
-                            {
-                                this.Status = ActivityStatus.Partial;
-                            }
-
                             // add to individual intake
                             foreach (LabourType labour in group)
                             {
@@ -502,6 +523,15 @@ namespace Models.CLEM.Activities
                             }
                         }
                     }
+                }
+                List<LabourActivityFeedTarget> labourActivityFeedTargets = Apsim.Children(this, typeof(LabourActivityFeedTarget)).Cast<LabourActivityFeedTarget>().ToList();
+                if (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0)
+                {
+                    this.Status = ActivityStatus.Partial;
+                }
+                else
+                {
+                    this.Status = ActivityStatus.Success;
                 }
             }
             

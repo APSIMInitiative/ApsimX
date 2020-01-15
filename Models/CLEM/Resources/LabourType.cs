@@ -115,13 +115,21 @@ namespace Models.CLEM.Resources
             {
                 foreach (LabourDietComponent dietComponent in DietaryComponentList)
                 {
-                    double doubleResult = 0;
-                    var result = (dietComponent.FoodStore as CLEMResourceTypeBase).ConvertTo(metric, dietComponent.AmountConsumed);
-                    if (result != null)
-                    {
-                        Double.TryParse(result.ToString(), out doubleResult);
-                    }
-                    value += doubleResult;
+                    value += dietComponent.GetTotal(metric);
+
+                    //double doubleResult = 0;
+                    //if(dietComponent.FoodStore is null)
+                    //{
+                    //    doubleResult = dietComponent.
+                    //}
+
+
+                    //var result = (dietComponent.FoodStore as CLEMResourceTypeBase).ConvertTo(metric, dietComponent.AmountConsumed);
+                    //if (result != null)
+                    //{
+                    //    Double.TryParse(result.ToString(), out doubleResult);
+                    //}
+                    //value += doubleResult;
                 }
             }
             return value;
@@ -300,7 +308,7 @@ namespace Models.CLEM.Resources
             {
                 DietaryComponentList = new List<LabourDietComponent>();
             }
-            LabourDietComponent alreadyEaten = DietaryComponentList.Where(a => a.FoodStore.Name == dietComponent.FoodStore.Name).FirstOrDefault();
+            LabourDietComponent alreadyEaten = DietaryComponentList.Where(a => a.FoodStore != null && a.FoodStore.Name == dietComponent.FoodStore.Name).FirstOrDefault();
             if (alreadyEaten != null)
             {
                 alreadyEaten.AmountConsumed += dietComponent.AmountConsumed;
