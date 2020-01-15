@@ -68,8 +68,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="App.config" />
     <EmbeddedResource Include="Resources\Glade\ExplorerView.glade">
@@ -244,6 +244,11 @@
     <Compile Include="Presenters\GraphPanelPresenter.cs" />
     <Compile Include="Presenters\ProfileGridPresenter.cs" />
     <Compile Include="Presenters\PropertyAndTablePresenter.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utility\ApsimFileMetadata.cs" />
     <Compile Include="Presenters\TernaryGraphPresenter.cs" />
     <Compile Include="Utility\Colour.cs" />
@@ -339,11 +344,6 @@
     <Compile Include="Presenters\TreeProxyPresenter.cs" />
     <Compile Include="Presenters\XYPairsPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Utility\ColumnXYSeries.cs" />
     <Compile Include="Utility\Configuration.cs" />
     <Compile Include="Utility\Excel.cs" />
@@ -469,9 +469,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\MenuImages\Upgrade.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\notes.wav" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\PresenterPictures\CircularZone.png" />
@@ -782,11 +779,12 @@
     <EmbeddedResource Include="Resources\TreeViewImages\AGPRhodes.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPTallFescue.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\AGPLucerne.png" />
+    <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
     <Content Include="Resources\TreeViewImages\apsim logo32.png" />
     <None Include="Resources\window_delete1.png" />
     <None Include="Resources\Close1.png" />
     <None Include="Resources\Apsim1.png" />
-    <EmbeddedResource Include="Resources\success.wav" />
+    <EmbeddedResource Include="Resources\Sounds\Success.wav" />
     <None Include="Resources\XYPairsGraph.xml" />
     <None Include="Resources\window_delete.png" />
     <None Include="Resources\WaterGraph.xml" />
