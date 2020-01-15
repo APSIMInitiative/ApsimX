@@ -197,9 +197,13 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[ValueSetFont]", "#0e2023");
             }
 
-            if (model.GetType() == typeof(ZoneCLEM))
+            if (model is ZoneCLEM)
             {
                 htmlString += (model as ZoneCLEM).GetFullSummary(model, true, htmlString);
+            }
+            else if (model is Market)
+            {
+                htmlString += (model as Market).GetFullSummary(model, true, htmlString);
             }
             else
             {

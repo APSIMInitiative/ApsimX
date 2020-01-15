@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(Market))]
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
@@ -48,14 +49,24 @@ namespace Models.CLEM.Resources
         [XmlIgnore]
         private List<IModel> ResourceGroupList;
 
+        private void InitialiseResourceGroupList()
+        {
+            if(ResourceGroupList == null)
+            {
+                ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
+            }
+        }
+
         private IModel GetGroupByName(string name)
         {
-            return ResourceGroupList.Find(x => x.Name == name & x.Enabled);
+            InitialiseResourceGroupList();
+            return ResourceGroupList.Find(x => x.Name == name);
         }
 
         private IModel GetGroupByType(Type type)
         {
-            ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
+            //            ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
+            InitialiseResourceGroupList();
             return ResourceGroupList.Find(x => x.GetType() == type);
         }
 
@@ -92,8 +103,9 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public object GetResourceGroupByName(string name)
         {
-            ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled).ToList();
-            return ResourceGroupList.Find(x => x.Name == name & x.Enabled);
+            //ResourceGroupList = Apsim.Children(this, typeof(IModel)).Where(a => a.Enabled & a.Name == name).ToList();
+            InitialiseResourceGroupList();
+            return ResourceGroupList.Find(x => x.Name == name);
         }
 
         /// <summary>
@@ -103,7 +115,8 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public object GetResourceGroupByType(Type resourceGroupType)
         {
-            return ResourceGroupList.Find(x => x.GetType() == resourceGroupType & x.Enabled);
+            InitialiseResourceGroupList();
+            return ResourceGroupList.Find(x => x.GetType() == resourceGroupType);
         }
 
         /// <summary>
@@ -389,7 +402,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ResourceGroupList = Apsim.Children(this, typeof(IModel));
+            InitialiseResourceGroupList();
         }
 
         /// <summary>
@@ -526,7 +539,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"resource\">";
+            return "\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
         /// <summary>

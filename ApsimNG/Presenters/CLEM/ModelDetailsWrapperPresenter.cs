@@ -99,7 +99,7 @@
                 if (viewName != null && presenterName != null)
                 {
                     // if model CLEMModel
-                    if(model.GetType().IsSubclassOf(typeof(CLEMModel)) || model is ZoneCLEM)
+                    if(model.GetType().IsSubclassOf(typeof(CLEMModel)) | model is ZoneCLEM | model is Market)
                     {
                         ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");
                     }

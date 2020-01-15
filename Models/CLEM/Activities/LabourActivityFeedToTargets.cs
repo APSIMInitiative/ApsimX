@@ -58,7 +58,7 @@ namespace Models.CLEM.Activities
         public double DailyIntakeOtherSources { get; set; }
 
         /// <summary>
-        /// Undertake managed sales t0 reserve level
+        /// Undertake managed sales to reserve level
         /// </summary>
         [Description("Sell excess")]
         public bool SellExcess { get; set; }
@@ -78,15 +78,22 @@ namespace Models.CLEM.Activities
         [GreaterThanEqualValue(0)]
         public int MonthsStorage { get; set; }
 
+        /// <summary>
+        /// Name of market if present.
+        /// </summary>
+        public Market Market { get; private set; }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            people = Resources.GetResourceGroupByType(typeof(Labour)) as Labour;
-            food = Resources.GetResourceGroupByType(typeof(HumanFoodStore)) as HumanFoodStore;
+            people = Resources.Labour();
+            food = Resources.HumanFoodStore();
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
+
+            Market = FindMarket();
         }
 
         /// <summary>
@@ -108,12 +115,27 @@ namespace Models.CLEM.Activities
                 }
             }
 
+            Market market = Apsim.Children(Apsim.Parent(this, typeof(Simulation)), typeof(Market)).FirstOrDefault() as Market;
+            if(market != null & bankAccount is null)
+            {
+                string[] memberNames = new string[] { "AccountName" };
+                results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a="+this.Name+"].", memberNames));
+            }
+
             // check that at least one target has been provided. 
             if (Apsim.Children(this, typeof(LabourActivityFeedTarget)).Count() == 0)
             {
                 string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
                 results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
             }
+
+            // check purchases
+            if(Apsim.Children(this, typeof(LabourActivityFeedTargetPurchase)).Cast<LabourActivityFeedTargetPurchase>().Sum(a => a.TargetProportion) != 1)
+            {
+                string[] memberNames = new string[] { "LabourActivityFeedToTargetPurchases" };
+                results.Add(new ValidationResult(String.Format("The sum of all [LabourActivityFeedTargetPurchase] proportions should be 1 for the targeted feed activity [{0}]", this.Name), memberNames));
+            }
+
             return results;
         }
 
@@ -160,7 +182,7 @@ namespace Models.CLEM.Activities
                 target.CurrentAchieved = target.OtherSourcesValue * aE * daysInMonth;
 
                 // calculate current level from previous intake this month (LabourActivityFeed)
-                target.CurrentAchieved += people.GetDietaryValue(target.Metric, IncludeHiredLabour) * aE * daysInMonth;
+                target.CurrentAchieved += people.GetDietaryValue(target.Metric, IncludeHiredLabour, true) * aE * daysInMonth;
             }
 
             // get max months before spoiling of all food stored (will be zero for non perishable food)
@@ -182,8 +204,43 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            //foodParcels = foodParcels.OrderBy(a => a.Expires).ThenByDescending(a => a.FoodStore.ConversionFactor(labourActivityFeedTargets.FirstOrDefault().Metric)).ThenBy(a => a.FoodStore.ConversionFactor("$")).ToList();
             foodParcels = foodParcels.OrderBy(a => a.Expires).ToList();
+
+            // if a market exists add the available market produce to the list below that ordered above.
+            // order market food by price ascending
+            // this will include market available food in the decisions.
+            // will need to purchase this food before taking it if cost associated.
+            // We can check if the parent of the human food store used is a market and charge accordingly.
+
+            // for each market
+            List<HumanFoodParcel> marketFoodParcels = new List<HumanFoodParcel>();
+            foreach (Market market in Apsim.Children(Apsim.Parent(this, typeof(Simulation)), typeof(Market)).Cast<Market>().ToList())
+            {
+                ResourcesHolder resources = Apsim.Child(market, typeof(ResourcesHolder)) as ResourcesHolder;
+                if (resources != null)
+                {
+                    HumanFoodStore food = resources.HumanFoodStore();
+                    if (food != null)
+                    {
+                        foreach (HumanFoodStoreType foodStore in Apsim.Children(food, typeof(HumanFoodStoreType)).Cast<HumanFoodStoreType>().ToList())
+                        {
+                            foreach (HumanFoodStorePool pool in foodStore.Pools)
+                            {
+                                marketFoodParcels.Add(new HumanFoodParcel()
+                                {
+                                    FoodStore = foodStore,
+                                    Pool = pool,
+                                    Expires = ((foodStore.UseByAge == 0) ? maxFoodAge + 1 : foodStore.UseByAge - pool.Age)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            foodParcels.AddRange(marketFoodParcels.OrderBy(a => a.FoodStore.Price));
+
+            double fundsAvailable = bankAccount.FundsAvailable;
+
             int parcelIndex = 0;
             double intake = otherIntake;
             // start eating food from list from that about to expire first
@@ -205,11 +262,19 @@ namespace Models.CLEM.Activities
                             // calculate reduction to metric target
                             double metricneeded = Math.Max(0, targetUnfilled.Target - targetUnfilled.CurrentAchieved);
                             double amountneeded = metricneeded / foodParcels[parcelIndex].FoodStore.ConversionFactor(targetUnfilled.Metric);
+
+                            // check we can afford to purchase this food parcel
+                            double cost = amountneeded / foodParcels[parcelIndex].FoodStore.Price.PacketSize * foodParcels[parcelIndex].FoodStore.Price.PricePerPacket;
+                            double priceReduction = Math.Min(1, cost / fundsAvailable);
+                            amountneeded *= priceReduction;
+                            fundsAvailable = Math.Min(0, fundsAvailable-priceReduction);
+
                             double reduceAmountMetric = Math.Min(1, (amountneeded) / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
                             reduceTarget = (reduceAmountMetric < 1) ? reduceAmountMetric : 1;
                         }
                     }
                     foodParcels[parcelIndex].Proportion = Math.Min(reduceAmount, reduceTarget);
+
                     // update intake
                     double newIntake = (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion);
                     intake += newIntake;
@@ -238,14 +303,30 @@ namespace Models.CLEM.Activities
             List<ResourceRequest> requests = new List<ResourceRequest>();
             foreach (var item in foodParcels.GroupBy(a => a.FoodStore))
             {
-                if (item.Sum(a => a.Pool.Amount * a.Proportion) > 0)
+                double amount = item.Sum(a => a.Pool.Amount * a.Proportion);
+                if (amount > 0)
                 {
+                    double financeLimit = 1;
+                    // if obtained from the market make financial transaction before taking
+                    if(bankAccount != null && item.Key.Parent.Parent == Market && item.Key.Price.PricePerPacket > 0)
+                    {
+                        // if shortfall reduce purchase
+                        ResourceRequest marketRequest = new ResourceRequest
+                        {
+                            ActivityModel = this,
+                            Required = amount/ item.Key.Price.PacketSize * item.Key.Price.PricePerPacket ,
+                            AllowTransmutation = false,
+                            Reason = "Purchase food"
+                        };
+                        bankAccount.Remove(marketRequest);
+                    }
+
                     requests.Add(new ResourceRequest()
                     {
                         Resource = item.Key,
                         ResourceType = typeof(HumanFoodStore),
                         AllowTransmutation = false,
-                        Required = item.Sum(a => a.Pool.Amount * a.Proportion),
+                        Required = amount * financeLimit,
                         ResourceTypeName = item.Key.Name,
                         ActivityModel = this,
                         Reason = "Consumption"
@@ -253,33 +334,69 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // use market stores
-            // buy extra into market store and use market stores
-            // if no market buy from unknown source
-            
-            // if still intake available and targets not met
+            // if still hungry and funds available, try buy food in excess of what stores (private or market) offered using transmutation if present.
+            // This will force the market or private sources to purchase more food to meet demand if transmutation available.
+            // if no market is present it will look to transmutating from its own stores if possible.
+            // this means that other than a purchase from market (above) this activity doesn't need to worry about financial tranactions.
+            if (intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0) && fundsAvailable > 0)
+            {
+                ResourcesHolder resourcesHolder = Resources;
+                // if market is present point to market to find the resource
+                if (Market != null)
+                {
+                    resourcesHolder = Apsim.Child(Market, typeof(ResourcesHolder)) as ResourcesHolder;
+                }
 
-            // 
+                // don't worry about money anymore. The over request will be handled by the transmutation.
+                // move through specified purchase list
+                foreach (LabourActivityFeedTargetPurchase purchase in Apsim.Children(this, typeof(LabourActivityFeedTargetPurchase)).Cast<LabourActivityFeedTargetPurchase>().ToList())
+                {
+                    HumanFoodStoreType foodtype = resourcesHolder.GetResourceItem(this, purchase.FoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
+                    if (foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
+                    {
+                        LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();
+                        if (targetUnfilled != null)
+                        {
+                            // calculate reduction to metric target
+                            double metricneeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved)* purchase.ProportionToPurchase);
+                            double amountneeded = metricneeded / foodtype.ConversionFactor(targetUnfilled.Metric);
 
-            // add more to stores from purchases, either from money or market and money
+                            if(intake + amountneeded > intakeLimit)
+                            {
+                                amountneeded = intakeLimit - intake;
+                            }
+                            double amountfood = amountneeded / foodtype.EdibleProportion;
 
-            // these purchases need to be instant
+                            // update intake
+                            intake += amountfood;
 
-            // then go and add to the resource requests to take any extra just purchased if needed
-
-
-
-
-
-            // now we need to add a heap of purchase requests for the shortfall in intake
-            // finances will limit the 
-            // one at a time going through the food types we will try and buy the shortfall up to intake and targets
-            // This will take money only if the food is available to buy (limited if market is present)
-            // This process will stop as soon as sufficient food has been purchased.
-            // The relavent resource request will need to be updated or a new request added
+                            // find in requests or create a new one
+                            ResourceRequest foodRequestFound = requests.Select(a => a.Resource == foodtype) as ResourceRequest;
+                            if (foodRequestFound is null)
+                            {
+                                requests.Add(new ResourceRequest()
+                                {
+                                    Resource = foodtype,
+                                    ResourceType = typeof(HumanFoodStore),
+                                    AllowTransmutation = true,
+                                    Required = amountfood,
+                                    ResourceTypeName = purchase.FoodStoreName,
+                                    ActivityModel = this,
+                                    Reason = "Consumption"
+                                });
+                            }
+                            else
+                            {
+                                foodRequestFound.Required += amountneeded;
+                                foodRequestFound.AllowTransmutation = true;
+                            }
+                        }
+                    }
+                }
+                // NOTE: proportions of purchased food are not modified if the sum does not add up to 1 or some of the food types are not available. 
+            }
 
             return requests;
-
         }
 
         /// <summary>
@@ -547,7 +664,7 @@ namespace Models.CLEM.Activities
             {
                 html += "<span class=\"errorlink\">NOT SET";
             }
-            html += "</span> kg per day</div>";
+            html += "</span> kg per day";
             if(DailyIntakeOtherSources > 0)
             {
                 html += "with <span class=\"setvalue\">";
@@ -558,6 +675,16 @@ namespace Models.CLEM.Activities
             html += "<div class=\"activityentry\">";
             html += "Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included";
             html += "</div>";
+
+
+            Market marketPlace = FindMarket();
+            if (marketPlace != null)
+            {
+                html += "<div class=\"activityentry\">";
+                html += "Food with be bought and sold through the market <span class=\"setvalue\">"+marketPlace.Name+"</span>";
+                html += "</div>";
+            }
+
             return html;
         }
 
@@ -580,7 +707,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"croprotationborder\">";
-            html += "<div class=\"croprotationlabel\">The people will eat to the following targets:</div>";
+            html += "<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>";
 
             if (Apsim.Children(this, typeof(LabourActivityFeedTarget)).Count() == 0)
             {
@@ -588,6 +715,14 @@ namespace Models.CLEM.Activities
                 html += "<div class=\"filtererror\">No Feed To Target component provided</div>";
                 html += "</div>";
             }
+
+            if (Apsim.Children(this, typeof(LabourActivityFeedTargetPurchase)).Count() == 0)
+            {
+                html += "\n<div class=\"errorbanner clearfix\">";
+                html += "<div class=\"filtererror\">No food items will be purchased above what is currently available</div>";
+                html += "</div>";
+            }
+
             return html;
         }
     }
