@@ -106,22 +106,21 @@ namespace Models.CLEM.Activities
         {
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
-            // only perform this activity if the timing is ok
-            // OR
-            // there are animals marked for destocking from forced selling
-            if (TimingOK || ruminantHerd.Herd.Where(a => a.SaleFlag == HerdChangeReason.DestockSale).Count() > 0)
-            {
-
-            }
-
             int trucks = 0;
             double saleValue = 0;
             double saleWeight = 0;
             int head = 0;
             double aESum = 0;
 
-            // get current untrucked list of animals flagged for sale
-            List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
+            // only perform this activity if timing ok, or selling required as a result of forces destock
+            List<Ruminant> herd = new List<Ruminant>();
+            if(this.TimingOK || this.CurrentHerd(false).Where(a => a.SaleFlag == HerdChangeReason.DestockSale).Count() > 0)
+            {
+                // get current untrucked list of animals flagged for sale
+                herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
+            }
+
+            //List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
 
             if (trucking == null)
             {
@@ -180,6 +179,8 @@ namespace Models.CLEM.Activities
                     }
                     trucking.ReportEmissions(trucks, true);
                 }
+                // if sold all
+                Status = (this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).Count() == 0) ? ActivityStatus.Success : ActivityStatus.Warning;
             }
             if (bankAccount != null && head > 0) //(trucks > 0 || trucking == null)
             {
@@ -238,6 +239,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).ToList();
             if (herd.Count() > 0)
             {
+                this.
                 SetStatusSuccess();
             }
 
@@ -397,11 +399,22 @@ namespace Models.CLEM.Activities
                     herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
                 }
 
+                if (Status != ActivityStatus.Warning)
+                {
+                    if(ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).Count() == 0)
+                    {
+                        SetStatusSuccess();
+                    }
+                    else
+                    {
+                        Status = ActivityStatus.Partial;
+                    }
+                }
+
                 // create trucking emissions
-                if(trucking != null && trucks > 0 )
+                if (trucking != null && trucks > 0 )
                 {
                     trucking.ReportEmissions(trucks, false);
-                    SetStatusSuccess();
                 }
 
                 if (bankAccount != null && (trucks > 0 || trucking == null))
@@ -454,7 +467,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                this.Status = ActivityStatus.Ignored;
+                this.Status = ActivityStatus.Warning;
             }
         }
 

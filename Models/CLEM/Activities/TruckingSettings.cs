@@ -206,8 +206,32 @@ namespace Models.CLEM.Activities
                     }
                     html += "truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeSelling.ToString("0.##%") + "</span> full";
                 }
-                html += "</div>";
+                html += " for sales</div>";
             }
+
+            if (MinimumLoadBeforeBuying > 0 || MinimumTrucksBeforeBuying > 0)
+            {
+                html += "\n<div class=\"activityentry\">";
+                if (MinimumTrucksBeforeBuying > 0)
+                {
+                    html += "A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeBuying.ToString("###") + "</span> truck loads is required";
+                }
+                if (MinimumLoadBeforeBuying > 0)
+                {
+                    if (MinimumTrucksBeforeBuying > 0)
+                    {
+                        html += " and each ";
+                    }
+                    else
+                    {
+                        html += "Each ";
+
+                    }
+                    html += "truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeBuying.ToString("0.##%") + "</span> full";
+                }
+                html += " for purchases</div>";
+            }
+
 
             if (TruckMethaneEmissions > 0 || TruckN2OEmissions > 0)
             {
