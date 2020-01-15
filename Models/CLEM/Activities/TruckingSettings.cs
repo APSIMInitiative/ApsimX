@@ -60,6 +60,20 @@ namespace Models.CLEM.Activities
         public double MinimumLoadBeforeSelling { get; set; }
 
         /// <summary>
+        /// Minimum number of truck loads before buying (0 continuous purchase)
+        /// </summary>
+        [Description("Minimum number of truck loads before buying (0 no limit)")]
+        [Required, GreaterThanEqualValue(0)]
+        public double MinimumTrucksBeforeBuying { get; set; }
+
+        /// <summary>
+        /// Minimum proportion of truck load before buying (0 continuous purchase)
+        /// </summary>
+        [Description("Minimum proportion of truck load before buying (0 no limit)")]
+        [Required, GreaterThanEqualValue(0)]
+        public double MinimumLoadBeforeBuying { get; set; }
+
+        /// <summary>
         /// Truck CO2 emissions per km
         /// </summary>
         [Description("Truck CO2 emissions per km")]

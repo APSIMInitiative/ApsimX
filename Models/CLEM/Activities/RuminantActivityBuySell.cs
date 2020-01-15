@@ -333,10 +333,10 @@ namespace Models.CLEM.Activities
             }
 
             // if purchase herd > min loads before allowing trucking
-            if (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck >= trucking.MinimumTrucksBeforeSelling)
+            if (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck >= trucking.MinimumTrucksBeforeBuying)
             {
                 // while truck to fill
-                while (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck > trucking.MinimumLoadBeforeSelling)
+                while (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck > trucking.MinimumLoadBeforeBuying)
                 {
                     bool nonloaded = true;
                     trucks++;
@@ -451,6 +451,10 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
+            }
+            else
+            {
+                this.Status = ActivityStatus.Ignored;
             }
         }
 
