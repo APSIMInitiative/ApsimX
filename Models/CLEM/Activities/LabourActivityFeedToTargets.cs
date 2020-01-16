@@ -292,7 +292,7 @@ namespace Models.CLEM.Activities
                     double propToPrice = 1;
                     if (cost > 0)
                     {
-                        propToPrice = Math.Max(1, fundsAvailable / cost);
+                        propToPrice = Math.Min(1, fundsAvailable / cost);
                         // remove cost from running check tally
                         fundsAvailable = Math.Max(0, fundsAvailable - (cost * propToPrice));
 
@@ -385,7 +385,7 @@ namespace Models.CLEM.Activities
                         if (targetUnfilled != null)
                         {
                             // calculate reduction to metric target
-                            double metricneeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved)* purchase.ProportionToPurchase);
+                            double metricneeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved));
                             double amountneeded = metricneeded / foodtype.ConversionFactor(targetUnfilled.Metric);
 
                             if(intake + amountneeded > intakeLimit)
@@ -398,7 +398,7 @@ namespace Models.CLEM.Activities
                             intake += amountfood;
 
                             // find in requests or create a new one
-                            ResourceRequest foodRequestFound = requests.Select(a => a.Resource == foodtype) as ResourceRequest;
+                            ResourceRequest foodRequestFound = requests.Find(a => a.Resource == foodtype) as ResourceRequest;
                             if (foodRequestFound is null)
                             {
                                 requests.Add(new ResourceRequest()
@@ -407,7 +407,7 @@ namespace Models.CLEM.Activities
                                     ResourceType = typeof(HumanFoodStore),
                                     AllowTransmutation = true,
                                     Required = amountfood,
-                                    ResourceTypeName = purchase.FoodStoreName,
+                                    ResourceTypeName = purchase.FoodStoreName.Split('.')[1],
                                     ActivityModel = this,
                                     Reason = "Consumption"
                                 });
