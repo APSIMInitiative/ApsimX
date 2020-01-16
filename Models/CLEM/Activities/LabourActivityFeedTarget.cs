@@ -19,7 +19,6 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(LabourActivityFeedToTargets))]
     [Description("This component defines a target to be achieved when trying to feed people to set targets")]
     [Version(1, 0, 1, "")]
-    [Version(1, 0, 2, "Displays new www.apsim.info online help.")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedTarget.htm")]
     public class LabourActivityFeedTarget: CLEMModel
     {

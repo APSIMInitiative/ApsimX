@@ -84,16 +84,34 @@ namespace Models.CLEM.Resources
         /// A method to calculate the total dietary intake by metric
         /// </summary>
         /// <param name="metric">Metric to use</param>
-        /// <param name="includeLabour">Include hired labour in calculations</param>
-        /// <returns></returns>
-        public double GetDietaryValue(string metric, bool includeLabour)
+        /// <param name="includeHiredLabour">Include hired labour in calculations</param>
+        /// <param name="reportPerAE">Report result as per Adult Equivalent</param>
+        /// <returns>Amount eaten</returns>
+        public double GetDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
         {
             double value = 0;
-            foreach (LabourType ind in Items.Where(a => includeLabour | (a.Hired == false)))
+            foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
             {
                 value += ind.GetDietDetails(metric);
             }
+            if(reportPerAE)
+            {
+                value /= AdultEquivalents(includeHiredLabour);
+            }
             return value;
+        }
+
+        /// <summary>
+        /// A method to calculate the total dietary intake by metric
+        /// </summary>
+        /// <param name="metric">Metric to use</param>
+        /// <param name="includeHiredLabour">Include hired labour in calculations</param>
+        /// <param name="reportPerAE">Report result as per Adult Equivalent</param>
+        /// <returns>Amount eaten per day</returns>
+        public double GetDailyDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
+        {
+            int daysInMonth = DateTime.DaysInMonth(Clock.Today.Year, Clock.Today.Month);
+            return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
         }
 
         /// <summary>
@@ -139,7 +157,7 @@ namespace Models.CLEM.Resources
                         InitialAge = labourChildModel.InitialAge,
                         AgeInMonths = labourChildModel.InitialAge * 12,
                         LabourAvailability = labourChildModel.LabourAvailability,
-                        Name = labourChildModel.Name + ((labourChildModel.Individuals > 1)?"_"+(i+1).ToString():""),
+                        Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
                         Hired = labourChildModel.Hired
                     };
                     labour.TransactionOccurred += Resource_TransactionOccurred;
