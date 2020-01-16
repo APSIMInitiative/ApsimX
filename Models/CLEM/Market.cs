@@ -19,8 +19,9 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This represents a market for CLEM farms")]
+    [Description("This represents a shared market place for CLEM farms")]
     [HelpUri(@"")]
+    [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
     [ScopedModel]
     public class Market: Zone, IValidatableObject, ICLEMUI

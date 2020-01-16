@@ -72,6 +72,11 @@
                 {
                     this.view.ModelTypeTextColour = "008000";
                 }
+                else if (this.view.ModelTypeText.Contains(".Market"))
+                {
+                    this.view.ModelTypeTextColour = "1785FF";
+                }
+
 
                 HelpUriAttribute helpAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(HelpUriAttribute), false) as HelpUriAttribute;
                 this.view.ModelHelpURL = "";
