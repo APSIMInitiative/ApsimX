@@ -1,0 +1,24 @@
+#! /bin/bash
+
+
+library(tidyverse)
+
+
+
+#writes .xlsx files. (you need to install the package from CRAN)
+#https://cran.r-project.org/web/packages/writexl/writexl.pdf
+# nb. You can use "readxl" to read .xlsx files (which is built into tidyverse, no installing needed)
+library(writexl)         
+
+
+
+myall <- read_csv("./data/APSIMClassicValidation/MyallValeObservedData.csv")
+gac <- read_csv("./data/APSIMClassicValidation/GACObservedData.csv")
+
+typeof(myall)
+typeof(gac)
+
+sheets <- list(MyallVale = myall, GAC = gac)  
+
+write_xlsx(x = sheets, path = "./output/APSIMClassicValidation.xlsx")
+
