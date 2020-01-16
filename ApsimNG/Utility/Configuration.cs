@@ -103,6 +103,16 @@ namespace Utility
         public double BaseFontSize { get; set; } = 12.5;
 
         /// <summary>
+        /// Simulation complete wav file.
+        /// </summary>
+        public string SimulationCompleteWavFileName { get; set; }
+
+        /// <summary>
+        /// Simulation complete with error wav file.
+        /// </summary>
+        public string SimulationCompleteWithErrorWavFileName { get; set; }
+
+        /// <summary>
         /// Stores the user's preferred font.
         /// </summary>
         /// <value></value>

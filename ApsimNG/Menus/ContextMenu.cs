@@ -198,8 +198,8 @@ namespace UserInterface.Presenters
                     object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
                     explorerPresenter.HideRightHandPanel();
                     explorerPresenter.ShowInRightHandPanel(model,
-                                                           "UserInterface.Views.NewAzureJobView",
-                                                           "UserInterface.Presenters.NewAzureJobPresenter");
+                                                           "UserInterface.Views.RunOnCloudView",
+                                                           "UserInterface.Presenters.RunOnCloudPresenter");
                 }
                 else
                 {
@@ -473,7 +473,7 @@ namespace UserInterface.Presenters
                 if (currentSoil != null)
                 {
 
-                    string errorMessages = SoilChecker.Check(currentSoil);
+                    string errorMessages = SoilChecker.CheckWithStandardisation(currentSoil);
                     if (!string.IsNullOrEmpty(errorMessages))
                         explorerPresenter.MainPresenter.ShowError(errorMessages);
                     else
