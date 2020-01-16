@@ -694,6 +694,7 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.Success;
                 return;
             }
+
             foreach (ResourceRequest request in resourceRequestList)
             {
                 request.ActivityID = uniqueActivityID;
@@ -737,6 +738,7 @@ namespace Models.CLEM.Activities
             if (((countShortfallRequests > 0) && (countShortfallRequests == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
             {
                 // do transmutations.
+                // this uses the current zone resources, but will find markets if needed in the process
                 Resources.TransmutateShortfall(shortfallRequests, false);
 
                 // recheck resource amounts now that resources have been topped up
@@ -765,7 +767,6 @@ namespace Models.CLEM.Activities
             {
                 this.Status = ActivityStatus.Success;
             }
-
         }
 
         /// <summary>

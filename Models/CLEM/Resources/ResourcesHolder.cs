@@ -419,9 +419,17 @@ namespace Models.CLEM.Resources
                 if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                 {
                     // get resource type
-                    IModel model = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IModel;
+                    IModel model = request.Resource as IModel;
+                    if (model is null)
+                    {
+                        model = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IModel;
+                    }
                     if (model != null)
                     {
+                        // get the resource holder to use for this request
+                        // not it is either this class or the holder for the market place required.
+                        ResourcesHolder resHolder = model.Parent.Parent as ResourcesHolder;
+
                         // check if transmutations provided
                         foreach (Transmutation trans in Apsim.Children(model, typeof(Transmutation)))
                         {
@@ -452,12 +460,13 @@ namespace Models.CLEM.Resources
                                 IResourceType transResource = null;
                                 if (transcost.ResourceType.Name != "Labour")
                                 {
-                                    transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+//                                    transResource = this.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                                    transResource = resHolder.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                                 }
 
                                 if (!queryOnly)
                                 {
-                                    //remove cost
+                                    // remove cost
                                     // create new request for this transmutation cost
                                     ResourceRequest transRequest = new ResourceRequest
                                     {
