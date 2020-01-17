@@ -1,0 +1,22 @@
+{
+    "Models": [
+        {
+            "Name": "AgPasture",
+            "Documents": [
+                {
+                    "Name": "Validation",
+                    "FileName": "Tests\\Validation\\AgPasture\\AgPasture.apsimx"
+                },
+                {
+                    "Name": "Model description",
+                    "FileName": "Tests\\Validation\\AgPasture\\AgPasture.apsimx",
+                    "ModelNameToDocument": "AGPRyegrass"
+                },
+                {
+                    "Name": "Science documentation",
+                    "URL": "https://apsimdev.apsim.info/apsim/apsimx/AgPastureScience.pdf"
+                }
+            ]
+        }
+    ]
+}

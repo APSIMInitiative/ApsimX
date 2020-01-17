@@ -786,6 +786,41 @@ namespace APSIM.Shared.Utilities
             return true;
         }
 
+        /// <summary>
+        /// Convert a data table to html snippet.
+        /// </summary>
+        /// <param name="table">The data table to convert to string.</param>
+        /// <returns>HTML snippet. Never returns null.</returns>
+        public static string ToHTML(DataTable table)
+        {
+            var builder = new StringBuilder();
+            if (table.Rows.Count > 0)
+            {
+                builder.Append("<table border='1px' cellpadding='5' cellspacing='0' ");
+                builder.AppendLine("style='border: solid 1px Silver;'>");
+                builder.AppendLine("<tr align='left' valign='top'>");
+                foreach (DataColumn c in table.Columns)
+                {
+                    builder.Append("<td align='left' valign='top'><b>");
+                    builder.Append(c.ColumnName);
+                    builder.AppendLine("</b></td>");
+                }
+                builder.AppendLine("</tr>");
+                foreach (DataRow r in table.Rows)
+                {
+                    builder.AppendLine("<tr align='left' valign='top'>");
+                    foreach (DataColumn c in table.Columns)
+                    {
+                        builder.AppendLine("<td align='left' valign='top'>");
+                        builder.AppendLine(r[c.ColumnName].ToString());
+                        builder.AppendLine("</td>");
+                    }
+                    builder.AppendLine("</tr>");
+                }
+                builder.AppendLine("</table>");
 
+            }
+            return builder.ToString();
+        }
     }
 }
