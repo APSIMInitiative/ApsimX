@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 72,
+  "Version": 73,
   "Name": "Simulations",
   "Children": [
     {
@@ -2771,6 +2771,8 @@
       "NumPaths": 25,
       "NumIntervals": 20,
       "Jump": 10,
+      "TableName": "Report",
+      "AggregationVariableName": "Clock.Today.Year",
       "Parameters": [
         {
           "$type": "Models.Sensitivity.Parameter, Models",
@@ -2802,13 +2804,6 @@
         },
         {
           "$type": "Models.Sensitivity.Parameter, Models",
-          "Name": "OC",
-          "Path": "Field.Soil.Organic.Carbon[1]",
-          "LowerBound": 0.5,
-          "UpperBound": 2.0
-        },
-        {
-          "$type": "Models.Sensitivity.Parameter, Models",
           "Name": "ResidueCNR",
           "Path": "Field.SurfaceOrganicMatter.InitialCNR",
           "LowerBound": 40.0,
@@ -2820,25 +2815,10 @@
           "Path": "Field.Soil.SoilWater.SWCON[1]",
           "LowerBound": 0.1,
           "UpperBound": 0.5
-        },
-        {
-          "$type": "Models.Sensitivity.Parameter, Models",
-          "Name": "DiffusConst",
-          "Path": "Field.Soil.SoilWater.DiffusConst",
-          "LowerBound": 20.0,
-          "UpperBound": 60.0
-        },
-        {
-          "$type": "Models.Sensitivity.Parameter, Models",
-          "Name": "DiffusSlope",
-          "Path": "Field.Soil.SoilWater.DiffusSlope",
-          "LowerBound": 10.0,
-          "UpperBound": 20.0
         }
       ],
-      "TableName": "Report",
-      "AggregationVariableName": "Clock.Today.Year",
       "AggregationValues": null,
+      "ParametersHaveChanged": true,
       "Name": "FallowSensitivity",
       "Children": [
         {
