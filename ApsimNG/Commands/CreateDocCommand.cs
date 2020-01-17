@@ -71,17 +71,17 @@
             // write image files
             Image banner;
             banner = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.AIBanner.png"));
-            
+
             // Convert all models in file to tags.
             var tags = new List<AutoDocumentation.ITag>();
 
             // Add banner and version.
             tags.Add(new AutoDocumentation.Image() { image = banner, name = "AIBanner" });
             tags.Add(new AutoDocumentation.Paragraph(explorerPresenter.ApsimXFile.ApsimVersion, 0));
-            
+
             foreach (IModel child in explorerPresenter.ApsimXFile.Children)
             {
-                AutoDocumentation.DocumentModel(child, tags, headingLevel:1, indent:0);
+                DocumentModel(tags, child);
                 if (child.Name == "TitlePage")
                 {
                     AddBackground(tags);
@@ -106,6 +106,31 @@
 
             // Write the PDF.
             pdfWriter.CreatePDF(tags, FileNameWritten);
+        }
+
+        /// <summary>
+        /// Document the specified model.
+        /// </summary>
+        /// <param name="tags">Document tags to add to.</param>
+        /// <param name="modelToDocument">The model to document.</param>
+        private void DocumentModel(List<AutoDocumentation.ITag> tags, IModel modelToDocument)
+        {
+            var childParent = Apsim.Parent(modelToDocument, typeof(Simulation));
+            if (childParent == null || childParent is Simulations)
+                AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel: 1, indent: 0);
+            else
+            {
+                var clonedModel = Apsim.Clone(modelToDocument);
+                try
+                {
+                    explorerPresenter.ApsimXFile.Links.Resolve(clonedModel, true);
+                    AutoDocumentation.DocumentModel(clonedModel, tags, headingLevel: 1, indent: 0);
+                }
+                finally
+                {
+                    explorerPresenter.ApsimXFile.Links.Unresolve(clonedModel, true);
+                }
+            }
         }
 
         /// <summary>Add statistics</summary>

@@ -35,6 +35,11 @@ namespace UserInterface.Presenters
         /// </summary>
         public string SimulationName { get; set; }
 
+        /// <summary>
+        /// The name of the simulation to display
+        /// </summary>
+        public string ZoneName { get; set; }
+
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
         /// <param name="view">Data store view to work with.</param>
@@ -119,7 +124,7 @@ namespace UserInterface.Presenters
                     {
                         // need to filter by current simulation
                         var filteredData = data.AsEnumerable()
-                            .Where(row => row.Field<String>("SimulationName") == this.SimulationName);
+                            .Where(row => row.Field<String>("SimulationName") == this.SimulationName & row.Field<String>("Zone") == this.ZoneName);
                         if (filteredData.Any())
                         {
                             data = filteredData.CopyToDataTable();
