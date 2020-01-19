@@ -477,6 +477,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\LabourActivityFeedTargetPurchase.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\Market.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ProtectedDivideFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\StorageNDemandFunction.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\ShadedBarsOnGraph.png" />

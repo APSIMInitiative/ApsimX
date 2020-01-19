@@ -135,7 +135,6 @@ namespace Models.CLEM.Activities
             DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
 
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">";
             html += "\n<div class=\"filter\">";
             string invertString = "";
             if (Invert)
@@ -173,7 +172,6 @@ namespace Models.CLEM.Activities
             {
                 html += " - DISABLED!";
             }
-            html += "\n</div>";
             return html;
         }
 
@@ -183,7 +181,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -192,7 +190,9 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
+            string html = "";
+            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return html;
         }
 
     }
