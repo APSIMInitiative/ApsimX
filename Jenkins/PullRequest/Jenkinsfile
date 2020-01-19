@@ -86,6 +86,9 @@ pipeline {
 					agent {
 						label "windows"
 					}
+					environment {
+						APSIM_SITE_CREDS = credentials('apsim-site-creds')
+					}
 					steps {
 						bat '''
 							@echo off
