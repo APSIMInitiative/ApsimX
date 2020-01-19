@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
+    using System.Net;
     using System.Reflection;
     using System.Text;
     using UserInterface.Commands;
@@ -87,7 +88,7 @@
                 }
 
                 // Upload to server
-                var serverFolder = "http://apsimdev.apsim.info/ApsimX/Releases/" + version;
+                var serverFolder = "ftp://apsimdev.apsim.info/ApsimX/Releases/" + version;
                 Upload(destinationFolder, serverFolder);
             }
             catch (Exception err)
@@ -149,12 +150,16 @@
                     // Create some necessary presenters and views.
                     var mainPresenter = new MainPresenter();
                     var explorerPresenter = new ExplorerPresenter(mainPresenter);
+
                     var explorerView = new ExplorerView(null);
                     explorerPresenter.Attach(simulations, explorerView, explorerPresenter);
 
                     // Document model.
                     if (documentObject["ModelNameToDocument"] == null)
                     {
+                        Console.WriteLine("----------------------------------------------------------");
+                        Console.WriteLine("Creating documentation from " + fileName);
+
                         // Whole of simulation document.
                         var createDoc = new CreateDocCommand(explorerPresenter, destinationFolder);
                         createDoc.Do(null);
@@ -162,6 +167,9 @@
                     }
                     else
                     {
+                        Console.WriteLine("----------------------------------------------------------");
+                        Console.WriteLine("Creating model description documentation from " + fileName);
+
                         // Specific model description documentation.
                         var modelNameToDocument = documentObject["ModelNameToDocument"].ToString();
                         var model = Apsim.Find(simulations, modelNameToDocument) as IModel;
@@ -189,10 +197,29 @@
             var password = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_PSW");
 
             Console.WriteLine("Sending documentation to " + serverFolder);
-            FTPClient.MakeDirectory(serverFolder, userName, password);
-            foreach (var fileName in Directory.GetFiles(destinationFolder))
+
+            try
             {
-                FTPClient.Upload(fileName, serverFolder + "/" + Path.GetFileName(fileName), userName, password);
+                var request = WebRequest.Create(serverFolder) as FtpWebRequest;
+                request.Method = WebRequestMethods.Ftp.MakeDirectory;
+                request.Credentials = new NetworkCredential(userName, password);
+                var ftpResponse = (FtpWebResponse)request.GetResponse();
+            }
+            catch (Exception)
+            {
+                // Can fail if the directory already exists on server.
+            }
+
+            using (var client = new WebClient())
+            {
+                client.Credentials = new NetworkCredential(userName, password);
+
+                foreach (var fileName in Directory.GetFiles(destinationFolder))
+                {
+                    var destFileName = serverFolder + "/" + Path.GetFileName(fileName);
+                    client.UploadFile(destFileName, WebRequestMethods.Ftp.UploadFile, fileName);
+
+                }
             }
         }
     }

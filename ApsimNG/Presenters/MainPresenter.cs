@@ -256,8 +256,16 @@
         {
             if (error != null)
             {
-                LastError = new List<string> { error.ToString() };
-                view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error);
+                if (view == null)
+                {
+                    // This can happen when CreateDocumentation.exe is the main program.
+                    Console.WriteLine(error.ToString());
+                }
+                else
+                {
+                    LastError = new List<string> { error.ToString() };
+                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error);
+                }
             }
             else
             {
