@@ -698,8 +698,17 @@ namespace UserInterface.Views
             if (textEditor.Text.Length > index + triggerWord.Length)
                 textAfterTriggerWord = textEditor.Text.Substring(index + triggerWord.Length);
 
+            // Changing the text property of the text editor will reset the scroll
+            // position. To work around this, we record the scroll position before
+            // we change the text then reset it manually afterwards.
+            double verticalPosition = scroller.Vadjustment.Value;
+            double horizontalPosition = scroller.Hadjustment.Value;
+
             textEditor.Text = textBeforeTriggerWord + completionOption + textAfterTriggerWord;
             textEditor.Caret.Offset = index + completionOption.Length;
+
+            scroller.Vadjustment.Value = verticalPosition;
+            scroller.Hadjustment.Value = horizontalPosition;
         }
 
         /// <summary>
