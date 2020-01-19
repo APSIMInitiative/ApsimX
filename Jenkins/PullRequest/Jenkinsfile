@@ -82,7 +82,7 @@ pipeline {
 						'''
 					}
 				}
-				stage('Unit Tests') {
+				stage('Unit Tests and Documentation') {
 					agent {
 						label "windows"
 					}
@@ -98,6 +98,13 @@ pipeline {
 							call build
 							if errorlevel 1 exit /b 1
 							call runTests Unit
+
+							cd
+							cd ..\\Bin
+							time <nul
+							CreateDocumentation.exe
+							if errorlevel 1 exit /b 1
+							time <nul
 						'''
 					}
 				}

@@ -182,11 +182,14 @@
         /// Upload files to server.
         /// </summary>
         /// <param name="destinationFolder">The folder to upload.</param>
+        /// <param name="serverFolder">Server folder to send files to.</param>
         private static void Upload(string destinationFolder, string serverFolder)
         {
-            string userName = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_USR");
-            string password = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_PSW");
+            var userName = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_USR");
+            var password = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_PSW");
 
+            Console.WriteLine("Sending documentation to " + serverFolder);
+            FTPClient.MakeDirectory(serverFolder, userName, password);
             foreach (var fileName in Directory.GetFiles(destinationFolder))
             {
                 FTPClient.Upload(fileName, serverFolder + "/" + Path.GetFileName(fileName), userName, password);
