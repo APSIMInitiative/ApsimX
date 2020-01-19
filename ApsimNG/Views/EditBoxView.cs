@@ -32,9 +32,17 @@ namespace UserInterface.Views
         int Offset { get; }
 
         /// <summary>
-        /// Inserts the selected text at the cursor.
+        /// Inserts the selected text at the cursor, replacing all text
+        /// before the cursor and after the most recent character which
+        /// is not an opening square bracket.
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">The text to be inserted.</param>
+        void InsertAtCursorInSquareBrackets(string text);
+
+        /// <summary>
+        /// Insert text at the cursor.
+        /// </summary>
+        /// <param name="text">The text to be inserted.</param>
         void InsertAtCursor(string text);
 
         /// <summary>
@@ -279,14 +287,25 @@ namespace UserInterface.Views
         /// before the cursor and after the most recent character which
         /// is not an opening square bracket.
         /// </summary>
-        /// <param name="text"></param>
-        public void InsertAtCursor(string text)
+        /// <param name="text">The text to be inserted.</param>
+        public void InsertAtCursorInSquareBrackets(string text)
         {
             int offset = IndexOfNot(textentry1.Text.Substring(0, Offset), '[');
             if (offset < 0)
                 offset = Offset;
             textentry1.Text = textentry1.Text.Substring(0, offset) + text + textentry1.Text.Substring(Offset);
             textentry1.Position = offset + text.Length;
+        }
+
+        /// <summary>
+        /// Insert text at the cursor.
+        /// </summary>
+        /// <param name="text">The text to be inserted.</param>
+        public void InsertAtCursor(string text)
+        {
+            int pos = Offset + text.Length;
+            textentry1.Text = textentry1.Text.Substring(0, Offset) + text + textentry1.Text.Substring(Offset);
+            textentry1.Position = pos;
         }
 
         /// <summary>
