@@ -193,6 +193,10 @@
         /// <param name="serverFolder">Server folder to send files to.</param>
         private static void Upload(string destinationFolder, string serverFolder)
         {
+            Console.WriteLine("Environment variables:");
+            foreach (System.Collections.DictionaryEntry variable in Environment.GetEnvironmentVariables())
+                Console.WriteLine(variable.Key);
+
             var userName = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_USR");
             var password = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_PSW");
 

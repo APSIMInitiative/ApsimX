@@ -11,10 +11,6 @@
                             "URL": "http://apsimdev.apsim.info/CLEM/Content/Home.htm"
                         },
                         {
-                            "Name": "Cropping example",
-                            "FileName": "Examples\\CLEM\\CLEM_Example_Cropping.apsimx"
-                        },
-                        {
                             "Name": "Grazing example",
                             "FileName": "Examples\\CLEM\\CLEM_Example_Grazing.apsimx"
                         }

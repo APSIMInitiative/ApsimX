@@ -97,7 +97,8 @@ pipeline {
 							call cleanup
 							call build
 							if errorlevel 1 exit /b 1
-							call runTests Unit
+							call runTests Units
+							call runTests Examples
 
 							cd
 							cd ..\\Bin
