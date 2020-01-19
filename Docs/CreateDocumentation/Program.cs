@@ -21,9 +21,6 @@
         {
             try
             {
-                Gtk.Application.Init();
-                Gtk.Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
-
                 var apsimDirectory = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".."));
 
                 // Set the current directory to the bin directory so that APSIM can find sqlite3.dll
@@ -34,39 +31,64 @@
                 var destinationFolder = Path.Combine(Path.GetTempPath(), "ApsimX", "AutoDoc");
                 Directory.CreateDirectory(destinationFolder);
 
-                // Create a data table that will later be turned into a table on a html page.
-                var documentationTable = new DataTable();
-                documentationTable.Columns.Add("Model name", typeof(string));
-                documentationTable.Columns.Add("Documentation", typeof(string));
+                // Create a string builder for writing the html index file.
+                var htmlBuilder = new StringBuilder();
+                htmlBuilder.AppendLine("<html>");
+                htmlBuilder.AppendLine("<body>");
+
+                // Was a title for the generated html file given as argument 1?
+                var version = Assembly.GetAssembly(typeof(ExplorerPresenter)).GetName().Version;
+                htmlBuilder.AppendLine("<h1>Documentation for version " + version + "</h1>");
 
                 // Read the documentation instructions file.
                 var documentationFileName = Path.Combine(apsimDirectory, "Docs", "CreateDocumentation", "Documentation.json");
                 var instructions = JObject.Parse(File.ReadAllText(documentationFileName));
 
-                // Loop through all models and document.
-                foreach (var model in instructions["Models"] as JArray)
+                // Keep track of all exceptions so that we can show them at the end.
+                var exceptions = new List<Exception>();
+
+                // Loop through all "Tables" element in the input json file.
+                foreach (JObject tableInstruction in instructions["Tables"] as JArray)
                 {
-                    var documentationRow = documentationTable.NewRow();
-                    documentationRow[0] = model["Name"].ToString();
-                    string html = string.Empty;
-                    foreach (var documentDescription in model["Documents"] as JArray)
-                        html += CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder);
-                    documentationRow[1] = html;
-                    documentationTable.Rows.Add(documentationRow);
+                    // Write html heading for table.
+                    htmlBuilder.AppendLine("<h2>" + tableInstruction["Title"].ToString() + "</h2>");
+
+                    try
+                    {
+                        // Create a data table.
+                        var documentationTable = CreateTable(tableInstruction, apsimDirectory, destinationFolder);
+
+                        // Write table to html.
+                        htmlBuilder.AppendLine(DataTableUtilities.ToHTML(documentationTable, writeHeaders: false));
+                    }
+                    catch (Exception err)
+                    {
+                        exceptions.Add(err);
+                    }
                 }
 
-                // Create a documentation html page.
-                var builder = new StringBuilder();
-                builder.AppendLine("<html>");
-                builder.AppendLine("<body>");
+                // Close the open html tags.
+                htmlBuilder.AppendLine("</body>");
+                htmlBuilder.AppendLine("</html>");
 
-                builder.AppendLine(DataTableUtilities.ToHTML(documentationTable));
-
-                builder.AppendLine("</body>");
-                builder.AppendLine("</html>");
-
+                // Write the html to file.
                 var htmlFileName = Path.Combine(destinationFolder, "index.html");
-                File.WriteAllText(htmlFileName, builder.ToString());
+                File.WriteAllText(htmlFileName, htmlBuilder.ToString());
+
+                // If exceptions were found then show them and return a value of 1 to indicate an error.
+                if (exceptions.Count > 0)
+                {
+                    foreach (var exception in exceptions)
+                    {
+                        Console.WriteLine(exception.ToString());
+                        Console.WriteLine("-------------------------------------");
+                    }
+                    return 1;
+                }
+
+                // Upload to server
+                var serverFolder = "http://apsimdev.apsim.info/ApsimX/Releases/" + version;
+                Upload(destinationFolder, serverFolder);
             }
             catch (Exception err)
             {
@@ -74,6 +96,31 @@
                 return 1;
             }
             return 0;
+        }
+
+        private static DataTable CreateTable(JObject instructions, string apsimDirectory, string destinationFolder)
+        {
+            // Create a data table that will later be turned into a table on a html page.
+            var documentationTable = new DataTable();
+            documentationTable.Columns.Add();
+
+            // Loop through all models and document.
+            foreach (var model in instructions["Rows"] as JArray)
+            {
+                var documentationRow = documentationTable.NewRow();
+                documentationRow[0] = model["Name"].ToString();
+                int columnIndex = 1;
+                foreach (var documentDescription in model["Documents"] as JArray)
+                {
+                    if (columnIndex >= documentationTable.Columns.Count)
+                        documentationTable.Columns.Add();
+                    documentationRow[columnIndex] = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder);
+                    columnIndex++;
+                }
+                documentationTable.Rows.Add(documentationRow);
+            }
+
+            return documentationTable;
         }
 
         /// <summary>
@@ -94,36 +141,33 @@
                 var fileName = Path.Combine(apsimDirectory, documentObject["FileName"].ToString());
                 if (File.Exists(fileName))
                 {
-                    // Get the name of the model
-                    string modelName = Path.GetFileNameWithoutExtension(fileName);
-
                     // Open the file.
                     var simulations = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> creationExceptions);
                     if (creationExceptions?.Count > 0)
                         throw creationExceptions[0];
 
-                    // Create some necessary presenters.
+                    // Create some necessary presenters and views.
                     var mainPresenter = new MainPresenter();
                     var explorerPresenter = new ExplorerPresenter(mainPresenter);
                     var explorerView = new ExplorerView(null);
                     explorerPresenter.Attach(simulations, explorerView, explorerPresenter);
-                    explorerView.MainWidget.ShowAll();
 
                     // Document model.
                     if (documentObject["ModelNameToDocument"] == null)
                     {
+                        // Whole of simulation document.
                         var createDoc = new CreateDocCommand(explorerPresenter, destinationFolder);
                         createDoc.Do(null);
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }
                     else
                     {
+                        // Specific model description documentation.
                         var modelNameToDocument = documentObject["ModelNameToDocument"].ToString();
                         var model = Apsim.Find(simulations, modelNameToDocument) as IModel;
                         if (model == null)
                             return null;
-                        //explorerPresenter.SelectNode(Apsim.FullPath(model));
-                        var createDoc = new CreateModelDescriptionDocCommand(explorerPresenter, model);
+                        var createDoc = new CreateModelDescriptionDocCommand(explorerPresenter, model, destinationFolder);
                         createDoc.Do(null);
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }
@@ -132,6 +176,21 @@
                     return null;
             }
             return string.Format("<p><a href=\"{0}\">{1}</a></p>", href, hrefName);
+        }
+
+        /// <summary>
+        /// Upload files to server.
+        /// </summary>
+        /// <param name="destinationFolder">The folder to upload.</param>
+        private static void Upload(string destinationFolder, string serverFolder)
+        {
+            string userName = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_USR");
+            string password = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_PSW");
+
+            foreach (var fileName in Directory.GetFiles(destinationFolder))
+            {
+                FTPClient.Upload(fileName, serverFolder + "/" + Path.GetFileName(fileName), userName, password);
+            }
         }
     }
 }

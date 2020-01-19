@@ -812,15 +812,15 @@ namespace UserInterface.Presenters
                     string fileNameWritten;
                     var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
 
+                    var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
                     if (modelToDocument is Simulations)
                     {
-                        var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
                         command = new CreateDocCommand(explorerPresenter, destinationFolder);
                         fileNameWritten = (command as CreateDocCommand).FileNameWritten;
                     }
                     else
                     {
-                        command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument);
+                        command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument, destinationFolder);
                         fileNameWritten = (command as CreateModelDescriptionDocCommand).FileNameWritten;
                     }
 
