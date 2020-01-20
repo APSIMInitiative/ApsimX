@@ -124,6 +124,7 @@
             set
             {
                 ParametersHaveChanged = true;
+                Parameters.Clear();
                 foreach (DataRow row in value[0].Rows)
                 {
                     Parameter param = new Parameter();

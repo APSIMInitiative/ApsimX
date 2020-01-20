@@ -473,7 +473,7 @@ namespace UserInterface.Presenters
                 if (currentSoil != null)
                 {
 
-                    string errorMessages = SoilChecker.Check(currentSoil);
+                    string errorMessages = SoilChecker.CheckWithStandardisation(currentSoil);
                     if (!string.IsNullOrEmpty(errorMessages))
                         explorerPresenter.MainPresenter.ShowError(errorMessages);
                     else

@@ -237,12 +237,28 @@
             if (completionModel.IterNChildren() > 0)
             {
                 completionForm.TransientFor = MainWindow;
-                completionForm.ShowAll();
                 completionForm.Move(x, y);
                 completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
+                completionForm.ShowAll();
                 completionView.SetCursor(new TreePath("0"), null, false);
                 completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
+
+                // OK so sometimes the HTMLView's web browser will steal focus. There is a
+                // hack in the HTMLView code which manually gives focus back to the toplevel
+                // window in this situation, but apparently creating the intellisense popup
+                // is enough to trigger this hack if there is a HTMLView onscreen. This is a
+                // problem because giving the focus back to the main window will take focus
+                // away from the intellisense popup which causes the intellisense popup to
+                // disappear. The workaround is to wait for all Gtk events to process, and
+                // then recreate the intellisense popup if need be.
                 while (GLib.MainContext.Iteration()) ;
+                if (!completionForm.Visible)
+                {
+                    // For some reason, the coordinates/sizing get reset if we lose focus.
+                    completionForm.Move(x, y);
+                    completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
+                    completionForm.ShowAll();
+                }
                 return true;
             }
             return false;
@@ -325,7 +341,7 @@
             foreach (CompletionData item in items)
             {
                 IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
-                string description = descriptionLines.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines.Aggregate((x, y) => x + Environment.NewLine + y);
+                string description = descriptionLines?.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines?.Aggregate((x, y) => x + Environment.NewLine + y);
                 completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, description, item.CompletionText, item.IsMethod);
             }
         }
