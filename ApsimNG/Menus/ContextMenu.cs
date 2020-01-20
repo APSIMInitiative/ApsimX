@@ -805,33 +805,30 @@ namespace UserInterface.Presenters
             {
                 if (this.explorerPresenter.Save())
                 {
-                    string destinationFolder = Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), "Doc");
-                    if (destinationFolder != null)
+                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
+                    explorerPresenter.MainPresenter.ShowWaitCursor(true);
+
+                    ICommand command;
+                    string fileNameWritten;
+                    var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+
+                    var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
+                    if (modelToDocument is Simulations)
                     {
-                        explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
-                        explorerPresenter.MainPresenter.ShowWaitCursor(true);
-
-                        ICommand command;
-                        string fileNameWritten;
-                        var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
-
-                        if (modelToDocument is Simulations)
-                        {
-                            command = new CreateDocCommand(explorerPresenter);
-                            fileNameWritten = (command as CreateDocCommand).FileNameWritten;
-                        }
-                        else
-                        {
-                            command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument);
-                            fileNameWritten = (command as CreateModelDescriptionDocCommand).FileNameWritten;
-                        }
-
-                        explorerPresenter.CommandHistory.Add(command, true);
-                        explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
-
-                        // Open the document.
-                        Process.Start(fileNameWritten);
+                        command = new CreateDocCommand(explorerPresenter, destinationFolder);
+                        fileNameWritten = (command as CreateDocCommand).FileNameWritten;
                     }
+                    else
+                    {
+                        command = new CreateModelDescriptionDocCommand(explorerPresenter, modelToDocument, destinationFolder);
+                        fileNameWritten = (command as CreateModelDescriptionDocCommand).FileNameWritten;
+                    }
+
+                    explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
+
+                    // Open the document.
+                    Process.Start(fileNameWritten);
                 }
             }
             catch (Exception err)

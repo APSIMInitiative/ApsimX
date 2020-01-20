@@ -52,14 +52,15 @@ namespace UserInterface.Commands
         /// </summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
         /// <param name="model">The model to document.</param>
-        public CreateModelDescriptionDocCommand(ExplorerPresenter explorerPresenter, IModel model)
+        /// <param name="destinationFolder">Name of directory to put pdf file into.</param>
+        public CreateModelDescriptionDocCommand(ExplorerPresenter explorerPresenter, IModel model, string destinationFolder)
         {
             this.explorerPresenter = explorerPresenter;
             this.modelToDocument = model;
 
             namespaceToDocument = modelToDocument.GetType().Namespace;
-
-            FileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".description.pdf");
+            var modelNameToDocument = Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
+            FileNameWritten = Path.Combine(destinationFolder, modelNameToDocument + ".description.pdf");
         }
 
         /// <summary>The name of the file written.</summary>
