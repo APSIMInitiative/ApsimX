@@ -38,7 +38,7 @@
                 htmlBuilder.AppendLine("<body>");
 
                 // Was a title for the generated html file given as argument 1?
-                var version = Assembly.GetAssembly(typeof(ExplorerPresenter)).GetName().Version;
+                var version = Environment.GetEnvironmentVariable("APSIM_VERSION");
                 htmlBuilder.AppendLine("<h1>Documentation for version " + version + "</h1>");
 
                 // Read the documentation instructions file.
@@ -193,10 +193,6 @@
         /// <param name="serverFolder">Server folder to send files to.</param>
         private static void Upload(string destinationFolder, string serverFolder)
         {
-            Console.WriteLine("Environment variables:");
-            foreach (System.Collections.DictionaryEntry variable in Environment.GetEnvironmentVariables())
-                Console.WriteLine(variable.Key);
-
             var userName = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_USR");
             var password = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_PSW");
 
