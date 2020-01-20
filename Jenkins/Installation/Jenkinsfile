@@ -29,7 +29,7 @@ pipeline {
 							call runTests Examples
 							if errorlevel 1 exit /b 1
 							
-							..\Bin\CreateDocumentation.exe 
+							..\\Bin\\CreateDocumentation.exe 
 							if errorlevel 1 exit /b 1
 						'''
 					}
