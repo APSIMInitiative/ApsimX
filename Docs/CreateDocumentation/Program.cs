@@ -38,7 +38,10 @@
                 htmlBuilder.AppendLine("<body>");
 
                 // Was a title for the generated html file given as argument 1?
-                var version = GetVersion(); 
+                var version = GetVersion();
+                var serverFtpFolder = "ftp://apsimdev.apsim.info/ApsimX/Releases/" + version;
+                var serverHttpFolder = "http://apsimdev.apsim.info/ApsimX/Releases/" + version;
+
                 htmlBuilder.AppendLine("<h1>Documentation for version " + version + "</h1>");
 
                 // Read the documentation instructions file.
@@ -57,7 +60,7 @@
                     try
                     {
                         // Create a data table.
-                        var documentationTable = CreateTable(tableInstruction, apsimDirectory, destinationFolder);
+                        var documentationTable = CreateTable(tableInstruction, apsimDirectory, destinationFolder, serverHttpFolder);
 
                         // Write table to html.
                         htmlBuilder.AppendLine(DataTableUtilities.ToHTML(documentationTable, writeHeaders: false));
@@ -88,8 +91,7 @@
                 }
 
                 // Upload to server
-                var serverFolder = "ftp://apsimdev.apsim.info/ApsimX/Releases/" + version;
-                Upload(destinationFolder, serverFolder);
+                Upload(destinationFolder, serverFtpFolder);
             }
             catch (Exception err)
             {
@@ -116,7 +118,15 @@
             return versionString + "." + issueNumber;
         }
 
-        private static DataTable CreateTable(JObject instructions, string apsimDirectory, string destinationFolder)
+        /// <summary>
+        /// Create a documentation table.
+        /// </summary>
+        /// <param name="instructions">The json instructions for creating the table.</param>
+        /// <param name="apsimDirectory">The root apsim directory.</param>
+        /// <param name="destinationFolder">The destination directory where the auto-generated files are to be created.</param>
+        /// <param name="destinationUrl">The server destination URL where all files will end up.</param>
+        /// <returns></returns>
+        private static DataTable CreateTable(JObject instructions, string apsimDirectory, string destinationFolder, string destinationUrl)
         {
             // Create a data table that will later be turned into a table on a html page.
             var documentationTable = new DataTable();
@@ -132,7 +142,7 @@
                 {
                     if (columnIndex >= documentationTable.Columns.Count)
                         documentationTable.Columns.Add();
-                    documentationRow[columnIndex] = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder);
+                    documentationRow[columnIndex] = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder, destinationUrl);
                     columnIndex++;
                 }
                 documentationTable.Rows.Add(documentationRow);
@@ -147,8 +157,9 @@
         /// <param name="documentObject">The documentObject node that describes what to document.</param>
         /// <param name="apsimDirectory">The APSIM root directory.</param>
         /// <param name="destinationFolder">The folder where the PDF should be created.</param>
+        /// <param name="destinationUrl">The server destination URL where all files will end up.</param>
         /// <returns>HTML snippet for a single model document.</returns>
-        private static string CreateModelDocumentation(JObject documentObject, string apsimDirectory, string destinationFolder)
+        private static string CreateModelDocumentation(JObject documentObject, string apsimDirectory, string destinationFolder, string destinationUrl)
         {
             string href;
             string hrefName = documentObject["Name"].ToString();
@@ -200,7 +211,7 @@
                 else
                     return null;
             }
-            return string.Format("<p><a href=\"{0}\">{1}</a></p>", href, hrefName);
+            return string.Format("<p><a href=\"{0}\">{1}</a></p>", destinationUrl + href, hrefName);
         }
 
         /// <summary>
