@@ -38,7 +38,7 @@
                 htmlBuilder.AppendLine("<body>");
 
                 // Was a title for the generated html file given as argument 1?
-                var version = Environment.GetEnvironmentVariable("APSIM_VERSION");
+                var version = GetVersion(); 
                 htmlBuilder.AppendLine("<h1>Documentation for version " + version + "</h1>");
 
                 // Read the documentation instructions file.
@@ -97,6 +97,23 @@
                 return 1;
             }
             return 0;
+        }
+
+        /// <summary>Get the APSIM version.</summary>
+        private static string GetVersion()
+        {
+            var pullRequestID = Environment.GetEnvironmentVariable("ghprbPullId");
+            if (pullRequestID == string.Empty)
+                pullRequestID = Environment.GetEnvironmentVariable("PULL_ID");
+
+            var url = string.Format("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID={0}",
+                                    pullRequestID);
+            var versionString = WebUtilities.CallRESTService<string>(url);
+
+            var temp = StringUtilities.SplitOffAfterDelimiter(ref versionString, "-");
+            var issueNumber = StringUtilities.SplitOffAfterDelimiter(ref temp, ",");
+
+            return versionString + "." + issueNumber;
         }
 
         private static DataTable CreateTable(JObject instructions, string apsimDirectory, string destinationFolder)
