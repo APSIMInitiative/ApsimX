@@ -105,7 +105,7 @@
         private static string GetVersion()
         {
             foreach (System.Collections.DictionaryEntry variable in Environment.GetEnvironmentVariables())
-                Console.Write(variable.Key);
+                Console.WriteLine(variable.Key);
 
             var pullRequestID = Environment.GetEnvironmentVariable("ghprbPullId");
             if (string.IsNullOrEmpty(pullRequestID))
