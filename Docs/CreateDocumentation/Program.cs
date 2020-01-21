@@ -54,22 +54,20 @@
                 var exceptions = new List<Exception>();
 
                 // Loop through all "Tables" element in the input json file.
+                bool errorsFound = false;
                 foreach (JObject tableInstruction in instructions["Tables"] as JArray)
                 {
                     // Write html heading for table.
                     htmlBuilder.AppendLine("<h2>" + tableInstruction["Title"].ToString() + "</h2>");
 
-                    try
+                    // Create a data table.
+                    var documentationTable = CreateTable(tableInstruction, apsimDirectory, destinationFolder, serverHttpFolder);
+                    if (documentationTable == null)
+                        errorsFound = true;
+                    else
                     {
-                        // Create a data table.
-                        var documentationTable = CreateTable(tableInstruction, apsimDirectory, destinationFolder, serverHttpFolder);
-
                         // Write table to html.
                         htmlBuilder.AppendLine(DataTableUtilities.ToHTML(documentationTable, writeHeaders: false));
-                    }
-                    catch (Exception err)
-                    {
-                        exceptions.Add(err);
                     }
                 }
 
@@ -81,39 +79,27 @@
                 var htmlFileName = Path.Combine(destinationFolder, "index.html");
                 File.WriteAllText(htmlFileName, htmlBuilder.ToString());
 
-                // If exceptions were found then show them and return a value of 1 to indicate an error.
-                if (exceptions.Count > 0)
-                {
-                    foreach (var exception in exceptions)
-                    {
-                        Console.WriteLine(exception.ToString());
-                        Console.WriteLine("-------------------------------------");
-                    }
-                    return 1;
-                }
-
                 // Upload to server
-                Upload(destinationFolder, serverFtpFolder);
+                if (!errorsFound)
+                    Upload(destinationFolder, serverFtpFolder);
             }
             catch (Exception err)
             {
                 Console.WriteLine(err.ToString());
-                return 1;
+                errorsFound = true;
             }
-            return 0;
+            if (errorsFound)
+                return 1;
+            else
+                return 0;
         }
 
         /// <summary>Get the APSIM version.</summary>
         private static string GetVersion()
         {
-            foreach (System.Collections.DictionaryEntry variable in Environment.GetEnvironmentVariables())
-                Console.WriteLine(variable.Key);
-
             var pullRequestID = Environment.GetEnvironmentVariable("ghprbPullId");
             if (string.IsNullOrEmpty(pullRequestID))
                 pullRequestID = Environment.GetEnvironmentVariable("PULL_ID");
-
-            Console.WriteLine("Pull request id = " + pullRequestID);
 
             var url = string.Format("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID={0}",
                                     pullRequestID);
@@ -142,22 +128,34 @@
             documentationTable.Columns.Add();
 
             // Loop through all models and document.
+            bool errorsFound = false;
             foreach (var model in instructions["Rows"] as JArray)
             {
-                var documentationRow = documentationTable.NewRow();
-                documentationRow[0] = model["Name"].ToString();
-                int columnIndex = 1;
-                foreach (var documentDescription in model["Documents"] as JArray)
+                try
                 {
-                    if (columnIndex >= documentationTable.Columns.Count)
-                        documentationTable.Columns.Add();
-                    documentationRow[columnIndex] = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder, destinationUrl);
-                    columnIndex++;
+                    var documentationRow = documentationTable.NewRow();
+                    documentationRow[0] = model["Name"].ToString();
+                    int columnIndex = 1;
+                    foreach (var documentDescription in model["Documents"] as JArray)
+                    {
+                        if (columnIndex >= documentationTable.Columns.Count)
+                            documentationTable.Columns.Add();
+                        documentationRow[columnIndex] = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder, destinationUrl);
+                        columnIndex++;
+                    }
+                    documentationTable.Rows.Add(documentationRow);
                 }
-                documentationTable.Rows.Add(documentationRow);
+                catch (Exception err)
+                {
+                    Console.WriteLine(err.ToString());
+                    errorsFound = true;
+                }
             }
 
-            return documentationTable;
+            if (errorsFound)
+                return null;
+            else
+                return documentationTable;
         }
 
         /// <summary>
@@ -194,7 +192,6 @@
                     // Document model.
                     if (documentObject["ModelNameToDocument"] == null)
                     {
-                        Console.WriteLine("----------------------------------------------------------");
                         Console.WriteLine("Creating documentation from " + fileName);
 
                         // Whole of simulation document.
@@ -204,7 +201,6 @@
                     }
                     else
                     {
-                        Console.WriteLine("----------------------------------------------------------");
                         Console.WriteLine("Creating model description documentation from " + fileName);
 
                         // Specific model description documentation.
@@ -233,7 +229,7 @@
             var userName = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_USR");
             var password = Environment.GetEnvironmentVariable("APSIM_SITE_CREDS_PSW");
 
-            Console.WriteLine("Sending documentation to " + serverFolder);
+            Console.WriteLine("Uploading documentation to " + serverFolder);
 
             try
             {
