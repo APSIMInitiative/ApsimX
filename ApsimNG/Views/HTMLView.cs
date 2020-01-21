@@ -1078,7 +1078,8 @@ namespace UserInterface.Views
             else
                browser.LoadHTML(contents);
 
-            browser.Font = (MasterView as ViewBase).MainWidget.Style.FontDescription;
+            if (MasterView != null)
+                browser.Font = (MasterView as ViewBase).MainWidget.Style.FontDescription;
 
             if (browser is TWWebBrowserIE && (browser as TWWebBrowserIE).Browser != null)
             {
