@@ -104,9 +104,14 @@
         /// <summary>Get the APSIM version.</summary>
         private static string GetVersion()
         {
+            foreach (System.Collections.DictionaryEntry variable in Environment.GetEnvironmentVariables())
+                Console.Write(variable.Key);
+
             var pullRequestID = Environment.GetEnvironmentVariable("ghprbPullId");
-            if (pullRequestID == string.Empty)
+            if (string.IsNullOrEmpty(pullRequestID))
                 pullRequestID = Environment.GetEnvironmentVariable("PULL_ID");
+
+            Console.WriteLine("Pull request id = " + pullRequestID);
 
             var url = string.Format("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID={0}",
                                     pullRequestID);
@@ -114,6 +119,8 @@
 
             var temp = StringUtilities.SplitOffAfterDelimiter(ref versionString, "-");
             var issueNumber = StringUtilities.SplitOffAfterDelimiter(ref temp, ",");
+
+            Console.WriteLine(versionString + "." + issueNumber);
 
             return versionString + "." + issueNumber;
         }
