@@ -20,6 +20,8 @@
         [STAThread]
         public static int Main(string[] args)
         {
+            bool errorsFound = false;
+
             try
             {
                 Gtk.Application.Init();
@@ -54,7 +56,6 @@
                 var exceptions = new List<Exception>();
 
                 // Loop through all "Tables" element in the input json file.
-                bool errorsFound = false;
                 foreach (JObject tableInstruction in instructions["Tables"] as JArray)
                 {
                     // Write html heading for table.
@@ -89,7 +90,10 @@
                 errorsFound = true;
             }
             if (errorsFound)
+            {
+                Console.WriteLine("Errors were found creating documentation");
                 return 1;
+            }
             else
                 return 0;
         }
