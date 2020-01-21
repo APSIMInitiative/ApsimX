@@ -17,7 +17,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 73; } }
+        public static int LatestVersion { get { return 74; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1451,6 +1451,17 @@
                 Alomet.Remove("YProperty");
 
             }
+        }
+
+        /// <summary>
+        /// Changes the Surface Organic Matter property FractionFaecesAdded to 1.0
+        /// </summary>
+        /// <param name="root">The root JSON token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion74(JObject root, string fileName)
+        {
+            foreach (JObject som in JsonUtilities.ChildrenRecursively(root, "SurfaceOrganicMatter"))
+                som["FractionFaecesAdded"] = "1.0";
         }
 
         /// <summary>
