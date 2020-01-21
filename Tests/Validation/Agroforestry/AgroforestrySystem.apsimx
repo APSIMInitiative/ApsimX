@@ -690,8 +690,8 @@
                 },
                 {
                   "$type": "Models.Weather, Models",
-                  "FileName": "Validation\\warra.met",
-                  "ExcelWorkSheetName": null,
+                  "FileName": "warra.met",
+                  "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
                   "IncludeInDocumentation": false,
