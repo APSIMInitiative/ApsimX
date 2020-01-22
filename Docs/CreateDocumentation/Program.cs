@@ -219,7 +219,7 @@
                 else
                     return null;
             }
-            return string.Format("<p><a href=\"{0}\">{1}</a></p>", destinationUrl + href, hrefName);
+            return string.Format("<p><a href=\"{0}/{1}\">{2}</a></p>", destinationUrl, href, hrefName);
         }
 
         /// <summary>
