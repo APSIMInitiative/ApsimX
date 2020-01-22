@@ -109,7 +109,7 @@ namespace UserInterface.Commands
 
             var outputs = GetProperties(objectToDocument.GetType(), PropertyType.NonParameters);
 
-            if (outputs != null)
+            if (outputs != null && outputs.Count > 0)
             {
                 var outputTable = PropertiesToTable(outputs);
                 tags.Add(new AutoDocumentation.Paragraph("**Properties (Outputs)**", 0));
@@ -285,7 +285,7 @@ namespace UserInterface.Commands
             else if (isArray)
                 typeName += "[]";
 
-            if (type.IsClass && type.Namespace.StartsWith(namespaceToDocument))
+            if (type.IsClass && type.Namespace != null && type.Namespace.StartsWith(namespaceToDocument))
             {
                 if (type != modelToDocument.GetType() && !typesToDocument.Contains(type))
                     typesToDocument.Add(type);

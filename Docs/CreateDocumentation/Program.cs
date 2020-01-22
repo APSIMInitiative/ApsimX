@@ -81,8 +81,7 @@
                 File.WriteAllText(htmlFileName, htmlBuilder.ToString());
 
                 // Upload to server
-                if (!errorsFound)
-                    Upload(destinationFolder, serverFtpFolder);
+                Upload(destinationFolder, serverFtpFolder);
             }
             catch (Exception err)
             {
